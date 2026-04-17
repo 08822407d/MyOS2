@@ -75,6 +75,7 @@
 	extern void idt_setup_early_handler(void);
 	extern void idt_setup_apic_and_irq_gates(void);
 	extern void switch_gdt_and_percpu_base(int);
+	extern void cr4_update_irqsoff(ulong set, ulong clear);
 	extern void load_direct_gdt(int);
 	extern void cpu_init(void);
 	extern void cpu_init_exception_handling(void);

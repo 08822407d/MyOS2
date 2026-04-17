@@ -30,14 +30,11 @@ static void get_framebuffer_info(mbi_framebuffer_s *framebuffer_info)
 {
 	mbi_framebuffer_common_s *common = &framebuffer_info->common;
 	framebuffer.FB_phybase = common->framebuffer_addr;
-	framebuffer.FB_virbase = phys_to_virt(framebuffer.FB_phybase);
+	framebuffer.FB_virbase = (virt_addr_t)phys_to_virt(framebuffer.FB_phybase);
 	framebuffer.FB_size = common->framebuffer_width * common->framebuffer_height * common->framebuffer_bpp / 8;
 	framebuffer.X_Resolution = common->framebuffer_width;
 	framebuffer.Y_Resolution = common->framebuffer_height;
 	framebuffer.PixperScanline = common->framebuffer_pitch / (common->framebuffer_bpp / 8);
-
-	// myos_ioremap(framebuffer.FB_phybase, framebuffer.FB_size);
-	// clearFB();
 }
 
 void myos_early_init_system(void)

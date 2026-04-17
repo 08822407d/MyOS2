@@ -18,7 +18,7 @@
 
 
 		extern pgd_t
-		*pgd_ent_ptr_in_mm(mm_s *mmp, ulong address);
+		*pgd_entp_in_mm(mm_s *mmp, ulong address);
 
 
 		extern int
@@ -60,7 +60,9 @@
 		extern void
 		fill_pgtbl_to_pmd_ent(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p);
 		extern void
-		fill_pgtbl_to_pmd_ent_safe(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p);
+		fill_pgtbl_to_pmd_ent_kernel(mm_s *mm, pmd_t *pmd_entp, pte_t *pte);
+		extern void
+		fill_pgtbl_to_pmd_ent_kernel_safe(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p);
 
 
 		extern pte_t
@@ -126,6 +128,15 @@
 		extern ulong
 		my_zero_pfn(ulong addr);
 
+		// extern void
+		// pgd_populate_init(mm_s *mm, pgd_t *pgd_entp, p4d_t *p4d_p, bool init);
+		extern void
+		p4d_populate_init(mm_s *mm, p4d_t *p4d_entp, pud_t *pud_p, bool init);
+		extern void
+		pud_populate_init(mm_s *mm, pud_t *pud_entp, pmd_t *pmd_p, bool init);
+		extern void
+		pmd_populate_kernel_init(mm_s *mm, pmd_t *pmd_entp, pte_t *pte_p, bool init);
+
 	#endif
 
 	#include "pgtable_macro.h"
@@ -156,7 +167,7 @@
 
 		PREFIX_STATIC_INLINE
 		pgd_t
-		*pgd_ent_ptr_in_mm(mm_s *mmp, ulong vaddr) {
+		*pgd_entp_in_mm(mm_s *mmp, ulong vaddr) {
 			return (mmp->pgd + pgd_index(vaddr));
 		};
 
@@ -273,13 +284,13 @@
 		}
 		PREFIX_STATIC_INLINE
 		void
-		fill_pgtbl_to_pmd_ent(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p) {
+		fill_pgtbl_to_pmd_ent_kernel(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p) {
 			// paravirt_alloc_pte(mm, __pa(pgtbl_p) >> PAGE_SHIFT);
 			set_pmd(pmd_entp, __pmd(__pa(pgtbl_p) | _PAGE_TABLE));
 		}
 		PREFIX_STATIC_INLINE
 		void
-		fill_pgtbl_to_pmd_ent_safe(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p) {
+		fill_pgtbl_to_pmd_ent_kernel_safe(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p) {
 			// paravirt_alloc_pte(mm, __pa(pgtbl_p) >> PAGE_SHIFT);
 			set_pmd_safe(pmd_entp, __pmd(__pa(pgtbl_p) | _PAGE_TABLE));
 		}
@@ -467,6 +478,39 @@
 		my_zero_pfn(ulong addr) {
 			extern ulong zero_pfn;
 			return zero_pfn;
+		}
+
+		// PREFIX_STATIC_INLINE
+		// void
+		// pgd_populate_init(mm_s *mm, pgd_t *pgd_entp, p4d_t *p4d_p, bool init) {
+		// 	if (init)
+		// 		pgd_populate_safe(mm, pgd_entp, p4d_p);
+		// 	else
+		// 		pgd_populate(mm, pgd_entp, p4d_p);
+		// }
+		PREFIX_STATIC_INLINE
+		void
+		p4d_populate_init(mm_s *mm, p4d_t *p4d_entp, pud_t *pud_p, bool init) {
+			if (init)
+				p4d_populate_safe(mm, p4d_entp, pud_p);
+			else
+				p4d_populate(mm, p4d_entp, pud_p);
+		}
+		PREFIX_STATIC_INLINE
+		void
+		pud_populate_init(mm_s *mm, pud_t *pud_entp, pmd_t *pmd_p, bool init) {
+			if (init)
+				pud_populate_safe(mm, pud_entp, pmd_p);
+			else
+				pud_populate(mm, pud_entp, pmd_p);
+		}
+		PREFIX_STATIC_INLINE
+		void
+		pmd_populate_kernel_init(mm_s *mm, pmd_t *pmd_entp, pte_t *pte_p, bool init) {
+			if (init)
+				pmd_populate_kernel_safe(mm, pmd_entp, pte_p);
+			else
+				pmd_populate_kernel(mm, pmd_entp, pte_p);
 		}
 
 	#endif

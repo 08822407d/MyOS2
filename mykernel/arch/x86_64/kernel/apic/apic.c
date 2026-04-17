@@ -14,22 +14,62 @@
  *	Pavel Machek and
  *	Mikael Pettersson	:	PM converted to driver model.
  */
-#include <linux/kernel/types.h>
-// #include <linux/debug/ftrace.h>
-// #include <linux/kernel/ioport.h>
-// #include <linux/kernel/export.h>
-// #include <linux/kernel/delay.h>
-#include <linux/init/init.h>
-// #include <linux/kernel/cpu.h>
-// #include <linux/smp/smp.h>
-// #include <linux/kernel/mm.h>
 
+// #include <linux/perf_event.h>
+// #include <linux/kernel_stat.h>
+// #include <linux/mc146818rtc.h>
+// #include <linux/acpi_pmtmr.h>
+#include <linux/lib/bitmap.h>
+// #include <linux/clockchips.h>
+// #include <linux/interrupt.h>
+// #include <linux/memblock.h>
+// #include <linux/ftrace.h>
+// #include <linux/ioport.h>
+#include <linux/kernel/export.h>
+// #include <linux/syscore_ops.h>
+#include <linux/kernel/delay.h>
+// #include <linux/timex.h>
+// #include <linux/i8253.h>
+// #include <linux/dmar.h>
+#include <linux/init/init.h>
+#include <linux/kernel/cpu.h>
+// #include <linux/dmi.h>
+#include <linux/smp/smp.h>
+#include <linux/kernel/mm.h>
+
+// #include <xen/xen.h>
+
+// #include <asm/trace/irq_vectors.h>
+// #include <asm/irq_remapping.h>
+// #include <asm/pc-conf-reg.h>
+// #include <asm/perf_event.h>
+// #include <asm/x86_init.h>
+// #include <linux/atomic.h>
+#include <linux/kernel/lock_ipc.h>
+// #include <asm/barrier.h>
+// #include <asm/mpspec.h>
+// #include <asm/i8259.h>
+// #include <asm/proto.h>
+// #include <asm/traps.h>
 #include <asm/apic.h>
+// #include <asm/acpi.h>
 // #include <asm/io_apic.h>
+// #include <asm/desc.h>
+// #include <asm/hpet.h>
+// #include <asm/mtrr.h>
 // #include <asm/time.h>
 // #include <asm/smp.h>
+// #include <asm/mce.h>
+// #include <asm/msr.h>
 // #include <asm/tsc.h>
-// #include <asm/cpu.h>
+#include <asm/hypervisor.h>
+// #include <asm/cpu_device_id.h>
+// #include <asm/intel-family.h>
+// #include <asm/irq_regs.h>
+#include <asm/cpu.h>
+
+// #include "local.h"
+
 #include <asm/apicdef.h>
 #include <asm/irq_vectors.h>
 #include <insns/x86msr_const.h>
@@ -134,7 +174,7 @@ void clear_local_APIC(void)
  */
 void __init init_bsp_APIC(void)
 {
-	unsigned int value;
+	uint value;
 
 	/*
 	 * Don't do the setup now if we have a SMP BIOS as the
@@ -181,8 +221,8 @@ enum {
 };
 static int x2apic_state;
 
-static bool x2apic_hw_locked(void)
-{
+static bool
+x2apic_hw_locked(void) {
 	u64 ia32_cap;
 	u64 msr;
 
@@ -195,8 +235,8 @@ static bool x2apic_hw_locked(void)
 	return false;
 }
 
-static void __x2apic_disable(void)
-{
+static void
+__x2apic_disable(void) {
 	u64 msr;
 
 	// if (!boot_cpu_has(X86_FEATURE_APIC))
@@ -212,8 +252,8 @@ static void __x2apic_disable(void)
 	// printk_once(KERN_INFO "x2apic disabled\n");
 }
 
-static void __x2apic_enable(void)
-{
+static void
+__x2apic_enable(void) {
 	u64 msr;
 
 	rdmsrl(MSR_IA32_APICBASE, &msr);
@@ -254,7 +294,7 @@ void __init myos_try_enable_x2apic(void)
 	if (boot_cpu_data.x86_capa_bits.x2APIC) {
 		__x2apic_enable();
 		if(apic_is_x2apic_enabled()) {
-			// pr_info("x2apic: enabled by BIOS, switching to x2apic ops\n");
+			pr_info("x2apic: enabled by BIOS, switching to x2apic ops\n");
 			x2apic_mode = 1;
 			if (x2apic_hw_locked())
 				x2apic_state = X2APIC_ON_LOCKED;
@@ -262,6 +302,23 @@ void __init myos_try_enable_x2apic(void)
 				x2apic_state = X2APIC_ON;
 		}
 		init_bsp_APIC();
+	} else if (!boot_cpu_data.x86_capa_bits.x2APIC) {
+		x2apic_state = X2APIC_DISABLED;
+	}
+}
+
+
+
+void __init check_x2apic(void)
+{
+	if (x2apic_enabled()) {
+		pr_info("x2apic: enabled by BIOS, switching to x2apic ops\n");
+		x2apic_mode = 1;
+		if (x2apic_hw_locked())
+			x2apic_state = X2APIC_ON_LOCKED;
+		else
+			x2apic_state = X2APIC_ON;
+		// apic_read_boot_cpu_id(true);
 	} else if (!boot_cpu_data.x86_capa_bits.x2APIC) {
 		x2apic_state = X2APIC_DISABLED;
 	}

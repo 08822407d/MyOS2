@@ -10,10 +10,10 @@
 	#ifdef DEBUG
 	
 		extern phys_addr_t
-		virt_to_phys(volatile virt_addr_t address);
+		virt_to_phys(volatile void *address);
 		
-		extern virt_addr_t
-		phys_to_virt(volatile phys_addr_t address);
+		extern void
+		*phys_to_virt(volatile phys_addr_t address);
 
 		extern void
 		slow_down_io(void);
@@ -36,7 +36,7 @@
 		 */
 		PREFIX_STATIC_INLINE
 		phys_addr_t
-		virt_to_phys(volatile virt_addr_t address) {
+		virt_to_phys(volatile void *address) {
 			return __pa(address);
 		}
 		// #define virt_to_phys	virt_to_phys
@@ -54,8 +54,8 @@
 		 *	this function
 		 */
 		PREFIX_STATIC_INLINE
-		virt_addr_t
-		phys_to_virt(volatile phys_addr_t address) {
+		void
+		*phys_to_virt(volatile phys_addr_t address) {
 			return __va(address);
 		}
 		// #define phys_to_virt	phys_to_virt

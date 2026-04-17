@@ -23,6 +23,12 @@
 		extern void
 		copy_user_page(void *to, void *from, ulong vaddr, page_s *topage);
 
+		extern phys_addr_t
+		get_max_mapped(void);
+
+		extern void
+		*alloc_low_page(void);
+
 	#endif
 
 	#include "page_macro_arch.h"
@@ -73,6 +79,18 @@
 		// __is_canonical_address(u64 vaddr, u8 vaddr_bits) {
 		// 	return __canonical_address(vaddr, vaddr_bits) == vaddr;
 		// }
+
+		PREFIX_STATIC_INLINE
+		phys_addr_t
+		get_max_mapped(void) {
+			return (phys_addr_t)max_pfn_mapped << PAGE_SHIFT;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		*alloc_low_page(void) {
+			return alloc_low_pages(1);
+		}
 
 	#endif
 

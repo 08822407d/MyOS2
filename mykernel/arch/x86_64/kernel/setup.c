@@ -83,8 +83,8 @@ char multiboot_MBI[32 * PAGE_SIZE] __section(".data") __aligned(PAGE_SIZE);
 cpuinfo_x86_s boot_cpu_data __read_mostly;
 
 
-void * __init extend_brk(size_t size, size_t align)
-{
+void * __init
+extend_brk(size_t size, size_t align) {
 	size_t mask = align - 1;
 	void *ret;
 
@@ -93,7 +93,7 @@ void * __init extend_brk(size_t size, size_t align)
 	BUG_ON(align & mask);
 
 	_brk_end = (_brk_end + mask) & ~mask;
-	// BUG_ON((char *)(_brk_end + size) > __brk_limit);
+	BUG_ON((char *)(_brk_end + size) > __brk_limit);
 
 	ret = (void *)_brk_end;
 	_brk_end += size;
@@ -103,10 +103,10 @@ void * __init extend_brk(size_t size, size_t align)
 	return ret;
 }
 
-static void __init reserve_brk(void)
-{
+static void __init
+reserve_brk(void) {
 	if (_brk_end > _brk_start)
-		simple_mmblk_reserve(__pa(_brk_start),
+		simple_mmblk_reserve(__pa_symbol(_brk_start),
 				_brk_end - _brk_start);
 
 	/* Mark brk area as locked down and no longer taking any
@@ -222,7 +222,9 @@ void __init setup_arch(char **cmdline_p)
 
 	myos_try_enable_x2apic();
 
-	// /* need this before calling reserve_initrd */
+	check_x2apic();
+	/* How many end-of-memory variables you have, grandma! */
+	/* need this before calling reserve_initrd */
 	max_low_pfn = max_pfn;
 	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 
@@ -235,6 +237,9 @@ void __init setup_arch(char **cmdline_p)
 	 * brk area.
 	 */
 	reserve_brk();
+
+	// cleanup_highmap();
+	myos_early_map_pgt_buf_into_directmap();
 
 	// 用e820获取的内存分布初始化memblock分配器
 	e820__memblock_setup();

@@ -32,10 +32,13 @@
 
 	phys_addr_t memblock_alloc_range(phys_addr_t size,
 			phys_addr_t align, phys_addr_t start, phys_addr_t end);
+	phys_addr_t memblock_phys_alloc_range(phys_addr_t size,
+			phys_addr_t align, phys_addr_t start, phys_addr_t end);
 	void *memblock_alloc(phys_addr_t size, phys_addr_t align);
 	void *myos_memblock_alloc_DMA(size_t size, size_t align);
 	void *myos_memblock_alloc_DMA32(size_t size, size_t align);
 	void *myos_memblock_alloc_normal(size_t size, size_t align);
+	bool memblock_is_region_memory(phys_addr_t base, phys_addr_t size);
 
 	void reserve_bootmem_region(phys_addr_t start, phys_addr_t end);
 

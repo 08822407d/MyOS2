@@ -21,4 +21,6 @@
 	void early_alloc_pgt_buf(void);
 	extern void paging_init(void);
 
+	extern void myos_early_map_pgt_buf_into_directmap(void);
+
 #endif /* _ASM_X86_PGTABLE_API_H_ */

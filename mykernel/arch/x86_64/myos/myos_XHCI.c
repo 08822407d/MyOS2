@@ -298,11 +298,11 @@ void XHCI_end_request(blkbuf_node_s *node)
 
 	regval_64 = Main_Intr_RegSet_ptr->ERDP;
 	regval_64 += sizeof(XHCI_TRB_s);
-	regval_64 = phys_to_virt(regval_64);
+	regval_64 = (u64)phys_to_virt(regval_64);
 	if (regval_64 >= (u64)(MainEventRing_Base + MainEventRing_Size))
-		regval_64 = virt_to_phys((phys_addr_t)MainEventRing_Base);
+		regval_64 = virt_to_phys(MainEventRing_Base);
 	regval_64 |= 1 << 3;	// 该位是RW1C
-	Main_Intr_RegSet_ptr->ERDP = virt_to_phys(regval_64);
+	Main_Intr_RegSet_ptr->ERDP = virt_to_phys((void *)regval_64);
 	__mb();
 
 
@@ -482,10 +482,10 @@ void XHCI_ResetHostController()
 	u16 Host_CmdRing_Size = RING_SIZE;
 	XHCI_CmdTRB_s *Host_CmdRing_Base = kzalloc(sizeof(XHCI_EvtTRB_s) *
 		((Host_CmdRing_Size + RingSegMaxSize - 1) / RingSegMaxSize) * RingSegMaxSize, GFP_KERNEL);
-	XHCI_HostCtrl_Ops_Regs_ptr->CRCR = virt_to_phys((virt_addr_t)Host_CmdRing_Base) | 0x1;
+	XHCI_HostCtrl_Ops_Regs_ptr->CRCR = virt_to_phys(Host_CmdRing_Base) | 0x1;
 	// 主控环尾
 	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)(Host_CmdRing_Base + RING_SIZE - 1);
-	LinkTRB_ptr->CmdTRB_ptr = virt_to_phys((virt_addr_t)Host_CmdRing_Base);
+	LinkTRB_ptr->CmdTRB_ptr = virt_to_phys(Host_CmdRing_Base);
 	LinkTRB_ptr->Cycle_Bit = 1;
 	LinkTRB_ptr->Toggle_Cycle = 1;
 	LinkTRB_ptr->TRB_Type = LINK;
@@ -508,10 +508,10 @@ void XHCI_ResetHostController()
 		((MainEventRing_Size + RingSegMaxSize - 1) / RingSegMaxSize) * RingSegMaxSize, GFP_KERNEL);
 	// 创建并设置段表
 	XHCI_ERSegTblEnt_s *MainEventRing_SegTable_Entp = (XHCI_ERSegTblEnt_s *)kzalloc(sizeof(XHCI_ERSegTblEnt_s), GFP_KERNEL);
-	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys((virt_addr_t)MainEventRing_Base);
+	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys(MainEventRing_Base);
 	MainEventRing_SegTable_Entp->RingSeg_Size = MainEventRing_Size;
 	// 设置主中断表项
-	Main_Intr_RegSet_ptr->ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
+	Main_Intr_RegSet_ptr->ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys(MainEventRing_SegTable_Entp);		//段表基址
 	Main_Intr_RegSet_ptr->ERSTSZ = 1;		//段表大小
 	Main_Intr_RegSet_ptr->ERDP = MainEventRing_SegTable_Entp->RingSeg_Base | (1 << 3);		//事件环出队指针
 

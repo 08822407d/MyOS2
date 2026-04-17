@@ -59,7 +59,7 @@ int __pgtbl_alloc(mm_s *mm, pmd_t *pmd_entp)
 
 		mm_inc_nr_ptes(mm);
 		smp_wmb();	/* See comment in pmd_install() */
-		pmd_populate(mm, pmd_entp, new);
+		pmd_populate_kernel(mm, pmd_entp, new);
 	}
 	spin_unlock(ptl);
 	return 0;

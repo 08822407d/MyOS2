@@ -59,14 +59,13 @@
 	// #endif /* CONFIG_CPU_SUP_INTEL */
 
 	// extern void get_cpu_cap(cpuinfo_x86_s *c);
-	// extern void get_cpu_address_sizes(cpuinfo_x86_s *c);
+	extern void get_cpu_address_sizes(cpuinfo_x86_s *c);
 	extern void cpu_detect_cache_sizes(cpuinfo_x86_s *c);
 	// extern void init_scattered_cpuid_features(cpuinfo_x86_s *c);
 	// extern void init_intel_cacheinfo(cpuinfo_x86_s *c);
 	// extern void init_amd_cacheinfo(cpuinfo_x86_s *c);
 	// extern void init_hygon_cacheinfo(cpuinfo_x86_s *c);
 
-	extern void detect_num_cpu_cores(cpuinfo_x86_s *c);
 	// extern int detect_extended_topology_early(cpuinfo_x86_s *c);
 	// extern int detect_extended_topology(cpuinfo_x86_s *c);
 	// extern int detect_ht_early(cpuinfo_x86_s *c);

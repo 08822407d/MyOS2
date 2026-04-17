@@ -44,36 +44,48 @@
 
 		extern int
 		p4d_ent_is_none(p4d_t p4d_ent);
+		extern bool
+		p4d_ent_is_leaf(p4d_t p4d_ent);
 		extern int
 		p4d_ent_is_bad(p4d_t p4d_ent);
 		extern int
 		p4d_ent_is_present(p4d_t p4d_ent);
 		extern int
 		p4d_ents_same(p4d_t a, p4d_t b);
+		extern phys_addr_t
+		p4de_pointed_page_paddr(p4d_t p4d_ent);
 		extern ulong
 		p4de_pointed_page_vaddr(p4d_t p4d_ent);
 
 		extern int
 		pud_ent_is_none(pud_t pud_ent);
+		extern bool
+		pud_ent_is_leaf(pud_t pud_ent);
 		extern int
 		pud_ent_is_bad(pud_t pud_ent);
 		extern int
 		pud_ent_is_present(pud_t pud_ent);
 		extern int
 		pud_ents_same(pud_t a, pud_t b);
+		extern phys_addr_t
+		pude_pointed_page_paddr(pud_t pud_ent);
 		extern ulong
 		pude_pointed_page_vaddr(pud_t pud_ent);
 
 		extern int
 		pmd_ent_is_none(pmd_t pmd_ent);
+		extern bool
+		pmd_ent_is_leaf(pmd_t pmd_ent);
 		extern int
 		pmd_ent_is_bad(pmd_t pmd_ent);
 		extern int
 		pmd_ent_is_present(pmd_t pmd_ent);
 		extern int
 		pmd_ents_same(pmd_t a, pmd_t b);
+		extern phys_addr_t
+		pmde_pointed_page_paddr(pmd_t pmd_ent);
 		extern ulong
-		pmde_pointed_page_vaddr(pmd_t pud_ent);
+		pmde_pointed_page_vaddr(pmd_t pmd_ent);
 
 		extern int
 		pte_is_none(pte_t pte);
@@ -173,6 +185,15 @@
 		extern pgprotval_t
 		check_pgprot(pgprot_t pgprot);
 
+		extern void
+		set_p4d_init(p4d_t *p4d_ptr, p4d_t p4d_ent, bool init);
+		extern void
+		set_pud_init(pud_t *pude_ptr, pud_t pud_ent, bool init);
+		extern void
+		set_pmd_init(pmd_t *pmd_ptr, pmd_t pmd_ent, bool init);
+		extern void
+		set_pte_init(pte_t *pte_ptr, pte_t pte_ent, bool init);
+
 	#endif
 
 	#include "pgtable_macro_arch.h"
@@ -262,6 +283,11 @@
 						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 		PREFIX_STATIC_INLINE
+		bool
+		p4d_ent_is_leaf(p4d_t p4d_ent) {
+			return arch_p4de_val(p4d_ent) & _PAGE_PSE;
+		}
+		PREFIX_STATIC_INLINE
 		int
 		p4d_ent_is_bad(p4d_t p4d_ent) {
 			return (arch_p4de_flags(p4d_ent) &
@@ -278,10 +304,15 @@
 			return a.val == b.val;
 		}
 		PREFIX_STATIC_INLINE
+		phys_addr_t
+		p4de_pointed_page_paddr(p4d_t p4d_ent) {
+			return (phys_addr_t)(arch_p4de_val(p4d_ent) &
+						arch_p4de_pfn_mask(p4d_ent));
+		}
+		PREFIX_STATIC_INLINE
 		ulong
 		p4de_pointed_page_vaddr(p4d_t p4d_ent) {
-			return (ulong)__va(arch_p4de_val(p4d_ent) &
-						arch_p4de_pfn_mask(p4d_ent));
+			return (ulong)__va(p4de_pointed_page_paddr(p4d_ent));
 		}
 
 
@@ -290,6 +321,11 @@
 		pud_ent_is_none(pud_t pud_ent) {
 			return (arch_pude_val(pud_ent) &
 						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+		}
+		PREFIX_STATIC_INLINE
+		bool
+		pud_ent_is_leaf(pud_t pud_ent) {
+			return arch_pude_val(pud_ent) & _PAGE_PSE;
 		}
 		PREFIX_STATIC_INLINE
 		int
@@ -309,10 +345,15 @@
 			return a.val == b.val;
 		}
 		PREFIX_STATIC_INLINE
+		phys_addr_t
+		pude_pointed_page_paddr(pud_t pud_ent) {
+			return (phys_addr_t)(arch_pude_val(pud_ent) &
+						arch_pude_pfn_mask(pud_ent));
+		}
+		PREFIX_STATIC_INLINE
 		ulong
 		pude_pointed_page_vaddr(pud_t pud_ent) {
-			return (ulong)__va(arch_pude_val(pud_ent) &
-						arch_pude_pfn_mask(pud_ent));
+			return (ulong)__va(pude_pointed_page_paddr(pud_ent));
 		}
 
 
@@ -325,6 +366,11 @@
 			 */
 			return (arch_pmde_val(pmd_ent) &
 						~_PAGE_KNL_ERRATUM_MASK) == 0;
+		}
+		PREFIX_STATIC_INLINE
+		bool
+		pmd_ent_is_leaf(pmd_t pmd_ent) {
+			return arch_pmde_val(pmd_ent) & _PAGE_PSE;
 		}
 		PREFIX_STATIC_INLINE
 		int
@@ -350,10 +396,15 @@
 			return a.val == b.val;
 		}
 		PREFIX_STATIC_INLINE
+		phys_addr_t
+		pmde_pointed_page_paddr(pmd_t pmd_ent) {
+			return (phys_addr_t)(arch_pmde_val(pmd_ent) &
+						arch_pmde_pfn_mask(pmd_ent));
+		}
+		PREFIX_STATIC_INLINE
 		ulong
 		pmde_pointed_page_vaddr(pmd_t pmd_ent) {
-			return (ulong)__va(arch_pmde_val(pmd_ent) &
-						arch_pmde_pfn_mask(pmd_ent));
+			return (ulong)__va(pmde_pointed_page_paddr(pmd_ent));
 		}
 
 
@@ -604,7 +655,6 @@
 		}
 
 
-
 		/*
 		 * A clear pte value is special, and doesn't get inverted.
 		 *
@@ -647,17 +697,50 @@
 		check_pgprot(pgprot_t pgprot) {
 			pgprotval_t massaged_val = massage_pgprot(pgprot);
 
-		// 	/* mmdebug.h can not be included here because of dependencies */
-		// #ifdef CONFIG_DEBUG_VM
-		// 	WARN_ONCE(pgprot_val(pgprot) != massaged_val,
-		// 		"attempted to set unsupported pgprot: %016llx "
-		// 		"bits: %016llx supported: %016llx\n",
-		// 		(u64)pgprot_val(pgprot),
-		// 		(u64)pgprot_val(pgprot) ^ massaged_val,
-		// 		(u64)__supported_pte_mask);
-		// #endif
+			/* mmdebug.h can not be included here because of dependencies */
+		#ifdef CONFIG_DEBUG_VM
+			WARN_ONCE(pgprot_val(pgprot) != massaged_val,
+				"attempted to set unsupported pgprot: %016llx "
+				"bits: %016llx supported: %016llx\n",
+				(u64)pgprot_val(pgprot),
+				(u64)pgprot_val(pgprot) ^ massaged_val,
+				(u64)__supported_pte_mask);
+		#endif
 
 			return massaged_val;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		set_p4d_init(p4d_t *p4d_ptr, p4d_t p4d_ent, bool init) {
+			if (init)
+				set_p4d_safe(p4d_ptr, p4d_ent);
+			else
+				set_p4d(p4d_ptr, p4d_ent);
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_pud_init(pud_t *pude_ptr, pud_t pud_ent, bool init) {
+			if (init)
+				set_pud_safe(pude_ptr, pud_ent);
+			else
+				set_pud(pude_ptr, pud_ent);
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_pmd_init(pmd_t *pmd_ptr, pmd_t pmd_ent, bool init) {
+			if (init)
+				set_pmd_safe(pmd_ptr, pmd_ent);
+			else
+				set_pmd(pmd_ptr, pmd_ent);
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_pte_init(pte_t *pte_ptr, pte_t pte_ent, bool init) {
+			if (init)
+				set_pte_safe(pte_ptr, pte_ent);
+			else
+				set_pte(pte_ptr, pte_ent);
 		}
 
 	#endif
@@ -839,10 +922,10 @@
 	// 	return pte_set_flags(pte, _PAGE_PSE);
 	// }
 
-	// static inline pte_t pte_clrhuge(pte_t pte)
-	// {
-	// 	return pte_clear_flags(pte, _PAGE_PSE);
-	// }
+	static inline pte_t pte_clrhuge(pte_t pte)
+	{
+		return pte_clear_flags(pte, _PAGE_PSE);
+	}
 
 	// static inline pte_t pte_mkglobal(pte_t pte)
 	// {
@@ -1037,6 +1120,7 @@
 
 	// #endif /* CONFIG_HAVE_ARCH_SOFT_DIRTY */
 
+
 	// static inline pmd_t pmd_mkinvalid(pmd_t pmd)
 	// {
 	// 	return pfn_pmde(pmde_pfn(pmd),
@@ -1081,10 +1165,10 @@
 	// 	return __pgprot(preservebits | addbits);
 	// }
 
-	// #define pte_pgprot(x) __pgprot(arch_pte_flags(x))
-	// #define pmd_pgprot(x) __pgprot(arch_pmde_flags(x))
-	// #define pud_pgprot(x) __pgprot(arch_pude_flags(x))
-	// #define p4d_pgprot(x) __pgprot(arch_p4de_flags(x))
+	#define pte_pgprot(x) __pgprot(arch_pte_flags(x))
+	#define pmd_pgprot(x) __pgprot(arch_pmde_flags(x))
+	#define pud_pgprot(x) __pgprot(arch_pude_flags(x))
+	#define p4d_pgprot(x) __pgprot(arch_p4de_flags(x))
 
 	// #define canon_pgprot(p) __pgprot(massage_pgprot(p))
 
@@ -1190,11 +1274,10 @@
 	// 		(_PAGE_PSE | _PAGE_PRESENT);
 	// }
 
-	// extern int direct_gbpages;
+	extern int direct_gbpages;
 	// extern void memblock_find_dma_reserve(void);
 	// void __init poking_init(void);
-	// unsigned long init_memory_mapping(unsigned long start,
-	// 				unsigned long end, pgprot_t prot);
+	ulong init_memory_mapping(ulong start, ulong end, pgprot_t prot);
 
 	// extern pgd_t trampoline_pgd_entry;
 

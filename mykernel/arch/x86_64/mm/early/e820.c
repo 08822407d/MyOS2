@@ -64,13 +64,10 @@ static e820_table_s e820_table_init		__initdata;
 
 e820_table_s *e820_table __refdata			= &e820_table_init;
 
-#define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT
-
-static void __init e820_print_type(enum e820_type type)
-{
+static void __init
+e820_print_type(enum e820_type type) {
 	switch (type) {
-	case E820_TYPE_RAM:				/* Fall through: */
-	case E820_TYPE_RESERVED_KERN:	pr_cont("usable");						break;
+	case E820_TYPE_RAM:				pr_cont("usable");						break;
 	case E820_TYPE_RESERVED:		pr_cont("reserved");					break;
 	case E820_TYPE_SOFT_RESERVED:	pr_cont("soft reserved");				break;
 	case E820_TYPE_ACPI:			pr_cont("ACPI data");					break;
@@ -119,22 +116,19 @@ void __init e820__memory_setup(void)
 }
 
 
-unsigned long __init e820__end_of_ram_pfn(void)
+ulong __init e820__end_ram_pfn(ulong limit_pfn)
 {
 	int i;
-	unsigned long last_pfn = 0;
-	unsigned long limit_pfn = MAX_ARCH_PFN;
-	unsigned long max_arch_pfn = MAX_ARCH_PFN;
+	ulong last_pfn = 0;
+	ulong max_arch_pfn = MAX_ARCH_PFN;
 
-	for (i = 0; i < e820_table->nr_entries; i++)
-	{
+	for (i = 0; i < e820_table->nr_entries; i++) {
 		e820_entry_s *entry = &(e820_table->entries[i]);
-		unsigned long start_pfn;
-		unsigned long end_pfn;
+		ulong start_pfn;
+		ulong end_pfn;
 
-		if (entry->size == 0)
-			break;
-		if (entry->type != E820_TYPE_RAM)
+		if (entry->type != E820_TYPE_RAM &&
+		    entry->type != E820_TYPE_ACPI)
 			continue;
 
 		start_pfn = entry->addr >> PAGE_SHIFT;
@@ -142,8 +136,7 @@ unsigned long __init e820__end_of_ram_pfn(void)
 
 		if (start_pfn >= limit_pfn)
 			continue;
-		if (end_pfn > limit_pfn)
-		{
+		if (end_pfn > limit_pfn) {
 			last_pfn = limit_pfn;
 			break;
 		}
@@ -154,6 +147,8 @@ unsigned long __init e820__end_of_ram_pfn(void)
 	if (last_pfn > max_arch_pfn)
 		last_pfn = max_arch_pfn;
 
+	pr_info("last_pfn = %#lx max_arch_pfn = %#lx\n",
+			last_pfn, max_arch_pfn);
 	return last_pfn;
 }
 
@@ -185,15 +180,10 @@ void __init e820__memblock_setup(void)
 		if (type == E820_TYPE_SOFT_RESERVED)
 			simple_mmblk_reserve(entry->addr, entry->size);
 
-		if (type != E820_TYPE_RAM &&
-			type != E820_TYPE_RESERVED_KERN)
+		if (type != E820_TYPE_RAM)
 			continue;
 
 		simple_mmblk_add(entry->addr, entry->size);
-
-		// if (type == E820_TYPE_ACPI ||
-		// 	type == E820_TYPE_NVS)
-		// 	simple_mmblk_reserve(entry->addr, entry->size);
 	}
 
 	/* Throw away partial pages: */

@@ -199,16 +199,17 @@
 	// 	return val;
 	// }
 
-	// extern int x2apic_mode;
-	// extern int x2apic_phys;
+	extern int x2apic_mode;
+	extern int x2apic_phys;
 	// extern void __init x2apic_set_max_apicid(u32 apicid);
-	// extern void __init check_x2apic(void);
+	extern void __init check_x2apic(void);
 	extern void __init myos_try_enable_x2apic(void);
 	extern void x2apic_setup(void);
-	// static inline int x2apic_enabled(void) {
-	// 	return boot_cpu_has(X86_FEATURE_X2APIC) &&
-	// 			apic_is_x2apic_enabled();
-	// }
+	static inline int x2apic_enabled(void) {
+		// return boot_cpu_has(X86_FEATURE_X2APIC) &&
+		// 		apic_is_x2apic_enabled();
+		return boot_cpu_data.x86_capa_bits.x2APIC;
+	}
 
 	// #define x2apic_supported()	(boot_cpu_has(X86_FEATURE_X2APIC))
 

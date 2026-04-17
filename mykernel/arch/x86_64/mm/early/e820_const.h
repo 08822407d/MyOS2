@@ -39,15 +39,6 @@
 			 * marking it with the IORES_DESC_SOFT_RESERVED designation.
 			 */
 			E820_TYPE_SOFT_RESERVED	= 0xefffffff,
-
-			/*
-			 * Reserved RAM used by the kernel itself if
-			 * CONFIG_INTEL_TXT=y is enabled, memory of this type
-			 * will be included in the S3 integrity calculation
-			 * and so should not include any memory that the BIOS
-			 * might alter over the S3 transition:
-			 */
-			E820_TYPE_RESERVED_KERN	= 128,
 		};
 	
 	#endif /* !__ASSEMBLY__ */
@@ -89,7 +80,6 @@
 	 * to allow more than three entries per node or otherwise refine
 	 * this size.
 	 */
-	// #define E820_MAX_ENTRIES	(E820_MAX_ENTRIES_ZEROPAGE + 3*MAX_NUMNODES)
 	#define E820_MAX_ENTRIES	128
 
 #endif /* _ASM_E820_CONST_H_ */

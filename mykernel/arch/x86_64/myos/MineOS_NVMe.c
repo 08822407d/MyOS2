@@ -100,7 +100,7 @@ long NVMe_cmd_out(blkbuf_node_s *node)
 			sqptr->CID = 0x1F00 | IOSQ_Tail_Idx;
 			sqptr->OPC = NVM_CMD_WRITE;	//Write command 0x01;
 			sqptr->NSID = 1;		//NSID=1
-			sqptr->PRP_SGL_Entry1 = (unsigned long)virt_to_phys((virt_addr_t)node->buffer);
+			sqptr->PRP_SGL_Entry1 = (ulong)virt_to_phys(node->buffer);
 			sqptr->Dword10 = node->LBA & 0xffffffff;		//SLBA-lower = 0
 			sqptr->Dword11 = (node->LBA >> 32) & 0xffffffff;	//SLBA-upper = 0
 			sqptr->Dword12 = node->count;	//LR=0,FUA=0,PRINFO=0,DTYPE=0,NLB=1
@@ -118,7 +118,7 @@ long NVMe_cmd_out(blkbuf_node_s *node)
 			sqptr->CID = 0x2F00 | IOSQ_Tail_Idx;
 			sqptr->OPC = NVM_CMD_READ;	//Read command 0x02;
 			sqptr->NSID = 1;		//NSID=1
-			sqptr->PRP_SGL_Entry1 = (unsigned long)virt_to_phys((virt_addr_t)node->buffer);
+			sqptr->PRP_SGL_Entry1 = (ulong)virt_to_phys(node->buffer);
 			sqptr->Dword10 = node->LBA & 0xffffffff;		//SLBA-lower = 0
 			sqptr->Dword11 = (node->LBA >> 32) & 0xffffffff;	//SLBA-upper = 0
 			sqptr->Dword12 = node->count;	//LR=0,FUA=0,PRINFO=0,NLB=1
@@ -576,7 +576,7 @@ void NVMe_IOqueue_init()
 		.CID			= 0x5A5A,
 		.NSID			= 0,
 		.OPC			= ADMIN_CMD_IDENTIFY,		////Identify command
-		.PRP_SGL_Entry1	= (ulong)virt_to_phys((virt_addr_t)NVMeID),
+		.PRP_SGL_Entry1	= (ulong)virt_to_phys(NVMeID),
 		.Dword10		= 0x01,						////CNTID=0,CNS=1
 	};
 	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_Identify);
@@ -597,7 +597,7 @@ void NVMe_IOqueue_init()
 		.CID				= 0x5A5A,
 		.NSID				= 1,					// 请求的命名空间 ID = 1
 		.OPC				= ADMIN_CMD_IDENTIFY,
-		.PRP_SGL_Entry1		= (ulong)virt_to_phys((virt_addr_t)NVMeID_NS_1),
+		.PRP_SGL_Entry1		= (ulong)virt_to_phys(NVMeID_NS_1),
 		.Dword10			= 0x0,					// CNS=0 (Identify Namespace)，CNTID=0
 	};
 	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_Identify_NS1);
@@ -613,7 +613,7 @@ void NVMe_IOqueue_init()
 	{
 	    .OPC			= 0x05,		////Create I/O Completion Queue command
 	    .CID			= 0x55AA,
-	    .PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)IO_Completion_Queue),
+	    .PRP_SGL_Entry1	= (unsigned long)virt_to_phys(IO_Completion_Queue),
 	    .Dword10		= NVMe_CTR_AQA_ACQS(IOQ_SIZE) | 0x0001,	////QSIZE=2,QID=1
 	    .Dword11		= 0x10003,	////IV=1,IEN=1,PC=1
 	};
@@ -624,7 +624,7 @@ void NVMe_IOqueue_init()
 	{
 		.OPC			= 0x01,		//Create I/O Submission Queue command
 		.CID			= 0xAA55,
-		.PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)IO_Submission_Queue),
+		.PRP_SGL_Entry1	= (unsigned long)virt_to_phys(IO_Submission_Queue),
 		.Dword10		= NVMe_CTR_AQA_ACQS(IOQ_SIZE) | 0x0001,	////QSIZE=2,QID=1
 		.Dword11		= 0x10001,	////CQID=1,QPRIO=0,PC=1
 	};
@@ -633,8 +633,8 @@ void NVMe_IOqueue_init()
 
 
 	/// Set IO_SQ_TDBL & IO_CQ_HDBL Address
-	IO_SQ_TDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1008);
-	IO_CQ_HDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x100c);
+	IO_SQ_TDBL = (uint *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1008);
+	IO_CQ_HDBL = (uint *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x100c);
 
 	*IO_CQ_HDBL = IOCQ_Head_Idx & IOQ_SIZE_MASK;	////CQ index
 	IOCQ_Head_Idx++;

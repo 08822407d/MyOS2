@@ -22,6 +22,22 @@
 #include <obsolete/glo.h>
 
 
+
+void cr4_update_irqsoff(ulong set, ulong clear)
+{
+	// ulong newval, cr4 = this_cpu_read(cpu_tlbstate.cr4);
+
+	// lockdep_assert_irqs_disabled();
+
+	// newval = (cr4 & ~clear) | set;
+	// if (newval != cr4) {
+	// 	this_cpu_write(cpu_tlbstate.cr4, newval);
+	// 	__write_cr4(newval);
+	// }
+}
+EXPORT_SYMBOL(cr4_update_irqsoff);
+
+
 /* Load the original GDT from the per-cpu structure */
 void load_direct_gdt(int cpu)
 {
@@ -33,6 +49,7 @@ void load_direct_gdt(int cpu)
 
 	refresh_segment_registers();
 }
+
 
 static void get_model_name(cpuinfo_x86_s *c)
 {
@@ -65,18 +82,6 @@ static void get_model_name(cpuinfo_x86_s *c)
 	*(s + 1) = '\0';
 }
 
-void detect_num_cpu_cores(cpuinfo_x86_s *c)
-{
-	uint eax, ebx, ecx, edx;
-
-	c->x86_max_cores = 1;
-	if (c->cpuid_level < 4)
-		return;
-
-	cpuid_count(4, 0, &eax, &ebx, &ecx, &edx);
-	if (eax & 0x1f)
-		c->x86_max_cores = (eax >> 26) + 1;
-}
 
 void cpu_detect_cache_sizes(cpuinfo_x86_s *c)
 {
@@ -101,8 +106,8 @@ void cpu_detect_cache_sizes(cpuinfo_x86_s *c)
 	c->x86_cache_size = l2size;
 }
 
-static void default_init(cpuinfo_x86_s *c)
-{
+static void
+default_init(cpuinfo_x86_s *c) {
 	cpu_detect_cache_sizes(c);
 }
 
@@ -173,11 +178,9 @@ void cpu_detect(cpuinfo_x86_s *c)
 	}
 }
 
-static void apply_forced_caps(cpuinfo_x86_s *c)
-{
-	int i;
-
-	for (i = 0; i < NCAPINTS + NBUGINTS; i++) {
+static void
+apply_forced_caps(cpuinfo_x86_s *c) {
+	for (int i = 0; i < NCAPINTS + NBUGINTS; i++) {
 		c->x86_capability[i] &= ~cpu_caps_cleared[i];
 		c->x86_capability[i] |= cpu_caps_set[i];
 	}

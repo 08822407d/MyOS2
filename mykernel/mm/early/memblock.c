@@ -488,6 +488,28 @@ memblock_alloc_range(phys_addr_t size, phys_addr_t align,
 }
 
 /**
+ * memblock_phys_alloc_range - allocate a memory block inside specified range
+ * @size: size of memory block to be allocated in bytes
+ * @align: alignment of the region and block's size
+ * @start: the lower bound of the memory region to allocate (physical address)
+ * @end: the upper bound of the memory region to allocate (physical address)
+ *
+ * Allocate @size bytes in the between @start and @end.
+ *
+ * Return: physical address of the allocated memory block on success,
+ * %0 on failure.
+ */
+phys_addr_t __init
+memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
+		phys_addr_t start, phys_addr_t end) {
+
+	// memblock_dbg("%s: %llu bytes align=0x%llx from=%pa max_addr=%pa %pS\n",
+	// 	__func__, (u64)size, (u64)align, &start, &end, (void *)_RET_IP_);
+	return memblock_alloc_range(size, align, start, end);
+}
+
+
+/**
  * memblock_alloc_internal - allocate boot memory block
  * @size: size of memory block to be allocated in bytes
  * @align: alignment of the region and block's size
@@ -589,6 +611,41 @@ myos_memblock_alloc_normal(size_t size, size_t align) {
 		memset(ptr, 0, size);
 
 	return ptr;
+}
+
+// int __init_memblock
+// memblock_search_pfn_nid(ulong pfn, ulong *start_pfn, ulong *end_pfn) {
+// 	mmblk_type_s *type = &memblock.memory;
+// 	int mid = memblock_search(type, PFN_PHYS(pfn));
+
+// 	if (mid == -1)
+// 		return NUMA_NO_NODE;
+
+// 	*start_pfn = PFN_DOWN(type->regions[mid].base);
+// 	*end_pfn = PFN_DOWN(type->regions[mid].base + type->regions[mid].size);
+
+// 	return memblock_get_region_node(&type->regions[mid]);
+// }
+
+/**
+ * memblock_is_region_memory - check if a region is a subset of memory
+ * @base: base of region to check
+ * @size: size of region to check
+ *
+ * Check if the region [@base, @base + @size) is a subset of a memory block.
+ *
+ * Return:
+ * 0 if false, non-zero if true
+ */
+bool __init_memblock
+memblock_is_region_memory(phys_addr_t base, phys_addr_t size) {
+	int idx = memblock_search(&memblock.memory, base);
+	phys_addr_t end = base + memblock_cap_size(base, &size);
+
+	if (idx == -1)
+		return false;
+	return (memblock.memory.regions[idx].base +
+		 memblock.memory.regions[idx].size) >= end;
 }
 
 __init_memblock void

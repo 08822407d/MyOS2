@@ -45,7 +45,7 @@ vm_fault_s myos_dump_pagetable(ulong address)
 	vmf.pte_ptr = pte_offset(vmf.pmd_entp, address);
 	if (pte_none(*vmf.pte_ptr))
 		goto finish;
-	virt_addr_t pg_vaddr = phys_to_virt(PTE_PFN_MASK & vmf.pte_ptr->val);
+	void *pg_vaddr = phys_to_virt(PTE_PFN_MASK & vmf.pte_ptr->val);
 	vmf.page = (virt_to_page(pg_vaddr));
 	
 finish:
@@ -149,6 +149,8 @@ do_kern_addr_fault(pt_regs_s *regs, ulong hw_err_code, ulong address) {
 	//  * fault we could otherwise deadlock:
 	//  */
 	// bad_area_nosemaphore(regs, hw_err_code, address);
+
+	while (1);
 }
 
 /*

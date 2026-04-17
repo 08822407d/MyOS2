@@ -11,6 +11,18 @@
 
 	#ifdef DEBUG
 
+		extern void
+		cr4_set_bits_irqsoff(ulong mask);
+
+		extern void
+		cr4_clear_bits_irqsoff(ulong mask);
+
+		extern void
+		cr4_set_bits(ulong mask);
+
+		extern void
+		cr4_clear_bits(ulong mask);
+
 		extern int
 		init_new_context(task_s *tsk, mm_s *mm);
 
@@ -19,6 +31,41 @@
 	#include "mmu_macro_arch.h"
 	
 	#if defined(ARCH_MMU_ARCH_DEFINATION) || !(DEBUG)
+
+		PREFIX_STATIC_INLINE
+		void
+		cr4_set_bits_irqsoff(ulong mask) {
+			cr4_update_irqsoff(mask, 0);
+		}
+
+		/* Clear in this cpu's CR4. */
+		PREFIX_STATIC_INLINE
+		void
+		cr4_clear_bits_irqsoff(ulong mask) {
+			cr4_update_irqsoff(0, mask);
+		}
+
+		/* Set in this cpu's CR4. */
+		PREFIX_STATIC_INLINE
+		void
+		cr4_set_bits(ulong mask) {
+			ulong flags;
+
+			local_irq_save(flags);
+			cr4_set_bits_irqsoff(mask);
+			local_irq_restore(flags);
+		}
+
+		/* Clear in this cpu's CR4. */
+		PREFIX_STATIC_INLINE
+		void
+		cr4_clear_bits(ulong mask) {
+			ulong flags;
+
+			local_irq_save(flags);
+			cr4_clear_bits_irqsoff(mask);
+			local_irq_restore(flags);
+		}
 
 		/*
 		 * Init a new mm.  Used on mm copies, like at fork()

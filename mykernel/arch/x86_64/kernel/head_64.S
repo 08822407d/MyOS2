@@ -248,13 +248,16 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
 	 * Preserve current value of EFER for comparison and to skip
 	 * EFER writes if no change was made (for TDX guest)
 	 */
-	movl    %eax,		%edx
+	movl	%eax,		%edx
 	btsl	$_EFER_SCE,	%eax	/* Enable System Call */
+	btl		$20,		%edi	/* No Execute supported? */
+	jnc		1f
+	btsl	$_EFER_NX,	%eax
 	/* Avoid writing EFER if no change was made (for TDX guest) */
-	cmpl	%edx,		%eax
+1:	cmpl	%edx,		%eax
 	je		1f
 	xor		%edx,		%edx
-	wrmsr				/* Make changes effective */
+	wrmsr						/* Make changes effective */
 1:
 	/* Setup cr0 */
 	movl	$CR0_STATE,	%eax

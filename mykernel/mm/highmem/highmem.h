@@ -108,7 +108,7 @@
 			// memcpy(to, from + offset, len);
 			// kunmap_local(from);
 
-			virt_addr_t page_vaddr = page_to_virt(page);
+			virt_addr_t page_vaddr = (virt_addr_t)page_to_virt(page);
 			memcpy(to, (void *)(page_vaddr + offset), len);
 		}
 
@@ -124,7 +124,7 @@
 			// flush_dcache_page(page);
 			// kunmap_local(to);
 
-			virt_addr_t page_vaddr = page_to_virt(page);
+			virt_addr_t page_vaddr = (virt_addr_t)page_to_virt(page);
 			memcpy((void *)(page_vaddr + offset), from, len);
 		}
 

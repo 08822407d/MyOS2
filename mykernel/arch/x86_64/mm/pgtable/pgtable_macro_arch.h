@@ -53,6 +53,10 @@
 	#define pud_none			pud_ent_is_none
 	#define pmd_none			pmd_ent_is_none
 
+	#define p4d_leaf			p4d_ent_is_leaf
+	#define pud_leaf			pud_ent_is_leaf
+	#define pmd_leaf			pmd_ent_is_leaf
+
 	#define p4d_bad				p4d_ent_is_bad
 	#define pud_bad				pud_ent_is_bad
 	#define pmd_bad				pmd_ent_is_bad
@@ -64,6 +68,10 @@
 	#define p4d_same			p4d_ents_same
 	#define pud_same			pud_ents_same
 	#define pmd_same			pmd_ents_same
+
+	#define p4d_page_paddr		p4de_pointed_page_paddr
+	#define pud_page_paddr		pude_pointed_page_paddr
+	#define pmd_page_paddr		pmde_pointed_page_paddr
 
 	#define p4d_page_vaddr		p4de_pointed_page_vaddr
 	#define pud_page_vaddr		pude_pointed_page_vaddr
@@ -85,8 +93,17 @@
 	#define pgd_present			p4d_present
 	#define pgd_same			p4d_same
 	#define pgd_page_vaddr		p4d_page_vaddr
+	#define pgd_page_paddr		p4d_page_paddr
 	#define pgd_val				p4d_val
 
+
+	#define p4d_pfn				p4de_pfn
+	#define pud_pfn				pude_pfn
+	#define pmd_pfn				pmde_pfn
+
+	#define pfn_p4d				pfn_p4de
+	#define pfn_pud				pfn_pude
+	#define pfn_pmd				pfn_pmde
 
 
 	#define pte_ERROR(e)	pr_err(						\

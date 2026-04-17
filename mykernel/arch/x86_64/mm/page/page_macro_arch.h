@@ -22,7 +22,7 @@
 	#define __pa_symbol(x) __phys_addr_symbol((ulong)(x))
 
 	#ifndef __va
-	#  define __va(x)	((ulong)(x) + PAGE_OFFSET)
+	#  define __va(x)	((void *)(ulong)(x) + PAGE_OFFSET)
 	#endif
 
 	// #define __boot_va(x)	__va(x)

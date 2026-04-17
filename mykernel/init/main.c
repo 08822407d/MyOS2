@@ -152,12 +152,12 @@ asmlinkage void __init start_kernel(void)
 	 */
 	sched_init();
 
-	/*
-	 * Allow workqueue creation and work item queueing/cancelling
-	 * early.  Work item execution depends on kthreads and starts after
-	 * workqueue_init().
-	 */
-	workqueue_init_early();
+	// /*
+	//  * Allow workqueue creation and work item queueing/cancelling
+	//  * early.  Work item execution depends on kthreads and starts after
+	//  * workqueue_init().
+	//  */
+	// workqueue_init_early();
 
 
 	init_IRQ();
@@ -324,7 +324,7 @@ static noinline void __init kernel_init_freeable(void)
 
 	// smp_prepare_cpus(setup_max_cpus);
 
-	workqueue_init();
+	// workqueue_init();
 
 	// rcu_init_tasks_generic();
 	do_pre_smp_initcalls();

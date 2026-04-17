@@ -127,7 +127,7 @@ vm_fault_t simple_filemap_fault(vm_fault_s *vmf)
 	page_s **pgcache_ptr = &mapping->page_array[index];
 	BUG_ON(*pgcache_ptr != NULL);
 	*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
-	virt_addr_t vaddr = page_to_virt(*pgcache_ptr);
+	virt_addr_t vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
 
 	file->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);
 	vmf->page = *pgcache_ptr;
@@ -218,11 +218,11 @@ simple_filemap_read(kiocb_s *iocb, iov_iter_s *iter)
 		page_s **pgcache_ptr = &(mapping->page_array[pgcache_pos >> PAGE_SHIFT]);
 		if (*pgcache_ptr == NULL) {
 			*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
-			vaddr = page_to_virt(*pgcache_ptr);
+			vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
 			filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &temp_pos);
 		}
 		BUG_ON(*pgcache_ptr == NULL);
-		vaddr = page_to_virt(*pgcache_ptr);
+		vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
 
 		loff_t inpage_start = max(pgcache_pos, start) % PAGE_SIZE;
 		loff_t len = 0;
@@ -324,11 +324,11 @@ generic_perform_write(kiocb_s *iocb, iov_iter_s *iter)
 		page_s **pgcache_ptr = &(mapping->page_array[pgcache_pos >> PAGE_SHIFT]);
 		if (*pgcache_ptr == NULL) {
 			*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
-			vaddr = page_to_virt(*pgcache_ptr);
+			vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
 			filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &temp_pos);
 		}
 		BUG_ON(*pgcache_ptr == NULL);
-		vaddr = page_to_virt(*pgcache_ptr);
+		vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
 
 		loff_t inpage_start = max(pgcache_pos, start) % PAGE_SIZE;
 		loff_t len = 0;
