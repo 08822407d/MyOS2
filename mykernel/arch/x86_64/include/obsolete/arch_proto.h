@@ -54,9 +54,6 @@ typedef struct pt_regs pt_regs_s;
 		uint8_t		thd_id;
 	};
 
-	/* init.c */
-	void myos_unmap_kernel_lowhalf();
-
 	/* i8259.c */
 	void init_i8259(void);
 	void i8259_unmask(const int);

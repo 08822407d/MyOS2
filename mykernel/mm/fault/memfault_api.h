@@ -49,4 +49,7 @@
 			pmd_t *pmdp, ulong addr, spinlock_t **ptlp);
 
 
+	// extern void cleanup_highmap(void);
+
+
 #endif /* _MEM_FAULT_API_H_ */

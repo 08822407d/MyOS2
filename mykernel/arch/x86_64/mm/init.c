@@ -159,13 +159,12 @@ void __init myos_early_map_pgt_buf_into_directmap(void) {
 
 	phys_start	= pgt_buf_start << PAGE_SHIFT;
 	phys_end	= pgt_buf_top   << PAGE_SHIFT;
-
 	/*
 	 * 这里只做地址换算。
 	 * 这时 pgt_buf 的 direct-map 还没建好，但 __va(phys) 作为目标 VA 计算是可以的。
 	 */
-	va		= (ulong)__va(phys_start);
-	vend	= (ulong)__va(phys_end - 1) + 1;
+	va			= (ulong)__va(phys_start);
+	vend		= (ulong)__va(phys_end - 1) + 1;
 
 	// /*
 	//  * 因为只有 1 张 early_pgtbuf_pud[] 和 1 张 early_pgtbuf_pmd[]，
@@ -186,26 +185,20 @@ void __init myos_early_map_pgt_buf_into_directmap(void) {
 	 */
 	early_pgd	= &early_top_pgt[pgd_index(va)];
 	init_pgd	= &init_top_pgt[pgd_index(va)];
-	p4d		= (p4d_t *)early_pgd;
-	// if (p4d_none(*p4d)) {
-		memset(early_pgtbuf_pud, 0, PAGE_SIZE);
-		p4d_populate(&init_mm, p4d, early_pgtbuf_pud);
-		pud_base = early_pgtbuf_pud;
-	// } else {
-	// 	pud_base = (pud_t *)p4d_page_vaddr(*p4d);
-	// }
+	p4d			= (p4d_t *)early_pgd;
+	memset(early_pgtbuf_pud, 0, PAGE_SIZE);
+	p4d_populate(&init_mm, p4d, early_pgtbuf_pud);
+	pud_base	= early_pgtbuf_pud;
+
 
 	/*
 	 * ---------- 第 2 步：确保 PUD entry -> PMD page ----------
 	 */
-	pud		= &pud_base[pud_index(va)];
-	// if (pud_none(*pud)) {
-		memset(early_pgtbuf_pmd, 0, PAGE_SIZE);
-		pud_populate(&init_mm, pud, early_pgtbuf_pmd);
-		pmd_base = early_pgtbuf_pmd;
-	// } else {
-	// 	pmd_base = (pmd_t *)pud_page_vaddr(*pud);
-	// }
+	pud			= &pud_base[pud_index(va)];
+	memset(early_pgtbuf_pmd, 0, PAGE_SIZE);
+	pud_populate(&init_mm, pud, early_pgtbuf_pmd);
+	pmd_base	= early_pgtbuf_pmd;
+
 
 	/*
 	 * ---------- 第 3 步：在 PMD 中填 2 MiB huge leaf ----------
@@ -213,10 +206,10 @@ void __init myos_early_map_pgt_buf_into_directmap(void) {
 	nr_pmd	= (phys_end - phys_start) / PMD_SIZE;
 	pa		= phys_start;
 	for (i = 0; i < nr_pmd; i++, pa += PMD_SIZE) {
-		ulong this_va = va + i * PMD_SIZE;
-		ulong pmd_slot = pmd_index(this_va);
-		pmd_t *pmd = &pmd_base[pmd_slot];
-		pmdval_t val = pa | pgprot_val(PAGE_KERNEL_LARGE);
+		ulong this_va	= va + i * PMD_SIZE;
+		ulong pmd_slot	= pmd_index(this_va);
+		pmd_t *pmd		= &pmd_base[pmd_slot];
+		pmdval_t val	= pa | pgprot_val(PAGE_KERNEL_LARGE);
 		set_pmd(pmd, __pmd(val));
 	}
 
@@ -266,37 +259,18 @@ extern void __init init_io_apic_mappings(void);
 
 
 static void __init
-probe_page_size_mask(void) {
+simple_probe_page_size_mask(void) {
 	/*
 	 * For pagealloc debugging, identity mapping will use small pages.
 	 * This will simplify cpa(), which otherwise needs to support splitting
 	 * large pages into small in interrupt context, etc.
 	 */
-	// if (boot_cpu_has(X86_FEATURE_PSE) && !debug_pagealloc_enabled())
 	if (boot_cpu_data.x86_capa_bits.PageSize_Ext)
 		page_size_mask |= 1 << PG_LEVEL_2M;
 	else
 		direct_gbpages = 0;
 
-	// /* Enable PSE if available */
-	// if (boot_cpu_data.x86_capa_bits.PageSize_Ext)
-	// 	cr4_set_bits_and_update_boot(X86_CR4_PSE);
-
-	// /* Enable PGE if available */
-	// __supported_pte_mask &= ~_PAGE_GLOBAL;
-	// if (boot_cpu_data.x86_capa_bits.PGE) {
-	// 	cr4_set_bits_and_update_boot(X86_CR4_PGE);
-	// 	__supported_pte_mask |= _PAGE_GLOBAL;
-	// }
-
-	// /* By the default is everything supported: */
-	// __default_kernel_pte_mask = __supported_pte_mask;
-	// /* Except when with PTI where the kernel is mostly non-Global: */
-	// if (cpu_feature_enabled(X86_FEATURE_PTI))
-	// 	__default_kernel_pte_mask &= ~_PAGE_GLOBAL;
-
 	/* Enable 1 GB linear kernel mappings if available: */
-	// if (direct_gbpages && boot_cpu_has(X86_FEATURE_GBPAGES)) {
 	if (direct_gbpages && boot_cpu_data.x86_capa_bits.Page_1GB) {
 		printk(KERN_INFO "Using GB pages for direct mapping\n");
 		page_size_mask |= 1 << PG_LEVEL_1G;
@@ -304,6 +278,7 @@ probe_page_size_mask(void) {
 		direct_gbpages = 0;
 	}
 }
+#define probe_page_size_mask simple_probe_page_size_mask
 
 
 static int __meminit
@@ -319,7 +294,6 @@ save_mr(struct map_range *mr,
 		mr[nr_range].page_size_mask = page_size_mask;
 		nr_range++;
 	}
-
 	return nr_range;
 }
 
@@ -331,9 +305,7 @@ static void __ref
 adjust_range_page_size_mask(
 	struct map_range *mr, int nr_range) {
 
-	int i;
-
-	for (i = 0; i < nr_range; i++) {
+	for (int i = 0; i < nr_range; i++) {
 		if ((page_size_mask & (1<<PG_LEVEL_2M)) &&
 			!(mr[i].page_size_mask & (1<<PG_LEVEL_2M))) {
 			ulong start = round_down(mr[i].start, PMD_SIZE);
@@ -372,8 +344,8 @@ static const char
 static int __meminit
 split_mem_range(struct map_range *mr,
 	int nr_range, ulong start, ulong end) {
-	ulong start_pfn, end_pfn, limit_pfn;
-	ulong pfn;
+
+	ulong start_pfn, end_pfn, limit_pfn, pfn;
 	int i;
 
 	limit_pfn = PFN_DOWN(end);
@@ -510,71 +482,7 @@ init_range_memory_mapping(ulong r_start, ulong r_end) {
 
 	return mapped_ram_size;
 }
-
-static ulong __init
-get_new_step_size(ulong step_size) {
-	/*
-	 * Initial mapped size is PMD_SIZE (2M).
-	 * We can not set step_size to be PUD_SIZE (1G) yet.
-	 * In worse case, when we cross the 1G boundary, and
-	 * PG_LEVEL_2M is not set, we will need 1+1+512 pages (2M + 8k)
-	 * to map 1G range with PTE. Hence we use one less than the
-	 * difference of page table level shifts.
-	 *
-	 * Don't need to worry about overflow in the top-down case, on 32bit,
-	 * when step_size is 0, round_down() returns 0 for start, and that
-	 * turns it into 0x100000000ULL.
-	 * In the bottom-up case, round_up(x, 0) returns 0 though too, which
-	 * needs to be taken into consideration by the code below.
-	 */
-	return step_size << (PMD_SHIFT - PAGE_SHIFT - 1);
-}
-
-
-/**
- * memory_map_bottom_up - Map [map_start, map_end) bottom up
- * @map_start: start address of the target memory range
- * @map_end: end address of the target memory range
- *
- * This function will setup direct mapping for memory range
- * [map_start, map_end) in bottom-up. Since we have limited the
- * bottom-up allocation above the kernel, the page tables will
- * be allocated just above the kernel and we map the memory
- * in [map_start, map_end) in bottom-up.
- */
-static void __init
-memory_map_bottom_up(ulong map_start, ulong map_end) {
-	ulong next, start;
-	ulong mapped_ram_size = 0;
-	/* step_size need to be small so pgt_buf from BRK could cover it */
-	ulong step_size = PMD_SIZE;
-
-	start = map_start;
-	min_pfn_mapped = start >> PAGE_SHIFT;
-
-	/*
-	 * We start from the bottom (@map_start) and go to the top (@map_end).
-	 * The memblock_find_in_range() gets us a block of RAM from the
-	 * end of RAM in [min_pfn_mapped, max_pfn_mapped) used as new pages
-	 * for page table.
-	 */
-	while (start < map_end) {
-		if (step_size && map_end - start > step_size) {
-			next = round_up(start + 1, step_size);
-			if (next > map_end)
-				next = map_end;
-		} else {
-			next = map_end;
-		}
-
-		mapped_ram_size += init_range_memory_mapping(start, next);
-		start = next;
-
-		if (mapped_ram_size >= step_size)
-			step_size = get_new_step_size(step_size);
-	}
-}
-
+#define memory_map_bottom_up	init_range_memory_mapping
 
 void __init init_mem_mapping(void)
 {
@@ -626,6 +534,17 @@ void __init init_mem_mapping(void)
 
 
 
+/*==========================================================================================*
+ *									set_memory.c codes										*
+ *==========================================================================================*/
+static ulong direct_pages_count[PG_LEVEL_NUM];
+void update_page_count(int level, ulong pages) {
+	/* Protect against CPA */
+	spin_lock(&pgd_lock);
+	direct_pages_count[level] += pages;
+	spin_unlock(&pgd_lock);
+}
+
 
 /*==========================================================================================*
  *										init_64.c codes										*
@@ -659,18 +578,6 @@ static __ref void
 
 	return ptr;
 }
-
-// static p4d_t
-// *fill_p4d(pgd_t *pgd, ulong vaddr) {
-// 	if (pgd_none(*pgd)) {
-// 		p4d_t *p4d = (p4d_t *)spp_getpage();
-// 		pgd_populate(&init_mm, pgd, p4d);
-// 		if (p4d != p4d_offset(pgd, 0))
-// 			printk(KERN_ERR "PAGETABLE BUG #00! %p <-> %p\n",
-// 					p4d, p4d_offset(pgd, 0));
-// 	}
-// 	return p4d_offset(pgd, vaddr);
-// }
 
 static pud_t
 *fill_pud(p4d_t *p4d, ulong vaddr) {
@@ -707,50 +614,14 @@ static pte_t
 	return pte_offset_kernel(pmd, vaddr);
 }
 
-/*
- * The head.S code sets up the kernel high mapping:
- *
- *   from __START_KERNEL_map to __START_KERNEL_map + size (== _end-_text)
- *
- * phys_base holds the negative offset to the kernel, which is added
- * to the compile time generated pmds. This results in invalid pmds up
- * to the point where we hit the physaddr 0 mapping.
- *
- * We limit the mappings to the region from _text to _brk_end.  _brk_end
- * is rounded up to the 2MB boundary. This catches the invalid pmds as
- * well, as they are located before _text:
- */
-void __init cleanup_highmap(void)
-{
-	// ulong vaddr = __START_KERNEL_map;
-	// ulong vaddr_end = __START_KERNEL_map + KERNEL_IMAGE_SIZE;
-	// ulong end = roundup((unsigned long)_brk_end, PMD_SIZE) - 1;
-	// pmd_t *pmd = level2_kernel_pgt;
-
-	// /*
-	//  * Native path, max_pfn_mapped is not set yet.
-	//  * Xen has valid max_pfn_mapped set in
-	//  *	arch/x86/xen/mmu.c:xen_setup_kernel_pagetable().
-	//  */
-	// if (max_pfn_mapped)
-	// 	vaddr_end = __START_KERNEL_map + (max_pfn_mapped << PAGE_SHIFT);
-
-	// for (; vaddr + PMD_SIZE - 1 < vaddr_end; pmd++, vaddr += PMD_SIZE) {
-	// 	if (pmd_none(*pmd))
-	// 		continue;
-	// 	if (vaddr < (unsigned long) _text || vaddr > end)
-	// 		set_pmd(pmd, __pmd(0));
-	// }
-}
 
 /*
  * Create PTE level page table mapping for physical addresses.
  * It returns the last physical address mapped.
  */
 static ulong __meminit
-phys_pte_init(pte_t *pte_page,
-		ulong paddr, ulong paddr_end,
-		pgprot_t prot, bool init) {
+phys_pte_init(pte_t *pte_page, ulong paddr,
+		ulong paddr_end, pgprot_t prot, bool init) {
 
 	ulong pages = 0, paddr_next;
 	ulong paddr_last = paddr_end;
@@ -762,15 +633,8 @@ phys_pte_init(pte_t *pte_page,
 
 	for (; i < PTRS_PER_PTE; i++, paddr = paddr_next, pte++) {
 		paddr_next = (paddr & PAGE_MASK) + PAGE_SIZE;
-		if (paddr >= paddr_end) {
-			// if (!after_bootmem &&
-			// 	!e820__mapped_any(paddr & PAGE_MASK,
-			// 		paddr_next, E820_TYPE_RAM) &&
-			// 	!e820__mapped_any(paddr & PAGE_MASK,
-			// 		paddr_next, E820_TYPE_ACPI))
-			// 	set_pte_init(pte, __pte(0), init);
+		if (paddr >= paddr_end)
 			continue;
-		}
 
 		/*
 		 * We will re-use the existing mapping.
@@ -791,7 +655,7 @@ phys_pte_init(pte_t *pte_page,
 		set_pte_init(pte, pfn_pte(paddr >> PAGE_SHIFT, prot), init);
 		paddr_last = (paddr & PAGE_MASK) + PAGE_SIZE;
 	}
-	// update_page_count(PG_LEVEL_4K, pages);
+	update_page_count(PG_LEVEL_4K, pages);
 	return paddr_last;
 }
 
@@ -815,15 +679,8 @@ phys_pmd_init(pmd_t *pmd_page, ulong paddr, ulong paddr_end,
 		pgprot_t new_prot = prot;
 
 		paddr_next = (paddr & PMD_MASK) + PMD_SIZE;
-		if (paddr >= paddr_end) {
-			// if (!after_bootmem &&
-			// 	!e820__mapped_any(paddr & PMD_MASK,
-			// 		paddr_next, E820_TYPE_RAM) &&
-			// 	!e820__mapped_any(paddr & PMD_MASK,
-			// 		paddr_next, E820_TYPE_ACPI))
-			// 	set_pmd_init(pmd, __pmd(0), init);
+		if (paddr >= paddr_end)
 			continue;
-		}
 
 		if (!pmd_none(*pmd)) {
 			if (!pmd_leaf(*pmd)) {
@@ -874,7 +731,7 @@ phys_pmd_init(pmd_t *pmd_page, ulong paddr, ulong paddr_end,
 		pmd_populate_kernel_init(&init_mm, pmd, pte, init);
 		spin_unlock(&init_mm.page_table_lock);
 	}
-	// update_page_count(PG_LEVEL_2M, pages);
+	update_page_count(PG_LEVEL_2M, pages);
 	return paddr_last;
 }
 
@@ -903,15 +760,8 @@ phys_pud_init(pud_t *pud_page, ulong paddr, ulong paddr_end,
 		paddr_next = (paddr & PUD_MASK) + PUD_SIZE;
 
 		// 超出映射范围的终止条件
-		if (paddr >= paddr_end) {
-			// if (!after_bootmem &&
-			// 	!e820__mapped_any(paddr & PUD_MASK,
-			// 		paddr_next, E820_TYPE_RAM) &&
-			// 	!e820__mapped_any(paddr & PUD_MASK,
-			// 		paddr_next, E820_TYPE_ACPI))
-			// 	set_pud_init(pud, __pud(0), init);
+		if (paddr >= paddr_end)
 			continue;
-		}
 
 		if (!pud_none(*pud)) {
 			if (!pud_leaf(*pud)) {
@@ -961,18 +811,14 @@ phys_pud_init(pud_t *pud_page, ulong paddr, ulong paddr_end,
 		pud_populate_init(&init_mm, pud, pmd, init);
 		spin_unlock(&init_mm.page_table_lock);
 	}
-	// update_page_count(PG_LEVEL_1G, pages);
+	update_page_count(PG_LEVEL_1G, pages);
 	return paddr_last;
 }
 
-static ulong __meminit
-phys_p4d_init(p4d_t *p4d_page, ulong paddr, ulong paddr_end,
-		ulong page_size_mask, pgprot_t prot, bool init) {
-
-	// if (!pgtable_l5_enabled())
-		return phys_pud_init((pud_t *) p4d_page, paddr,
-				paddr_end, page_size_mask, prot, init);
-}
+#define phys_p4d_init(p4d_page, paddr, paddr_end,					\
+				page_size_mask, prot, init)							\
+			phys_pud_init((pud_t *)(p4d_page), (paddr),				\
+					(paddr_end), (page_size_mask), (prot), (init))
 
 static ulong __meminit
 __kernel_physical_mapping_init(ulong paddr_start,
@@ -1028,38 +874,6 @@ pteval_t __supported_pte_mask __read_mostly = ~0;
 /* Bits allowed in normal kernel mappings: */
 pteval_t __default_kernel_pte_mask __read_mostly = ~0;
 
-/*
- * Create page table mapping for the physical memory for specific physical
- * addresses. Note that it can only be used to populate non-present entries.
- * The virtual and physical addresses have to be aligned on PMD level
- * down. It returns the last physical address mapped.
- */
-// static void __meminit
-// *__myos_kernel_physical_mapping_init(
-// 	size_t paddr_start, size_t paddr_end, ulong prot)
-// {
-// 	ulong pg_addr = PFN_ALIGN(paddr_start);
-// 	do
-// 	{
-// 		// map physical memory only to high-half of kernel mapping
-// 		ulong kv_addr = (ulong)phys_to_virt(pg_addr);
-
-// 		pgd_t *pgdp = pgd_offset(&init_mm, kv_addr);
-// 		while (pgdp == 0);
-// 		p4d_t *p4dp = p4d_offset(pgdp, kv_addr);
-// 		while (p4dp == 0);
-// 		pud_t *pudp = pud_offset(p4dp, kv_addr);
-// 		while (pudp == 0);
-// 		pmd_t *pmdp = pmd_offset(pudp, kv_addr);
-// 		while (pmdp == 0);
-// 		pte_t *ptep = pte_offset(pmdp, kv_addr);
-// 		*ptep = arch_make_pte(prot | _PAGE_PAT | pg_addr);
-
-// 		pg_addr += PAGE_SIZE;
-// 	} while (pg_addr < paddr_end);
-
-// 	return phys_to_virt(paddr_start);
-// }
 void __iomem
 *myos_ioremap(size_t paddr_start, ulong size)
 {
@@ -1097,9 +911,4 @@ void __init mem_init(void)
 	// 	kclist_add(&kcore_vsyscall, (void *)VSYSCALL_ADDR, PAGE_SIZE, KCORE_USER);
 
 	// preallocate_vmalloc_pages();
-}
-
-void myos_unmap_kernel_lowhalf()
-{
-	memset(init_top_pgt, 0, PAGE_SIZE / 2);
 }

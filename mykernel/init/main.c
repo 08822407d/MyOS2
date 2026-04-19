@@ -191,8 +191,6 @@ asmlinkage void __init start_kernel(void)
 
 	myos_init_percpu_intr();
 
-	myos_unmap_kernel_lowhalf();
-
 	rest_init();
 
 	prevent_tail_call_optimization();
