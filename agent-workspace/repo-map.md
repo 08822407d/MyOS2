@@ -3,8 +3,8 @@
 ```yaml
 task_id: bootstrap（非任务产出，由搭建方 claude-fable-5 本地扫描生成）
 date: 2026-09-01
-base_snapshot: master @ 63f0785c
-method: 目录树扫描＋逐目录源码行数统计＋关键脚本抽读；未逐行核对源码——各条目默认为 [INFERRED]（目录名→内容推断），标注 [VERIFIED] 的除外
+base_snapshot: time @ a039d980（本地最新开发版检出；master=63f0785c 是其祖先，落后 44 提交）
+method: 对本地 time 分支检出做目录树扫描＋逐目录源码行数统计＋关键脚本抽读；未逐行核对源码——各条目默认为 [INFERRED]（目录名→内容推断），标注 [VERIFIED] 的除外
 ```
 
 ## §1 一句话背景
@@ -23,7 +23,7 @@ method: 目录树扫描＋逐目录源码行数统计＋关键脚本抽读；未
 | user-guide/ | Build_Kernel、Installation、User-Application、Syscall-Table、kernel_flags | 入口文档 |
 | 根目录 | make_install.sh（总装脚本）、dbg-vmw.sh、dbg-qemu.sh.bak、bugs_record.md、todo.txt、changelog.md | — |
 
-## §3 mykernel/ 子系统细分（行数含头文件，快照实测）
+## §3 mykernel/ 子系统细分（行数含头文件，time @ a039d980 快照实测；master 上缺 cpu/ 等新目录）
 
 | 目录 | 行数 | 推断内容与备注 |
 |---|---|---|
@@ -50,9 +50,11 @@ method: 目录树扫描＋逐目录源码行数统计＋关键脚本抽读；未
 
 ## §4 分支情况（重要）
 
-默认分支＝**master**（第一波分析基线）。另有主题分支：libc、list、mmap、percpu、pid_ns、signal、slub、time、vma_list、workqueue、writeback——Owner 按子系统开分支工作，master 可能落后于某主题分支的最新进展。分析结论一律限定"master 快照"。提交信息几乎全为 "backup"，**git 历史不可用作演进依据**。
+**开发模式（Owner 口述，2026-09-01）**：两年来全部开发在本机进行；习惯是为每个机制/子系统/模块新建专门分支（但增改的代码并不限于该子系统的源码），基本达到要求后才合并回 master。因此**本机当前检出分支＝最新版本**。
 
-## §5 构建与调试工作流实况（抽读核实）
+当前状态：最新分支＝`time` @ a039d980（已同步 GitHub）；master（63f0785c）是它的祖先，落后 44 提交/324 文件（+13332/−5240），且没有 time 上新增的 mykernel/cpu/ 等内容 [VERIFIED git 实测]。**分析基线＝time 分支**，本地图即按 time 快照生成；agent-workspace/ 工作区只存在于 master。其余主题分支（libc、list、mmap、percpu、pid_ns、signal、slub、vma_list、workqueue、writeback）是既往工作轨迹，无需阅读。提交信息几乎全为 "backup"，**git 历史不可用作演进依据**。
+
+## §5 构建与调试工作流实况（在 time 快照上抽读核实；master 版本或略有出入）
 
 - 总装：根目录 make_install.sh → source scripts/ 下四个函数脚本 → `rm -rf build/*` 全量重建 → 内核/initramfs/引导器三件套 cmake 构建安装；含硬编码物理盘 by-id 路径（注释掉的 phys 安装）[VERIFIED]。
 - 内核构建：mykernel/CMakeLists.txt 用 `file(GLOB_RECURSE)` 收全部 .c/.S 再剔除 kbuild 文件 [VERIFIED]——目录即模块，无编译开关粒度。

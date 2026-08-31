@@ -16,7 +16,7 @@
 task_id: MYOS2-DR-0NN
 produced_by: <模型/产品名>（如 ChatGPT Pro / GPT-5.x）
 date: 2026-09-0X
-base_snapshot: master @ 63f0785c
+base_snapshot: 实际所读分支 @ commit（期望 time @ a039d980；降级读了 master 就如实写 master @ 63f0785c）
 inputs_read: [实际读过的仓库路径列表]
 status: draft | final
 open_questions: [未解决的问题，可为空]
@@ -49,6 +49,7 @@ lib.digit  lib.idr  lib.list  lib.printf  lib.string
 
 ## §4 事实纪律
 
-- 以 master @ 63f0785c 为分析基线；仓库另有多个主题分支（见 repo-map.md §4），你无需读它们，但下结论时不要断言"仓库中不存在 X"，只说"master 快照中未见 X"。
+- **分析基线＝分支 `time` @ a039d980（当前最新开发版）**。Owner 的开发模式：两年来全部开发在本机，按机制/子系统开专门分支（改动并不限于该子系统的源码），基本达标才合并回 master——所以 master（63f0785c）落后最新进展 44 个提交（324 文件），time 分支已同步到 GitHub。**读内核源码优先用 time 分支**；工作区文件（公约/地图/任务书）只在 master 上。若你的连接器读不到非默认分支，允许降级用 master 分析，但必须在每份产出的 base_snapshot 如实填写实际所读分支＋commit。
+- 下结论一律限定"所读快照中未见 X"，不断言"仓库中不存在 X"；其余历史主题分支（libc/mmap/slub 等，见 repo-map.md §4）无需阅读。
 - `bugs_record.md`、`todo.txt`、`changelog.md`、`documents/` 是历史材料，可引用但不可当作现状依据。
 - 不确定就写进 open_questions，禁止编造：拿不到的数据标 `not_measurable`，不要估一个数糊弄。

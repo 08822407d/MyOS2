@@ -7,7 +7,7 @@ created: 2026-09-01
 created_by: claude-fable-5（Mnemosyne 主导会话，代 Owner 搭建）
 status: bootstrap（紧急启用版；未来由 meta-agent 接管并可重组结构）
 task_series: MYOS2-DR-NNN（本目标项目专用序列，从 001 起编；先例：meta-agent 项目的 MA-DR 序列）
-base_snapshot: origin/master @ 63f0785c
+base_snapshot: 分析基线=分支 time @ a039d980（当前最新开发版）；工作区与产出写入=master（读写分离，见 conventions.md §4）
 ```
 
 ## 这是什么
@@ -38,7 +38,7 @@ agent-workspace/
 
 1. **产出皆证据、非规范**：results/ 里的一切是带出处的分析证据（S1 级），不是裁决过的权威结论；接管方可以重评、替代、重组，但不得改写原件——用新文件加 supersedes 标注。
 2. **来源可追**：每份产出带 YAML 头（任务号、模型、日期、读过的输入、置信度），正文中事实性断言标注 [VERIFIED]/[INFERRED]/[EXTERNAL]（见 conventions.md）。
-3. **快照锚定**：所有第一波分析基于 master @ 63f0785c；接管方据此判断结论时效。
+3. **快照锚定**：第一波分析基线为分支 time @ a039d980（最新开发版；连接器读不到时允许降级用 master，但实际所读快照必须写进产出 YAML 头）；接管方据此判断结论时效。
 4. **词汇表共享**：子系统/能力节点命名统一用 conventions.md §3 词汇表，各任务的机器可读产出（YAML/DOT）因此可以直接合并。
 5. **重组自由**：未来重新设计文件组织时，本目录可整体迁移或重构，唯一要求是保留 results/ 原件与其 MANIFEST 链条。
 

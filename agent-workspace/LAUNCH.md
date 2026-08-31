@@ -27,12 +27,17 @@
 ### 通用模板（NNN 换成任务号）
 
 ```text
-你将执行 MyOS2 内核分析任务 MYOS2-DR-NNN。通过 GitHub 连接器读取仓库 08822407d/MyOS2（master 分支）。
+你将执行 MyOS2 内核分析任务 MYOS2-DR-NNN。通过 GitHub 连接器读取仓库 08822407d/MyOS2。
+分支分工（重要）：工作区文件（公约/地图/任务书）在 master 分支的 agent-workspace/ 目录；而被分析的内核源码以 time 分支为准——那才是最新开发版，master 落后它 44 个提交。若你读不到 time 分支，允许退回 master 分析，但必须在每份产出的 base_snapshot 字段如实写明实际读的是哪个分支哪个 commit。
 第一步：读 agent-workspace/conventions.md（写入公约，必须遵守）和 agent-workspace/repo-map.md（仓库地图）。
 第二步：读你的任务书 agent-workspace/tasks/ 目录下以 MYOS2-DR-NNN 开头的文件，严格按其目标、交付物与边界执行。
-写入规则：只能在新分支 agent/MYOS2-DR-NNN 上、agent-workspace/results/MYOS2-DR-NNN/ 目录内新增文件，完成后向 master 开 PR；若无法写入仓库，就在对话里逐文件完整输出交付物，每个文件前注明目标路径。
-开始前用三句话复述：你的任务目标、你的唯一可写目录、你的交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+写入规则：只能在新分支 agent/MYOS2-DR-NNN 上（从 master 建）、agent-workspace/results/MYOS2-DR-NNN/ 目录内新增文件，完成后向 master 开 PR；若无法写入仓库，就在对话里逐文件完整输出交付物，每个文件前注明目标路径。
+开始前用四句话复述：你的任务目标、你分析用的源码分支、你的唯一可写目录、你的交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
 ```
+
+### 为什么读 time、写 master
+
+Owner 的开发都在专门分支上做、达标才合并 master，当前最新是 time 分支（已同步 GitHub）；分析要对着最新代码做才有意义。而 agent-workspace/ 只在 master 上（不打扰开发分支），产出 PR 也合入 master——results 目录是纯新增内容，将来 time 合并回 master 时不会冲突。
 
 ### 深度研究任务（006/007/009）附加一句
 
