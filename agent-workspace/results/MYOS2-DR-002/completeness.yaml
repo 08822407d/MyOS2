@@ -1,0 +1,1677 @@
+task_id: MYOS2-DR-002
+produced_by: GPT-5.6 Pro
+date: "2026-09-01"
+base_snapshot: "time @ a039d9803ade2a1613d620bda375e028530d5242"
+inputs_read:
+  - agent-workspace/conventions.md
+  - agent-workspace/repo-map.md
+  - agent-workspace/tasks/MYOS2-DR-002-subsystem-completeness.md
+  - mykernel/mm/
+  - mykernel/sched/
+  - mykernel/lock_IPC/
+  - mykernel/kactive/
+  - mykernel/time/
+  - mykernel/fs/
+  - mykernel/arch/x86_64/
+  - mykernel/arch/aarch64/
+  - mykernel/block/
+  - mykernel/device/
+  - mykernel/drivers/ata/
+  - mykernel/drivers/base/
+  - mykernel/drivers/char/
+  - mykernel/drivers/pci/
+  - mykernel/drivers/rtc/
+  - mykernel/init/
+  - mykernel/entry/
+  - mykernel/cpu/
+  - mykernel/namespace/
+  - mykernel/printk/
+  - mykernel/debug/
+  - mykernel/klib/
+  - mykernel/lib/
+  - myloader/uefi/
+  - myinitramfs/
+status: final
+open_questions:
+  - "本任务为静态源码盘点，未在该提交上执行完整编译、QEMU 启动或硬件回归。"
+  - "myloader/BOOTX64.EFI 为仓库内预构建文件，顶层 CMake 未重建它；二进制与所读 UEFI 源码是否完全对应未验证。"
+  - "外部磁盘镜像、GPT/FAT 内容未纳入读取，PID 1、/boot/sh 与根文件系统的实际集成状态未运行验证。"
+  - "通用 timer wheel 的到期执行入口在已读路径中未定位；是否存在于未纳入构建的路径仍待链接图或运行验证。"
+maturity_scale:
+  "0": empty_shell
+  "1": embryonic_or_compile_skeleton
+  "2": basic_path_present
+  "3": reasonably_complete_with_boundaries
+  "4": complete_with_concurrency_correctness
+status_vocabulary:
+  - implemented
+  - partial
+  - missing
+  - unknown
+risk_vocabulary:
+  - low
+  - medium
+  - high
+  - critical
+summary:
+  subsystem_count: 53
+  status_counts:
+    implemented: 5
+    partial: 43
+    missing: 5
+    unknown: 0
+  maturity_counts:
+    "0": 5
+    "1": 13
+    "2": 30
+    "3": 5
+    "4": 0
+  interpretation: "[INFERRED] 广覆盖的 Linux 风格教学内核；多条单机基本路径存在，但 SMP、生命周期、错误恢复和跨子系统集成普遍不完整。"
+subsystems:
+  - id: arch.x86_64
+    group: architecture_boot_core
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "x86-64 启动、入口、页表、APIC 和 AP trampoline 已有基本路径，SMP 上线与现代保护未闭合。"
+    evidence:
+      - mykernel/arch/x86_64/kernel/head64.c
+      - mykernel/arch/x86_64/kernel/setup.c
+      - mykernel/arch/x86_64/entry/entry_64.S
+      - mykernel/arch/x86_64/kernel/idt.c
+      - mykernel/arch/x86_64/kernel/apic/apic.c
+      - mykernel/arch/x86_64/smp/smpboot.c
+    implemented_capabilities:
+      - node: arch.x86_64.core_path
+        status: implemented
+        evidence:
+          - mykernel/arch/x86_64/kernel/head64.c
+          - mykernel/arch/x86_64/kernel/setup.c
+          - mykernel/arch/x86_64/entry/entry_64.S
+          - mykernel/arch/x86_64/kernel/idt.c
+          - mykernel/arch/x86_64/kernel/apic/apic.c
+        notes: "[VERIFIED mykernel/arch/x86_64/] 具备 64 位入口、临时及直接映射页表、E820/架构初始化、系统调用/异常/外部中断入口和 Local APIC/x2APIC。"
+      - node: arch.x86_64.ap_trampoline
+        status: implemented
+        evidence:
+          - mykernel/arch/x86_64/kernel/myos_APboot.S
+          - mykernel/arch/x86_64/smp/smpboot.c
+        notes: "[VERIFIED mykernel/arch/x86_64/kernel/myos_APboot.S] 存在 16→32→64 位 AP trampoline 与 INIT/SIPI 启动代码。"
+    obvious_missing:
+      - node: arch.x86_64.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/arch/x86_64/smp/smpboot.c
+          - mykernel/arch/x86_64/kernel/cpu/common.c
+        notes: "[INFERRED] AP 上线握手与加入调度、动态 IRQ vector/descriptor、完整 FPU 初始化、KASLR/KPTI 和漏洞缓解未形成。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/arch/x86_64/kernel/myos_APboot.S
+          - mykernel/arch/x86_64/entry/common.c
+        notes: "[VERIFIED mykernel/arch/x86_64/] AP 进入 64 位后原地自旋；未知系统调用也无限循环。"
+
+  - id: arch.aarch64
+    group: architecture_boot_core
+    status: missing
+    maturity: 0
+    risk_level: high
+    summary: "只有空构建占位。"
+    evidence:
+      - mykernel/arch/aarch64/CMakeLists.txt
+    implemented_capabilities: []
+    obvious_missing:
+      - node: arch.aarch64.core_path
+        status: missing
+        evidence:
+          - mykernel/arch/aarch64/CMakeLists.txt
+        notes: "[VERIFIED mykernel/arch/aarch64/CMakeLists.txt] 所读快照中未见启动入口、异常向量、MMU、定时器、SMP、系统调用或上下文切换主体。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/arch/aarch64/CMakeLists.txt
+        notes: "[VERIFIED mykernel/arch/aarch64/CMakeLists.txt] 当前不能形成 AArch64 可启动目标。"
+
+  - id: boot.uefi
+    group: architecture_boot_core
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "可装载 ELF64 内核并构造 Multiboot2 信息，但 ExitBootServices 顺序和可复现构建存在关键缺口。"
+    evidence:
+      - myloader/uefi/bootloader.c
+      - myloader/uefi/ElfLib/Elf64Lib.c
+      - myloader/uefi/multiboot2_utils.c
+      - myloader/CMakeLists.txt
+    implemented_capabilities:
+      - node: boot.uefi.kernel_load_and_handoff
+        status: implemented
+        evidence:
+          - myloader/uefi/bootloader.c
+          - myloader/uefi/ElfLib/Elf64Lib.c
+        notes: "[VERIFIED myloader/uefi/] 可选择 GOP 模式、读取/解析/装载 ELF64 内核并跳转入口。"
+      - node: boot.uefi.multiboot2_tags
+        status: implemented
+        evidence:
+          - myloader/uefi/bootloader.c
+          - myloader/uefi/multiboot2_utils.c
+        notes: "[VERIFIED myloader/uefi/bootloader.c] 构造 framebuffer、E820、ACPI 和 CPU topology 标签。"
+    obvious_missing:
+      - node: boot.uefi.obvious_missing
+        status: missing
+        evidence:
+          - myloader/CMakeLists.txt
+          - myloader/uefi/bootloader.c
+        notes: "[INFERRED] 缺少顶层源码重建闭环、initrd、配置/回退菜单、Secure Boot 和可靠 ExitBootServices 重试。"
+    risks:
+      - severity: critical
+        evidence:
+          - myloader/uefi/bootloader.c
+        notes: "[VERIFIED myloader/uefi/bootloader.c] 内存映射缓冲在 ExitBootServices 前被释放，返回值未处理，且退出后仍调用 Boot Services/协议。"
+      - severity: high
+        evidence:
+          - myloader/CMakeLists.txt
+        notes: "[VERIFIED myloader/CMakeLists.txt] 顶层工程只安装预构建 BOOTX64.EFI。"
+
+  - id: user.initramfs
+    group: architecture_boot_core
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "有轻量 libc、PID 1 和基础 shell，但未形成内核可复现解包启动闭环。"
+    evidence:
+      - myinitramfs/CMakeLists.txt
+      - myinitramfs/myinit/initd.c
+      - myinitramfs/myshell/myshell.c
+      - myinitramfs/mylib/myglibc/syscall/syscall.c
+      - mykernel/init/do_mounts.c
+    implemented_capabilities:
+      - node: user.initramfs.pid1_and_shell
+        status: implemented
+        evidence:
+          - myinitramfs/myinit/initd.c
+          - myinitramfs/myshell/myshell.c
+        notes: "[VERIFIED myinitramfs/] PID 1 重定向 console、fork/exec /boot/sh；shell 提供基础文件与重启命令。"
+      - node: user.initramfs.libc_syscall_bridge
+        status: implemented
+        evidence:
+          - myinitramfs/mylib/myglibc/syscall/syscall.c
+        notes: "[VERIFIED myinitramfs/mylib/myglibc/syscall/syscall.c] 提供 open/read/write/fork/execve 等 x86-64 syscall 包装。"
+    obvious_missing:
+      - node: user.initramfs.obvious_missing
+        status: missing
+        evidence:
+          - myinitramfs/CMakeLists.txt
+          - mykernel/init/do_mounts.c
+        notes: "[INFERRED] 缺少 cpio 打包/内核解包集成、子进程回收、作业控制、管道/重定向、稳健 errno 和可移植构建。"
+    risks:
+      - severity: high
+        evidence:
+          - myinitramfs/CMakeLists.txt
+          - myinitramfs/mylib/myglibc/syscall/syscall.c
+          - myinitramfs/myshell/myshell.c
+        notes: "[VERIFIED myinitramfs/] 构建硬编码本机 musl；syscall 包装不设置 errno；shell 输入无边界保护并泄漏分配。"
+
+  - id: entry
+    group: architecture_boot_core
+    status: partial
+    maturity: 1
+    risk_level: high
+    summary: "x86 syscall 与用户返回骨架存在，通用 work loop 未形成。"
+    evidence:
+      - mykernel/entry/common.c
+      - mykernel/arch/x86_64/entry/common.c
+      - mykernel/arch/x86_64/entry/entry_64.S
+    implemented_capabilities:
+      - node: entry.syscall_and_return
+        status: implemented
+        evidence:
+          - mykernel/arch/x86_64/entry/entry_64.S
+          - mykernel/arch/x86_64/entry/common.c
+          - mykernel/entry/common.c
+        notes: "[VERIFIED mykernel/entry/; mykernel/arch/x86_64/entry/] 有 syscall 汇编入口、编号分派、SYSRET 安全判断和返回前信号/重启调用。"
+    obvious_missing:
+      - node: entry.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/entry/common.c
+        notes: "[INFERRED] 缺少完整 TIF work loop、返回前重调度、notify/audit/seccomp 和 RCU/context tracking。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/entry/common.c
+        notes: "[VERIFIED mykernel/entry/common.c] work flag 检查被注释，返回路径无条件进入信号处理。"
+
+  - id: cpu
+    group: architecture_boot_core
+    status: partial
+    maturity: 2
+    risk_level: medium
+    summary: "BSP CPUID 与 hypervisor 识别可用，厂商、FPU、缓解和 AP 逐核初始化不足。"
+    evidence:
+      - mykernel/cpu/hypervisor.c
+      - mykernel/arch/x86_64/kernel/cpu/common.c
+    implemented_capabilities:
+      - node: cpu.bsp_identification
+        status: implemented
+        evidence:
+          - mykernel/arch/x86_64/kernel/cpu/common.c
+          - mykernel/cpu/hypervisor.c
+        notes: "[VERIFIED mykernel/cpu/hypervisor.c; mykernel/arch/x86_64/kernel/cpu/common.c] 可读取 CPUID 特性、地址位宽、缓存/型号并识别 VMware/KVM。"
+    obvious_missing:
+      - node: cpu.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/arch/x86_64/kernel/cpu/common.c
+        notes: "[INFERRED] 缺少厂商专用初始化、完整 FPU、漏洞缓解、CPU hotplug 和 AP 逐核识别。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/arch/x86_64/kernel/cpu/common.c
+        notes: "[VERIFIED mykernel/arch/x86_64/kernel/cpu/common.c] 多项 vendor/FPU/mitigation 初始化被关闭，状态主要代表 BSP。"
+
+  - id: init
+    group: architecture_boot_core
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "启动顺序和 PID 1/kthreadd 路径存在，多个关键后期初始化被跳过。"
+    evidence:
+      - mykernel/init/main.c
+      - mykernel/init/do_mounts.c
+    implemented_capabilities:
+      - node: init.kernel_boot_sequence
+        status: implemented
+        evidence:
+          - mykernel/init/main.c
+          - mykernel/init/do_mounts.c
+        notes: "[VERIFIED mykernel/init/] 可初始化内存、调度、IRQ/HPET、VFS/驱动，创建 PID 1/kthreadd 并尝试切根与 exec。"
+    obvious_missing:
+      - node: init.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/init/main.c
+          - mykernel/init/do_mounts.c
+        notes: "[INFERRED] 缺少正式 SMP 完成链、常规 workqueue 初始化、通用 PCI 扫描、initramfs 解包、init section 回收和多级 init fallback。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/init/main.c
+          - mykernel/init/do_mounts.c
+        notes: "[VERIFIED mykernel/init/] 关键初始化被注释，存储或 init 失败路径多为原地自旋。"
+
+  - id: namespace
+    group: architecture_boot_core
+    status: partial
+    maturity: 1
+    risk_level: medium
+    summary: "nsproxy 与 PID namespace 骨架存在，其余隔离域未形成。"
+    evidence:
+      - mykernel/namespace/nsproxy.c
+      - mykernel/sched/task/pid_namespace.c
+    implemented_capabilities:
+      - node: namespace.pid_and_nsproxy
+        status: implemented
+        evidence:
+          - mykernel/namespace/nsproxy.c
+          - mykernel/sched/task/pid_namespace.c
+        notes: "[VERIFIED mykernel/namespace/nsproxy.c; mykernel/sched/task/pid_namespace.c] 有 nsproxy 复制/释放骨架和 PID namespace 层级/引用。"
+    obvious_missing:
+      - node: namespace.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/namespace/nsproxy.c
+        notes: "[INFERRED] 未形成 mount、UTS、IPC、network、cgroup、time 和 user namespace 隔离语义。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/namespace/nsproxy.c
+        notes: "[VERIFIED mykernel/namespace/nsproxy.c] 共享快速路径、引用保护与能力校验多被注释。"
+
+  - id: printk
+    group: architecture_boot_core
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "日志缓冲和 console 输出可用，并发序列化与读取面不足。"
+    evidence:
+      - mykernel/printk/printk.c
+    implemented_capabilities:
+      - node: printk.ring_and_console
+        status: implemented
+        evidence:
+          - mykernel/printk/printk.c
+        notes: "[VERIFIED mykernel/printk/printk.c] 有固定环形缓冲、级别/时间戳、console 注册、framebuffer 分发和 printk/vprintk。"
+    obvious_missing:
+      - node: printk.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/printk/printk.c
+        notes: "[INFERRED] 缺少可靠 console/logbuf 锁、完整递归保护、syslog 读取、持久日志和 SMP 序列化。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/printk/printk.c
+        notes: "[VERIFIED mykernel/printk/printk.c] 主要锁和级别过滤被注释；并发写可能破坏索引或交错，unregister_console 无有效返回。"
+
+  - id: debug
+    group: architecture_boot_core
+    status: partial
+    maturity: 1
+    risk_level: medium
+    summary: "panic 可输出并停止当前 CPU，系统级崩溃处理未形成。"
+    evidence:
+      - mykernel/debug/panic.c
+    implemented_capabilities:
+      - node: debug.panic_local_stop
+        status: implemented
+        evidence:
+          - mykernel/debug/panic.c
+        notes: "[VERIFIED mykernel/debug/panic.c] panic 可关闭本地中断/抢占、输出终止信息并进入不返回路径。"
+    obvious_missing:
+      - node: debug.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/debug/panic.c
+        notes: "[INFERRED] 缺少多 CPU 停机、栈回溯、oops/taint、kmsg dump、crash kernel 和重启策略。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/debug/panic.c
+        notes: "[VERIFIED mykernel/debug/panic.c] 其他 CPU 不会被停下。"
+
+  - id: klib
+    group: architecture_boot_core
+    status: partial
+    maturity: 2
+    risk_level: low
+    summary: "提供基本位图、字体和早期输出辅助。"
+    evidence:
+      - mykernel/klib/bitmap.c
+      - mykernel/klib/font.c
+      - mykernel/klib/printk.c
+    implemented_capabilities:
+      - node: klib.bitmap_font_early_print
+        status: implemented
+        evidence:
+          - mykernel/klib/bitmap.c
+          - mykernel/klib/font.c
+          - mykernel/klib/printk.c
+        notes: "[VERIFIED mykernel/klib/] 有基本位图操作、字体数据和早期彩色输出。"
+    obvious_missing:
+      - node: klib.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/klib/bitmap.c
+        notes: "[INFERRED] 缺少边界检查、并发语义和动态位图管理。"
+    risks:
+      - severity: low
+        evidence:
+          - mykernel/klib/bitmap.c
+        notes: "[VERIFIED mykernel/klib/bitmap.c] 位索引无范围校验。"
+
+  - id: mm.early
+    group: memory
+    status: implemented
+    maturity: 3
+    risk_level: medium
+    summary: "memblock 式启动内存登记、保留、分配与移交基本完整。"
+    evidence:
+      - mykernel/mm/early/earlymem_api.h
+      - mykernel/mm/early/memblock.c
+    implemented_capabilities:
+      - node: mm.early.memblock_lifecycle
+        status: implemented
+        evidence:
+          - mykernel/mm/early/earlymem_api.h
+          - mykernel/mm/early/memblock.c
+        notes: "[VERIFIED mykernel/mm/early/] 实现区域 add/reserve/trim、对齐分配、DMA/DMA32 范围处理和向页分配器移交。"
+    obvious_missing:
+      - node: mm.early.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/mm/early/memblock.c
+        notes: "[INFERRED] 未见 NUMA-aware early allocation、复杂固件冲突解析和热插拔早期模型。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/mm/early/memblock.c
+        notes: "[VERIFIED mykernel/mm/early/memblock.c] 结构容量与启动期假设较静态，异常固件图容错有限。"
+
+  - id: mm.page_alloc
+    group: memory
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "zoned buddy 基本路径存在，回收、per-CPU 和高阶边界不足。"
+    evidence:
+      - mykernel/mm/page_alloc/page_alloc_api.h
+      - mykernel/mm/page_alloc/buddy.c
+      - mykernel/mm/page_alloc/zone.c
+    implemented_capabilities:
+      - node: mm.page_alloc.zoned_buddy
+        status: implemented
+        evidence:
+          - mykernel/mm/page_alloc/buddy.c
+          - mykernel/mm/page_alloc/zone.c
+        notes: "[VERIFIED mykernel/mm/page_alloc/] 有 DMA/DMA32/Normal zone、buddy 分配/释放/合并、高阶页与 folio/compound page 基础。"
+    obvious_missing:
+      - node: mm.page_alloc.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/mm/page_alloc/buddy.c
+          - mykernel/mm/page_alloc/zone.c
+        notes: "[INFERRED] 缺少 reclaim、OOM、per-CPU page lists、compaction、NUMA、热插拔和 huge page。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/mm/page_alloc/buddy.c
+        notes: "[VERIFIED mykernel/mm/page_alloc/buddy.c] 分配侧链表锁/水位/回收不完整，高阶页清零指针计算存在可疑路径。"
+
+  - id: mm.kmalloc
+    group: memory
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "SLUB/cache/kmalloc 主路径存在，锁和 slab 回收边界危险。"
+    evidence:
+      - mykernel/mm/kmalloc/slub.c
+      - mykernel/mm/kmalloc/slab_common.c
+      - mykernel/mm/kmalloc/kmalloc_api.h
+    implemented_capabilities:
+      - node: mm.kmalloc.slub_and_size_classes
+        status: implemented
+        evidence:
+          - mykernel/mm/kmalloc/slub.c
+          - mykernel/mm/kmalloc/slab_common.c
+          - mykernel/mm/kmalloc/kmalloc_api.h
+        notes: "[VERIFIED mykernel/mm/kmalloc/] 有 kmalloc 尺寸类、对象 cache、partial/full 链表和大对象转页分配。"
+    obvious_missing:
+      - node: mm.kmalloc.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/mm/kmalloc/slub.c
+        notes: "[INFERRED] 缺少 per-CPU fastpath、cache destroy/shrink、非法释放检测、poison/redzone 和完整 hardening。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/mm/kmalloc/slub.c
+          - mykernel/mm/kmalloc/slab_common.c
+        notes: "[VERIFIED mykernel/mm/kmalloc/] 全局 cache 锁被注释；状态在解锁后检查，可能释放仍含对象的 slab。"
+
+  - id: mm.vm_map
+    group: memory
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "VMA 与 mmap/munmap/brk 基本路径存在，gap 搜索含确定性代码风险。"
+    evidence:
+      - mykernel/mm/vm_map/mmap.c
+      - mykernel/mm/vm_map/vm_map_api.h
+    implemented_capabilities:
+      - node: mm.vm_map.vma_and_syscalls
+        status: implemented
+        evidence:
+          - mykernel/mm/vm_map/mmap.c
+          - mykernel/mm/vm_map/vm_map_api.h
+        notes: "[VERIFIED mykernel/mm/vm_map/] 有 VMA 列表、合并/拆分、匿名/文件 mmap、munmap、brk 和 gap 搜索。"
+    obvious_missing:
+      - node: mm.vm_map.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/mm/vm_map/mmap.c
+        notes: "[INFERRED] 缺少平衡索引、mprotect/mremap、完整锁/记账、ASLR 和共享映射一致性。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/mm/vm_map/mmap.c
+        notes: "[VERIFIED mykernel/mm/vm_map/mmap.c] gap 搜索存在空 VMA 解引用和赋值代替比较。"
+
+  - id: mm.fault
+    group: memory
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "匿名、文件只读和私有 COW 缺页可见，共享写与高级 VM 语义缺失。"
+    evidence:
+      - mykernel/mm/fault/fault.c
+      - mykernel/mm/fault/memfault_api.h
+    implemented_capabilities:
+      - node: mm.fault.anon_file_cow
+        status: implemented
+        evidence:
+          - mykernel/mm/fault/fault.c
+          - mykernel/mm/fault/memfault_api.h
+        notes: "[VERIFIED mykernel/mm/fault/] 有多级页表分配、匿名缺页、文件只读缺页、私有 COW 和 fork 页表复制。"
+    obvious_missing:
+      - node: mm.fault.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/mm/fault/fault.c
+        notes: "[INFERRED] 缺少 swap、huge page、共享可写 fault、成熟 rmap/refcount 和并发 TLB shootdown。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/mm/fault/fault.c
+        notes: "[VERIFIED mykernel/mm/fault/fault.c] 共享可写及若干不支持路径直接无限循环。"
+
+  - id: mm.highmem
+    group: memory
+    status: partial
+    maturity: 1
+    risk_level: medium
+    summary: "仅有直接映射辅助，多项页操作为空。"
+    evidence:
+      - mykernel/mm/highmem/highmem.c
+      - mykernel/mm/highmem/highmem.h
+    implemented_capabilities:
+      - node: mm.highmem.direct_map_copy
+        status: implemented
+        evidence:
+          - mykernel/mm/highmem/highmem.c
+        notes: "[VERIFIED mykernel/mm/highmem/highmem.c] 直接映射条件下有页间复制辅助。"
+    obvious_missing:
+      - node: mm.highmem.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/mm/highmem/highmem.c
+          - mykernel/mm/highmem/highmem.h
+        notes: "[INFERRED] 未形成 kmap/kunmap、临时映射槽和真正高端内存管理。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/mm/highmem/highmem.c
+        notes: "[VERIFIED mykernel/mm/highmem/highmem.c] memcpy_page/memset_page/memzero_page 等公开辅助为空操作。"
+
+  - id: mm.misc
+    group: memory
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "聚合 mm 初始化、ioremap、GUP 和 per-CPU 基本实现。"
+    evidence:
+      - mykernel/mm/misc/mm_misc_api.h
+      - mykernel/mm/misc/mm_init.c
+      - mykernel/mm/misc/gup.c
+      - mykernel/mm/misc/percpu.c
+    implemented_capabilities:
+      - node: mm.misc.mm_init_ioremap_gup_percpu
+        status: implemented
+        evidence:
+          - mykernel/mm/misc/mm_init.c
+          - mykernel/mm/misc/gup.c
+          - mykernel/mm/misc/percpu.c
+        notes: "[VERIFIED mykernel/mm/misc/] 有 init_mm、内存总初始化、ioremap、简化 GUP、per-CPU 区和 mm 生命周期骨架。"
+    obvious_missing:
+      - node: mm.misc.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/mm/misc/gup.c
+          - mykernel/mm/misc/mm_init.c
+        notes: "[INFERRED] 缺少成熟 NUMA、长期 pin 记账、MMU notifier、热插拔和完整 mm teardown。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/mm/misc/gup.c
+        notes: "[VERIFIED mykernel/mm/misc/gup.c] 简化 GUP 对并发解除映射和退出期保护不足。"
+
+  - id: sched.task
+    group: scheduling
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "任务、PID、PID namespace 和唤醒骨架可用。"
+    evidence:
+      - mykernel/sched/task/task_api.h
+      - mykernel/sched/task/task.c
+      - mykernel/sched/task/pid.c
+      - mykernel/sched/task/pid_namespace.c
+    implemented_capabilities:
+      - node: sched.task.task_pid_wakeup
+        status: implemented
+        evidence:
+          - mykernel/sched/task/task.c
+          - mykernel/sched/task/pid.c
+          - mykernel/sched/task/pid_namespace.c
+        notes: "[VERIFIED mykernel/sched/task/] 有 init_task、PID 分配/查找、PID namespace、idle/new task 和唤醒接口。"
+    obvious_missing:
+      - node: sched.task.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/sched/task/task.c
+          - mykernel/sched/task/pid.c
+        notes: "[INFERRED] 缺少完整进程组/session、cgroup、CPU affinity、SMP 放置和任务统计。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/sched/task/pid.c
+        notes: "[VERIFIED mykernel/sched/task/pid.c] PID/任务生命周期依赖尚未闭合的调度与 RCU/锁语义。"
+
+  - id: sched.forkexec
+    group: scheduling
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "fork/exec/exit 主体存在，wait、mm 回收和线程组语义缺失。"
+    evidence:
+      - mykernel/sched/forkexec/fork.c
+      - mykernel/sched/forkexec/exec.c
+      - mykernel/sched/forkexec/exit.c
+    implemented_capabilities:
+      - node: sched.forkexec.fork_clone_exec_exit
+        status: implemented
+        evidence:
+          - mykernel/sched/forkexec/fork.c
+          - mykernel/sched/forkexec/exec.c
+          - mykernel/sched/forkexec/exit.c
+        notes: "[VERIFIED mykernel/sched/forkexec/] 可复制地址空间/文件/命名空间，构造 exec 参数栈并执行基础退出资源处理。"
+    obvious_missing:
+      - node: sched.forkexec.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/sched/forkexec/exit.c
+          - mykernel/sched/forkexec/exec.c
+        notes: "[INFERRED] 缺少 wait4、mm 回收、线程组退出/de-thread、exec 凭据转换和 zombie 回收。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/sched/forkexec/exit.c
+          - mykernel/sched/forkexec/fork.c
+        notes: "[VERIFIED mykernel/sched/forkexec/] wait4 为空、exit 不释放 mm、sighand 复制关键赋值被注释，并有重复 fput/硬自旋路径。"
+
+  - id: sched.runqueue
+    group: scheduling
+    status: partial
+    maturity: 1
+    risk_level: high
+    summary: "runqueue 结构存在，有效策略操作很少。"
+    evidence:
+      - mykernel/sched/runqueue/runqueue.h
+      - mykernel/sched/runqueue/runqueue.c
+    implemented_capabilities:
+      - node: sched.runqueue.structures
+        status: implemented
+        evidence:
+          - mykernel/sched/runqueue/runqueue.h
+        notes: "[VERIFIED mykernel/sched/runqueue/runqueue.h] 有 runqueue、优先级和队列辅助结构/宏。"
+    obvious_missing:
+      - node: sched.runqueue.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/sched/runqueue/runqueue.c
+        notes: "[INFERRED] 缺少有效 nice/weight 调整、通用 enqueue/dequeue、负载跟踪和迁移。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/sched/runqueue/runqueue.c
+        notes: "[VERIFIED mykernel/sched/runqueue/runqueue.c] set_user_nice 的有效逻辑全部注释。"
+
+  - id: sched.scheduler
+    group: scheduling
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "单 BSP 调度和上下文切换可见，SMP runqueue 语义未形成。"
+    evidence:
+      - mykernel/sched/scheduler/scheduler_core.c
+      - mykernel/sched/scheduler/myos_rt.c
+      - mykernel/sched/scheduler/scheduler_api.h
+    implemented_capabilities:
+      - node: sched.scheduler.schedule_context_switch
+        status: implemented
+        evidence:
+          - mykernel/sched/scheduler/scheduler_core.c
+          - mykernel/sched/scheduler/myos_rt.c
+        notes: "[VERIFIED mykernel/sched/scheduler/] 有 schedule/__schedule、抢占入口、架构上下文切换、idle 和 time_slice/vruntime 轮转选择器。"
+    obvious_missing:
+      - node: sched.scheduler.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/sched/scheduler/scheduler_core.c
+        notes: "[INFERRED] 缺少 SMP runqueue 锁、reschedule IPI、负载均衡、迁移同步和完整调度类层次。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/sched/scheduler/scheduler_core.c
+        notes: "[VERIFIED mykernel/sched/scheduler/scheduler_core.c] 多个 enqueue/dequeue/wakeup 分支不完整，任务主要固定 CPU0。"
+
+  - id: sched.misc
+    group: scheduling
+    status: partial
+    maturity: 2
+    risk_level: medium
+    summary: "fs_struct、idle 与线程辅助存在。"
+    evidence:
+      - mykernel/sched/misc/sched_misc_api.h
+      - mykernel/sched/misc/fs_struct.c
+      - mykernel/sched/misc/idle.c
+    implemented_capabilities:
+      - node: sched.misc.fs_idle_helpers
+        status: implemented
+        evidence:
+          - mykernel/sched/misc/fs_struct.c
+          - mykernel/sched/misc/idle.c
+        notes: "[VERIFIED mykernel/sched/misc/] 有 fs root/pwd 复制释放、idle 线程和线程辅助。"
+    obvious_missing:
+      - node: sched.misc.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/sched/misc/idle.c
+          - mykernel/sched/misc/fs_struct.c
+        notes: "[INFERRED] 缺少 idle governor、CPU hotplug 协调和成熟 fs_struct 并发引用。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/sched/misc/fs_struct.c
+        notes: "[VERIFIED mykernel/sched/misc/fs_struct.c] 正确性依赖尚未成熟的 VFS 引用与 SMP 调度。"
+
+  - id: lock.atomic
+    group: locking_ipc_async
+    status: implemented
+    maturity: 3
+    risk_level: medium
+    summary: "x86 原子操作与 refcount 基础较完整。"
+    evidence:
+      - mykernel/lock_IPC/atomic/atomic_api.h
+      - mykernel/lock_IPC/atomic/atomic.h
+      - mykernel/arch/x86_64/include/asm/atomic.h
+    implemented_capabilities:
+      - node: lock.atomic.atomic_cmpxchg_refcount
+        status: implemented
+        evidence:
+          - mykernel/lock_IPC/atomic/atomic_api.h
+          - mykernel/lock_IPC/atomic/atomic.h
+          - mykernel/arch/x86_64/include/asm/atomic.h
+        notes: "[VERIFIED mykernel/lock_IPC/atomic/; mykernel/arch/x86_64/include/asm/atomic.h] 提供 32/64 位原子、cmpxchg/xchg、位操作、atomic_long 和 refcount。"
+    obvious_missing:
+      - node: lock.atomic.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/arch/x86_64/include/asm/atomic.h
+        notes: "[INFERRED] 缺少非 x86 后端、系统化内存序测试和 refcount 饱和诊断。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/arch/x86_64/include/asm/atomic.h
+        notes: "[VERIFIED mykernel/arch/x86_64/include/asm/atomic.h] 当前正确性绑定 x86 指令语义。"
+
+  - id: lock.spinlock
+    group: locking_ipc_async
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "自旋锁基本变体存在，BH 与 lockdep 语义不足。"
+    evidence:
+      - mykernel/lock_IPC/spinlock/spinlock_smp.h
+      - mykernel/arch/x86_64/include/asm/spinlock.h
+    implemented_capabilities:
+      - node: lock.spinlock.basic_variants
+        status: implemented
+        evidence:
+          - mykernel/lock_IPC/spinlock/spinlock_smp.h
+          - mykernel/arch/x86_64/include/asm/spinlock.h
+        notes: "[VERIFIED mykernel/lock_IPC/spinlock/; mykernel/arch/x86_64/include/asm/spinlock.h] 有普通、irq、irqsave 和抢占配合的自旋锁。"
+    obvious_missing:
+      - node: lock.spinlock.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/lock_IPC/spinlock/spinlock_smp.h
+        notes: "[INFERRED] 缺少 lockdep、完整 trylock、可信 BH/softirq 语义和公平性。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/lock_IPC/spinlock/spinlock_smp.h
+        notes: "[VERIFIED mykernel/lock_IPC/spinlock/spinlock_smp.h] BH 变体未真正控制可执行 softirq。"
+
+  - id: lock.semaphore
+    group: locking_ipc_async
+    status: partial
+    maturity: 1
+    risk_level: high
+    summary: "计数信号量有主路径，rwsem 为空。"
+    evidence:
+      - mykernel/lock_IPC/semaphore/semaphore.c
+      - mykernel/lock_IPC/semaphore/semaphore.h
+      - mykernel/lock_IPC/semaphore/rwsem.c
+    implemented_capabilities:
+      - node: lock.semaphore.counting_semaphore
+        status: implemented
+        evidence:
+          - mykernel/lock_IPC/semaphore/semaphore.c
+          - mykernel/lock_IPC/semaphore/semaphore.h
+        notes: "[VERIFIED mykernel/lock_IPC/semaphore/semaphore.c] 有等待队列、阻塞、超时和唤醒主路径。"
+    obvious_missing:
+      - node: lock.semaphore.rwsem_and_advanced_semantics
+        status: missing
+        evidence:
+          - mykernel/lock_IPC/semaphore/rwsem.c
+        notes: "[INFERRED] rwsem、公平性、优先级继承和完整中断语义未形成。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/lock_IPC/semaphore/rwsem.c
+        notes: "[VERIFIED mykernel/lock_IPC/semaphore/rwsem.c] 读写信号量核心体被注释，部分非 void 路径无返回。"
+
+  - id: lock.futex
+    group: locking_ipc_async
+    status: missing
+    maturity: 0
+    risk_level: critical
+    summary: "futex 入口立即自旋。"
+    evidence:
+      - mykernel/lock_IPC/futex/futex.c
+    implemented_capabilities: []
+    obvious_missing:
+      - node: lock.futex.core_path
+        status: missing
+        evidence:
+          - mykernel/lock_IPC/futex/futex.c
+        notes: "[VERIFIED mykernel/lock_IPC/futex/futex.c] do_futex 入口立即无限循环；未见 WAIT/WAKE/REQUEUE、robust list 或 PI。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/lock_IPC/futex/futex.c
+        notes: "[VERIFIED mykernel/lock_IPC/futex/futex.c] 任何到达该入口的调用都会挂住当前执行流。"
+
+  - id: lock.lockdep
+    group: locking_ipc_async
+    status: missing
+    maturity: 0
+    risk_level: high
+    summary: "只有 lockdep 空桩。"
+    evidence:
+      - mykernel/lock_IPC/lockdep/lockdep.c
+      - mykernel/lock_IPC/lockdep/lockdep.h
+    implemented_capabilities: []
+    obvious_missing:
+      - node: lock.lockdep.core_path
+        status: missing
+        evidence:
+          - mykernel/lock_IPC/lockdep/lockdep.c
+          - mykernel/lock_IPC/lockdep/lockdep.h
+        notes: "[VERIFIED mykernel/lock_IPC/lockdep/] 未见锁依赖图、顺序检查、IRQ 上下文验证或递归/死锁报告。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/lock_IPC/lockdep/lockdep.c
+        notes: "[VERIFIED mykernel/lock_IPC/lockdep/lockdep.c] 锁误用不会由该子系统检测。"
+
+  - id: ipc.signal
+    group: locking_ipc_async
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "基础 pending、sigaction 与 x86 信号帧存在，唤醒和组语义不完整。"
+    evidence:
+      - mykernel/lock_IPC/signal/signal.c
+      - mykernel/lock_IPC/signal/signal_api.h
+      - mykernel/lock_IPC/syscall.c
+      - mykernel/arch/x86_64/kernel/signal.c
+    implemented_capabilities:
+      - node: ipc.signal.pending_delivery_frame
+        status: implemented
+        evidence:
+          - mykernel/lock_IPC/signal/signal.c
+          - mykernel/lock_IPC/syscall.c
+          - mykernel/arch/x86_64/kernel/signal.c
+        notes: "[VERIFIED mykernel/lock_IPC/signal/; mykernel/arch/x86_64/kernel/signal.c] 有 pending bit/队列、sigaction、掩码、正 PID 发送、get_signal 和 x86 用户帧。"
+    obvious_missing:
+      - node: ipc.signal.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/lock_IPC/signal/signal.c
+          - mykernel/lock_IPC/syscall.c
+        notes: "[INFERRED] 缺少权限、进程组/全局广播、可靠目标唤醒、线程组退出、RT 顺序和 stop/continue。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/lock_IPC/signal/signal.c
+          - mykernel/lock_IPC/syscall.c
+        notes: "[VERIFIED mykernel/lock_IPC/] 入队后未调用 complete_signal；pid<=0 kill 自旋；致命默认动作未进入真实 group exit。"
+
+  - id: kactive.softirq
+    group: locking_ipc_async
+    status: partial
+    maturity: 1
+    risk_level: high
+    summary: "只有 pending 位和唤醒辅助。"
+    evidence:
+      - mykernel/kactive/softirq/softirq.c
+    implemented_capabilities:
+      - node: kactive.softirq.pending_bits
+        status: implemented
+        evidence:
+          - mykernel/kactive/softirq/softirq.c
+        notes: "[VERIFIED mykernel/kactive/softirq/softirq.c] 可设置 pending 位并调用唤醒辅助。"
+    obvious_missing:
+      - node: kactive.softirq.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/kactive/softirq/softirq.c
+        notes: "[INFERRED] 缺少 handler 注册、do_softirq 执行循环、预算、tasklet 和 ksoftirqd。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/kactive/softirq/softirq.c
+        notes: "[VERIFIED mykernel/kactive/softirq/softirq.c] 已读路径未见 pending 位消费者。"
+
+  - id: kactive.workqueue
+    group: locking_ipc_async
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "per-CPU worker 基本执行链存在，去重、销毁和 unbound 不完整。"
+    evidence:
+      - mykernel/kactive/workqueue/workqueue.c
+      - mykernel/kactive/workqueue/workqueue_api.h
+    implemented_capabilities:
+      - node: kactive.workqueue.pool_queue_worker
+        status: implemented
+        evidence:
+          - mykernel/kactive/workqueue/workqueue.c
+          - mykernel/kactive/workqueue/workqueue_api.h
+        notes: "[VERIFIED mykernel/kactive/workqueue/] 有 per-CPU/BH pool、workqueue 分配、排队、kworker 创建和回调执行。"
+    obvious_missing:
+      - node: kactive.workqueue.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/kactive/workqueue/workqueue.c
+        notes: "[INFERRED] 缺少 pending 去重、flush/cancel/destroy、CPU hotplug、完整 unbound pool 和 rescuer。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/kactive/workqueue/workqueue.c
+        notes: "[VERIFIED mykernel/kactive/workqueue/workqueue.c] pending test/set 被注释，重复排队可破坏链；BH 自旋，unbound 错误路径可能返回未初始化值。"
+
+  - id: kactive.swait
+    group: locking_ipc_async
+    status: partial
+    maturity: 2
+    risk_level: medium
+    summary: "简单等待队列的准备、收尾和唤醒可用。"
+    evidence:
+      - mykernel/kactive/swait/swait.c
+      - mykernel/kactive/swait/swait.h
+    implemented_capabilities:
+      - node: kactive.swait.basic_wait_queue
+        status: implemented
+        evidence:
+          - mykernel/kactive/swait/swait.c
+          - mykernel/kactive/swait/swait.h
+        notes: "[VERIFIED mykernel/kactive/swait/] 有初始化、prepare/finish、wake one/all。"
+    obvious_missing:
+      - node: kactive.swait.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/kactive/swait/swait.h
+        notes: "[INFERRED] 缺少完整条件等待宏族、独占/优先级策略和独立超时集成。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/kactive/swait/swait.c
+        notes: "[VERIFIED mykernel/kactive/swait/swait.c] 正确性依赖尚不完整的任务状态与调度锁。"
+
+  - id: kactive.completion
+    group: locking_ipc_async
+    status: partial
+    maturity: 2
+    risk_level: medium
+    summary: "completion 核心等待/完成路径存在。"
+    evidence:
+      - mykernel/kactive/completion/completion.c
+      - mykernel/kactive/completion/completion.h
+    implemented_capabilities:
+      - node: kactive.completion.basic_completion
+        status: implemented
+        evidence:
+          - mykernel/kactive/completion/completion.c
+          - mykernel/kactive/completion/completion.h
+        notes: "[VERIFIED mykernel/kactive/completion/] 在 swait 上实现计数式 complete、阻塞等待及信号/超时通用内核。"
+    obvious_missing:
+      - node: kactive.completion.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/kactive/completion/completion.h
+        notes: "[INFERRED] 缺少完整公开 API、可靠 complete_all/reinit 组合和成熟超时测试。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/kactive/completion/completion.c
+        notes: "[VERIFIED mykernel/kactive/completion/completion.c] 超时与唤醒继承 timer/scheduler 的未闭合路径。"
+
+  - id: time.systick
+    group: time
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "jiffies 与 HPET 周期 tick 已连接，推进可能重复。"
+    evidence:
+      - mykernel/time/systick/systick.c
+      - mykernel/time/systick/systick_api.h
+      - mykernel/arch/x86_64/kernel/hpet.c
+      - mykernel/time/timekeeping/timekeeping.c
+    implemented_capabilities:
+      - node: time.systick.jiffies_hpet_tick
+        status: implemented
+        evidence:
+          - mykernel/time/systick/systick.c
+          - mykernel/arch/x86_64/kernel/hpet.c
+        notes: "[VERIFIED mykernel/time/systick/; mykernel/arch/x86_64/kernel/hpet.c] 有全局 jiffies、低评级 clocksource，HPET legacy 周期中断调用 do_timer。"
+    obvious_missing:
+      - node: time.systick.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/time/systick/systick.c
+          - mykernel/arch/x86_64/kernel/hpet.c
+        notes: "[INFERRED] 缺少 per-CPU tick、NO_HZ、broadcast tick 和 clockevent 抽象。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/arch/x86_64/kernel/hpet.c
+          - mykernel/time/timekeeping/timekeeping.c
+        notes: "[VERIFIED mykernel/arch/x86_64/kernel/hpet.c; mykernel/time/timekeeping/timekeeping.c] handler 先 jiffies++ 又调用会递增 jiffies 的 do_timer，存在双推进风险。"
+
+  - id: time.ktime
+    group: time
+    status: implemented
+    maturity: 3
+    risk_level: low
+    summary: "64 位纳秒标量与转换语义较完整。"
+    evidence:
+      - mykernel/time/ktime/ktime.h
+    implemented_capabilities:
+      - node: time.ktime.scalar_and_conversions
+        status: implemented
+        evidence:
+          - mykernel/time/ktime/ktime.h
+        notes: "[VERIFIED mykernel/time/ktime/ktime.h] 提供 64 位纳秒、加减、比较及 timespec/timeval 转换。"
+    obvious_missing:
+      - node: time.ktime.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/time/ktime/ktime.h
+        notes: "[INFERRED] 主要缺少系统化边界测试和架构优化，不缺核心语义。"
+    risks:
+      - severity: low
+        evidence:
+          - mykernel/time/ktime/ktime.h
+        notes: "[VERIFIED mykernel/time/ktime/ktime.h] 风险主要来自调用者溢出与单位误用。"
+
+  - id: time.clocksource
+    group: time
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "clocksource 注册/换算存在，watchdog、切换锁和 TSC 稳定性不足。"
+    evidence:
+      - mykernel/time/clocksource/clocksource.c
+      - mykernel/time/clocksource/clocksource_api.h
+      - mykernel/arch/x86_64/kernel/tsc.c
+      - mykernel/arch/x86_64/kernel/hpet.c
+    implemented_capabilities:
+      - node: time.clocksource.registration_conversion
+        status: implemented
+        evidence:
+          - mykernel/time/clocksource/clocksource.c
+          - mykernel/arch/x86_64/kernel/tsc.c
+          - mykernel/arch/x86_64/kernel/hpet.c
+        notes: "[VERIFIED mykernel/time/clocksource/; mykernel/arch/x86_64/kernel/tsc.c; mykernel/arch/x86_64/kernel/hpet.c] 有 mult/shift、rating 注册/排序、选择和 unstable 标记。"
+    obvious_missing:
+      - node: time.clocksource.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/time/clocksource/clocksource.c
+          - mykernel/arch/x86_64/kernel/tsc.c
+        notes: "[INFERRED] 缺少 watchdog、运行期切换锁、跨 CPU TSC 同步和成熟 suspend/resume。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/arch/x86_64/kernel/tsc.c
+          - mykernel/time/clocksource/clocksource.c
+        notes: "[VERIFIED mykernel/arch/x86_64/kernel/tsc.c] 校准失败硬退 3 GHz，随后 TSC 又被标为不稳定；选择/切换锁大量关闭。"
+
+  - id: time.timekeeping
+    group: time
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "RTC 初值和基本读时可用，连续推进与并发一致性不足。"
+    evidence:
+      - mykernel/time/timekeeping/timekeeping.c
+      - mykernel/time/timekeeping/timekeeping_api.h
+    implemented_capabilities:
+      - node: time.timekeeping.basic_read_and_tick
+        status: implemented
+        evidence:
+          - mykernel/time/timekeeping/timekeeping.c
+          - mykernel/time/timekeeping/timekeeping_api.h
+        notes: "[VERIFIED mykernel/time/timekeeping/] 有 RTC 初始墙钟、clocksource 绑定、cycle→ns、ktime_get/realtime 和 do_timer。"
+    obvious_missing:
+      - node: time.timekeeping.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/time/timekeeping/timekeeping.c
+        notes: "[INFERRED] 缺少完整 seqcount/锁、连续 wall/monotonic 推进、NTP、suspend/resume 和 leap second。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/time/timekeeping/timekeeping.c
+        notes: "[VERIFIED mykernel/time/timekeeping/timekeeping.c] 多 CPU 读取一致性和长期时间推进可能不连续或陈旧。"
+
+  - id: time.timer
+    group: time
+    status: partial
+    maturity: 1
+    risk_level: critical
+    summary: "timer wheel 管理骨架存在，到期执行和 sleep 路径未闭合。"
+    evidence:
+      - mykernel/time/timer/timer.c
+      - mykernel/time/timer/hrtimer.c
+      - mykernel/time/timer/posix-timers.c
+      - mykernel/time/syscall.c
+    implemented_capabilities:
+      - node: time.timer.wheel_management_and_realtime_read
+        status: implemented
+        evidence:
+          - mykernel/time/timer/timer.c
+          - mykernel/time/timer/posix-timers.c
+          - mykernel/time/syscall.c
+        notes: "[VERIFIED mykernel/time/timer/; mykernel/time/syscall.c] 有 timer 插入/修改/删除、timeout 建立和有限 realtime clock 读取。"
+    obvious_missing:
+      - node: time.timer.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/time/timer/timer.c
+          - mykernel/time/timer/hrtimer.c
+          - mykernel/time/timer/posix-timers.c
+        notes: "[INFERRED] 已读路径未定位到期扫描/回调执行；缺少可用 hrtimer、非 realtime POSIX clocks 和可靠 sleep。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/time/timer/timer.c
+        notes: "[VERIFIED mykernel/time/timer/timer.c] schedule_timeout 中真正的 schedule 被注释，msleep 等可能忙等或不返回。"
+
+  - id: time.adjtime
+    group: time
+    status: missing
+    maturity: 0
+    risk_level: medium
+    summary: "只有 adjtime 空壳。"
+    evidence:
+      - mykernel/time/adjtime/adjtime.c
+      - mykernel/time/adjtime/adjtime_api.h
+    implemented_capabilities: []
+    obvious_missing:
+      - node: time.adjtime.core_path
+        status: missing
+        evidence:
+          - mykernel/time/adjtime/adjtime.c
+          - mykernel/time/adjtime/adjtime_api.h
+        notes: "[VERIFIED mykernel/time/adjtime/] 未见 NTP PLL、adjtimex、频率/相位校正或 leap 状态主体。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/time/adjtime/adjtime.c
+        notes: "[VERIFIED mykernel/time/adjtime/adjtime.c] 墙钟不能通过该层校正。"
+
+  - id: fs.vfs
+    group: filesystem_block_drivers
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "VFS 广泛骨架和多条基本 I/O/路径路径存在，引用与 ELF 边界危险。"
+    evidence:
+      - mykernel/fs/vfs/open.c
+      - mykernel/fs/vfs/read_write.c
+      - mykernel/fs/vfs/namei.c
+      - mykernel/fs/vfs/namespace.c
+      - mykernel/fs/vfs/dcache.c
+      - mykernel/fs/vfs/inode.c
+      - mykernel/fs/vfs/binfmt_elf.c
+    implemented_capabilities:
+      - node: fs.vfs.open_io_path_mount
+        status: implemented
+        evidence:
+          - mykernel/fs/vfs/open.c
+          - mykernel/fs/vfs/read_write.c
+          - mykernel/fs/vfs/namei.c
+          - mykernel/fs/vfs/namespace.c
+        notes: "[VERIFIED mykernel/fs/vfs/] 有 filesystem 注册、fd/open/read/write/lseek/fcntl、路径/挂载遍历及 create/mkdir/unlink。"
+      - node: fs.vfs.cache_dir_elf
+        status: implemented
+        evidence:
+          - mykernel/fs/vfs/dcache.c
+          - mykernel/fs/vfs/inode.c
+          - mykernel/fs/vfs/readdir.c
+          - mykernel/fs/vfs/binfmt_elf.c
+        notes: "[VERIFIED mykernel/fs/vfs/] 有 dcache/inode、getdents、rootfs/shmem 和 ELF 装载框架。"
+    obvious_missing:
+      - node: fs.vfs.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/fs/vfs/super.c
+          - mykernel/fs/vfs/namei.c
+          - mykernel/fs/vfs/dcache.c
+        notes: "[INFERRED] 缺少 mount_bdev、完整 symlink/权限、引用生命周期、page cache/writeback、可靠 O_CREAT 和成熟 mount namespace。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/fs/vfs/open.c
+          - mykernel/fs/vfs/dcache.c
+          - mykernel/fs/vfs/inode.c
+          - mykernel/fs/vfs/binfmt_elf.c
+        notes: "[VERIFIED mykernel/fs/vfs/] close 直接 kfree(file)，dput/iput 为空，多函数缺返回，ELF 栈 VMA 未初始化即使用。"
+
+  - id: fs.fat
+    group: filesystem_block_drivers
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "FAT32 数据与目录主路径存在，簇扩容和写入状态风险显著。"
+    evidence:
+      - mykernel/fs/fat/myos_fat32.c
+      - mykernel/fs/fat/myos_fat32_namei.c
+      - mykernel/fs/fat/myos_fat32_iobuf.c
+      - mykernel/fs/fat/inode.c
+    implemented_capabilities:
+      - node: fs.fat.file_directory_operations
+        status: implemented
+        evidence:
+          - mykernel/fs/fat/myos_fat32.c
+          - mykernel/fs/fat/myos_fat32_namei.c
+          - mykernel/fs/fat/myos_fat32_iobuf.c
+        notes: "[VERIFIED mykernel/fs/fat/] 有 FAT 表/簇链、文件读写/seek、VFAT 目录枚举/查找、create/mkdir/rmdir/unlink 和 GPT 根 superblock。"
+    obvious_missing:
+      - node: fs.fat.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/fs/fat/myos_fat32_namei.c
+          - mykernel/fs/fat/myos_fat32_iobuf.c
+        notes: "[INFERRED] 缺少 rename、fsck、崩溃一致性、并发元数据锁和稳健缓存/写回。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/fs/fat/myos_fat32.c
+          - mykernel/fs/fat/myos_fat32_iobuf.c
+        notes: "[VERIFIED mykernel/fs/fat/] 新文件写入使用未初始化 sector；非首簇仍访问 clusters[0]；扩容多分配且链连接不可靠。"
+
+  - id: block
+    group: filesystem_block_drivers
+    status: partial
+    maturity: 1
+    risk_level: critical
+    summary: "gendisk/GPT 与 bdev 骨架存在，通用块 I/O 和生命周期不可用。"
+    evidence:
+      - mykernel/block/bdev.c
+      - mykernel/block/genhd.c
+      - mykernel/block/fops.c
+      - mykernel/block/partitions/efi.c
+    implemented_capabilities:
+      - node: block.bdev_gendisk_partition_skeleton
+        status: implemented
+        evidence:
+          - mykernel/block/bdev.c
+          - mykernel/block/genhd.c
+          - mykernel/block/partitions/efi.c
+        notes: "[VERIFIED mykernel/block/] 有 bdev pseudo-fs、gendisk、分区扫描/GPT 和 fops 切换骨架。"
+    obvious_missing:
+      - node: block.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/block/fops.c
+          - mykernel/block/bdev.c
+        notes: "[INFERRED] 缺少通用 read/write、bio/request queue、设备 claim、完整引用和缓存一致性。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/block/bdev.c
+          - mykernel/block/genhd.c
+          - mykernel/block/fops.c
+        notes: "[VERIFIED mykernel/block/] 分区 open 固定 -ENXIO，按路径打开为空，alloc_disk 成功后仍释放/NULL，close 不释放 bdev。"
+
+  - id: device
+    group: filesystem_block_drivers
+    status: missing
+    maturity: 0
+    risk_level: high
+    summary: "顶层 device ID 只有空构建占位。"
+    evidence:
+      - mykernel/device/CMakeLists.txt
+    implemented_capabilities: []
+    obvious_missing:
+      - node: device.core_path
+        status: missing
+        evidence:
+          - mykernel/device/CMakeLists.txt
+        notes: "[VERIFIED mykernel/device/CMakeLists.txt] 该 ID 下未见独立 device core、bus、class、probe/remove 或 sysfs 生命周期。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/device/CMakeLists.txt
+        notes: "[VERIFIED mykernel/device/CMakeLists.txt] 以该子系统 ID 为边界当前不可用；局部设备模型位于 drivers.base。"
+
+  - id: drivers.ata
+    group: filesystem_block_drivers
+    status: partial
+    maturity: 2
+    risk_level: critical
+    summary: "legacy PIO ATA 基本读写/注册存在，I/O 语义与资源释放不完整。"
+    evidence:
+      - mykernel/drivers/ata/myos_libata.c
+      - mykernel/drivers/ata/libata-core.c
+      - mykernel/drivers/ata/libata-sff.c
+    implemented_capabilities:
+      - node: drivers.ata.legacy_pio_probe_io
+        status: implemented
+        evidence:
+          - mykernel/drivers/ata/myos_libata.c
+          - mykernel/drivers/ata/libata-core.c
+          - mykernel/drivers/ata/libata-sff.c
+        notes: "[VERIFIED mykernel/drivers/ata/] 有 legacy PIO 探测、IDENTIFY/LBA 容量、扇区读写和 gendisk/devtmpfs 注册。"
+    obvious_missing:
+      - node: drivers.ata.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/drivers/ata/myos_libata.c
+        notes: "[INFERRED] 缺少 DMA/NCQ/AHCI、错误恢复、热插拔和成熟 block queue 集成。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/drivers/ata/myos_libata.c
+        notes: "[VERIFIED mykernel/drivers/ata/myos_libata.c] read/write 不返回正确字节数、不推进位置并泄漏缓冲/bdev；错误被忽略。"
+
+  - id: drivers.base
+    group: filesystem_block_drivers
+    status: partial
+    maturity: 1
+    risk_level: critical
+    summary: "devtmpfs 与局部 device/class 数据结构存在，注册生命周期有严重缺陷。"
+    evidence:
+      - mykernel/drivers/base/base_init.c
+      - mykernel/drivers/base/core.c
+      - mykernel/drivers/base/devtmpfs.c
+      - mykernel/drivers/base/class.c
+    implemented_capabilities:
+      - node: drivers.base.devtmpfs_device_class_skeleton
+        status: implemented
+        evidence:
+          - mykernel/drivers/base/base_init.c
+          - mykernel/drivers/base/core.c
+          - mykernel/drivers/base/devtmpfs.c
+          - mykernel/drivers/base/class.c
+        notes: "[VERIFIED mykernel/drivers/base/] 有 devtmpfs、device/class 结构和设备号映射的局部实现。"
+    obvious_missing:
+      - node: drivers.base.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/drivers/base/base_init.c
+          - mykernel/drivers/base/core.c
+        notes: "[INFERRED] 缺少 bus/class/firmware/platform 完整初始化、驱动匹配/probe/remove、uevent/sysfs 和可靠引用模型。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/drivers/base/core.c
+          - mykernel/drivers/base/devtmpfs.c
+        notes: "[VERIFIED mykernel/drivers/base/] device_add 可解引用空 parent 且保留 -EINVAL；devtmpfs 有 UAF 和释放栈对象路径。"
+
+  - id: drivers.char
+    group: filesystem_block_drivers
+    status: partial
+    maturity: 1
+    risk_level: critical
+    summary: "cdev 与简化 TTY/null/zero 存在，用户内存和对象寿命风险显著。"
+    evidence:
+      - mykernel/drivers/char/char_dev.c
+      - mykernel/drivers/char/mem.c
+      - mykernel/drivers/char/myos_tty.c
+    implemented_capabilities:
+      - node: drivers.char.cdev_mem_tty
+        status: implemented
+        evidence:
+          - mykernel/drivers/char/char_dev.c
+          - mykernel/drivers/char/mem.c
+          - mykernel/drivers/char/myos_tty.c
+        notes: "[VERIFIED mykernel/drivers/char/] 有 cdev 映射/open、null/zero 类设备和 framebuffer+键盘 TTY。"
+    obvious_missing:
+      - node: drivers.char.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/drivers/char/myos_tty.c
+        notes: "[INFERRED] 缺少 tty core、line discipline、termios、pty、session/controlling tty。"
+    risks:
+      - severity: critical
+        evidence:
+          - mykernel/drivers/char/char_dev.c
+          - mykernel/drivers/char/mem.c
+          - mykernel/drivers/char/myos_tty.c
+        notes: "[VERIFIED mykernel/drivers/char/] cdev 保存栈副本地址；/dev/zero 直接写用户指针；TTY open=1 且 read 忙轮询。"
+
+  - id: drivers.pci
+    group: filesystem_block_drivers
+    status: partial
+    maturity: 1
+    risk_level: high
+    summary: "PCI 配置访问和扫描骨架存在，设备发现结果未进入资源/驱动模型。"
+    evidence:
+      - mykernel/drivers/pci/probe.c
+      - mykernel/drivers/pci/access.c
+      - mykernel/arch/x86_64/pci/direct.c
+    implemented_capabilities:
+      - node: drivers.pci.config_scan_skeleton
+        status: implemented
+        evidence:
+          - mykernel/drivers/pci/probe.c
+          - mykernel/drivers/pci/access.c
+          - mykernel/arch/x86_64/pci/direct.c
+        notes: "[VERIFIED mykernel/drivers/pci/; mykernel/arch/x86_64/pci/direct.c] 有配置空间访问、vendor/class/header/subsystem 读取和总线扫描骨架。"
+    obvious_missing:
+      - node: drivers.pci.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/drivers/pci/probe.c
+        notes: "[INFERRED] 缺少多 function/bridge、BAR、IRQ/MSI/MSI-X、结果持久化、设备注册和驱动匹配。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/drivers/pci/probe.c
+          - mykernel/drivers/pci/access.c
+        notes: "[VERIFIED mykernel/drivers/pci/] 扫描未编码 function、未过滤不存在设备，使用栈上 pci_dev 且不注册；锁/校验被注释。"
+
+  - id: drivers.rtc
+    group: filesystem_block_drivers
+    status: partial
+    maturity: 2
+    risk_level: medium
+    summary: "CMOS 读取与时间转换存在，硬件模式和稳定读取不足。"
+    evidence:
+      - mykernel/drivers/rtc/rtc-mc146818.c
+      - mykernel/drivers/rtc/lib.c
+    implemented_capabilities:
+      - node: drivers.rtc.cmos_read_conversion
+        status: implemented
+        evidence:
+          - mykernel/drivers/rtc/rtc-mc146818.c
+          - mykernel/drivers/rtc/lib.c
+        notes: "[VERIFIED mykernel/drivers/rtc/] 可读取 MC146818 CMOS，并完成 BCD/日历与 Unix 时间转换。"
+    obvious_missing:
+      - node: drivers.rtc.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/drivers/rtc/rtc-mc146818.c
+        notes: "[INFERRED] 缺少 UIP 稳定读取、binary/BCD 与 12/24h 模式处理、set/alarm/IRQ 和 RTC class。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/drivers/rtc/rtc-mc146818.c
+        notes: "[VERIFIED mykernel/drivers/rtc/rtc-mc146818.c] 跨秒读取和模式假设可能产生错误墙钟。"
+
+  - id: lib.digit
+    group: libraries
+    status: implemented
+    maturity: 3
+    risk_level: low
+    summary: "数值字符串转换与 hexdump 核心语义较完整。"
+    evidence:
+      - mykernel/lib/digit/kstrtox.c
+      - mykernel/lib/digit/hexdump.c
+    implemented_capabilities:
+      - node: lib.digit.kstrtox_hexdump
+        status: implemented
+        evidence:
+          - mykernel/lib/digit/kstrtox.c
+          - mykernel/lib/digit/hexdump.c
+        notes: "[VERIFIED mykernel/lib/digit/] 有进制自识别、溢出检查、布尔解析和 hexdump。"
+    obvious_missing:
+      - node: lib.digit.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/lib/digit/kstrtox.c
+        notes: "[INFERRED] from_user 变体未启用，缺少系统化测试。"
+    risks:
+      - severity: low
+        evidence:
+          - mykernel/lib/digit/kstrtox.c
+        notes: "[VERIFIED mykernel/lib/digit/kstrtox.c] 主要风险来自调用者忽略返回码。"
+
+  - id: lib.idr
+    group: libraries
+    status: partial
+    maturity: 1
+    risk_level: high
+    summary: "固定数组版 IDR 有基本增删查，范围、迭代和并发不完整。"
+    evidence:
+      - mykernel/lib/idr/idr.c
+      - mykernel/lib/idr/idr.h
+    implemented_capabilities:
+      - node: lib.idr.fixed_array_basic_ops
+        status: implemented
+        evidence:
+          - mykernel/lib/idr/idr.c
+          - mykernel/lib/idr/idr.h
+        notes: "[VERIFIED mykernel/lib/idr/] 有固定数组版 alloc/cyclic/find/remove/replace。"
+    obvious_missing:
+      - node: lib.idr.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/lib/idr/idr.c
+        notes: "[INFERRED] 缺少有效 for_each/get_next、动态扩容、严格 range/max、RCU 和内部锁。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/lib/idr/idr.c
+        notes: "[VERIFIED mykernel/lib/idr/idr.c] 分配忽略部分 max；find/remove 直接按未校验 ID 下标访问；迭代为空。"
+
+  - id: lib.list
+    group: libraries
+    status: partial
+    maturity: 2
+    risk_level: high
+    summary: "双链/hlist/遍历宏可用，RCU 和失败行为不成熟。"
+    evidence:
+      - mykernel/lib/list/double_list.h
+      - mykernel/lib/list/double_list_macro.h
+      - mykernel/lib/list/hash_list.h
+      - mykernel/lib/list/rcu_list.h
+    implemented_capabilities:
+      - node: lib.list.double_hlist_iteration
+        status: implemented
+        evidence:
+          - mykernel/lib/list/double_list.h
+          - mykernel/lib/list/double_list_macro.h
+          - mykernel/lib/list/hash_list.h
+          - mykernel/lib/list/rcu_list.h
+        notes: "[VERIFIED mykernel/lib/list/] 有双向链表、hlist、遍历宏和部分 RCU-list，主体以内联/宏实现。"
+    obvious_missing:
+      - node: lib.list.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/lib/list/rcu_list.h
+          - mykernel/lib/list/double_list.h
+        notes: "[INFERRED] 缺少完整 RCU grace-period 语义以及若干 replace/swap/careful 操作。"
+    risks:
+      - severity: high
+        evidence:
+          - mykernel/lib/list/double_list.h
+        notes: "[VERIFIED mykernel/lib/list/double_list.h] 结构校验失败时无限循环；并发安全完全依赖外部锁/RCU。"
+
+  - id: lib.printf
+    group: libraries
+    status: partial
+    maturity: 2
+    risk_level: medium
+    summary: "格式化与动态分配路径存在，const 变体无返回。"
+    evidence:
+      - mykernel/lib/printf/vsprintf.c
+      - mykernel/lib/printf/kasprintf.c
+    implemented_capabilities:
+      - node: lib.printf.vsnprintf_kasprintf
+        status: implemented
+        evidence:
+          - mykernel/lib/printf/vsprintf.c
+          - mykernel/lib/printf/kasprintf.c
+        notes: "[VERIFIED mykernel/lib/printf/] 有较完整 vsnprintf/vsprintf 和 kvasprintf/kasprintf。"
+    obvious_missing:
+      - node: lib.printf.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/lib/printf/kasprintf.c
+        notes: "[INFERRED] 缺少 fortify、广泛格式测试和完整 const 优化路径。"
+    risks:
+      - severity: medium
+        evidence:
+          - mykernel/lib/printf/kasprintf.c
+        notes: "[VERIFIED mykernel/lib/printf/kasprintf.c] kvasprintf_const 主体被注释且无返回。"
+
+  - id: lib.string
+    group: libraries
+    status: implemented
+    maturity: 3
+    risk_level: low
+    summary: "常用字符串/内存与用户字符串长度辅助较完整。"
+    evidence:
+      - mykernel/lib/string/string.c
+      - mykernel/lib/string/string_helpers.c
+      - mykernel/lib/string/strnlen_user.c
+    implemented_capabilities:
+      - node: lib.string.common_string_memory_helpers
+        status: implemented
+        evidence:
+          - mykernel/lib/string/string.c
+          - mykernel/lib/string/string_helpers.c
+          - mykernel/lib/string/strnlen_user.c
+        notes: "[VERIFIED mykernel/lib/string/] 有常用拷贝、比较、搜索、strscpy、辅助格式和用户字符串长度实现。"
+    obvious_missing:
+      - node: lib.string.obvious_missing
+        status: missing
+        evidence:
+          - mykernel/lib/string/string.c
+        notes: "[INFERRED] 缺少完整 fortify、架构优化和部分可选 API。"
+    risks:
+      - severity: low
+        evidence:
+          - mykernel/lib/string/string.c
+        notes: "[VERIFIED mykernel/lib/string/string.c] strcpy/strcat 等传统接口依赖调用者保证容量。"
+unknown_nodes:
+  - node: boot.uefi.prebuilt_binary_source_correspondence
+    status: unknown
+    maturity: 0
+    evidence:
+      - myloader/BOOTX64.EFI
+      - myloader/CMakeLists.txt
+      - myloader/uefi/bootloader.c
+    notes: "[INFERRED] 顶层构建只安装预构建 EFI，静态内容不能证明该二进制由所读源码生成。"
+  - node: user.initramfs.integrated_boot_runtime
+    status: unknown
+    maturity: 0
+    evidence:
+      - myinitramfs/CMakeLists.txt
+      - myinitramfs/myinit/initd.c
+      - mykernel/init/do_mounts.c
+    notes: "[INFERRED] 未运行验证 PID 1、/boot/sh、外部根盘和内核 exec 是否形成端到端启动。"
+  - node: time.timer.expiry_dispatch_linkage
+    status: unknown
+    maturity: 0
+    evidence:
+      - mykernel/time/timer/timer.c
+      - mykernel/arch/x86_64/kernel/hpet.c
+    notes: "[INFERRED] 已读路径未定位 timer wheel 到期扫描入口；需链接图或运行追踪确认是否由其他路径间接调用。"
