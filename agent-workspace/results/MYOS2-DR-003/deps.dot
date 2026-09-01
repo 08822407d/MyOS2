@@ -1,0 +1,288 @@
+// ---
+// task_id: MYOS2-DR-003
+// produced_by: ChatGPT Pro / GPT-5.6 Pro
+// date: 2026-09-01
+// generated_at: 2026-09-01T00:56:24+08:00
+// agent_id: openai-gpt-5.6-pro
+// base_snapshot: workspace master @ c7e68edb3dd76f4e4808dff12b5ca2021035e719; kernel source time @ a039d9803ade2a1613d620bda375e028530d5242
+// inputs_read:
+// - agent-workspace/conventions.md
+// - agent-workspace/repo-map.md
+// - agent-workspace/tasks/MYOS2-DR-003-dependency-graph.md
+// - mykernel/CMakeLists.txt
+// - mykernel/scripts/options_flags.cmake
+// - mykernel/scripts/target_kbuild.cmake
+// - mykernel/scripts/target_kernel.cmake
+// - mykernel/arch/x86_64/kernel.lds
+// - mykernel/arch/x86_64/kernel/head_64.S
+// - mykernel/arch/x86_64/kernel/head64.c
+// - mykernel/arch/x86_64/myos/pre_init.c
+// - mykernel/arch/x86_64/kernel/setup.c
+// - mykernel/arch/x86_64/smp/setup_percpu.c
+// - mykernel/arch/x86_64/kernel/traps.c
+// - mykernel/mm/misc/mm_init.c
+// - mykernel/sched/scheduler/scheduler_core.c
+// - mykernel/arch/x86_64/kernel/irqinit.c
+// - mykernel/arch/x86_64/kernel/time.c
+// - mykernel/arch/x86_64/kernel/hpet.c
+// - mykernel/time/timekeeping/timekeeping.c
+// - mykernel/init/main.c
+// - mykernel/fs/vfs/init.c
+// - mykernel/fs/vfs/myos_vfs.c
+// - mykernel/arch/x86_64/entry/entry_64.S
+// - mykernel/arch/x86_64/entry/common.c
+// - mykernel/entry/common.c
+// - mykernel/arch/x86_64/myos/arch_task.c
+// content_type: dependency_graph_dot
+// source_scope: MyOS2 time 分支：构建入口、x86_64 启动、内存/调度/中断/时间、系统调用、VFS/块设备、PID 1
+// status: final
+// analysis_coverage: static_source_only
+// limitations:
+// - 仅对 time 快照做静态源码分析，未在连接器环境中执行干净构建、链接、启动或设备 I/O 实测。
+// - 递归 GLOB 会把大量源码加入 kernel 目标；本文区分“进入构建输入”与“运行时实际可达”，但未生成链接 map 验证 --gc-sections 的最终保留集合。
+// - 动态注册、函数指针、宏展开与条件编译的闭包仅覆盖启动主链和关键功能链，不能视为逐符号完备图。
+// - 部分 Linux 通用框架代码被注释或保留但未进入当前调用路径；未把“源码存在”自动视为“当前生效”。
+// open_questions:
+// - 当前正式发布/测试使用的 CMake 构建类型、ARCH 参数与根块设备选择宏是什么？
+// - ROOTBLK_TRANSFER 在目标机器上最终绑定 ATA 还是 NVMe，是否存在稳定的替代根文件系统配置？
+// - kernel_init 中手工 do_initcalls() 与链接器 initcall section 机制未来是否计划并存，还是前者为临时过渡？
+// - workqueue_init()、sched_init_smp() 等被注释路径是有意禁用、尚未移植完成，还是由其他私有路径替代？
+// - 目标平台是否保证 HPET；若不保证，PIT/LAPIC/TSC-deadline 的降级策略在哪里完成？
+// ---
+
+digraph MyOS2Dependencies {
+  graph [rankdir=LR, compound=true, overlap=false, fontsize=10, labelloc="t", label="MyOS2: dependent -> dependency"];
+  node [shape=box, fontsize=8];
+  edge [fontsize=7];
+  subgraph cluster_build { label="build";
+    "arch.x86_64.build_profile";
+    "arch.x86_64.asm_offsets";
+    "arch.x86_64.linker_layout";
+    "init.kernel_sources";
+    "init.kernel_target";
+    "init.uapi_export";
+    "init.kernel_install";
+    "arch.x86_64";
+    "entry";
+    "cpu";
+    "init";
+    "mm.early";
+    "mm.page_alloc";
+    "mm.kmalloc";
+    "sched.task";
+    "sched.scheduler";
+    "kactive.softirq";
+    "kactive.workqueue";
+    "time.timekeeping";
+    "time.timer";
+    "fs.vfs";
+    "fs.fat";
+    "block";
+    "device";
+    "drivers.ata";
+    "drivers.base";
+    "drivers.char";
+    "drivers.pci";
+    "drivers.rtc";
+    "ipc.signal";
+    "lock.spinlock";
+    "lock.futex";
+    "lib.string";
+    "printk";
+    "debug";
+    "mm.vm_map";
+  }
+  subgraph cluster_init { label="init";
+    "arch.x86_64.phys_startup_64";
+    "arch.x86_64.startup_64";
+    "arch.x86_64.x86_64_start_kernel";
+    "mm.early.page_table_handoff";
+    "init.start_kernel";
+    "mm.early.setup_arch";
+    "cpu.percpu_areas";
+    "entry.trap_init";
+    "mm.page_alloc.mm_core_init";
+    "sched.scheduler.sched_init";
+    "entry.irq_init";
+    "kactive.softirq.init";
+    "time.timekeeping.init";
+    "printk.console_init";
+    "time.systick.late_time_init";
+    "cpu.arch_finalize";
+    "lib.idr.pid_init";
+    "device.core_init";
+    "sched.task.proc_caches_init";
+    "fs.vfs.caches_init";
+    "ipc.signal.init";
+    "debug.cpu_bug_check";
+    "entry.percpu_interrupt_init";
+    "init.rest_init";
+    "sched.task.kernel_init_spawn";
+    "sched.task.kthreadd_spawn";
+    "sched.task.kernel_init_post_kthreadd";
+    "sched.task.boot_idle";
+    "fs.vfs.bootstrap_directories";
+    "mm.misc.zero_pfn";
+    "drivers.base.driver_init";
+    "ipc.signal.frame_size_init";
+    "sched.forkexec.elf_binfmt_init";
+    "drivers.char.tty_class_init";
+    "time.clocksource.boot_complete";
+    "drivers.char.char_device_init";
+    "namespace.pid.init";
+    "fs.fat.register_diskfs";
+    "block.nvme_request_thread";
+    "drivers.ata.request_thread";
+    "device.xhci_request_thread";
+    "drivers.pci.scan";
+    "drivers.ata.probe";
+    "block.nvme_ioqueue_init";
+    "fs.vfs.root_switch";
+    "sched.forkexec.exec_boot_init";
+  }
+  subgraph cluster_functional { label="functional";
+    "mm.early.memblock";
+    "mm.page_alloc.buddy_system";
+    "mm.kmalloc.object_allocator";
+    "sched.scheduler.multitasking";
+    "time.systick.hpet_periodic";
+    "entry.syscall_64";
+    "sched.forkexec.user_process";
+    "fs.vfs.root_mount";
+    "fs.vfs.devtmpfs_mount";
+    "fs.fat.fat32_root";
+    "block.root_transfer";
+    "device.device_io";
+    "drivers.pci.enumeration";
+    "kactive.workqueue.deferred_work";
+    "lock.futex.wait_wake";
+    "drivers.rtc.wall_clock";
+    "arch.aarch64.port";
+    "user.initramfs.early_userspace";
+    "init.usable_kernel";
+    "debug.runtime_diagnostics";
+  }
+  "init.kernel_sources" -> "arch.x86_64" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "entry" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "cpu" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "init" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "mm.early" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "mm.page_alloc" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "mm.kmalloc" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "sched.task" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "sched.scheduler" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "kactive.softirq" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "kactive.workqueue" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "time.timekeeping" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "time.timer" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "fs.vfs" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "fs.fat" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "block" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "device" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "drivers.ata" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "drivers.base" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "drivers.char" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "drivers.pci" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "drivers.rtc" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "ipc.signal" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "lock.spinlock" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "lock.futex" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "lib.string" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "printk" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "init.kernel_sources" -> "debug" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:26-35]"];
+  "entry" -> "arch.x86_64.asm_offsets" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/arch/x86_64/entry/entry_64.S:18-24]; [VERIFIED mykernel/arch/x86_64/kernel/head_64.S:12-16]"];
+  "init.kernel_target" -> "init.kernel_sources" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/scripts/target_kernel.cmake:1-4]"];
+  "init.kernel_target" -> "arch.x86_64.asm_offsets" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/scripts/target_kbuild.cmake:16-32]"];
+  "init.kernel_target" -> "arch.x86_64.linker_layout" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/scripts/target_kernel.cmake:5-7]"];
+  "init.kernel_target" -> "arch.x86_64.build_profile" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/CMakeLists.txt:8-12]"];
+  "init.uapi_export" -> "init.kernel_target" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/scripts/target_kernel.cmake:25-29]"];
+  "init.kernel_install" -> "init.kernel_target" [style=dashed,label="build/hard",tooltip="[VERIFIED mykernel/scripts/target_kernel.cmake:30-30]"];
+  "arch.x86_64.startup_64" -> "arch.x86_64.phys_startup_64" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/arch/x86_64/kernel.lds:1-7]"];
+  "arch.x86_64.x86_64_start_kernel" -> "arch.x86_64.startup_64" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/arch/x86_64/kernel/head_64.S:220-296]"];
+  "mm.early.page_table_handoff" -> "arch.x86_64.x86_64_start_kernel" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/arch/x86_64/kernel/head64.c:145-174]"];
+  "init.start_kernel" -> "mm.early.page_table_handoff" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/arch/x86_64/kernel/head64.c:158-177]"];
+  "mm.early.setup_arch" -> "init.start_kernel" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:112-120]"];
+  "cpu.percpu_areas" -> "mm.early.setup_arch" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:118-123]"];
+  "entry.trap_init" -> "cpu.percpu_areas" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:120-124]"];
+  "mm.page_alloc.mm_core_init" -> "entry.trap_init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:123-124]"];
+  "mm.page_alloc.mm_core_init" -> "mm.early.setup_arch" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:118-124]"];
+  "sched.scheduler.sched_init" -> "mm.page_alloc.mm_core_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:123-132]"];
+  "entry.irq_init" -> "sched.scheduler.sched_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:126-141]"];
+  "kactive.softirq.init" -> "entry.irq_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:141-143]"];
+  "time.timekeeping.init" -> "kactive.softirq.init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:142-143]"];
+  "printk.console_init" -> "time.timekeeping.init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:143-151]"];
+  "time.systick.late_time_init" -> "printk.console_init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:151-154]"];
+  "time.systick.late_time_init" -> "entry.irq_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/arch/x86_64/kernel/time.c:29-59]"];
+  "cpu.arch_finalize" -> "time.systick.late_time_init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:154-156]"];
+  "lib.idr.pid_init" -> "cpu.arch_finalize" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:156-158]"];
+  "device.core_init" -> "lib.idr.pid_init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:158-161]"];
+  "sched.task.proc_caches_init" -> "device.core_init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:161-163]"];
+  "fs.vfs.caches_init" -> "sched.task.proc_caches_init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:163-164]"];
+  "ipc.signal.init" -> "fs.vfs.caches_init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:164-165]"];
+  "debug.cpu_bug_check" -> "ipc.signal.init" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:165-167]"];
+  "entry.percpu_interrupt_init" -> "debug.cpu_bug_check" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:167-169]"];
+  "entry.percpu_interrupt_init" -> "entry.irq_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:141-169]"];
+  "init.rest_init" -> "entry.percpu_interrupt_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:169-171]"];
+  "sched.task.kernel_init_spawn" -> "init.rest_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:76-92]"];
+  "sched.task.kthreadd_spawn" -> "sched.task.kernel_init_spawn" [style=solid,penwidth=1.5,label="init_order/soft",tooltip="[VERIFIED mykernel/init/main.c:82-104]"];
+  "sched.task.kernel_init_post_kthreadd" -> "sched.task.kthreadd_spawn" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:93-116]"];
+  "sched.task.boot_idle" -> "sched.task.kthreadd_spawn" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:105-123]"];
+  "fs.vfs.bootstrap_directories" -> "sched.task.kernel_init_post_kthreadd" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:258-273]"];
+  "mm.misc.zero_pfn" -> "fs.vfs.bootstrap_directories" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:300-338]"];
+  "drivers.base.driver_init" -> "mm.misc.zero_pfn" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:230-240]"];
+  "ipc.signal.frame_size_init" -> "drivers.base.driver_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:193-237]"];
+  "sched.forkexec.elf_binfmt_init" -> "ipc.signal.frame_size_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:193-213]"];
+  "drivers.char.tty_class_init" -> "sched.forkexec.elf_binfmt_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:193-213]"];
+  "time.clocksource.boot_complete" -> "drivers.char.tty_class_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:193-213]"];
+  "drivers.char.char_device_init" -> "time.clocksource.boot_complete" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:193-213]"];
+  "namespace.pid.init" -> "drivers.char.char_device_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:193-213]"];
+  "fs.fat.register_diskfs" -> "namespace.pid.init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:193-213]"];
+  "block.nvme_request_thread" -> "fs.fat.register_diskfs" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:270-279]"];
+  "drivers.ata.request_thread" -> "block.nvme_request_thread" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:276-279]"];
+  "device.xhci_request_thread" -> "drivers.ata.request_thread" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:276-279]"];
+  "drivers.pci.scan" -> "device.xhci_request_thread" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:276-281]"];
+  "drivers.ata.probe" -> "drivers.pci.scan" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:281-286]"];
+  "block.nvme_ioqueue_init" -> "drivers.ata.probe" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:286-287]"];
+  "fs.vfs.root_switch" -> "block.nvme_ioqueue_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:286-290]"];
+  "sched.forkexec.exec_boot_init" -> "fs.vfs.root_switch" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:290-293]"];
+  "init.usable_kernel" -> "sched.forkexec.exec_boot_init" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:290-299]"];
+  "init.usable_kernel" -> "sched.task.boot_idle" [style=solid,penwidth=1.5,label="init_order/hard",tooltip="[VERIFIED mykernel/init/main.c:105-123]"];
+  "mm.kmalloc.object_allocator" -> "mm.page_alloc.buddy_system" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/mm/misc/mm_init.c:570-650]"];
+  "mm.page_alloc.buddy_system" -> "mm.early.memblock" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/mm/misc/mm_init.c:430-570]"];
+  "sched.scheduler.multitasking" -> "sched.scheduler.sched_init" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/sched/scheduler/scheduler_core.c:1500-1750]"];
+  "sched.scheduler.multitasking" -> "cpu.percpu_areas" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/sched/scheduler/scheduler_core.c:1500-1750]"];
+  "sched.scheduler.multitasking" -> "mm.kmalloc.object_allocator" [style=dotted,label="functional/hard",tooltip="[INFERRED]"];
+  "sched.scheduler.multitasking" -> "entry.irq_init" [style=dotted,label="functional/soft",tooltip="[VERIFIED mykernel/init/main.c:126-143]"];
+  "sched.scheduler.multitasking" -> "time.systick.hpet_periodic" [style=dotted,label="functional/soft",tooltip="[VERIFIED mykernel/arch/x86_64/kernel/time.c:29-59]"];
+  "time.systick.hpet_periodic" -> "entry.irq_init" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/arch/x86_64/kernel/time.c:29-59]"];
+  "entry.syscall_64" -> "cpu.percpu_areas" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/arch/x86_64/entry/entry_64.S:130-214]"];
+  "entry.syscall_64" -> "ipc.signal.init" [style=dotted,label="functional/soft",tooltip="[VERIFIED mykernel/entry/common.c:1-77]"];
+  "sched.forkexec.user_process" -> "sched.forkexec.elf_binfmt_init" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/init/main.c:193-213]"];
+  "sched.forkexec.user_process" -> "fs.vfs.root_mount" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/arch/x86_64/myos/arch_task.c:7-45]"];
+  "sched.forkexec.user_process" -> "mm.vm_map" [style=dotted,label="functional/hard",tooltip="[INFERRED]"];
+  "sched.forkexec.user_process" -> "entry.syscall_64" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/arch/x86_64/myos/arch_task.c:7-45]"];
+  "sched.forkexec.user_process" -> "sched.scheduler.multitasking" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/init/main.c:76-123]"];
+  "fs.vfs.root_mount" -> "fs.vfs.caches_init" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/init/main.c:163-171]"];
+  "fs.vfs.root_mount" -> "fs.fat.fat32_root" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/fs/vfs/myos_vfs.c:55-139]"];
+  "fs.vfs.root_mount" -> "block.root_transfer" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/fs/vfs/myos_vfs.c:75-132]"];
+  "fs.vfs.root_mount" -> "mm.kmalloc.object_allocator" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/fs/vfs/myos_vfs.c:70-132]"];
+  "fs.fat.fat32_root" -> "fs.vfs" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/fs/vfs/myos_vfs.c:55-66]"];
+  "fs.fat.fat32_root" -> "block" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/fs/vfs/myos_vfs.c:75-139]"];
+  "block.root_transfer" -> "device.device_io" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/fs/vfs/myos_vfs.c:75-132]"];
+  "device.device_io" -> "entry.irq_init" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/init/main.c:141-169]"];
+  "device.device_io" -> "drivers.pci.enumeration" [style=dotted,label="functional/soft",tooltip="[VERIFIED mykernel/init/main.c:276-287]"];
+  "device.device_io" -> "block.nvme_request_thread" [style=dotted,label="functional/soft",tooltip="[VERIFIED mykernel/init/main.c:276-287]"];
+  "device.device_io" -> "drivers.ata.request_thread" [style=dotted,label="functional/soft",tooltip="[VERIFIED mykernel/init/main.c:276-287]"];
+  "fs.vfs.devtmpfs_mount" -> "fs.vfs.root_mount" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/fs/vfs/myos_vfs.c:139-151]"];
+  "fs.vfs.devtmpfs_mount" -> "drivers.base.driver_init" [style=dotted,label="functional/hard",tooltip="[INFERRED]"];
+  "kactive.workqueue.deferred_work" -> "sched.task.kthreadd_spawn" [style=dotted,label="functional/hard",tooltip="[INFERRED]"];
+  "kactive.workqueue.deferred_work" -> "sched.scheduler.multitasking" [style=dotted,label="functional/hard",tooltip="[INFERRED]"];
+  "lock.futex.wait_wake" -> "sched.scheduler.multitasking" [style=dotted,label="functional/hard",tooltip="[INFERRED]"];
+  "lock.futex.wait_wake" -> "mm.kmalloc.object_allocator" [style=dotted,label="functional/soft",tooltip="[INFERRED]"];
+  "drivers.rtc.wall_clock" -> "device.device_io" [style=dotted,label="functional/soft",tooltip="[INFERRED]"];
+  "user.initramfs.early_userspace" -> "fs.vfs" [style=dotted,label="functional/hard",tooltip="[INFERRED]"];
+  "debug.runtime_diagnostics" -> "printk.console_init" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/init/main.c:143-167]"];
+  "init.usable_kernel" -> "sched.forkexec.user_process" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/init/main.c:258-299]"];
+  "init.usable_kernel" -> "sched.scheduler.multitasking" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/init/main.c:76-123]"];
+  "init.usable_kernel" -> "device.device_io" [style=dotted,label="functional/hard",tooltip="[VERIFIED mykernel/init/main.c:276-293]"];
+}

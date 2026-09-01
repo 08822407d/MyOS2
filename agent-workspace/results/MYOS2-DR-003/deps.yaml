@@ -1,0 +1,213 @@
+task_id: "MYOS2-DR-003"
+produced_by: "ChatGPT Pro / GPT-5.6 Pro"
+date: "2026-09-01"
+generated_at: "2026-09-01T00:56:24+08:00"
+agent_id: "openai-gpt-5.6-pro"
+base_snapshot: "workspace master @ c7e68edb3dd76f4e4808dff12b5ca2021035e719; kernel source time @ a039d9803ade2a1613d620bda375e028530d5242"
+inputs_read: ["agent-workspace/conventions.md","agent-workspace/repo-map.md","agent-workspace/tasks/MYOS2-DR-003-dependency-graph.md","mykernel/CMakeLists.txt","mykernel/scripts/options_flags.cmake","mykernel/scripts/target_kbuild.cmake","mykernel/scripts/target_kernel.cmake","mykernel/arch/x86_64/kernel.lds","mykernel/arch/x86_64/kernel/head_64.S","mykernel/arch/x86_64/kernel/head64.c","mykernel/arch/x86_64/myos/pre_init.c","mykernel/arch/x86_64/kernel/setup.c","mykernel/arch/x86_64/smp/setup_percpu.c","mykernel/arch/x86_64/kernel/traps.c","mykernel/mm/misc/mm_init.c","mykernel/sched/scheduler/scheduler_core.c","mykernel/arch/x86_64/kernel/irqinit.c","mykernel/arch/x86_64/kernel/time.c","mykernel/arch/x86_64/kernel/hpet.c","mykernel/time/timekeeping/timekeeping.c","mykernel/init/main.c","mykernel/fs/vfs/init.c","mykernel/fs/vfs/myos_vfs.c","mykernel/arch/x86_64/entry/entry_64.S","mykernel/arch/x86_64/entry/common.c","mykernel/entry/common.c","mykernel/arch/x86_64/myos/arch_task.c"]
+content_type: "dependency_graph_yaml"
+source_scope: "MyOS2 time 分支：构建入口、x86_64 启动、内存/调度/中断/时间、系统调用、VFS/块设备、PID 1"
+status: "final"
+analysis_coverage: "static_source_only"
+limitations: ["仅对 time 快照做静态源码分析，未在连接器环境中执行干净构建、链接、启动或设备 I/O 实测。","递归 GLOB 会把大量源码加入 kernel 目标；本文区分“进入构建输入”与“运行时实际可达”，但未生成链接 map 验证 --gc-sections 的最终保留集合。","动态注册、函数指针、宏展开与条件编译的闭包仅覆盖启动主链和关键功能链，不能视为逐符号完备图。","部分 Linux 通用框架代码被注释或保留但未进入当前调用路径；未把“源码存在”自动视为“当前生效”。"]
+open_questions: ["当前正式发布/测试使用的 CMake 构建类型、ARCH 参数与根块设备选择宏是什么？","ROOTBLK_TRANSFER 在目标机器上最终绑定 ATA 还是 NVMe，是否存在稳定的替代根文件系统配置？","kernel_init 中手工 do_initcalls() 与链接器 initcall section 机制未来是否计划并存，还是前者为临时过渡？","workqueue_init()、sched_init_smp() 等被注释路径是有意禁用、尚未移植完成，还是由其他私有路径替代？","目标平台是否保证 HPET；若不保证，PIT/LAPIC/TSC-deadline 的降级策略在哪里完成？"]
+edge_direction: {"build":"依赖方 -> 被依赖方","init_order":"后执行/后可用节点 -> 必须先执行/先可用节点","functional":"能力 -> 该能力所依赖的子系统或能力"}
+hardness_semantics: {"hard":"当前快照/当前启动配置下缺失即阻断该边起点能力或步骤","soft":"缺失时可降级、仅特定配置需要，或仅能从源码确认实际顺序而未证明语义必需"}
+summary: {node_count: 102, edge_count: 123, isolated_nodes: [arch.aarch64.port]}
+confidence_default: high
+evidence_catalog:
+  ev01: &ev01 ["[VERIFIED mykernel/CMakeLists.txt:26-35]"]
+  ev02: &ev02 ["[VERIFIED mykernel/arch/x86_64/entry/entry_64.S:18-24]","[VERIFIED mykernel/arch/x86_64/kernel/head_64.S:12-16]"]
+  ev03: &ev03 ["[VERIFIED mykernel/scripts/target_kernel.cmake:1-4]"]
+  ev04: &ev04 ["[VERIFIED mykernel/scripts/target_kbuild.cmake:16-32]"]
+  ev05: &ev05 ["[VERIFIED mykernel/scripts/target_kernel.cmake:5-7]"]
+  ev06: &ev06 ["[VERIFIED mykernel/CMakeLists.txt:8-12]"]
+  ev07: &ev07 ["[VERIFIED mykernel/scripts/target_kernel.cmake:25-29]"]
+  ev08: &ev08 ["[VERIFIED mykernel/scripts/target_kernel.cmake:30-30]"]
+  ev09: &ev09 ["[VERIFIED mykernel/arch/x86_64/kernel.lds:1-7]"]
+  ev10: &ev10 ["[VERIFIED mykernel/arch/x86_64/kernel/head_64.S:220-296]"]
+  ev11: &ev11 ["[VERIFIED mykernel/arch/x86_64/kernel/head64.c:145-174]"]
+  ev12: &ev12 ["[VERIFIED mykernel/arch/x86_64/kernel/head64.c:158-177]"]
+  ev13: &ev13 ["[VERIFIED mykernel/init/main.c:112-120]"]
+  ev14: &ev14 ["[VERIFIED mykernel/init/main.c:118-123]"]
+  ev15: &ev15 ["[VERIFIED mykernel/init/main.c:120-124]"]
+  ev16: &ev16 ["[VERIFIED mykernel/init/main.c:123-124]"]
+  ev17: &ev17 ["[VERIFIED mykernel/init/main.c:118-124]"]
+  ev18: &ev18 ["[VERIFIED mykernel/init/main.c:123-132]"]
+  ev19: &ev19 ["[VERIFIED mykernel/init/main.c:126-141]"]
+  ev20: &ev20 ["[VERIFIED mykernel/init/main.c:141-143]"]
+  ev21: &ev21 ["[VERIFIED mykernel/init/main.c:142-143]"]
+  ev22: &ev22 ["[VERIFIED mykernel/init/main.c:143-151]"]
+  ev23: &ev23 ["[VERIFIED mykernel/init/main.c:151-154]"]
+  ev24: &ev24 ["[VERIFIED mykernel/arch/x86_64/kernel/time.c:29-59]"]
+  ev25: &ev25 ["[VERIFIED mykernel/init/main.c:154-156]"]
+  ev26: &ev26 ["[VERIFIED mykernel/init/main.c:156-158]"]
+  ev27: &ev27 ["[VERIFIED mykernel/init/main.c:158-161]"]
+  ev28: &ev28 ["[VERIFIED mykernel/init/main.c:161-163]"]
+  ev29: &ev29 ["[VERIFIED mykernel/init/main.c:163-164]"]
+  ev30: &ev30 ["[VERIFIED mykernel/init/main.c:164-165]"]
+  ev31: &ev31 ["[VERIFIED mykernel/init/main.c:165-167]"]
+  ev32: &ev32 ["[VERIFIED mykernel/init/main.c:167-169]"]
+  ev33: &ev33 ["[VERIFIED mykernel/init/main.c:141-169]"]
+  ev34: &ev34 ["[VERIFIED mykernel/init/main.c:169-171]"]
+  ev35: &ev35 ["[VERIFIED mykernel/init/main.c:76-92]"]
+  ev36: &ev36 ["[VERIFIED mykernel/init/main.c:82-104]"]
+  ev37: &ev37 ["[VERIFIED mykernel/init/main.c:93-116]"]
+  ev38: &ev38 ["[VERIFIED mykernel/init/main.c:105-123]"]
+  ev39: &ev39 ["[VERIFIED mykernel/init/main.c:258-273]"]
+  ev40: &ev40 ["[VERIFIED mykernel/init/main.c:300-338]"]
+  ev41: &ev41 ["[VERIFIED mykernel/init/main.c:230-240]"]
+  ev42: &ev42 ["[VERIFIED mykernel/init/main.c:193-237]"]
+  ev43: &ev43 ["[VERIFIED mykernel/init/main.c:193-213]"]
+  ev44: &ev44 ["[VERIFIED mykernel/init/main.c:270-279]"]
+  ev45: &ev45 ["[VERIFIED mykernel/init/main.c:276-279]"]
+  ev46: &ev46 ["[VERIFIED mykernel/init/main.c:276-281]"]
+  ev47: &ev47 ["[VERIFIED mykernel/init/main.c:281-286]"]
+  ev48: &ev48 ["[VERIFIED mykernel/init/main.c:286-287]"]
+  ev49: &ev49 ["[VERIFIED mykernel/init/main.c:286-290]"]
+  ev50: &ev50 ["[VERIFIED mykernel/init/main.c:290-293]"]
+  ev51: &ev51 ["[VERIFIED mykernel/init/main.c:290-299]"]
+  ev52: &ev52 ["[VERIFIED mykernel/mm/misc/mm_init.c:570-650]"]
+  ev53: &ev53 ["[VERIFIED mykernel/mm/misc/mm_init.c:430-570]"]
+  ev54: &ev54 ["[VERIFIED mykernel/sched/scheduler/scheduler_core.c:1500-1750]"]
+  ev55: &ev55 ["[INFERRED]"]
+  ev56: &ev56 ["[VERIFIED mykernel/init/main.c:126-143]"]
+  ev57: &ev57 ["[VERIFIED mykernel/arch/x86_64/entry/entry_64.S:130-214]"]
+  ev58: &ev58 ["[VERIFIED mykernel/entry/common.c:1-77]"]
+  ev59: &ev59 ["[VERIFIED mykernel/arch/x86_64/myos/arch_task.c:7-45]"]
+  ev60: &ev60 ["[VERIFIED mykernel/init/main.c:76-123]"]
+  ev61: &ev61 ["[VERIFIED mykernel/init/main.c:163-171]"]
+  ev62: &ev62 ["[VERIFIED mykernel/fs/vfs/myos_vfs.c:55-139]"]
+  ev63: &ev63 ["[VERIFIED mykernel/fs/vfs/myos_vfs.c:75-132]"]
+  ev64: &ev64 ["[VERIFIED mykernel/fs/vfs/myos_vfs.c:70-132]"]
+  ev65: &ev65 ["[VERIFIED mykernel/fs/vfs/myos_vfs.c:55-66]"]
+  ev66: &ev66 ["[VERIFIED mykernel/fs/vfs/myos_vfs.c:75-139]"]
+  ev67: &ev67 ["[VERIFIED mykernel/init/main.c:276-287]"]
+  ev68: &ev68 ["[VERIFIED mykernel/fs/vfs/myos_vfs.c:139-151]"]
+  ev69: &ev69 ["[VERIFIED mykernel/init/main.c:143-167]"]
+  ev70: &ev70 ["[VERIFIED mykernel/init/main.c:258-299]"]
+  ev71: &ev71 ["[VERIFIED mykernel/init/main.c:276-293]"]
+edges:
+- {from: "init.kernel_sources", to: "arch.x86_64", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "entry", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "cpu", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "init", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "mm.early", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "mm.page_alloc", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "mm.kmalloc", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "sched.task", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "sched.scheduler", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "kactive.softirq", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "kactive.workqueue", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "time.timekeeping", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "time.timer", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "fs.vfs", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "fs.fat", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "block", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "device", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "drivers.ata", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "drivers.base", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "drivers.char", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "drivers.pci", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "drivers.rtc", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "ipc.signal", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "lock.spinlock", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "lock.futex", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "lib.string", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "printk", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "init.kernel_sources", to: "debug", kind: "build", hardness: "hard", evidence: *ev01}
+- {from: "entry", to: "arch.x86_64.asm_offsets", kind: "build", hardness: "hard", evidence: *ev02}
+- {from: "init.kernel_target", to: "init.kernel_sources", kind: "build", hardness: "hard", evidence: *ev03}
+- {from: "init.kernel_target", to: "arch.x86_64.asm_offsets", kind: "build", hardness: "hard", evidence: *ev04}
+- {from: "init.kernel_target", to: "arch.x86_64.linker_layout", kind: "build", hardness: "hard", evidence: *ev05}
+- {from: "init.kernel_target", to: "arch.x86_64.build_profile", kind: "build", hardness: "hard", evidence: *ev06}
+- {from: "init.uapi_export", to: "init.kernel_target", kind: "build", hardness: "hard", evidence: *ev07}
+- {from: "init.kernel_install", to: "init.kernel_target", kind: "build", hardness: "hard", evidence: *ev08}
+- {from: "arch.x86_64.startup_64", to: "arch.x86_64.phys_startup_64", kind: "init_order", hardness: "hard", evidence: *ev09}
+- {from: "arch.x86_64.x86_64_start_kernel", to: "arch.x86_64.startup_64", kind: "init_order", hardness: "hard", evidence: *ev10}
+- {from: "mm.early.page_table_handoff", to: "arch.x86_64.x86_64_start_kernel", kind: "init_order", hardness: "hard", evidence: *ev11}
+- {from: "init.start_kernel", to: "mm.early.page_table_handoff", kind: "init_order", hardness: "hard", evidence: *ev12}
+- {from: "mm.early.setup_arch", to: "init.start_kernel", kind: "init_order", hardness: "hard", evidence: *ev13}
+- {from: "cpu.percpu_areas", to: "mm.early.setup_arch", kind: "init_order", hardness: "hard", evidence: *ev14}
+- {from: "entry.trap_init", to: "cpu.percpu_areas", kind: "init_order", hardness: "hard", evidence: *ev15}
+- {from: "mm.page_alloc.mm_core_init", to: "entry.trap_init", kind: "init_order", hardness: "soft", evidence: *ev16}
+- {from: "mm.page_alloc.mm_core_init", to: "mm.early.setup_arch", kind: "init_order", hardness: "hard", evidence: *ev17}
+- {from: "sched.scheduler.sched_init", to: "mm.page_alloc.mm_core_init", kind: "init_order", hardness: "hard", evidence: *ev18}
+- {from: "entry.irq_init", to: "sched.scheduler.sched_init", kind: "init_order", hardness: "hard", evidence: *ev19}
+- {from: "kactive.softirq.init", to: "entry.irq_init", kind: "init_order", hardness: "hard", evidence: *ev20}
+- {from: "time.timekeeping.init", to: "kactive.softirq.init", kind: "init_order", hardness: "soft", evidence: *ev21}
+- {from: "printk.console_init", to: "time.timekeeping.init", kind: "init_order", hardness: "soft", evidence: *ev22}
+- {from: "time.systick.late_time_init", to: "printk.console_init", kind: "init_order", hardness: "soft", evidence: *ev23}
+- {from: "time.systick.late_time_init", to: "entry.irq_init", kind: "init_order", hardness: "hard", evidence: *ev24}
+- {from: "cpu.arch_finalize", to: "time.systick.late_time_init", kind: "init_order", hardness: "soft", evidence: *ev25}
+- {from: "lib.idr.pid_init", to: "cpu.arch_finalize", kind: "init_order", hardness: "soft", evidence: *ev26}
+- {from: "device.core_init", to: "lib.idr.pid_init", kind: "init_order", hardness: "soft", evidence: *ev27}
+- {from: "sched.task.proc_caches_init", to: "device.core_init", kind: "init_order", hardness: "soft", evidence: *ev28}
+- {from: "fs.vfs.caches_init", to: "sched.task.proc_caches_init", kind: "init_order", hardness: "soft", evidence: *ev29}
+- {from: "ipc.signal.init", to: "fs.vfs.caches_init", kind: "init_order", hardness: "soft", evidence: *ev30}
+- {from: "debug.cpu_bug_check", to: "ipc.signal.init", kind: "init_order", hardness: "soft", evidence: *ev31}
+- {from: "entry.percpu_interrupt_init", to: "debug.cpu_bug_check", kind: "init_order", hardness: "soft", evidence: *ev32}
+- {from: "entry.percpu_interrupt_init", to: "entry.irq_init", kind: "init_order", hardness: "hard", evidence: *ev33}
+- {from: "init.rest_init", to: "entry.percpu_interrupt_init", kind: "init_order", hardness: "hard", evidence: *ev34}
+- {from: "sched.task.kernel_init_spawn", to: "init.rest_init", kind: "init_order", hardness: "hard", evidence: *ev35}
+- {from: "sched.task.kthreadd_spawn", to: "sched.task.kernel_init_spawn", kind: "init_order", hardness: "soft", evidence: *ev36}
+- {from: "sched.task.kernel_init_post_kthreadd", to: "sched.task.kthreadd_spawn", kind: "init_order", hardness: "hard", evidence: *ev37}
+- {from: "sched.task.boot_idle", to: "sched.task.kthreadd_spawn", kind: "init_order", hardness: "hard", evidence: *ev38}
+- {from: "fs.vfs.bootstrap_directories", to: "sched.task.kernel_init_post_kthreadd", kind: "init_order", hardness: "hard", evidence: *ev39}
+- {from: "mm.misc.zero_pfn", to: "fs.vfs.bootstrap_directories", kind: "init_order", hardness: "hard", evidence: *ev40}
+- {from: "drivers.base.driver_init", to: "mm.misc.zero_pfn", kind: "init_order", hardness: "hard", evidence: *ev41}
+- {from: "ipc.signal.frame_size_init", to: "drivers.base.driver_init", kind: "init_order", hardness: "hard", evidence: *ev42}
+- {from: "sched.forkexec.elf_binfmt_init", to: "ipc.signal.frame_size_init", kind: "init_order", hardness: "hard", evidence: *ev43}
+- {from: "drivers.char.tty_class_init", to: "sched.forkexec.elf_binfmt_init", kind: "init_order", hardness: "hard", evidence: *ev43}
+- {from: "time.clocksource.boot_complete", to: "drivers.char.tty_class_init", kind: "init_order", hardness: "hard", evidence: *ev43}
+- {from: "drivers.char.char_device_init", to: "time.clocksource.boot_complete", kind: "init_order", hardness: "hard", evidence: *ev43}
+- {from: "namespace.pid.init", to: "drivers.char.char_device_init", kind: "init_order", hardness: "hard", evidence: *ev43}
+- {from: "fs.fat.register_diskfs", to: "namespace.pid.init", kind: "init_order", hardness: "hard", evidence: *ev43}
+- {from: "block.nvme_request_thread", to: "fs.fat.register_diskfs", kind: "init_order", hardness: "hard", evidence: *ev44}
+- {from: "drivers.ata.request_thread", to: "block.nvme_request_thread", kind: "init_order", hardness: "hard", evidence: *ev45}
+- {from: "device.xhci_request_thread", to: "drivers.ata.request_thread", kind: "init_order", hardness: "hard", evidence: *ev45}
+- {from: "drivers.pci.scan", to: "device.xhci_request_thread", kind: "init_order", hardness: "hard", evidence: *ev46}
+- {from: "drivers.ata.probe", to: "drivers.pci.scan", kind: "init_order", hardness: "hard", evidence: *ev47}
+- {from: "block.nvme_ioqueue_init", to: "drivers.ata.probe", kind: "init_order", hardness: "hard", evidence: *ev48}
+- {from: "fs.vfs.root_switch", to: "block.nvme_ioqueue_init", kind: "init_order", hardness: "hard", evidence: *ev49}
+- {from: "sched.forkexec.exec_boot_init", to: "fs.vfs.root_switch", kind: "init_order", hardness: "hard", evidence: *ev50}
+- {from: "init.usable_kernel", to: "sched.forkexec.exec_boot_init", kind: "init_order", hardness: "hard", evidence: *ev51}
+- {from: "init.usable_kernel", to: "sched.task.boot_idle", kind: "init_order", hardness: "hard", evidence: *ev38}
+- {from: "mm.kmalloc.object_allocator", to: "mm.page_alloc.buddy_system", kind: "functional", hardness: "hard", evidence: *ev52}
+- {from: "mm.page_alloc.buddy_system", to: "mm.early.memblock", kind: "functional", hardness: "hard", evidence: *ev53}
+- {from: "sched.scheduler.multitasking", to: "sched.scheduler.sched_init", kind: "functional", hardness: "hard", evidence: *ev54}
+- {from: "sched.scheduler.multitasking", to: "cpu.percpu_areas", kind: "functional", hardness: "hard", evidence: *ev54}
+- {from: "sched.scheduler.multitasking", to: "mm.kmalloc.object_allocator", kind: "functional", hardness: "hard", evidence: *ev55, confidence: "low"}
+- {from: "sched.scheduler.multitasking", to: "entry.irq_init", kind: "functional", hardness: "soft", evidence: *ev56}
+- {from: "sched.scheduler.multitasking", to: "time.systick.hpet_periodic", kind: "functional", hardness: "soft", evidence: *ev24}
+- {from: "time.systick.hpet_periodic", to: "entry.irq_init", kind: "functional", hardness: "hard", evidence: *ev24}
+- {from: "entry.syscall_64", to: "cpu.percpu_areas", kind: "functional", hardness: "hard", evidence: *ev57}
+- {from: "entry.syscall_64", to: "ipc.signal.init", kind: "functional", hardness: "soft", evidence: *ev58}
+- {from: "sched.forkexec.user_process", to: "sched.forkexec.elf_binfmt_init", kind: "functional", hardness: "hard", evidence: *ev43}
+- {from: "sched.forkexec.user_process", to: "fs.vfs.root_mount", kind: "functional", hardness: "hard", evidence: *ev59}
+- {from: "sched.forkexec.user_process", to: "mm.vm_map", kind: "functional", hardness: "hard", evidence: *ev55, confidence: "low"}
+- {from: "sched.forkexec.user_process", to: "entry.syscall_64", kind: "functional", hardness: "hard", evidence: *ev59}
+- {from: "sched.forkexec.user_process", to: "sched.scheduler.multitasking", kind: "functional", hardness: "hard", evidence: *ev60}
+- {from: "fs.vfs.root_mount", to: "fs.vfs.caches_init", kind: "functional", hardness: "hard", evidence: *ev61}
+- {from: "fs.vfs.root_mount", to: "fs.fat.fat32_root", kind: "functional", hardness: "hard", evidence: *ev62}
+- {from: "fs.vfs.root_mount", to: "block.root_transfer", kind: "functional", hardness: "hard", evidence: *ev63}
+- {from: "fs.vfs.root_mount", to: "mm.kmalloc.object_allocator", kind: "functional", hardness: "hard", evidence: *ev64}
+- {from: "fs.fat.fat32_root", to: "fs.vfs", kind: "functional", hardness: "hard", evidence: *ev65}
+- {from: "fs.fat.fat32_root", to: "block", kind: "functional", hardness: "hard", evidence: *ev66}
+- {from: "block.root_transfer", to: "device.device_io", kind: "functional", hardness: "hard", evidence: *ev63}
+- {from: "device.device_io", to: "entry.irq_init", kind: "functional", hardness: "hard", evidence: *ev33}
+- {from: "device.device_io", to: "drivers.pci.enumeration", kind: "functional", hardness: "soft", evidence: *ev67, confidence: "medium"}
+- {from: "device.device_io", to: "block.nvme_request_thread", kind: "functional", hardness: "soft", evidence: *ev67}
+- {from: "device.device_io", to: "drivers.ata.request_thread", kind: "functional", hardness: "soft", evidence: *ev67}
+- {from: "fs.vfs.devtmpfs_mount", to: "fs.vfs.root_mount", kind: "functional", hardness: "hard", evidence: *ev68}
+- {from: "fs.vfs.devtmpfs_mount", to: "drivers.base.driver_init", kind: "functional", hardness: "hard", evidence: *ev55, confidence: "low"}
+- {from: "kactive.workqueue.deferred_work", to: "sched.task.kthreadd_spawn", kind: "functional", hardness: "hard", evidence: *ev55, confidence: "low"}
+- {from: "kactive.workqueue.deferred_work", to: "sched.scheduler.multitasking", kind: "functional", hardness: "hard", evidence: *ev55, confidence: "low"}
+- {from: "lock.futex.wait_wake", to: "sched.scheduler.multitasking", kind: "functional", hardness: "hard", evidence: *ev55, confidence: "low"}
+- {from: "lock.futex.wait_wake", to: "mm.kmalloc.object_allocator", kind: "functional", hardness: "soft", evidence: *ev55, confidence: "low"}
+- {from: "drivers.rtc.wall_clock", to: "device.device_io", kind: "functional", hardness: "soft", evidence: *ev55, confidence: "low"}
+- {from: "user.initramfs.early_userspace", to: "fs.vfs", kind: "functional", hardness: "hard", evidence: *ev55, confidence: "low"}
+- {from: "debug.runtime_diagnostics", to: "printk.console_init", kind: "functional", hardness: "hard", evidence: *ev69}
+- {from: "init.usable_kernel", to: "sched.forkexec.user_process", kind: "functional", hardness: "hard", evidence: *ev70}
+- {from: "init.usable_kernel", to: "sched.scheduler.multitasking", kind: "functional", hardness: "hard", evidence: *ev60}
+- {from: "init.usable_kernel", to: "device.device_io", kind: "functional", hardness: "hard", evidence: *ev71}

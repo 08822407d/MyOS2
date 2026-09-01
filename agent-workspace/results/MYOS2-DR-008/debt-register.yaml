@@ -1,0 +1,130 @@
+task_id: MYOS2-DR-008
+produced_by: GPT-5.6 Pro
+date: '2026-09-01'
+base_snapshot: 'time @ a039d9803ade2a1613d620bda375e028530d5242'
+inputs_read:
+- "agent-workspace/conventions.md"
+- "agent-workspace/repo-map.md"
+- "agent-workspace/tasks/MYOS2-DR-008-tech-debt-register.md"
+- "bugs_record.md"
+- "changelog.md"
+- "dbg-qemu.sh.bak"
+- "make_install.sh"
+- "myinitramfs/CMakeLists.txt"
+- "mykernel/CMakeLists.txt"
+- "mykernel/arch/x86_64/entry/common.c"
+- "mykernel/arch/x86_64/include/obsolete/arch_proto.h"
+- "mykernel/arch/x86_64/include/obsolete/device.h"
+- "mykernel/arch/x86_64/include/obsolete/ide.h"
+- "mykernel/arch/x86_64/include/obsolete/keyboard.h"
+- "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h"
+- "mykernel/arch/x86_64/lib/delay.c"
+- "mykernel/arch/x86_64/mm/fault.c"
+- "mykernel/arch/x86_64/myos/interrupt.c"
+- "mykernel/arch/x86_64/smp/setup_percpu.c"
+- "mykernel/block/CMakeLists.txt"
+- "mykernel/block/part_core.c"
+- "mykernel/block/part_efi.c"
+- "mykernel/fs/vfs/fs_context.c"
+- "mykernel/fs/vfs/myos_vfs.c"
+- "mykernel/include/obsolete/glo.h"
+- "mykernel/include/obsolete/ktypes.h"
+- "mykernel/include/obsolete/printk.h"
+- "mykernel/include/obsolete/proto.h"
+- "mykernel/init/main.c"
+- "mykernel/lock_IPC/futex/futex.c"
+- "mykernel/lock_IPC/signal/signal.c"
+- "mykernel/lock_IPC/syscall.c"
+- "mykernel/mm/page_alloc/mempolicy.c"
+- "mykernel/mm/vm_map/filemap.c"
+- "mykernel/sched/forkexec/exit.c"
+- "mykernel/sched/forkexec/fork.c"
+- "mykernel/sched/scheduler/scheduler_core.c"
+- "mykernel/scripts/asm-offset_copy_asm.py"
+- "mykernel/scripts/options_flags.cmake"
+- "mykernel/time/adjtime/adjtime.c"
+- "myloader/CMakeLists.txt"
+- "myloader/uefi/install_loader.sh"
+- "scripts/map_vdisk.sh"
+- "scripts/part_vdisk.sh"
+- "scripts/phys_nvme_install.sh"
+- "todo.txt"
+status: final
+open_questions:
+- "OQ-001: 顶层递归 glob 静态上会纳入 part_core.c/part_efi.c，但本会话无法执行完整构建，尚未用最终链接映射再次证明所有配置均包含它们。"
+- "OQ-002: 旧 mykernel/fs/vfs/myos_vfs.c 根盘 GPT 路径与新 mykernel/block/part_* 路径谁是当前唯一权威实现，所读快照未给明确所有权说明。"
+- "OQ-003: 调度器其他文件是否存在可补偿 enqueue/TTWU/set_task_cpu 缺失语义的自定义机制，已读调用链中未见，但未做运行时不变量追踪。"
+- "OQ-004: 仓库中的 myloader/BOOTX64.EFI 是否由 time@a039d980 的 uefi 源码生成，缺少可重复构建记录与哈希证明。"
+- "OQ-005: bugs_record.md 的四条历史故障在 time@a039d980 上是否仍可复现，未执行启动/硬件测试。"
+- "OQ-006: 9 个仍被活动源码依赖的 obsolete 头应按何种顺序迁移，需结合编译依赖图和回归覆盖决定。"
+- "OQ-007: 因连接器环境无法进行完整编译、链接和静态分析，仓库中可能仍有未被关键词/定向阅读捕获的非 void 跌落、未初始化变量或死循环。"
+entries:
+- {"id":"DR008-001","quote":"while (1);","path":"mykernel/lock_IPC/futex/futex.c","line":"L6-L56","category":"正确性隐患","subsystem":"lock.futex","severity":"S1","status":"open","notes":"[VERIFIED mykernel/lock_IPC/futex/futex.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-002","quote":"pr_err(\"Unsupported feature: Futex Timeout\"); while (1);","path":"mykernel/lock_IPC/syscall.c","line":"L105-L136","category":"正确性隐患","subsystem":"lock.futex","severity":"S1","status":"open","notes":"[VERIFIED mykernel/lock_IPC/syscall.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-003","quote":"color_printk(... \"Syscall not implemented\"); while (1);","path":"mykernel/arch/x86_64/entry/common.c","line":"L18-L50","category":"正确性隐患","subsystem":"entry","severity":"S1","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/entry/common.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-004","quote":"probe loop and all return paths commented out","path":"mykernel/block/part_core.c","line":"L120-L187","category":"正确性隐患","subsystem":"block","severity":"S1","status":"open","notes":"[VERIFIED mykernel/block/part_core.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-005","quote":"state = check_partition(disk); ... final return commented out","path":"mykernel/block/part_core.c","line":"L190-L248","category":"正确性隐患","subsystem":"block","severity":"S1","status":"open","notes":"[VERIFIED mykernel/block/part_core.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-006","quote":"return statements commented in last_lba() and read_lba()","path":"mykernel/block/part_efi.c","line":"L100-L155","category":"正确性隐患","subsystem":"block","severity":"S1","status":"open","notes":"[VERIFIED mykernel/block/part_efi.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-007","quote":"legacy_mbr *legacymbr; read_lba(... legacymbr ...);","path":"mykernel/block/part_efi.c","line":"L165-L275","category":"正确性隐患","subsystem":"block","severity":"S1","status":"open","notes":"[VERIFIED mykernel/block/part_efi.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-008","quote":"partition enumeration and return 1 commented out","path":"mykernel/block/part_efi.c","line":"L295-L345","category":"正确性隐患","subsystem":"block","severity":"S1","status":"open","notes":"[VERIFIED mykernel/block/part_efi.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-009","quote":"if (node == NUMA_NO_NODE) // node = ...; tsk = alloc_task_struct_node(node);","path":"mykernel/sched/forkexec/fork.c","line":"L260-L295","category":"正确性隐患","subsystem":"sched.forkexec","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/forkexec/fork.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-010","quote":"enqueue_task() body commented; dequeue_task() has no return","path":"mykernel/sched/scheduler/scheduler_core.c","line":"L28-L108","category":"正确性隐患","subsystem":"sched.scheduler","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/scheduler/scheduler_core.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-011","quote":"success = 0; queueing commented; return success","path":"mykernel/sched/scheduler/scheduler_core.c","line":"L318-L510","category":"正确性隐患","subsystem":"sched.scheduler","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/scheduler/scheduler_core.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-012","quote":"__set_task_cpu(p, new_cpu) commented; direct target runqueue mutation","path":"mykernel/sched/scheduler/scheduler_core.c","line":"L116-L180","category":"正确性隐患","subsystem":"sched.scheduler","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/scheduler/scheduler_core.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-013","quote":"smp_send_reschedule(cpu) commented in kick_process/resched_curr","path":"mykernel/sched/scheduler/scheduler_core.c","line":"L183-L215","category":"正确性隐患","subsystem":"sched.scheduler","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/scheduler/scheduler_core.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-014","quote":"rq = per_cpu(runqueues, 0)","path":"mykernel/sched/scheduler/scheduler_core.c","line":"L650-L705","category":"正确性隐患","subsystem":"sched.scheduler","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/scheduler/scheduler_core.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-015","quote":"filemap_page_mkwrite() has no active return; registered in vm_ops","path":"mykernel/mm/vm_map/filemap.c","line":"L150-L205","category":"正确性隐患","subsystem":"mm.vm_map","severity":"S1","status":"open","notes":"[VERIFIED mykernel/mm/vm_map/filemap.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-016","quote":"len = end % PAGE_SIZE - inpage_start","path":"mykernel/mm/vm_map/filemap.c","line":"L205-L365","category":"正确性隐患","subsystem":"mm.vm_map","severity":"S1","status":"open","notes":"[VERIFIED mykernel/mm/vm_map/filemap.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-017","quote":"int irq_nr = 0; controller->ack(irq_nr);","path":"mykernel/arch/x86_64/myos/interrupt.c","line":"L155-L180","category":"正确性隐患","subsystem":"arch.x86_64","severity":"S1","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/myos/interrupt.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-018","quote":"fixed 5-page buffer; memcpy uses gptent_nr; loop lacks i < gptent_nr","path":"mykernel/fs/vfs/myos_vfs.c","line":"L75-L155","category":"正确性隐患","subsystem":"fs.vfs","severity":"S1","status":"open","notes":"[VERIFIED mykernel/fs/vfs/myos_vfs.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-019","quote":"return page_folio(alloc_page(GFP_HIGHUSER_MOVABLE));","path":"mykernel/mm/page_alloc/mempolicy.c","line":"L105-L122","category":"正确性隐患","subsystem":"mm.page_alloc","severity":"S1","status":"open","notes":"[VERIFIED mykernel/mm/page_alloc/mempolicy.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-020","quote":".free callback commented; fs_private allocated","path":"mykernel/fs/vfs/fs_context.c","line":"L85-L175","category":"正确性隐患","subsystem":"fs.vfs","severity":"S1","status":"open","notes":"[VERIFIED mykernel/fs/vfs/fs_context.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-021","quote":"int group_dead; ... exit_notify(tsk, group_dead);","path":"mykernel/sched/forkexec/exit.c","line":"L70-L155","category":"正确性隐患","subsystem":"sched.forkexec","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/forkexec/exit.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-022","quote":"exit_mm(), group-exit synchronization and most resource cleanup commented","path":"mykernel/sched/forkexec/exit.c","line":"L70-L180","category":"正确性隐患","subsystem":"sched.forkexec","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/forkexec/exit.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-023","quote":"while (fault != ENOERR);","path":"mykernel/arch/x86_64/mm/fault.c","line":"L250-L330","category":"正确性隐患","subsystem":"mm.fault","severity":"S1","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/mm/fault.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-024","quote":"myos_bad_area()/do_kern_addr_fault() end in while (1)","path":"mykernel/arch/x86_64/mm/fault.c","line":"L90-L155","category":"正确性隐患","subsystem":"mm.fault","severity":"S1","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/mm/fault.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-025","quote":"default: color_printk(\"Handler not yet implemented\"); break;","path":"mykernel/arch/x86_64/myos/interrupt.c","line":"L120-L165","category":"正确性隐患","subsystem":"arch.x86_64","severity":"S1","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/myos/interrupt.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-026","quote":"finish_task_switch body mostly commented; schedule_tail call commented","path":"mykernel/sched/scheduler/scheduler_core.c","line":"L735-L895","category":"正确性隐患","subsystem":"sched.scheduler","severity":"S1","status":"open","notes":"[VERIFIED mykernel/sched/scheduler/scheduler_core.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-027","quote":"sigpending initialized to 0; accounting increment commented","path":"mykernel/lock_IPC/signal/signal.c","line":"L15-L55","category":"正确性隐患","subsystem":"ipc.signal","severity":"S2","status":"open","notes":"[VERIFIED mykernel/lock_IPC/signal/signal.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-028","quote":"unsigned long loops_per_jiffy = 10371364","path":"mykernel/init/main.c","line":"L55-L70","category":"正确性隐患","subsystem":"time.systick","severity":"S2","status":"open","notes":"[VERIFIED mykernel/init/main.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-029","quote":"while (devider == 0);","path":"mykernel/arch/x86_64/lib/delay.c","line":"L205-L220","category":"正确性隐患","subsystem":"arch.x86_64","severity":"S2","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/lib/delay.c] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-030","quote":"matching_files[0] before checking list length","path":"mykernel/scripts/asm-offset_copy_asm.py","line":"L15-L33","category":"正确性隐患","subsystem":"init","severity":"S2","status":"open","notes":"[VERIFIED mykernel/scripts/asm-offset_copy_asm.py] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-031","quote":"do_part $MYOS_VMDK_NVME0 ... at file end","path":"scripts/part_vdisk.sh","line":"L1-L95","category":"正确性隐患","subsystem":"boot.uefi","severity":"S1","status":"open","notes":"[VERIFIED scripts/part_vdisk.sh] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-032","quote":"rm -rf /mnt1/* after mounting caller-supplied device","path":"scripts/phys_nvme_install.sh","line":"L1-L12","category":"正确性隐患","subsystem":"boot.uefi","severity":"S1","status":"open","notes":"[VERIFIED scripts/phys_nvme_install.sh] 当前快照静态证据；详见 02-correctness-suspects.md。"}
+- {"id":"DR008-033","quote":"file(GLOB_RECURSE KERNEL_C_SRCS .../*.c)","path":"mykernel/CMakeLists.txt","line":"L1-L70","category":"未完成功能","subsystem":"init","severity":"S2","status":"open","notes":"[VERIFIED mykernel/CMakeLists.txt] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-034","quote":"-Wextra commented; CONFIG_* values hardcoded","path":"mykernel/scripts/options_flags.cmake","line":"L1-L120","category":"风格","subsystem":"init","severity":"S2","status":"open","notes":"[VERIFIED mykernel/scripts/options_flags.cmake] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-035","quote":"partition probe/enumeration implementation commented while registered","path":"mykernel/block/part_core.c","line":"L20-L248","category":"未完成功能","subsystem":"block","severity":"S2","status":"open","notes":"[VERIFIED mykernel/block/part_core.c] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-036","quote":"core scheduler locking/queue/class callbacks mostly commented","path":"mykernel/sched/scheduler/scheduler_core.c","line":"L1-L900","category":"未完成功能","subsystem":"sched.scheduler","severity":"S2","status":"open","notes":"[VERIFIED mykernel/sched/scheduler/scheduler_core.c] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-037","quote":"ADJTIME_DEFINATION include-only translation unit","path":"mykernel/time/adjtime/adjtime.c","line":"L1-L2","category":"未完成功能","subsystem":"time.adjtime","severity":"S2","status":"open","notes":"[VERIFIED mykernel/time/adjtime/adjtime.c] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-038","quote":"read_current_timer implementation commented but declaration remains","path":"mykernel/arch/x86_64/lib/delay.c","line":"L70-L170","category":"未完成功能","subsystem":"time.adjtime","severity":"S2","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/lib/delay.c] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-039","quote":"credential, namespace and security ownership operations commented","path":"mykernel/fs/vfs/fs_context.c","line":"L45-L130","category":"未完成功能","subsystem":"fs.vfs","severity":"S2","status":"open","notes":"[VERIFIED mykernel/fs/vfs/fs_context.c] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-040","quote":"elseif (); hardcoded MUSL_PATH=/home/cheyh/...","path":"myinitramfs/CMakeLists.txt","line":"L1-L55","category":"未完成功能","subsystem":"user.initramfs","severity":"S2","status":"open","notes":"[VERIFIED myinitramfs/CMakeLists.txt] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-041","quote":"install(PROGRAMS BOOTX64.EFI ...); no source build target","path":"myloader/CMakeLists.txt","line":"L1-L6","category":"未完成功能","subsystem":"boot.uefi","severity":"S2","status":"open","notes":"[VERIFIED myloader/CMakeLists.txt] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-042","quote":"mount /dev/dm-0; hardcoded EDK2 DEBUG_GCC5 path","path":"myloader/uefi/install_loader.sh","line":"L1-L8","category":"风格","subsystem":"boot.uefi","severity":"S2","status":"open","notes":"[VERIFIED myloader/uefi/install_loader.sh] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-043","quote":"Debug default, rm -rf ./build/*, hardcoded physical disk id","path":"make_install.sh","line":"L1-L35","category":"风格","subsystem":"init","severity":"S2","status":"open","notes":"[VERIFIED make_install.sh] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-044","quote":"privileged losetup/kpartx calls lack quoting, set -e and cleanup trap","path":"scripts/map_vdisk.sh","line":"L1-L25","category":"风格","subsystem":"boot.uefi","severity":"S2","status":"open","notes":"[VERIFIED scripts/map_vdisk.sh] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-045","quote":"empty subsystem CMakeLists.txt","path":"mykernel/block/CMakeLists.txt","line":"L1","category":"风格","subsystem":"init","severity":"S2","status":"open","notes":"[VERIFIED mykernel/block/CMakeLists.txt] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-046","quote":"__per_cpu_offset initialized to 0; upstream allocator/copy paths commented","path":"mykernel/arch/x86_64/smp/setup_percpu.c","line":"L20-L210","category":"未完成功能","subsystem":"cpu","severity":"S2","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/smp/setup_percpu.c] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-047","quote":"generic_perform_write only copies to page cache","path":"mykernel/mm/vm_map/filemap.c","line":"L310-L410","category":"未完成功能","subsystem":"mm.vm_map","severity":"S2","status":"open","notes":"[VERIFIED mykernel/mm/vm_map/filemap.c] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-048","quote":"tracked .bak QEMU script with personal VM paths","path":"dbg-qemu.sh.bak","line":"L1-L20","category":"废弃物","subsystem":"debug","severity":"S3","status":"open","notes":"[VERIFIED dbg-qemu.sh.bak] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-049","quote":"legacy global declarations under include/obsolete","path":"mykernel/include/obsolete/glo.h","line":"L1-L16","category":"废弃物","subsystem":"init","severity":"S2","status":"open","notes":"[VERIFIED mykernel/include/obsolete/glo.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-050","quote":"legacy keyboard/framebuffer/time types","path":"mykernel/include/obsolete/ktypes.h","line":"L1-L40","category":"废弃物","subsystem":"device","severity":"S2","status":"open","notes":"[VERIFIED mykernel/include/obsolete/ktypes.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-051","quote":"MINE banner, color macros and color_printk API","path":"mykernel/include/obsolete/printk.h","line":"L1-L75","category":"废弃物","subsystem":"printk","severity":"S2","status":"open","notes":"[VERIFIED mykernel/include/obsolete/printk.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-052","quote":"legacy timer/softirq structs and prototypes","path":"mykernel/include/obsolete/proto.h","line":"L1-L45","category":"废弃物","subsystem":"kactive.softirq","severity":"S2","status":"open","notes":"[VERIFIED mykernel/include/obsolete/proto.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-053","quote":"legacy IRQ controller/descriptor definitions","path":"mykernel/arch/x86_64/include/obsolete/arch_proto.h","line":"L1-L105","category":"废弃物","subsystem":"arch.x86_64","severity":"S2","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/include/obsolete/arch_proto.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-054","quote":"legacy device and ROOTBLK_TRANSFER macros","path":"mykernel/arch/x86_64/include/obsolete/device.h","line":"L1-L75","category":"废弃物","subsystem":"device","severity":"S2","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/include/obsolete/device.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-055","quote":"legacy ATA constants and ports","path":"mykernel/arch/x86_64/include/obsolete/ide.h","line":"L1-L55","category":"废弃物","subsystem":"drivers.ata","severity":"S2","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/include/obsolete/ide.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-056","quote":"legacy keyboard constants and busy-wait macros","path":"mykernel/arch/x86_64/include/obsolete/keyboard.h","line":"L1-L55","category":"废弃物","subsystem":"drivers.char","severity":"S2","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/include/obsolete/keyboard.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-057","quote":"legacy exception/IRQ vector map","path":"mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h","line":"L1-L125","category":"废弃物","subsystem":"arch.x86_64","severity":"S2","status":"open","notes":"[VERIFIED mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-058","quote":"fork() user stack contents frequently wrong","path":"bugs_record.md","line":"L1-L2","category":"正确性隐患","subsystem":"sched.forkexec","severity":"S1","status":"无法判定","notes":"[VERIFIED bugs_record.md] 历史材料，现状未核。"}
+- {"id":"DR008-059","quote":"firmware ProcessorId differs from initial APIC ID and continuity is not guaranteed","path":"bugs_record.md","line":"L4-L5","category":"正确性隐患","subsystem":"cpu","severity":"S2","status":"无法判定","notes":"[VERIFIED bugs_record.md] 历史材料，现状未核。"}
+- {"id":"DR008-060","quote":"disk read in myos_switch_to_root_disk cleared IF","path":"bugs_record.md","line":"L7-L8","category":"正确性隐患","subsystem":"arch.x86_64","severity":"S1","status":"无法判定","notes":"[VERIFIED bugs_record.md] 历史材料，现状未核。"}
+- {"id":"DR008-061","quote":"HPET stopped after init.bin; scheduler stopped switching","path":"bugs_record.md","line":"L10-L12","category":"正确性隐患","subsystem":"time.systick","severity":"S1","status":"无法判定","notes":"[VERIFIED bugs_record.md] 历史材料，现状未核。"}
+- {"id":"DR008-062","quote":"upgrade ELF argv/env setup to AUX_VEC; port complete uaccess API","path":"todo.txt","line":"L1-L6","category":"未完成功能","subsystem":"sched.forkexec","severity":"S2","status":"无法判定","notes":"[VERIFIED todo.txt] 历史材料，现状未核。"}
+- {"id":"DR008-063","quote":"simplify mmap and add file-mmap/page cache; add libata partition scan framework","path":"todo.txt","line":"L7-L12","category":"未完成功能","subsystem":"mm.vm_map","severity":"S2","status":"无法判定","notes":"[VERIFIED todo.txt] 历史材料，现状未核。"}
+- {"id":"DR008-064","quote":"re-enable AP-core/idle and implement runtime percpu allocation","path":"todo.txt","line":"L13-L17","category":"未完成功能","subsystem":"cpu","severity":"S2","status":"无法判定","notes":"[VERIFIED todo.txt] 历史材料，现状未核。"}
+- {"id":"DR008-065","quote":"split kernel stack/task_struct; upgrade memblock and exception entry","path":"todo.txt","line":"L18-L27","category":"未完成功能","subsystem":"mm.early","severity":"S2","status":"无法判定","notes":"[VERIFIED todo.txt] 历史材料，现状未核。"}
+- {"id":"DR008-066","quote":"implement FAT32 create/mkdir/rmdir and VFS file flags","path":"todo.txt","line":"L28-L31","category":"未完成功能","subsystem":"fs.fat","severity":"S2","status":"无法判定","notes":"[VERIFIED todo.txt] 历史材料，现状未核。"}
+- {"id":"DR008-067","quote":"date-only free-form TODO list without owner/status/acceptance","path":"todo.txt","line":"L1-L31","category":"文档欠账","subsystem":"init","severity":"S2","status":"open","notes":"[VERIFIED todo.txt] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-068","quote":"bug notes lack reproduction, affected snapshot and closure","path":"bugs_record.md","line":"L1-L12","category":"文档欠账","subsystem":"debug","severity":"S2","status":"open","notes":"[VERIFIED bugs_record.md] 当前快照静态证据；详见 01-summary-v2.md。"}
+- {"id":"DR008-069","quote":"latest changelog entry is 2024-09-05","path":"changelog.md","line":"L1-L20","category":"文档欠账","subsystem":"init","severity":"S3","status":"open","notes":"[VERIFIED changelog.md] 当前快照静态证据；详见 01-summary-v2.md。"}

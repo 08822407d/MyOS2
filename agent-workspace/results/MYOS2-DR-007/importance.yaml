@@ -1,0 +1,745 @@
+task_id: MYOS2-DR-007
+produced_by: "GPT-5.5 Thinking / Deep Research"
+date: 2026-08-31
+base_snapshot: "kernel=time @ a039d9803ade2a1613d620bda375e028530d5242; workspace=master @ c7e68edb3dd76f4e4808dff12b5ca2021035e719"
+inputs_read:
+  - agent-workspace/conventions.md
+  - agent-workspace/repo-map.md
+  - agent-workspace/tasks/MYOS2-DR-007-importance-and-roadmap.md
+  - mykernel/
+  - mykernel/sched/
+  - mykernel/sched/scheduler/scheduler_core.c
+  - mykernel/lock_IPC/
+  - mykernel/lock_IPC/lockdep/lockdep.c
+  - mykernel/fs/
+  - mykernel/debug/
+  - mykernel/device/
+  - mykernel/namespace/
+  - myinitramfs/
+status: final
+open_questions:
+  - "词汇表无 net/security/extensibility 独立前缀；网络、W^X、BPF 分别临时映射到 device、mm.vm_map、debug 下的合法能力节点。"
+  - "Linux path-level subsystem change frequency = not_measurable；不用于制造伪精确 tier。"
+---
+# Evidence IDs resolve to 01-evidence-survey.md.
+# T0 = 骨干必修
+# T1 = 强烈建议
+# T2 = 进阶选修
+# T3 = 特定场景
+
+# ---- subsystem-level coverage: 53/53 ----
+
+- node: arch.x86_64
+  tier: T0
+  rationale: "课程骨干+工程骨干：特权级、异常/中断、页表与 syscall boundary 是理解 MyOS2 主架构上所有更高层机制的前提。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: arch.aarch64
+  tier: T2
+  rationale: "进阶可移植性：第二架构能暴露 x86 隐含假设，但在 Owner 当前 x86_64 主线目标下不应先于 MM/调度/并发。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: boot.uefi
+  tier: T1
+  rationale: "强烈建议：完整理解 firmware→loader→kernel handoff 能把地址布局、内存地图和早期初始化串起来，但不是调度/MM 本体。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL course:E05]"
+
+- node: user.initramfs
+  tier: T1
+  rationale: "强烈建议：用户态 init/shell 是检验 syscall、fork/exec、FD、FS 和错误语义是否真正闭环的最佳端到端层。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL course:E05]"
+
+- node: entry
+  tier: T0
+  rationale: "课程骨干+工程骨干：syscall、interrupt、exception 的 user/kernel boundary 是保护、调度、fault 与设备处理的公共入口。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: cpu
+  tier: T0
+  rationale: "课程骨干+现代性：现代内核必须理解 SMP、per-CPU state 与 CPU-local execution，后续调度和并发均依赖它。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E09]"
+
+- node: init
+  tier: T1
+  rationale: "工程骨干：初始化顺序决定 MM、scheduler、timer、driver 何时可用，是跨子系统依赖的可执行体现。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: namespace
+  tier: T1
+  rationale: "现代素养：containers 已进入现代 OS 课程，namespace/resource isolation 是理解当代进程隔离的重要层。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E18]"
+
+- node: printk
+  tier: T1
+  rationale: "工程杠杆：可观测性是调试并发、fault、driver 和 boot 的共同前置条件，printk 是内核最基础的 tracing/logging 工具。"
+  evidence:
+    - "[EXTERNAL engineering:E22]"
+    - "[EXTERNAL book:E06]"
+
+- node: debug
+  tier: T1
+  rationale: "工程杠杆：现代内核开发把 testing、tracing、fault injection 和 debugging 作为一等开发设施，而非事后附属品。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL book:E06]"
+
+- node: klib
+  tier: T2
+  rationale: "支持性进阶：内核基础库重要，但其教学价值主要服务于更高层 subsystem，而不是独立的 OS 设计主轴。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: mm.early
+  tier: T1
+  rationale: "强烈建议：bootstrap allocator 和 early mappings 能解释内核如何在完整 allocator 尚不可用时自举。"
+  evidence:
+    - "[EXTERNAL course:E05]"
+    - "[EXTERNAL book:E06]"
+
+- node: mm.page_alloc
+  tier: T0
+  rationale: "课程骨干+工程骨干：物理页管理是页表、用户地址空间、page cache 与多数大型内核对象的资源底座。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL book:E06]"
+
+- node: mm.kmalloc
+  tier: T0
+  rationale: "工程骨干+教学骨干：通用 kernel dynamic allocation 贯穿 task、VFS、driver 与 IPC 数据结构，是对象生命周期的基础。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: mm.vm_map
+  tier: T0
+  rationale: "课程骨干+工程骨干：address-space mapping、page tables 与 protection 是操作系统隔离和 VM abstraction 的核心。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: mm.fault
+  tier: T0
+  rationale: "课程骨干+工程骨干：page fault 把 lazy allocation、COW、mmap 和 protection violation 串成可执行 VM 语义。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: mm.highmem
+  tier: T3
+  rationale: "特定场景：highmem 主要承载受限虚拟地址空间等历史/架构特化问题，对 x86_64 主线现代内核学习不是优先项。"
+  evidence:
+    - "[EXTERNAL historical-book:E07]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: mm.misc
+  tier: T2
+  rationale: "进阶聚合项：值得按具体机制拆学，但不应让 misc 容器遮蔽 page allocator、mapping、fault 等更清晰的骨干节点。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+
+- node: sched.task
+  tier: T0
+  rationale: "课程骨干+工程骨干：task state/lifetime 是调度、signal、fork/exit、wait、资源控制的共同对象模型。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL book:E06]"
+
+- node: sched.forkexec
+  tier: T0
+  rationale: "课程骨干+工程骨干：fork/exec/exit/wait 把进程、地址空间、文件描述符和调度生命周期连成完整 Unix process model。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: sched.runqueue
+  tier: T0
+  rationale: "课程骨干+工程骨干：runnable-set 与 per-CPU queue 是从抽象 scheduling policy 到真实 SMP scheduler 的桥梁。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL engineering:E09]"
+
+- node: sched.scheduler
+  tier: T0
+  rationale: "课程骨干+工程骨干：CPU multiplexing、preemption、wake-up 与 SMP placement 是内核资源管理最核心机制之一。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL engineering:E09]"
+
+- node: sched.misc
+  tier: T2
+  rationale: "进阶聚合项：在 task/runqueue/scheduler 核心不变量掌握后，再按实际剩余机制拆分学习。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+
+- node: lock.atomic
+  tier: T0
+  rationale: "课程骨干+现代性：atomic RMW 和 memory ordering 是多核 synchronization 的最底层语言，不能被 mutex 抽象替代。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL engineering:E11]"
+
+- node: lock.spinlock
+  tier: T0
+  rationale: "课程骨干+工程骨干：spinlock 是短临界区、IRQ/preemption context 与大量内核共享状态保护的基本原语。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL book:E06]"
+
+- node: lock.semaphore
+  tier: T1
+  rationale: "强烈建议：sleeping synchronization、counting resource 与 blocking semantics 是 spin-based locking 之外的重要模型。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL course:E03]"
+
+- node: lock.futex
+  tier: T1
+  rationale: "强烈建议：futex 展示 userspace fast path 与 kernel blocking slow path 的经典协作，是现代线程库的重要内核接口思想。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: lock.lockdep
+  tier: T1
+  rationale: "工程正确性：把锁依赖与持锁不变量做成可检查图，比单纯增加更多 lock primitive 更能提升多核内核学习质量。"
+  evidence:
+    - "[EXTERNAL engineering:E10]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: ipc.signal
+  tier: T1
+  rationale: "强烈建议：异步 signal 把 task state、syscall return、user context 与进程生命周期连接起来，是 Unix ABI 的关键部分。"
+  evidence:
+    - "[EXTERNAL historical-book:E07]"
+    - "[EXTERNAL course:E05]"
+
+- node: kactive.softirq
+  tier: T1
+  rationale: "工程中心度：interrupt top-half 与 deferred bottom-half 的拆分是高频 I/O 与网络处理的重要执行模型。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: kactive.workqueue
+  tier: T1
+  rationale: "工程中心度：workqueue 是 Linux 常用异步 process-context 执行机制，适合教学 blocking/deferred work 与 worker management。"
+  evidence:
+    - "[EXTERNAL engineering:E12]"
+    - "[EXTERNAL book:E06]"
+
+- node: kactive.swait
+  tier: T2
+  rationale: "进阶同步：专用/simple wait primitive 的价值通常在掌握普通 wait/wakeup、completion 和锁之后。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+
+- node: kactive.completion
+  tier: T1
+  rationale: "强烈建议：one-shot event completion 是驱动初始化、异步任务结束与 producer/consumer coordination 的清晰教学原语。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL engineering:E12]"
+
+- node: time.systick
+  tier: T1
+  rationale: "强烈建议：周期 tick 是理解抢占、timeout 和传统 scheduler clock 的直接入口，即使现代内核会进一步走向 tickless。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL course:E05]"
+
+- node: time.ktime
+  tier: T1
+  rationale: "工程基础：统一 kernel time representation 能支撑 scheduler accounting、timer 和 timeout correctness。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: time.clocksource
+  tier: T1
+  rationale: "强烈建议：把 hardware clock source 与 higher-level timekeeping 分层，是理解精确计时和跨平台 timer 的关键。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: time.timekeeping
+  tier: T1
+  rationale: "工程基础：monotonic/wall-clock、clocksource 与更新规则直接影响 timeout、scheduler accounting 和用户时间语义。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: time.timer
+  tier: T1
+  rationale: "课程+工程：timer/timeout 是睡眠、重传、调度、driver 等大量异步控制流的公共机制。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL book:E06]"
+
+- node: time.adjtime
+  tier: T2
+  rationale: "进阶时间语义：clock adjustment 很重要但对核心调度/MM/并发理解不是前置，可在基础 timekeeping 后深入。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+
+- node: fs.vfs
+  tier: T0
+  rationale: "课程骨干+工程骨干：VFS-style file/inode/path/FD abstraction 是把用户 API、缓存、具体 FS 和设备统一起来的核心接口层。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL book:E06]"
+
+- node: fs.fat
+  tier: T2
+  rationale: "进阶具体格式：实现 FAT 很适合练习 block/dir/allocation，但其格式细节不等于现代 VFS/consistency 的骨干知识。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL book:E06]"
+
+- node: block
+  tier: T1
+  rationale: "强烈建议：block request lifecycle、queue、completion 与并行 I/O 是理解真实存储栈和 filesystem persistence 的关键中层。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E21]"
+
+- node: device
+  tier: T1
+  rationale: "强烈建议：通用 device abstraction 能把 bus、driver、DMA/IRQ、lifetime 和 userspace-facing resources 分离。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: drivers.ata
+  tier: T2
+  rationale: "硬件/协议进阶：ATA 可深入真实 block device，但具体命令集不应先于通用 block/device/PCI 模型。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL book:E06]"
+
+- node: drivers.base
+  tier: T1
+  rationale: "工程中心度：driver model、probe/remove、resource lifetime 和 device abstraction 是扩展多种硬件的公共基础。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL book:E06]"
+
+- node: drivers.char
+  tier: T2
+  rationale: "具体接口进阶：字符设备是练习 syscall/device boundary 的好载体，但本身不如通用 driver model 和 interrupt/DMA 重要。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: drivers.pci
+  tier: T1
+  rationale: "强烈建议：enumeration、BAR/resource、interrupt routing 与 device discovery 是现代 PC 驱动栈的重要共同层。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL book:E06]"
+
+- node: drivers.rtc
+  tier: T3
+  rationale: "特定设备：RTC 对 wall-clock bootstrapping 有用，但学习收益明显低于 generic timekeeping、PCI 与 block/network I/O。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+
+- node: lib.digit
+  tier: T3
+  rationale: "辅助工具：数字转换属于实现支持代码，不构成现代内核设计的独立学习主轴。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+
+- node: lib.idr
+  tier: T2
+  rationale: "通用数据结构进阶：ID allocation 对 kernel object management 很实用，但应服务于 task/device 等上层生命周期学习。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL book:E06]"
+
+- node: lib.list
+  tier: T2
+  rationale: "通用数据结构进阶：intrusive list 是内核常用基础设施，但重要度来自承载 runqueue/VFS/device 对象，而非算法本身。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: lib.printf
+  tier: T3
+  rationale: "辅助工具：格式化支持对 observability 有用，但设计学习应优先投入 printk/tracing/debug invariants。"
+  evidence:
+    - "[EXTERNAL engineering:E22]"
+
+- node: lib.string
+  tier: T3
+  rationale: "辅助工具：必要但通用的 C/string primitive，不构成独立 OS 设计能力。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+
+# ---- capability-level T0/T1 nodes ----
+
+- node: arch.x86_64.interrupt_exception_entry
+  tier: T0
+  rationale: "正确保存/恢复 context 与区分 exception/interrupt 是 fault、preemption 和 device handling 的硬件边界基础。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: arch.x86_64.page_table_mmu
+  tier: T0
+  rationale: "页表权限、TLB 与地址翻译是 isolation、fault、COW 和 mmap 的共同硬件机制。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL historical-book:E07]"
+
+- node: entry.syscall_entry_exit
+  tier: T0
+  rationale: "syscall entry/return 把 privilege transition、ABI、signal、scheduler 与用户内存访问集中到一个关键边界。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: cpu.smp_bringup
+  tier: T0
+  rationale: "多核启动后才能真正面对 per-CPU state、跨 CPU wakeup、cache coherence 和 scheduling concurrency。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E09]"
+
+- node: cpu.per_cpu_state
+  tier: T0
+  rationale: "per-CPU partitioning 是现代内核减少共享写热点、实现 runqueue 与 scalable fast path 的基础技巧。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: mm.early.bootstrap_allocator
+  tier: T1
+  rationale: "用一个极小 early allocator 自举到完整 page allocator 能清晰揭示 kernel initialization dependency。"
+  evidence:
+    - "[EXTERNAL course:E05]"
+    - "[EXTERNAL book:E06]"
+
+- node: mm.page_alloc.physical_page_allocator
+  tier: T0
+  rationale: "能够分配、释放并验证 physical page ownership 是 VM 和 page-backed kernel object 的资源根。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL book:E06]"
+
+- node: mm.kmalloc.kernel_heap_allocator
+  tier: T0
+  rationale: "kernel heap 把 page-level storage 转成 variable-size object lifetime，是多数 subsystem 的直接依赖。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: mm.vm_map.address_space_mapping
+  tier: T0
+  rationale: "map/unmap/protect 是 virtual-memory abstraction 的原子操作，后续 mmap、COW、loader 都建立其上。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: mm.vm_map.mmap_userspace
+  tier: T1
+  rationale: "mmap 把 VFS、VM、fault 和用户 ABI 直接连接，适合作为跨 subsystem 的高价值进阶。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: mm.vm_map.kernel_w_x_hardening
+  tier: T1
+  rationale: "现代安全：内核 executable memory 不应 writable，W^X 是把 VM protection 用于 self-protection 的最小可教学版本。"
+  evidence:
+    - "[EXTERNAL modern-security:E13]"
+    - "[EXTERNAL course:E02]"
+
+- node: mm.fault.demand_paging_cow
+  tier: T0
+  rationale: "demand paging + COW 是理解 fault-driven lazy state transition 的经典骨干案例。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: sched.task.task_lifecycle
+  tier: T0
+  rationale: "new/runnable/running/sleeping/zombie 等生命周期和引用关系是 scheduler/fork/signal/wait correctness 的共同基础。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL book:E06]"
+
+- node: sched.task.resource_control
+  tier: T1
+  rationale: "现代资源治理：理解 task 如何被层级 CPU/memory policy 约束，是 container-era kernel literacy 的重要部分。"
+  evidence:
+    - "[EXTERNAL engineering:E18]"
+    - "[EXTERNAL course:E02]"
+
+- node: sched.forkexec.fork_exec_wait_exit
+  tier: T0
+  rationale: "完整实现 fork→exec→exit→wait 可同时验证 VM inheritance、FD lifetime、scheduler state 和 parent/child semantics。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL book:E06]"
+
+- node: sched.runqueue.per_cpu_runqueue
+  tier: T0
+  rationale: "per-CPU runqueue 是从单核调度走向 scalable SMP scheduler 的第一性结构选择。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E09]"
+
+- node: sched.scheduler.preemptive_scheduling
+  tier: T0
+  rationale: "抢占点、context switch 和 runnable selection 是 CPU virtualization 的最小可执行机制。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL book:E06]"
+
+- node: sched.scheduler.smp_load_balance
+  tier: T0
+  rationale: "多核课程权重+现代工程中心度：task placement/migration 是从多个独立 CPU queue 走向系统级吞吐与公平性的关键。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E09]"
+
+- node: sched.scheduler.priority_inversion_handling
+  tier: T1
+  rationale: "正确性+实时性：priority inversion 展示 scheduler policy 与 lock ownership 如何交叉，适合在基础调度后深入。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL engineering:E09]"
+
+- node: lock.atomic.memory_ordering
+  tier: T0
+  rationale: "多核正确性的硬底座：必须理解 acquire/release、barrier 与 compiler/CPU reorder，才能证明 wakeup 和 lock-free paths。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E11]"
+
+- node: lock.atomic.rcu_read_mostly
+  tier: T1
+  rationale: "现代多核素养：实现 RCU/epoch-lite 能学习 read-mostly scaling、grace period 与 lifetime ordering，而无需复制 TREE_RCU。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E11]"
+
+- node: lock.spinlock.irq_preempt_safe_locking
+  tier: T0
+  rationale: "内核锁不能脱离 execution context；理解 IRQ/preempt interaction 是避免 deadlock 与 data race 的基本要求。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL book:E06]"
+
+- node: lock.semaphore.sleeping_lock
+  tier: T1
+  rationale: "区分 spinning 与 sleeping synchronization 能建立 blocking context、scheduler cooperation 和 latency 的正确直觉。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL book:E06]"
+
+- node: lock.futex.user_kernel_wait_wake
+  tier: T1
+  rationale: "futex-style fast/slow path 把 userspace atomics 与 kernel waitqueue 连接，是用户线程同步的高价值机制。"
+  evidence:
+    - "[EXTERNAL course:E03]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: lock.lockdep.runtime_dependency_graph
+  tier: T1
+  rationale: "用 runtime lock graph 检测 dependency cycle/incorrect context，可把并发知识从经验升级成可检查 invariant。"
+  evidence:
+    - "[EXTERNAL engineering:E10]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: ipc.signal.async_signal_delivery
+  tier: T1
+  rationale: "signal delivery/return 要同时处理 task state、saved user context 和 syscall interruption，是优秀的跨边界练习。"
+  evidence:
+    - "[EXTERNAL historical-book:E07]"
+    - "[EXTERNAL course:E05]"
+
+- node: kactive.softirq.deferred_interrupt_work
+  tier: T1
+  rationale: "把硬中断最小化并延后非紧急工作，是理解 latency、reentrancy 和 high-rate I/O 的基础模式。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: kactive.workqueue.async_process_context
+  tier: T1
+  rationale: "workqueue 展示如何把不能在 atomic context 完成的工作转移到可阻塞 process context。"
+  evidence:
+    - "[EXTERNAL engineering:E12]"
+    - "[EXTERNAL book:E06]"
+
+- node: kactive.completion.one_shot_wait
+  tier: T1
+  rationale: "completion 是简单但高杠杆的 asynchronous handoff primitive，适合驱动、初始化和 worker coordination。"
+  evidence:
+    - "[EXTERNAL engineering:E12]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: time.clocksource.monotonic_source
+  tier: T1
+  rationale: "把 monotonic hardware source 与 higher-level timekeeping 解耦可学习 wrap、frequency 与 platform abstraction。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: time.timekeeping.monotonic_wall_time
+  tier: T1
+  rationale: "正确区分 monotonic time 与可调整 wall time 能避免 timeout 与 scheduler accounting 被时钟调整破坏。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: time.timer.high_resolution_timer
+  tier: T1
+  rationale: "从 periodic tick 走向 deadline-oriented timer 能学习精确 timeout、tickless design 与 timer queue。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: fs.vfs.file_inode_dentry_model
+  tier: T0
+  rationale: "file/inode/dentry-style separation 能把 open instance、persistent object 与 pathname cache 分开，是 VFS 核心抽象。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL book:E06]"
+
+- node: fs.vfs.pathname_and_fd
+  tier: T0
+  rationale: "pathname resolution 与 FD table 把 namespace、process state 和 persistent object 串成用户可见文件语义。"
+  evidence:
+    - "[EXTERNAL course:E01]"
+    - "[EXTERNAL book:E06]"
+
+- node: fs.vfs.page_cache
+  tier: T1
+  rationale: "page cache 是 VM 与 storage 的关键交叉点，也是理解 mmap、writeback 和 filesystem performance 的必要进阶。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL course:E03]"
+
+- node: fs.vfs.crash_consistency
+  tier: T1
+  rationale: "crash recovery 在 MIT 独立占据多讲，是从功能正确走向持久化正确性的关键学习阶段。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL course:E01]"
+
+- node: fs.vfs.async_io_submission
+  tier: T1
+  rationale: "现代 I/O 素养：submission/completion、buffer lifetime 与 cancellation 比复制具体 io_uring UAPI 更值得教学内核掌握。"
+  evidence:
+    - "[EXTERNAL modern-io:E15]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: block.bio_request_queue
+  tier: T1
+  rationale: "明确 request lifecycle 与 queue/completion boundary，能把 filesystem I/O 与具体 controller driver 解耦。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL engineering:E21]"
+
+- node: block.multiqueue_parallel_io
+  tier: T1
+  rationale: "现代高速存储依赖并行硬件 queue；blk-mq 是理解从机械盘时代到 NVMe 时代 block design 演进的好教材。"
+  evidence:
+    - "[EXTERNAL engineering:E21]"
+    - "[EXTERNAL modernity:E08]"
+
+- node: block.writeback
+  tier: T1
+  rationale: "dirty data writeback 把 page cache、durability、memory pressure 和 block scheduling 连接起来。"
+  evidence:
+    - "[EXTERNAL book:E06]"
+    - "[EXTERNAL course:E02]"
+
+- node: device.network_stack
+  tier: T1
+  rationale: "课程实践+工程中心度：network stack 已是现代 OS 教学与 Linux 的大型 subsystem；因词汇表无 net 前缀暂挂 device。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E17]"
+
+- node: device.dma_interrupt_io
+  tier: T1
+  rationale: "现代设备 I/O 的核心不是轮询寄存器，而是 DMA buffer ownership、interrupt/completion 与 concurrency。"
+  evidence:
+    - "[EXTERNAL course:E05]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: drivers.base.device_driver_model
+  tier: T1
+  rationale: "probe/remove、resource lifetime 与 bus/device/driver 分离是扩展多种真实硬件时最可复用的设计知识。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL book:E06]"
+
+- node: drivers.base.safe_driver_interfaces
+  tier: T1
+  rationale: "现代安全接口：即使继续使用 C，也值得借鉴 Rust-for-Linux 的显式 safety precondition、窄 unsafe boundary 与资源生命周期约束。"
+  evidence:
+    - "[EXTERNAL modern-safety:E16]"
+    - "[EXTERNAL engineering:E08]"
+
+- node: drivers.pci.enumeration_resources
+  tier: T1
+  rationale: "PCI discovery/BAR/IRQ/resource assignment 是把 firmware/hardware topology 交给 driver model 的关键公共能力。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL book:E06]"
+
+- node: namespace.process_isolation
+  tier: T1
+  rationale: "namespace-style isolation 是 container abstraction 的核心组成，适合从 nsproxy 落点演进一个最小教学版本。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL engineering:E18]"
+
+- node: debug.bpf_style_programmability
+  tier: T1
+  rationale: "现代可编程性：实现 verifier+有限 helpers+trace hooks 的极小 BPF-like VM，可同时学习 extensibility、安全边界与 observability。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL modern-programmability:E14]"
+
+- node: debug.fault_injection_tracing
+  tier: T1
+  rationale: "现代开发素养：主动制造失败并追踪 invariant，能让 allocator、I/O、locking 和 recovery path 得到系统性验证。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL book:E06]"
+
+- node: user.initramfs.syscall_abi_exerciser
+  tier: T1
+  rationale: "把 shell/init/lib 变成自动化 ABI regression harness，可用用户可见行为约束 kernel subsystem 演进。"
+  evidence:
+    - "[EXTERNAL course:E02]"
+    - "[EXTERNAL course:E05]"
+
+- node: boot.uefi.kernel_handoff
+  tier: T1
+  rationale: "固定并验证 firmware memory map、kernel image、stack 与 early allocator handoff，可消除 boot/early-MM 间的隐式假设。"
+  evidence:
+    - "[EXTERNAL engineering:E08]"
+    - "[EXTERNAL course:E05]"

@@ -1,0 +1,202 @@
+# base_snapshot: time@a039d9803893e0ce54164413aa8a0c29eacf5c78
+#
+# Proposed GitHub Actions workflow for MYOS2-DR-006.
+#
+# This is intentionally an integration proposal.  The research task does not
+# invent repository-specific build/image paths that have not been frozen.
+#
+# Before activation, configure/freeze:
+#
+#   MYOS2_BUILD_CMD
+#   MYOS2_QEMU_CMD
+#   MYOS2_BOOT_OK
+#
+# Better final state:
+# move BUILD_CMD and QEMU_CMD into repository-owned scripts and call the
+# scripts here, so local developers and CI execute the same entry points.
+
+name: myos2-kernel-ci-proposal
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - time
+  pull_request:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+env:
+  BASE_SNAPSHOT: "time@a039d9803893e0ce54164413aa8a0c29eacf5c78"
+
+jobs:
+  proposal-sanity:
+    name: Proposal syntax and harness sanity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Show revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "proposal_base=${BASE_SNAPSHOT}"
+          echo "checked_out=$(git rev-parse HEAD)"
+
+      - name: Validate smoke harness shell syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n \
+            agent-workspace/results/MYOS2-DR-006/proposed/run-qemu-smoke.sh
+
+  host-unit:
+    name: L2 host unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run repository-owned host unit entry point
+        shell: bash
+        env:
+          MYOS2_HOST_TEST_CMD: ${{ vars.MYOS2_HOST_TEST_CMD }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${MYOS2_HOST_TEST_CMD}" ]]; then
+            echo "::error::MYOS2_HOST_TEST_CMD is not frozen yet."
+            echo "::error::Replace this variable with a repository-owned test script before making the workflow required."
+            exit 2
+          fi
+
+          echo "BASE_SNAPSHOT=${BASE_SNAPSHOT}"
+          echo "checked_out=$(git rev-parse HEAD)"
+          bash -lc "${MYOS2_HOST_TEST_CMD}"
+
+  qemu-boot-smoke:
+    name: L1 QEMU headless boot smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build boot artifact
+        shell: bash
+        env:
+          MYOS2_BUILD_CMD: ${{ vars.MYOS2_BUILD_CMD }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${MYOS2_BUILD_CMD}" ]]; then
+            echo "::error::MYOS2_BUILD_CMD is not frozen yet."
+            exit 2
+          fi
+
+          echo "BASE_SNAPSHOT=${BASE_SNAPSHOT}"
+          echo "checked_out=$(git rev-parse HEAD)"
+          bash -lc "${MYOS2_BUILD_CMD}"
+
+      - name: Run bounded QEMU smoke
+        shell: bash
+        env:
+          MYOS2_QEMU_CMD: ${{ vars.MYOS2_QEMU_CMD }}
+          MYOS2_BOOT_OK: ${{ vars.MYOS2_BOOT_OK }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${MYOS2_QEMU_CMD}" ]]; then
+            echo "::error::MYOS2_QEMU_CMD is not frozen yet."
+            exit 2
+          fi
+
+          if [[ -z "${MYOS2_BOOT_OK}" ]]; then
+            echo "::error::MYOS2_BOOT_OK is not frozen yet."
+            exit 2
+          fi
+
+          mkdir -p ci-logs
+
+          echo "QEMU command:"
+          printf '%s\n' "${MYOS2_QEMU_CMD}"
+
+          agent-workspace/results/MYOS2-DR-006/proposed/run-qemu-smoke.sh \
+            --timeout-seconds 45 \
+            --success-regex "${MYOS2_BOOT_OK}" \
+            --fatal-regex '^MYOS2_(FATAL|PANIC)' \
+            --log ci-logs/qemu-boot.log \
+            -- bash -lc "${MYOS2_QEMU_CMD}"
+
+      - name: Print boot log
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f ci-logs/qemu-boot.log ]]; then
+            cat ci-logs/qemu-boot.log
+          fi
+
+  qemu-syscall:
+    name: L3 syscall functional tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build syscall-test boot artifact
+        shell: bash
+        env:
+          MYOS2_SYSCALL_BUILD_CMD: ${{ vars.MYOS2_SYSCALL_BUILD_CMD }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${MYOS2_SYSCALL_BUILD_CMD}" ]]; then
+            echo "::error::MYOS2_SYSCALL_BUILD_CMD is not frozen yet."
+            echo "::error::It must build a guest image containing the real user-mode syscall test."
+            exit 2
+          fi
+
+          echo "BASE_SNAPSHOT=${BASE_SNAPSHOT}"
+          echo "checked_out=$(git rev-parse HEAD)"
+          bash -lc "${MYOS2_SYSCALL_BUILD_CMD}"
+
+      - name: Run syscall functional guest
+        shell: bash
+        env:
+          MYOS2_SYSCALL_QEMU_CMD: ${{ vars.MYOS2_SYSCALL_QEMU_CMD }}
+        run: |
+          set -euo pipefail
+
+          if [[ -z "${MYOS2_SYSCALL_QEMU_CMD}" ]]; then
+            echo "::error::MYOS2_SYSCALL_QEMU_CMD is not frozen yet."
+            exit 2
+          fi
+
+          mkdir -p ci-logs
+
+          agent-workspace/results/MYOS2-DR-006/proposed/run-qemu-smoke.sh \
+            --timeout-seconds 60 \
+            --success-regex '^MYOS2_TEST_END pass=[0-9]+ fail=0$' \
+            --fatal-regex '^(MYOS2_(FATAL|PANIC)|MYOS2_TEST_FAIL )' \
+            --log ci-logs/qemu-syscall.log \
+            -- bash -lc "${MYOS2_SYSCALL_QEMU_CMD}"
+
+      - name: Print syscall log
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f ci-logs/qemu-syscall.log ]]; then
+            cat ci-logs/qemu-syscall.log
+          fi
