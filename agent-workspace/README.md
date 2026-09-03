@@ -43,3 +43,10 @@ agent-workspace/
 5. **重组自由**：未来重新设计文件组织时，本目录可整体迁移或重构，唯一要求是保留 results/ 原件与其 MANIFEST 链条。
 
 对应的立项与决策记录在 Mnemosyne 仓库 target-projects/myos2/ 下。
+
+## 主导会话记录目录 lead/（2026-09-03 追加登记；MYOS2-LEAD-001）
+
+- `lead/MYOS2-LEAD-NNN/`：主导会话（非 GPT 任务会话）的记录目录，一条主导轨道一个目录。序列 `MYOS2-LEAD-NNN` 从 001 起编、永不复用，与任务序列 `MYOS2-DR-NNN` 互不占用。首条 MYOS2-LEAD-001：本地 Claude Code 主导会话（Fable 5.1），2026-09-03 自 Mnemosyne 会话接手本计划的全部 MyOS2 职责。
+- 目录内容：Owner 工作令与补充说明原文（`00-owner-work-order-verbatim.md`，现行规则的最高来源）、启动回执、前任记录镜像（`predecessor/`）、定向报告、分析维度台账、暂定执行源清单、续接检查点（`checkpoints/`）、交接包（`09-continuation/`）。一个全新会话应能仅凭该目录恢复：现行规则在哪、做到哪一步、哪些门待 Owner、哪些是暂定/待追认、下一步安全动作是什么。
+- 分支命名：主导会话维护件走 `agent/MYOS2-LEAD-NNN`，提交前缀 `MYOS2-LEAD-NNN: `，PR 到 master 由 Owner 合并；任务产出仍走 conventions.md §1.3 的 `agent/MYOS2-DR-NNN`。
+- 记录分工变更：上文末句"对应的立项与决策记录在 Mnemosyne 仓库 target-projects/myos2/ 下"自 2026-09-03 起不再适用于新记录——此后新记录只进本目录；Mnemosyne 侧既有两份记录已逐字节镜像至 `lead/MYOS2-LEAD-001/predecessor/`（附双侧哈希收据），其后仅追加一份移交记录后停笔。上文原句按"只增不改"保留。

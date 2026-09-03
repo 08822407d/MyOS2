@@ -39,3 +39,7 @@ maintained_by: 主导会话（非 GPT 任务会话）——GPT 任务会话不�
 - 对话侧原件在本仓的落点不统一（001/005 为 `FINAL-RESPONSE.md`、008 为 `final-chat-response.md`、其余在 `received/`）——这是各 GPT 会话自行放置的结果，**不搬动**（MANIFEST 与 Alaya 索引均按现路径引用）；后续波次统一要求放 `received/`。
 - GitHub 侧交付件（MANIFEST、图表、`proposed/` 脚本等）留在本仓，不复制到 Alaya；可信度裁定见 `WAVE-1-REVIEW.md`，Alaya 索引 `verdict` 字段只作导航。
 - 第二波（004R/010/011）回收后追加"批次 2"，任务书按其启动时 commit 钉住。
+
+## 维护权移交（2026-09-03 追加；不改上文）
+
+自 2026-09-03 起本文件由 **MYOS2-LEAD-001**（本地 Claude Code 主导会话，记录目录 `agent-workspace/lead/MYOS2-LEAD-001/`）维护：上文 YAML 头 `maintained_by: 主导会话（非 GPT 任务会话）` 中的"主导会话"自此指 MYOS2-LEAD-001；Mnemosyne 会话不再写入本文件；GPT 任务会话仍不写本文件。批次 2（004R/010/011 及后续）起的收据由 MYOS2-LEAD-001 追加，任务书按其启动时 commit 钉住。Alaya 侧写入需 Owner 单独同意（工作令 §4.9、§12 第 6 条）。
