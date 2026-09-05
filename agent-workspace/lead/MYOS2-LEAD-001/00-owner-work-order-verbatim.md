@@ -310,3 +310,9 @@ status: READY_WAITING_FOR_OWNER_SUPPLEMENT | BLOCKED
 ### 脱敏登记（会话操作，2026-09-03）
 
 仓库副本对以上原件做了 **1 处**可逆脱敏替换：Owner 的 gitee 备份镜像地址（出现于 §2.1 第 2 行与 §4 第 4 条）替换为 `git@gitee.com:<REDACTED-owner-backup-mirror>`；00-startup-receipt.md 中同一地址同样替换。原因：该地址在公开仓（origin/master 与 time 两棵树）中此前从未出现，且非任务所必需（§4.4 的推送规则只需知道"禁止 git push upstream"）。原件逐字节版本仍在 Downloads（sha256 见上）。Owner 一句"保留"即改回逐字节副本；未表态则维持脱敏。因此上文 `head -c 42603` 复核法在脱敏版本上**不成立**，以 Downloads 原件为准。
+
+### 第 3 条 · 2026-09-05（Owner 对话原话，逐字；同文发送两次，登记一次）
+
+> pr6我合并了,你说到新编写了一份反编造协议.那么是不是第一次的chatgpt pro任务都最好重做一遍?你给出所有需要重做的gpt pro任务的任务书/提示词/研究课题,并且在收到结果后标注一下它们都是由gpt6-astra完成的(今天稍早时候该模型已经上架可用了).
+
+会话复述 [MI]：(a) PR #6 已合并（merge commit c06048260c7076588bb126c9206b61284391784a，2026-09-05）——阶段 0 的门已过；(b) Owner 问：有了反编造协议，第一波九个 ChatGPT Pro 任务是否都最好重做；(c) 要求给出**所有**需要重做的 GPT Pro 任务的任务书/启动提示词/研究课题；(d) 回收结果后，由主导会话标注这些结果由 **gpt6-astra** 完成（Owner 告知该模型 2026-09-05 稍早上架）。按署名惯例 §6，ChatGPT 表面的模型自识别可信度低，Owner 的告知按 `direct_user_instruction` 类证据记录：回收时在收据/评审记录写 `model_per_owner: gpt6-astra（Owner 2026-09-05 告知）`，GPT 会话自报的 produced_by 原样保留不改。本条视为对第二波任务书起草与发射清单整理的授权；发射仍由 Owner 亲手；未授权本地任务（阶段 1 的 A/B/D）开工。
