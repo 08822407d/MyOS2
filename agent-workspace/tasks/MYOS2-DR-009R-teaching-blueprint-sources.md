@@ -7,7 +7,7 @@ mode: 深度研究 Pro（外部出处为主）；研究完成后回到普通回�
 priority: P2（Owner 目的⑤的证据输入；不阻塞其他任务）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-009R/
-protocol: agent-workspace/tasks/00-gpt-task-protocol-v1.md（全部十条适用；P5 出处纪律最关键）
+protocol: agent-workspace/tasks/00-gpt-task-protocol-v2.md（全部十三条适用，硬性；P5 出处纪律最关键）
 prerequisites: 先读 conventions.md、上述协议、WAVE-1-REVIEW.md §3.5；results/EXTRACTION-NOTE.md；再读 results/MYOS2-DR-009/received/MYOS2-DR-009-deep-research-report.md（只读，待补做对象；其五份文件内嵌于该原件）；以及 results/MYOS2-DR-002/completeness.yaml（若 MYOS2-DR-002R 已回收则改读 completeness-v2.yaml）
 drafted_by: MYOS2-LEAD-001（2026-09-05）
 status: draft（发射由 Owner）
@@ -34,6 +34,16 @@ status: draft（发射由 Owner）
 3. **errata.md**：v1→v2 逐条变更；明确列出被降为不可教的单元。
 4. **交付形态**：优先写库；若只能对话降级，**每个文件单独包在一个代码围栏内**，围栏前一行写目标路径——第一波未围栏导致无法拆分。
 
+## 输入范围与 MANIFEST（v2 协议增补，据对抗评审）
+
+**输入清单（文件/节级；协议 P11）**：`results/MYOS2-DR-009/received/MYOS2-DR-009-deep-research-report.md`（61,623 B，勘误对象；其内嵌五份文件按标题定位：清单文件 / 教学内核先例文件 / LLM 教学证据文件 / 自有代码库教材文件 / 课程骨架文件）；`results/MYOS2-DR-002/MANIFEST.md` 的覆盖统计表与 `completeness-matrix.md` 的子系统级汇总表（只取每个子系统的 completeness/maturity 值；若 002R 已回收改读 `results/MYOS2-DR-002R/MANIFEST.md`）；`agent-workspace/repo-map.md` §3 行数表；`WAVE-1-REVIEW.md` §3.5、§4.11。不读内核源码。
+
+**本任务无源码引文锚点**，MANIFEST 免 `branch_canary_quotes`；`04-curriculum-skeleton-v2.md` 的每行 `teachability` 判定须写明所用的 completeness 值与行数值来源（002/002R 或 repo-map.md），闸门抽样比对。
+
+`MANIFEST.md` 必备字段（协议 P3/P6/P13）：`base_snapshot: time（分支名）`、`read_channel`、`startup_selfcheck_quote`、`branch_canary_quotes`（读源码的任务）、`self_check`（`verified_claims` 须等于全部交付文件的 `[VERIFIED` 标签数）、`produced_by`（界面显示的模型名原样）、覆盖表。
+
+降级交付按协议 P12：每条回复只含一个文件、独立围栏、围栏前一行写目标路径；读不完按本任务书的优先顺序弃尾并在覆盖表声明。
+
 ## 交付物（放入 write_zone）
 
 `MANIFEST.md`（必交；含出处统计、`self_check`、`supersedes` 列表）＋`errata.md`＋`01-precedents-v2.md`＋`02-llm-teaching-evidence-v2.md`＋`03-own-kernel-specifics-v2.md`＋`04-curriculum-skeleton-v2.md`。
@@ -49,3 +59,5 @@ status: draft（发射由 Owner）
 - 04 映射表覆盖 53 个 ID，每行有 `teachability` 与依据；`entry`/`device`/`debug` 三个已知空壳单元不得再标 teachable；
 - 若降级交付，每个文件独立围栏（本地机械拆分成功即通过）；
 - `self_check` 自洽；全文无 40 位 SHA。
+- MANIFEST 含 `startup_selfcheck_quote`、`read_channel`、`self_check`；正则 `[0-9a-f]{40}` 0 命中；每个 `supersedes` 指向 received 原件中存在的标题（协议 P9-1、3、5、8）。
+

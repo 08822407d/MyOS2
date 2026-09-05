@@ -7,7 +7,7 @@ mode: 普通对话 Pro（GitHub 连接器；读 time 分支源码）
 priority: P2（可选：其机械部分本地 L4/L5 也能做，且更便宜；GPT 版本的增量价值在"扩覆盖＋逐条引文"。Owner 若额度紧可跳过）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-008R/
-protocol: agent-workspace/tasks/00-gpt-task-protocol-v1.md（全部十条适用，硬性）
+protocol: agent-workspace/tasks/00-gpt-task-protocol-v2.md（全部十三条适用，硬性；与本任务书冲突时以协议为准）
 prerequisites: 先读 conventions.md、上述协议、WAVE-1-REVIEW.md §3.4、§4.3~4.8；再读 results/MYOS2-DR-008/{MANIFEST-v2.md,debt-register.yaml,01-summary-v2.md,02-correctness-suspects.md}（只读，待勘误对象）
 drafted_by: MYOS2-LEAD-001（2026-09-05）
 status: draft（发射由 Owner；可选）
@@ -37,6 +37,16 @@ status: draft（发射由 Owner；可选）
 - `mykernel/scripts/options_flags.cmake`（协议 P4：判断"死代码/未启用"前必读）；
 - `results/MYOS2-DR-008/`（待勘误对象）。
 
+## 输入范围、强制锚点与 MANIFEST（v2 协议增补，据对抗评审）
+
+**输入清单（文件/节级；协议 P11）**：`results/MYOS2-DR-008/debt-register.yaml`（25,685 B，勘误对象，逐条处理；优先顺序：S1 → S2 → S3，读不完按此弃尾并声明）；`results/MYOS2-DR-008/02-correctness-suspects.md`（三张表）；`results/MYOS2-DR-008/01-summary-v2.md`（只取热点图）；`results/MYOS2-DR-008/MANIFEST-v2.md`（只取统计表）；`WAVE-1-REVIEW.md` §3.4、§4.3~4.8；`mykernel/scripts/options_flags.cmake` 全文。其 `evidence` 里带 40 位 SHA 的 GitHub URL **不得转抄**（协议 P1）。
+
+**强制 [VERIFIED] 锚点（不得降级、不得省略）**：`mykernel/lock_IPC/futex/futex.c::do_futex`（`while (1);`）；`mykernel/arch/x86_64/lock_IPC/atomic/atomic_arch.h::arch_atomic_add_test_negative`；`mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h::arch_spin_trylock`；`mykernel/sched/scheduler/scheduler_core.c::try_to_wake_up`；`mykernel/time/timer/timer.c::msleep`；`mykernel/arch/x86_64/kernel/cpu/common.c`（`x86_vendor` 被置为 `X86_VENDOR_UNKNOWN` 的语句所在函数或初始化器）；`mykernel/arch/x86_64/kernel/myos_APboot.S` 的 `jmp .` 行；`mykernel/scripts/options_flags.cmake` 含 `-DCONFIG_BUG` 的行。
+
+`MANIFEST.md` 必备字段（协议 P3/P6/P13）：`base_snapshot: time（分支名）`、`read_channel`、`startup_selfcheck_quote`、`branch_canary_quotes`（读源码的任务）、`self_check`（`verified_claims` 须等于全部交付文件的 `[VERIFIED` 标签数）、`produced_by`（界面显示的模型名原样）、覆盖表。
+
+降级交付按协议 P12：每条回复只含一个文件、独立围栏、围栏前一行写目标路径；读不完按本任务书的优先顺序弃尾并在覆盖表声明。
+
 ## 交付物（放入 write_zone）
 
 `MANIFEST.md`（必交；含 `self_check`、统计表、新增条目数）＋`errata.md`＋`debt-register-v2.yaml`＋`01-summary-v3.md`＋`02-correctness-suspects-v2.md`。
@@ -52,3 +62,5 @@ status: draft（发射由 Owner；可选）
 - 热点图行数 = 子系统数，统计与 YAML 一致（本地机械核对）；
 - 六项评审事实各有一条带引文的新条目；
 - `self_check` 自洽；全文无 40 位 SHA；`base_snapshot: time（分支名）`。
+- MANIFEST 含 `startup_selfcheck_quote`、`branch_canary_quotes`（time 命中、master 不命中）、`read_channel`、`self_check`（`verified_claims` = 标签计数）；强制锚点八组齐全；`evidence` 字段无 40 位 SHA URL（协议 P9-1、5、7、8、13）。
+

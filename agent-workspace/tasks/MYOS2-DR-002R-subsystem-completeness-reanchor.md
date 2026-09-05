@@ -7,7 +7,7 @@ mode: 普通对话 Pro（GitHub 连接器；读 time 分支源码）
 priority: P0（Owner 目的②的地基；与 003R 并行，互不依赖；阶段 3 交叉综合的输入）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-002R/
-protocol: agent-workspace/tasks/00-gpt-task-protocol-v1.md（全部十条适用，硬性）
+protocol: agent-workspace/tasks/00-gpt-task-protocol-v2.md（全部十三条适用，硬性；与本任务书冲突时以协议为准）
 prerequisites: 先读 conventions.md（尤其 §3 词汇表）、上述协议、WAVE-1-REVIEW.md §3.4、§4、§5；再读 results/MYOS2-DR-002/{MANIFEST.md,completeness.yaml,completeness-matrix.md}（只读，待勘误对象）与 results/MYOS2-DR-008/debt-register.yaml（只取 id）
 drafted_by: MYOS2-LEAD-001（2026-09-05）
 status: draft（发射由 Owner）
@@ -47,6 +47,16 @@ status: draft（发射由 Owner）
 - `results/MYOS2-DR-008/debt-register.yaml`（只取 `id` 与 `path` 做 correctness_ref，不复述其内容）；
 - `results/MYOS2-DR-002/`（待勘误对象）。
 
+## 输入范围、强制锚点与 MANIFEST（v2 协议增补，据对抗评审）
+
+**输入清单（文件/节级；协议 P11）**：`results/MYOS2-DR-002/completeness.yaml`（66,969 B，是勘误对象，按子系统分块读：mm → sched → lock_IPC → kactive → time → fs → arch.x86_64 → block/drivers → 其余；读不完按此顺序弃尾并在覆盖表声明）；`results/MYOS2-DR-002/MANIFEST.md`（只取覆盖统计表）；`results/MYOS2-DR-002/completeness-matrix.md` 的子系统级汇总表（不逐章读）；`results/MYOS2-DR-008/debt-register.yaml` 只取 `id`/`path`/`subsystem` 三列；`WAVE-1-REVIEW.md` §4；`mykernel/scripts/options_flags.cmake` 全文。
+
+**强制 [VERIFIED] 锚点（不得降级、不得省略）**：`mykernel/scripts/options_flags.cmake` 中含 `-DCONFIG_SLUB` 的那一行；`mykernel/arch/x86_64/lock_IPC/atomic/atomic_arch.h::arch_atomic_add_test_negative`（生效汇编为 `subl` 的那一行）；`mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h::arch_spin_trylock`；`mykernel/sched/scheduler/scheduler_core.c::try_to_wake_up`（含 `success = 0` 的那一行）；`mykernel/time/timer/timer.c::msleep`；`mykernel/lock_IPC/futex/futex.c::do_futex`（首句 `while (1);`）；`mykernel/arch/x86_64/kernel/myos_APboot.S` 中 `jmp .` 所在行；`mykernel/time/misc/time_misc.c`（任一函数定义行，证明 time.misc 有实码）。这些锚点对应 `correctness_flag: known_bug` 与 `smp_status: up_only` 的判定依据。
+
+`MANIFEST.md` 必备字段（协议 P3/P6/P13）：`base_snapshot: time（分支名）`、`read_channel`、`startup_selfcheck_quote`、`branch_canary_quotes`（读源码的任务）、`self_check`（`verified_claims` 须等于全部交付文件的 `[VERIFIED` 标签数）、`produced_by`（界面显示的模型名原样）、覆盖表。
+
+降级交付按协议 P12：每条回复只含一个文件、独立围栏、围栏前一行写目标路径；读不完按本任务书的优先顺序弃尾并在覆盖表声明。
+
 ## 交付物（放入 write_zone）
 
 `MANIFEST.md`（必交；含 `read_channel`、`self_check`、`supersedes`、`vocabulary_gap`、双轴统计表）＋`errata.md`＋`completeness-v2.yaml`＋`completeness-matrix-v2.md`。
@@ -62,3 +72,5 @@ status: draft（发射由 Owner）
 - 每条 `correctness_flag != none` 都有 `correctness_ref` 指向 DR008-NNN 或 WAVE-1-REVIEW 编号事实；
 - 每条并发/调度/锁相关节点有 `smp_status`；
 - MANIFEST 双轴统计与 YAML 一致（本地机械核对）；`self_check` 自洽；全文无 40 位 SHA；`base_snapshot: time（分支名）`。
+- MANIFEST 含 `startup_selfcheck_quote`、`branch_canary_quotes`（time 命中、master 不命中）、`read_channel`、`self_check`（`verified_claims` = 标签计数）；强制锚点八组齐全（协议 P9-5、7、8、13）；正则 `[0-9a-f]{40}` 0 命中。
+
