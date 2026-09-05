@@ -88,3 +88,34 @@ https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-
 3. **行号降级使用**：重锚（L4）完成前，第一波的证据一律当"函数级事实断言"而非"行级定位索引"。
 4. **实施类任务的硬前置**：L3（instrumentation）与 L6（冒烟 harness）未就位前，不开展依赖运行时验证的实施任务。
 5. **UP/SMP 分标**：所有并发结论显式区分"UP 下成立"与"SMP 下待验"——当前 SMP 未上线，第一波所有"基本路径可跑"只对单 BSP 成立。
+
+## 5. 补充（2026-09-03，MYOS2-LEAD-001；只增不改上文）
+
+**背景**：Owner 2026-09-03 指示"找回上一会话对编造情况的分析，再设计一次补充/重做任务书"。分析在本文件上方引用的 WAVE-1-REVIEW.md；机械取证与重做计划见 `agent-workspace/lead/MYOS2-LEAD-001/05-wave1-fabrication-ledger-and-redo-plan.md`。
+
+### 5.1 新增任务书（草案，发射由 Owner 亲手）
+
+| 任务 | 标题 | 模式 | 优先 | 说明 |
+|---|---|---|---|---|
+| （协议） | `tasks/00-gpt-task-protocol-v1.md` | — | 前置 | 所有 GPT 任务共用的反编造协议：分支名代替 SHA、引文＋函数名代替行号、自检回合、本地机械闸门 |
+| MYOS2-DR-003R | 依赖图与初始化序列重锚（函数级） | 普通对话 Pro | P0 | supersedes 003 的锚点与 rtc 判定；新增 config 边 |
+| MYOS2-DR-001R | 外围工程审计复跑（勘误优先） | 普通对话 Pro | P1 | supersedes 001；只交 errata＋两件改进件；建议在决策 2/3/4 后发 |
+| MYOS2-DR-005R | x86 查表资料包勘误与出处补全 | 普通对话 Pro（可开浏览） | P2 | supersedes 005 部分 |
+
+004R/010/011 不变（004R 的执行者归属待 Owner 裁决：任务书 mode 为普通对话 Pro，§2 的 L3 却派给本地 Claude）。006 的假 SHA 由本地机械 -v2 替换处理，不另开 GPT 任务。
+
+### 5.2 启动提示词 v3（001R/003R/005R 共用；NNN 换成 001/003/005）
+
+```text
+你将执行 MyOS2 内核分析的重做任务 MYOS2-DR-NNNR。仓库 08822407d/MyOS2 是 public 仓库。
+第一步：读 master 分支的 agent-workspace/conventions.md、agent-workspace/tasks/00-gpt-task-protocol-v1.md（反编造协议，硬性）、agent-workspace/WAVE-1-REVIEW.md，以及你的任务书 agent-workspace/tasks/ 下以 MYOS2-DR-NNNR 开头的文件。连接器读不到就用 raw URL：https://raw.githubusercontent.com/08822407d/MyOS2/master/<path>。
+第二步：开工自检——在回复中逐字引用 conventions.md §1 第 2 条与协议 P2 的原文；引不出来就停止并报告"读取失败"，不要继续。
+分支分工：工作区文件在 master；内核源码以 time 分支为准（raw URL 用 https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>）。
+硬性纪律：不写 40 位 commit SHA（只写分支名 time，或从连接器输出复制的 12 位短 SHA 并标"短 SHA"）；每条 [VERIFIED] 断言附 路径＋函数名＋逐字引文，不用行号定位；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；交付前按协议 P6 自检并在 MANIFEST 写 self_check 结果；编造一条即整份作废。
+写入规则：新分支 agent/MYOS2-DR-NNNR（从 master 建）、只在 agent-workspace/results/MYOS2-DR-NNNR/ 内新增文件、完成后向 master 开 PR；不能写库就在对话里逐文件完整输出交付物，每个文件前注明目标路径。
+开始前用四句话复述：任务目标、源码分支、唯一可写目录、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 5.3 发射顺序建议
+
+先合并承载任务书的 PR → 003R（P0）先发，本地同时做引文闸门脚本与配置面真相表 → 004R（若仍由 GPT）与 010/011 并行 → 001R 在决策 2/3/4 后 → 005R 最后。回收件先过本地闸门（协议 P9），不过整份退回原对话返工。
