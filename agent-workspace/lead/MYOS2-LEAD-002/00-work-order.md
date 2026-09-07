@@ -97,7 +97,7 @@ status: draft（Owner 发出即生效）
 10. Owner 原话 > 本工作令 §12 补充 > 03 文件的 S1~S13 > 你的判断；冲突记 open item 报 Owner，不自裁。
 
 ## 4. 暂定执行源
-见 `lead/MYOS2-LEAD-001/03-provisional-execution-sources.md`（S1~S13、W1~W5，全部 provisional）。对你最常用的：S2 写入规则、S3 产出格式、S4 词汇表、S5 溯源纪律、S8 反编造、S9 归档（你只登记 GitHub 侧）、S11 沟通、协议 v2。
+见 `lead/MYOS2-LEAD-001/03-provisional-execution-sources.md`（S1~S13、W1~W5，全部 provisional）。对你最常用的：S2 写入规则、S3 产出格式、S4 词汇表、S5 溯源纪律、S8 第二波硬纪律、S9 归档（你只登记 GitHub 侧）、S11 沟通、协议 v2。
 
 ## 5. 你能做的闸门（协议 P9 的"可读子集"）与裁定等级
 
