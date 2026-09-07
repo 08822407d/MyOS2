@@ -195,3 +195,33 @@ Owner 原话（逐字，含入口标记）：
 聊天、仓库文档及 PR 的面向 Owner 入口都应让关键结论先出现，必要细节分层保留供追溯与接手。不能假定 Owner 会读完每句话，不能把“已输出／已入库”视为“已知悉／已同意”；影响目标或决定的重要失败、限制和不确定性仍须直接说明，不得以精简为由隐藏。
 
 本条是沟通约定，不是对既有权限边界的逐项解除；本轮只登记补充，不据此启动第二波评审、合并 PR 或执行本地命令。
+
+### 第 4 条 · 2026-09-07 · Mnemosyne 仓库与行为约束借用来源
+
+Owner 原话（逐字，含入口标记）：
+
+> @GitHub 刚刚我让你参考Mnemosyne的说明,我需要说清楚,这是一个我建立的AI Agent项目,它的相关内容都在名叫Mnemosyne的仓库里,地址是git@github.com:08822407d/Mnemosyne.git,该仓库对本账号开放了较高的访问权限,因此如果你不确定它的内容的话可以自行访问相关文件看看.它当中还有许多行为规范(在该仓库里应该叫做"Mnemosyne约束指导")可供本项目的各agent对话/任务借用.
+
+关联：补充第 3 条的背景出处与读取许可；明确 Mnemosyne 指 Owner 建立的 `08822407d/Mnemosyne` 项目。本轨道可以自行按需读取有关行为约束，不需要 Owner 搬运文件或重复说明。没有获得对 Mnemosyne 的写入、任务接管或操作授权；MyOS2 的既有硬约束不因连接器权限较高而改变。
+
+本轮读取发现（LEAD-002 记录，不是新增 Owner 原话）：已通过连接器读取 Mnemosyne 的 master 分支文件；“加载 MNEMOSYNE 约束指导”的实际入口是 [commands/load-mnemosyne-guidance.md](https://github.com/08822407d/Mnemosyne/blob/master/commands/load-mnemosyne-guidance.md)。它要求保持当前对话任务主线，借用行为约束不等于导入该项目的任务或权限。本轮是针对性参考，不宣称已完成整套指导加载。
+
+对 MyOS2 的借用理解：AI 在已有授权内承担信息筛选、工作组织和内容核查责任；Owner 合并 PR 不构成全文阅读、技术正确或测试通过的证明。给 Owner 的当前操作应显眼且与 AI 内部安排分开；输出和入库不等于告知或同意。第 3 条明确的注意力限制同样适用于仓库文档，因此不能只把大段流程搬进文件，就要求 Owner 自行找要点。仍需本地执行的核对如实登记“待本地”，不能为了减轻 Owner 负担而声称已做。
+
+<details>
+<summary>已读来源与借用边界（供后续 agent 按需追溯）</summary>
+
+以下均为 `08822407d/Mnemosyne` 的 master 分支；未转抄原文件的完整提交标识或旧运行结论。
+
+| 来源 | 本轮实际范围与用途 |
+|---|---|
+| [README.md](https://github.com/08822407d/Mnemosyne/blob/master/README.md) | 全文；确认项目定位与指导入口，不把列出的活动路线当作 MyOS2 任务。 |
+| [MNEMOSYNE-AI-START-HERE.md](https://github.com/08822407d/Mnemosyne/blob/master/notes/ai-onboarding/MNEMOSYNE-AI-START-HERE.md) | 全文；识别只读参考、任务接管与写入的区别。 |
+| [load-mnemosyne-guidance.md](https://github.com/08822407d/Mnemosyne/blob/master/commands/load-mnemosyne-guidance.md) | 全文；确认命令别名、分层入口及保留当前主线的边界。 |
+| [user-operation-next-step-capability-and-intent-guard.md](https://github.com/08822407d/Mnemosyne/blob/master/current/user-operation-next-step-capability-and-intent-guard.md) | §1、§2 全部及 §3.1 的前部；只借用操作显眼、结果分层与问题须有上下文的原则，不申报全文。 |
+| [agent-product-ready-pr-and-frontier-efficiency-guard.md](https://github.com/08822407d/Mnemosyne/blob/master/current/agent-product-ready-pr-and-frontier-efficiency-guard.md) | 文件头及 §1 至 §4；用于理解 Owner 不是逐行审阅者、Agent 承担审查责任、实际使用反馈的重要性；未读后续节，不整体移植其 Ready/Draft 等程序规则。 |
+| [02-owner-correction-dual-channel-rules.md](https://github.com/08822407d/Mnemosyne/blob/master/notes/cross-model-review-results/FABLE5-REDESIGN-001/09-continuation/02-owner-correction-dual-channel-rules.md) | 全文；为理解本次沟通纠正而定向打开的历史材料。原件自称跨会话转达，不是 Owner 逐字原话；不把其本地执行记录当作本轮事实。 |
+
+本轮没有读取 `current/human-approved-spec.md`、全部 guard 或其他项目的运行材料，不宣称完整加载、全面评审或已向其他会话传播这些约束。这里只提供已读来源与当前借用理解；后续 agent 仍需按自己的任务与适用范围读取。MyOS2 的直接指令及本工作令继续控制本轨道；本轮不改公共公约、任务书或其他轨道，不越过当前等待中的阶段门，不在 Mnemosyne 写入。
+
+</details>
