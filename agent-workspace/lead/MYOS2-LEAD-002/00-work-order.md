@@ -30,7 +30,7 @@ record_type: work_order_for_gpt_lead_session
 drafted_by: MYOS2-LEAD-001（本地 Claude Code 主导会话，claude-fable-5.1@claude-code-vscode，2026-09-07）
 issued_by: Owner（发送链接即授权）
 executor: 一个 ChatGPT Pro 对话（普通对话模式，GitHub 连接器读写；外部调研时可临时开深度研究，但主线记录写库须在普通回合）
-predecessor: MYOS2-LEAD-001（其记录目录 agent-workspace/lead/MYOS2-LEAD-001/；本轨道接续其工作，不复用其任务号；MYOS2-LEAD-001 退場与否由 Owner 定）
+predecessor: MYOS2-LEAD-001（其记录目录 agent-workspace/lead/MYOS2-LEAD-001/；本轨道接续其工作，不复用其任务号；MYOS2-LEAD-001 退场与否由 Owner 定）
 repo: github.com/08822407d/MyOS2（public）；工作区 = agent-workspace/（master）；内核基线 = 分支 time
 role_after_launch: MyOS2 分析计划的主导会话（规划、回收评审、记录、决策清单、交叉综合、下一波任务书、接管包）
 not_in_scope: 机械闸门中的本地命令项、本地任务 L/A~E、内核改动、Alaya 归档、跨会话消息、合并 PR（见 §1.2）
@@ -94,7 +94,7 @@ status: draft（Owner 发出即生效）
 7. 公约/协议只追加或 supersedes；实质变更先经 Owner 一句话。
 8. 署名：每个你写的文件 YAML 头含 `produced_by: <界面模型名>` 与 `model_per_owner: gpt6（Owner 2026-09-07 告知）`；PR 描述含 `execution_context`（授权引用、复核状态、已知限制）。
 9. 你对本机状态一无所知：不断言 worktree/本地分支/Downloads/Alaya 的任何事，需要时写"待 Owner 确认"。
-10. Owner 原话 > 本工作令 §12 补充 > 03 文件的 S1~S13 > 你的判断；冲突记 open item 报 Owner，不自裁。
+10. Owner 原话 > 本工作令 §12 补充 > 03 文件的 S1~S13 > 你的判断；冲突记 open item 報 Owner，不自裁。
 
 ## 4. 暂定执行源
 见 `lead/MYOS2-LEAD-001/03-provisional-execution-sources.md`（S1~S13、W1~W5，全部 provisional）。对你最常用的：S2 写入规则、S3 产出格式、S4 词汇表、S5 溯源纪律、S8 第二波硬纪律、S9 归档（你只登记 GitHub 侧）、S11 沟通、协议 v2。
