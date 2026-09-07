@@ -30,7 +30,7 @@ record_type: work_order_for_gpt_lead_session
 drafted_by: MYOS2-LEAD-001（本地 Claude Code 主导会话，claude-fable-5.1@claude-code-vscode，2026-09-07）
 issued_by: Owner（发送链接即授权）
 executor: 一个 ChatGPT Pro 对话（普通对话模式，GitHub 连接器读写；外部调研时可临时开深度研究，但主线记录写库须在普通回合）
-predecessor: MYOS2-LEAD-001（其记录目录 agent-workspace/lead/MYOS2-LEAD-001/；本轨道接续其工作，不复用其任务号；MYOS2-LEAD-001 退场与否由 Owner 定）
+predecessor: MYOS2-LEAD-001（其记录目录 agent-workspace/lead/MYOS2-LEAD-001/；本轨道接续其工作，不复用其任务号；MYOS2-LEAD-001 退場与否由 Owner 定）
 repo: github.com/08822407d/MyOS2（public）；工作区 = agent-workspace/（master）；内核基线 = 分支 time
 role_after_launch: MyOS2 分析计划的主导会话（规划、回收评审、记录、决策清单、交叉综合、下一波任务书、接管包）
 not_in_scope: 机械闸门中的本地命令项、本地任务 L/A~E、内核改动、Alaya 归档、跨会话消息、合并 PR（见 §1.2）
@@ -259,3 +259,13 @@ Owner 原话（逐字，含入口标记）：
 关联：确认本批九附件的来源与分析授权，继续 §5、§6 的阶段 2 回收评审；本批任务为 002R、003R、004R、005R、007R、008R、009R、010、011，001R 不在本批。Owner 模型告知记录为 model_per_owner: gpt6，并另保留原话 gpt6 pro；各原件自报的 produced_by 不覆盖、不据此推测后端。
 
 本轮观察与处置（LEAD-002 记录，不是新增 Owner 原话）：九附件均只有各自 MANIFEST，列出的其他 49 文件未随附；008R 的清单中另含八组候选源码引文。当前交付退回补交，不判定全部研究错误或正文在原对话不存在。评审见 WAVE-2-REVIEW.md 与各任务新建的 GATE-REPORT-by-LEAD-002.md；最新接收状态见 checkpoints/2026-09-07-wave2-attachment-review-01.md。原附件未改，逐字节入库及哈希待本地；不以重录文本冒充原件，不自动重跑九项研究，不改变本地、合并或后续阶段边界。
+
+### 第 8 条 · 2026-09-07 · 课题合集与下一步综合分析
+
+Owner 原话（逐字，含入口标记）：
+
+> @GitHub 这个附件是生成9份研究课题的claude code整理出来的全部研究课题内容,据它说还包含相关的背景,你现在可以综合分析后决定下一步内容了
+
+关联：授权将本轮课题合集与已收九附件结合分析，决定阶段 2 的恢复工作；不把课题原文当作新增研究结果。合集实际含十份题目及发射块，001R 仍不是本批已收成果。
+
+本轮结论与边界（LEAD-002 的解释，不是新增 Owner 原话）：先修复共同交付设计及已查明的输入/计数矛盾，再优先取回已有正文，只补真正缺少的研究；不重跑九项。详见 `03-wave2-delivery-recovery-decision.md`。该文件提出 P12 等交付条款及已列明规则矛盾的修订，但依 §3.7 尚未生效；本轮不改协议、公约或任务书。原研究材料、旧评审和前任文件保留，正文到达后的既有分析授权仍有效，不因此等待重复开工。
