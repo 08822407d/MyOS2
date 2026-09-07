@@ -3,7 +3,7 @@
 ```yaml
 task_id: MYOS2-DR-009R
 supersedes: MYOS2-DR-009（部分：四份研究文件的证据层；04 的映射表整体替换）
-mode: 深度研究 Pro（外部出处为主）；研究完成后回到普通回合写库或降级输出
+mode: 深度研究 Pro（Owner 2026-09-07 指示：第二波全部任务由深度研究执行；研究期间 GitHub 连接器只读、可用 raw URL 读仓库；写库在普通回合，或按协议 P12 逐文件输出）
 priority: P2（Owner 目的⑤的证据输入；不阻塞其他任务）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-009R/

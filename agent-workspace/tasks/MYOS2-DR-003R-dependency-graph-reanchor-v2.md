@@ -3,7 +3,7 @@
 ```yaml
 task_id: MYOS2-DR-003R
 supersedes: agent-workspace/tasks/MYOS2-DR-003R-dependency-graph-reanchor.md（v1 任务书，保留不改）；产出 supersedes MYOS2-DR-003 的锚点与 rtc 判定（results/MYOS2-DR-003/ 保留不改）
-mode: 普通对话 Pro（GitHub 连接器；读 time 分支源码）
+mode: 深度研究 Pro（Owner 2026-09-07 指示：第二波全部任务由深度研究执行；研究期间 GitHub 连接器只读、可用 raw URL 读仓库；写库在普通回合，或按协议 P12 逐文件输出）
 priority: P0（002/007 的交叉综合、menuconfig 式裁剪、004R 的启动检查点都以它的锚点为地基）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-003R/

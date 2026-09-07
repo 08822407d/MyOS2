@@ -3,7 +3,7 @@
 ```yaml
 task_id: MYOS2-DR-001R
 supersedes: agent-workspace/tasks/MYOS2-DR-001R-build-and-scripts-audit-rerun.md（v1 任务书，保留不改）；产出 supersedes MYOS2-DR-001（results/MYOS2-DR-001/ 保留不改）
-mode: 普通对话 Pro（GitHub 连接器；读 time 分支的根目录脚本、scripts/、三套 CMakeLists）
+mode: 深度研究 Pro（Owner 2026-09-07 指示：第二波全部任务由深度研究执行；研究期间 GitHub 连接器只读、可用 raw URL 读仓库；写库在普通回合，或按协议 P12 逐文件输出）
 priority: P1（Owner 目的①；受 Owner 决策 2/3/4 制约，建议决策后发射）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-001R/

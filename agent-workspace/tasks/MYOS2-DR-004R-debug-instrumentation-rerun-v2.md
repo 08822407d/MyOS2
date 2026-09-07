@@ -3,7 +3,7 @@
 ```yaml
 task_id: MYOS2-DR-004R
 supersedes: agent-workspace/tasks/MYOS2-DR-004R-debug-instrumentation-rerun.md（v1 任务书，保留不改；本 v2 经 3 视角对抗评审后重写）；原任务 MYOS2-DR-004 因连接器故障零交付（results/MYOS2-DR-004/received/），未编造
-mode: 普通对话 Pro（GitHub 连接器；读 time 分支源码）
+mode: 深度研究 Pro（Owner 2026-09-07 指示：第二波全部任务由深度研究执行；研究期间 GitHub 连接器只读、可用 raw URL 读仓库；写库在普通回合，或按协议 P12 逐文件输出）
 priority: P0（Owner 目的③；第一波唯一结构性空洞；008 的 32 条嫌疑全靠它锁定）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-004R/
