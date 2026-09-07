@@ -328,3 +328,9 @@ status: READY_WAITING_FOR_OWNER_SUPPLEMENT | BLOCKED
 > 你看看在不接收分析这些深度研究的情况下,能不能设计一份任务书让chatgpt pro来接手当前主线的工作
 
 会话复述 [MI]：不等第二波深度研究结果回收，先判断并设计一份工作令，让一个 ChatGPT Pro 对话接手本轨道（MYOS2-LEAD-001）的主线职责。本会话的处置：(a) 可行性判断记入 `07-gpt-lead-takeover-feasibility.md`；(b) 起草 GPT 主导会话工作令 `agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md`（Owner 发送链接即授权；draft）；(c) 写交接快卡 `09-continuation/00-quick-card-handover.md`（工作令 §8 收口项，提前出）。本会话不因此退场，直到 Owner 明示。
+
+### 第 6 条 · 2026-09-07（Owner 对话原话，逐字）
+
+> 现在由于你的额度剩余不多，所以暂时假定这一轮研究结果没有编造，但并不是说就让你不再管这个任务了。等3天后额度恢复时会让你在进行一次仔细的核实。
+
+会话复述 [MI]：(a) 因本会话额度所剩不多，第二波回收件**暂按"未编造"假定**投入使用，但每份回收件登记 `verification_status: provisional_unverified（Owner 2026-09-07 指示）`，不得当已核实事实引用；(b) 本会话仍是本轨道的责任会话，不退场；(c) 约 2026-09-10 额度恢复后，由 Owner 指示时对本轮全部回收件做一次仔细核实（按协议 P9 十三项机械闸门＋对抗核查），核实前不启动子代理、不跑工作流；(d) 与 MYOS2-LEAD-002 工作令的关系：其 PASS_PENDING_LOCAL 规则不变，"暂定无编造"只是消费口径，不改变验收等级。

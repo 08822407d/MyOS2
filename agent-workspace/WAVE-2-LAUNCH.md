@@ -87,6 +87,7 @@ review_coverage: 004R 任务书经 3 视角独立对抗评审（反编造 / 可�
 3. **对抗核查与裁定**：过闸门后按第一波方法（精读＋对抗核查）出 WAVE-2-REVIEW；可靠性裁定进 MANIFEST 的消费说明。
 4. **署名标注（Owner 2026-09-05 指示，2026-09-07 修订）**：回收件的 MANIFEST `produced_by` 保留 GPT 会话自报值不改；主导会话在 `results/ARCHIVE-RECEIPTS.md` 批次 2 与 WAVE-2-REVIEW 的每条记录加 `model_per_owner: gpt6（Owner 2026-09-07 告知：自此起所有 GPT 执行的工作已换到 gpt6）`；日后模型再更新由 Owner 一句话改标，不影响已回收件的标记。依据：多写入方署名惯例 §6——ChatGPT 表面的模型自识别可信度低，Owner 告知按 direct_user_instruction 记录。
 5. **归档**：过闸门的回收件按双仓制度进 Alaya 批次 2（Alaya 写入需 Owner 单独同意）。
+6. **临时消费口径（Owner 2026-09-07 指示）**：本会话额度受限期间，回收件暂按"未编造"假定使用，但每份在 GATE-REPORT / 消费说明中标 `verification_status: provisional_unverified`，下游引用其结论须带此标记；约 2026-09-10 额度恢复后由主导会话按协议 P9 十三项＋对抗核查做正式核实，核实后改为 verified 或退回。此口径不改变验收等级（最高仍为 PASS_PENDING_LOCAL 直到本地闸门通过）。
 
 ## 5. 状态跟踪（Owner 手工勾选）
 
