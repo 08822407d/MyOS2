@@ -3,13 +3,14 @@
 ```yaml
 record_type: launch_sheet
 wave: 2
-version: 3（修订 1，2026-09-05 晚：吸收对抗评审、改用协议 v2 与 v2 任务书）
+version: 3（修订 2，2026-09-07：Owner 指示全部任务改深度研究执行、署名标 gpt6、暂不评审；新增 §7 逐任务发射块）
 date: 2026-09-05
 drafted_by: MYOS2-LEAD-001（本地 Claude Code 主导会话；claude-fable-5.1@claude-code-vscode）
 supersedes: WAVE-2-PLAN.md §1 的启动提示词与 §5.2 的 v3 提示词（本文件为准；WAVE-2-PLAN 的分流原则、本地任务、决策清单、硬纪律仍有效）
 protocol: agent-workspace/tasks/00-gpt-task-protocol-v2.md（所有 GPT 任务硬性适用；与任务书冲突时以协议为准；v1 已被 v2 取代）
 status: draft（发射由 Owner 亲手；每个任务一个全新对话）
-owner_instruction_2026_09_05: 第一波 ChatGPT Pro 任务按需重做；回收结果由主导会话标注为 gpt6-astra 完成（Owner 告知该模型 2026-09-05 上架）
+owner_instruction_2026_09_05: 第一波 ChatGPT Pro 任务按需重做；回收结果由主导会话标注模型（初为 gpt6-astra）
+owner_instruction_2026_09_07: 暂不评审任务书；全部重做研究由 ChatGPT 深度研究执行；自此起 GPT 执行的工作一律标 model_per_owner: gpt6
 review_coverage: 004R 任务书经 3 视角独立对抗评审（反编造 / 可执行性 / 事实一致性）并据此重写为 v2；其发现中可推广的部分已写入协议 v2 与全部任务书；其余 10 份文件的独立评审因账号用量上限未能运行（待补）
 ```
 
@@ -34,18 +35,18 @@ review_coverage: 004R 任务书经 3 视角独立对抗评审（反编造 / 可�
 
 | 任务 | 标题 | 模式 | 优先 | 任务书 | 依赖 Owner 决策？ |
 |---|---|---|---|---|---|
-| MYOS2-DR-003R | 依赖图与初始化序列重锚 | 普通对话 Pro | P0 | tasks/MYOS2-DR-003R-dependency-graph-reanchor-v2.md | 否 |
-| MYOS2-DR-002R | 完成度矩阵重锚与双轴化 | 普通对话 Pro | P0 | tasks/MYOS2-DR-002R-subsystem-completeness-reanchor.md | 否 |
-| MYOS2-DR-004R | 调试桩复跑 | 普通对话 Pro | P0 | tasks/MYOS2-DR-004R-debug-instrumentation-rerun-v2.md | 决策 5（console 通道）可选；执行者归属 OI-1 |
+| MYOS2-DR-003R | 依赖图与初始化序列重锚 | **深度研究 Pro** | P0 | tasks/MYOS2-DR-003R-dependency-graph-reanchor-v2.md | 否 |
+| MYOS2-DR-002R | 完成度矩阵重锚与双轴化 | **深度研究 Pro** | P0 | tasks/MYOS2-DR-002R-subsystem-completeness-reanchor.md | 否 |
+| MYOS2-DR-004R | 调试桩复跑 | **深度研究 Pro** | P0 | tasks/MYOS2-DR-004R-debug-instrumentation-rerun-v2.md | 决策 5（console 通道）可选；执行者归属 OI-1 |
 | MYOS2-DR-007R | 重要度证据补全与 tier 重算 | **深度研究 Pro** | P1 | tasks/MYOS2-DR-007R-importance-evidence-and-tiers.md | 否（决策 7 有答案则一并消费） |
 | MYOS2-DR-010 | 补做外部测试实践综述 | **深度研究 Pro** | P1 | tasks/MYOS2-DR-010-testing-practice-survey-redo.md | 否 |
-| MYOS2-DR-001R | 外围工程审计复跑 | 普通对话 Pro | P1 | tasks/MYOS2-DR-001R-build-and-scripts-audit-rerun-v2.md | 决策 2/3/4（无则只能再问一遍） |
+| MYOS2-DR-001R | 外围工程审计复跑 | **深度研究 Pro** | P1 | tasks/MYOS2-DR-001R-build-and-scripts-audit-rerun-v2.md | 决策 2/3/4（无则只能再问一遍） |
 | MYOS2-DR-011 | lockdep-lite 调研 | **深度研究 Pro** | P2 | tasks/MYOS2-DR-011-lockdep-lite-research.md | 否 |
 | MYOS2-DR-009R | 教学蓝本出处补全与过滤 | **深度研究 Pro** | P2 | tasks/MYOS2-DR-009R-teaching-blueprint-sources.md | 否（002R 回收后发更好） |
-| MYOS2-DR-005R | x86 资料包勘误 | 普通对话 Pro（可开浏览） | P2 | tasks/MYOS2-DR-005R-x86-reference-pack-errata-v2.md | 否 |
-| MYOS2-DR-008R | 技术债台账重锚（可选） | 普通对话 Pro | P2 | tasks/MYOS2-DR-008R-tech-debt-register-reanchor.md | 否 |
+| MYOS2-DR-005R | x86 资料包勘误 | **深度研究 Pro** | P2 | tasks/MYOS2-DR-005R-x86-reference-pack-errata-v2.md | 否 |
+| MYOS2-DR-008R | 技术债台账重锚（可选） | **深度研究 Pro** | P2 | tasks/MYOS2-DR-008R-tech-debt-register-reanchor.md | 否 |
 
-全部并行安全（各写各的 results 目录与 agent/ 分支）。
+全部并行安全（各写各的 results 目录与 agent/ 分支）。**执行模式：自 2026-09-07 起十个任务全部用深度研究 Pro**（Owner 指示）；任务书 mode 字段已同步。
 
 ## 2. 发射顺序建议
 
@@ -57,20 +58,9 @@ review_coverage: 004R 任务书经 3 视角独立对抗评审（反编造 / 可�
 
 ## 3. 启动提示词 v3
 
-### 3.1 普通对话 Pro 模板（001R / 002R / 003R / 004R / 005R / 008R；把 <任务号> 与 <任务书路径> 换成 §1 表中的值）
+### 3.1 （已作废，2026-09-07）普通对话模板不再使用——全部任务改用 §7 的逐任务发射块（深度研究）。
 
-```text
-你将执行 MyOS2 内核分析任务 MYOS2-DR-<任务号>。仓库 08822407d/MyOS2 是 public 仓库。
-第一步：读 master 分支的这四个文件——agent-workspace/conventions.md；agent-workspace/tasks/00-gpt-task-protocol-v2.md（反编造协议，硬性；与任务书冲突时以协议为准）；agent-workspace/WAVE-1-REVIEW.md；你的任务书 agent-workspace/<任务书路径>（只读这一份任务书，不读同名的旧版本）。连接器读不到就用 raw URL：https://raw.githubusercontent.com/08822407d/MyOS2/master/<path>；raw URL 不能列目录，浏览目录用 https://github.com/08822407d/MyOS2/tree/<分支>/<dir>。两条通道都失败就停止并报告，不猜内容。
-分支分工：工作区文件（公约/协议/任务书/第一波产出）在 master；内核源码以 time 分支为准（raw URL 用 https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>）。
-开工自检（写进 MANIFEST，闸门只认 MANIFEST）：startup_selfcheck_quote 逐字复制 conventions.md §1 第 2 条整句；branch_canary_quotes 逐字引用协议 P3 指定的两行（options_flags.cmake 的 -mcmodel=…-fno-pie 行、panic.c::panic 的 this_cpu = 行）。
-硬性纪律：不写 40 位 commit SHA（base_snapshot 只写分支名 time；确需引用 commit 只写从连接器输出复制的 12 位短 SHA 并标"短 SHA"）；每条 [VERIFIED] 断言写成 [VERIFIED 路径::函数名] 并紧跟 1~5 行逐字引文，引文必须在该函数/宏定义体内，不用行号定位；任务书列的强制锚点不得降级为 [INFERRED]；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；代码件用整文件或"改动块"（路径::函数名＋逐字 before 引文＋after 代码），不手写 diff，首部标 UNTESTED，MANIFEST 列 symbols_referenced；交付前按协议 P6 自检并写 self_check（verified_claims 必须等于你全部交付文件里 [VERIFIED 标签的个数）；编造一条即整份作废。
-署名：MANIFEST 的 produced_by 原样填写你界面上显示的模型名称，不猜测后端。
-写入规则：新分支 agent/MYOS2-DR-<任务号>（从 master 建）、只在 agent-workspace/results/MYOS2-DR-<任务号>/ 内新增文件、完成后向 master 开 PR；不能写库就在对话里逐文件输出：每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序输出。
-开始前用四句话复述：任务目标、源码分支、唯一可写目录、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
-```
-
-### 3.2 深度研究 Pro 模板（007R / 009R / 010 / 011；把 <任务号> 与 <任务书路径> 换成 §1 表中的值）
+### 3.2 深度研究 Pro 通用模板（全部十个任务；§7 已按任务填好，直接复制 §7）
 
 ```text
 你将执行 MyOS2 项目的外部调研任务 MYOS2-DR-<任务号>。仓库 08822407d/MyOS2 是 public 仓库，master 分支。
@@ -95,7 +85,7 @@ review_coverage: 004R 任务书经 3 视角独立对抗评审（反编造 / 可�
 1. **回收**：GPT 开了 PR 就先不合并，主导会话拉取分支做闸门；对话降级件由 Owner 存盘（或上传压缩包）交主导会话入库到 `results/<任务号>/received/`。
 2. **本地机械闸门**（协议 v2 P9 的十三项：40 位十六进制正则、引文 grep 与函数体范围、路径存在、行号越界、self_check 计数、URL/DOI、分支金丝雀、开工自检引文、symbols_referenced、改动块 before 引文、无"可编译/可运行"字样、围栏可拆分、强制锚点齐全）。任一不过 → 整份退回原对话返工，引用具体判据。闸门脚本＝本地任务 A，发射前应就位。
 3. **对抗核查与裁定**：过闸门后按第一波方法（精读＋对抗核查）出 WAVE-2-REVIEW；可靠性裁定进 MANIFEST 的消费说明。
-4. **署名标注（Owner 2026-09-05 指示）**：回收件的 MANIFEST `produced_by` 保留 GPT 会话自报值不改；主导会话在 `results/ARCHIVE-RECEIPTS.md` 批次 2 与 WAVE-2-REVIEW 的每条记录加 `model_per_owner: gpt6-astra（Owner 2026-09-05 告知）`；若某次对话 Owner 改用了别的模型，Owner 一句话即改该条。依据：多写入方署名惯例 §6——ChatGPT 表面的模型自识别可信度低，Owner 告知按 direct_user_instruction 记录。
+4. **署名标注（Owner 2026-09-05 指示，2026-09-07 修订）**：回收件的 MANIFEST `produced_by` 保留 GPT 会话自报值不改；主导会话在 `results/ARCHIVE-RECEIPTS.md` 批次 2 与 WAVE-2-REVIEW 的每条记录加 `model_per_owner: gpt6（Owner 2026-09-07 告知：自此起所有 GPT 执行的工作已换到 gpt6）`；日后模型再更新由 Owner 一句话改标，不影响已回收件的标记。依据：多写入方署名惯例 §6——ChatGPT 表面的模型自识别可信度低，Owner 告知按 direct_user_instruction 记录。
 5. **归档**：过闸门的回收件按双仓制度进 Alaya 批次 2（Alaya 写入需 Owner 单独同意）。
 
 ## 5. 状态跟踪（Owner 手工勾选）
@@ -113,6 +103,159 @@ review_coverage: 004R 任务书经 3 视角独立对抗评审（反编造 / 可�
 
 ## 6. 评审覆盖与已知局限（2026-09-05 晚）
 
-- 对抗评审只完成了 004R 任务书（三视角 × 1 份）；其结论中可推广的六类漏洞已写进协议 v2 并落到全部任务书（输入清单文件级、强制锚点、金丝雀、self_check 计数绑定、改动块、不转抄第一波字段）。其余 10 份文件（协议 v2 本身、001R/002R/003R/005R/007R/008R/009R/010/011、本清单）的独立评审因账号用量上限未运行，属**未经独立复核的草案**；Owner 可在额度恢复后要求补评（约 30 个子代理）。
+- 对抗评审只完成了 004R 任务书（三视角 × 1 份）；其结论中可推广的六类漏洞已写进协议 v2 并落到全部任务书（输入清单文件级、强制锚点、金丝雀、self_check 计数绑定、改动块、不转抄第一波字段）。其余 10 份文件（协议 v2 本身、001R/002R/003R/005R/007R/008R/009R/010/011、本清单）的独立评审因账号用量上限未运行，属**未经独立复核的草案**；Owner 2026-09-07 指示**暂不评审**，草案按现状发射。
 - 本地闸门脚本（本地 A）尚未存在；在它就位前，回收件只能人工按 P9 清单核对。
 - 004R 执行者归属（GPT 还是本地）仍待 Owner（OI-1）。
+
+## 7. 逐任务发射块（2026-09-07；每块整段复制到一个全新的 ChatGPT 深度研究对话；顺序即建议发射顺序）
+> 前提：本文件所在 PR 合并到 master 后链接才有效；合并前想先发，把每个链接中的 `/master/` 换成 `/agent/MYOS2-LEAD-001/`。四份必读之外的链接（time 源码、results 目录）无需改。
+
+### 7.1 MYOS2-DR-003R · 依赖关系图与初始化序列重锚（函数级）
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-003R（依赖关系图与初始化序列重锚（函数级））。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-003R-dependency-graph-reanchor-v2.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-003R 上、agent-workspace/results/MYOS2-DR-003R/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.2 MYOS2-DR-002R · 子系统完成度矩阵重锚与双轴化
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-002R（子系统完成度矩阵重锚与双轴化）。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-002R-subsystem-completeness-reanchor.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-002R 上、agent-workspace/results/MYOS2-DR-002R/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.3 MYOS2-DR-004R · 调试桩与可观测性方案（复跑）
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-004R（调试桩与可观测性方案（复跑））。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-004R-debug-instrumentation-rerun-v2.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-004R 上、agent-workspace/results/MYOS2-DR-004R/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.4 MYOS2-DR-007R · 重要度分级证据补全与 tier 重算
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-007R（重要度分级证据补全与 tier 重算）。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-007R-importance-evidence-and-tiers.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-007R 上、agent-workspace/results/MYOS2-DR-007R/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.5 MYOS2-DR-010 · 补做外部测试实践综述
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-010（补做外部测试实践综述）。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-010-testing-practice-survey-redo.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-010 上、agent-workspace/results/MYOS2-DR-010/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.6 MYOS2-DR-001R · 外围工程审计复跑（勘误优先）
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-001R（外围工程审计复跑（勘误优先））。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-001R-build-and-scripts-audit-rerun-v2.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-001R 上、agent-workspace/results/MYOS2-DR-001R/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.7 MYOS2-DR-011 · lockdep-lite 设计调研
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-011（lockdep-lite 设计调研）。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-011-lockdep-lite-research.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-011 上、agent-workspace/results/MYOS2-DR-011/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.8 MYOS2-DR-009R · 教学蓝本预研出处补全与教学单元过滤
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-009R（教学蓝本预研出处补全与教学单元过滤）。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-009R-teaching-blueprint-sources.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-009R 上、agent-workspace/results/MYOS2-DR-009R/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.9 MYOS2-DR-005R · x86 查表资料包勘误与出处补全
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-005R（x86 查表资料包勘误与出处补全）。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-005R-x86-reference-pack-errata-v2.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-005R 上、agent-workspace/results/MYOS2-DR-005R/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```
+
+### 7.10 MYOS2-DR-008R · 技术债台账重锚与覆盖扩展（可选）
+
+```text
+你将以深度研究模式执行 MyOS2 项目任务 MYOS2-DR-008R（技术债台账重锚与覆盖扩展（可选））。仓库 08822407d/MyOS2 是 public 仓库。
+先完整读取这四个文件（GitHub 连接器可用则用连接器，否则直接打开 raw 链接）：
+1) 写入公约：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/conventions.md
+2) 反编造协议 v2（硬性；与任务书冲突时以协议为准）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/00-gpt-task-protocol-v2.md
+3) 第一波评审报告：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/WAVE-1-REVIEW.md
+4) 你的任务书（只读这一份，不读同名旧版本）：https://raw.githubusercontent.com/08822407d/MyOS2/master/agent-workspace/tasks/MYOS2-DR-008R-tech-debt-register-reanchor.md
+内核源码以 time 分支为准：https://raw.githubusercontent.com/08822407d/MyOS2/time/<path>（浏览目录用 https://github.com/08822407d/MyOS2/tree/time/mykernel/ ）；第一波产出在 https://github.com/08822407d/MyOS2/tree/master/agent-workspace/results/ 下，只按任务书的输入清单读。
+严格按任务书的输入清单、强制锚点、交付物、输出上限与验收判据执行；协议 P1~P13 全部硬性：不写 40 位 commit SHA（base_snapshot 只写分支名）；每条 [VERIFIED 路径::函数名] 紧跟 1~5 行逐字引文且引文在该函数/宏定义体内，不用行号；强制锚点不得降级；说"不存在/未调用/可裁剪"前先读 mykernel/scripts/options_flags.cmake 并引用；外部结论带可解析 URL/DOI；第一波产出只取结构、函数名、ID，不转述其断言、不转抄其行号与文件头字段；MANIFEST 必含 startup_selfcheck_quote（逐字复制公约 §1 第 2 条）、branch_canary_quotes（协议 P3 指定的两行；不读源码的任务免）、read_channel、self_check（verified_claims 等于你全部交付文件中 [VERIFIED 标签的个数）、produced_by（原样填写界面显示的模型名）；编造一条即整份作废。
+深度研究期间连接器只读。研究完成后回到普通对话回合：能写库则在新分支 agent/MYOS2-DR-008R 上、agent-workspace/results/MYOS2-DR-008R/ 内新增文件并向 master 开 PR；不能写库就逐文件输出——每条回复只含一个文件，独立代码围栏，围栏前一行写目标路径，按任务书给的顺序。
+开始前用三句话复述：任务目标、出处与引文纪律、交付物清单。复述无误后直接开工，过程中不要向我提问，拿不准的写进 open_questions。
+```

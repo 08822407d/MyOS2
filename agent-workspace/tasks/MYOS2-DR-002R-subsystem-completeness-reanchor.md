@@ -3,7 +3,7 @@
 ```yaml
 task_id: MYOS2-DR-002R
 supersedes: MYOS2-DR-002（原目录 results/MYOS2-DR-002/ 保留不改；本任务产出 -v2 文件并写 supersedes）
-mode: 普通对话 Pro（GitHub 连接器；读 time 分支源码）
+mode: 深度研究 Pro（Owner 2026-09-07 指示：第二波全部任务由深度研究执行；研究期间 GitHub 连接器只读、可用 raw URL 读仓库；写库在普通回合，或按协议 P12 逐文件输出）
 priority: P0（Owner 目的②的地基；与 003R 并行，互不依赖；阶段 3 交叉综合的输入）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-002R/

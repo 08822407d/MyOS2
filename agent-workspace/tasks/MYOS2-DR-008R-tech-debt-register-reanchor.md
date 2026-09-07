@@ -3,7 +3,7 @@
 ```yaml
 task_id: MYOS2-DR-008R
 supersedes: MYOS2-DR-008（部分：证据锚点、热点图、永久自旋类目；ID 体系保留）
-mode: 普通对话 Pro（GitHub 连接器；读 time 分支源码）
+mode: 深度研究 Pro（Owner 2026-09-07 指示：第二波全部任务由深度研究执行；研究期间 GitHub 连接器只读、可用 raw URL 读仓库；写库在普通回合，或按协议 P12 逐文件输出）
 priority: P2（可选：其机械部分本地 L4/L5 也能做，且更便宜；GPT 版本的增量价值在"扩覆盖＋逐条引文"。Owner 若额度紧可跳过）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-008R/

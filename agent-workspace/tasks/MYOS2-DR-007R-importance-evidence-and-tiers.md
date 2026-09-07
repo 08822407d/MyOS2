@@ -3,7 +3,7 @@
 ```yaml
 task_id: MYOS2-DR-007R
 supersedes: MYOS2-DR-007（部分：01-evidence-survey 与 importance.yaml 的证据层、MANIFEST 计数；roadmap 的三条路线保留）
-mode: 深度研究 Pro（外部出处为主）；研究完成后回到普通回合写库或降级输出
+mode: 深度研究 Pro（Owner 2026-09-07 指示：第二波全部任务由深度研究执行；研究期间 GitHub 连接器只读、可用 raw URL 读仓库；写库在普通回合，或按协议 P12 逐文件输出）
 priority: P1（Owner 目的②"重要程度图"；阶段 3 交叉综合需要可复核的重要度证据）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-007R/

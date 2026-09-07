@@ -3,7 +3,7 @@
 ```yaml
 task_id: MYOS2-DR-005R
 supersedes: agent-workspace/tasks/MYOS2-DR-005R-x86-reference-pack-errata.md（v1 任务书，保留不改）；产出部分 supersedes MYOS2-DR-005（只对有变更的卡出 -v2；results/MYOS2-DR-005/ 保留不改）
-mode: 普通对话 Pro（GitHub 连接器＋开浏览核对 Intel SDM / AMD APM 官方页面）
+mode: 深度研究 Pro（Owner 2026-09-07 指示：第二波全部任务由深度研究执行；研究期间 GitHub 连接器只读、可用 raw URL 读仓库；写库在普通回合，或按协议 P12 逐文件输出）
 priority: P2（Owner 目的④；查表包最忌错值，但不阻塞其他任务）
 parallel_safe: true
 write_zone: agent-workspace/results/MYOS2-DR-005R/
