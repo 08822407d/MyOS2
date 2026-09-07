@@ -13,9 +13,9 @@ date: 2026-09-07
 base_snapshot: "agent/MYOS2-LEAD-002（分支名）"
 inputs_read:
   - agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md
-authorization_ref: "Owner 本轮补充；工作令 §2.5、§12"
-status: READY_WAITING_FOR_OWNER_GO
-owner_go_received: false
+authorization_ref: "Owner 本轮开工指令；工作令 §2.5、§7、§12 第 1~2 条"
+status: ACTIVE_AFTER_OWNER_GO
+owner_go_received: true
 local_validation: "待本地；本轮未执行命令。"
 open_questions: []
 ---
@@ -173,3 +173,11 @@ Owner 原话（逐字，含入口标记）：
 > @GitHub 在网页端入口可见模型写的是newest gpt6，effort pro；在ios的app界面上看到的是6 pro
 
 关联：§2.3、§3.8 与协议 v2 P13 的署名要求；本条补充启动回执的 STARTUP-Q1。网页端模型名、effort 与 iOS 显示名分别保留，不合成为自拟名称；原启动回执不改写。本条不修改开工条件，不构成“开工”指令。
+
+### 第 2 条 · 2026-09-07 · 开工
+
+Owner 原话（逐字，含入口标记）：
+
+> @GitHub 开工
+
+关联：满足 §2.5 的开工条件，按 §7 先进入阶段 0 接手定向；完成该阶段后仍按“每门停等 Owner 一字批示”停止。此条不替 Owner 回答十二条决策，不取消待本地边界，不授权合并任何 PR；不修改上述硬约束。
