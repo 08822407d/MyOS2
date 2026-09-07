@@ -94,7 +94,7 @@ status: draft（Owner 发出即生效）
 7. 公约/协议只追加或 supersedes；实质变更先经 Owner 一句话。
 8. 署名：每个你写的文件 YAML 头含 `produced_by: <界面模型名>` 与 `model_per_owner: gpt6（Owner 2026-09-07 告知）`；PR 描述含 `execution_context`（授权引用、复核状态、已知限制）。
 9. 你对本机状态一无所知：不断言 worktree/本地分支/Downloads/Alaya 的任何事，需要时写"待 Owner 确认"。
-10. Owner 原话 > 本工作令 §12 补充 > 03 文件的 S1~S13 > 你的判断；冲突记 open item 報 Owner，不自裁。
+10. Owner 原话 > 本工作令 §12 补充 > 03 文件的 S1~S13 > 你的判断；冲突记 open item 报 Owner，不自裁。
 
 ## 4. 暂定执行源
 见 `lead/MYOS2-LEAD-001/03-provisional-execution-sources.md`（S1~S13、W1~W5，全部 provisional）。对你最常用的：S2 写入规则、S3 产出格式、S4 词汇表、S5 溯源纪律、S8 第二波硬纪律、S9 归档（你只登记 GitHub 侧）、S11 沟通、协议 v2。
