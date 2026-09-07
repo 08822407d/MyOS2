@@ -1,3 +1,25 @@
+---
+task_id: MYOS2-LEAD-002
+track_id: MYOS2-LEAD-002
+record_type: work_order_with_owner_supplements
+evidence_class: "Owner 原话登记；不含回收评审或验收裁定"
+produced_by: "newest gpt6"
+model_per_owner: gpt6
+produced_by_source: "Owner 2026-09-07 告知的网页端模型显示名，见 §12 第 1 条；不是本会话直接读取客户端界面。"
+effort_per_owner: pro
+ios_display_per_owner: "6 pro"
+attribution_scope: "本 YAML 头与 §12 补充登记；原工作令起草者仍见下文 drafted_by，原文保留。"
+date: 2026-09-07
+base_snapshot: "agent/MYOS2-LEAD-002（分支名）"
+inputs_read:
+  - agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md
+authorization_ref: "Owner 本轮补充；工作令 §2.5、§12"
+status: READY_WAITING_FOR_OWNER_GO
+owner_go_received: false
+local_validation: "待本地；本轮未执行命令。"
+open_questions: []
+---
+
 # 工作令 · MYOS2-LEAD-002（ChatGPT Pro 主导会话；接手 MyOS2 分析计划主线）
 
 > 本文件是一份完整工作令。请**先完整读完全文**（能看到最后一节"§12 Owner 补充说明登记处"才算完整）。读不完整就停止并报告，不要开始任何工作。Owner 把本文件链接发给你即构成任务授权；Owner 可在补充说明中追加、修改或删除任何条款。
@@ -143,3 +165,11 @@ MYOS2-LEAD-001（本地 Claude）在 Owner 明示前不退场；两者分工：�
 ## 12. Owner 补充说明登记处
 
 （由 MYOS2-LEAD-002 会话回填 Owner 在对话中所说的话，逐字、标日期与序号；Owner 不必编辑本文件。与前文冲突时以补充为准并注明改了哪条。）
+
+### 第 1 条 · 2026-09-07 · 模型界面显示
+
+Owner 原话（逐字，含入口标记）：
+
+> @GitHub 在网页端入口可见模型写的是newest gpt6，effort pro；在ios的app界面上看到的是6 pro
+
+关联：§2.3、§3.8 与协议 v2 P13 的署名要求；本条补充启动回执的 STARTUP-Q1。网页端模型名、effort 与 iOS 显示名分别保留，不合成为自拟名称；原启动回执不改写。本条不修改开工条件，不构成“开工”指令。
