@@ -322,3 +322,9 @@ status: READY_WAITING_FOR_OWNER_SUPPLEMENT | BLOCKED
 > 目前你先不要评审它们.目前的所有重做研究都让chatgpt的深度研究来执行.你现在在当前对话里给出所有研究课题的超链接,我手动把它们复制发送给chatgpt,你顺便标记一下从这次开始所有gpt执行的工作都已经换到了gpt6(显然后续再上新就不是这个版本了,不过不影响目前的版本标记)
 
 会话复述 [MI]：(a) 暂不对任务书做对抗评审（第 3 条所述的补评取消，草案按现状发射）；(b) 第二波全部重做/补做任务一律由 ChatGPT **深度研究**模式执行（任务书 mode 字段随之改为深度研究；研究期间连接器只读，写库在普通回合或降级输出）；(c) 主导会话在对话中给出每个研究课题的超链接（逐任务发射块，含任务书/协议/公约/评审的 raw 链接），Owner 手动复制到 ChatGPT；(d) 署名标注改为 **gpt6**（取代第 3 条的 "gpt6-astra" 字样）：自 2026-09-07 起 GPT 执行的工作在收据/评审记录写 `model_per_owner: gpt6（Owner 2026-09-07 告知）`；日后模型再更新不影响当前标记。
+
+### 第 5 条 · 2026-09-07（Owner 对话原话，逐字）
+
+> 你看看在不接收分析这些深度研究的情况下,能不能设计一份任务书让chatgpt pro来接手当前主线的工作
+
+会话复述 [MI]：不等第二波深度研究结果回收，先判断并设计一份工作令，让一个 ChatGPT Pro 对话接手本轨道（MYOS2-LEAD-001）的主线职责。本会话的处置：(a) 可行性判断记入 `07-gpt-lead-takeover-feasibility.md`；(b) 起草 GPT 主导会话工作令 `agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md`（Owner 发送链接即授权；draft）；(c) 写交接快卡 `09-continuation/00-quick-card-handover.md`（工作令 §8 收口项，提前出）。本会话不因此退场，直到 Owner 明示。
