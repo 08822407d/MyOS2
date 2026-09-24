@@ -99,7 +99,7 @@ run_context:
     value: ChatGPT普通主线对话
     evidence: [{class: operator_reported, ref: '00-work-order.md §12第1条', claim_scope: 客户端显示告知}]
   operator_selection:
-    verbatim: 'newest gpt6；effort pro；ios 6 pro'
+    verbatim: '在网页端入口可见模型写的是newest gpt6，effort pro；在ios的app界面上看到的是6 pro'
     evidence: [{class: operator_reported, ref: '00-work-order.md §12第1条', claim_scope: Owner告知的选项，不认证本响应后端}]
   backend: {status: unknown_or_not_attestable, reason: 消费者界面名称不是后端证明}
   artifacts:
