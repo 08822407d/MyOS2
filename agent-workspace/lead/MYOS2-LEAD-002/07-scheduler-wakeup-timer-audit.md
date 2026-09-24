@@ -19,6 +19,7 @@ inputs_read:
   - mykernel/sched/scheduler/myos_rt.c
   - mykernel/sched/scheduler/scheduler_macro.h
   - mykernel/time/timer/timer.c
+  - mykernel/time/timer/timer.h
   - mykernel/time/systick/systick.c
   - mykernel/time/timekeeping/timekeeping.c
   - mykernel/kactive/completion/completion.c
@@ -28,6 +29,7 @@ inputs_read:
   - mykernel/lib/list/double_list_macro.h
   - mykernel/init/main.c
   - mykernel/kactive/softirq/softirq.c
+  - mykernel/kactive/softirq/softirq.h
   - mykernel/arch/x86_64/myos/interrupt.c
   - mykernel/arch/x86_64/myos/LVT_timer.c
   - mykernel/arch/x86_64/kernel/hpet.c
@@ -44,7 +46,7 @@ inputs_read:
   - agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md
   - agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-09-24-scheduling-sync-followup.md
   - "Owner 提供的第二波课题合集及九份 MANIFEST，作为历史断言与任务缺口输入"
-input_scope: "scheduler_core/scheduler.h/myos_rt、completion、swait、配置和主入口全文；timer 只读前部入队/回调与后部 timeout/msleep；list 只读本次所用原语与宏；fork 读 copy_process 局部及 kernel_clone/kernel_thread；printk 只读 console_init/临时 console 后端；其他具体边界见正文。"
+input_scope: "scheduler_core/scheduler.h/myos_rt、completion、swait、配置、主入口、timer.c/timer.h、softirq.c/softirq.h 全文；list 只读本次所用原语与宏；fork 读 copy_process 局部及 kernel_clone/kernel_thread；printk 只读 console_init/临时 console 后端；其他具体边界见正文。"
 status: STATIC_AUDIT_AND_VERIFICATION_DESIGN_DELIVERED
 runtime_verified: false
 kernel_modified: false
@@ -439,7 +441,7 @@ A43｜定时器到期回调的目标是唤醒任务：
 	wake_up_process(timeout->task);
 ```
 
-已读 HPET、LVT handler、softirq.c 中未闭合“计时推进 → 取出到期 timer → 调用 process_timeout”的分发链；timer.c 中间段、其他潜在分发者及最终链接输入尚待本地全树核查。因此本件明确标为 **链未闭合**，不写“全仓不存在 runner”。中断出口有 A14 调度，也不能代替到期回调。
+本輪补齐读取了 timer.c 的中间段及 timer.h、softirq.h。已读 HPET/LVT handler、timer.c/timer.h、softirq.c/softirq.h 仍未给出“计时推进 → 取出到期 timer → 调用 process_timeout”的完整分发链；其他潜在分发者及最终链接输入尚待本地全树核查。因此本件明确标为 **链未闭合**，不写“全仓不存在 runner”。中断出口有 A14 调度，也不能代替到期回调。定时器注释宣称到期会调用 function，同样不能替代活动分发语句。
 
 ## 6. 验证底座与已知原语问题
 
@@ -476,7 +478,7 @@ A38｜加法判负函数的活动汇编是 subl：
 ```c
 			bool c;
 			asm volatile(LOCK_PREFIX
-							"subl\t%2,\t\t%0\t\t\n\t"
+							"subl	%2,		%0		\n\t"
 ```
 
 A39｜trylock 活动体没有申请票据或写锁所有权：
