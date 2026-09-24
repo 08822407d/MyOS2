@@ -1,0 +1,151 @@
+---
+task_id: MYOS2-LEAD-002
+track_id: MYOS2-LEAD-002
+record_type: bounded_core_contract_map
+evidence_class: "源码锚点引用、静态推导与未闭合依赖；非完整实现矩阵"
+produced_by: "newest gpt6"
+model_per_owner: gpt6
+effort_per_owner: pro
+date: 2026-09-24
+base_snapshot: "kernel=time（分支名）；workspace=master（分支名）；write=agent/MYOS2-LEAD-002"
+inputs_read:
+  - agent-workspace/lead/MYOS2-LEAD-002/07-scheduler-wakeup-timer-audit.md
+  - "该报告 inputs_read 中实际读取的源码定义体"
+status: STATIC_MAP_DELIVERED_RUNTIME_PENDING
+report: agent-workspace/lead/MYOS2-LEAD-002/07-scheduler-wakeup-timer-audit.md
+validation_contract: agent-workspace/lead/MYOS2-LEAD-002/09-local-verification-contract.md
+replacement_for_002R_003R_007R: false
+kernel_changes: false
+acceptance_ceiling: PASS_PENDING_LOCAL
+local_validation: "待本地；未运行 YAML 解析器、命令、构建或测试。"
+open_questions:
+  - "最终链接/预处理选择、运行前提及本机产物身份尚待独立核验。"
+  - "软件定时器到期分发链尚未闭合，不代表全树不存在。"
+semantics:
+  anchor_namespace: "A01-A47 只在配套 07 报告中解析，不复用此前 C/E/N 编号。"
+  node_namespace: "沿用 MyOS2 子系统/能力前缀；issue_id 是主线局部核查编号，不是 DR008 新债务号。"
+  direct_call: "在所读定义体有实际调用；不证明调用在运行中发生或被调用者正确。"
+  active_side_effect: "所读活动语句的副作用；运行前提仍需核对。"
+  inferred_counterexample: "明确初始条件下的静态推导，没有报告已复现。"
+  not_closed: "缺少完整正向调用/数据链；不能外推全仓否定。"
+  old_review_not_authority: true
+  original_tiers_unchanged: true
+  all_runtime_status: pending_local
+issues:
+  - issue_id: CA-01
+    nodes: [sched.scheduler, sched.runqueue, sched.task]
+    result: correct_old_no_enqueue_claim_retain_contract_defects
+    anchors: [A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12]
+    observation: "非 current 唤醒通过 set_task_cpu 插入 myos.running_lhdr；success 在所读函数正常路径保持 0。"
+    old_claim_ref: "agent-workspace/WAVE-1-REVIEW.md §4.4"
+    old_claim_disposition: "撤回永不入队的扩大结论；保留 generic enqueue 被注释及返回量缺口。"
+    inference: "不能仅恢复 ttwu_queue 而忽略现有副作用；需先统一状态筛选、入队与返回值合同。"
+    local_cases: [V04, V05, V06, V07]
+    not_proved: [完整唤醒正确, 任意CPU放置, SMP可运行]
+  - issue_id: CA-02
+    nodes: [sched.scheduler, sched.runqueue]
+    result: active_picker_with_conditional_empty_queue_gap
+    anchors: [A10, A11, A12, A13, A14, A33, A34, A44, A45]
+    observation: "自有选择器默认 current，实际选择分支要求运行队列 count 大于 0。"
+    counterexample:
+      preconditions: [current不是TASK_RUNNING, running_lhdr_count为0, 函数按所读代码正常执行]
+      predicted_result: "返回默认 current；需核对 idle 是否保证该组合不可达。"
+    local_cases: [V08]
+    not_proved: [实际工作负载已达到该状态, 所有上下文切换均错误]
+  - issue_id: CA-03
+    nodes: [time.timer, kactive.completion, sched.scheduler]
+    result: finite_timeout_contract_incomplete
+    anchors: [A15, A16, A17, A18, A19, A20, A40, A41, A43]
+    observation: "有限非负路径没有活动 schedule 且返回原 timeout；MAX_SCHEDULE_TIMEOUT 路径有 schedule。"
+    counterexample:
+      preconditions: [有限正timeout, 辅助调用正常返回, 未发生未定义行为]
+      predicted_result: "msleep 的 T_next=T，返回量不能正常降到 0。"
+    local_cases: [V09, V10, V11]
+    not_proved: [所有等待都不调度, 所有非零毫秒已实测死循环, 软件timer到期分发不存在]
+  - issue_id: CA-04
+    nodes: [kactive.swait, kactive.completion, lib.list]
+    result: counted_header_plain_unlink_inconsistency_candidate
+    anchors: [A21, A22, A23, A24, A25, A26, A27, A42]
+    counterexample:
+      preconditions: [初始空表, 单个合法等待者入队, 无并发修改, try_to_wake_up正常返回]
+      transitions:
+        - "prepare: count 0->1，anchor 链到 waiter。"
+        - "wake: list_del_init 摘 waiter，自指恢复，头 count 保持 1。"
+        - "finish: waiter 已自指，跳过带 count 的删除。"
+      predicted_result: "链接为空而 count=1；后续空表判断不一致。"
+      unproven_follow_on: "下一次取首容器可能使用 anchor；未实测崩溃或无限循环。"
+    local_cases: [V02, V03, V11]
+    debt_register_id_allocation: not_performed
+  - issue_id: CA-05
+    nodes: [time.systick, time.timekeeping, time.timer]
+    result: duplicate_tick_increment_under_linker_alias
+    anchors: [A28, A29, A30, A31, A32, A43, A46]
+    counterexample:
+      preconditions: [使用所读x86链接脚本, 两符号绑定同一对象, handler正常走完]
+      predicted_result: "HPET_handler 的两条操作增加同一计数两次。"
+    local_cases: [V14]
+    not_proved: [墙钟精确两倍, 中断真实频率, 运行产物符号已经核对]
+  - issue_id: CA-06
+    nodes: [debug, printk]
+    result: observation_and_environment_not_ready_for_automatic_vm_tests
+    anchors: [A01, A35, A36, A37]
+    observation: "WARN_ON 只计算条件；脚本 READY 是 GDB 端口探测；所读 drive 未提供测试盘只读/快照保证。"
+    disposition: "局部验证不直接运行现有启动脚本；VM 需另行确认隔离副本和观测合同。"
+    local_cases: [V00, V01]
+  - issue_id: CA-07
+    nodes: [lock.atomic, lock.spinlock, cpu]
+    result: primitive_contracts_reconfirmed_static_only
+    anchors: [A38, A39, A47]
+    observation: "加法判负使用 subl；trylock 未申请所有权；AP_DEBUG 尾部原地跳转。"
+    local_cases: [V12, V13]
+    not_proved: [所有自旋锁实现都坏, SMP已运行, lockdep可证明原语正确]
+relations:
+  - {from: wake_up_process, to: try_to_wake_up, kind: direct_call, anchors: [A08]}
+  - {from: try_to_wake_up, to: select_task_rq, kind: direct_call, condition: non_current_path, anchors: [A04]}
+  - {from: select_task_rq, to: input_cpu, kind: return_value, anchors: [A07]}
+  - {from: try_to_wake_up, to: set_task_cpu, kind: direct_call, condition: non_current_path, anchors: [A05]}
+  - {from: set_task_cpu, to: myos.running_lhdr, kind: active_side_effect, anchors: [A02]}
+  - {from: wake_up_new_task, to: myos.running_lhdr, kind: active_side_effect, anchors: [A09]}
+  - {from: pick_next_task_myos, to: myos.running_lhdr, kind: dequeue_and_selection, anchors: [A10, A33, A34]}
+  - {from: myos_rt_sched_class, to: pick_next_task_myos, kind: registered_callback, anchors: [A11]}
+  - {from: __pick_next_task, to: sched_class.pick_next_task, kind: callback_call, anchors: [A12]}
+  - {from: __schedule_loop, to: __schedule, kind: direct_call, anchors: [A13]}
+  - {from: __schedule, to: pick_next_task, kind: direct_call, anchors: [A44]}
+  - {from: __schedule, to: context_switch, kind: direct_call, condition: prev_not_next, anchors: [A45]}
+  - {from: excep_hwint_context, to: schedule, kind: direct_call, condition: not_in_atomic, anchors: [A14]}
+  - {from: msleep, to: schedule_timeout_uninterruptible, kind: direct_call, condition: timeout_nonzero, anchors: [A17]}
+  - {from: schedule_timeout_uninterruptible, to: schedule_timeout, kind: direct_call, anchors: [A18]}
+  - {from: schedule_timeout, to: schedule, kind: direct_call, condition: MAX_SCHEDULE_TIMEOUT, anchors: [A19]}
+  - {from: schedule_timeout, to: schedule, kind: commented_call, condition: ordinary_finite_path, anchors: [A15]}
+  - {from: wait_for_completion, to: wait_for_common, kind: direct_call, condition: timeout_MAX_SCHEDULE_TIMEOUT, anchors: [A20]}
+  - {from: __prepare_to_swait, to: list_header_add_to_tail, kind: direct_call, anchors: [A21]}
+  - {from: complete, to: swake_up_locked, kind: direct_call, anchors: [A42]}
+  - {from: swake_up_locked, to: try_to_wake_up, kind: direct_call, condition: header_count_nonzero, anchors: [A23]}
+  - {from: swake_up_locked, to: list_del_init, kind: direct_call, anchors: [A23, A24]}
+  - {from: list_header_is_empty, to: header.count, kind: read_condition, anchors: [A25]}
+  - {from: HPET_handler, to: jiffies, kind: active_increment, anchors: [A28]}
+  - {from: HPET_handler, to: do_timer, kind: direct_call, anchors: [A28]}
+  - {from: do_timer, to: jiffies_64, kind: active_increment, anchors: [A29]}
+  - {from: jiffies, to: jiffies_64, kind: linker_alias, anchors: [A30, A31]}
+  - {from: process_timeout, to: wake_up_process, kind: direct_call, anchors: [A43]}
+not_closed_relations:
+  - from: interrupt_or_softirq_expiry_dispatch
+    to: process_timeout
+    status: not_closed
+    why: "已读 handler/softirq 文件未给出完整分发链；timer 中间段和全树另需查。"
+  - from: configured_source_collection
+    to: actual_user_ELF
+    status: pending_local
+    why: "没有用户本机本次构建产物与配置证据。"
+  - from: observed_2_task_switch
+    to: correctness_of_sleep_wakeup_lifecycle
+    status: implication_rejected
+    why: "当前未做运行；即便将来观测到切换，也不能跳过状态、队列和回收合同。"
+validation:
+  source_quote_count_in_report_expected: 47
+  parser_run: false
+  automatic_count_run: false
+  independent_review: false
+  runtime_run: false
+  kernel_patch_produced: false
+  source_assertions_in_this_map: "均解析至配套报告 A 索引；不重复制造源码标签。"
