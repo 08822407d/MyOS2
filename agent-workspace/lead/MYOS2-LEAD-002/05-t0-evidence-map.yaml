@@ -1,0 +1,620 @@
+---
+task_id: MYOS2-LEAD-002
+track_id: MYOS2-LEAD-002
+subject_task: MYOS2-DR-007R
+record_type: bounded_t0_evidence_map
+evidence_class: "课程与工程内容核对；学习建议为 INFERRED，不是 MyOS2 源码事实"
+produced_by: "newest gpt6"
+model_per_owner: gpt6
+effort_per_owner: pro
+date: 2026-09-24
+base_snapshot: "工作区 master；写入 agent/MYOS2-LEAD-002；未读 MyOS2 内核源码。"
+inputs_read:
+  - agent-workspace/results/MYOS2-DR-007/importance.yaml
+  - agent-workspace/tasks/MYOS2-DR-007R-importance-evidence-and-tiers.md
+  - agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md
+  - "sources 中的 32 个一手页面；实际范围由 locator/read_scope 指定"
+status: BOUNDED_REVIEW_COMPLETE_WITH_TWO_SPECIFIC_DESIGN_GAPS
+content_origin: "LEAD-002 本轮新核查；不称原 007R 正文恢复。"
+report: agent-workspace/lead/MYOS2-LEAD-002/05-t0-evidence-review.md
+supplements: agent-workspace/results/MYOS2-DR-007/importance.yaml
+complete_importance_replacement: false
+canonical_007r_package_complete: false
+original_tier_assignments_changed: false
+kernel_fact_verification: not_performed
+acceptance_ceiling: PASS_PENDING_LOCAL
+local_validation: "待本地；未执行命令、解析器、自动计数、构建或测试。"
+manual_coverage:
+  subsystem_rows: 14
+  capability_rows: 18
+  bounded_concept_supported: 30
+  specific_design_partial: 2
+  sources: 32
+  context_only_sources: 2
+open_questions:
+  - "K12/K14 的专门教学证据和立即实践优先级未闭合。"
+  - "其余 71 个非 T0 节点不在本轮覆盖中。"
+  - "完整映射、路线、源文件字节归档与机械核对待后续。"
+semantics:
+  source_id_namespace: "仅本证据包有效；C/E 编号不沿用旧 Evidence Catalog。"
+  source_lookup: "evidence 的 source 字段解析到 sources 中同名键；URL 与章节联合定位。"
+  original_tier: "只记录旧字段，不表示重新批准 tier。"
+  bounded_concept_supported: "课程与工程页面支持本条收窄后的概念；不背书全部旧 rationale。"
+  specific_design_partial: "工程机制有依据，但专门教学/强制前置论证仍有缺口。"
+  learning_judgment_class: INFERRED
+  myos2_readiness_for_every_node: unknown
+  quantitative_learning_weight: not_measurable
+  per_subsystem_change_frequency: not_measurable
+  source_support_is_not: "源码完成度、原会话执行证明、Owner 已采纳路线或整包验收。"
+sources:
+  C01:
+    category: education
+    url: https://pages.cs.wisc.edu/~remzi/OSTEP/
+    version_scope: "当次首页；教材目录"
+    locator: "介绍与 Virtualization/Concurrency/Persistence 目录"
+    read_scope: context_only
+  C02:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/schedule.html
+    version_scope: "Fall 2025，不是 2026 日程"
+    locator: "locking/thread switching/filesystems/high-performance scheduling 讲次"
+    read_scope: context_only
+  C03:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/labs/lock.html
+    version_scope: "MIT 2025 xv6 RISC-V"
+    locator: "Memory allocator；共享 free list、per-CPU lists 与 stealing"
+    read_scope: selected_sections
+  C04:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/labs/cow.html
+    version_scope: "MIT 2025 xv6 RISC-V"
+    locator: "Problem/Solution、引用计数、只读页与分配失败"
+    read_scope: selected_sections
+  C05:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/labs/pgtbl.html
+    version_scope: "MIT 2025 xv6 RISC-V"
+    locator: "Inspect a user-process page table；Speed up system calls；Print a page table"
+    read_scope: selected_sections
+  C06:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/lec/l-threads.txt
+    version_scope: "MIT 2025 Lecture 13"
+    locator: "saved state、scheduler thread details、timer pre-emption、yield/sched"
+    read_scope: selected_sections
+  C07:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/lec/l-coordination.txt
+    version_scope: "MIT 2025"
+    locator: "lost wakeup、sleep/wakeup、exit/wait"
+    read_scope: selected_sections
+  C08:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/lec/l-lockv2.txt
+    version_scope: "MIT 2025"
+    locator: "How to implement locks；push_off；memory read/write ordering"
+    read_scope: selected_sections
+  C09:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/lec/l-internal.txt
+    version_scope: "MIT 2025 RISC-V 入口讲义"
+    locator: "用户/内核状态转移及返回"
+    read_scope: selected_sections
+  C10:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/lec/l-fs.txt
+    version_scope: "MIT 2025"
+    locator: "文件层次、rename/unlink/open 引用、路径解析示例"
+    read_scope: selected_sections
+  C11:
+    category: education
+    url: https://www.cs.cmu.edu/~410/p1/proj1.html
+    version_scope: "CMU 15-410 的旧 32 位 x86 教学实例"
+    locator: "Interrupts；Traps and Exceptions；Writing an Interrupt Handler"
+    read_scope: selected_sections
+  C12:
+    category: education
+    url: https://web.stanford.edu/class/cs140/projects/pintos/pintos_6.html
+    version_scope: "Stanford Pintos Reference Guide"
+    locator: "A.5.1 Page Allocator；A.5.2 Block Allocator"
+    read_scope: selected_sections
+  C13:
+    category: education
+    url: https://pdos.csail.mit.edu/6.828/2018/labs/lab4/
+    version_scope: "MIT 2018 JOS，BIOS/32 位背景"
+    locator: "Part A Multiprocessor Support；Application Processor Bootstrap"
+    read_scope: selected_sections
+  E01:
+    category: engineering
+    url: https://docs.kernel.org/arch/x86/entry_64.html
+    version_scope: "无版本 URL，当次读取"
+    locator: "Kernel Entries；入口列表、calling conventions、IST"
+    read_scope: selected_sections
+  E02:
+    category: engineering
+    url: https://docs.kernel.org/6.18/mm/page_tables.html
+    version_scope: "Linux 文档 6.18"
+    locator: "页表层次、条目、MMU/TLB、Page Fault Handling"
+    read_scope: selected_sections
+  E03:
+    category: engineering
+    url: https://docs.kernel.org/6.18/mm/physical_memory.html
+    version_scope: "Linux 文档 6.18"
+    locator: "Zones 的 PCP、free_area、lock 字段解释"
+    read_scope: selected_sections
+  E04:
+    category: engineering
+    url: https://docs.kernel.org/core-api/memory-allocation.html
+    version_scope: "无版本 URL，当次读取"
+    locator: "Get Free Page flags；Selecting memory allocator"
+    read_scope: selected_sections
+  E05:
+    category: engineering
+    url: https://docs.kernel.org/core-api/cachetlb.html
+    version_scope: "无版本 URL，当次读取；固定版本地址本轮未取得"
+    locator: "TLB flush 接口及页表更新副作用"
+    read_scope: selected_sections
+  E06:
+    category: engineering
+    url: https://docs.kernel.org/6.18/core-api/this_cpu_ops.html
+    version_scope: "Linux 文档 6.18"
+    locator: "this_cpu 访问、Variants、Remote access to per cpu data"
+    read_scope: selected_sections
+  E07:
+    category: engineering
+    url: https://docs.kernel.org/core-api/cpu_hotplug.html
+    version_scope: "无版本 URL，当次读取；固定版本地址本轮未取得"
+    locator: "CPU maps、coordination、CPU hotplug state machine"
+    read_scope: selected_sections
+  E08:
+    category: engineering
+    url: https://docs.kernel.org/scheduler/sched-domains.html
+    version_scope: "无版本 URL，当次读取；固定版本地址本轮未取得"
+    locator: "domain/span/group、周期平衡与运行队列间移动"
+    read_scope: page_body
+  E09:
+    category: engineering
+    url: https://docs.kernel.org/6.18/scheduler/sched-design-CFS.html
+    version_scope: "Linux 文档 6.18；CFS 历史设计例子，文内提示 EEVDF 演进"
+    locator: "Overview；Scheduling classes 的 enqueue/dequeue 等接口"
+    read_scope: selected_sections
+  E10:
+    category: engineering
+    url: https://docs.kernel.org/6.18/locking/locktypes.html
+    version_scope: "Linux 文档 6.18"
+    locator: "raw_spinlock_t and spinlock_t；PREEMPT_RT 条件"
+    read_scope: selected_sections
+  E11:
+    category: engineering
+    url: https://docs.kernel.org/6.18/core-api/wrappers/atomic_t.html
+    version_scope: "Linux 文档 6.18"
+    locator: "RMW；ORDERING；relaxed/acquire/release 与失败条件"
+    read_scope: selected_sections
+  E12:
+    category: engineering
+    url: https://docs.kernel.org/6.18/core-api/wrappers/memory-barriers.html
+    version_scope: "Linux 文档 6.18"
+    locator: "ACQUIRE/RELEASE；锁的单向屏障；INTERRUPT DISABLING FUNCTIONS"
+    read_scope: selected_sections
+  E13:
+    category: engineering
+    url: https://docs.kernel.org/6.18/filesystems/vfs.html
+    version_scope: "Linux 文档 6.18"
+    locator: "Introduction；Directory Entry Cache；Inode Object；File Object"
+    read_scope: selected_sections
+  E14:
+    category: engineering
+    url: https://docs.kernel.org/6.18/filesystems/path-lookup.html
+    version_scope: "Linux 文档 6.18"
+    locator: "Introduction；More than just a cache；REF-walk 与引用/锁"
+    read_scope: selected_sections
+  E15:
+    category: engineering
+    url: https://docs.kernel.org/6.18/filesystems/files.html
+    version_scope: "Linux 文档 6.18"
+    locator: "开头 files/file/fdtable 引用与无锁模型说明"
+    read_scope: selected_sections
+  E16:
+    category: engineering
+    url: https://man7.org/linux/man-pages/man2/fork.2.html
+    version_scope: "Linux man-pages 当次页面；不是内核版本声明"
+    locator: "DESCRIPTION、RETURN VALUE、fd 继承、NOTES 的 COW"
+    read_scope: selected_sections
+  E17:
+    category: engineering
+    url: https://man7.org/linux/man-pages/man2/execve.2.html
+    version_scope: "Linux man-pages 当次页面；不是内核版本声明"
+    locator: "DESCRIPTION；Effect on process attributes"
+    read_scope: selected_sections
+  E18:
+    category: engineering
+    url: https://man7.org/linux/man-pages/man2/wait.2.html
+    version_scope: "Linux man-pages 当次页面；不是内核版本声明"
+    locator: "DESCRIPTION；NOTES 中 zombie 与回收"
+    read_scope: selected_sections
+  E19:
+    category: engineering
+    url: https://man7.org/linux/man-pages/man5/proc_pid_stat.5.html
+    version_scope: "Linux man-pages 当次页面；不是内核版本声明"
+    locator: "DESCRIPTION 的 state 字段"
+    read_scope: selected_sections
+nodes:
+  - row: S01
+    node: arch.x86_64
+    level: subsystem
+    original_tier: T0
+    concept: "特权、异常入口、地址翻译的硬件接口"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C11, role: education_direct, supports: "x86 中断处理作为实际教学任务"}
+      - {source: C05, role: education_direct, supports: "观察页表和权限"}
+      - {source: E01, role: engineering_direct, supports: "x86-64 入口种类差异"}
+      - {source: E02, role: engineering_direct, supports: "页表与地址翻译"}
+    judgment: "基础概念候选；跨架构材料仅转移概念，不转移位域。"
+    remaining: "MyOS2 实际入口、配置和厂商规范未核。"
+  - row: S02
+    node: entry
+    level: subsystem
+    original_tier: T0
+    concept: "用户/内核转移中的保存与恢复边界"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C09, role: education_direct, supports: "用户与内核执行环境转换"}
+      - {source: E01, role: engineering_direct, supports: "不同 x86 入口具有不同约定"}
+    judgment: "先理解边界与状态，不统一套用所有入口栈布局。"
+    remaining: "MyOS2 参数和返回链未核。"
+  - row: S03
+    node: cpu
+    level: subsystem
+    original_tier: T0
+    concept: "CPU 私有状态、共享状态、上线服务的阶段"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C13, role: education_direct, supports: "BSP/AP 与就绪握手"}
+      - {source: E06, role: engineering_direct, supports: "本地与远端 per-CPU 访问"}
+      - {source: E07, role: engineering_direct, supports: "准备、启动、上线阶段"}
+    judgment: "分层学习；不把全部 SMP 功能作为当前统一前置。"
+    remaining: "实际 SMP 目标和 MyOS2 就绪度未知。"
+  - row: S04
+    node: mm.page_alloc
+    level: subsystem
+    original_tier: T0
+    concept: "页的分配、归还、连续性与碎片"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C12, role: education_direct, supports: "页池和位图分配"}
+      - {source: E03, role: engineering_direct, supports: "伙伴分裂、合并及保护"}
+    judgment: "先比较基本资源契约，不要求先复刻生产优化。"
+    remaining: "当前分配器实现及失败路径未核。"
+  - row: S05
+    node: mm.kmalloc
+    level: subsystem
+    original_tier: T0
+    concept: "页之上的内核对象分配与生命周期"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C12, role: education_direct, supports: "kernel-pool block allocator 的教学实现"}
+      - {source: E04, role: engineering_direct, supports: "大小、上下文、失败与释放约束"}
+    judgment: "补足直接教学依据；不把完整 SLUB 调优作为基础要求。"
+    remaining: "MyOS2 的堆分配接口和语义未核。"
+  - row: S06
+    node: mm.vm_map
+    level: subsystem
+    original_tier: T0
+    concept: "映射、权限及翻译缓存一致性"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C05, role: education_direct, supports: "只读映射和页表观察"}
+      - {source: E02, role: engineering_direct, supports: "映射层次与权限"}
+      - {source: E05, role: engineering_direct, supports: "变更后的 TLB 副作用"}
+    judgment: "优先明确接口契约；不声称所有操作具备并发原子性。"
+    remaining: "MyOS2 映射、撤销及 TLB 路径未核。"
+  - row: S07
+    node: mm.fault
+    level: subsystem
+    original_tier: T0
+    concept: "区分权限错误、延迟处理和 COW fault"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C04, role: education_direct, supports: "COW 写入 fault 和错误情况"}
+      - {source: E02, role: engineering_direct, supports: "Page Fault Handling 的用途"}
+    judgment: "基础概念候选；不能把所有 fault 简化成同一种错误。"
+    remaining: "实际 fault 分派及覆盖未核。"
+  - row: S08
+    node: sched.task
+    level: subsystem
+    original_tier: T0
+    concept: "可恢复执行状态和任务生命周期"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C06, role: education_direct, supports: "状态、上下文与交接"}
+      - {source: E19, role: engineering_direct, supports: "用户可见进程状态例子"}
+      - {source: E18, role: engineering_direct, supports: "终止后的等待与回收"}
+    judgment: "理解状态意义；不将接口字符当作内部完整枚举。"
+    remaining: "MyOS2 对象引用与状态机未核。"
+  - row: S09
+    node: sched.forkexec
+    level: subsystem
+    original_tier: T0
+    concept: "创建、程序替换、结束与等待的资源交接"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C04, role: education_direct, supports: "fork 与 COW"}
+      - {source: C07, role: education_direct, supports: "exit/wait 分工"}
+      - {source: E16, role: engineering_direct, supports: "创建及继承"}
+      - {source: E17, role: engineering_direct, supports: "替换当前程序"}
+      - {source: E18, role: engineering_direct, supports: "等待与回收"}
+    judgment: "生命周期闭环候选；不要把 exec 等同新建进程。"
+    remaining: "实际 ABI 子集及资源失败回退未核。"
+  - row: S10
+    node: sched.runqueue
+    level: subsystem
+    original_tier: T0
+    concept: "就绪集合与状态变化的一致性"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C06, role: education_direct, supports: "共享 proc[] 中选择 runnable 项"}
+      - {source: E09, role: engineering_direct, supports: "runnable 实体进入与离开"}
+    judgment: "集合与不变量是基础；每 CPU 队列是实现选择。"
+    remaining: "实际队列结构及锁顺序未核。"
+  - row: S11
+    node: sched.scheduler
+    level: subsystem
+    original_tier: T0
+    concept: "时间复用、抢占与上下文交接"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C06, role: education_direct, supports: "timer 驱动的非自愿交接"}
+      - {source: E09, role: engineering_direct, supports: "调度实体接口示例"}
+      - {source: C01, role: education_context, supports: "CPU Scheduling 主题在教材目录中"}
+    judgment: "先机制后策略，不把 CFS/EEVDF 品牌作为达标条件。"
+    remaining: "本项目调度与唤醒链的事实未核。"
+  - row: S12
+    node: lock.atomic
+    level: subsystem
+    original_tier: T0
+    concept: "原子读改写与内存顺序的区别"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C08, role: education_direct, supports: "分开检查与写入产生竞争"}
+      - {source: E11, role: engineering_direct, supports: "RMW 与 ordering 的分类"}
+    judgment: "原子性不等于对其他位置的全屏障。"
+    remaining: "MyOS2 汇编、别名与测试向量未核。"
+  - row: S13
+    node: lock.spinlock
+    level: subsystem
+    original_tier: T0
+    concept: "互斥与执行上下文共同约束临界区"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C08, role: education_direct, supports: "自旋、IRQ 重入与 push_off"}
+      - {source: E10, role: engineering_direct, supports: "raw/non-RT/RT 锁语义"}
+    judgment: "明确具体锁类别，不说所有 spinlock 都关闭 IRQ。"
+    remaining: "MyOS2 的实际配置与锁语义未核。"
+  - row: S14
+    node: fs.vfs
+    level: subsystem
+    original_tier: T0
+    concept: "名字、打开对象、文件系统实现的分层"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C10, role: education_direct, supports: "文件层次与引用生命周期"}
+      - {source: E13, role: engineering_direct, supports: "VFS、inode、dentry、file 的关系"}
+    judgment: "基础是抽象与生命周期，不是特定磁盘格式。"
+    remaining: "MyOS2 VFS 当前能力未核。"
+  - row: K01
+    node: arch.x86_64.interrupt_exception_entry
+    level: capability
+    original_tier: T0
+    concept: "中断/异常入口的状态保存与恢复"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C11, role: education_direct, supports: "中断汇编包装与 C handler 的教学分工"}
+      - {source: E01, role: engineering_direct, supports: "x86-64 入口种类与约定"}
+    judgment: "保留概念，32 位教学细节不充当 64 位规范。"
+    remaining: "厂商位域和 MyOS2 入口锚点未核。"
+  - row: K02
+    node: arch.x86_64.page_table_mmu
+    level: capability
+    original_tier: T0
+    concept: "页表权限、翻译与 TLB 的联系"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C05, role: education_direct, supports: "观察 PTE、权限和映射"}
+      - {source: E02, role: engineering_direct, supports: "MMU/TLB 与页表层次"}
+      - {source: E05, role: engineering_direct, supports: "修改翻译后的刷新契约"}
+    judgment: "分开通用概念与 RISC-V/x86 字段。"
+    remaining: "x86-64 逐位规范及本项目权限设置未核。"
+  - row: K03
+    node: entry.syscall_entry_exit
+    level: capability
+    original_tier: T0
+    concept: "系统调用入口与返回的执行环境边界"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C09, role: education_direct, supports: "用户/内核转移及恢复"}
+      - {source: E01, role: engineering_direct, supports: "syscall 等入口约定不同"}
+    judgment: "先明确所保存状态，不先导入所有兼容入口。"
+    remaining: "MyOS2 的 ABI 和返回路径未核。"
+  - row: K04
+    node: cpu.smp_bringup
+    level: capability
+    original_tier: T0
+    concept: "AP 启动、就绪握手和服务上线的阶段"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C13, role: education_direct, supports: "AP bootstrap 及 CPU_STARTED 握手"}
+      - {source: E07, role: engineering_direct, supports: "准备/启动/在线回调阶段"}
+    judgment: "SMP 阶段条件项，不是当前立即实施决定。"
+    remaining: "JOS 32 位例子和 hotplug 均不构成完整 UEFI/x86-64 实施规范。"
+  - row: K05
+    node: cpu.per_cpu_state
+    level: capability
+    original_tier: T0
+    concept: "CPU 本地分区及共享/远端访问例外"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C03, role: education_direct, supports: "per-CPU free lists 及借用"}
+      - {source: E06, role: engineering_direct, supports: "本地访问、迁移与远端写入边界"}
+    judgment: "适合学习减少共享写热点，但不能免除所有同步。"
+    remaining: "本项目 per-CPU 基础设施与迁移约束未核。"
+  - row: K06
+    node: mm.page_alloc.physical_page_allocator
+    level: capability
+    original_tier: T0
+    concept: "物理页空闲集合、归还和碎片"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C12, role: education_direct, supports: "页池与位图分配"}
+      - {source: E03, role: engineering_direct, supports: "按 order 分裂与合并"}
+    judgment: "比较契约与取舍，而非指定唯一算法。"
+    remaining: "实际页所有权检查待源码和本地实验。"
+  - row: K07
+    node: mm.kmalloc.kernel_heap_allocator
+    level: capability
+    original_tier: T0
+    concept: "页存储转为可变大小内核对象"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C12, role: education_direct, supports: "分层的 kernel block allocator"}
+      - {source: E04, role: engineering_direct, supports: "对象大小、上下文及释放接口"}
+    judgment: "先掌握生命周期；SLUB 完整调优非基础门槛。"
+    remaining: "实际实现是否符合契约未知。"
+  - row: K08
+    node: mm.vm_map.address_space_mapping
+    level: capability
+    original_tier: T0
+    concept: "映射建立、权限与撤销后的翻译一致性"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C05, role: education_direct, supports: "插入受权限约束的映射"}
+      - {source: E05, role: engineering_direct, supports: "映射改变后 TLB 接口副作用"}
+    judgment: "基础接口操作不等于并发意义原子操作。"
+    remaining: "实际锁、回收和 shootdown 契约未核。"
+  - row: K09
+    node: mm.fault.demand_paging_cow
+    level: capability
+    original_tier: T0
+    concept: "合法延迟分配、COW 与非法写入的区别"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C04, role: education_direct, supports: "写 fault、复制、最后引用释放"}
+      - {source: E02, role: engineering_direct, supports: "page fault 的不同用途"}
+      - {source: E16, role: engineering_direct, supports: "Linux fork 的 COW 说明"}
+    judgment: "适合串联 MM 生命周期，不推定本项目已经支持。"
+    remaining: "实际 fault 处理和分配失败行为未核。"
+  - row: K10
+    node: sched.task.task_lifecycle
+    level: capability
+    original_tier: T0
+    concept: "停止执行、等待状态和资源回收的区别"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C07, role: education_direct, supports: "exit/wait 的教学资源分工"}
+      - {source: E18, role: engineering_direct, supports: "等待终止和 zombie 回收"}
+      - {source: E19, role: engineering_direct, supports: "状态接口示例"}
+    judgment: "用生命周期解释状态，不照搬字符表。"
+    remaining: "内部引用及状态原子交接待 MyOS2 核查。"
+  - row: K11
+    node: sched.forkexec.fork_exec_wait_exit
+    level: capability
+    original_tier: T0
+    concept: "Unix 进程生命周期的资源继承与替换"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C04, role: education_direct, supports: "fork/COW 实验"}
+      - {source: C07, role: education_direct, supports: "exit/wait 协作"}
+      - {source: E16, role: engineering_direct, supports: "fd 与内存继承"}
+      - {source: E17, role: engineering_direct, supports: "程序映像替换"}
+      - {source: E18, role: engineering_direct, supports: "等待与回收"}
+    judgment: "闭环理解优先，不扩大成所有 Linux ABI 的实现承诺。"
+    remaining: "失败路径和实际 ABI 子集未核。"
+  - row: K12
+    node: sched.runqueue.per_cpu_runqueue
+    level: capability
+    original_tier: T0
+    concept: "每 CPU 运行队列作为可比较的 SMP 设计方案"
+    support: specific_design_partial
+    evidence:
+      - {source: C06, role: education_counterexample, supports: "各 CPU 扫描共享 proc[]，说明存在替代组织"}
+      - {source: E08, role: engineering_direct, supports: "Linux 的 per-CPU 队列平衡设计"}
+    judgment: "不得作为所有基础调度器的必需前置；未直接改级。"
+    remaining: "缺少该具体方案为何必须作为 T0 的独立直接教学论证。"
+  - row: K13
+    node: sched.scheduler.preemptive_scheduling
+    level: capability
+    original_tier: T0
+    concept: "不合作任务也能被切换的抢占机制"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C06, role: education_direct, supports: "timer 驱动 involuntary context switch"}
+      - {source: E09, role: engineering_direct, supports: "runnable 实体与调度类接口"}
+    judgment: "策略与机制分开，不以 tick 存在替代正确性。"
+    remaining: "项目中的调度触发点、锁和切换链未核。"
+  - row: K14
+    node: sched.scheduler.smp_load_balance
+    level: capability
+    original_tier: T0
+    concept: "CPU 间负载分布、任务迁移与拓扑取舍"
+    support: specific_design_partial
+    evidence:
+      - {source: C01, role: education_context, supports: "目录列有 Multi-CPU Scheduling"}
+      - {source: C02, role: education_context, supports: "日程列有高性能调度"}
+      - {source: E08, role: engineering_direct, supports: "domain/span 与任务平衡机制"}
+    judgment: "在基本多核可用和明确负载目标后考虑；未直接改级。"
+    remaining: "课程标题不足以闭合动态平衡的专门教学依据，所链完整正文未读。"
+  - row: K15
+    node: lock.atomic.memory_ordering
+    level: capability
+    original_tier: T0
+    concept: "互斥、访问顺序与可见性的分别约束"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C08, role: education_direct, supports: "编译器与 CPU 重排问题"}
+      - {source: E12, role: engineering_direct, supports: "acquire/release 的单向性质"}
+      - {source: E11, role: engineering_direct, supports: "原子操作的顺序分类"}
+    judgment: "基础概念候选，不用局部关 IRQ 推出跨 CPU 同步。"
+    remaining: "实际代码的配对与内存模型证明未做。"
+  - row: K16
+    node: lock.spinlock.irq_preempt_safe_locking
+    level: capability
+    original_tier: T0
+    concept: "持锁时 IRQ 重入和抢占的上下文规则"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C08, role: education_direct, supports: "中断再次取得同一锁的风险"}
+      - {source: E10, role: engineering_direct, supports: "锁类别及 PREEMPT_RT 条件"}
+    judgment: "先列上下文与 IRQ 契约，再设计断言。"
+    remaining: "不据外部文档判断 MyOS2 原语已正确。"
+  - row: K17
+    node: fs.vfs.file_inode_dentry_model
+    level: capability
+    original_tier: T0
+    concept: "名字、持久对象与打开实例的生命周期分工"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C10, role: education_direct, supports: "名字/inode/open 引用分工"}
+      - {source: E13, role: engineering_direct, supports: "Linux dentry/inode/file 对象关系"}
+    judgment: "通过对照理解，不声称 xv6 等同 Linux dcache。"
+    remaining: "本项目对象映射与引用不变量未核。"
+  - row: K18
+    node: fs.vfs.pathname_and_fd
+    level: capability
+    original_tier: T0
+    concept: "路径解析与已打开引用的不同生命周期"
+    support: bounded_concept_supported
+    evidence:
+      - {source: C10, role: education_direct, supports: "rename/unlink 后 fd 的行为"}
+      - {source: E14, role: engineering_direct, supports: "名字查找和并发引用保护"}
+      - {source: E15, role: engineering_direct, supports: "fdtable 与 file 的引用管理"}
+    judgment: "区分查找、打开、关闭回收，单个可读用例不足以覆盖。"
+    remaining: "真实 VFS/FD 代码和用户态回归输入未核。"
+validation_record:
+  method: "人工核对 ID、行数、来源角色和章节；不代表解析器或脚本运行。"
+  parser_run: false
+  source_files_byte_preserved: false
+  readback: "以本轮后续连接器结果和检查点记录为准。"
+  source_code_claims: 0
+  cross_model_independent_review: false
+  not_a_full_007r_manifest: true
