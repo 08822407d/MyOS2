@@ -1,0 +1,273 @@
+---
+task_id: MYOS2-LEAD-002
+track_id: MYOS2-LEAD-002
+subject_task: MYOS2-DR-007R
+record_type: bounded_evidence_delta_map
+evidence_class: "外部有限命题；学习判断为INFERRED；没有MyOS2源码事实"
+produced_by: "newest gpt6"
+model_per_owner: gpt6
+effort_per_owner: pro
+date: 2026-09-24
+base_snapshot: "工作区master；写入agent/MYOS2-LEAD-002；未读MyOS2内核。"
+inputs_read:
+  - agent-workspace/results/MYOS2-DR-007/importance.yaml
+  - agent-workspace/lead/MYOS2-LEAD-002/05-t0-evidence-map.yaml
+  - agent-workspace/lead/MYOS2-LEAD-002/06-scheduling-sync-evidence-review.md
+  - "sources中的N01-N11指定正文，实际范围见配套报告"
+status: BOUNDED_FOLLOWUP_DELIVERED
+content_origin: "LEAD-002新增核查；非旧报告恢复"
+report: agent-workspace/lead/MYOS2-LEAD-002/06-scheduling-sync-evidence-review.md
+supplements: agent-workspace/lead/MYOS2-LEAD-002/05-t0-evidence-map.yaml
+original_tier_assignments_changed: false
+canonical_007r_package_complete: false
+acceptance_ceiling: PASS_PENDING_LOCAL
+local_validation: "待本地；未运行项目命令、解析器、自动统计、模拟器或测试。"
+open_questions:
+  - "lockdep运行时图及softirq专门教学实现未补齐，不能以相关课程消除缺口。"
+  - "剩余59节点、全量旧断言勘误、完整分轴关联、正式路线及本地检查未完成。"
+semantics:
+  source_namespace: "06包局部N编号，不沿用05的C/E编号或v1的E编号。"
+  combine_on: node
+  update_scope: "仅覆盖05的K12/K14证据状态并新增12项；不能将14项都作为新增节点。"
+  old_tier: "v1字段摘录，不是重新分级"
+  bounded_dual_category: "教学内容或教学模式与工程内容共同支持限定命题；不证明完整旧rationale或实践顺序。"
+  engineering_plus_related_education: "工程内容直接，教学来源只给相关问题背景，未取得专门教学实现。"
+  all_learning_judgments: INFERRED
+  all_myos2_readiness: unknown
+  per_subsystem_change_frequency: not_measurable
+  complete_original_rationale_endorsement: false
+manual_coverage:
+  delta_rows: 14
+  revisited_t0_capabilities: 2
+  new_t1_subsystems: 6
+  new_t1_capabilities: 6
+  new_t1_bounded_dual_category: 8
+  new_t1_engineering_plus_related_education: 4
+  cumulative_distinct_subsystems: 20
+  cumulative_distinct_capabilities: 24
+  cumulative_distinct_nodes: 44
+  remaining_subsystems: 33
+  remaining_capabilities: 26
+  remaining_nodes: 59
+sources:
+  N01:
+    category: education
+    url: https://pages.cs.wisc.edu/~remzi/OSTEP/cpu-sched-multi.pdf
+    locator: "v1.10，第10章§10.4/§10.5及Homework第8题；图已截图核对。"
+    limit: "历史Linux算法概述不作当前状态；未运行模拟器。"
+  N02:
+    category: engineering
+    url: https://docs.kernel.org/scheduler/sched-domains.html
+    locator: "domain/span/group及运行队列间平衡正文"
+    limit: "无版本页面；固定6.18地址本轮未取得。"
+  N03:
+    category: education
+    url: https://web.stanford.edu/class/cs140/projects/pintos/pintos_6.html
+    locator: "A.3.2信号量、A.3.3锁的相关段、A.4.3外部中断"
+    limit: "教学模式对照，不是Linux completion/softirq/workqueue同一实现。"
+  N04:
+    category: engineering
+    url: https://docs.kernel.org/6.18/locking/locktypes.html
+    locator: "Sleeping locks、Owner semantics、semaphore和PREEMPT_RT"
+    limit: "不能跨锁类型概括所有权与调用上下文。"
+  N05:
+    category: education
+    url: https://pages.cs.wisc.edu/~remzi/OSTEP/threads-locks.pdf
+    locator: "v1.10，§28.14末部、§28.15图28.10、§28.16；印刷页18/19另截图。"
+    limit: "旧glibc例子不是当前glibc或MyOS2实现。"
+  N06:
+    category: engineering
+    url: https://man7.org/linux/man-pages/man2/futex.2.html
+    locator: "DESCRIPTION中的用户态快路径和比较/入睡原子性"
+    limit: "未核完整PI、robust和错误返回语义。"
+  N07:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/lec/l-lockv2.txt
+    locator: "死锁顺序、非原子获取反例与锁粒度"
+    limit: "只支持相关问题；没有教学lockdep实现。"
+  N08:
+    category: engineering
+    url: https://docs.kernel.org/locking/lockdep-design.html
+    locator: "Lock-class、State、Single-lock/Multi-lock dependency rules"
+    limit: "未读检测器源码或运行它。"
+  N09:
+    category: engineering
+    url: https://docs.kernel.org/core-api/workqueue.html
+    locator: "Introduction、The Design、WQ_BH、取消/等待的相关API条款"
+    limit: "无版本页面；未通读全部API；threaded与BH不能混用。"
+  N10:
+    category: engineering
+    url: https://docs.kernel.org/scheduler/completion.html
+    locator: "Usage、Initializing、Waiting及timeout条款"
+    limit: "等待返回不是对象释放或异步生产者结束的证明。"
+  N11:
+    category: education
+    url: https://pdos.csail.mit.edu/6.1810/2025/lec/l-coordination.txt
+    locator: "条件等待、丢唤醒时序与锁交接"
+    limit: "未运行讲义；不证明MyOS2的实际唤醒链。"
+changes:
+  - row: K12
+    node: sched.runqueue.per_cpu_runqueue
+    level: capability
+    old_tier: T0
+    change: evidence_followup
+    previous_support: specific_design_partial
+    support: bounded_dual_category
+    claim: "每CPU队列与共享队列可以作有依据的方案比较。"
+    evidence:
+      - {source: N01, role: education_direct}
+      - {source: N02, role: engineering_direct}
+    limitation: "关闭直接教学正文缺口，不新增必须最先实施的条件。"
+  - row: K14
+    node: sched.scheduler.smp_load_balance
+    level: capability
+    old_tier: T0
+    change: evidence_followup
+    previous_support: specific_design_partial
+    support: bounded_dual_category
+    claim: "可围绕迁移、局部性与失衡比较设计并定位练习。"
+    evidence:
+      - {source: N01, role: education_direct}
+      - {source: N02, role: engineering_direct}
+    limitation: "没有本项目最优周期、收益或就绪度的实测。"
+  - row: S15
+    node: lock.semaphore
+    level: subsystem
+    old_tier: T1
+    change: new_review
+    support: bounded_dual_category
+    claim: "资源计数与阻塞同步的契约。"
+    evidence:
+      - {source: N03, role: education_direct}
+      - {source: N04, role: engineering_direct}
+    limitation: "计数、所有权和完成通知分别处理。"
+  - row: K19
+    node: lock.semaphore.sleeping_lock
+    level: capability
+    old_tier: T1
+    change: new_review
+    support: bounded_dual_category
+    claim: "阻塞时交出CPU及调用上下文约束。"
+    evidence:
+      - {source: N03, role: education_direct}
+      - {source: N04, role: engineering_direct}
+    limitation: "不是所有上下文都可等待，不统一所有sleeping lock的所有权。"
+  - row: S16
+    node: lock.futex
+    level: subsystem
+    old_tier: T1
+    change: new_review
+    support: bounded_dual_category
+    claim: "用户态同步与内核等待协作。"
+    evidence:
+      - {source: N05, role: education_direct}
+      - {source: N06, role: engineering_direct}
+    limitation: "历史教材示例不作当前库实现或完整ABI要求。"
+  - row: K20
+    node: lock.futex.user_kernel_wait_wake
+    level: capability
+    old_tier: T1
+    change: new_review
+    support: bounded_dual_category
+    claim: "比较期望值与入睡之间的原子交接。"
+    evidence:
+      - {source: N05, role: education_direct}
+      - {source: N06, role: engineering_direct}
+      - {source: N11, role: education_problem_context}
+    limitation: "不能用先读值后单独入睡替代；MyOS2实现未核。"
+  - row: S17
+    node: lock.lockdep
+    level: subsystem
+    old_tier: T1
+    change: new_review
+    support: engineering_plus_related_education
+    claim: "检查锁顺序与IRQ使用状态。"
+    evidence:
+      - {source: N07, role: education_problem_context}
+      - {source: N08, role: engineering_direct}
+    limitation: "课程没有实现lockdep，不能据无报警证明锁原语正确。"
+  - row: K21
+    node: lock.lockdep.runtime_dependency_graph
+    level: capability
+    old_tier: T1
+    change: new_review
+    support: engineering_plus_related_education
+    claim: "记录锁类依赖并检查环。"
+    evidence:
+      - {source: N07, role: education_problem_context}
+      - {source: N08, role: engineering_direct}
+    limitation: "动态检测器的专门教学实现、容量和误报控制仍待补。"
+  - row: S18
+    node: kactive.softirq
+    level: subsystem
+    old_tier: T1
+    change: new_review
+    support: engineering_plus_related_education
+    claim: "延后处理仍须说明其执行上下文。"
+    evidence:
+      - {source: N03, role: education_problem_context}
+      - {source: N09, role: engineering_direct}
+    limitation: "Pintos转交线程不是Linux softirq教学实现。"
+  - row: K22
+    node: kactive.softirq.deferred_interrupt_work
+    level: capability
+    old_tier: T1
+    change: new_review
+    support: engineering_plus_related_education
+    claim: "延后执行不自动允许睡眠；WQ_BH是明确反例。"
+    evidence:
+      - {source: N03, role: education_problem_context}
+      - {source: N09, role: engineering_direct}
+    limitation: "不外推全部softirq及所有配置内部实现。"
+  - row: S19
+    node: kactive.workqueue
+    level: subsystem
+    old_tier: T1
+    change: new_review
+    support: bounded_dual_category
+    claim: "工作描述与执行资源分离。"
+    evidence:
+      - {source: N03, role: education_pattern}
+      - {source: N09, role: engineering_direct}
+    limitation: "课程给转交线程模式，不是Linux池管理实现。"
+  - row: K23
+    node: kactive.workqueue.async_process_context
+    level: capability
+    old_tier: T1
+    change: new_review
+    support: bounded_dual_category
+    claim: "需要可睡眠环境的工作应明确选择线程型执行。"
+    evidence:
+      - {source: N03, role: education_pattern}
+      - {source: N09, role: engineering_direct}
+    limitation: "限定threaded；WQ_BH不能混称可睡眠。"
+  - row: S20
+    node: kactive.completion
+    level: subsystem
+    old_tier: T1
+    change: new_review
+    support: bounded_dual_category
+    claim: "事件完成与等待者通知的模式。"
+    evidence:
+      - {source: N03, role: education_pattern}
+      - {source: N10, role: engineering_direct}
+    limitation: "初值0的信号量不是Linux completion同一实现，也不替代数据互斥。"
+  - row: K24
+    node: kactive.completion.one_shot_wait
+    level: capability
+    old_tier: T1
+    change: new_review
+    support: bounded_dual_category
+    claim: "先通知或先等待均成立，对象生命周期必须覆盖使用者。"
+    evidence:
+      - {source: N03, role: education_pattern}
+      - {source: N10, role: engineering_direct}
+    limitation: "超时不自动终止生产者或允许释放对象。"
+validation:
+  method: "人工逐项核对14个node、来源键、角色和范围。"
+  parser_run: false
+  automated_count_run: false
+  runtime_test_run: false
+  independent_cross_model_review: false
+  exact_source_bytes_archived: false
+  not_full_007r_manifest: true
