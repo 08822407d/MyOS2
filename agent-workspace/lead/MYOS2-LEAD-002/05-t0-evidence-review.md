@@ -83,7 +83,7 @@ open_questions:
 | K02 `arch.x86_64.page_table_mmu` | [C05] 观察 PTE 和权限；[E02] 映射层次及 MMU/TLB，另用 [E05] 约束更新。 | 概念支持；RISC-V 具体 PTE 位不得当作 x86 位表。 |
 | K03 `entry.syscall_entry_exit` | [C09] 用户/内核状态切换；[E01] syscall 与其他入口有不同调用约定。 | 概念支持；这里只证明应理解其边界，不核 MyOS2 的参数传递或返回路径。 |
 | K04 `cpu.smp_bringup` | [C13] AP bootstrap 与就绪握手；[E07] 资源准备、目标 CPU 启动、上线服务分阶段。 | 概念支持，**SMP 阶段条件项**；热插拔不是启动全过程，JOS 的 BIOS/32 位流程也不是 UEFI/x86-64 实施规范。 |
-| K05 `cpu.per_cpu_state` | [C03] 分配器按 CPU 分散并在缺页时借用；[E06] 本地访问和远端写入限制。 | 概念支持；必须讲迁移和共享例外，不能说“per-CPU 数据永远不需要同步”。 |
+| K05 `cpu.per_cpu_state` | [C03] 分配器按 CPU 分散并在本地空闲链表耗尽时借用其他 CPU 的空闲页；[E06] 本地访问和远端写入限制。 | 概念支持；必须讲迁移和共享例外，不能说“per-CPU 数据永远不需要同步”。 |
 | K06 `mm.page_alloc.physical_page_allocator` | [C12] 页池、位图及连续分配碎片；[E03] 按 order 分裂/合并。 | 概念支持；比较所有权、空闲集合和失败条件，不把某一算法视为唯一正确实现。 |
 | K07 `mm.kmalloc.kernel_heap_allocator` | [C12] 页上层 block allocator；[E04] 小对象、页分配及可睡眠约束。 | 概念支持；核心是对象生命周期与接口契约，完整 SLUB 性能调优不是本轮结论。 |
 | K08 `mm.vm_map.address_space_mapping` | [C05] 建立受权限约束的映射；[E05] 页表改变后的缓存翻译处理。 | 概念支持；map/unmap/protect 是接口操作，不应笼统称为并发意义的“原子操作”。 |
