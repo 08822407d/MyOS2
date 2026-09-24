@@ -41,7 +41,7 @@ issues:
     old_claim_disposition: "撤回永不入队的扩大结论；保留 generic enqueue 被注释及返回量缺口。"
     inference: "不能仅恢复 ttwu_queue 而忽略现有副作用；需先统一状态筛选、入队与返回值合同。"
     local_cases: [V04, V05, V06, V07]
-    not_proved: [完整唤醒正确, 任意CPU放置, SMP可运行]
+    not_proved: [完整唤醒正确, 任意CPU放置, 完整SMP运行成立]
   - issue_id: CA-02
     nodes: [sched.scheduler, sched.runqueue]
     result: active_picker_with_conditional_empty_queue_gap
@@ -132,7 +132,7 @@ not_closed_relations:
   - from: interrupt_or_softirq_expiry_dispatch
     to: process_timeout
     status: not_closed
-    why: "已读 handler/softirq 文件未给出完整分发链；timer 中间段和全树另需查。"
+    why: "已补齐 timer.c/timer.h、softirq.c/softirq.h；与已读 handler 合并仍未闭合到期分发链，其他可能分发者待全树核查。"
   - from: configured_source_collection
     to: actual_user_ELF
     status: pending_local
