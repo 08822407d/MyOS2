@@ -2355,7 +2355,7 @@
   ],
   "protection": {
     "work_branch": "claude/dazzling-cori-q0dnyt",
-    "head_short12": "a1e7c2277705",
+    "head_short12": "f9ae2bce9a64",
     "head_descends_from_pilot_head": true,
     "pilot_files_changed_since_pilot_head": [],
     "worktree_changes_outside_core_dir": []

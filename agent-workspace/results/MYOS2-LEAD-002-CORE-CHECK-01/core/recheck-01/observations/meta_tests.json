@@ -1,6 +1,6 @@
 {
  "check": "META_TESTS",
- "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical-meta/meta-5kc3hcc3",
+ "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2-meta/meta-csmqto5c",
  "frozen_manifest_names_match": true,
  "tests": [
   {
@@ -536,7 +536,7 @@
       "fixtures": 0
      },
      "infrastructure_errors": [
-      "identity gate closed: RuntimeError: git rev-parse rc=128 fatal: cannot change to '/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical-meta/meta-5kc3hcc3/no-such-repo': No such file or directory\n"
+      "identity gate closed: RuntimeError: git rev-parse rc=128 fatal: cannot change to '/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2-meta/meta-csmqto5c/no-such-repo': No such file or directory\n"
      ]
     }
    },
@@ -994,7 +994,7 @@
   },
   {
    "id": "M09",
-   "input_label": "HARNESS_META_TEST (real partial run with injected compile failure, case exception and skipped stage)",
+   "input_label": "HARNESS_META_TEST (real partial run with injected compile failure, case exception and skipped stage; variant B: static stage reported failed after writing its output)",
    "requirement": "no crash; full list of not-executed layers, affected CA, still-valid items; complete control = M12",
    "injection": {
     "broken_fixture": "fx_prims",
@@ -1041,8 +1041,8 @@
      "OBSERVED_AS_PREDICTED"
     ],
     "V08": [
-     "VALID",
-     "OBSERVED_AS_PREDICTED"
+     "INCOMPLETE_EVIDENCE",
+     null
     ],
     "V09": [
      "VALID",
@@ -1088,6 +1088,7 @@
     "V06.host_original_slice_serial",
     "V06.concurrent_wakeups",
     "V07.ap_migration",
+    "V08.limited_model_reachability",
     "V08.global_reachability",
     "V09.real_timer_expiry",
     "V10.real_timer_or_scheduler",
@@ -1103,9 +1104,122 @@
     "V06 evidence status ERROR",
     "V12 evidence status BLOCKED",
     "V13 evidence status BLOCKED",
+    "V08 evidence status INCOMPLETE_EVIDENCE",
     "stage static_checks.py not completed"
    ],
    "generator_errors": [],
+   "variant_static_stage_failed": {
+    "exit_code": 2,
+    "run_status": "PARTIAL",
+    "yaml_renders": true,
+    "static_stage_real_returncode": 0,
+    "static_json_left_in_stage_dir": true,
+    "stage_outputs_usable": {
+     "v00": true,
+     "v01": true,
+     "static": false,
+     "a46": true
+    },
+    "cases": {
+     "V00": [
+      "VALID",
+      "COUNTEREVIDENCE"
+     ],
+     "V01": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "V02": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V03": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V04": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V05": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V06": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "V07": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V08": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "V09": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V10": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V11": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V12": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V13": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V14": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "V00_A46_correction": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ]
+    },
+    "ca_rulings": {
+     "CA-01": "SUPPORTED_IN_SCOPE",
+     "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+     "CA-03": "SUPPORTED_IN_SCOPE",
+     "CA-04": "SUPPORTED_IN_SCOPE",
+     "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+     "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+     "CA-07": "SUPPORTED_IN_SCOPE"
+    },
+    "layers_not_executed": [
+     "V04.smp_or_real_scheduler",
+     "V05.irq_or_signal_context",
+     "V06.concurrent_wakeups",
+     "V07.ap_migration",
+     "V08.limited_model_reachability",
+     "V08.global_reachability",
+     "V09.real_timer_expiry",
+     "V10.real_timer_or_scheduler",
+     "V11.real_context_switch",
+     "V12.multicore_atomicity",
+     "V13.smp_stress",
+     "V14.source_and_build_reference",
+     "V14.existing_elf"
+    ],
+    "infrastructure_errors": [
+     "V08 evidence status INCOMPLETE_EVIDENCE",
+     "stage static_checks.py not completed"
+    ],
+    "generator_errors": []
+   },
+   "met_variants": {
+    "partial_run": true,
+    "static_stage_failed": true
+   },
    "old": {
     "missing_static_stage": {
      "returncode": 1,
@@ -1174,8 +1288,8 @@
       "OBSERVED_AS_PREDICTED"
      ],
      "V08": [
-      "VALID",
-      "OBSERVED_AS_PREDICTED"
+      "INCOMPLETE_EVIDENCE",
+      null
      ],
      "V09": [
       "VALID",
@@ -1214,6 +1328,19 @@
      "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
      "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
      "CA-07": "UNDETERMINED_MISSING_EVIDENCE"
+    },
+    "static_stage_failed": {
+     "exit": 2,
+     "V08": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "V14": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+     "CA-05": "UNDETERMINED_MISSING_EVIDENCE"
     }
    },
    "old_side_status": "failure_demonstrated (Phase A A5: FileNotFoundError / KeyError)",
@@ -1371,7 +1498,7 @@
    "real_repo_gate_ok": true,
    "real_repo_execution": {
     "branch": "claude/dazzling-cori-q0dnyt",
-    "head_short12": "a1e7c2277705",
+    "head_short12": "f9ae2bce9a64",
     "remote_relation": "equal"
    },
    "main_repo_object_store_unchanged": true,

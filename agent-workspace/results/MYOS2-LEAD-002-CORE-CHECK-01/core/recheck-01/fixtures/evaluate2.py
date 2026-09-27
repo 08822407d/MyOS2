@@ -7,6 +7,7 @@
 #   timeout, confirmed reap, empty stderr, identical repeat). Only VALID evidence is compared with the
 #   unchanged 07/09 predictions. Empty, partial, duplicated, conflicting, unparsable or failed runs give
 #   NOT_RUN / BLOCKED / ERROR / INCOMPLETE_EVIDENCE / INVALID_EVIDENCE and never a behaviour verdict.
+# change (batch 2): V08 without its static criteria is INCOMPLETE_EVIDENCE (no case-level verdict).
 # --------------------------------------------------------------------------------------------------
 """Evidence contracts and case evaluators for the recheck."""
 import json
@@ -436,13 +437,20 @@ def v08(fx, static=None):
             reach = "COUNTEREVIDENCE_IN_LIMITED_MODEL"
         else:
             reach = "NO_COUNTEREVIDENCE_FOUND"
+        basis = {"function_level": fl, "limited_model_reachability": reach,
+                 "global_reachability": "NOT_ESTABLISHED_BY_THIS_CHECK", "static_criteria": crit}
+        extra = {"order_before": g(ix, names[3], ("pick_in", "f_running_requeue_by_vruntime"))["order_before"],
+                 "order_after": f["order_after"], "vruntime_sorted_would_be": [4, 2, 5]}
+        if crit is None:
+            # recheck-01 batch 2: the limited-model part of V08 needs the static criteria. Without them the
+            # case evidence is incomplete and no case-level verdict is given; the function-level subresult
+            # stays visible in result_basis (batch 1 returned VALID + the function-level verdict here).
+            return {"status": "INCOMPLETE_EVIDENCE", "result": None,
+                    "evidence_reasons": ["static_checks V08 criteria missing, malformed or from a stage that did not complete"],
+                    "result_basis": basis, "subresults": subs, "extra_observation_requeue_order": extra}
         top = "COUNTEREVIDENCE" if (fl == "COUNTEREVIDENCE" or reach == "COUNTEREVIDENCE_IN_LIMITED_MODEL") else fl
-        return {"status": "VALID", "result": top,
-                "result_basis": {"function_level": fl, "limited_model_reachability": reach,
-                                 "global_reachability": "NOT_ESTABLISHED_BY_THIS_CHECK", "static_criteria": crit},
-                "subresults": subs,
-                "extra_observation_requeue_order": {"order_before": g(ix, names[3], ("pick_in", "f_running_requeue_by_vruntime"))["order_before"],
-                                                    "order_after": f["order_after"], "vruntime_sorted_would_be": [4, 2, 5]}}
+        return {"status": "VALID", "result": top, "result_basis": basis, "subresults": subs,
+                "extra_observation_requeue_order": extra}
     return _wrap("V08", fx, [("fx_sched", n) for n in names], body)
 
 

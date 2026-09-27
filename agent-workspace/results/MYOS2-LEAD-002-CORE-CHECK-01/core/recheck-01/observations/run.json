@@ -1,6 +1,6 @@
 {
  "check": "RECHECK_RUN",
- "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s",
+ "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf",
  "meta_injection": null,
  "dynamic_calls": {
   "h00": 1,
@@ -13,7 +13,7 @@
    "returncode": 0,
    "timed_out": false,
    "terminal_state": "exited",
-   "elapsed_s": 0.558,
+   "elapsed_s": 0.564,
    "stderr_tail": "",
    "stdout_tail": "tags=47 raw=47 ids_unique=True missing=[] mech={'MATCH_IN_DEFINITION': 45, 'MATCH_IN_DEFINITION_INCLUDES_COMMENT_LINE': 1, 'OUTSIDE_OR_PARTIAL_DEFINITION': 1} sem={'SUPPORTS_WITH_NOTE': 12, 'SUPPORTS': 34, 'PARTIAL_BOUNDARY': 1}\n"
   },
@@ -23,7 +23,7 @@
    "returncode": 0,
    "timed_out": false,
    "terminal_state": "exited",
-   "elapsed_s": 0.292,
+   "elapsed_s": 0.259,
    "stderr_tail": "",
    "stdout_tail": "_reconfirmed_plus_downgraded\": 47,\n    \"map_expected_quote_count\": 47,\n    \"automated_equals_declared\": true,\n    \"arithmetic_ok\": true\n  },\n  \"startup_selfcheck_quote_in_master_conventions\": true,\n  \"completion_flags\": {\n    \"whole_002R_complete\": false,\n    \"whole_003R_complete\": false,\n    \"whole_007R_complete\": false,\n    \"whole_wave2_complete\": false,\n    \"acceptance_verdict\": \"NOT_ISSUED\",\n    \"kernel_modified\": false,\n    \"map.replacement_for_002R_003R_007R\": false\n  },\n  \"hex40_hits_in_scope_files\": {\n    \"07-scheduler-wakeup-timer-audit.md\": 0,\n    \"07-core-audit-map.yaml\": 0,\n    \"08-conversation-archive-disposition.md\": 0,\n    \"09-local-verification-contract.md\": 0,\n    \"MANIFEST.md\": 0,\n    \"2026-09-24-core-audit-and-archive.md\": 0\n  },\n  \"p9_wording_hits_in_scope_files\": {}\n}\n"
   },
@@ -33,7 +33,7 @@
    "returncode": 0,
    "timed_out": false,
    "terminal_state": "exited",
-   "elapsed_s": 37.17,
+   "elapsed_s": 36.594,
    "stderr_tail": "",
    "stdout_tail": "active_extern_jiffies_declarations\": [\n      {\n        \"path\": \"mykernel/lock_IPC/semaphore/semaphore_api.h\",\n        \"line\": 12,\n        \"text\": \"extern int __must_check down_timeout(sema_t *sem, long jiffies);\"\n      },\n      {\n        \"path\": \"mykernel/time/misc/time_misc_api.h\",\n        \"line\": 12,\n        \"text\": \"extern void jiffies_to_timespec64(const ulong jiffies, timespec64_s *value);\"\n      },\n      {\n        \"path\": \"mykernel/time/systick/systick_api.h\",\n        \"line\": 25,\n        \"text\": \"extern ulong volatile __cacheline_aligned_in_smp __jiffy_arch_data jiffies;\"\n      }\n    ],\n    \"hpet_registration\": [\n      {\n        \"path\": \"mykernel/arch/x86_64/include/asm/time.h\",\n        \"line\": 8,\n        \"text\": \"extern void hpet_time_init(void);\"\n      },\n      {\n        \"path\": \"\n"
   },
@@ -43,7 +43,7 @@
    "returncode": 0,
    "timed_out": false,
    "terminal_state": "exited",
-   "elapsed_s": 0.06,
+   "elapsed_s": 0.054,
    "stderr_tail": "",
    "stdout_tail": "{\n \"old_A46_verdict_in_frozen_v00\": \"OUTSIDE_OR_PARTIAL_DEFINITION\",\n \"anchors\": [\n  [\n   \"A46-C\",\n   \"MATCH_IN_DEFINITION\"\n  ],\n  [\n   \"A46-ASM\",\n   \"MATCH_IN_DEFINITION\"\n  ]\n ]\n}\n"
   }
@@ -266,7 +266,7 @@
  },
  "identity": {
   "check": "IDENTITY2",
-  "read_time_utc": "2026-09-27T08:42:57Z",
+  "read_time_utc": "2026-09-27T08:58:15Z",
   "gate": {
    "core_review_record": true,
    "core_review_input_refs": true,
@@ -315,7 +315,7 @@
   },
   "execution": {
    "branch": "claude/dazzling-cori-q0dnyt",
-   "head_short12": "a1e7c2277705",
+   "head_short12": "f9ae2bce9a64",
    "remote_relation": "equal"
   },
   "originals": {
@@ -594,12 +594,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v02_single"
       ],
       "timeout_s": 5,
-      "pid": 15268,
-      "pgid": 15268,
+      "pid": 32397,
+      "pgid": 32397,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -610,7 +610,7 @@
       "terminal_state": "exited",
       "stdout": "{\"case\":\"v02_single\",\"ev\":\"layout\",\"sizeof_lock\":8,\"offsetof_hdr_task_list_hdr\":8,\"offsetof_waiter_task_list\":8,\"anchor_container_task_field_aliases_lock\":true}\n{\"case\":\"v02_single\",\"ev\":\"snap\",\"step\":\"init\",\"count\":0,\"walk_len\":0,\"count_equals_nodes\":true,\"anchor_self\":true,\"header_is_empty\":true,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v02_single\",\"ev\":\"snap\",\"step\":\"after_prepare\",\"count\":1,\"walk_len\":1,\"count_equals_nodes\":true,\"anchor_self\":false,\"header_is_empty\":false,\"a_self\":false,\"a_occ\":1,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v02_single\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":2,\"mask\":3}\n{\"case\":\"v02_single\",\"ev\":\"snap\",\"step\":\"after_wake\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v02_single\",\"ev\":\"snap\",\"step\":\"after_finish\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v02_single\",\"ev\":\"end\",\"ttwu_calls\":1}\n",
       "stderr": "",
-      "elapsed_s": 0.004,
+      "elapsed_s": 0.001,
       "group_members_after": null
      },
      "repeat_identical": true,
@@ -621,12 +621,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v03_second_wake_direct"
       ],
       "timeout_s": 5,
-      "pid": 15270,
-      "pgid": 15270,
+      "pid": 32399,
+      "pgid": 32399,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -637,7 +637,7 @@
       "terminal_state": "exited",
       "stdout": "{\"case\":\"v03_second_wake_direct\",\"ev\":\"layout\",\"sizeof_lock\":8,\"offsetof_hdr_task_list_hdr\":8,\"offsetof_waiter_task_list\":8,\"anchor_container_task_field_aliases_lock\":true}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"snap\",\"step\":\"init\",\"count\":0,\"walk_len\":0,\"count_equals_nodes\":true,\"anchor_self\":true,\"header_is_empty\":true,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"snap\",\"step\":\"after_prepare\",\"count\":1,\"walk_len\":1,\"count_equals_nodes\":true,\"anchor_self\":false,\"header_is_empty\":false,\"a_self\":false,\"a_occ\":1,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":2,\"mask\":3}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"snap\",\"step\":\"after_wake\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"snap\",\"step\":\"after_finish\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"second_wake_begin\",\"lock_held\":false}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"ttwu_invalid_task\",\"call\":2,\"task_ptr_value\":0,\"watched_lock_word\":0,\"equals_watched_lock_word\":true}\n",
       "stderr": "",
-      "elapsed_s": 0.002,
+      "elapsed_s": 0.001,
       "group_members_after": null
      },
      "repeat_identical": true,
@@ -648,12 +648,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v03_second_wake_via_complete"
       ],
       "timeout_s": 5,
-      "pid": 15272,
-      "pgid": 15272,
+      "pid": 32401,
+      "pgid": 32401,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -664,7 +664,7 @@
       "terminal_state": "exited",
       "stdout": "{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":0,\"mask\":3}\n{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"snap\",\"step\":\"after_first_complete\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":4294967297,\"preempt\":0}\n{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"snap\",\"step\":\"after_waiter_finish\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":4294967297,\"preempt\":0}\n{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"second_complete_begin\",\"lock_held_inside\":true}\n{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"ttwu_invalid_task\",\"call\":2,\"task_ptr_value\":4294967298,\"watched_lock_word\":4294967298,\"equals_watched_lock_word\":true}\n",
       "stderr": "",
-      "elapsed_s": 0.002,
+      "elapsed_s": 0.001,
       "group_members_after": null
      },
      "repeat_identical": true,
@@ -675,12 +675,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v03_all_two_waiters"
       ],
       "timeout_s": 5,
-      "pid": 15274,
-      "pgid": 15274,
+      "pid": 32403,
+      "pgid": 32403,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -702,12 +702,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v09_schedule_timeout_values"
       ],
       "timeout_s": 5,
-      "pid": 15276,
-      "pgid": 15276,
+      "pid": 32405,
+      "pgid": 32405,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -718,7 +718,7 @@
       "terminal_state": "exited",
       "stdout": "{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":0,\"ret\":0,\"sched_calls\":0,\"mod_timer_calls\":1,\"del_calls\":1,\"state_after\":2}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":1,\"ret\":1,\"sched_calls\":0,\"mod_timer_calls\":1,\"del_calls\":1,\"state_after\":2}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":5,\"ret\":5,\"sched_calls\":0,\"mod_timer_calls\":1,\"del_calls\":1,\"state_after\":2}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":-1,\"ret\":0,\"sched_calls\":0,\"mod_timer_calls\":0,\"del_calls\":0,\"state_after\":0}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"schedule\",\"call\":1,\"current\":1,\"current_state\":2}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":9223372036854775807,\"ret\":9223372036854775807,\"sched_calls\":1,\"mod_timer_calls\":0,\"del_calls\":0,\"state_after\":2}\n",
       "stderr": "",
-      "elapsed_s": 0.002,
+      "elapsed_s": 0.001,
       "group_members_after": null
      },
      "repeat_identical": true,
@@ -729,12 +729,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v09_uninterruptible_wrapper"
       ],
       "timeout_s": 5,
-      "pid": 15278,
-      "pgid": 15278,
+      "pid": 32407,
+      "pgid": 32407,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -756,12 +756,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v09_msleep_bounded"
       ],
       "timeout_s": 5,
-      "pid": 15280,
-      "pgid": 15280,
+      "pid": 32409,
+      "pgid": 32409,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -783,12 +783,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v10_done_preset_fast_path"
       ],
       "timeout_s": 5,
-      "pid": 15282,
-      "pgid": 15282,
+      "pid": 32411,
+      "pgid": 32411,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -810,12 +810,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v10_infinite_notify_during_schedule"
       ],
       "timeout_s": 5,
-      "pid": 15284,
-      "pgid": 15284,
+      "pid": 32413,
+      "pgid": 32413,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -837,12 +837,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v10_finite_timeout_no_notifier"
       ],
       "timeout_s": 5,
-      "pid": 15286,
-      "pgid": 15286,
+      "pid": 32415,
+      "pgid": 32415,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -864,12 +864,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
        "v11_wait_then_notify_then_reuse"
       ],
       "timeout_s": 5,
-      "pid": 15288,
-      "pgid": 15288,
+      "pid": 32417,
+      "pgid": 32417,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -2442,14 +2442,14 @@
      "-Wno-unused-variable",
      "-Wno-unused-function",
      "-I",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/frozen",
      "-o",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait.expanded.c"
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_wait/fx_wait.expanded.c"
     ],
     "timeout_s": 60,
-    "pid": 15263,
-    "pgid": 15263,
+    "pid": 32392,
+    "pgid": 32392,
     "pgid_differs_from_own": true,
     "timed_out": false,
     "kill": null,
@@ -2460,7 +2460,7 @@
     "terminal_state": "exited",
     "stdout": "",
     "stderr": "",
-    "elapsed_s": 0.097,
+    "elapsed_s": 0.101,
     "group_members_after": null,
     "binary_exists": true
    },
@@ -2474,12 +2474,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
        "v04_noncurrent_wake"
       ],
       "timeout_s": 5,
-      "pid": 15401,
-      "pgid": 15401,
+      "pid": 32533,
+      "pgid": 32533,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -2501,12 +2501,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
        "v05_state_not_in_mask"
       ],
       "timeout_s": 5,
-      "pid": 15403,
-      "pgid": 15403,
+      "pid": 32535,
+      "pgid": 32535,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -2528,12 +2528,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
        "v06_double_wake"
       ],
       "timeout_s": 5,
-      "pid": 15405,
-      "pgid": 15405,
+      "pid": 32537,
+      "pgid": 32537,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -2555,12 +2555,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
        "v07_cpu_metadata"
       ],
       "timeout_s": 5,
-      "pid": 15407,
-      "pgid": 15407,
+      "pid": 32539,
+      "pgid": 32539,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -2582,12 +2582,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
        "v08_pick_combinations"
       ],
       "timeout_s": 5,
-      "pid": 15409,
-      "pgid": 15409,
+      "pid": 32541,
+      "pgid": 32541,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -2609,12 +2609,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
        "v08_sequence_idle_requeue"
       ],
       "timeout_s": 5,
-      "pid": 15411,
-      "pgid": 15411,
+      "pid": 32543,
+      "pgid": 32543,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -2636,12 +2636,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
        "v08_sequence_idle_switched_out_blocked"
       ],
       "timeout_s": 5,
-      "pid": 15413,
-      "pgid": 15413,
+      "pid": 32545,
+      "pgid": 32545,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -2663,12 +2663,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
        "v08_vruntime_requeue_order"
       ],
       "timeout_s": 5,
-      "pid": 15415,
-      "pgid": 15415,
+      "pid": 32547,
+      "pgid": 32547,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -3665,14 +3665,14 @@
      "-Wno-unused-variable",
      "-Wno-unused-function",
      "-I",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/frozen",
      "-o",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched.expanded.c"
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_sched/fx_sched.expanded.c"
     ],
     "timeout_s": 60,
-    "pid": 15396,
-    "pgid": 15396,
+    "pid": 32528,
+    "pgid": 32528,
     "pgid_differs_from_own": true,
     "timed_out": false,
     "kill": null,
@@ -3683,7 +3683,7 @@
     "terminal_state": "exited",
     "stdout": "",
     "stderr": "",
-    "elapsed_s": 0.076,
+    "elapsed_s": 0.088,
     "group_members_after": null,
     "binary_exists": true
    },
@@ -3697,12 +3697,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_prims/fx_prims",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_prims/fx_prims",
        "v12_add_test_negative"
       ],
       "timeout_s": 5,
-      "pid": 15448,
-      "pgid": 15448,
+      "pid": 32580,
+      "pgid": 32580,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -3724,12 +3724,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_prims/fx_prims",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_prims/fx_prims",
        "v13_trylock"
       ],
       "timeout_s": 5,
-      "pid": 15450,
-      "pgid": 15450,
+      "pid": 32582,
+      "pgid": 32582,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -4006,14 +4006,14 @@
      "-Wno-unused-variable",
      "-Wno-unused-function",
      "-I",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/frozen",
      "-o",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_prims/fx_prims",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_prims/fx_prims.expanded.c"
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_prims/fx_prims",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_prims/fx_prims.expanded.c"
     ],
     "timeout_s": 60,
-    "pid": 15443,
-    "pgid": 15443,
+    "pid": 32575,
+    "pgid": 32575,
     "pgid_differs_from_own": true,
     "timed_out": false,
     "kill": null,
@@ -4024,7 +4024,7 @@
     "terminal_state": "exited",
     "stdout": "",
     "stderr": "",
-    "elapsed_s": 0.057,
+    "elapsed_s": 0.051,
     "group_members_after": null,
     "binary_exists": true
    },
@@ -4038,12 +4038,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies/fx_jiffies",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_jiffies/fx_jiffies",
        "v14"
       ],
       "timeout_s": 5,
-      "pid": 15462,
-      "pgid": 15462,
+      "pid": 32594,
+      "pgid": 32594,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -4054,7 +4054,7 @@
       "terminal_state": "exited",
       "stdout": "{\"case\":\"v14\",\"ev\":\"one_handler_call\",\"same_address\":true,\"jiffies_64_delta\":2,\"jiffies_delta\":2,\"sizeof_jiffies\":8,\"sizeof_jiffies_64\":8,\"tty_calls\":0}\n",
       "stderr": "",
-      "elapsed_s": 0.002,
+      "elapsed_s": 0.001,
       "group_members_after": null
      },
      "repeat_identical": true,
@@ -4122,15 +4122,15 @@
      "-Wno-unused-variable",
      "-Wno-unused-function",
      "-I",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/frozen",
      "-o",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies/fx_jiffies",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies/fx_jiffies.expanded.c",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies/alias.ld"
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_jiffies/fx_jiffies",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_jiffies/fx_jiffies.expanded.c",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_jiffies/alias.ld"
     ],
     "timeout_s": 60,
-    "pid": 15457,
-    "pgid": 15457,
+    "pid": 32589,
+    "pgid": 32589,
     "pgid_differs_from_own": true,
     "timed_out": false,
     "kill": null,
@@ -4141,7 +4141,7 @@
     "terminal_state": "exited",
     "stdout": "",
     "stderr": "",
-    "elapsed_s": 0.05,
+    "elapsed_s": 0.046,
     "group_members_after": null,
     "binary_exists": true
    },
@@ -4160,12 +4160,12 @@
      "status": "RAN",
      "run": {
       "cmd": [
-       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies_control/fx_jiffies_control",
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_jiffies_control/fx_jiffies_control",
        "v14_control"
       ],
       "timeout_s": 5,
-      "pid": 15473,
-      "pgid": 15473,
+      "pid": 32605,
+      "pgid": 32605,
       "pgid_differs_from_own": true,
       "timed_out": false,
       "kill": null,
@@ -4245,14 +4245,14 @@
      "-Wno-unused-function",
      "-DCONTROL_SEPARATE",
      "-I",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/frozen",
      "-o",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies_control/fx_jiffies_control",
-     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies_control/fx_jiffies_control.expanded.c"
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_jiffies_control/fx_jiffies_control",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf/fixtures/fx_jiffies_control/fx_jiffies_control.expanded.c"
     ],
     "timeout_s": 60,
-    "pid": 15468,
-    "pgid": 15468,
+    "pid": 32600,
+    "pgid": 32600,
     "pgid_differs_from_own": true,
     "timed_out": false,
     "kill": null,
@@ -4263,12 +4263,18 @@
     "terminal_state": "exited",
     "stdout": "",
     "stderr": "",
-    "elapsed_s": 0.052,
+    "elapsed_s": 0.044,
     "group_members_after": null,
     "binary_exists": true
    },
    "status": "BUILT"
   }
+ },
+ "stage_outputs_usable": {
+  "v00": true,
+  "v01": true,
+  "static": true,
+  "a46": true
  },
  "evaluation": {
   "V02": {

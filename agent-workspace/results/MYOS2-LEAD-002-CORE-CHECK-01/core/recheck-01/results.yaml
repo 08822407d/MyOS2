@@ -26,9 +26,14 @@ run:
   dynamic_calls:
     h00: 1
     fixtures: 1
-  workdir: /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s
+  workdir: /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf
   meta_injection: null
   stage_outputs_present:
+    v00: true
+    v01: true
+    static: true
+    a46: true
+  stage_outputs_usable:
     v00: true
     v01: true
     static: true
@@ -60,7 +65,7 @@ identity:
     pilot_result: 10ecb7dd0bdb
   execution:
     branch: claude/dazzling-cori-q0dnyt
-    head_short12: a1e7c2277705
+    head_short12: f9ae2bce9a64
     remote_relation: equal
   originals:
     frozen_files: 26
@@ -1509,8 +1514,8 @@ m_items:
         - VALID
         - OBSERVED_AS_PREDICTED
         V08:
-        - VALID
-        - OBSERVED_AS_PREDICTED
+        - INCOMPLETE_EVIDENCE
+        - null
         V09:
         - VALID
         - OBSERVED_AS_PREDICTED
@@ -1540,6 +1545,16 @@ m_items:
         CA-05: UNDETERMINED_MISSING_EVIDENCE
         CA-06: SUPPORTED_AT_SOURCE_LEVEL
         CA-07: UNDETERMINED_MISSING_EVIDENCE
+      static_stage_failed:
+        exit: 2
+        V08:
+        - INCOMPLETE_EVIDENCE
+        - null
+        V14:
+        - INCOMPLETE_EVIDENCE
+        - null
+        CA-02: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+        CA-05: UNDETERMINED_MISSING_EVIDENCE
   M10:
     requirement: legit successor replays; wrong branch / non-descendant / changed originals / bad remote are rejected
     met: true

@@ -6,6 +6,10 @@
 #   supplied run data with explicit criteria; missing stages, blocked fixtures, errors and partial runs
 #   produce UNDETERMINED/NOT_RUN entries instead of fixed text or a crash. Fixed explanatory text is kept
 #   only under keys named *_template. Section failures are collected in generator_errors.
+# change (batch 2): stage outputs (v00/static/a46) are used only when their stage completed; V08 layers
+#   follow its function-level subresult and its complete evidence separately; CA-02 keeps the
+#   function-level part when only the static criteria are missing; CA-06 and the V14 source layer need
+#   VALID V00 evidence.
 # --------------------------------------------------------------------------------------------------
 """Usage: python3 make_results2.py <observations_dir> <out.yaml>
 Reads run.json, v00.json, v01.json, static.json, a46.json, old_counterexamples.json, meta_tests.json
@@ -27,7 +31,7 @@ LAYER_TEMPLATES = {
     "V05": {"host_original_slice": "V05", "irq_or_signal_context": None},
     "V06": {"host_original_slice_serial": "V06", "concurrent_wakeups": None},
     "V07": {"host_original_slice": "V07", "ap_migration": None},
-    "V08": {"host_original_slice_function_level": "V08", "limited_model_reachability": "V08", "global_reachability": None},
+    "V08": {"host_original_slice_function_level": "V08_function", "limited_model_reachability": "V08", "global_reachability": None},
     "V09": {"host_original_slice_stub_timers": "V09", "real_timer_expiry": None},
     "V10": {"host_original_slice_scripted_interleaving": "V10", "real_timer_or_scheduler": None},
     "V11": {"local_sequence_scripted_interleaving": "V11", "real_context_switch": None},
@@ -101,9 +105,16 @@ def build_doc(run, v00, v01, static, a46, oldc, meta, frozen_results):
             doc[name] = {"generator_error": True}
     run = run or {}
     ev = run.get("evaluation") or {}
+    stg = run.get("stages") or {}
+    done = lambda s: (stg.get(s) or {}).get("returncode") == 0 and not (stg.get(s) or {}).get("timed_out")
+    # a file left behind by a stage that did not complete is not evidence
+    v00 = v00 if done("v00_anchors.py") else None
+    static = static if done("static_checks.py") else None
+    a46 = a46 if done("a46_check.py") else None
+    v00_valid = (ev.get("V00") or {}).get("status") == "VALID"
     section("run", lambda: {k: run.get(k) for k in ("status", "exit_code", "execution_complete", "verification_findings",
                                                     "infrastructure_errors", "dynamic_calls", "workdir", "meta_injection",
-                                                    "stage_outputs_present")})
+                                                    "stage_outputs_present", "stage_outputs_usable")})
     section("identity", lambda: {"gate": (run.get("identity") or {}).get("gate"), "error": (run.get("identity") or {}).get("error"),
                                  "pins": (run.get("identity") or {}).get("pins"),
                                  "execution": (run.get("identity") or {}).get("execution"),
@@ -122,7 +133,7 @@ def build_doc(run, v00, v01, static, a46, oldc, meta, frozen_results):
                                for k, v in (run.get("stages") or {}).items()})
 
     def cases():
-        v14s = v14_source(v00, static)
+        v14s = v14_source(v00 if v00_valid else None, static)
         v14m = ev.get("V14_model") or {"status": "INCOMPLETE_EVIDENCE", "result": None}
         out = []
         for cid in ORDER:
@@ -143,6 +154,9 @@ def build_doc(run, v00, v01, static, a46, oldc, meta, frozen_results):
                     layers[lname] = "EXECUTED" if v14s.get("status") == "VALID" else v14s.get("status")
                 elif src == "V14_model":
                     layers[lname] = "EXECUTED" if v14m.get("status") == "VALID" else v14m.get("status")
+                elif src == "V08_function":
+                    fsub = (((ev.get("V08") or {}).get("subresults") or {}).get("function_level_combinations") or {})
+                    layers[lname] = "EXECUTED" if fsub.get("status") == "VALID" else (ev.get("V08") or {}).get("status", "INCOMPLETE_EVIDENCE")
                 else:
                     layers[lname] = "EXECUTED" if (ev.get(src) or {}).get("status") == "VALID" else (ev.get(src) or {}).get("status", "INCOMPLETE_EVIDENCE")
             if cid == "V14" and isinstance(static, dict):
@@ -172,7 +186,9 @@ def build_doc(run, v00, v01, static, a46, oldc, meta, frozen_results):
                           "observed": obs, "missing_or_invalid": missing, "contradicting": contra}
         v08 = by.get("V08", {})
         rb = v08.get("result_basis") or {}
-        if v08.get("evidence_status") != "VALID":
+        only_static_missing = (v08.get("evidence_status") == "INCOMPLETE_EVIDENCE"
+                               and rb.get("limited_model_reachability") == "UNDETERMINED_STATIC_INPUT_MISSING")
+        if v08.get("evidence_status") != "VALID" and not only_static_missing:
             r = "UNDETERMINED_MISSING_EVIDENCE"
         else:
             fl = "FUNCTION_LEVEL_SUPPORTED" if rb.get("function_level") == "OBSERVED_AS_PREDICTED" else "FUNCTION_LEVEL_CONTRADICTED"
@@ -192,7 +208,7 @@ def build_doc(run, v00, v01, static, a46, oldc, meta, frozen_results):
             r = "CONTRADICTED_IN_SCOPE"
         res["CA-05"] = {"ruling": r, "criteria": {"V14": "source layer and host link model both as predicted"},
                         "observed": {"V14": [v14.get("evidence_status"), v14.get("result")], "layers": ld}}
-        anc = {a.get("id"): a for a in (v00 or {}).get("anchors", [])} if isinstance(v00, dict) else {}
+        anc = {a.get("id"): a for a in (v00 or {}).get("anchors", [])} if isinstance(v00, dict) and v00_valid else {}
         if not anc:
             r, obs = "UNDETERMINED_MISSING_EVIDENCE", {}
         else:

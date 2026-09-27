@@ -6,6 +6,8 @@
 #   run in its own subprocess (or its Phase A record where the old entry needs the full old replay);
 #   new side = revised modules in this directory. Every altered input is labelled HARNESS_META_TEST;
 #   none of them is a MyOS2 original-function result. M12 is the real same-source run supplied as input.
+# change (batch 2): M09 also requires V08 = INCOMPLETE_EVIDENCE with its limited-model layer listed when the
+#   static stage is missing, and adds variant B (static stage reported failed after writing its output).
 # --------------------------------------------------------------------------------------------------
 """Usage: RECHECK_ROOT=<parent> python3 meta_tests.py <canonical run.json> <old_counterexamples.json> <out.json>"""
 import copy
@@ -355,12 +357,7 @@ def m08(c, canon, oldc):
             "old_side_status": "failure_demonstrated (Phase A A5: V01 stays NO_FAILURE_IN_SCOPE)", "met": met}
 
 
-def m09(c, oldc):
-    rr_env(c, "m09_partial")
-    outp = os.path.join(os.environ["RECHECK_ROOT"], "run.json")
-    inj = {"broken_fixture": "fx_prims", "case_error": ["fx_sched", "v06_double_wake"], "skip_stage": "static_checks.py"}
-    code = run_recheck.main(["--out", outp], inject=inj)
-    rec = json.load(open(outp))
+def _doc_of(rec):
     wd = rec["workdir"]
     ld = lambda n: json.load(open(os.path.join(wd, "stages", n))) if os.path.exists(os.path.join(wd, "stages", n)) else None
     doc = MR.build_doc(rec, ld("v00.json"), ld("v01.json"), ld("static.json"), ld("a46.json"), None, None, MR.frozen_old_results())
@@ -371,21 +368,70 @@ def m09(c, oldc):
         text_ok = "%s: %s" % (type(e).__name__, e)
     cases = {x["case_id"]: [x["evidence_status"], x["result"]] for x in doc["cases"]}
     cas = {k: v["ruling"] for k, v in doc["ca_rulings"].items()}
-    met = (code == 2 and text_ok is True and not doc["generator_errors"]
-           and cases["V12"][0] == "BLOCKED" and cases["V13"][0] == "BLOCKED" and cases["V06"][0] == "ERROR"
-           and cases["V02"][0] == "VALID" and cas["CA-07"].startswith("UNDETERMINED") and cas["CA-01"].startswith("UNDETERMINED")
-           and cas["CA-05"].startswith("UNDETERMINED")
-           and ("UNDETERMINED" in doc["ca_rulings"]["CA-02"]["ruling"]))
+    return doc, text_ok, cases, cas
+
+
+def m09(c, oldc, canon):
+    rr_env(c, "m09_partial")
+    outp = os.path.join(os.environ["RECHECK_ROOT"], "run.json")
+    inj = {"broken_fixture": "fx_prims", "case_error": ["fx_sched", "v06_double_wake"], "skip_stage": "static_checks.py"}
+    code = run_recheck.main(["--out", outp], inject=inj)
+    rec = json.load(open(outp))
+    doc, text_ok, cases, cas = _doc_of(rec)
+    lnr = doc["counts"]["layers_not_executed"]
+    met_a = (code == 2 and text_ok is True and not doc["generator_errors"]
+             and cases["V12"][0] == "BLOCKED" and cases["V13"][0] == "BLOCKED" and cases["V06"][0] == "ERROR"
+             and cases["V02"][0] == "VALID" and cas["CA-07"].startswith("UNDETERMINED") and cas["CA-01"].startswith("UNDETERMINED")
+             and cas["CA-05"].startswith("UNDETERMINED")
+             # batch 2: without static criteria V08 gives no case-level verdict and its limited-model layer is listed
+             and cases["V08"] == ["INCOMPLETE_EVIDENCE", None]
+             and "V08.limited_model_reachability" in lnr and "V08.host_original_slice_function_level" not in lnr
+             and "V14.source_and_build_reference" in lnr
+             and cas["CA-02"].startswith("FUNCTION_LEVEL_SUPPORTED") and "UNDETERMINED_STATIC_INPUT_MISSING" in cas["CA-02"])
+    # variant B (batch 2): the static stage really runs and writes static.json, but its exit code is reported
+    # as 1; fixture records are the M12 run's real records (no rebuild) and H00 is a stand-in
+    rr_env(c, "m09_static_stage_failed")
+    outb = os.path.join(os.environ["RECHECK_ROOT"], "run.json")
+
+    def stage_fail_static(name, fz, sdir):
+        r = run_recheck.run_stage(name, fz, sdir)
+        if name == "static_checks.py":
+            r = dict(r, returncode_real=r.get("returncode"), returncode=1,
+                     note=META + " exit code reported as 1 after the real stage wrote static.json")
+        return r
+    h00_ok = lambda *a: {"dynamic_safety_ok": True, "transport_ok": True, "probes": [], "note": META + " stand-in; real H00 in the M12 run"}
+    fx_reuse = lambda *a: copy.deepcopy(canon["fixtures"])
+    code_b = run_recheck.main(["--out", outb], hooks={"h00": h00_ok, "stage": stage_fail_static, "fixtures": fx_reuse})
+    recb = json.load(open(outb))
+    docb, text_ok_b, cases_b, cas_b = _doc_of(recb)
+    static_file_left = os.path.exists(os.path.join(recb["workdir"], "stages", "static.json"))
+    canon_cases = {k: [v.get("status"), v.get("result")] for k, v in (canon.get("evaluation") or {}).items()}
+    var_b = {"exit_code": code_b, "run_status": recb.get("status"), "yaml_renders": text_ok_b,
+             "static_stage_real_returncode": (recb["stages"].get("static_checks.py") or {}).get("returncode_real"),
+             "static_json_left_in_stage_dir": static_file_left, "stage_outputs_usable": recb.get("stage_outputs_usable"),
+             "cases": cases_b, "ca_rulings": cas_b, "layers_not_executed": docb["counts"]["layers_not_executed"],
+             "infrastructure_errors": recb.get("infrastructure_errors"), "generator_errors": docb["generator_errors"]}
+    met_b = (code_b == 2 and text_ok_b is True and not docb["generator_errors"] and static_file_left
+             and (recb.get("stage_outputs_usable") or {}).get("static") is False
+             and cases_b["V08"] == ["INCOMPLETE_EVIDENCE", None] and cases_b["V14"][0] == "INCOMPLETE_EVIDENCE"
+             and "UNDETERMINED_STATIC_INPUT_MISSING" in cas_b["CA-02"] and cas_b["CA-05"].startswith("UNDETERMINED")
+             and all(cases_b[k] == canon_cases.get(k) for k in ("V02", "V03", "V04", "V05", "V06", "V07", "V09", "V10",
+                                                                 "V11", "V12", "V13", "V00", "V01")))
     old = {k: {"returncode": v.get("returncode"), "generated": v.get("generated"),
                "error_tail": (v.get("stderr_tail") or "").strip().splitlines()[-1:] if v.get("stderr_tail") else []}
            for k, v in (oldc.get("A5_R03_old_make_results") or {}).items() if k in ("missing_static_stage", "fixture_blocked_compile")}
-    return {"id": "M09", "input_label": META + " (real partial run with injected compile failure, case exception and skipped stage)",
+    return {"id": "M09", "input_label": META + " (real partial run with injected compile failure, case exception and skipped stage;"
+                                             " variant B: static stage reported failed after writing its output)",
             "requirement": "no crash; full list of not-executed layers, affected CA, still-valid items; complete control = M12",
             "injection": inj, "exit_code": code, "run_status": rec.get("status"), "yaml_renders": text_ok,
-            "cases": cases, "ca_rulings": cas, "layers_not_executed": doc["counts"]["layers_not_executed"],
+            "cases": cases, "ca_rulings": cas, "layers_not_executed": lnr,
             "infrastructure_errors": rec.get("infrastructure_errors"), "generator_errors": doc["generator_errors"],
-            "old": old, "old_summary": old, "new_summary": {"exit": code, "cases": cases, "ca": cas},
-            "old_side_status": "failure_demonstrated (Phase A A5: FileNotFoundError / KeyError)", "met": bool(met)}
+            "variant_static_stage_failed": var_b, "met_variants": {"partial_run": bool(met_a), "static_stage_failed": bool(met_b)},
+            "old": old, "old_summary": old,
+            "new_summary": {"exit": code, "cases": cases, "ca": cas,
+                            "static_stage_failed": {"exit": code_b, "V08": cases_b["V08"], "V14": cases_b["V14"],
+                                                    "CA-02": cas_b["CA-02"], "CA-05": cas_b["CA-05"]}},
+            "old_side_status": "failure_demonstrated (Phase A A5: FileNotFoundError / KeyError)", "met": bool(met_a and met_b)}
 
 
 # ---------------------------------------------------------------- M10 (identity with a scratch clone)
@@ -553,7 +599,7 @@ def main():
     res["delivered_records"] = {k: sorted(v["cases"]) for k, v in dv.items()}
     steps = [("M01", lambda: m01(c)), ("M02", lambda: m02(c, dv)), ("M03", lambda: m03(c, dv)), ("M04", lambda: m04(c, dv)),
              ("M05", lambda: m05(c, dv)), ("M06", lambda: m06(c, oldc)), ("M07", lambda: m07(c, oldc)),
-             ("M08", lambda: m08(c, canon, oldc)), ("M09", lambda: m09(c, oldc)), ("M10", lambda: m10(c, oldc)),
+             ("M08", lambda: m08(c, canon, oldc)), ("M09", lambda: m09(c, oldc, canon)), ("M10", lambda: m10(c, oldc)),
              ("M11", lambda: m11(c, oldc)), ("M12", lambda: m12(c, canon))]
     for mid, fn in steps:
         try:

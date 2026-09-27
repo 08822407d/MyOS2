@@ -9,6 +9,7 @@
 #   verification_findings and infrastructure_errors. Exit codes: 0 complete (findings allowed),
 #   2 partial, 3 identity/authorisation blocked, 4 internal error before a record could be completed.
 #   hooks/inject parameters exist only for HARNESS_META_TEST runs.
+# change (batch 2): static_checks output reaches evaluation only when that stage completed.
 # --------------------------------------------------------------------------------------------------
 """Usage: RECHECK_ROOT=<parent> python3 run_recheck.py [--out FILE]
 Creates a fresh work directory under RECHECK_ROOT; never reuses or cleans an existing one."""
@@ -26,6 +27,7 @@ import build2
 import evaluate2 as E
 
 STAGES = ["v00_anchors.py", "v01_structure.py", "static_checks.py"]
+STAGE_OF = {"v00": "v00_anchors.py", "v01": "v01_structure.py", "static": "static_checks.py", "a46": "a46_check.py"}
 FIXTURES = {
     "fx_wait": ["v02_single", "v03_second_wake_direct", "v03_second_wake_via_complete", "v03_all_two_waiters",
                 "v09_schedule_timeout_values", "v09_uninterruptible_wrapper", "v09_msleep_bounded",
@@ -181,7 +183,11 @@ def main(argv=None, hooks=None, inject=None):
             outs[key], err = load(os.path.join(sdir, fname))
             if err:
                 res.setdefault("stage_output_errors", {})[key] = err
-        ev = E.evaluate_all(fx, outs["static"])
+        # a stage output is evidence only when its stage completed (exit 0, no timeout); a file left behind
+        # by a failed stage is not used (V00/V01/A46 evaluators receive the stage record and check it)
+        done = lambda s: (res["stages"].get(s) or {}).get("returncode") == 0 and not (res["stages"].get(s) or {}).get("timed_out")
+        res["stage_outputs_usable"] = {k: outs[k] is not None and done(STAGE_OF[k]) for k in outs}
+        ev = E.evaluate_all(fx, outs["static"] if res["stage_outputs_usable"]["static"] else None)
         ev["V00"] = E.v00(outs["v00"], res["stages"].get("v00_anchors.py"))
         ev["V01"] = E.v01(outs["v01"], res["stages"].get("v01_structure.py"))
         ev["V00_A46_correction"] = E.a46r(outs["a46"], res["stages"].get("a46_check.py"))
