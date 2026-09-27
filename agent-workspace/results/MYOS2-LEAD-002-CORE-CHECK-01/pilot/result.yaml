@@ -1,0 +1,187 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+track_id: MYOS2-LEAD-002
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+phase: pilot
+record_type: cloud_pilot_structured_result
+transport_marker: MYOS2-CLOUD-PILOT-20260925-K7P4
+produced_by: Claude Code 云端会话执行者（claude.ai/code）；模型名不写入仓库产物，见 execution_model_selection
+execution_model_selection: unknown_or_not_attestable
+execution_model_selection_source: 平台规则禁止在推送到仓库的产物中写模型标识；主线如需可向 Owner 核对会话界面所选项
+date: '2026-09-27'
+base_snapshot: workspace=master（分支名）；taskbook=agent/MYOS2-LEAD-002（分支名）；kernel=time（分支名）；短标识见 source_refs
+inputs_read:
+- agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/10-cloud-pilot-and-github-handoff.md
+- agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/MANIFEST.md
+- master:agent-workspace/conventions.md
+- master:agent-workspace/tasks/00-gpt-task-protocol-v2.md
+- time:mykernel/scripts/options_flags.cmake
+- time:mykernel/debug/panic.c
+- master:mykernel/scripts/options_flags.cmake
+- master:mykernel/debug/panic.c
+status: frozen_before_P03_readback
+p03_note: 本文件在 P03 远端回读之前生成并冻结；回读结论只写在 evidence.md 与 MANIFEST.md，不回填本文件。
+open_questions: []
+source_refs:
+  read_time_utc: '2026-09-27T04:36:43Z'
+  read_method: git fetch 取远端对象后用 git show <ref>:<path> 读取；ls-remote 比对本地远端跟踪引用
+  work_branch: claude/dazzling-cori-q0dnyt
+  work_branch_start_short12: de3bb1df906a
+  work_branch_start_equals_master: true
+  refs:
+    workspace_base:
+      branch: master
+      short12: de3bb1df906a
+      matches_ls_remote: true
+    kernel_source:
+      branch: time
+      short12: a039d9803ade
+      matches_ls_remote: true
+    taskbook:
+      branch: agent/MYOS2-LEAD-002
+      short12: 57a7c3e0eebf
+      matches_ls_remote: true
+  files:
+  - ref: time
+    path: mykernel/scripts/options_flags.cmake
+    bytes: 2658
+    sha256_segments:
+    - 67d64e8ae02fcdd6
+    - fcd57c0bec27177e
+    - 82ff30e871429bf3
+    - 05c6b07fe2252e28
+  - ref: time
+    path: mykernel/debug/panic.c
+    bytes: 6472
+    sha256_segments:
+    - 08104a5fa836babd
+    - 84006dc74bdaf492
+    - 90ac1779c46c9f74
+    - 1d9d365c00feefc0
+  - ref: master
+    path: mykernel/scripts/options_flags.cmake
+    bytes: 2546
+    sha256_segments:
+    - fb42dce04a4a56a5
+    - 4c51e3512faa83ab
+    - a749f9e48dcb3ead
+    - 5c850f3b154a1818
+  - ref: master
+    path: mykernel/debug/panic.c
+    bytes: 6476
+    sha256_segments:
+    - 45f2862ffa295316
+    - ba71a20cbc54c21a
+    - f124494c9526076e
+    - 5f8af303ad70da57
+  - ref: agent/MYOS2-LEAD-002
+    path: agent-workspace/lead/MYOS2-LEAD-002/MANIFEST.md
+    bytes: 7093
+    sha256_segments:
+    - 1d591d6b4b2ee7dd
+    - adbe161e66f22345
+    - 25dd693c8d14b274
+    - 382474374a0c9916
+  sha256_segments_rule: 4 段各 16 个小写十六进制字符，按数组顺序无分隔拼接即完整 SHA-256
+environment:
+  os: Ubuntu 24.04.4 LTS
+  kernel_release: 6.18.44-fc-v37
+  cpu_arch: x86_64
+  python3: 3.11.15
+  gcc: gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+  clang: Ubuntu clang version 18.1.3 (1ubuntu1)
+  git: git version 2.43.0
+  yaml_parser: PyYAML 6.0.1
+  tools_installed_by_executor: false
+checks:
+  P00:
+    what: 环境与输入身份
+    script_exit: 0
+    all_materials_retrievable: true
+    all_refs_match_ls_remote: true
+    expected: 三分支材料均可取且与远端一致
+    as_expected: true
+  P01:
+    what: time 两条金丝雀逐字节整行命中且 master 不命中；篡改负控不命中
+    script_exit: 0
+    quote_source: agent/MYOS2-LEAD-002 MANIFEST.md front matter branch_canary_quotes（PyYAML 解析）
+    method: bytes 按 \n 切行做整行相等计数 + 原始子串计数；真实制表符保留
+    canaries:
+    - key: options_flags_cmake
+      path: mykernel/scripts/options_flags.cmake
+      quote_repr: '''\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\'''
+      quote_contains_real_tab: true
+      time_whole_line_matches: 1
+      master_substring_matches: 0
+      tab_to_space_variant_time_substring_matches: 0
+      master_observed_comparison_master_whole_line_matches: 1
+      verdict: DISCRIMINATES
+      expected: DISCRIMINATES
+      as_expected: true
+    - key: panic_c_panic
+      path: mykernel/debug/panic.c
+      quote_repr: '''\tthis_cpu = smp_processor_id();'''
+      quote_contains_real_tab: true
+      time_whole_line_matches: 1
+      master_substring_matches: 0
+      tab_to_space_variant_time_substring_matches: 0
+      master_observed_comparison_master_whole_line_matches: 1
+      verdict: DISCRIMINATES
+      expected: DISCRIMINATES
+      as_expected: true
+    negative_control:
+      tampered_repr: '''\t-m64 -mcmodel=kernal -fno-pie -fno-pic \\'''
+      precondition_differs_from_original: true
+      precondition_absent_from_time_file: true
+      time_whole_line_matches: 0
+      time_substring_matches: 0
+      verdict: NOT_HIT_AS_EXPECTED
+      expected: NOT_HIT_AS_EXPECTED
+      as_expected: true
+    as_expected: true
+  P02:
+    what: ENVIRONMENT_SMOKE：真实编译并运行普通 C 小程序；超时捕捉与回收
+    not: 不是 MyOS2 原函数或内核运行验证
+    script_exit: 0
+    compiler: /usr/bin/gcc
+    compile:
+      returncode: 0
+      timed_out: false
+      elapsed_s: 0.195
+      binary_exists: true
+      as_expected: true
+    run_expect_5:
+      stdout: 'actual=5 expected=5
+
+        '
+      returncode: 0
+      expected_returncode: 0
+      as_expected: true
+    run_expect_6:
+      stdout: 'actual=5 expected=6
+
+        '
+      returncode: 7
+      expected_returncode: 7
+      as_expected: true
+    timeout_probe:
+      timeout_s: 0.2
+      timed_out: true
+      returncode: -9
+      elapsed_s: 0.201
+      child_reaped: true
+      proc_entry_exists_after: false
+      label: TIMEOUT_EXPECTED
+      as_expected: true
+    as_expected: true
+  P03:
+    state_in_this_file: not_yet_run
+    where_reported: evidence.md §P03 与 MANIFEST.md
+evidence_refs:
+- agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/evidence.md
+- agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/MANIFEST.md
+limitations:
+- 所有运行仅限本次云端会话容器内的普通用户态进程；不是 MyOS2 内核运行、启动或硬件行为证明。
+- P02 只证明普通 C 编译/运行与退出码、超时捕捉可用；未执行 x86 特权指令、内核代码或并发压力。
+- P01 只比较两条金丝雀行，不代表其余源码或正式 V00-V14 已核。
+- 未运行仓库脚本、完整构建、QEMU；未安装工具；未改内核。
+- 平台在提示词前完成的容器初始化与克隆未由执行者审计。
