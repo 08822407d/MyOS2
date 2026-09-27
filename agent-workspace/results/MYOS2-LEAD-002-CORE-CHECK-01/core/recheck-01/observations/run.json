@@ -1,0 +1,5576 @@
+{
+ "check": "RECHECK_RUN",
+ "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s",
+ "meta_injection": null,
+ "dynamic_calls": {
+  "h00": 1,
+  "fixtures": 1
+ },
+ "stages": {
+  "v00_anchors.py": {
+   "script": "v00_anchors.py",
+   "source": "frozen a1e7c2277705",
+   "returncode": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "elapsed_s": 0.558,
+   "stderr_tail": "",
+   "stdout_tail": "tags=47 raw=47 ids_unique=True missing=[] mech={'MATCH_IN_DEFINITION': 45, 'MATCH_IN_DEFINITION_INCLUDES_COMMENT_LINE': 1, 'OUTSIDE_OR_PARTIAL_DEFINITION': 1} sem={'SUPPORTS_WITH_NOTE': 12, 'SUPPORTS': 34, 'PARTIAL_BOUNDARY': 1}\n"
+  },
+  "v01_structure.py": {
+   "script": "v01_structure.py",
+   "source": "frozen a1e7c2277705",
+   "returncode": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "elapsed_s": 0.292,
+   "stderr_tail": "",
+   "stdout_tail": "_reconfirmed_plus_downgraded\": 47,\n    \"map_expected_quote_count\": 47,\n    \"automated_equals_declared\": true,\n    \"arithmetic_ok\": true\n  },\n  \"startup_selfcheck_quote_in_master_conventions\": true,\n  \"completion_flags\": {\n    \"whole_002R_complete\": false,\n    \"whole_003R_complete\": false,\n    \"whole_007R_complete\": false,\n    \"whole_wave2_complete\": false,\n    \"acceptance_verdict\": \"NOT_ISSUED\",\n    \"kernel_modified\": false,\n    \"map.replacement_for_002R_003R_007R\": false\n  },\n  \"hex40_hits_in_scope_files\": {\n    \"07-scheduler-wakeup-timer-audit.md\": 0,\n    \"07-core-audit-map.yaml\": 0,\n    \"08-conversation-archive-disposition.md\": 0,\n    \"09-local-verification-contract.md\": 0,\n    \"MANIFEST.md\": 0,\n    \"2026-09-24-core-audit-and-archive.md\": 0\n  },\n  \"p9_wording_hits_in_scope_files\": {}\n}\n"
+  },
+  "static_checks.py": {
+   "script": "static_checks.py",
+   "source": "frozen a1e7c2277705",
+   "returncode": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "elapsed_s": 37.17,
+   "stderr_tail": "",
+   "stdout_tail": "active_extern_jiffies_declarations\": [\n      {\n        \"path\": \"mykernel/lock_IPC/semaphore/semaphore_api.h\",\n        \"line\": 12,\n        \"text\": \"extern int __must_check down_timeout(sema_t *sem, long jiffies);\"\n      },\n      {\n        \"path\": \"mykernel/time/misc/time_misc_api.h\",\n        \"line\": 12,\n        \"text\": \"extern void jiffies_to_timespec64(const ulong jiffies, timespec64_s *value);\"\n      },\n      {\n        \"path\": \"mykernel/time/systick/systick_api.h\",\n        \"line\": 25,\n        \"text\": \"extern ulong volatile __cacheline_aligned_in_smp __jiffy_arch_data jiffies;\"\n      }\n    ],\n    \"hpet_registration\": [\n      {\n        \"path\": \"mykernel/arch/x86_64/include/asm/time.h\",\n        \"line\": 8,\n        \"text\": \"extern void hpet_time_init(void);\"\n      },\n      {\n        \"path\": \"\n"
+  },
+  "a46_check.py": {
+   "script": "a46_check.py",
+   "source": "recheck-01",
+   "returncode": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "elapsed_s": 0.06,
+   "stderr_tail": "",
+   "stdout_tail": "{\n \"old_A46_verdict_in_frozen_v00\": \"OUTSIDE_OR_PARTIAL_DEFINITION\",\n \"anchors\": [\n  [\n   \"A46-C\",\n   \"MATCH_IN_DEFINITION\"\n  ],\n  [\n   \"A46-ASM\",\n   \"MATCH_IN_DEFINITION\"\n  ]\n ]\n}\n"
+  }
+ },
+ "infrastructure_errors": [],
+ "tools": {
+  "cpu_arch": "x86_64",
+  "python3": "3.11.15",
+  "gcc": "gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+  "git": "git version 2.43.0",
+  "curl": "curl 8.5.0 (x86_64-pc-linux-gnu) libcurl/8.5.0 OpenSSL/3.0.13 zlib/1.3 brotli/1.1.0 zstd/1.5.5 libidn2/2.3.7 libpsl/0.21.2 (+libidn2/2.3.7) libssh/0.10.6/openssl/zlib nghttp2/1.59.0 librtmp/2.3 OpenLDAP/2.6.10",
+  "pyyaml": "6.0.1"
+ },
+ "frozen_manifest": {
+  "commit_short12": "a1e7c2277705",
+  "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/",
+  "names_match_expected": true,
+  "files": [
+   {
+    "name": "build.py",
+    "bytes": 5927,
+    "sha256_segments": [
+     "c6871aeb7a6f794c",
+     "2848f3be4c90f81d",
+     "bdd3499b64f71925",
+     "bb89de26aec2c6e7"
+    ]
+   },
+   {
+    "name": "build_evidence.py",
+    "bytes": 20214,
+    "sha256_segments": [
+     "0c1f65359731d6f6",
+     "79048c64c18fdde6",
+     "db78e0f71630afc6",
+     "df391f5d1740212c"
+    ]
+   },
+   {
+    "name": "evaluate.py",
+    "bytes": 14653,
+    "sha256_segments": [
+     "bba70f48e40d4ef5",
+     "99d1a5ec44185996",
+     "f51bb79ddf50fef8",
+     "b2d5bb66deb4bc5c"
+    ]
+   },
+   {
+    "name": "final_check.py",
+    "bytes": 4142,
+    "sha256_segments": [
+     "c370015eecce89fc",
+     "d3fc547f759eb74f",
+     "46645dc70be95981",
+     "073358e19fd78daf"
+    ]
+   },
+   {
+    "name": "fx_common.h",
+    "bytes": 1854,
+    "sha256_segments": [
+     "5c3b5baaeb652c16",
+     "2676d7b4ad193f26",
+     "4ea329133dc4817d",
+     "2c754ed1ee0fb906"
+    ]
+   },
+   {
+    "name": "fx_jiffies.c",
+    "bytes": 2040,
+    "sha256_segments": [
+     "33bc74720fa60fe5",
+     "97ef0f1042581776",
+     "b455c4c0a8d0755b",
+     "6b4f51007c7264a4"
+    ]
+   },
+   {
+    "name": "fx_list.inc.c",
+    "bytes": 3054,
+    "sha256_segments": [
+     "146d23b7aa2d1e4b",
+     "1bed214a8b8d716e",
+     "a8eadb69f4222fb2",
+     "45ff21540f35ad3f"
+    ]
+   },
+   {
+    "name": "fx_prims.c",
+    "bytes": 3605,
+    "sha256_segments": [
+     "0181a8e6985f37d8",
+     "a0ce3f8e4cca6f83",
+     "163afad482140ae6",
+     "57c8c5962b1ac1a4"
+    ]
+   },
+   {
+    "name": "fx_sched.c",
+    "bytes": 10795,
+    "sha256_segments": [
+     "65c8f613d9854c93",
+     "d12fee7ba824eb14",
+     "1c9b2acc61b297e5",
+     "e1ccf8799b577929"
+    ]
+   },
+   {
+    "name": "fx_wait.c",
+    "bytes": 15937,
+    "sha256_segments": [
+     "87bae891c6a2e272",
+     "85b762f879839d06",
+     "e704d21097621ef7",
+     "360fe2807963a883"
+    ]
+   },
+   {
+    "name": "h00_hardening.py",
+    "bytes": 7633,
+    "sha256_segments": [
+     "4fd0cd4e28c6fb64",
+     "0e6a04892ece5118",
+     "0cbd9fb1e6d71e19",
+     "3d66390f76a24f36"
+    ]
+   },
+   {
+    "name": "harness.py",
+    "bytes": 4131,
+    "sha256_segments": [
+     "c6d71a86a3c297e3",
+     "f95b840138728f39",
+     "e352c1f4e2055247",
+     "14436f3cc6868694"
+    ]
+   },
+   {
+    "name": "locate.py",
+    "bytes": 11783,
+    "sha256_segments": [
+     "2b89aff5cc0524fa",
+     "e0ec3fb1f5806ea6",
+     "535bca63abdd7474",
+     "7ba58873e207e2a7"
+    ]
+   },
+   {
+    "name": "make_results.py",
+    "bytes": 29260,
+    "sha256_segments": [
+     "0f61e45e8889e41f",
+     "48c8ddb4e3da19de",
+     "1552de84bb4188d9",
+     "1404a842c9c49861"
+    ]
+   },
+   {
+    "name": "readback.py",
+    "bytes": 3454,
+    "sha256_segments": [
+     "e15fb7070bdcb919",
+     "e090d9a060412123",
+     "fedf9f7eade20f9b",
+     "db6b5b32a67828b5"
+    ]
+   },
+   {
+    "name": "run_all.py",
+    "bytes": 8906,
+    "sha256_segments": [
+     "0a3c7205f2d156a5",
+     "439a49bb7e667a60",
+     "d9fc3abe69de0d0a",
+     "2a81a94a31406800"
+    ]
+   },
+   {
+    "name": "static_checks.py",
+    "bytes": 6372,
+    "sha256_segments": [
+     "2a2bc27f8f973e4d",
+     "5a169ee2b534c27b",
+     "6cac69ee99518c36",
+     "21ee5d908c015577"
+    ]
+   },
+   {
+    "name": "v00_anchors.py",
+    "bytes": 10507,
+    "sha256_segments": [
+     "41e07b5bd9d970ea",
+     "ca5c806cc0471099",
+     "446bbb77dd224a0b",
+     "5c45f8b8447cf6e0"
+    ]
+   },
+   {
+    "name": "v00_semantic_review.yaml",
+    "bytes": 6910,
+    "sha256_segments": [
+     "497ae5488068d98f",
+     "9d010187c25c851c",
+     "bf0c01483064092d",
+     "cb4e8b2be5953f0c"
+    ]
+   },
+   {
+    "name": "v01_structure.py",
+    "bytes": 7249,
+    "sha256_segments": [
+     "d69d71b6eed855ce",
+     "ade8a20fa70995e3",
+     "75416dc613eec371",
+     "234c06e3903387a4"
+    ]
+   }
+  ]
+ },
+ "identity": {
+  "check": "IDENTITY2",
+  "read_time_utc": "2026-09-27T08:42:57Z",
+  "gate": {
+   "core_review_record": true,
+   "core_review_input_refs": true,
+   "contract12_binding": true,
+   "technical_inputs_unchanged": true,
+   "lead_head_descends_from_taskbook": true,
+   "on_execution_branch": true,
+   "head_descends_from_reviewed_core": true,
+   "originals_unchanged": true,
+   "remote_on_same_line": true,
+   "remote_descends_from_reviewed_core": true,
+   "worktree_clean_outside_recheck": true,
+   "ok": true
+  },
+  "notes": [],
+  "pins": {
+   "time": "a039d9803ade",
+   "master": "de3bb1df906a",
+   "taskbook": "57a7c3e0eebf",
+   "pilot_review": "f79b3a281616",
+   "lead_head": "ec62453e76d2",
+   "core_frozen": "a1e7c2277705",
+   "core_results": "7e2fa84a9823",
+   "pilot_head": "0851af4fc08b",
+   "pilot_result": "10ecb7dd0bdb"
+  },
+  "core_review_fields": {
+   "record_id": "CORE-CHECK-01-CORE-REVIEW-001",
+   "disposition": "RETURN",
+   "reviewed_pr": 17,
+   "reviewed_branch": "claude/dazzling-cori-q0dnyt",
+   "reviewed_commit_short12": "a1e7c2277705",
+   "frozen_results_commit_short12": "7e2fa84a9823",
+   "pilot_head_short12": "0851af4fc08b",
+   "followup_id": "CORE-CHECK-01-RECHECK-01",
+   "allowed_write_prefix": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/"
+  },
+  "technical_inputs_unchanged": {
+   "07-scheduler-wakeup-timer-audit.md": true,
+   "07-core-audit-map.yaml": true,
+   "MANIFEST.md": true,
+   "09-local-verification-contract.md": true,
+   "10-cloud-pilot-and-github-handoff.md": true,
+   "11-core-verification-cloud.md": true,
+   "reviews/CORE-CHECK-01-pilot-review.md": true
+  },
+  "execution": {
+   "branch": "claude/dazzling-cori-q0dnyt",
+   "head_short12": "a1e7c2277705",
+   "remote_relation": "equal"
+  },
+  "originals": {
+   "frozen_files": 26,
+   "changed_or_missing": [],
+   "added_outside_recheck": [],
+   "pilot_changed_since_pilot_head": []
+  },
+  "remote_refs_equal_pins": {
+   "master": true,
+   "time": true,
+   "agent/MYOS2-LEAD-002": true
+  },
+  "worktree_changes_outside_recheck": []
+ },
+ "h00": {
+  "check": "H00_2",
+  "probes": [
+   {
+    "probe": "group_kill",
+    "terminal_state": "timeout_group_killed",
+    "kill": "group_signalled",
+    "elapsed_s": 0.302,
+    "returncode": -9,
+    "reaped_confirmed": true,
+    "child_in_group": true,
+    "child_state_last": "ABSENT",
+    "bystander_alive": true,
+    "as_expected": true,
+    "gates_dynamic": true
+   },
+   {
+    "probe": "fast_exit",
+    "terminal_state": "exited",
+    "returncode": 0,
+    "reaped_confirmed": true,
+    "as_expected": true,
+    "gates_dynamic": true
+   },
+   {
+    "probe": "group_already_gone_injected",
+    "terminal_state": "timeout_group_already_gone",
+    "kill": "group_already_gone",
+    "returncode": 0,
+    "reaped_confirmed": true,
+    "elapsed_s": 1.002,
+    "note": "killpg replaced by a stand-in raising ProcessLookupError; the real sleep then exits by itself",
+    "as_expected": true,
+    "gates_dynamic": true
+   },
+   {
+    "probe": "collect_timeout_escaped_grandchild",
+    "terminal_state": "timeout_group_killed_collect_timeout",
+    "kill": "group_signalled",
+    "collect_timed_out": true,
+    "output_lost": true,
+    "reaped_confirmed": true,
+    "returncode": -9,
+    "elapsed_s": 1.302,
+    "escaped_grandchild_state_before_cleanup": "S",
+    "escaped_grandchild_killed_by_exact_pid": true,
+    "as_expected": true,
+    "gates_dynamic": true
+   },
+   {
+    "probe": "compile_failure",
+    "status": "BLOCKED_COMPILE",
+    "compile_returncode": 1,
+    "stale_binary_exists_after": false,
+    "cases": {
+     "c1": "BLOCKED",
+     "c2": "BLOCKED"
+    },
+    "as_expected": true,
+    "gates_dynamic": true
+   },
+   {
+    "probe": "case_exception_isolated",
+    "boom": {
+     "status": "ERROR",
+     "reason": "RuntimeError: HARNESS_META_TEST injected case exception"
+    },
+    "fine_status": "RAN",
+    "as_expected": true,
+    "gates_dynamic": true
+   },
+   {
+    "probe": "readback_criteria",
+    "missing_path": {
+     "mode": "object",
+     "target_commit_short12": "0851af4fc08b",
+     "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/does-not-exist.yaml",
+     "field": null,
+     "expected_blob_available": false,
+     "expected_bytes": null,
+     "expected_sha256_segments": null,
+     "channels": [
+      {
+       "channel": "raw.githubusercontent.com",
+       "url": "https://raw.githubusercontent.com/08822407d/MyOS2/<commit:0851af4fc08b>/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/does-not-exist.yaml",
+       "curl_exit": 0,
+       "timed_out": false,
+       "terminal_state": "exited",
+       "http_code": "404",
+       "curl_stderr": "",
+       "bytes": 14,
+       "sha256_segments": [
+        "d5558cd419c8d46b",
+        "dc958064cb97f963",
+        "d1ea793866414c02",
+        "5906ec15033512ed"
+       ],
+       "transport_ok": false,
+       "byte_identical": false,
+       "field_ok": true,
+       "ok": false
+      },
+      {
+       "channel": "api.github.com_contents_raw",
+       "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/does-not-exist.yaml?ref=<commit:0851af4fc08b>",
+       "curl_exit": 0,
+       "timed_out": false,
+       "terminal_state": "exited",
+       "http_code": "404",
+       "curl_stderr": "",
+       "bytes": 141,
+       "sha256_segments": [
+        "0f74c8b9c1f03a2b",
+        "9d2da1ebe4f7c027",
+        "ecb616202d539401",
+        "c259562157c5a216"
+       ],
+       "transport_ok": false,
+       "byte_identical": false,
+       "field_ok": true,
+       "ok": false
+      }
+     ],
+     "binding": "fetched at the target commit itself",
+     "ok": false
+    },
+    "frozen_pilot_by_object": {
+     "mode": "object",
+     "target_commit_short12": "0851af4fc08b",
+     "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml",
+     "field": "transport_marker",
+     "expected_blob_available": true,
+     "expected_bytes": 6741,
+     "expected_sha256_segments": [
+      "28ea9895bb723d58",
+      "9d097982311512a4",
+      "e3a7f3ff950c53a3",
+      "7aa18b85772da2ed"
+     ],
+     "channels": [
+      {
+       "channel": "raw.githubusercontent.com",
+       "url": "https://raw.githubusercontent.com/08822407d/MyOS2/<commit:0851af4fc08b>/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml",
+       "curl_exit": 0,
+       "timed_out": false,
+       "terminal_state": "exited",
+       "http_code": "200",
+       "curl_stderr": "",
+       "bytes": 6741,
+       "sha256_segments": [
+        "28ea9895bb723d58",
+        "9d097982311512a4",
+        "e3a7f3ff950c53a3",
+        "7aa18b85772da2ed"
+       ],
+       "transport_ok": true,
+       "byte_identical": true,
+       "field_value": "MYOS2-CLOUD-PILOT-20260925-K7P4",
+       "field_ok": true,
+       "ok": true
+      },
+      {
+       "channel": "api.github.com_contents_raw",
+       "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml?ref=<commit:0851af4fc08b>",
+       "curl_exit": 0,
+       "timed_out": false,
+       "terminal_state": "exited",
+       "http_code": "200",
+       "curl_stderr": "",
+       "bytes": 6741,
+       "sha256_segments": [
+        "28ea9895bb723d58",
+        "9d097982311512a4",
+        "e3a7f3ff950c53a3",
+        "7aa18b85772da2ed"
+       ],
+       "transport_ok": true,
+       "byte_identical": true,
+       "field_value": "MYOS2-CLOUD-PILOT-20260925-K7P4",
+       "field_ok": true,
+       "ok": true
+      }
+     ],
+     "binding": "fetched at the target commit itself",
+     "ok": true
+    },
+    "frozen_pilot_by_branch": {
+     "mode": "branch",
+     "target_commit_short12": "0851af4fc08b",
+     "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml",
+     "field": "transport_marker",
+     "expected_blob_available": true,
+     "expected_bytes": 6741,
+     "expected_sha256_segments": [
+      "28ea9895bb723d58",
+      "9d097982311512a4",
+      "e3a7f3ff950c53a3",
+      "7aa18b85772da2ed"
+     ],
+     "channels": [
+      {
+       "channel": "raw.githubusercontent.com",
+       "url": "https://raw.githubusercontent.com/08822407d/MyOS2/claude/dazzling-cori-q0dnyt/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml",
+       "curl_exit": 0,
+       "timed_out": false,
+       "terminal_state": "exited",
+       "http_code": "200",
+       "curl_stderr": "",
+       "bytes": 6741,
+       "sha256_segments": [
+        "28ea9895bb723d58",
+        "9d097982311512a4",
+        "e3a7f3ff950c53a3",
+        "7aa18b85772da2ed"
+       ],
+       "transport_ok": true,
+       "byte_identical": true,
+       "field_value": "MYOS2-CLOUD-PILOT-20260925-K7P4",
+       "field_ok": true,
+       "ok": true
+      },
+      {
+       "channel": "api.github.com_contents_raw",
+       "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml?ref=claude/dazzling-cori-q0dnyt",
+       "curl_exit": 0,
+       "timed_out": false,
+       "terminal_state": "exited",
+       "http_code": "200",
+       "curl_stderr": "",
+       "bytes": 6741,
+       "sha256_segments": [
+        "28ea9895bb723d58",
+        "9d097982311512a4",
+        "e3a7f3ff950c53a3",
+        "7aa18b85772da2ed"
+       ],
+       "transport_ok": true,
+       "byte_identical": true,
+       "field_value": "MYOS2-CLOUD-PILOT-20260925-K7P4",
+       "field_ok": true,
+       "ok": true
+      }
+     ],
+     "branch": "claude/dazzling-cori-q0dnyt",
+     "branch_head_relation": "descendant_with_identical_blob",
+     "ok": true
+    },
+    "as_expected": true,
+    "gates_dynamic": false
+   }
+  ],
+  "dynamic_safety_ok": true,
+  "transport_ok": true
+ },
+ "fixtures": {
+  "fx_wait": {
+   "fixture": "fx_wait",
+   "template": "fx_wait.c",
+   "cases": {
+    "v02_single": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v02_single"
+      ],
+      "timeout_s": 5,
+      "pid": 15268,
+      "pgid": 15268,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v02_single\",\"ev\":\"layout\",\"sizeof_lock\":8,\"offsetof_hdr_task_list_hdr\":8,\"offsetof_waiter_task_list\":8,\"anchor_container_task_field_aliases_lock\":true}\n{\"case\":\"v02_single\",\"ev\":\"snap\",\"step\":\"init\",\"count\":0,\"walk_len\":0,\"count_equals_nodes\":true,\"anchor_self\":true,\"header_is_empty\":true,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v02_single\",\"ev\":\"snap\",\"step\":\"after_prepare\",\"count\":1,\"walk_len\":1,\"count_equals_nodes\":true,\"anchor_self\":false,\"header_is_empty\":false,\"a_self\":false,\"a_occ\":1,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v02_single\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":2,\"mask\":3}\n{\"case\":\"v02_single\",\"ev\":\"snap\",\"step\":\"after_wake\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v02_single\",\"ev\":\"snap\",\"step\":\"after_finish\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v02_single\",\"ev\":\"end\",\"ttwu_calls\":1}\n",
+      "stderr": "",
+      "elapsed_s": 0.004,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v03_second_wake_direct": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v03_second_wake_direct"
+      ],
+      "timeout_s": 5,
+      "pid": 15270,
+      "pgid": 15270,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 42,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v03_second_wake_direct\",\"ev\":\"layout\",\"sizeof_lock\":8,\"offsetof_hdr_task_list_hdr\":8,\"offsetof_waiter_task_list\":8,\"anchor_container_task_field_aliases_lock\":true}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"snap\",\"step\":\"init\",\"count\":0,\"walk_len\":0,\"count_equals_nodes\":true,\"anchor_self\":true,\"header_is_empty\":true,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"snap\",\"step\":\"after_prepare\",\"count\":1,\"walk_len\":1,\"count_equals_nodes\":true,\"anchor_self\":false,\"header_is_empty\":false,\"a_self\":false,\"a_occ\":1,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":2,\"mask\":3}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"snap\",\"step\":\"after_wake\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"snap\",\"step\":\"after_finish\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"second_wake_begin\",\"lock_held\":false}\n{\"case\":\"v03_second_wake_direct\",\"ev\":\"ttwu_invalid_task\",\"call\":2,\"task_ptr_value\":0,\"watched_lock_word\":0,\"equals_watched_lock_word\":true}\n",
+      "stderr": "",
+      "elapsed_s": 0.002,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 42,
+     "repeat_terminal_state": "exited"
+    },
+    "v03_second_wake_via_complete": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v03_second_wake_via_complete"
+      ],
+      "timeout_s": 5,
+      "pid": 15272,
+      "pgid": 15272,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 42,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":0,\"mask\":3}\n{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"snap\",\"step\":\"after_first_complete\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":4294967297,\"preempt\":0}\n{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"snap\",\"step\":\"after_waiter_finish\",\"count\":1,\"walk_len\":0,\"count_equals_nodes\":false,\"anchor_self\":true,\"header_is_empty\":false,\"a_self\":true,\"a_occ\":0,\"b_self\":null,\"b_occ\":-1,\"lock_word\":4294967297,\"preempt\":0}\n{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"second_complete_begin\",\"lock_held_inside\":true}\n{\"case\":\"v03_second_wake_via_complete\",\"ev\":\"ttwu_invalid_task\",\"call\":2,\"task_ptr_value\":4294967298,\"watched_lock_word\":4294967298,\"equals_watched_lock_word\":true}\n",
+      "stderr": "",
+      "elapsed_s": 0.002,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 42,
+     "repeat_terminal_state": "exited"
+    },
+    "v03_all_two_waiters": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v03_all_two_waiters"
+      ],
+      "timeout_s": 5,
+      "pid": 15274,
+      "pgid": 15274,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 42,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v03_all_two_waiters\",\"ev\":\"snap\",\"step\":\"after_two_prepare\",\"count\":2,\"walk_len\":2,\"count_equals_nodes\":true,\"anchor_self\":false,\"header_is_empty\":false,\"a_self\":false,\"a_occ\":1,\"b_self\":false,\"b_occ\":1,\"lock_word\":0,\"preempt\":0}\n{\"case\":\"v03_all_two_waiters\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":0,\"mask\":3}\n{\"case\":\"v03_all_two_waiters\",\"ev\":\"ttwu\",\"call\":2,\"task\":2,\"state_before\":0,\"mask\":3}\n{\"case\":\"v03_all_two_waiters\",\"ev\":\"ttwu_invalid_task\",\"call\":3,\"task_ptr_value\":0,\"watched_lock_word\":0,\"equals_watched_lock_word\":true}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 42,
+     "repeat_terminal_state": "exited"
+    },
+    "v09_schedule_timeout_values": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v09_schedule_timeout_values"
+      ],
+      "timeout_s": 5,
+      "pid": 15276,
+      "pgid": 15276,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":0,\"ret\":0,\"sched_calls\":0,\"mod_timer_calls\":1,\"del_calls\":1,\"state_after\":2}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":1,\"ret\":1,\"sched_calls\":0,\"mod_timer_calls\":1,\"del_calls\":1,\"state_after\":2}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":5,\"ret\":5,\"sched_calls\":0,\"mod_timer_calls\":1,\"del_calls\":1,\"state_after\":2}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":-1,\"ret\":0,\"sched_calls\":0,\"mod_timer_calls\":0,\"del_calls\":0,\"state_after\":0}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"schedule\",\"call\":1,\"current\":1,\"current_state\":2}\n{\"case\":\"v09_schedule_timeout_values\",\"ev\":\"st\",\"in\":9223372036854775807,\"ret\":9223372036854775807,\"sched_calls\":1,\"mod_timer_calls\":0,\"del_calls\":0,\"state_after\":2}\n",
+      "stderr": "",
+      "elapsed_s": 0.002,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v09_uninterruptible_wrapper": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v09_uninterruptible_wrapper"
+      ],
+      "timeout_s": 5,
+      "pid": 15278,
+      "pgid": 15278,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v09_uninterruptible_wrapper\",\"ev\":\"stu\",\"in\":5,\"ret\":5,\"sched_calls\":0,\"state_after\":2}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v09_msleep_bounded": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v09_msleep_bounded"
+      ],
+      "timeout_s": 5,
+      "pid": 15280,
+      "pgid": 15280,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 43,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v09_msleep_bounded\",\"ev\":\"msleep_begin\",\"msecs\":5,\"cap\":100}\n{\"case\":\"v09_msleep_bounded\",\"ev\":\"step_cap\",\"where\":\"__mod_timer\",\"cap\":100,\"first_timeouts\":[5,5,5],\"last_timeout\":5,\"sched_calls\":0,\"current_state\":2}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 43,
+     "repeat_terminal_state": "exited"
+    },
+    "v10_done_preset_fast_path": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v10_done_preset_fast_path"
+      ],
+      "timeout_s": 5,
+      "pid": 15282,
+      "pgid": 15282,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v10_done_preset_fast_path\",\"ev\":\"wfc_common\",\"ret_is_max\":true,\"done_after\":0,\"sched_calls\":0,\"count\":0,\"state_after\":0}\n{\"case\":\"v10_done_preset_fast_path\",\"ev\":\"wait_for_completion\",\"done_after\":0,\"sched_calls\":0,\"count\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v10_infinite_notify_during_schedule": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v10_infinite_notify_during_schedule"
+      ],
+      "timeout_s": 5,
+      "pid": 15284,
+      "pgid": 15284,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v10_infinite_notify_during_schedule\",\"ev\":\"schedule\",\"call\":1,\"current\":1,\"current_state\":2}\n{\"case\":\"v10_infinite_notify_during_schedule\",\"ev\":\"notifier_start\",\"waiter_state\":2,\"done\":0,\"count\":1,\"walk_len\":1}\n{\"case\":\"v10_infinite_notify_during_schedule\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":2,\"mask\":3}\n{\"case\":\"v10_infinite_notify_during_schedule\",\"ev\":\"notifier_end\",\"waiter_state\":0,\"done\":1,\"count\":1,\"walk_len\":0}\n{\"case\":\"v10_infinite_notify_during_schedule\",\"ev\":\"returned\",\"ret_is_max\":true,\"done_after\":0,\"sched_calls\":1,\"count\":1,\"walk_len\":0,\"state_after\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v10_finite_timeout_no_notifier": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v10_finite_timeout_no_notifier"
+      ],
+      "timeout_s": 5,
+      "pid": 15286,
+      "pgid": 15286,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 43,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v10_finite_timeout_no_notifier\",\"ev\":\"begin\",\"timeout\":5,\"cap\":100}\n{\"case\":\"v10_finite_timeout_no_notifier\",\"ev\":\"step_cap\",\"where\":\"__mod_timer\",\"cap\":100,\"first_timeouts\":[5,5,5],\"last_timeout\":5,\"sched_calls\":0,\"current_state\":2}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 43,
+     "repeat_terminal_state": "exited"
+    },
+    "v11_wait_then_notify_then_reuse": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+       "v11_wait_then_notify_then_reuse"
+      ],
+      "timeout_s": 5,
+      "pid": 15288,
+      "pgid": 15288,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 42,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v11_wait_then_notify_then_reuse\",\"ev\":\"schedule\",\"call\":1,\"current\":1,\"current_state\":2}\n{\"case\":\"v11_wait_then_notify_then_reuse\",\"ev\":\"notifier_start\",\"waiter_state\":2,\"done\":0,\"count\":1,\"walk_len\":1}\n{\"case\":\"v11_wait_then_notify_then_reuse\",\"ev\":\"ttwu\",\"call\":1,\"task\":1,\"state_before\":2,\"mask\":3}\n{\"case\":\"v11_wait_then_notify_then_reuse\",\"ev\":\"notifier_end\",\"waiter_state\":0,\"done\":1,\"count\":1,\"walk_len\":0}\n{\"case\":\"v11_wait_then_notify_then_reuse\",\"ev\":\"waiter_returned\",\"done\":0,\"count\":1,\"walk_len\":0,\"anchor_self\":true,\"header_is_empty\":false,\"state\":0,\"sched_calls\":1,\"ttwu_calls\":1}\n{\"case\":\"v11_wait_then_notify_then_reuse\",\"ev\":\"reuse_complete_begin\",\"note\":\"waiter stack object no longer exists\"}\n{\"case\":\"v11_wait_then_notify_then_reuse\",\"ev\":\"ttwu_invalid_task\",\"call\":2,\"task_ptr_value\":12884901892,\"watched_lock_word\":12884901892,\"equals_watched_lock_word\":true}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 42,
+     "repeat_terminal_state": "exited"
+    }
+   },
+   "stale_binary_removed_before_compile": true,
+   "extraction": [
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_types.h",
+     "kind": "struct",
+     "name": "list_head",
+     "lines": [
+      8,
+      11
+     ],
+     "bytes": 57,
+     "sha256_segments": [
+      "ebf1c027f3463abc",
+      "9029be1c1da14773",
+      "780ed6b2ba9cc720",
+      "23726124f4272c69"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_types.h",
+     "kind": "struct",
+     "name": "list_hdr",
+     "lines": [
+      13,
+      16
+     ],
+     "bytes": 56,
+     "sha256_segments": [
+      "d248e3e72255d766",
+      "328d6ce52b5bb521",
+      "1c323da28c70123e",
+      "5a6b3b8b647eb892"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_const.h",
+     "kind": "macro",
+     "name": "LIST_POISON1",
+     "lines": [
+      5,
+      5
+     ],
+     "bytes": 39,
+     "sha256_segments": [
+      "4208b26ec9006c27",
+      "23019599fa9f5b52",
+      "4e0008809c563eaa",
+      "c4696f4816d4065a"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_const.h",
+     "kind": "macro",
+     "name": "LIST_POISON2",
+     "lines": [
+      6,
+      6
+     ],
+     "bytes": 39,
+     "sha256_segments": [
+      "7e513a95411558d5",
+      "abc9ae4608901471",
+      "f4f690fd07992c8d",
+      "8530c20dbcc56ceb"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/include/uapi/linux/stddef.h",
+     "kind": "macro",
+     "name": "container_of",
+     "lines": [
+      9,
+      13
+     ],
+     "bytes": 263,
+     "sha256_segments": [
+      "ae12efae715f1169",
+      "20f9bfc0a68d2261",
+      "0d19e43a6a403411",
+      "a852ec8a5a0b75e6"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "macro",
+     "name": "INIT_LIST_HEAD",
+     "lines": [
+      125,
+      125
+     ],
+     "bytes": 48,
+     "sha256_segments": [
+      "0c5f3ae9c2784896",
+      "b0dbb8bcd040ae59",
+      "aa94407f02c1a9c9",
+      "410f3e3da30c7b11"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "macro",
+     "name": "list_is_head",
+     "lines": [
+      132,
+      132
+     ],
+     "bytes": 42,
+     "sha256_segments": [
+      "7eadc5411f450e4d",
+      "0b846f5b635bd9e7",
+      "8e321c11a58798b8",
+      "ba1bb8cce2366434"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "LIST_INIT",
+     "lines": [
+      5,
+      8
+     ],
+     "bytes": 65,
+     "sha256_segments": [
+      "3a4d4e1a6894cb52",
+      "5c8ce8c6013db55a",
+      "2a120a498c8bf204",
+      "47909789cef22a30"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "LIST_HEADER_INIT",
+     "lines": [
+      9,
+      12
+     ],
+     "bytes": 106,
+     "sha256_segments": [
+      "fd948458e96905d1",
+      "fd3115f3708a15bf",
+      "6914443895cc9b99",
+      "6679a1911dfa71b8"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_container",
+     "lines": [
+      25,
+      26
+     ],
+     "bytes": 80,
+     "sha256_segments": [
+      "98d6a6e49e50f5a3",
+      "a3cc91ecd944524e",
+      "8379836ca5f4cc60",
+      "5db07ee1dc4106a4"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_entry",
+     "lines": [
+      27,
+      27
+     ],
+     "bytes": 34,
+     "sha256_segments": [
+      "18fedd137eb90cba",
+      "03ef61ad0d4bb5a1",
+      "678dcd038a633546",
+      "1e921a14699e55e1"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_first_entry",
+     "lines": [
+      37,
+      38
+     ],
+     "bytes": 88,
+     "sha256_segments": [
+      "9158858037a4a4dc",
+      "ec0ad3c7b14ed4fd",
+      "6301979bf184afff",
+      "c0fb930c32721a76"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_for_each",
+     "lines": [
+      88,
+      91
+     ],
+     "bytes": 126,
+     "sha256_segments": [
+      "0d8764ba976cf21c",
+      "5ae9ae6e094cd9bc",
+      "352eed94abe11d70",
+      "eff67bbd84f5b071"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_headr_first_container",
+     "lines": [
+      334,
+      335
+     ],
+     "bytes": 109,
+     "sha256_segments": [
+      "68549932735e1f43",
+      "146a592968730380",
+      "43ffbd5e0c66b1d0",
+      "4d971593aa35fe2b"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_header_foreach",
+     "lines": [
+      340,
+      341
+     ],
+     "bytes": 83,
+     "sha256_segments": [
+      "63e3a3c429a91383",
+      "7840e201b2c821c3",
+      "6e24b3649fc9283f",
+      "b145beed88b4bce2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "INIT_LIST_S",
+     "lines": [
+      147,
+      152
+     ],
+     "bytes": 129,
+     "sha256_segments": [
+      "6503fe0d66ff1558",
+      "1f640e13371c02a3",
+      "7938fded5e28c909",
+      "b86a13275cb0410a"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "INIT_LIST_HEADER_S",
+     "lines": [
+      153,
+      158
+     ],
+     "bytes": 136,
+     "sha256_segments": [
+      "53598975b6d1421a",
+      "b63bc9bfdeb3a12f",
+      "0af6937bab98f97d",
+      "f75b67847f917ae2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_add_valid",
+     "lines": [
+      160,
+      168
+     ],
+     "bytes": 247,
+     "sha256_segments": [
+      "3ed8f4cedd0f9fda",
+      "e1e2bf838cabf053",
+      "2f4aeb0056ed04c4",
+      "39753a237659c70a"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_del_entry_valid",
+     "lines": [
+      169,
+      179
+     ],
+     "bytes": 306,
+     "sha256_segments": [
+      "13f263662c49e0ff",
+      "3303fb6e1f5dcfd3",
+      "ca5c5220df88bba2",
+      "270354b21ea40d41"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_add_between",
+     "lines": [
+      187,
+      197
+     ],
+     "bytes": 248,
+     "sha256_segments": [
+      "9147161d2d4ba947",
+      "ab9b41bf303ecc2b",
+      "71944175f0aba081",
+      "47e17d14785cec6f"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_add_to_next",
+     "lines": [
+      206,
+      210
+     ],
+     "bytes": 127,
+     "sha256_segments": [
+      "1388a0b7eda6e30b",
+      "7ad3e725953b9f22",
+      "bf7500f7fb2282a8",
+      "12216b2f101f62ae"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_add_to_prev",
+     "lines": [
+      219,
+      223
+     ],
+     "bytes": 127,
+     "sha256_segments": [
+      "69a63f65475e8438",
+      "a0ef66048d0bbd01",
+      "c58afd93239cfffd",
+      "7b765ab78d7eb30d"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_del",
+     "lines": [
+      233,
+      238
+     ],
+     "bytes": 133,
+     "sha256_segments": [
+      "4b2d41eef303900b",
+      "5d8f42afdb3fad5c",
+      "ad3da5a9396736b6",
+      "330ce2826fb59874"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_del_entry",
+     "lines": [
+      253,
+      260
+     ],
+     "bytes": 162,
+     "sha256_segments": [
+      "1e6b8fa214378a31",
+      "7922af680c712821",
+      "27183b68156fb1fa",
+      "2649002e489130e0"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_del_init",
+     "lines": [
+      278,
+      283
+     ],
+     "bytes": 120,
+     "sha256_segments": [
+      "69ca4826f39fa5d2",
+      "62df122459de7e35",
+      "4964226ddcd19c7c",
+      "4cb01e8b13c55b90"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_is_head_anchor",
+     "lines": [
+      419,
+      423
+     ],
+     "bytes": 121,
+     "sha256_segments": [
+      "2115a38e9262a008",
+      "6932bc75201fcff1",
+      "f5713f5df30d89c2",
+      "b7fc71d037652c8d"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_is_empty_entry",
+     "lines": [
+      428,
+      432
+     ],
+     "bytes": 118,
+     "sha256_segments": [
+      "a917ea3ed5156f20",
+      "aaa8bdf4fd524d5f",
+      "a581b7c57f785e0d",
+      "b7af8047a7e4b52b"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_is_empty",
+     "lines": [
+      628,
+      632
+     ],
+     "bytes": 125,
+     "sha256_segments": [
+      "6d2bbba923422901",
+      "a98e79ac6699a16f",
+      "18915e829d6dbf9a",
+      "e35e80eda44c7623"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_contains",
+     "lines": [
+      633,
+      642
+     ],
+     "bytes": 212,
+     "sha256_segments": [
+      "d2c885447e83747d",
+      "34793b1d05e1ee1b",
+      "a688d6a42c12a0a7",
+      "3d545c1fb3ecc573"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_add_to_head",
+     "lines": [
+      644,
+      649
+     ],
+     "bytes": 157,
+     "sha256_segments": [
+      "bdf1ccbe85075372",
+      "3c3193e93fc8241d",
+      "366f8ab719b737b7",
+      "dc7fd8095582cd57"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_remove_head",
+     "lines": [
+      650,
+      660
+     ],
+     "bytes": 245,
+     "sha256_segments": [
+      "c36e35500b6e3970",
+      "3f72ce1228c530e4",
+      "79cd6c6a55ba27cb",
+      "0f30d8c9b5992435"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_add_to_tail",
+     "lines": [
+      662,
+      667
+     ],
+     "bytes": 157,
+     "sha256_segments": [
+      "e7451841f25dda30",
+      "2703ff77eea647b4",
+      "d5b2f77f7503ad62",
+      "f46666e314ad5174"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_delete_node",
+     "lines": [
+      681,
+      691
+     ],
+     "bytes": 224,
+     "sha256_segments": [
+      "239d2d2bf75873c5",
+      "f3aa16b8028993df",
+      "90585be83380e402",
+      "c47501b2c4e6ad84"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic_types_arch.h",
+     "kind": "struct",
+     "name": "atomic64",
+     "lines": [
+      11,
+      13
+     ],
+     "bytes": 38,
+     "sha256_segments": [
+      "88746cc46d19b8f9",
+      "fc8ab1fda7bf092e",
+      "8b603bb9f22ef89a",
+      "ef070d05774b6fe2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_types_arch.h",
+     "kind": "struct",
+     "name": "tspinlock",
+     "lines": [
+      8,
+      17
+     ],
+     "bytes": 106,
+     "sha256_segments": [
+      "6b43dbd41422b7c4",
+      "69198a7c2df2d420",
+      "23b78580cd535edc",
+      "ad8f44f3bb4a9584"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/include/asm/alternative.h",
+     "kind": "macro",
+     "name": "LOCK_PREFIX_HERE",
+     "lines": [
+      41,
+      46
+     ],
+     "bytes": 181,
+     "sha256_segments": [
+      "b4a3e09c335307e4",
+      "ccf5cd2b5d4c8eac",
+      "98bfcfce5946d14f",
+      "d580de772b61ad85"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/include/asm/alternative.h",
+     "kind": "macro",
+     "name": "LOCK_PREFIX",
+     "lines": [
+      48,
+      48
+     ],
+     "bytes": 51,
+     "sha256_segments": [
+      "9a5b7a0654e64f55",
+      "3c209fdbf179fa38",
+      "24e233b3e366c453",
+      "fe86657ebcfcdcdf"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_macro_arch.h",
+     "kind": "macro",
+     "name": "__ARCH_SPIN_LOCK_UNLOCKED",
+     "lines": [
+      8,
+      11
+     ],
+     "bytes": 87,
+     "sha256_segments": [
+      "c32fded0a8cd7c82",
+      "6420daa213fc3fe8",
+      "5dfcd89997261f22",
+      "54694ad58b117f12"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+     "kind": "func",
+     "name": "arch_spin_init",
+     "lines": [
+      36,
+      40
+     ],
+     "bytes": 130,
+     "sha256_segments": [
+      "cf7bd89531c709bd",
+      "a98fbf2820831acb",
+      "67bad7d7749f299d",
+      "7afa785e3d609d97"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+     "kind": "func",
+     "name": "arch_spin_lock",
+     "lines": [
+      59,
+      80
+     ],
+     "bytes": 652,
+     "sha256_segments": [
+      "f10132ff49db386e",
+      "9650463a9ab8f04c",
+      "4892acea3ab76dff",
+      "856d76eb33e6ecfa"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+     "kind": "func",
+     "name": "arch_spin_unlock",
+     "lines": [
+      82,
+      92
+     ],
+     "bytes": 236,
+     "sha256_segments": [
+      "398186ca12164db8",
+      "ff84a95c5d1d9477",
+      "463e830d409469e8",
+      "7ade52bb7d21c3aa"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp.h",
+     "kind": "func",
+     "name": "raw_spin_lock_irqsave",
+     "lines": [
+      63,
+      69
+     ],
+     "bytes": 170,
+     "sha256_segments": [
+      "3da2f322937ed1d4",
+      "839eb550961e2fd0",
+      "13aee07a6c7fa408",
+      "f9ec70ac32d32339"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp.h",
+     "kind": "func",
+     "name": "raw_spin_lock_irq",
+     "lines": [
+      72,
+      78
+     ],
+     "bytes": 149,
+     "sha256_segments": [
+      "748649dcc846086c",
+      "c0e810ec37f1b060",
+      "bc0847d2c1146fef",
+      "26ea0182166820fe"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp.h",
+     "kind": "func",
+     "name": "raw_spin_unlock_irqrestore",
+     "lines": [
+      106,
+      112
+     ],
+     "bytes": 179,
+     "sha256_segments": [
+      "bc9dbf93f5b0595e",
+      "dbbdd34592a38882",
+      "2ddb2947f61dc466",
+      "8c9af97d5b71173d"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp.h",
+     "kind": "func",
+     "name": "raw_spin_unlock_irq",
+     "lines": [
+      115,
+      121
+     ],
+     "bytes": 151,
+     "sha256_segments": [
+      "1ad2b9eadc0f003d",
+      "7ddcf623cffd9272",
+      "1b8d7e29c63980f8",
+      "70d05a0537457e74"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+     "kind": "macro",
+     "name": "raw_spin_lock_init",
+     "lines": [
+      67,
+      67
+     ],
+     "bytes": 54,
+     "sha256_segments": [
+      "614867e1d4fcba55",
+      "a4d6c5510d6732a3",
+      "d8bbfc33a165a5a6",
+      "db7e27422030d561"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+     "kind": "macro",
+     "name": "spin_lock_init",
+     "lines": [
+      124,
+      125
+     ],
+     "bytes": 60,
+     "sha256_segments": [
+      "249f4dea7e51c0ba",
+      "fe74f5368b8b08c8",
+      "6f859c2e5e5f2d24",
+      "792f5e57c4163838"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+     "kind": "macro",
+     "name": "spin_lock_irqsave",
+     "lines": [
+      151,
+      152
+     ],
+     "bytes": 81,
+     "sha256_segments": [
+      "7263a35fae6325bb",
+      "0a240b3fe3537941",
+      "d7ecc7408849deec",
+      "bb203fbd6c192ede"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+     "kind": "macro",
+     "name": "spin_unlock_irqrestore",
+     "lines": [
+      169,
+      170
+     ],
+     "bytes": 91,
+     "sha256_segments": [
+      "f7eabb2b7d0f933e",
+      "acba1812b2feae71",
+      "3c6a78e06bd787a5",
+      "3c6e039aa9fbd50e"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+     "kind": "macro",
+     "name": "spin_lock_irq",
+     "lines": [
+      148,
+      149
+     ],
+     "bytes": 58,
+     "sha256_segments": [
+      "b14865ea84fc2a5b",
+      "4b9d9c56777848d5",
+      "ecff78a2aa1f1ea3",
+      "f09ee50cbd7941d0"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+     "kind": "macro",
+     "name": "spin_unlock_irq",
+     "lines": [
+      166,
+      167
+     ],
+     "bytes": 62,
+     "sha256_segments": [
+      "91ea3269eae535d9",
+      "db01f642a61520cc",
+      "349b181a0240d37d",
+      "4062cf243ce7a7bf"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_RUNNING",
+     "lines": [
+      26,
+      26
+     ],
+     "bytes": 34,
+     "sha256_segments": [
+      "1eb741bd7c9b5641",
+      "d1df3d8e36ee44b6",
+      "f096c7691e61c999",
+      "5962bd4a265ee06a"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_INTERRUPTIBLE",
+     "lines": [
+      27,
+      27
+     ],
+     "bytes": 39,
+     "sha256_segments": [
+      "9b3420f0602f3495",
+      "aab3483715597a22",
+      "a5b2718904b04b35",
+      "bc55d323bfd8ea6e"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_UNINTERRUPTIBLE",
+     "lines": [
+      28,
+      28
+     ],
+     "bytes": 40,
+     "sha256_segments": [
+      "160d93bd1d542e1b",
+      "01464472626b7ba2",
+      "9d0ca27e5fed3ef0",
+      "c759fdb05b93a8c9"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_WAKEKILL",
+     "lines": [
+      38,
+      38
+     ],
+     "bytes": 35,
+     "sha256_segments": [
+      "0411eee40b11ff31",
+      "86258b4fbd44308c",
+      "01a4de9ea416ca94",
+      "89222c3ae4f69c3e"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_NORMAL",
+     "lines": [
+      73,
+      75
+     ],
+     "bytes": 85,
+     "sha256_segments": [
+      "1aac90836fb20cb7",
+      "90a0017d66253d26",
+      "cb71e18b1fbc305c",
+      "62fc5f9b18719569"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "MAX_SCHEDULE_TIMEOUT",
+     "lines": [
+      86,
+      86
+     ],
+     "bytes": 38,
+     "sha256_segments": [
+      "29697bf0946d3b15",
+      "4b0b207e1f24b33e",
+      "8b54e5c85709ea2e",
+      "7bb21713333af85d"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/runqueue/runqueue_macro.h",
+     "kind": "macro",
+     "name": "__set_current_state",
+     "lines": [
+      64,
+      67
+     ],
+     "bytes": 134,
+     "sha256_segments": [
+      "f4b4241155c77bb1",
+      "9795bfbb440e9d76",
+      "fd540ecfea217154",
+      "af6a5bdecad3f5b5"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/include/linux/lib/errno.h",
+     "kind": "macro",
+     "name": "ERESTARTSYS",
+     "lines": [
+      13,
+      13
+     ],
+     "bytes": 27,
+     "sha256_segments": [
+      "8176f6fe1a157cda",
+      "80d15466aeaf837a",
+      "dc195354f68ccbd4",
+      "64f558a1765c9b81"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lock_IPC/signal/signal.h",
+     "kind": "func",
+     "name": "signal_pending_state",
+     "lines": [
+      498,
+      507
+     ],
+     "bytes": 261,
+     "sha256_segments": [
+      "3b31a35d29a5fcf9",
+      "e4b1667e6a2586fa",
+      "6f6545da010a4f8a",
+      "fd48542600d668f0"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait_types.h",
+     "kind": "struct",
+     "name": "swait_queue_head",
+     "lines": [
+      7,
+      10
+     ],
+     "bytes": 77,
+     "sha256_segments": [
+      "aa0d280c38f57622",
+      "3733954a6c9a8812",
+      "94a9d5c8c5f21d75",
+      "4c8ebd1ee1c1b1c1"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait_types.h",
+     "kind": "struct",
+     "name": "swait_queue",
+     "lines": [
+      12,
+      15
+     ],
+     "bytes": 63,
+     "sha256_segments": [
+      "4e68787a6a9e3597",
+      "7f4747c4a8f641a4",
+      "755ce07682ccb6f3",
+      "bfb4ec6b821196e2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/completion/completion_types.h",
+     "kind": "struct",
+     "name": "completion",
+     "lines": [
+      19,
+      22
+     ],
+     "bytes": 61,
+     "sha256_segments": [
+      "e948137e76e750c8",
+      "ab9274b5b1e612a1",
+      "12e0bf488faf9100",
+      "9ecf99e14b4087df"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait_macro.h",
+     "kind": "macro",
+     "name": "__SWAITQUEUE_INITIALIZER",
+     "lines": [
+      5,
+      8
+     ],
+     "bytes": 131,
+     "sha256_segments": [
+      "836895663cf6c39c",
+      "d1528585f31e106d",
+      "50845360b246ba34",
+      "be5462c40e8f3b60"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait_macro.h",
+     "kind": "macro",
+     "name": "DECLARE_SWAITQUEUE",
+     "lines": [
+      10,
+      11
+     ],
+     "bytes": 87,
+     "sha256_segments": [
+      "fee5419c7404dc6e",
+      "19c35a499d87b1bd",
+      "0236fa5ef23b4542",
+      "7e4aa1f89e7063c4"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait_macro.h",
+     "kind": "macro",
+     "name": "init_swait_queue_head",
+     "lines": [
+      21,
+      24
+     ],
+     "bytes": 105,
+     "sha256_segments": [
+      "4b62cf034822ac26",
+      "c1029406ed83234d",
+      "5a42f108852b8c9e",
+      "ce7c7eba6bad3fb9"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait.c",
+     "kind": "func",
+     "name": "__init_swait_queue_head",
+     "lines": [
+      11,
+      15
+     ],
+     "bytes": 117,
+     "sha256_segments": [
+      "d70464a1aa57ba6a",
+      "b7655747b9a58bf1",
+      "17ac9d1e1c2c1b45",
+      "abefcdb7e56f9a2f"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait.c",
+     "kind": "func",
+     "name": "swake_up_locked",
+     "lines": [
+      23,
+      31
+     ],
+     "bytes": 301,
+     "sha256_segments": [
+      "8643dea35fe86cb7",
+      "05650297acbb4a18",
+      "3b67bd974468e96d",
+      "bc6407ba6c657133"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait.c",
+     "kind": "func",
+     "name": "swake_up_all_locked",
+     "lines": [
+      40,
+      43
+     ],
+     "bytes": 121,
+     "sha256_segments": [
+      "85e418f5556391be",
+      "17aa63571123064f",
+      "fc00a0af26129cc1",
+      "f12d995b7d04f96f"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait.c",
+     "kind": "func",
+     "name": "__prepare_to_swait",
+     "lines": [
+      46,
+      50
+     ],
+     "bytes": 193,
+     "sha256_segments": [
+      "392489bb6f2a01be",
+      "6ff460adf8eae247",
+      "4877191e25e71d51",
+      "2b42fb35716c9511"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/swait/swait.c",
+     "kind": "func",
+     "name": "__finish_swait",
+     "lines": [
+      52,
+      56
+     ],
+     "bytes": 203,
+     "sha256_segments": [
+      "488a6ff2f334d692",
+      "2c138230f082edaa",
+      "3647f2b61d8e8fe2",
+      "65fa0d55b7a597a0"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/completion/completion.c",
+     "kind": "func",
+     "name": "complete",
+     "lines": [
+      32,
+      40
+     ],
+     "bytes": 207,
+     "sha256_segments": [
+      "f7470dc2d5c81485",
+      "e76aeeda81c9bea6",
+      "29b11fb58c2361ef",
+      "1e2405dd2532d2ef"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer_const.h",
+     "kind": "macro",
+     "name": "MOD_TIMER_NOTPENDING",
+     "lines": [
+      206,
+      206
+     ],
+     "bytes": 34,
+     "sha256_segments": [
+      "484d475fcba5a779",
+      "1719e1fd86eac0ef",
+      "4fc0c78275c817ea",
+      "d76091152299a4c2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer_macro.h",
+     "kind": "macro",
+     "name": "from_timer",
+     "lines": [
+      6,
+      7
+     ],
+     "bytes": 123,
+     "sha256_segments": [
+      "6c3505bcd7ac135d",
+      "82051def48d7a72b",
+      "404cad1e4471ca1e",
+      "c68bf3d48428b686"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer_macro.h",
+     "kind": "macro",
+     "name": "timer_setup_on_stack",
+     "lines": [
+      21,
+      22
+     ],
+     "bytes": 111,
+     "sha256_segments": [
+      "1b41531e7a600d95",
+      "9b78cdd1e5ae16b2",
+      "7a614460d9fe0a5e",
+      "0c19becf4c410d94"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer_macro.h",
+     "kind": "macro",
+     "name": "del_timer_sync",
+     "lines": [
+      25,
+      25
+     ],
+     "bytes": 41,
+     "sha256_segments": [
+      "7ce800c6eb1a3e4d",
+      "22ff6767078b12ae",
+      "f8da41a47c3dbccd",
+      "f0e7450b6b71ef9b"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer_macro.h",
+     "kind": "func",
+     "name": "destroy_timer_on_stack",
+     "lines": [
+      27,
+      27
+     ],
+     "bytes": 67,
+     "sha256_segments": [
+      "0433e8a9d62e97a9",
+      "5ba7ab92a60c3186",
+      "cf76baf6a4774299",
+      "72126351818fca38"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer.c",
+     "kind": "struct",
+     "name": "process_timer",
+     "lines": [
+      32,
+      35
+     ],
+     "bytes": 84,
+     "sha256_segments": [
+      "16e79c329ea39368",
+      "cd9930fe1587f98c",
+      "15ce465be7fdf43b",
+      "b0bfde3e4119d2c0"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer.c",
+     "kind": "func",
+     "name": "process_timeout",
+     "lines": [
+      41,
+      45
+     ],
+     "bytes": 137,
+     "sha256_segments": [
+      "1d7d2dffb0f2e7f9",
+      "183b9c7892c872d4",
+      "c7715188c27cd3d8",
+      "6b356c74046dff83"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer.c",
+     "kind": "func",
+     "name": "schedule_timeout",
+     "lines": [
+      759,
+      806
+     ],
+     "bytes": 1305,
+     "sha256_segments": [
+      "89e94155be574cd1",
+      "e502843f196243b4",
+      "69b3759254614642",
+      "7fc7ed9dd5ddd8d6"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer.c",
+     "kind": "func",
+     "name": "schedule_timeout_uninterruptible",
+     "lines": [
+      826,
+      830
+     ],
+     "bytes": 142,
+     "sha256_segments": [
+      "eaae1a722e66687d",
+      "81bcb8f590fc0769",
+      "e56ddce73e9fb645",
+      "ebf42e87aa823290"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timer/timer.c",
+     "kind": "func",
+     "name": "msleep",
+     "lines": [
+      852,
+      858
+     ],
+     "bytes": 142,
+     "sha256_segments": [
+      "249f96a1b94a9e8e",
+      "6aecb6b047844ead",
+      "b41a67ba6f54b68b",
+      "bec9602bc4d1350f"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/completion/completion.h",
+     "kind": "func",
+     "name": "do_wait_for_common",
+     "lines": [
+      42,
+      68
+     ],
+     "bytes": 645,
+     "sha256_segments": [
+      "12e691ec39b573ba",
+      "3f5c5da24eb27a3a",
+      "bd31746baa9d953a",
+      "69cae4ab34002e87"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/completion/completion.h",
+     "kind": "func",
+     "name": "wait_for_common",
+     "lines": [
+      70,
+      80
+     ],
+     "bytes": 274,
+     "sha256_segments": [
+      "ab79405fd3d9702b",
+      "96afc545d6026d4f",
+      "b2d46777c5467913",
+      "667f70fdbf02a9cd"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/kactive/completion/completion.c",
+     "kind": "func",
+     "name": "wait_for_completion",
+     "lines": [
+      53,
+      55
+     ],
+     "bytes": 110,
+     "sha256_segments": [
+      "81402eb4e23497df",
+      "ddc458b50b5151b4",
+      "c99a1ee90cacebea",
+      "4295a894f9551c59"
+     ]
+    }
+   ],
+   "expanded_source": {
+    "bytes": 40405,
+    "sha256_segments": [
+     "036edc1945a17973",
+     "6f68b06da8cc83d5",
+     "e6734bf811e06cc0",
+     "65b0d58b9ba241df"
+    ]
+   },
+   "compile": {
+    "cmd": [
+     "/usr/bin/gcc",
+     "-std=gnu11",
+     "-O0",
+     "-g",
+     "-fno-strict-aliasing",
+     "-Wall",
+     "-Wno-unused-label",
+     "-Wno-unused-variable",
+     "-Wno-unused-function",
+     "-I",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "-o",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_wait/fx_wait.expanded.c"
+    ],
+    "timeout_s": 60,
+    "pid": 15263,
+    "pgid": 15263,
+    "pgid_differs_from_own": true,
+    "timed_out": false,
+    "kill": null,
+    "collect_timed_out": false,
+    "output_lost": false,
+    "returncode": 0,
+    "reaped_confirmed": true,
+    "terminal_state": "exited",
+    "stdout": "",
+    "stderr": "",
+    "elapsed_s": 0.097,
+    "group_members_after": null,
+    "binary_exists": true
+   },
+   "status": "BUILT"
+  },
+  "fx_sched": {
+   "fixture": "fx_sched",
+   "template": "fx_sched.c",
+   "cases": {
+    "v04_noncurrent_wake": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "v04_noncurrent_wake"
+      ],
+      "timeout_s": 5,
+      "pid": 15401,
+      "pgid": 15401,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v04_noncurrent_wake\",\"ev\":\"q\",\"step\":\"before\",\"cpu\":0,\"count\":0,\"walk_len\":0,\"order\":[],\"task\":2,\"task_state\":2,\"task_occ\":0,\"task_cpu_meta\":0,\"preempt\":0}\n{\"case\":\"v04_noncurrent_wake\",\"ev\":\"ret\",\"fn\":\"wake_up_process\",\"ret\":0}\n{\"case\":\"v04_noncurrent_wake\",\"ev\":\"q\",\"step\":\"after\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":0,\"preempt\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v05_state_not_in_mask": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "v05_state_not_in_mask"
+      ],
+      "timeout_s": 5,
+      "pid": 15403,
+      "pgid": 15403,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v05_state_not_in_mask\",\"ev\":\"mask_case\",\"label\":\"stopped_via_wake_up_process\",\"state_in\":4,\"mask\":3,\"state_in_mask\":false,\"ret\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"q\",\"step\":\"stopped_via_wake_up_process\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":0,\"preempt\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"mask_case\",\"label\":\"uninterruptible_mask_interruptible\",\"state_in\":2,\"mask\":1,\"state_in_mask\":false,\"ret\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"q\",\"step\":\"uninterruptible_mask_interruptible\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":0,\"preempt\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"mask_case\",\"label\":\"task_new_via_wake_up_process\",\"state_in\":2048,\"mask\":3,\"state_in_mask\":false,\"ret\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"q\",\"step\":\"task_new_via_wake_up_process\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":0,\"preempt\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"mask_case\",\"label\":\"running_not_queued_via_wake_up_process\",\"state_in\":0,\"mask\":3,\"state_in_mask\":false,\"ret\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"q\",\"step\":\"running_not_queued_via_wake_up_process\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":0,\"preempt\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"mask_case\",\"label\":\"current_uninterruptible_mask_interruptible\",\"state_in\":2,\"mask\":1,\"state_in_mask\":false,\"ret\":0}\n{\"case\":\"v05_state_not_in_mask\",\"ev\":\"q\",\"step\":\"current_path\",\"cpu\":0,\"count\":0,\"walk_len\":0,\"order\":[],\"task\":2,\"task_state\":0,\"task_occ\":0,\"task_cpu_meta\":0,\"preempt\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v06_double_wake": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "v06_double_wake"
+      ],
+      "timeout_s": 5,
+      "pid": 15405,
+      "pgid": 15405,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v06_double_wake\",\"ev\":\"q\",\"step\":\"after_first\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":0,\"preempt\":0}\n{\"case\":\"v06_double_wake\",\"ev\":\"q\",\"step\":\"after_second\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":0,\"preempt\":0}\n{\"case\":\"v06_double_wake\",\"ev\":\"q\",\"step\":\"after_third\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":0,\"preempt\":0}\n{\"case\":\"v06_double_wake\",\"ev\":\"rets\",\"r1\":0,\"r2\":0,\"r3\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v07_cpu_metadata": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "v07_cpu_metadata"
+      ],
+      "timeout_s": 5,
+      "pid": 15407,
+      "pgid": 15407,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v07_cpu_metadata\",\"ev\":\"q\",\"step\":\"set_task_cpu_A_to_1_rq1\",\"cpu\":1,\"count\":1,\"walk_len\":1,\"order\":[2],\"task\":2,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":3,\"preempt\":0}\n{\"case\":\"v07_cpu_metadata\",\"ev\":\"ret\",\"fn\":\"wake_up_process\",\"ret\":0}\n{\"case\":\"v07_cpu_metadata\",\"ev\":\"q\",\"step\":\"wake_B_meta2_rq0\",\"cpu\":0,\"count\":1,\"walk_len\":1,\"order\":[3],\"task\":3,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":2,\"preempt\":0}\n{\"case\":\"v07_cpu_metadata\",\"ev\":\"q\",\"step\":\"wake_B_meta2_rq2\",\"cpu\":2,\"count\":0,\"walk_len\":0,\"order\":[],\"task\":3,\"task_state\":0,\"task_occ\":0,\"task_cpu_meta\":2,\"preempt\":0}\n{\"case\":\"v07_cpu_metadata\",\"ev\":\"q\",\"step\":\"new_task_C_meta3_rq0\",\"cpu\":0,\"count\":2,\"walk_len\":2,\"order\":[4,3],\"task\":4,\"task_state\":0,\"task_occ\":1,\"task_cpu_meta\":3,\"preempt\":0}\n{\"case\":\"v07_cpu_metadata\",\"ev\":\"q\",\"step\":\"new_task_C_meta3_rq3\",\"cpu\":3,\"count\":0,\"walk_len\":0,\"order\":[],\"task\":4,\"task_state\":0,\"task_occ\":0,\"task_cpu_meta\":3,\"preempt\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v08_pick_combinations": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "v08_pick_combinations"
+      ],
+      "timeout_s": 5,
+      "pid": 15409,
+      "pgid": 15409,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_in\",\"name\":\"a_running_empty\",\"current\":2,\"current_state\":0,\"current_is_idle\":false,\"need_resched\":1,\"order_before\":[],\"count_before\":0}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_out\",\"name\":\"a_running_empty\",\"returned\":2,\"returned_is_current\":true,\"rq_curr\":2,\"order_after\":[],\"count_after\":0,\"walk_len_after\":0,\"idle_in_list\":false}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_in\",\"name\":\"b_blocked_empty\",\"current\":2,\"current_state\":2,\"current_is_idle\":false,\"need_resched\":0,\"order_before\":[],\"count_before\":0}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_out\",\"name\":\"b_blocked_empty\",\"returned\":2,\"returned_is_current\":true,\"rq_curr\":2,\"order_after\":[],\"count_after\":0,\"walk_len_after\":0,\"idle_in_list\":false}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_in\",\"name\":\"c_blocked_one_runnable\",\"current\":2,\"current_state\":2,\"current_is_idle\":false,\"need_resched\":0,\"order_before\":[3],\"count_before\":1}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_out\",\"name\":\"c_blocked_one_runnable\",\"returned\":3,\"returned_is_current\":false,\"rq_curr\":3,\"order_after\":[],\"count_after\":0,\"walk_len_after\":0,\"idle_in_list\":false}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_in\",\"name\":\"d_idle_one_runnable\",\"current\":0,\"current_state\":0,\"current_is_idle\":true,\"need_resched\":0,\"order_before\":[3],\"count_before\":1}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_out\",\"name\":\"d_idle_one_runnable\",\"returned\":3,\"returned_is_current\":false,\"rq_curr\":3,\"order_after\":[0],\"count_after\":1,\"walk_len_after\":1,\"idle_in_list\":true}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_in\",\"name\":\"e_blocked_queue_only_idle\",\"current\":2,\"current_state\":2,\"current_is_idle\":false,\"need_resched\":0,\"order_before\":[0],\"count_before\":1}\n{\"case\":\"v08_pick_combinations\",\"ev\":\"pick_out\",\"name\":\"e_blocked_queue_only_idle\",\"returned\":0,\"returned_is_current\":false,\"rq_curr\":0,\"order_after\":[],\"count_after\":0,\"walk_len_after\":0,\"idle_in_list\":false}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v08_sequence_idle_requeue": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "v08_sequence_idle_requeue"
+      ],
+      "timeout_s": 5,
+      "pid": 15411,
+      "pgid": 15411,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v08_sequence_idle_requeue\",\"ev\":\"pick_in\",\"name\":\"s1_idle_switches_out\",\"current\":0,\"current_state\":0,\"current_is_idle\":true,\"need_resched\":0,\"order_before\":[3,2],\"count_before\":2}\n{\"case\":\"v08_sequence_idle_requeue\",\"ev\":\"pick_out\",\"name\":\"s1_idle_switches_out\",\"returned\":3,\"returned_is_current\":false,\"rq_curr\":3,\"order_after\":[2,0],\"count_after\":2,\"walk_len_after\":2,\"idle_in_list\":true}\n{\"case\":\"v08_sequence_idle_requeue\",\"ev\":\"pick_in\",\"name\":\"s2_first_blocks\",\"current\":3,\"current_state\":2,\"current_is_idle\":false,\"need_resched\":0,\"order_before\":[2,0],\"count_before\":2}\n{\"case\":\"v08_sequence_idle_requeue\",\"ev\":\"pick_out\",\"name\":\"s2_first_blocks\",\"returned\":2,\"returned_is_current\":false,\"rq_curr\":2,\"order_after\":[0],\"count_after\":1,\"walk_len_after\":1,\"idle_in_list\":true}\n{\"case\":\"v08_sequence_idle_requeue\",\"ev\":\"pick_in\",\"name\":\"s3_second_blocks\",\"current\":2,\"current_state\":2,\"current_is_idle\":false,\"need_resched\":0,\"order_before\":[0],\"count_before\":1}\n{\"case\":\"v08_sequence_idle_requeue\",\"ev\":\"pick_out\",\"name\":\"s3_second_blocks\",\"returned\":0,\"returned_is_current\":false,\"rq_curr\":0,\"order_after\":[],\"count_after\":0,\"walk_len_after\":0,\"idle_in_list\":false}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v08_sequence_idle_switched_out_blocked": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "v08_sequence_idle_switched_out_blocked"
+      ],
+      "timeout_s": 5,
+      "pid": 15413,
+      "pgid": 15413,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v08_sequence_idle_switched_out_blocked\",\"ev\":\"pick_in\",\"name\":\"t1_blocked_idle_switches_out\",\"current\":0,\"current_state\":2,\"current_is_idle\":true,\"need_resched\":0,\"order_before\":[2],\"count_before\":1}\n{\"case\":\"v08_sequence_idle_switched_out_blocked\",\"ev\":\"pick_out\",\"name\":\"t1_blocked_idle_switches_out\",\"returned\":2,\"returned_is_current\":false,\"rq_curr\":2,\"order_after\":[],\"count_after\":0,\"walk_len_after\":0,\"idle_in_list\":false}\n{\"case\":\"v08_sequence_idle_switched_out_blocked\",\"ev\":\"pick_in\",\"name\":\"t2_only_task_blocks\",\"current\":2,\"current_state\":2,\"current_is_idle\":false,\"need_resched\":0,\"order_before\":[],\"count_before\":0}\n{\"case\":\"v08_sequence_idle_switched_out_blocked\",\"ev\":\"pick_out\",\"name\":\"t2_only_task_blocks\",\"returned\":2,\"returned_is_current\":true,\"rq_curr\":2,\"order_after\":[],\"count_after\":0,\"walk_len_after\":0,\"idle_in_list\":false}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v08_vruntime_requeue_order": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+       "v08_vruntime_requeue_order"
+      ],
+      "timeout_s": 5,
+      "pid": 15415,
+      "pgid": 15415,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v08_vruntime_requeue_order\",\"ev\":\"pick_in\",\"name\":\"f_running_requeue_by_vruntime\",\"current\":2,\"current_state\":0,\"current_is_idle\":false,\"need_resched\":1,\"order_before\":[3,4,5],\"count_before\":3}\n{\"case\":\"v08_vruntime_requeue_order\",\"ev\":\"pick_out\",\"name\":\"f_running_requeue_by_vruntime\",\"returned\":3,\"returned_is_current\":false,\"rq_curr\":3,\"order_after\":[4,5,2],\"count_after\":3,\"walk_len_after\":3,\"idle_in_list\":false}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    }
+   },
+   "stale_binary_removed_before_compile": true,
+   "extraction": [
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_types.h",
+     "kind": "struct",
+     "name": "list_head",
+     "lines": [
+      8,
+      11
+     ],
+     "bytes": 57,
+     "sha256_segments": [
+      "ebf1c027f3463abc",
+      "9029be1c1da14773",
+      "780ed6b2ba9cc720",
+      "23726124f4272c69"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_types.h",
+     "kind": "struct",
+     "name": "list_hdr",
+     "lines": [
+      13,
+      16
+     ],
+     "bytes": 56,
+     "sha256_segments": [
+      "d248e3e72255d766",
+      "328d6ce52b5bb521",
+      "1c323da28c70123e",
+      "5a6b3b8b647eb892"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_const.h",
+     "kind": "macro",
+     "name": "LIST_POISON1",
+     "lines": [
+      5,
+      5
+     ],
+     "bytes": 39,
+     "sha256_segments": [
+      "4208b26ec9006c27",
+      "23019599fa9f5b52",
+      "4e0008809c563eaa",
+      "c4696f4816d4065a"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_const.h",
+     "kind": "macro",
+     "name": "LIST_POISON2",
+     "lines": [
+      6,
+      6
+     ],
+     "bytes": 39,
+     "sha256_segments": [
+      "7e513a95411558d5",
+      "abc9ae4608901471",
+      "f4f690fd07992c8d",
+      "8530c20dbcc56ceb"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/include/uapi/linux/stddef.h",
+     "kind": "macro",
+     "name": "container_of",
+     "lines": [
+      9,
+      13
+     ],
+     "bytes": 263,
+     "sha256_segments": [
+      "ae12efae715f1169",
+      "20f9bfc0a68d2261",
+      "0d19e43a6a403411",
+      "a852ec8a5a0b75e6"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "macro",
+     "name": "INIT_LIST_HEAD",
+     "lines": [
+      125,
+      125
+     ],
+     "bytes": 48,
+     "sha256_segments": [
+      "0c5f3ae9c2784896",
+      "b0dbb8bcd040ae59",
+      "aa94407f02c1a9c9",
+      "410f3e3da30c7b11"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "macro",
+     "name": "list_is_head",
+     "lines": [
+      132,
+      132
+     ],
+     "bytes": 42,
+     "sha256_segments": [
+      "7eadc5411f450e4d",
+      "0b846f5b635bd9e7",
+      "8e321c11a58798b8",
+      "ba1bb8cce2366434"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "LIST_INIT",
+     "lines": [
+      5,
+      8
+     ],
+     "bytes": 65,
+     "sha256_segments": [
+      "3a4d4e1a6894cb52",
+      "5c8ce8c6013db55a",
+      "2a120a498c8bf204",
+      "47909789cef22a30"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "LIST_HEADER_INIT",
+     "lines": [
+      9,
+      12
+     ],
+     "bytes": 106,
+     "sha256_segments": [
+      "fd948458e96905d1",
+      "fd3115f3708a15bf",
+      "6914443895cc9b99",
+      "6679a1911dfa71b8"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_container",
+     "lines": [
+      25,
+      26
+     ],
+     "bytes": 80,
+     "sha256_segments": [
+      "98d6a6e49e50f5a3",
+      "a3cc91ecd944524e",
+      "8379836ca5f4cc60",
+      "5db07ee1dc4106a4"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_entry",
+     "lines": [
+      27,
+      27
+     ],
+     "bytes": 34,
+     "sha256_segments": [
+      "18fedd137eb90cba",
+      "03ef61ad0d4bb5a1",
+      "678dcd038a633546",
+      "1e921a14699e55e1"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_first_entry",
+     "lines": [
+      37,
+      38
+     ],
+     "bytes": 88,
+     "sha256_segments": [
+      "9158858037a4a4dc",
+      "ec0ad3c7b14ed4fd",
+      "6301979bf184afff",
+      "c0fb930c32721a76"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_for_each",
+     "lines": [
+      88,
+      91
+     ],
+     "bytes": 126,
+     "sha256_segments": [
+      "0d8764ba976cf21c",
+      "5ae9ae6e094cd9bc",
+      "352eed94abe11d70",
+      "eff67bbd84f5b071"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_headr_first_container",
+     "lines": [
+      334,
+      335
+     ],
+     "bytes": 109,
+     "sha256_segments": [
+      "68549932735e1f43",
+      "146a592968730380",
+      "43ffbd5e0c66b1d0",
+      "4d971593aa35fe2b"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list_macro.h",
+     "kind": "macro",
+     "name": "list_header_foreach",
+     "lines": [
+      340,
+      341
+     ],
+     "bytes": 83,
+     "sha256_segments": [
+      "63e3a3c429a91383",
+      "7840e201b2c821c3",
+      "6e24b3649fc9283f",
+      "b145beed88b4bce2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "INIT_LIST_S",
+     "lines": [
+      147,
+      152
+     ],
+     "bytes": 129,
+     "sha256_segments": [
+      "6503fe0d66ff1558",
+      "1f640e13371c02a3",
+      "7938fded5e28c909",
+      "b86a13275cb0410a"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "INIT_LIST_HEADER_S",
+     "lines": [
+      153,
+      158
+     ],
+     "bytes": 136,
+     "sha256_segments": [
+      "53598975b6d1421a",
+      "b63bc9bfdeb3a12f",
+      "0af6937bab98f97d",
+      "f75b67847f917ae2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_add_valid",
+     "lines": [
+      160,
+      168
+     ],
+     "bytes": 247,
+     "sha256_segments": [
+      "3ed8f4cedd0f9fda",
+      "e1e2bf838cabf053",
+      "2f4aeb0056ed04c4",
+      "39753a237659c70a"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_del_entry_valid",
+     "lines": [
+      169,
+      179
+     ],
+     "bytes": 306,
+     "sha256_segments": [
+      "13f263662c49e0ff",
+      "3303fb6e1f5dcfd3",
+      "ca5c5220df88bba2",
+      "270354b21ea40d41"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_add_between",
+     "lines": [
+      187,
+      197
+     ],
+     "bytes": 248,
+     "sha256_segments": [
+      "9147161d2d4ba947",
+      "ab9b41bf303ecc2b",
+      "71944175f0aba081",
+      "47e17d14785cec6f"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_add_to_next",
+     "lines": [
+      206,
+      210
+     ],
+     "bytes": 127,
+     "sha256_segments": [
+      "1388a0b7eda6e30b",
+      "7ad3e725953b9f22",
+      "bf7500f7fb2282a8",
+      "12216b2f101f62ae"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_add_to_prev",
+     "lines": [
+      219,
+      223
+     ],
+     "bytes": 127,
+     "sha256_segments": [
+      "69a63f65475e8438",
+      "a0ef66048d0bbd01",
+      "c58afd93239cfffd",
+      "7b765ab78d7eb30d"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_del",
+     "lines": [
+      233,
+      238
+     ],
+     "bytes": 133,
+     "sha256_segments": [
+      "4b2d41eef303900b",
+      "5d8f42afdb3fad5c",
+      "ad3da5a9396736b6",
+      "330ce2826fb59874"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "__list_del_entry",
+     "lines": [
+      253,
+      260
+     ],
+     "bytes": 162,
+     "sha256_segments": [
+      "1e6b8fa214378a31",
+      "7922af680c712821",
+      "27183b68156fb1fa",
+      "2649002e489130e0"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_del_init",
+     "lines": [
+      278,
+      283
+     ],
+     "bytes": 120,
+     "sha256_segments": [
+      "69ca4826f39fa5d2",
+      "62df122459de7e35",
+      "4964226ddcd19c7c",
+      "4cb01e8b13c55b90"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_is_head_anchor",
+     "lines": [
+      419,
+      423
+     ],
+     "bytes": 121,
+     "sha256_segments": [
+      "2115a38e9262a008",
+      "6932bc75201fcff1",
+      "f5713f5df30d89c2",
+      "b7fc71d037652c8d"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_is_empty_entry",
+     "lines": [
+      428,
+      432
+     ],
+     "bytes": 118,
+     "sha256_segments": [
+      "a917ea3ed5156f20",
+      "aaa8bdf4fd524d5f",
+      "a581b7c57f785e0d",
+      "b7af8047a7e4b52b"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_is_empty",
+     "lines": [
+      628,
+      632
+     ],
+     "bytes": 125,
+     "sha256_segments": [
+      "6d2bbba923422901",
+      "a98e79ac6699a16f",
+      "18915e829d6dbf9a",
+      "e35e80eda44c7623"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_contains",
+     "lines": [
+      633,
+      642
+     ],
+     "bytes": 212,
+     "sha256_segments": [
+      "d2c885447e83747d",
+      "34793b1d05e1ee1b",
+      "a688d6a42c12a0a7",
+      "3d545c1fb3ecc573"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_add_to_head",
+     "lines": [
+      644,
+      649
+     ],
+     "bytes": 157,
+     "sha256_segments": [
+      "bdf1ccbe85075372",
+      "3c3193e93fc8241d",
+      "366f8ab719b737b7",
+      "dc7fd8095582cd57"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_remove_head",
+     "lines": [
+      650,
+      660
+     ],
+     "bytes": 245,
+     "sha256_segments": [
+      "c36e35500b6e3970",
+      "3f72ce1228c530e4",
+      "79cd6c6a55ba27cb",
+      "0f30d8c9b5992435"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_add_to_tail",
+     "lines": [
+      662,
+      667
+     ],
+     "bytes": 157,
+     "sha256_segments": [
+      "e7451841f25dda30",
+      "2703ff77eea647b4",
+      "d5b2f77f7503ad62",
+      "f46666e314ad5174"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/lib/list/double_list.h",
+     "kind": "func",
+     "name": "list_header_delete_node",
+     "lines": [
+      681,
+      691
+     ],
+     "bytes": 224,
+     "sha256_segments": [
+      "239d2d2bf75873c5",
+      "f3aa16b8028993df",
+      "90585be83380e402",
+      "c47501b2c4e6ad84"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler_types.h",
+     "kind": "struct",
+     "name": "sched_entity",
+     "lines": [
+      8,
+      40
+     ],
+     "bytes": 811,
+     "sha256_segments": [
+      "2ae073a5d065956e",
+      "eba66540ca4f7028",
+      "d442f7ebf8e79e1a",
+      "6baa46519aae71f4"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler_types.h",
+     "kind": "struct",
+     "name": "sched_rt_entity",
+     "lines": [
+      42,
+      58
+     ],
+     "bytes": 454,
+     "sha256_segments": [
+      "b5dd1d6f5523a96d",
+      "d0d8a693f346a24b",
+      "d5019fe060a1e127",
+      "4b779d440dfc77b8"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/sched/context/thread_info_types_arch.h",
+     "kind": "struct",
+     "name": "thread_info",
+     "lines": [
+      19,
+      24
+     ],
+     "bytes": 189,
+     "sha256_segments": [
+      "848398c2f9f642ad",
+      "3e8a6ce0434e1af4",
+      "464dcf56989d0ea3",
+      "3b33b0e84da05519"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/runqueue/runqueue_types.h",
+     "kind": "struct",
+     "name": "myos_rq",
+     "lines": [
+      193,
+      197
+     ],
+     "bytes": 131,
+     "sha256_segments": [
+      "6470522644a0034b",
+      "87d6a2d412bc4fb2",
+      "97003fd0808d4c7d",
+      "915cad38add28281"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_RUNNING",
+     "lines": [
+      26,
+      26
+     ],
+     "bytes": 34,
+     "sha256_segments": [
+      "1eb741bd7c9b5641",
+      "d1df3d8e36ee44b6",
+      "f096c7691e61c999",
+      "5962bd4a265ee06a"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_INTERRUPTIBLE",
+     "lines": [
+      27,
+      27
+     ],
+     "bytes": 39,
+     "sha256_segments": [
+      "9b3420f0602f3495",
+      "aab3483715597a22",
+      "a5b2718904b04b35",
+      "bc55d323bfd8ea6e"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_UNINTERRUPTIBLE",
+     "lines": [
+      28,
+      28
+     ],
+     "bytes": 40,
+     "sha256_segments": [
+      "160d93bd1d542e1b",
+      "01464472626b7ba2",
+      "9d0ca27e5fed3ef0",
+      "c759fdb05b93a8c9"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "__TASK_STOPPED",
+     "lines": [
+      29,
+      29
+     ],
+     "bytes": 36,
+     "sha256_segments": [
+      "423917040ac7f172",
+      "7d17507ec43fbd4f",
+      "8d225f00a46cfff3",
+      "e85450fab769ae52"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_WAKING",
+     "lines": [
+      39,
+      39
+     ],
+     "bytes": 34,
+     "sha256_segments": [
+      "7e259640465d7154",
+      "75707febb0ab93e8",
+      "3643be32be792bad",
+      "58d9680a36c69103"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_NEW",
+     "lines": [
+      41,
+      41
+     ],
+     "bytes": 31,
+     "sha256_segments": [
+      "6efa559c5c3cacc3",
+      "6f700331e12331c9",
+      "39494a84a27c2ab3",
+      "733904a677e2a34b"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/task/task_const.h",
+     "kind": "macro",
+     "name": "TASK_NORMAL",
+     "lines": [
+      73,
+      75
+     ],
+     "bytes": 85,
+     "sha256_segments": [
+      "1aac90836fb20cb7",
+      "90a0017d66253d26",
+      "cb71e18b1fbc305c",
+      "62fc5f9b18719569"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler_const.h",
+     "kind": "macro",
+     "name": "WF_TTWU",
+     "lines": [
+      53,
+      53
+     ],
+     "bytes": 73,
+     "sha256_segments": [
+      "9ea60426d3212d2a",
+      "25cbc90af1457009",
+      "81c0139cc94509b3",
+      "31f8bc827990143d"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/misc/sched_misc_api.h",
+     "kind": "macro",
+     "name": "task_thread_info",
+     "lines": [
+      35,
+      35
+     ],
+     "bytes": 54,
+     "sha256_segments": [
+      "58d81a63e9d7f50a",
+      "ba7213e8f0e517f8",
+      "c63cb40d0d42f633",
+      "44b231da8056abe5"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler.h",
+     "kind": "func",
+     "name": "task_cpu",
+     "lines": [
+      47,
+      51
+     ],
+     "bytes": 110,
+     "sha256_segments": [
+      "110ac54418f24183",
+      "7248556ade44c1ed",
+      "02b22ea7aeb6fdec",
+      "b1d4251c10296b3b"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler.h",
+     "kind": "func",
+     "name": "select_task_rq",
+     "lines": [
+      56,
+      80
+     ],
+     "bytes": 808,
+     "sha256_segments": [
+      "c743e172d84c2787",
+      "41548329b96bc01e",
+      "70875ce06bade974",
+      "5dcea8111f7db4d0"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler_core.c",
+     "kind": "func",
+     "name": "set_task_cpu",
+     "lines": [
+      123,
+      181
+     ],
+     "bytes": 1906,
+     "sha256_segments": [
+      "04f3270a1000e7b9",
+      "933e814f655c3e77",
+      "2fc7865b26a00f23",
+      "2d9dfd55dbc67ec3"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler_core.c",
+     "kind": "func",
+     "name": "try_to_wake_up",
+     "lines": [
+      328,
+      483
+     ],
+     "bytes": 5127,
+     "sha256_segments": [
+      "d4ed78c52d17f1cd",
+      "2e555fe3e47c8df1",
+      "04862aafad98cefc",
+      "c328cac0239ce9b2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler_core.c",
+     "kind": "func",
+     "name": "wake_up_process",
+     "lines": [
+      556,
+      559
+     ],
+     "bytes": 77,
+     "sha256_segments": [
+      "bdfcdb5beb19c0c7",
+      "137d375eb9bf746f",
+      "bd888b8156ff91f6",
+      "36faa9f3c6cfa586"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/scheduler_core.c",
+     "kind": "func",
+     "name": "wake_up_new_task",
+     "lines": [
+      684,
+      722
+     ],
+     "bytes": 1158,
+     "sha256_segments": [
+      "f89e51f6b1ede267",
+      "a74d0fb9371da55a",
+      "98a31eb7f49d3d19",
+      "6ce01ca1021e508f"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/sched/scheduler/myos_rt.c",
+     "kind": "func",
+     "name": "pick_next_task_myos",
+     "lines": [
+      5,
+      58
+     ],
+     "bytes": 1598,
+     "sha256_segments": [
+      "2ff36b570d0422f3",
+      "ccb84857384d5cd7",
+      "c8df90beee74d36a",
+      "adda9dacb713e54f"
+     ]
+    }
+   ],
+   "expanded_source": {
+    "bytes": 36557,
+    "sha256_segments": [
+     "657e9616e16446d0",
+     "3861ae44cd729ea4",
+     "1a78b408b94c8759",
+     "305e3c4bba521eb0"
+    ]
+   },
+   "compile": {
+    "cmd": [
+     "/usr/bin/gcc",
+     "-std=gnu11",
+     "-O0",
+     "-g",
+     "-fno-strict-aliasing",
+     "-Wall",
+     "-Wno-unused-label",
+     "-Wno-unused-variable",
+     "-Wno-unused-function",
+     "-I",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "-o",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_sched/fx_sched.expanded.c"
+    ],
+    "timeout_s": 60,
+    "pid": 15396,
+    "pgid": 15396,
+    "pgid_differs_from_own": true,
+    "timed_out": false,
+    "kill": null,
+    "collect_timed_out": false,
+    "output_lost": false,
+    "returncode": 0,
+    "reaped_confirmed": true,
+    "terminal_state": "exited",
+    "stdout": "",
+    "stderr": "",
+    "elapsed_s": 0.076,
+    "group_members_after": null,
+    "binary_exists": true
+   },
+   "status": "BUILT"
+  },
+  "fx_prims": {
+   "fixture": "fx_prims",
+   "template": "fx_prims.c",
+   "cases": {
+    "v12_add_test_negative": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_prims/fx_prims",
+       "v12_add_test_negative"
+      ],
+      "timeout_s": 5,
+      "pid": 15448,
+      "pgid": 15448,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v12_add_test_negative\",\"ev\":\"vec\",\"init\":-1,\"i\":1,\"after\":-2,\"ret\":true,\"contract_after_add\":0,\"contract_ret\":false,\"sub_after\":-2,\"sub_ret\":true,\"after_matches_contract\":false,\"ret_matches_contract\":false,\"after_matches_sub\":true}\n{\"case\":\"v12_add_test_negative\",\"ev\":\"vec\",\"init\":1,\"i\":2,\"after\":-1,\"ret\":true,\"contract_after_add\":3,\"contract_ret\":false,\"sub_after\":-1,\"sub_ret\":true,\"after_matches_contract\":false,\"ret_matches_contract\":false,\"after_matches_sub\":true}\n{\"case\":\"v12_add_test_negative\",\"ev\":\"vec\",\"init\":2,\"i\":-1,\"after\":3,\"ret\":false,\"contract_after_add\":1,\"contract_ret\":false,\"sub_after\":3,\"sub_ret\":false,\"after_matches_contract\":false,\"ret_matches_contract\":true,\"after_matches_sub\":true}\n{\"case\":\"v12_add_test_negative\",\"ev\":\"vec\",\"init\":0,\"i\":0,\"after\":0,\"ret\":false,\"contract_after_add\":0,\"contract_ret\":false,\"sub_after\":0,\"sub_ret\":false,\"after_matches_contract\":true,\"ret_matches_contract\":true,\"after_matches_sub\":true}\n{\"case\":\"v12_add_test_negative\",\"ev\":\"vec\",\"init\":5,\"i\":3,\"after\":2,\"ret\":false,\"contract_after_add\":8,\"contract_ret\":false,\"sub_after\":2,\"sub_ret\":false,\"after_matches_contract\":false,\"ret_matches_contract\":true,\"after_matches_sub\":true}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    },
+    "v13_trylock": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_prims/fx_prims",
+       "v13_trylock"
+      ],
+      "timeout_s": 5,
+      "pid": 15450,
+      "pgid": 15450,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v13_trylock\",\"ev\":\"lock\",\"step\":\"after_init\",\"ret\":-1,\"val\":0,\"head\":0,\"tail\":0,\"is_locked\":0}\n{\"case\":\"v13_trylock\",\"ev\":\"lock\",\"step\":\"after_first_trylock\",\"ret\":1,\"val\":0,\"head\":0,\"tail\":0,\"is_locked\":0}\n{\"case\":\"v13_trylock\",\"ev\":\"lock\",\"step\":\"after_second_trylock_without_unlock\",\"ret\":1,\"val\":0,\"head\":0,\"tail\":0,\"is_locked\":0}\n{\"case\":\"v13_trylock\",\"ev\":\"lock\",\"step\":\"after_arch_spin_lock\",\"ret\":-1,\"val\":1,\"head\":1,\"tail\":0,\"is_locked\":1}\n{\"case\":\"v13_trylock\",\"ev\":\"lock\",\"step\":\"trylock_while_held_by_arch_spin_lock\",\"ret\":0,\"val\":1,\"head\":1,\"tail\":0,\"is_locked\":1}\n{\"case\":\"v13_trylock\",\"ev\":\"lock\",\"step\":\"after_arch_spin_unlock\",\"ret\":-1,\"val\":4294967297,\"head\":1,\"tail\":1,\"is_locked\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    }
+   },
+   "stale_binary_removed_before_compile": true,
+   "extraction": [
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic_types_arch.h",
+     "kind": "struct",
+     "name": "atomic",
+     "lines": [
+      7,
+      9
+     ],
+     "bytes": 36,
+     "sha256_segments": [
+      "79de26326600be29",
+      "93efb970e52b6c3e",
+      "c2ec7402e510a509",
+      "6ce15991099b7d90"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic_types_arch.h",
+     "kind": "struct",
+     "name": "atomic64",
+     "lines": [
+      11,
+      13
+     ],
+     "bytes": 38,
+     "sha256_segments": [
+      "88746cc46d19b8f9",
+      "fc8ab1fda7bf092e",
+      "8b603bb9f22ef89a",
+      "ef070d05774b6fe2"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_types_arch.h",
+     "kind": "struct",
+     "name": "tspinlock",
+     "lines": [
+      8,
+      17
+     ],
+     "bytes": 106,
+     "sha256_segments": [
+      "6b43dbd41422b7c4",
+      "69198a7c2df2d420",
+      "23b78580cd535edc",
+      "ad8f44f3bb4a9584"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/include/asm/alternative.h",
+     "kind": "macro",
+     "name": "LOCK_PREFIX_HERE",
+     "lines": [
+      41,
+      46
+     ],
+     "bytes": 181,
+     "sha256_segments": [
+      "b4a3e09c335307e4",
+      "ccf5cd2b5d4c8eac",
+      "98bfcfce5946d14f",
+      "d580de772b61ad85"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/include/asm/alternative.h",
+     "kind": "macro",
+     "name": "LOCK_PREFIX",
+     "lines": [
+      48,
+      48
+     ],
+     "bytes": 51,
+     "sha256_segments": [
+      "9a5b7a0654e64f55",
+      "3c209fdbf179fa38",
+      "24e233b3e366c453",
+      "fe86657ebcfcdcdf"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_macro_arch.h",
+     "kind": "macro",
+     "name": "__ARCH_SPIN_LOCK_UNLOCKED",
+     "lines": [
+      8,
+      11
+     ],
+     "bytes": 87,
+     "sha256_segments": [
+      "c32fded0a8cd7c82",
+      "6420daa213fc3fe8",
+      "5dfcd89997261f22",
+      "54694ad58b117f12"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic_arch.h",
+     "kind": "func",
+     "name": "arch_atomic_add_test_negative",
+     "lines": [
+      270,
+      283
+     ],
+     "bytes": 343,
+     "sha256_segments": [
+      "ee240b32ae955309",
+      "a7438c5496017300",
+      "3d3c4ed1ba1fa126",
+      "c585dc108b5b52eb"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic64_arch.h",
+     "kind": "func",
+     "name": "arch_atomic64_read",
+     "lines": [
+      89,
+      93
+     ],
+     "bytes": 113,
+     "sha256_segments": [
+      "7c2dcb22c0d604c4",
+      "c31a93428c3f7b08",
+      "317641c7776a5708",
+      "729e742ee107b8b9"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+     "kind": "func",
+     "name": "arch_spin_init",
+     "lines": [
+      36,
+      40
+     ],
+     "bytes": 130,
+     "sha256_segments": [
+      "cf7bd89531c709bd",
+      "a98fbf2820831acb",
+      "67bad7d7749f299d",
+      "7afa785e3d609d97"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+     "kind": "func",
+     "name": "arch_spin_is_locked",
+     "lines": [
+      42,
+      47
+     ],
+     "bytes": 171,
+     "sha256_segments": [
+      "b925f2a34c84ac52",
+      "5a2b3c002ef40ac2",
+      "3b16f8ef943ce220",
+      "8f4642b0eff5785f"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+     "kind": "func",
+     "name": "arch_spin_trylock",
+     "lines": [
+      49,
+      57
+     ],
+     "bytes": 208,
+     "sha256_segments": [
+      "943b540e732c1bd4",
+      "728967e6af612a84",
+      "4f8e3df41515e31f",
+      "5282464e6e3f0bd1"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+     "kind": "func",
+     "name": "arch_spin_lock",
+     "lines": [
+      59,
+      80
+     ],
+     "bytes": 652,
+     "sha256_segments": [
+      "f10132ff49db386e",
+      "9650463a9ab8f04c",
+      "4892acea3ab76dff",
+      "856d76eb33e6ecfa"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+     "kind": "func",
+     "name": "arch_spin_unlock",
+     "lines": [
+      82,
+      92
+     ],
+     "bytes": 236,
+     "sha256_segments": [
+      "398186ca12164db8",
+      "ff84a95c5d1d9477",
+      "463e830d409469e8",
+      "7ade52bb7d21c3aa"
+     ]
+    }
+   ],
+   "expanded_source": {
+    "bytes": 7544,
+    "sha256_segments": [
+     "e1788bdb3d9a2e43",
+     "8cb87accbdadb305",
+     "13bd7d80140aeb29",
+     "38d73924457130d8"
+    ]
+   },
+   "compile": {
+    "cmd": [
+     "/usr/bin/gcc",
+     "-std=gnu11",
+     "-O0",
+     "-g",
+     "-fno-strict-aliasing",
+     "-Wall",
+     "-Wno-unused-label",
+     "-Wno-unused-variable",
+     "-Wno-unused-function",
+     "-I",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "-o",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_prims/fx_prims",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_prims/fx_prims.expanded.c"
+    ],
+    "timeout_s": 60,
+    "pid": 15443,
+    "pgid": 15443,
+    "pgid_differs_from_own": true,
+    "timed_out": false,
+    "kill": null,
+    "collect_timed_out": false,
+    "output_lost": false,
+    "returncode": 0,
+    "reaped_confirmed": true,
+    "terminal_state": "exited",
+    "stdout": "",
+    "stderr": "",
+    "elapsed_s": 0.057,
+    "group_members_after": null,
+    "binary_exists": true
+   },
+   "status": "BUILT"
+  },
+  "fx_jiffies": {
+   "fixture": "fx_jiffies",
+   "template": "fx_jiffies.c",
+   "cases": {
+    "v14": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies/fx_jiffies",
+       "v14"
+      ],
+      "timeout_s": 5,
+      "pid": 15462,
+      "pgid": 15462,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v14\",\"ev\":\"one_handler_call\",\"same_address\":true,\"jiffies_64_delta\":2,\"jiffies_delta\":2,\"sizeof_jiffies\":8,\"sizeof_jiffies_64\":8,\"tty_calls\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.002,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    }
+   },
+   "stale_binary_removed_before_compile": true,
+   "extraction": [
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timekeeping/timekeeping.c",
+     "kind": "func",
+     "name": "do_timer",
+     "lines": [
+      270,
+      273
+     ],
+     "bytes": 52,
+     "sha256_segments": [
+      "919ca040e3f7b43d",
+      "0c21102c6379afdd",
+      "cedb76752ac99aaa",
+      "01725cacae09d380"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/kernel/hpet.c",
+     "kind": "func",
+     "name": "HPET_handler",
+     "lines": [
+      525,
+      537
+     ],
+     "bytes": 295,
+     "sha256_segments": [
+      "370ba3406993097a",
+      "ff42564c944fc771",
+      "71cd58f4ff21ebd7",
+      "7bf47c5a1c643913"
+     ]
+    }
+   ],
+   "expanded_source": {
+    "bytes": 2604,
+    "sha256_segments": [
+     "5369f8fda7307d88",
+     "0fe42f842548d6ef",
+     "331228327972c751",
+     "fe6c2cdecf28bdb1"
+    ]
+   },
+   "compile": {
+    "cmd": [
+     "/usr/bin/gcc",
+     "-std=gnu11",
+     "-O0",
+     "-g",
+     "-fno-strict-aliasing",
+     "-Wall",
+     "-Wno-unused-label",
+     "-Wno-unused-variable",
+     "-Wno-unused-function",
+     "-I",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "-o",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies/fx_jiffies",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies/fx_jiffies.expanded.c",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies/alias.ld"
+    ],
+    "timeout_s": 60,
+    "pid": 15457,
+    "pgid": 15457,
+    "pgid_differs_from_own": true,
+    "timed_out": false,
+    "kill": null,
+    "collect_timed_out": false,
+    "output_lost": false,
+    "returncode": 0,
+    "reaped_confirmed": true,
+    "terminal_state": "exited",
+    "stdout": "",
+    "stderr": "",
+    "elapsed_s": 0.05,
+    "group_members_after": null,
+    "binary_exists": true
+   },
+   "status": "BUILT",
+   "alias_ld": {
+    "source": "time:mykernel/arch/x86_64/kernel.lds",
+    "line": 17,
+    "text": "jiffies = jiffies_64;"
+   }
+  },
+  "fx_jiffies_control": {
+   "fixture": "fx_jiffies_control",
+   "template": "fx_jiffies.c",
+   "cases": {
+    "v14_control": {
+     "status": "RAN",
+     "run": {
+      "cmd": [
+       "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies_control/fx_jiffies_control",
+       "v14_control"
+      ],
+      "timeout_s": 5,
+      "pid": 15473,
+      "pgid": 15473,
+      "pgid_differs_from_own": true,
+      "timed_out": false,
+      "kill": null,
+      "collect_timed_out": false,
+      "output_lost": false,
+      "returncode": 0,
+      "reaped_confirmed": true,
+      "terminal_state": "exited",
+      "stdout": "{\"case\":\"v14_control\",\"ev\":\"one_handler_call\",\"same_address\":false,\"jiffies_64_delta\":1,\"jiffies_delta\":1,\"sizeof_jiffies\":8,\"sizeof_jiffies_64\":8,\"tty_calls\":0}\n",
+      "stderr": "",
+      "elapsed_s": 0.001,
+      "group_members_after": null
+     },
+     "repeat_identical": true,
+     "repeat_returncode": 0,
+     "repeat_terminal_state": "exited"
+    }
+   },
+   "stale_binary_removed_before_compile": true,
+   "extraction": [
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/time/timekeeping/timekeeping.c",
+     "kind": "func",
+     "name": "do_timer",
+     "lines": [
+      270,
+      273
+     ],
+     "bytes": 52,
+     "sha256_segments": [
+      "919ca040e3f7b43d",
+      "0c21102c6379afdd",
+      "cedb76752ac99aaa",
+      "01725cacae09d380"
+     ]
+    },
+    {
+     "pin": "time",
+     "commit_short12": "a039d9803ade",
+     "path": "mykernel/arch/x86_64/kernel/hpet.c",
+     "kind": "func",
+     "name": "HPET_handler",
+     "lines": [
+      525,
+      537
+     ],
+     "bytes": 295,
+     "sha256_segments": [
+      "370ba3406993097a",
+      "ff42564c944fc771",
+      "71cd58f4ff21ebd7",
+      "7bf47c5a1c643913"
+     ]
+    }
+   ],
+   "expanded_source": {
+    "bytes": 2604,
+    "sha256_segments": [
+     "5369f8fda7307d88",
+     "0fe42f842548d6ef",
+     "331228327972c751",
+     "fe6c2cdecf28bdb1"
+    ]
+   },
+   "compile": {
+    "cmd": [
+     "/usr/bin/gcc",
+     "-std=gnu11",
+     "-O0",
+     "-g",
+     "-fno-strict-aliasing",
+     "-Wall",
+     "-Wno-unused-label",
+     "-Wno-unused-variable",
+     "-Wno-unused-function",
+     "-DCONTROL_SEPARATE",
+     "-I",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/frozen",
+     "-o",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies_control/fx_jiffies_control",
+     "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical/run-7s4d4c4s/fixtures/fx_jiffies_control/fx_jiffies_control.expanded.c"
+    ],
+    "timeout_s": 60,
+    "pid": 15468,
+    "pgid": 15468,
+    "pgid_differs_from_own": true,
+    "timed_out": false,
+    "kill": null,
+    "collect_timed_out": false,
+    "output_lost": false,
+    "returncode": 0,
+    "reaped_confirmed": true,
+    "terminal_state": "exited",
+    "stdout": "",
+    "stderr": "",
+    "elapsed_s": 0.052,
+    "group_members_after": null,
+    "binary_exists": true
+   },
+   "status": "BUILT"
+  }
+ },
+ "evaluation": {
+  "V02": {
+   "case_id": "V02",
+   "constituents": {
+    "v02_single": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "prepare.count",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "prepare.walk_len",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "wake.links_empty(anchor_self)",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "wake.count",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "wake.waiter_self_linked",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "finish.count",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "finish.header_is_empty",
+     "observed": false,
+     "predicted": false,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "finish.count",
+     "observed": 1,
+     "wrong_prediction": 0
+    }
+   ]
+  },
+  "V03": {
+   "case_id": "V03",
+   "constituents": {
+    "v03_second_wake_direct": "VALID",
+    "v03_second_wake_via_complete": "VALID",
+    "v03_all_two_waiters": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "direct.invalid_at_call",
+     "observed": 2,
+     "predicted": 2,
+     "match": true
+    },
+    {
+     "label": "direct.task_field_is_lock_word",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "layout.anchor_container_task_aliases_lock",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "via_complete.task_field_is_lock_word",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "via_complete.task_ptr_nonzero_while_lock_held",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "all_two.valid_wakeups_in_order",
+     "observed": [
+      1,
+      2
+     ],
+     "predicted": [
+      1,
+      2
+     ],
+     "match": true
+    },
+    {
+     "label": "all_two.third_iteration_invalid",
+     "observed": 3,
+     "predicted": 3,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "all_two.valid_wakeups_in_order",
+     "observed": [
+      1,
+      2
+     ],
+     "wrong_prediction": [
+      1,
+      2,
+      1
+     ]
+    }
+   ]
+  },
+  "V04": {
+   "case_id": "V04",
+   "constituents": {
+    "v04_noncurrent_wake": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "state_after(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "queued_once",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "rq0.count",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "preempt_balanced",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "ret",
+     "observed": 0,
+     "wrong_prediction": 1
+    }
+   ]
+  },
+  "V05": {
+   "case_id": "V05",
+   "constituents": {
+    "v05_state_not_in_mask": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "stopped_via_wake_up_process.state_in_mask",
+     "observed": false,
+     "predicted": false,
+     "match": true
+    },
+    {
+     "label": "stopped_via_wake_up_process.state_after(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "stopped_via_wake_up_process.queued",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "stopped_via_wake_up_process.ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "uninterruptible_mask_interruptible.state_in_mask",
+     "observed": false,
+     "predicted": false,
+     "match": true
+    },
+    {
+     "label": "uninterruptible_mask_interruptible.state_after(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "uninterruptible_mask_interruptible.queued",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "uninterruptible_mask_interruptible.ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "task_new_via_wake_up_process.state_in_mask",
+     "observed": false,
+     "predicted": false,
+     "match": true
+    },
+    {
+     "label": "task_new_via_wake_up_process.state_after(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "task_new_via_wake_up_process.queued",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "task_new_via_wake_up_process.ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "running_not_queued_via_wake_up_process.state_in_mask",
+     "observed": false,
+     "predicted": false,
+     "match": true
+    },
+    {
+     "label": "running_not_queued_via_wake_up_process.state_after(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "running_not_queued_via_wake_up_process.queued",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "running_not_queued_via_wake_up_process.ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "current_uninterruptible_mask_interruptible.state_in_mask",
+     "observed": false,
+     "predicted": false,
+     "match": true
+    },
+    {
+     "label": "current_uninterruptible_mask_interruptible.state_after(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "current_uninterruptible_mask_interruptible.queued",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "current_uninterruptible_mask_interruptible.ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "stopped_via_wake_up_process.state_after(RUNNING)",
+     "observed": 0,
+     "wrong_prediction": 4
+    }
+   ]
+  },
+  "V06": {
+   "case_id": "V06",
+   "constituents": {
+    "v06_double_wake": "VALID"
+   },
+   "status": "VALID",
+   "result": "NO_FAILURE_IN_SCOPE",
+   "checks": [
+    {
+     "label": "after_first.occurrences",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_second.occurrences",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_third.occurrences",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_first.count",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_second.count",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_third.count",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "returns",
+     "observed": [
+      0,
+      0,
+      0
+     ],
+     "predicted": [
+      0,
+      0,
+      0
+     ],
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "after_second.occurrences",
+     "observed": 1,
+     "wrong_prediction": 2
+    }
+   ]
+  },
+  "V07": {
+   "case_id": "V07",
+   "constituents": {
+    "v07_cpu_metadata": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "set_task_cpu(A,1).queued_on_rq1",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "set_task_cpu(A,1).task_cpu_meta_unchanged(3)",
+     "observed": 3,
+     "predicted": 3,
+     "match": true
+    },
+    {
+     "label": "wake(B meta=2).queued_on_rq0",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "wake(B meta=2).not_on_rq2",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "new_task(C meta=3).queued_on_rq0",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "new_task(C meta=3).task_cpu_meta_unchanged(3)",
+     "observed": 3,
+     "predicted": 3,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "set_task_cpu(A,1).task_cpu_meta_unchanged(3)",
+     "observed": 3,
+     "wrong_prediction": 1
+    }
+   ]
+  },
+  "V09": {
+   "case_id": "V09",
+   "constituents": {
+    "v09_schedule_timeout_values": "VALID",
+    "v09_uninterruptible_wrapper": "VALID",
+    "v09_msleep_bounded": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "in=0.ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "in=0.schedule_calls",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "in=0.state_after(UNINTERRUPTIBLE=2)",
+     "observed": 2,
+     "predicted": 2,
+     "match": true
+    },
+    {
+     "label": "in=1.ret",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "in=1.schedule_calls",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "in=1.state_after(UNINTERRUPTIBLE=2)",
+     "observed": 2,
+     "predicted": 2,
+     "match": true
+    },
+    {
+     "label": "in=5.ret",
+     "observed": 5,
+     "predicted": 5,
+     "match": true
+    },
+    {
+     "label": "in=5.schedule_calls",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "in=5.state_after(UNINTERRUPTIBLE=2)",
+     "observed": 2,
+     "predicted": 2,
+     "match": true
+    },
+    {
+     "label": "in=-1.ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "in=-1.state_after(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "in=MAX.schedule_calls",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "in=MAX.ret",
+     "observed": 9223372036854775807,
+     "predicted": 9223372036854775807,
+     "match": true
+    },
+    {
+     "label": "wrapper(5).ret",
+     "observed": 5,
+     "predicted": 5,
+     "match": true
+    },
+    {
+     "label": "wrapper(5).state_after",
+     "observed": 2,
+     "predicted": 2,
+     "match": true
+    },
+    {
+     "label": "msleep(5).stopped_at_step_cap",
+     "observed": 100,
+     "predicted": 100,
+     "match": true
+    },
+    {
+     "label": "msleep.first_timeouts",
+     "observed": [
+      5,
+      5,
+      5
+     ],
+     "predicted": [
+      5,
+      5,
+      5
+     ],
+     "match": true
+    },
+    {
+     "label": "msleep.last_timeout",
+     "observed": 5,
+     "predicted": 5,
+     "match": true
+    },
+    {
+     "label": "msleep.schedule_calls",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "in=5.ret",
+     "observed": 5,
+     "wrong_prediction": 4
+    }
+   ]
+  },
+  "V10": {
+   "case_id": "V10",
+   "constituents": {
+    "v10_done_preset_fast_path": "VALID",
+    "v10_infinite_notify_during_schedule": "VALID",
+    "v10_finite_timeout_no_notifier": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "preset.schedule_calls",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "preset.done_consumed",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "preset.ret_is_MAX",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "preset.wait_for_completion.schedule_calls",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "infinite.schedule_calls",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "infinite.done_consumed",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "infinite.state_after(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "finite(no notifier).bounded_non_progress",
+     "observed": 100,
+     "predicted": 100,
+     "match": true
+    },
+    {
+     "label": "finite.schedule_calls",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "preset.schedule_calls",
+     "observed": 0,
+     "wrong_prediction": 1
+    }
+   ],
+   "observations_beyond_prediction": {
+    "infinite.header_count_after_return": 1,
+    "infinite.walk_len_after_return": 0
+   }
+  },
+  "V11": {
+   "case_id": "V11",
+   "constituents": {
+    "v11_wait_then_notify_then_reuse": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "waiter_state_at_schedule(UNINTERRUPTIBLE)",
+     "observed": 2,
+     "predicted": 2,
+     "match": true
+    },
+    {
+     "label": "queued_before_notify.count",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "queued_before_notify.walk_len",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_notify.waiter_state(RUNNING)",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "after_notify.done",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_notify.count(stays 1)",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_notify.walk_len",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "after_return.count(stays 1)",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "after_return.done",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "reuse.complete_hits_anchor_container",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "after_return.count(stays 1)",
+     "observed": 1,
+     "wrong_prediction": 0
+    }
+   ],
+   "layers": {
+    "local_sequence_with_scripted_interleaving": "EXECUTED",
+    "real_context_switch": "NOT_RUN"
+   }
+  },
+  "V12": {
+   "case_id": "V12",
+   "constituents": {
+    "v12_add_test_negative": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "(-1,1).after_is_subtraction",
+     "observed": -2,
+     "predicted": -2,
+     "match": true
+    },
+    {
+     "label": "(-1,1).ret_is_sign_of_subtraction",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "(1,2).after_is_subtraction",
+     "observed": -1,
+     "predicted": -1,
+     "match": true
+    },
+    {
+     "label": "(1,2).ret_is_sign_of_subtraction",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "(2,-1).after_is_subtraction",
+     "observed": 3,
+     "predicted": 3,
+     "match": true
+    },
+    {
+     "label": "(2,-1).ret_is_sign_of_subtraction",
+     "observed": false,
+     "predicted": false,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "(-1,1).after_is_addition",
+     "observed": -2,
+     "wrong_prediction": 0
+    }
+   ],
+   "contract_mismatch_vectors": [
+    [
+     -1,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     -1
+    ],
+    [
+     5,
+     3
+    ]
+   ]
+  },
+  "V13": {
+   "case_id": "V13",
+   "constituents": {
+    "v13_trylock": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "init.val",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "first_trylock.ret(success)",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "first_trylock.val_unchanged",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "first_trylock.is_locked_after",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    },
+    {
+     "label": "second_trylock_without_unlock.ret(success again)",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    },
+    {
+     "label": "control.trylock_while_held_by_arch_spin_lock.ret",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "second_trylock_without_unlock.ret(success again)",
+     "observed": 1,
+     "wrong_prediction": 0
+    }
+   ]
+  },
+  "V08": {
+   "case_id": "V08",
+   "constituents": {
+    "v08_pick_combinations": "VALID",
+    "v08_sequence_idle_requeue": "VALID",
+    "v08_sequence_idle_switched_out_blocked": "VALID",
+    "v08_vruntime_requeue_order": "VALID"
+   },
+   "status": "VALID",
+   "result": "COUNTEREVIDENCE",
+   "result_basis": {
+    "function_level": "OBSERVED_AS_PREDICTED",
+    "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL",
+    "global_reachability": "NOT_ESTABLISHED_BY_THIS_CHECK",
+    "static_criteria": {
+     "no_active_idle_state_writer": true,
+     "no_explicit_state_change_in_rest_init": true,
+     "single_rq_idle_assignment": true,
+     "init_task_starts_running": true
+    }
+   },
+   "subresults": {
+    "function_level_combinations": {
+     "status": "VALID",
+     "result": "OBSERVED_AS_PREDICTED",
+     "checks": [
+      {
+       "label": "a_running_empty.returns_current",
+       "observed": true,
+       "predicted": true,
+       "match": true
+      },
+      {
+       "label": "b_blocked_empty.returns_current",
+       "observed": true,
+       "predicted": true,
+       "match": true
+      },
+      {
+       "label": "c_blocked_one_runnable.returns_other",
+       "observed": 3,
+       "predicted": 3,
+       "match": true
+      },
+      {
+       "label": "c.blocked_current_not_requeued(count 0)",
+       "observed": 0,
+       "predicted": 0,
+       "match": true
+      },
+      {
+       "label": "d_idle.requeued_at_tail",
+       "observed": [
+        0
+       ],
+       "predicted": [
+        0
+       ],
+       "match": true
+      },
+      {
+       "label": "e_blocked_only_idle.returns_idle",
+       "observed": 0,
+       "predicted": 0,
+       "match": true
+      }
+     ],
+     "negcontrol_wrong_prediction_detected": true,
+     "negcontrol": [
+      {
+       "label": "b_blocked_empty.returns_current",
+       "observed": true,
+       "wrong_prediction": false
+      }
+     ]
+    },
+    "sequence_with_idle_requeue": {
+     "status": "VALID",
+     "result": "OBSERVED_AS_PREDICTED",
+     "checks": [
+      {
+       "label": "s1.idle_in_list_after_switch_out",
+       "observed": true,
+       "predicted": true,
+       "match": true
+      },
+      {
+       "label": "s2.idle_still_in_list",
+       "observed": true,
+       "predicted": true,
+       "match": true
+      },
+      {
+       "label": "s3.blocked_last_task_yields_idle",
+       "observed": 0,
+       "predicted": 0,
+       "match": true
+      }
+     ],
+     "negcontrol_wrong_prediction_detected": true,
+     "negcontrol": [
+      {
+       "label": "s3.blocked_last_task_yields_idle",
+       "observed": 0,
+       "wrong_prediction": 2
+      }
+     ]
+    },
+    "sequence_when_idle_switched_out_blocked": {
+     "status": "VALID",
+     "result": "OBSERVED_AS_PREDICTED",
+     "checks": [
+      {
+       "label": "t1.idle_not_requeued",
+       "observed": false,
+       "predicted": false,
+       "match": true
+      },
+      {
+       "label": "t2.blocked_current_returned_with_empty_queue",
+       "observed": true,
+       "predicted": true,
+       "match": true
+      }
+     ],
+     "negcontrol_wrong_prediction_detected": true,
+     "negcontrol": [
+      {
+       "label": "t2.blocked_current_returned_with_empty_queue",
+       "observed": true,
+       "wrong_prediction": false
+      }
+     ]
+    }
+   },
+   "extra_observation_requeue_order": {
+    "order_before": [
+     3,
+     4,
+     5
+    ],
+    "order_after": [
+     4,
+     5,
+     2
+    ],
+    "vruntime_sorted_would_be": [
+     4,
+     2,
+     5
+    ]
+   }
+  },
+  "V14_model": {
+   "case_id": "V14_model",
+   "constituents": {
+    "v14": "VALID",
+    "v14_control": "VALID"
+   },
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "alias.same_address",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "alias.jiffies_64_delta_per_handler",
+     "observed": 2,
+     "predicted": 2,
+     "match": true
+    },
+    {
+     "label": "control.same_address",
+     "observed": false,
+     "predicted": false,
+     "match": true
+    },
+    {
+     "label": "control.jiffies_64_delta_per_handler",
+     "observed": 1,
+     "predicted": 1,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "alias.jiffies_64_delta_per_handler",
+     "observed": 2,
+     "wrong_prediction": 1
+    }
+   ]
+  },
+  "V00": {
+   "case_id": "V00",
+   "status": "VALID",
+   "result": "COUNTEREVIDENCE",
+   "checks": [
+    {
+     "label": "tag_count",
+     "observed": 47,
+     "predicted": 47,
+     "match": true
+    },
+    {
+     "label": "raw_tag_count",
+     "observed": 47,
+     "predicted": 47,
+     "match": true
+    },
+    {
+     "label": "ids_unique",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "ids_missing",
+     "observed": [],
+     "predicted": [],
+     "match": true
+    },
+    {
+     "label": "ids_duplicated",
+     "observed": [],
+     "predicted": [],
+     "match": true
+    },
+    {
+     "label": "anchors_failing_boundary_or_match",
+     "observed": [
+      {
+       "id": "A46",
+       "verdict_mech": "OUTSIDE_OR_PARTIAL_DEFINITION"
+      }
+     ],
+     "predicted": [],
+     "match": false
+    },
+    {
+     "label": "canaries",
+     "observed": [
+      "DISCRIMINATES",
+      "DISCRIMINATES"
+     ],
+     "predicted": [
+      "DISCRIMINATES",
+      "DISCRIMINATES"
+     ],
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "tag_count",
+     "observed": 47,
+     "wrong_prediction": 46
+    }
+   ],
+   "failing_anchors": [
+    {
+     "id": "A46",
+     "verdict_mech": "OUTSIDE_OR_PARTIAL_DEFINITION"
+    }
+   ],
+   "mechanical_verdict_counts": {
+    "MATCH_IN_DEFINITION": 45,
+    "MATCH_IN_DEFINITION_INCLUDES_COMMENT_LINE": 1,
+    "OUTSIDE_OR_PARTIAL_DEFINITION": 1
+   },
+   "semantic_verdict_counts": {
+    "SUPPORTS_WITH_NOTE": 12,
+    "SUPPORTS": 34,
+    "PARTIAL_BOUNDARY": 1
+   },
+   "semantic_source": "v00_semantic_review.yaml reused unchanged from a1e7c2277705 (executor reading judgement, not recomputed)"
+  },
+  "V01": {
+   "case_id": "V01",
+   "status": "VALID",
+   "result": "NO_FAILURE_IN_SCOPE",
+   "checks": [
+    {
+     "label": "all_six_parse",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "issue_ids_CA01_CA07",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "anchor_refs_dangling",
+     "observed": [],
+     "predicted": [],
+     "match": true
+    },
+    {
+     "label": "anchor_dups_within_issue",
+     "observed": {},
+     "predicted": {},
+     "match": true
+    },
+    {
+     "label": "case_refs_dangling",
+     "observed": [],
+     "predicted": [],
+     "match": true
+    },
+    {
+     "label": "contract09_anchor_refs_dangling",
+     "observed": [],
+     "predicted": [],
+     "match": true
+    },
+    {
+     "label": "referenced_paths_exist",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "report_inputs_read_exist",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "self_check_automated_equals_declared",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "self_check_arithmetic",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "startup_selfcheck_quote",
+     "observed": true,
+     "predicted": true,
+     "match": true
+    },
+    {
+     "label": "no_whole_completion_claims",
+     "observed": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "predicted": [
+      false,
+      false,
+      false,
+      false
+     ],
+     "match": true
+    },
+    {
+     "label": "hex40_hits",
+     "observed": 0,
+     "predicted": 0,
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "hex40_hits",
+     "observed": 0,
+     "wrong_prediction": 1
+    }
+   ]
+  },
+  "V00_A46_correction": {
+   "case_id": "V00_A46_correction",
+   "status": "VALID",
+   "result": "OBSERVED_AS_PREDICTED",
+   "checks": [
+    {
+     "label": "A46-C.verdict_mech",
+     "observed": "MATCH_IN_DEFINITION",
+     "predicted": "MATCH_IN_DEFINITION",
+     "match": true
+    },
+    {
+     "label": "A46-ASM.verdict_mech",
+     "observed": "MATCH_IN_DEFINITION",
+     "predicted": "MATCH_IN_DEFINITION",
+     "match": true
+    },
+    {
+     "label": "old_A46_still_fails_in_frozen_v00",
+     "observed": "OUTSIDE_OR_PARTIAL_DEFINITION",
+     "predicted": "OUTSIDE_OR_PARTIAL_DEFINITION",
+     "match": true
+    }
+   ],
+   "negcontrol_wrong_prediction_detected": true,
+   "negcontrol": [
+    {
+     "label": "A46-C.verdict_mech",
+     "observed": "MATCH_IN_DEFINITION",
+     "wrong_prediction": "QUOTE_NOT_FOUND"
+    }
+   ]
+  }
+ },
+ "stage_outputs_present": {
+  "v00": true,
+  "v01": true,
+  "static": true,
+  "a46": true
+ },
+ "verification_findings": [
+  "V00",
+  "V08"
+ ],
+ "execution_complete": true,
+ "status": "COMPLETE",
+ "exit_code": 0
+}
