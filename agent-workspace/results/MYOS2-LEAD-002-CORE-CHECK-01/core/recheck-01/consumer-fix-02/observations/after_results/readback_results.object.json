@@ -1,0 +1,60 @@
+{
+ "mode": "object",
+ "target_commit_short12": "77faf51e9a43",
+ "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/results.yaml",
+ "field": "packet_id",
+ "expected_blob_available": true,
+ "expected_bytes": 33576,
+ "expected_sha256_segments": [
+  "f1c46d1279f30e46",
+  "784331a94af33ca8",
+  "c5baa963a61401a9",
+  "7b6b75e902b6416a"
+ ],
+ "channels": [
+  {
+   "channel": "raw.githubusercontent.com",
+   "url": "https://raw.githubusercontent.com/08822407d/MyOS2/<commit:77faf51e9a43>/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/results.yaml",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 33576,
+   "sha256_segments": [
+    "f1c46d1279f30e46",
+    "784331a94af33ca8",
+    "c5baa963a61401a9",
+    "7b6b75e902b6416a"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_value": "MYOS2-LEAD-002-CORE-CHECK-01",
+   "field_ok": true,
+   "ok": true
+  },
+  {
+   "channel": "api.github.com_contents_raw",
+   "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/results.yaml?ref=<commit:77faf51e9a43>",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 33576,
+   "sha256_segments": [
+    "f1c46d1279f30e46",
+    "784331a94af33ca8",
+    "c5baa963a61401a9",
+    "7b6b75e902b6416a"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_value": "MYOS2-LEAD-002-CORE-CHECK-01",
+   "field_ok": true,
+   "ok": true
+  }
+ ],
+ "binding": "fetched at the target commit itself",
+ "ok": true
+}
