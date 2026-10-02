@@ -1,0 +1,1254 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-CHECK-01-RECHECK-02
+phase: evidence_consumer_recheck
+record_type: consumer_fix_results
+produced_by: Claude Code 云端会话执行者（claude.ai/code）；模型名不写入仓库产物，见 execution_model_selection
+execution_model_selection: unknown_or_not_attestable
+execution_surface: claude.ai/code 托管云端会话容器；普通用户态 Python 数据层实验（每例独立进程，30 s 上限）
+date: '2026-10-01'
+base_snapshot: kernel=time a039d9803ade；workspace=master de3bb1df906a；主线 b0aa54db1b70（13 号任务书与 recheck-01 回执，开工时固定）；被审输入 b843d475367a；recheck-01 results 冻结于 efb9846b88ec（均为短 SHA）
+status: generated_from_observations
+acceptance_ceiling: PASS_PENDING_LOCAL
+results_are_generated: true
+scope_template: 'data layer only: no C compile/run, no H00, no tree scan, no kernel change; recorded observations re-judged'
+input_identity:
+  pins:
+    time: a039d9803ade
+    master: de3bb1df906a
+    taskbook: 57a7c3e0eebf
+    lead_recheck01: ec62453e76d2
+    lead_recheck02: b0aa54db1b70
+    core_frozen: a1e7c2277705
+    core_results: 7e2fa84a9823
+    batch1: f9ae2bce9a64
+    frozen_results: efb9846b88ec
+    reviewed_input: b843d475367a
+  guard_start_gate:
+    review_receipt_binding: true
+    contract13_binding: true
+    lead_advanced_by_additions_only: true
+    inputs_unchanged: true
+    results_chain: true
+    on_execution_branch: true
+    head_descends_from_b843: true
+    b843_files_unchanged_only_additions_under_prefix: true
+    remote_on_same_line_and_contains_b843: true
+    kernel_source_branch_equals_pin: true
+    auxiliary_identity2_open: true
+    ok: true
+  review_fields:
+    record_id: CORE-CHECK-01-RECHECK-01-REVIEW-001
+    disposition: RETURN
+    reviewed_pr: 17
+    reviewed_branch: claude/dazzling-cori-q0dnyt
+    reviewed_commit_short12: b843d475367a
+    results_frozen_short12: efb9846b88ec
+    first_batch_short12: f9ae2bce9a64
+    previous_core_short12: a1e7c2277705
+    followup_id: CORE-CHECK-01-RECHECK-02
+    followup_allowed_write_prefix: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/
+  lead_changes_since_previous_pin:
+  - "A\t13-core-evidence-consumer-recheck.md"
+  - "A\t14-scheduler-ordering-followup.md"
+  - "A\tcheckpoints/2026-10-01-recheck01-reviewed-consumer-fix-ready.md"
+  - "A\treviews/CORE-CHECK-01-recheck-01-review.md"
+  efb_to_b843:
+  - "A\tMANIFEST.md"
+  - "A\tevidence.md"
+  - "A\tfixtures/build_evidence2.py"
+  - "A\tobservations/after_batch2/identity_after_push.json"
+  - "A\tobservations/after_batch2/readback_results.branch.json"
+  - "A\tobservations/after_batch2/readback_results.object.json"
+  b843_files:
+    under_recheck01: 32
+    under_results_root: 58
+    whole_tree: 1228
+  frozen_b843_extraction:
+    commit_short12: b843d475367a
+    fixture_names_match_expected: true
+    observation_names_match_expected: true
+    all_unchanged_at_head: true
+    reused_modules:
+    - - fixtures/evaluate2.py
+      - 38706
+      - 6a61e29a3b0b1c80
+    - - fixtures/harness2.py
+      - 7501
+      - 9b9c5c23698a13a1
+    - - fixtures/identity2.py
+      - 8884
+      - b4e36c60fa2dc53d
+    - - fixtures/make_results2.py
+      - 22174
+      - dbeda2acada94bc1
+    - - fixtures/readback2.py
+      - 6039
+      - 41019aeb61216b01
+old_side:
+  programs: b843d475367a recheck-01/fixtures (extraction /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/dev-frozen)
+  workdir: /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/dev-oldside/old-side-yg3q_ak8
+  input_label: HARNESS_META_TEST (altered copies of the b843 observations; originals untouched)
+  S01:
+    case: fx_sched/v04_noncurrent_wake
+    deleted_run_keys:
+    - collect_timed_out
+    - terminal_state
+    - reaped_confirmed
+    - stderr
+    lead_prediction:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    old_returned:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    old_control:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    reproduced: true
+  S02:
+    lead_prediction:
+    - VALID
+    - NO_FAILURE_IN_SCOPE
+    old_returned:
+      empty_referenced_paths:
+      - VALID
+      - NO_FAILURE_IN_SCOPE
+      empty_report_inputs_read:
+      - VALID
+      - NO_FAILURE_IN_SCOPE
+      empty_hex40_hits_in_scope_files:
+      - VALID
+      - NO_FAILURE_IN_SCOPE
+      empty_all_three:
+      - VALID
+      - NO_FAILURE_IN_SCOPE
+    old_control:
+    - VALID
+    - NO_FAILURE_IN_SCOPE
+    reproduced:
+      empty_referenced_paths: true
+      empty_report_inputs_read: true
+      empty_hex40_hits_in_scope_files: true
+      empty_all_three: true
+  S03:
+    lead_prediction:
+      static_omitted: V14 source layer missing evidence, V08 still cached VALID with limited-model verdict
+      static_truncated_json: JSONDecodeError before section error collection; no partial report
+    control_complete_copy:
+      returncode: 0
+      report_identical_to_efb_results_yaml: true
+    static_omitted:
+      returncode: 0
+      report_written: true
+      report:
+        status: generated_from_run_status_COMPLETE
+        run_status: COMPLETE
+        V08:
+          evidence_status: VALID
+          result: COUNTEREVIDENCE
+          layers:
+            host_original_slice_function_level: EXECUTED
+            limited_model_reachability: EXECUTED
+            global_reachability: NOT_RUN
+          limited_model_reachability: COUNTEREVIDENCE_IN_LIMITED_MODEL
+        V14:
+          evidence_status: INCOMPLETE_EVIDENCE
+          result: null
+          layers:
+            source_and_build_reference: INCOMPLETE_EVIDENCE
+            host_link_model: EXECUTED
+            existing_elf: NOT_RUN
+        CA-02: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+        CA-05: UNDETERMINED_MISSING_EVIDENCE
+        generator_errors: []
+        counts_evidence_status:
+          VALID: 14
+          INCOMPLETE_EVIDENCE: 1
+    static_truncated_json:
+      returncode: 1
+      report_written: false
+      stderr_last:
+      - 'json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)'
+    reproduced:
+      static_omitted: true
+      static_truncated_json: true
+  S04_found_this_round:
+    N02.control_complete_hex40_hit_found:
+      old:
+      - ERROR
+      - null
+      old_reasons:
+      - 'COMPARATOR_INVALID: wrong prediction not detected'
+      new:
+      - VALID
+      - COUNTEREVIDENCE
+    N05.valid_but_different_from_prediction_v04_ret_1:
+      old:
+      - ERROR
+      - null
+      old_reasons:
+      - 'COMPARATOR_INVALID: wrong prediction not detected'
+      new:
+      - VALID
+      - COUNTEREVIDENCE
+  all_lead_derivations_reproduced: true
+  counterevidence_to_lead: []
+new_tests:
+  N01:
+    requirement: missing run metadata is never VALID; error class recorded; explicit failures still rejected; complete control valid
+    input_label: HARNESS_META_TEST (fields removed/changed on the real b843 V04 record)
+    met: true
+    variants:
+      delete_run.collect_timed_out:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_FIELD
+        met: true
+      delete_run.terminal_state:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_FIELD
+        met: true
+      delete_run.reaped_confirmed:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_FIELD
+        met: true
+      delete_run.stderr:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_FIELD
+        met: true
+      delete_all_four:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_FIELD
+        met: true
+      delete_case.repeat_terminal_state:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_FIELD
+        met: true
+      delete_run.output_lost:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_FIELD
+        met: true
+      explicit_collect_timed_out_true:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories: []
+        met: true
+      explicit_terminal_state_killed:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories: []
+        met: true
+      explicit_reaped_confirmed_false:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories: []
+        met: true
+      explicit_stderr_nonempty:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories: []
+        met: true
+      explicit_output_lost_true:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories:
+        - EXPLICIT_FAILURE
+        met: true
+      explicit_repeat_terminal_state_killed:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories:
+        - EXPLICIT_FAILURE
+        met: true
+      wrong_type_reaped_confirmed_string:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories:
+        - WRONG_TYPE
+        met: true
+      control_complete_real_record:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new_categories: null
+        met: true
+  N02:
+    requirement: missing checked objects are missing evidence, not 'no failure'; legal empty error lists stay valid; a real False is a finding
+    input_label: HARNESS_META_TEST (members removed/duplicated/changed on the real b843 v01.json)
+    met: true
+    variants:
+      drop_one_referenced_path:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_OBJECT
+        met: true
+      empty_referenced_paths:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_OBJECT
+        met: true
+      drop_one_report_input:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_OBJECT
+        met: true
+      empty_report_inputs_read:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_OBJECT
+        met: true
+      drop_one_hex40_scope_file:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_OBJECT
+        met: true
+      empty_hex40_hits_in_scope_files:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_OBJECT
+        met: true
+      empty_all_three:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new_categories:
+        - MISSING_OBJECT
+        met: true
+      duplicate_report_input:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories:
+        - DUPLICATE_OBJECT
+        met: true
+      renamed_referenced_path_member:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - INVALID_EVIDENCE
+        - null
+        new_categories:
+        - MEMBER_IDENTITY
+        met: true
+      control_complete_empty_error_lists:
+        old:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        new_categories: null
+        met: true
+      control_member_exists_false:
+        old:
+        - VALID
+        - COUNTEREVIDENCE
+        new:
+        - VALID
+        - COUNTEREVIDENCE
+        new_categories: null
+        met: true
+      control_complete_hex40_hit_found:
+        old:
+        - ERROR
+        - null
+        new:
+        - VALID
+        - COUNTEREVIDENCE
+        new_categories: null
+        met: true
+  N03:
+    requirement: no cached verdict hides a missing original; V08 keeps only the independent function layer; independent items unaffected
+    input_label: HARNESS_META_TEST (b843 observations copied with one file omitted)
+    met: true
+    checks:
+      control_complete_exit0: true
+      omit_static_partial_exit2: true
+      omit_static_V08_not_valid_function_layer_kept: true
+      omit_static_CA02_function_level_only: true
+      omit_static_V14_source_layer_not_executed: true
+      omit_static_cache_not_used: true
+      omit_static_independent_items_unchanged: true
+      omit_v01_partial_exit2: true
+      omit_v01_V01_not_valid: true
+      omit_v01_independent_items_unchanged: true
+      source_run_status_kept_as_history: true
+    variants:
+      control_full:
+        old_cli:
+          returncode: 0
+          report_written: true
+          stderr_last: []
+          V08: VALID
+          V14: VALID
+        new_cli:
+          returncode: 0
+          report_written: true
+          status: consumer_COMPLETE
+          input_problems: {}
+          not_valid: []
+          cached_differs: []
+      omit_static:
+        old_cli:
+          returncode: 0
+          report_written: true
+          stderr_last: []
+          V08: VALID
+          V14: INCOMPLETE_EVIDENCE
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            static.json: static.json MISSING
+          not_valid:
+          - V08
+          - V14
+          cached_differs:
+          - V08
+      omit_v01:
+        old_cli:
+          returncode: 0
+          report_written: true
+          stderr_last: []
+          V08: VALID
+          V14: VALID
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            v01.json: v01.json MISSING
+          not_valid:
+          - V01
+          cached_differs:
+          - V01
+  N04:
+    requirement: error/partial report written with matching exit code; no behaviour verdict for affected items; no dynamic claim without run data
+    input_label: HARNESS_META_TEST (b843 observations copied with one file corrupted)
+    met: true
+    checks:
+      static_syntax_open_brace: true
+      static_empty_file: true
+      static_wrong_top_type_list: true
+      v01_syntax_open_brace: true
+      v01_empty_file: true
+      v01_wrong_top_type_list: true
+      run_unparsable_control: true
+      consumer_failure_control: true
+    variants:
+      static_syntax_open_brace:
+        old_cli:
+          returncode: 1
+          report_written: false
+          stderr_last:
+          - 'json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)'
+          V08: null
+          V14: null
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            static.json: 'static.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)'
+          not_valid:
+          - V08
+          - V14
+          cached_differs:
+          - V08
+      static_empty_file:
+        old_cli:
+          returncode: 1
+          report_written: false
+          stderr_last:
+          - 'json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)'
+          V08: null
+          V14: null
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            static.json: static.json EMPTY
+          not_valid:
+          - V08
+          - V14
+          cached_differs:
+          - V08
+      static_wrong_top_type_list:
+        old_cli:
+          returncode: 0
+          report_written: true
+          stderr_last: []
+          V08: VALID
+          V14: INCOMPLETE_EVIDENCE
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            static.json: 'static.json WRONG_TOP_TYPE: top-level list, expected object'
+          not_valid:
+          - V08
+          - V14
+          cached_differs:
+          - V08
+      v01_syntax_open_brace:
+        old_cli:
+          returncode: 1
+          report_written: false
+          stderr_last:
+          - 'json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)'
+          V08: null
+          V14: null
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            v01.json: 'v01.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)'
+          not_valid:
+          - V01
+          cached_differs:
+          - V01
+      v01_empty_file:
+        old_cli:
+          returncode: 1
+          report_written: false
+          stderr_last:
+          - 'json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)'
+          V08: null
+          V14: null
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            v01.json: v01.json EMPTY
+          not_valid:
+          - V01
+          cached_differs:
+          - V01
+      v01_wrong_top_type_list:
+        old_cli:
+          returncode: 0
+          report_written: true
+          stderr_last: []
+          V08: VALID
+          V14: VALID
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            v01.json: 'v01.json WRONG_TOP_TYPE: top-level list, expected object'
+          not_valid:
+          - V01
+          cached_differs:
+          - V01
+      run_unparsable_control:
+        old_cli:
+          returncode: 1
+          report_written: false
+          stderr_last:
+          - 'json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)'
+          V08: null
+          V14: null
+        new_cli:
+          returncode: 2
+          report_written: true
+          status: consumer_PARTIAL
+          input_problems:
+            run.json: 'run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)'
+            v00.json: 'stage completion record unavailable (run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))'
+            v01.json: 'stage completion record unavailable (run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))'
+            static.json: 'stage completion record unavailable (run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))'
+            a46.json: 'stage completion record unavailable (run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))'
+          not_valid:
+          - V00
+          - V00_A46_correction
+          - V01
+          - V02
+          - V03
+          - V04
+          - V05
+          - V06
+          - V07
+          - V08
+          - V09
+          - V10
+          - V11
+          - V12
+          - V13
+          - V14
+          cached_differs:
+          - V00
+          - V00_A46_correction
+          - V01
+          - V02
+          - V03
+          - V04
+          - V05
+          - V06
+          - V07
+          - V08
+          - V09
+          - V10
+          - V11
+          - V12
+          - V13
+          - V14_model
+      consumer_failure_control:
+        old_cli: null
+        new_cli:
+          returncode: 4
+          report_written: false
+          status: null
+          input_problems: null
+          not_valid: []
+          cached_differs: null
+  N05:
+    requirement: old rejections still hold, legal 0/42/43 and a valid-but-different record still accepted; N02/N03 transforms through the real entry
+    input_label: HARNESS_META_TEST (M01-M05/M08/M09 transformations re-applied to the real b843 records)
+    met: true
+    variants:
+      M01_empty_cases:
+        old:
+          V02:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V03:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V04:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V05:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V06:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V07:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V09:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V10:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V11:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V12:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V13:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V08:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V14_model:
+          - INCOMPLETE_EVIDENCE
+          - null
+        new:
+          V02:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V03:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V04:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V05:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V06:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V07:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V09:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V10:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V11:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V12:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V13:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V08:
+          - INCOMPLETE_EVIDENCE
+          - null
+          V14_model:
+          - INCOMPLETE_EVIDENCE
+          - null
+        met: true
+      M02_drop_label_task_new:
+        old:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        met: true
+      M02_drop_q_uninterruptible:
+        old:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        met: true
+      M02_truncate_last_two:
+        old:
+        - INCOMPLETE_EVIDENCE
+        - null
+        new:
+        - INCOMPLETE_EVIDENCE
+        - null
+        met: true
+      M03_duplicate_conflicting_ret:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M03_wrong_field_type:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M03_unparsable_line:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M03_duplicate_q:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M04_timed_out:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M04_collect_timed_out:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M04_case_status_ERROR:
+        old:
+        - ERROR
+        - null
+        new:
+        - ERROR
+        - null
+        met: true
+      M04_repeat_not_identical:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M04_terminal_state_killed:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M05_v02_exit_42:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M05_v03_stop_event_exit_0:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M05_v09_step_cap_exit_0:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      M05_v03_exit_42_without_stop_event:
+        old:
+        - INVALID_EVIDENCE
+        - null
+        new:
+        - INVALID_EVIDENCE
+        - null
+        met: true
+      control_exit_0_v02:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        met: true
+      control_exit_42_v03:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        met: true
+      control_exit_43_v09:
+        old:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        new:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        met: true
+      valid_but_different_from_prediction_v04_ret_1:
+        old:
+        - ERROR
+        - null
+        new:
+        - VALID
+        - COUNTEREVIDENCE
+        met: true
+    through_cli:
+      M08_v01_member_exists_false:
+        old_cli_returncode: 0
+        new_cli:
+          returncode: 0
+          status: consumer_COMPLETE
+          not_valid: {}
+        met: true
+      M08_v00_A46_changed_to_match:
+        old_cli_returncode: 0
+        new_cli:
+          returncode: 0
+          status: consumer_COMPLETE
+          not_valid: {}
+        met: true
+      M08_v00_A35_changed_to_quote_not_found:
+        old_cli_returncode: 0
+        new_cli:
+          returncode: 0
+          status: consumer_COMPLETE
+          not_valid: {}
+        met: true
+      M09_partial_compile_case_skipped_stage:
+        old_cli_returncode: 0
+        new_cli:
+          returncode: 2
+          status: consumer_PARTIAL
+          not_valid:
+            V06:
+            - ERROR
+            - null
+            V08:
+            - INCOMPLETE_EVIDENCE
+            - null
+            V12:
+            - BLOCKED
+            - null
+            V13:
+            - BLOCKED
+            - null
+            V14:
+            - INCOMPLETE_EVIDENCE
+            - null
+        met: true
+      M09B_static_stage_failed_output_present:
+        old_cli_returncode: 0
+        new_cli:
+          returncode: 2
+          status: consumer_PARTIAL
+          not_valid:
+            V08:
+            - INCOMPLETE_EVIDENCE
+            - null
+            V14:
+            - INCOMPLETE_EVIDENCE
+            - null
+        met: true
+      N02_through_cli_empty_referenced_paths:
+        old_cli_returncode: 0
+        new_cli:
+          returncode: 2
+          status: consumer_PARTIAL
+          not_valid:
+            V01:
+            - INCOMPLETE_EVIDENCE
+            - null
+        met: true
+      N02_through_cli_duplicate_report_input:
+        old_cli_returncode: 0
+        new_cli:
+          returncode: 2
+          status: consumer_PARTIAL
+          not_valid:
+            V01:
+            - INVALID_EVIDENCE
+            - null
+        met: true
+recorded_observation_revalidation:
+  kind: RECORDED_OBSERVATION_REVALIDATION
+  met: true
+  checks:
+    exit0_consumer_complete: true
+    all_cases_identical_to_efb: true
+    ca_rulings_identical: true
+    counts_identical: true
+    r_m_items_identical: true
+    old_A46_failure_kept: true
+    A46_C_ASM_listed_separately: true
+    not_run_layers_not_upgraded: true
+    cached_equals_consumer: true
+  source_execution_facts:
+    run_status: COMPLETE
+    run_exit_code: 0
+    identity_read_time_utc: '2026-09-27T08:58:15Z'
+    execution_head_short12: f9ae2bce9a64
+    note_template: historical facts of the source run; nothing re-executed
+  consumer_facts:
+    status: COMPLETE
+    date_utc: '2026-10-01'
+    programs: consumer-fix-02/fixtures/consumer3.py + make_results3.py; frozen evaluate2/make_results2 from b843d475367a
+    inputs:
+    - - run.json
+      - OK
+      - 148341
+    - - v00.json
+      - OK
+      - 63054
+    - - v01.json
+      - OK
+      - 6556
+    - - static.json
+      - OK
+      - 8847
+    - - a46.json
+      - OK
+      - 1050
+    - - old_counterexamples.json
+      - OK
+      - 23717
+    - - meta_tests.json
+      - OK
+      - 47618
+    dynamic_raw_observations_available: true
+    cached_evaluation_differs: []
+  cases:
+    V00:
+    - VALID
+    - COUNTEREVIDENCE
+    V01:
+    - VALID
+    - NO_FAILURE_IN_SCOPE
+    V02:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V03:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V04:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V05:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V06:
+    - VALID
+    - NO_FAILURE_IN_SCOPE
+    V07:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V08:
+    - VALID
+    - COUNTEREVIDENCE
+    V09:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V10:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V11:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V12:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V13:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V14:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V00_A46_correction:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+  ca_rulings:
+    CA-01: SUPPORTED_IN_SCOPE
+    CA-02: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+    CA-03: SUPPORTED_IN_SCOPE
+    CA-04: SUPPORTED_IN_SCOPE
+    CA-05: SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE
+    CA-06: SUPPORTED_AT_SOURCE_LEVEL
+    CA-07: SUPPORTED_IN_SCOPE
+  counts:
+    top_level_cases: 15
+    evidence_status:
+      VALID: 15
+    results_for_valid_evidence:
+      COUNTEREVIDENCE: 2
+      NO_FAILURE_IN_SCOPE: 2
+      OBSERVED_AS_PREDICTED: 11
+    layers_not_executed:
+    - V04.smp_or_real_scheduler
+    - V05.irq_or_signal_context
+    - V06.concurrent_wakeups
+    - V07.ap_migration
+    - V08.global_reachability
+    - V09.real_timer_expiry
+    - V10.real_timer_or_scheduler
+    - V11.real_context_switch
+    - V12.multicore_atomicity
+    - V13.smp_stress
+    - V14.existing_elf
+    layers_not_executed_reason_template: outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)
+  diff_vs_recheck01_frozen_results:
+    source: recheck-01 results.yaml @ efb9846b88ec
+    cases_identical:
+    - V00
+    - V00_A46_correction
+    - V01
+    - V02
+    - V03
+    - V04
+    - V05
+    - V06
+    - V07
+    - V08
+    - V09
+    - V10
+    - V11
+    - V12
+    - V13
+    - V14
+    cases_different: {}
+    ca_rulings:
+      CA-01:
+        efb: SUPPORTED_IN_SCOPE
+        now: SUPPORTED_IN_SCOPE
+        same: true
+      CA-02:
+        efb: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+        now: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+        same: true
+      CA-03:
+        efb: SUPPORTED_IN_SCOPE
+        now: SUPPORTED_IN_SCOPE
+        same: true
+      CA-04:
+        efb: SUPPORTED_IN_SCOPE
+        now: SUPPORTED_IN_SCOPE
+        same: true
+      CA-05:
+        efb: SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE
+        now: SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE
+        same: true
+      CA-06:
+        efb: SUPPORTED_AT_SOURCE_LEVEL
+        now: SUPPORTED_AT_SOURCE_LEVEL
+        same: true
+      CA-07:
+        efb: SUPPORTED_IN_SCOPE
+        now: SUPPORTED_IN_SCOPE
+        same: true
+    counts_same: true
+    diff_vs_frozen_core_same: true
+    r_items_same: true
+    m_items_same: true
+  report_file:
+    bytes: 46489
+    sha256_segments:
+    - 27d28d7a4660406f
+    - 6ff08d37fe7f38c7
+    - e996929dd05c938b
+    - 7af18cb3fe532af9
+  open_template:
+  - CA-02 global reachability
+  - V08 requeue-order candidate (14 号 CORE-SCHED-ORDER-02 is not executed here)
+  - real ELF / IRQ / SMP / context switch
+summary:
+  S01_S03_reproduced_on_b843: true
+  N_met:
+    N01: true
+    N02: true
+    N03: true
+    N04: true
+    N05: true
+    N06: true
+  all_N_met: true
+  S04_old_new:
+    N02.control_complete_hex40_hit_found:
+    - - ERROR
+      - null
+    - - VALID
+      - COUNTEREVIDENCE
+    N05.valid_but_different_from_prediction_v04_ret_1:
+    - - ERROR
+      - null
+    - - VALID
+      - COUNTEREVIDENCE
+  consumer_tests_workdir: /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/official/tests/consumer-tests-pj4dud6e

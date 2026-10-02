@@ -1,0 +1,81 @@
+{
+ "check": "GUARD4",
+ "read_time_utc": "2026-10-02T02:08:57Z",
+ "pins": {
+  "time": "a039d9803ade",
+  "master": "de3bb1df906a",
+  "lead_prev": "b0aa54db1b70",
+  "lead": "6706013a079a",
+  "reviewed": "0d62c4d19711",
+  "consumer_results": "77faf51e9a43"
+ },
+ "gate": {
+  "review_binding": true,
+  "contract_binding": true,
+  "analysis14_present": true,
+  "lead_advanced_by_additions_only": true,
+  "reviewed_chain": true,
+  "on_execution_branch": true,
+  "head_descends_from_0d62": true,
+  "0d62_files_unchanged_only_additions_under_prefix": true,
+  "remote_on_same_line_and_contains_0d62": true,
+  "kernel_source_equals_pin": true,
+  "ok": true
+ },
+ "review_fields": {
+  "record_id": "CORE-CHECK-01-RECHECK-02-REVIEW-001",
+  "status": "BOUNDED_RECHECK_CLOSED",
+  "acceptance_verdict": "PASS_PENDING_LOCAL",
+  "reviewed_pr": 17,
+  "reviewed_branch": "claude/dazzling-cori-q0dnyt",
+  "reviewed_commit_short12": "0d62c4d19711",
+  "results_frozen_short12": "77faf51e9a43",
+  "remaining_return_items_in_contract13": []
+ },
+ "contract_fields": {
+  "followup_id": "CORE-SCHED-ORDER-02",
+  "required_review_record": "CORE-CHECK-01-RECHECK-02-REVIEW-001",
+  "reviewed_execution_short12": "0d62c4d19711",
+  "consumer_results_frozen_short12": "77faf51e9a43",
+  "kernel_short12": "a039d9803ade",
+  "execution_branch": "claude/dazzling-cori-q0dnyt",
+  "initial_execution_pr": 17,
+  "allowed_write_prefix": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/",
+  "kernel_change_authorized": false,
+  "phase3_authorized": false,
+  "acceptance_ceiling": "PASS_PENDING_LOCAL"
+ },
+ "lead_changes_since_previous_pin": [
+  "A\t15-scheduler-ordering-witness-contract.md",
+  "A\tcheckpoints/2026-10-02-consumer-closed-scheduler-witness-ready.md",
+  "A\treviews/CORE-CHECK-01-recheck-02-review.md"
+ ],
+ "consumer_results_to_reviewed": [
+  "A\tcore/recheck-01/consumer-fix-02/MANIFEST.md",
+  "A\tcore/recheck-01/consumer-fix-02/evidence.md",
+  "A\tcore/recheck-01/consumer-fix-02/fixtures/build_evidence3.py",
+  "A\tcore/recheck-01/consumer-fix-02/observations/after_results/guard_after_push.json",
+  "A\tcore/recheck-01/consumer-fix-02/observations/after_results/readback_results.branch.json",
+  "A\tcore/recheck-01/consumer-fix-02/observations/after_results/readback_results.object.json"
+ ],
+ "execution": {
+  "branch": "claude/dazzling-cori-q0dnyt",
+  "head_short12": "0d62c4d19711",
+  "remote_relation": "equal"
+ },
+ "frozen_0d62_files": {
+  "under_results_root": 84,
+  "whole_tree": 1254
+ },
+ "changes_vs_0d62": {
+  "committed": [],
+  "staged_not_additions_under_prefix": [],
+  "worktree_outside_prefix": []
+ },
+ "remote_refs_equal_pins": {
+  "master": true,
+  "time": true,
+  "agent/MYOS2-LEAD-002": true
+ },
+ "note_template": "a lead branch that moved past the pin is an expected append and does not close the gate"
+}

@@ -1,0 +1,274 @@
+{
+ "check": "USER_VFS_BASELINE_05_SCOPE",
+ "mode": "stage",
+ "pins": {
+  "time": "a039d9803ade",
+  "master_at_start": "de3bb1df906a",
+  "lead": "0d066801371d",
+  "reviewed": "de7c96ede546",
+  "mm_results": "eb75b3100601"
+ },
+ "work_branch": "claude/dazzling-cori-q0dnyt",
+ "prefix": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/",
+ "lead_remote_head_short12": "0d066801371d",
+ "lead_relation": "equal",
+ "policy_fields": {
+  "status": "ACTIVE_RECORD_FIRST_OWNER_REPAIR_DEFERRED",
+  "owner_action_for_existing_findings": "NONE_NOW",
+  "kernel_change_authorized": false
+ },
+ "contract_fields": {
+  "followup_id": {
+   "want": "CORE-USER-VFS-BASELINE-05",
+   "got": "CORE-USER-VFS-BASELINE-05",
+   "ok": true
+  },
+  "reviewed_execution_short12": {
+   "want": "de7c96ede546",
+   "got": "de7c96ede546",
+   "ok": true
+  },
+  "memory_results_frozen_short12": {
+   "want": "eb75b3100601",
+   "got": "eb75b3100601",
+   "ok": true
+  },
+  "kernel_short12": {
+   "want": "a039d9803ade",
+   "got": "a039d9803ade",
+   "ok": true
+  },
+  "execution_branch": {
+   "want": "claude/dazzling-cori-q0dnyt",
+   "got": "claude/dazzling-cori-q0dnyt",
+   "ok": true
+  },
+  "initial_execution_pr": {
+   "want": 17,
+   "got": 17,
+   "ok": true
+  },
+  "allowed_write_prefix": {
+   "want": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/",
+   "got": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/",
+   "ok": true
+  },
+  "kernel_change_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "kernel_patch_production_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "host_fixture_execution_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "full_kernel_build_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "candidate_A_adopted": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "candidate_B_adopted": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "owner_decisions_requested_now": {
+   "want": [],
+   "got": [],
+   "ok": true
+  },
+  "required_review_record": {
+   "want": "CORE-MM-BASELINE-04-REVIEW-001",
+   "got": "CORE-MM-BASELINE-04-REVIEW-001",
+   "ok": true
+  },
+  "findings_policy_ref": {
+   "want": "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md",
+   "got": "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md",
+   "ok": true
+  }
+ },
+ "review_fields": {
+  "record_id": {
+   "want": "CORE-MM-BASELINE-04-REVIEW-001",
+   "got": "CORE-MM-BASELINE-04-REVIEW-001",
+   "ok": true
+  },
+  "reviewed_commit_short12": {
+   "want": "de7c96ede546",
+   "got": "de7c96ede546",
+   "ok": true
+  },
+  "results_frozen_short12": {
+   "want": "eb75b3100601",
+   "got": "eb75b3100601",
+   "ok": true
+  },
+  "acceptance_verdict": {
+   "want": "RETURN",
+   "got": "RETURN",
+   "ok": true
+  },
+  "returned_items": {
+   "want": [
+    "MR-01",
+    "MR-02"
+   ],
+   "got": [
+    "MR-01",
+    "MR-02"
+   ],
+   "ok": true
+  },
+  "next_followup": {
+   "want": "CORE-USER-VFS-BASELINE-05",
+   "got": "CORE-USER-VFS-BASELINE-05",
+   "ok": true
+  },
+  "kernel_change_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "owner_decisions_requested_now": {
+   "want": [],
+   "got": [],
+   "ok": true
+  }
+ },
+ "remote_time_short12": "a039d9803ade",
+ "remote_master_short12": "de3bb1df906a",
+ "master_moved_since_start": false,
+ "head_short12": "de7c96ede546",
+ "head_contains_reviewed": true,
+ "master_contains_reviewed": false,
+ "changes_vs_reviewed": [
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/deferred-findings.yaml",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/mm-04-disposition.md",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/records/checker_probes.json",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/records/facts_check.json",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/records/queries.json",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/records/scope_start.json",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_facts_check.py",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_scope.py",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/user-vfs-baseline.md"
+ ],
+ "changes_outside_rule": [],
+ "new_files": [
+  {
+   "path": "deferred-findings.yaml",
+   "bytes": 42058,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "parse": "yaml_ok",
+   "ok": true
+  },
+  {
+   "path": "facts-and-dependencies.yaml",
+   "bytes": 145142,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "parse": "yaml_ok",
+   "ok": true
+  },
+  {
+   "path": "mm-04-disposition.md",
+   "bytes": 16250,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "ok": true
+  },
+  {
+   "path": "records/checker_probes.json",
+   "bytes": 5251,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": false,
+   "parse": "json_ok",
+   "ok": true
+  },
+  {
+   "path": "records/facts_check.json",
+   "bytes": 5418,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": false,
+   "parse": "json_ok",
+   "ok": true
+  },
+  {
+   "path": "records/queries.json",
+   "bytes": 37203,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": false,
+   "parse": "json_ok",
+   "ok": true
+  },
+  {
+   "path": "records/scope_start.json",
+   "bytes": 3807,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": false,
+   "parse": "json_ok",
+   "ok": true
+  },
+  {
+   "path": "scripts/uv_facts_check.py",
+   "bytes": 23037,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "provenance_header": true,
+   "ok": true
+  },
+  {
+   "path": "scripts/uv_scope.py",
+   "bytes": 10741,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "provenance_header": true,
+   "ok": true
+  },
+  {
+   "path": "user-vfs-baseline.md",
+   "bytes": 39183,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "ok": true
+  }
+ ],
+ "new_scripts": [
+  "scripts/uv_facts_check.py",
+  "scripts/uv_scope.py"
+ ],
+ "all_ok": true
+}

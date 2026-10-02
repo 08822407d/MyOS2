@@ -1,0 +1,55 @@
+record_type: v00_semantic_support_review
+method: >-
+  执行者阅读判断，不是机械检查：对每个 A 编号，在 time@a039d9803ade 的固定 blob 中阅读 v00_anchors.py
+  定位出的整个定义体（--context 输出的窗口），判断该引文是否支持 07 报告中紧邻的命题。
+  verdict 取值：SUPPORTS（引文与所在定义体支持命题）、SUPPORTS_WITH_NOTE（支持，但有需要读者知道的限定）、
+  PARTIAL_BOUNDARY（语义支持，但引文有行落在所标符号定义体外）、NOT_SUPPORTED（不支持）。
+  “支持命题”只指源码文本层面，不代表运行行为。
+anchors:
+  A01: {verdict: SUPPORTS_WITH_NOTE, note: "三行位于第二个 set(CMAKE_C_FLAGS ...)（第58-70行）；文件共有两个 set(CMAKE_C_FLAGS) 命令，第一个不含这些 -D。"}
+  A02: {verdict: SUPPORTS, note: "set_task_cpu 活动尾部：取 per_cpu rq、写 TASK_RUNNING、contains 检查后 add_to_head；其前全部为注释。"}
+  A03: {verdict: SUPPORTS, note: "success 仅在此声明处初始化为 0。"}
+  A04: {verdict: SUPPORTS_WITH_NOTE, note: "调用活动；传入的是局部 cpu（初值 0），原 p->wake_cpu 版本被注释。"}
+  A05: {verdict: SUPPORTS_WITH_NOTE, note: "外层 if (task_cpu(p) != cpu) 被注释，故 set_task_cpu 在非 current 路径无条件执行。"}
+  A06: {verdict: SUPPORTS, note: "定义体内对 success 的活动引用只有声明与本 return；ttwu_state_match(...&success) 全为注释。"}
+  A07: {verdict: SUPPORTS, note: "select_task_rq 除 return cpu 外全部为注释。"}
+  A08: {verdict: SUPPORTS, note: "wake_up_process 直接返回 try_to_wake_up(p, TASK_NORMAL, 0)。"}
+  A09: {verdict: SUPPORTS_WITH_NOTE, note: "rq 取 per_cpu(runqueues, 0)；与 set_task_cpu 不同，此处 add_to_head 前没有 list_header_contains 检查。"}
+  A10: {verdict: SUPPORTS, note: "pick_next_task_myos 在条件分支内 remove_head 取下一任务。"}
+  A11: {verdict: SUPPORTS_WITH_NOTE, note: "名称由 DEFINE_SCHED_CLASS(myos_rt) 宏拼接生成；所读快照中 DEFINE_SCHED_CLASS 只在 myos_rt.c 使用一次，kernel.lds 以 __sched_class_highest/lowest 包住 .data.sched_class。"}
+  A12: {verdict: SUPPORTS, note: "for_each_class 循环内活动调用 class->pick_next_task；注释掉的是 pick_task 分支。"}
+  A13: {verdict: SUPPORTS, note: "schedule() 调用 __schedule_loop(SM_NONE)（同文件第1211行），循环内调用 __schedule。"}
+  A14: {verdict: SUPPORTS, note: "excep_hwint_context 在异常/硬中断处理后 !in_atomic() 即调用 schedule()，不看 need_resched。"}
+  A15: {verdict: SUPPORTS_WITH_NOTE, note: "引文第3行 '// schedule();' 是注释行，属于有意引用；其余三行为活动语句。机械结果 MATCH_IN_DEFINITION_INCLUDES_COMMENT_LINE 与此一致。"}
+  A16: {verdict: SUPPORTS, note: "定义体内没有以 jiffies/expire 计算剩余量的活动语句；out 标签后只有此返回式。"}
+  A17: {verdict: SUPPORTS, note: "msleep 循环以 schedule_timeout_uninterruptible 的返回值作为下一轮 timeout。"}
+  A18: {verdict: SUPPORTS, note: "先写 TASK_UNINTERRUPTIBLE 再调用 schedule_timeout。"}
+  A19: {verdict: SUPPORTS, note: "case MAX_SCHEDULE_TIMEOUT 分支 schedule(); goto out。"}
+  A20: {verdict: SUPPORTS, note: "wait_for_completion 以 MAX_SCHEDULE_TIMEOUT 调 wait_for_common；后者把 schedule_timeout 作为 action（completion.h）。"}
+  A21: {verdict: SUPPORTS, note: "__prepare_to_swait：节点自指时 list_header_add_to_tail。"}
+  A22: {verdict: SUPPORTS, note: "list_header_add_to_tail 增加 count。"}
+  A23: {verdict: SUPPORTS, note: "swake_up_locked 以 count 判空，取 anchor.next 容器，唤醒后 list_del_init（不带头计数）。"}
+  A24: {verdict: SUPPORTS_WITH_NOTE, note: "list_del_init 只改链接并自指，不改 count；其 __list_del_entry_valid 在链接不一致时是 while(...); 自旋而不是报错返回。"}
+  A25: {verdict: SUPPORTS, note: "list_header_is_empty 只读 count。"}
+  A26: {verdict: SUPPORTS, note: "__finish_swait 仅在节点非自指时调用带 count 的 list_header_delete_node。"}
+  A27: {verdict: SUPPORTS, note: "宏展开为 list_first_entry(&anchor, ...) -> container_of(anchor.next, ...)，不检查 count 或 anchor。"}
+  A28: {verdict: SUPPORTS, note: "HPET_handler 前两条活动语句 jiffies++; do_timer(1);。"}
+  A29: {verdict: SUPPORTS, note: "do_timer 唯一语句 jiffies_64 += ticks。"}
+  A30: {verdict: SUPPORTS, note: "kernel.lds 第17行顶层赋值（SECTIONS 之外）。"}
+  A31: {verdict: SUPPORTS_WITH_NOTE, note: "kernel 目标以 -T arch/${ARCH}/kernel.lds 链接；ARCH 缺省在 options_flags.cmake 设为 x86_64。未运行 CMake。"}
+  A32: {verdict: SUPPORTS, note: "LVT_timer_handler 递增 lvt_count，不触及 jiffies。"}
+  A33: {verdict: SUPPORTS, note: "取下一任务的整个分支以 running_lhdr.count > 0 为合取条件。"}
+  A34: {verdict: SUPPORTS, note: "retval 默认 current；分支不执行时 rq->curr = retval 并返回 current。"}
+  A35: {verdict: SUPPORTS_WITH_NOTE, note: "定义位于 #ifdef CONFIG_BUG 内；CONFIG_BUG 由 A01 的 -DCONFIG_BUG 定义；所读快照中 WARN_ON 只有这一处活动 #define（其余为注释）。"}
+  A36: {verdict: SUPPORTS, note: "顶层 QEMU 命令续行；同一命令另有 -smp 1 与 -S；该 drive 行无 readonly/snapshot。"}
+  A37: {verdict: SUPPORTS, note: "顶层 for 循环中 nc -z 成功即 log_ready；另一分支用 /dev/tcp 探测，含义相同（端口可连）。"}
+  A38: {verdict: SUPPORTS_WITH_NOTE, note: "同样三行也出现在 arch_atomic_sub_test_zero（第170行）；单纯 grep -F 会命中两处，定义体边界定位到第274行 arch_atomic_add_test_negative。"}
+  A39: {verdict: SUPPORTS, note: "arch_spin_trylock 只读 val 并比较 head/tail，无写入。"}
+  A40: {verdict: SUPPORTS, note: "rest_init 在两次 kernel_thread 之后 complete(&kthreadd_done)。"}
+  A41: {verdict: SUPPORTS, note: "kernel_init 首条语句等待 kthreadd_done。"}
+  A42: {verdict: SUPPORTS, note: "complete 在锁内 done++ 后调用 swake_up_locked。"}
+  A43: {verdict: SUPPORTS, note: "process_timeout 取容器后 wake_up_process(timeout->task)。"}
+  A44: {verdict: SUPPORTS_WITH_NOTE, note: "pick_next_task 在同文件第976行 #define 为 __pick_next_task。"}
+  A45: {verdict: SUPPORTS, note: "prev != next 分支调用 context_switch。"}
+  A46: {verdict: PARTIAL_BOUNDARY, note: "语义支持“根 CMake 递归收集源码”；但第二行 file(GLOB_RECURSE KERNEL_ASM_SRCS ...) 是另一个变量的定义，落在所标符号 KERNEL_C_SRCS 的定义（第30行单行命令）之外，按 P2 定义体规则为部分失败。"}
+  A47: {verdict: SUPPORTS_WITH_NOTE, note: "SYM_CODE_START(AP_DEBUG) 后第124行 jmp .；定义体终点按“下一个 SYM_*_START/列0标签/EOF”启发式确定。"}

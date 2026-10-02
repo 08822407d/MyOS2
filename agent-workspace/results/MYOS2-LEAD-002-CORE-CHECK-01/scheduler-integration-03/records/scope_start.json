@@ -1,0 +1,141 @@
+{
+ "check": "SCOPE_INTEGRATION_03",
+ "mode": "start",
+ "pins": {
+  "time": "a039d9803ade",
+  "master": "de3bb1df906a",
+  "lead_prev": "6706013a079a",
+  "lead": "40bc4faa4202",
+  "reviewed": "f36b89b8a53a",
+  "witness_results": "5078686e8267"
+ },
+ "contract_fields": {
+  "packet_id": [
+   "MYOS2-LEAD-002-CORE-CHECK-01",
+   true
+  ],
+  "followup_id": [
+   "CORE-SCHED-INTEGRATION-03",
+   true
+  ],
+  "required_review_record": [
+   "CORE-SCHED-ORDER-02-REVIEW-001",
+   true
+  ],
+  "reviewed_execution_short12": [
+   "f36b89b8a53a",
+   true
+  ],
+  "witness_results_frozen_short12": [
+   "5078686e8267",
+   true
+  ],
+  "kernel_short12": [
+   "a039d9803ade",
+   true
+  ],
+  "execution_branch": [
+   "claude/dazzling-cori-q0dnyt",
+   true
+  ],
+  "initial_execution_pr": [
+   17,
+   true
+  ],
+  "allowed_write_prefix": [
+   "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/",
+   true
+  ],
+  "acceptance_ceiling": [
+   "PASS_PENDING_LOCAL",
+   true
+  ],
+  "kernel_change_authorized": [
+   false,
+   true
+  ],
+  "kernel_patch_production_authorized": [
+   false,
+   true
+  ],
+  "host_fixture_execution_authorized": [
+   false,
+   true
+  ]
+ },
+ "review_fields": {
+  "record_id": [
+   "CORE-SCHED-ORDER-02-REVIEW-001",
+   true
+  ],
+  "packet_id": [
+   "MYOS2-LEAD-002-CORE-CHECK-01",
+   true
+  ],
+  "followup_id": [
+   "CORE-SCHED-ORDER-02",
+   true
+  ],
+  "reviewed_pr": [
+   17,
+   true
+  ],
+  "reviewed_branch": [
+   "claude/dazzling-cori-q0dnyt",
+   true
+  ],
+  "reviewed_commit_short12": [
+   "f36b89b8a53a",
+   true
+  ],
+  "results_frozen_short12": [
+   "5078686e8267",
+   true
+  ],
+  "acceptance_verdict": [
+   "PASS_PENDING_LOCAL",
+   true
+  ],
+  "remaining_return_items_in_contract15": [
+   [],
+   true
+  ],
+  "next_followup": [
+   "CORE-SCHED-INTEGRATION-03",
+   true
+  ]
+ },
+ "lead_changes_prev_to_pin": [
+  "A\t16-scheduler-integration-contract.md",
+  "A\tcheckpoints/2026-10-02-scheduler-witness-reviewed-integration-ready.md",
+  "A\treviews/CORE-SCHED-ORDER-02-review.md"
+ ],
+ "remote_lead_short12": "40bc4faa4202",
+ "remote_lead_changes_after_pin": [],
+ "branch": "claude/dazzling-cori-q0dnyt",
+ "head_short12": "f36b89b8a53a",
+ "index_vs_f36": [],
+ "worktree_outside_prefix": [],
+ "remote_branch_short12": "f36b89b8a53a",
+ "remote_branch_relation": "equal",
+ "remote_time_equals_pin": true,
+ "remote_master_equals_pin": true,
+ "order02_manifest_at_f36": {
+  "bytes": 14153,
+  "followup_id": "CORE-SCHED-ORDER-02"
+ },
+ "gate": {
+  "contract_binding": true,
+  "review_binding": true,
+  "lead_pin_advanced_by_additions_only": true,
+  "remote_lead_appends_only_after_pin": true,
+  "on_execution_branch": true,
+  "head_contains_f36": true,
+  "f36_files_unchanged_only_additions_under_prefix": true,
+  "worktree_clean_outside_prefix": true,
+  "remote_on_same_line": true,
+  "kernel_source_equals_pin": true,
+  "order02_manifest_present": true,
+  "ok": true
+ }
+}

@@ -1,0 +1,242 @@
+{
+ "check": "MM_BASELINE_04_SCOPE",
+ "mode": "stage",
+ "pins": {
+  "time": "a039d9803ade",
+  "master": "de3bb1df906a",
+  "lead": "c2176ad4da02",
+  "reviewed": "ee9e6a738224",
+  "integration_results": "b7fa83583e35"
+ },
+ "work_branch": "claude/dazzling-cori-q0dnyt",
+ "prefix": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/",
+ "lead_remote_head_short12": "c2176ad4da02",
+ "lead_relation": "equal",
+ "contract_fields": {
+  "followup_id": {
+   "want": "CORE-MM-BASELINE-04",
+   "got": "CORE-MM-BASELINE-04",
+   "ok": true
+  },
+  "reviewed_execution_short12": {
+   "want": "ee9e6a738224",
+   "got": "ee9e6a738224",
+   "ok": true
+  },
+  "integration_results_frozen_short12": {
+   "want": "b7fa83583e35",
+   "got": "b7fa83583e35",
+   "ok": true
+  },
+  "kernel_short12": {
+   "want": "a039d9803ade",
+   "got": "a039d9803ade",
+   "ok": true
+  },
+  "execution_branch": {
+   "want": "claude/dazzling-cori-q0dnyt",
+   "got": "claude/dazzling-cori-q0dnyt",
+   "ok": true
+  },
+  "initial_execution_pr": {
+   "want": 17,
+   "got": 17,
+   "ok": true
+  },
+  "allowed_write_prefix": {
+   "want": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/",
+   "got": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/",
+   "ok": true
+  },
+  "kernel_change_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "kernel_patch_production_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "host_fixture_execution_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "full_kernel_build_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "candidate_A_adopted": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "candidate_B_adopted": {
+   "want": false,
+   "got": false,
+   "ok": true
+  },
+  "required_review_record": {
+   "want": "CORE-SCHED-INTEGRATION-03-REVIEW-001",
+   "got": "CORE-SCHED-INTEGRATION-03-REVIEW-001",
+   "ok": true
+  }
+ },
+ "review_fields": {
+  "record_id": {
+   "want": "CORE-SCHED-INTEGRATION-03-REVIEW-001",
+   "got": "CORE-SCHED-INTEGRATION-03-REVIEW-001",
+   "ok": true
+  },
+  "reviewed_commit_short12": {
+   "want": "ee9e6a738224",
+   "got": "ee9e6a738224",
+   "ok": true
+  },
+  "results_frozen_short12": {
+   "want": "b7fa83583e35",
+   "got": "b7fa83583e35",
+   "ok": true
+  },
+  "acceptance_verdict": {
+   "want": "RETURN",
+   "got": "RETURN",
+   "ok": true
+  },
+  "returned_items": {
+   "want": [
+    "IR-01",
+    "IR-02"
+   ],
+   "got": [
+    "IR-01",
+    "IR-02"
+   ],
+   "ok": true
+  },
+  "next_followup": {
+   "want": "CORE-MM-BASELINE-04",
+   "got": "CORE-MM-BASELINE-04",
+   "ok": true
+  },
+  "kernel_change_authorized": {
+   "want": false,
+   "got": false,
+   "ok": true
+  }
+ },
+ "remote_time_short12": "a039d9803ade",
+ "remote_master_short12": "de3bb1df906a",
+ "head_short12": "ee9e6a738224",
+ "head_contains_reviewed": true,
+ "master_contains_reviewed": false,
+ "changes_vs_reviewed": [
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/facts-and-dependencies.yaml",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/integration-03-disposition.md",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/memory-baseline.md",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/checker_probes.json",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/facts_check.json",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/queries.json",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/scope_start.json",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_facts_check.py",
+  "A\tagent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_scope.py"
+ ],
+ "changes_outside_rule": [],
+ "new_files": [
+  {
+   "path": "facts-and-dependencies.yaml",
+   "bytes": 148940,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "parse": "yaml_ok",
+   "ok": true
+  },
+  {
+   "path": "integration-03-disposition.md",
+   "bytes": 14400,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "ok": true
+  },
+  {
+   "path": "memory-baseline.md",
+   "bytes": 50335,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "ok": true
+  },
+  {
+   "path": "records/checker_probes.json",
+   "bytes": 2281,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": false,
+   "parse": "json_ok",
+   "ok": true
+  },
+  {
+   "path": "records/facts_check.json",
+   "bytes": 2340,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": false,
+   "parse": "json_ok",
+   "ok": true
+  },
+  {
+   "path": "records/queries.json",
+   "bytes": 83125,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": false,
+   "parse": "json_ok",
+   "ok": true
+  },
+  {
+   "path": "records/scope_start.json",
+   "bytes": 3192,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": false,
+   "parse": "json_ok",
+   "ok": true
+  },
+  {
+   "path": "scripts/mm_facts_check.py",
+   "bytes": 21655,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "provenance_header": true,
+   "ok": true
+  },
+  {
+   "path": "scripts/mm_scope.py",
+   "bytes": 10099,
+   "nul_or_zip": false,
+   "hex40": false,
+   "secret_pattern": false,
+   "model_marker": true,
+   "provenance_header": true,
+   "ok": true
+  }
+ ],
+ "new_scripts": [
+  "scripts/mm_facts_check.py",
+  "scripts/mm_scope.py"
+ ],
+ "all_ok": true
+}

@@ -1,0 +1,4269 @@
+# facts-and-dependencies.yaml — CORE-MM-BASELINE-04 (mm-baseline-04)
+# executor: Claude Code cloud session (claude.ai/code); model: unknown_or_not_attestable
+# generated from scratch data by the executor; anchors re-checked by scripts/mm_facts_check.py
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+produced_by: 'Claude Code cloud session (claude.ai/code); model: unknown_or_not_attestable'
+base_snapshot: kernel=time a039d9803ade；workspace=master de3bb1df906a；lead=agent/MYOS2-LEAD-002 c2176ad4da02；execution base ee9e6a738224
+inputs_read:
+- 'agent/MYOS2-LEAD-002 @ c2176ad4da02: 17-memory-baseline-contract.md, reviews/CORE-SCHED-INTEGRATION-03-review.md'
+- 'ee9e6a738224: scheduler-integration-03/MANIFEST.md, facts-and-regressions.yaml (candidate_changes, owner_decisions, future_regressions, gaps), integration.md (§2 C3, §4–§7), records/d01_index.json (definitions)'
+- 'master @ de3bb1df906a: results/MYOS2-DR-002/completeness.yaml (四子系统条目 ID), results/MYOS2-DR-003/deps.yaml (相交端点名), conventions.md §1–§2'
+- 'time @ a039d9803ade: mykernel/mm/{page_alloc,kmalloc,vm_map,fault}/ 主路径文件与 API 头, mm/mm_api.h, mm/misc/mm_init.c, mm/early/memblock.c(memblock_free_all), arch/x86_64/mm/fault.c, arch/x86_64/mm/init.c(mem_init,
+  alloc_low_pages), arch/x86_64/mm/vm_map/{mmap_arch.c,pgprot.c}, include/linux/kernel/mmap_lock.h, lib/list/double_list.h(header 原语), sched/forkexec/fork.c(dup_mmap, __mmput, copy_sighand, proc_caches_init),
+  sched/forkexec/exec.c(__bprm_mm_init), init/main.c, arch/x86_64/myos/interrupt.c(excep_hwint_context), lock_IPC/signal/signal.c(signal_wake_up_state), sched/scheduler/myos_rt.c(pick_next_task_myos), CMakeLists.txt,
+  scripts/{options_flags,target_kernel}.cmake; 其余由 queries 定点命中'
+status: final
+open_questions:
+- 见 gaps 中 status=open 的 9 项
+record_type: mm_static_baseline_with_integration03_disposition
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-MM-BASELINE-04
+executor: Claude Code cloud session (claude.ai/code)
+model: unknown_or_not_attestable
+date: '2026-10-02'
+pins:
+  kernel_time: a039d9803ade
+  workspace_master: de3bb1df906a
+  lead_object: c2176ad4da02
+  execution_base_reviewed: ee9e6a738224
+  integration_results_frozen: b7fa83583e35
+evidence_class: 静态源码盘点（git 对象只读查询 + 逐字引文 + 定点检索）+ 一次独立只读反驳式审查；没有编译、没有运行 C/ASM、内核或 QEMU。
+axes:
+  implementation_evidence: 本批证据状态，不是成熟度分数：declaration_only / partial_body / connected_body / not_located_in_scope / not_assessed
+  correctness_evidence: not_assessed / static_concern / bounded_prior_observation；static_concern 必须给出前提、路径、反证与 unknown
+  runtime_evidence: 本批统一 NOT_RUN
+  concurrency_evidence: not_assessed / source_only（没有 SMP 实测）
+  source_condition.resolution: not_conditional / resolved / partially_resolved / unknown
+edge_direction:
+  call: 调用方 → 被调用方
+  data: 读取/消费方 → 产生/提供方
+  init_order: 后执行或后可用者 → 必须先完成者
+  config: 受影响的代码 → 提供开关的配置
+  build: 被编译的代码 → 构建脚本
+inputs_old:
+  sources:
+  - path: agent-workspace/results/MYOS2-DR-002/completeness.yaml
+    object: master de3bb1df906a
+    read: 四个子系统条目及其 implemented_capabilities / obvious_missing 的 id 与 node 名；status/maturity/risk/evidence/notes 未导入
+  - path: agent-workspace/results/MYOS2-DR-003/deps.yaml
+    object: master de3bb1df906a
+    read: edges 中与 mm.page_alloc / mm.kmalloc / mm.vm_map / mm.fault 相交的端点名；evidence 目录、行号、hardness/confidence 未导入。该文件没有显式 nodes 列表，只有 summary.node_count 与 edges。
+  rule: 旧 ID 原样保留；本批新增的细粒度能力一律标 proposed_id，不改公共词汇表；旧证据路径、行号、溯源与可靠性判断都不复制。
+counts:
+  subsystems: 4
+  capabilities: 21
+  anchors: 80
+  edges: 39
+  link_breaks: 9
+  concerns: 20
+  dependency_risks: 6
+  queries: 43
+  next_validation_candidates: 6
+  gaps: 10
+  gaps_open: 9
+  capabilities_per_subsystem:
+    mm.page_alloc: 5
+    mm.kmalloc: 5
+    mm.vm_map: 6
+    mm.fault: 5
+  implementation_evidence:
+    connected_body: 16
+    declaration_only: 0
+    not_assessed: 0
+    not_located_in_scope: 0
+    partial_body: 5
+  refuted_claims: 5
+subsystems:
+- id: mm.page_alloc
+  old_id: mm.page_alloc
+  directory: mykernel/mm/page_alloc/
+  api_header: mykernel/mm/page_alloc/page_alloc_api.h（经 mm/mm_api.h 包含，Q01）
+  capabilities:
+  - mm.page_alloc.zone_layout
+  - mm.page_alloc.mm_core_init
+  - mm.page_alloc.buddy_alloc
+  - mm.page_alloc.buddy_free
+  - mm.page_alloc.folio_ref_release
+  current_effect: zoned buddy 的取块/拆分/释放/合并都有活动正文，并已被 slab、页表分配、缺页使用；但释放块永不合并（MC-01）、分配不加锁（MC-02）、put_page 不归还（MC-05）。
+  implementation_evidence: connected_body（folio 释放部分为 partial_body）
+  correctness_evidence: static_concern
+  runtime_evidence: NOT_RUN
+  concurrency_evidence: source_only
+  main_unknowns:
+  - 构建类型（Debug/Release）决定头文件内联函数的链接形式
+  - --gc-sections 后实际保留哪些函数
+  - 碎片化在实际运行中多久导致高阶分配失败
+- id: mm.kmalloc
+  old_id: mm.kmalloc
+  directory: mykernel/mm/kmalloc/
+  api_header: mykernel/mm/kmalloc/kmalloc_api.h（经 mm/mm_api.h 包含，Q01）
+  capabilities:
+  - mm.kmalloc.boot_init
+  - mm.kmalloc.object_allocator
+  - mm.kmalloc.object_free
+  - mm.kmalloc.size_classes_and_large
+  - mm.kmalloc.ctor_cache_state
+  current_effect: 单节点 SLUB 风格分配器：partial/full 两条链、按页分流、kmalloc 尺寸表齐全并被大量调用；释放可能丢掉仍有对象的 slab（MC-07）；空闲指针覆盖对象首 8 字节、不保留 ctor 状态（MC-08，本 pin 无可达有害后果）。
+  implementation_evidence: connected_body（ctor 支持为 partial_body）
+  correctness_evidence: static_concern
+  runtime_evidence: NOT_RUN
+  concurrency_evidence: source_only
+  main_unknowns:
+  - partial 链在实际负载下能否达到 min_partial
+  - 中断上下文是否调用 kmalloc
+- id: mm.vm_map
+  old_id: mm.vm_map
+  directory: mykernel/mm/vm_map/
+  api_header: mykernel/mm/vm_map/vm_map_api.h（经 mm/mm_api.h 包含，Q01）
+  capabilities:
+  - mm.vm_map.vma_list_lookup
+  - mm.vm_map.mmap_create
+  - mm.vm_map.unmapped_area_search
+  - mm.vm_map.munmap
+  - mm.vm_map.brk_stack_exec
+  - mm.vm_map.mm_lifecycle
+  current_effect: VMA 链表、mmap/munmap/brk、exec 建栈都有活动文本，ELF 装载在用；但只管 VMA，不撤销页表（MC-16），选址固定（MC-11），相交查询与合并有确定性缺陷（MC-13、MC-14、MC-15），无任何 mmap 锁（MC-18）。
+  implementation_evidence: connected_body（munmap、选址、生命周期为 partial_body）
+  correctness_evidence: static_concern
+  runtime_evidence: NOT_RUN
+  concurrency_evidence: source_only
+  main_unknowns:
+  - 实际用户程序是否为动态链接 PIE（MC-12）以及其 mmap 序列
+  - 多线程共享 mm 是否存在（CLONE_VM 用户）
+- id: mm.fault
+  old_id: mm.fault
+  directory: mykernel/mm/fault/（另含 arch/x86_64/mm/fault.c 入口与 mm/vm_map/filemap.c 的文件缺页回调）
+  api_header: mykernel/mm/fault/memfault_api.h（经 mm/mm_api.h 包含，Q01）
+  capabilities:
+  - mm.fault.arch_entry
+  - mm.fault.pgtable_walk
+  - mm.fault.anonymous
+  - mm.fault.file_backed
+  - mm.fault.cow
+  current_effect: '#PF→VMA→页表补齐→匿名/文件/COW 分派一条链完整，页来自 buddy；但任何未处理结果都在内核里自旋而不发信号（MC-23），匿名写页不清零（MC-21），栈不能靠缺页增长（MC-22），fork 后不刷 TLB（MC-25）。'
+  implementation_evidence: connected_body（共享写为占位自旋）
+  correctness_evidence: static_concern
+  runtime_evidence: NOT_RUN
+  concurrency_evidence: source_only
+  main_unknowns:
+  - 自旋中的任务能否被时钟中断换下（DR-01）
+  - 文件缺页之下的块 I/O 等待（DR-02）
+capabilities:
+- id: mm.page_alloc.zone_layout
+  id_status: proposed_id
+  old_refs: []
+  subsystem: mm.page_alloc
+  purpose: 按 max_low_pfn 给 DMA/DMA32/NORMAL 三个区定上限，分配 mem_map，并为每个区建好各阶空闲链表头。
+  entries:
+  - mykernel/arch/x86_64/kernel/setup.c::setup_arch（调用点，Q04）
+  - mykernel/mm/page_alloc/mmzone.c::zone_sizes_init
+  - mykernel/mm/misc/mm_init.c::free_area_init
+  key_helpers:
+  - calculate_node_totalpages
+  - alloc_node_mem_map
+  - memmap_init
+  normal_path: setup_arch 调 zone_sizes_init；后者写三个区的上限并调 free_area_init（A-PA01）。free_area_init 求节点页框范围、分配并清零 mem_map、按区 init 每个 page 和 free_area 链表头；calculate_node_totalpages 把 nr_zones 设为 MAX_NR_ZONES（A-PA02）。
+  failure_path: mem_map 分配失败时原地 while (1)（A-PA16），没有 panic 或返回值。
+  source_condition:
+    macros:
+    - CONFIG_ZONE_DMA
+    - CONFIG_ZONE_DMA32（options_flags.cmake 定义）
+    resolution: not_conditional
+    note: 'zone_type 枚举不受 #if 控制（A-PA03 的 cpp_conditions 为空），五个枚举值 DMA/DMA32/NORMAL/MOVABLE/DEVICE 恒存在；本批未发现 CONFIG_ZONE_* 改变区列表。'
+  anchors:
+  - A-PA01
+  - A-PA02
+  - A-PA03
+  - A-PA16
+  queries:
+  - Q04
+  edges:
+  - E02
+  - E03
+  - E04
+  concerns: []
+  dependency_risks: []
+  implementation_evidence:
+    value: connected_body
+    reason: 有调用者，正文从 zone_sizes_init 连到每页 init 与空闲链表头初始化。
+  correctness_evidence:
+    value: not_assessed
+    reason: 只核对了调用链与字段写入；未对 e820/memblock 输入做边界推演。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 启动期单 CPU 路径，未分析。
+  not_covered:
+  - memblock/e820 的输入正确性
+  - MOVABLE/DEVICE 区跨度为 0 只是由 max_zone_pfns 未赋值推断，未运行确认
+  - 区从 pfn 1 开始，pfn 0 不属于任何区；myos_page_zone 对区外 pfn 无返回值（阅读记录，未锚定，见 observed_not_anchored）
+- id: mm.page_alloc.mm_core_init
+  id_status: old_id_kept
+  old_refs:
+  - mm.page_alloc.mm_core_init (DR-003 节点)
+  subsystem: mm.page_alloc
+  purpose: 启动期把 memblock 记录的空闲内存交给 buddy，然后初始化 slab；决定“页分配器先可用、堆后可用”的顺序。
+  entries:
+  - mykernel/init/main.c::start_kernel（调用 mm_core_init，Q04）
+  - mykernel/mm/misc/mm_init.c::mm_core_init
+  - mykernel/arch/x86_64/mm/init.c::mem_init（Q04）
+  - mykernel/mm/early/memblock.c::memblock_free_all
+  - mykernel/mm/page_alloc/buddy.c::memblock_free_pages
+  key_helpers:
+  - memmap_init_reserved_pages
+  - __free_pages_ok
+  normal_path: mm_core_init 先 mem_init 再 kmem_cache_init（A-PA05）；mem_init 调 memblock_free_all（Q04）；后者把每段空闲区间按起点对齐切成 2 的幂块，逐块调 memblock_free_pages（A-PA04）；memblock_free_pages 清 Reserved、置引用计数 0、计入 managed_pages，再走普通释放路径
+    __free_pages_ok（Q05）。
+  failure_path: 无失败返回；块大小推导依赖 __ffs(start_pfn)，start_pfn 为 0 时 __ffs 结果未定义（阅读推断，未锚定；pfn 0 是否出现在空闲区间未核）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: '活动文本，无 #if。'
+  anchors:
+  - A-PA04
+  - A-PA05
+  queries:
+  - Q04
+  - Q05
+  edges:
+  - E03
+  - E05
+  - E06
+  concerns: []
+  dependency_risks: []
+  implementation_evidence:
+    value: connected_body
+    reason: 从 start_kernel 到 __free_pages_ok 的每一跳都有活动文本调用。
+  correctness_evidence:
+    value: not_assessed
+    reason: 块切分逻辑只做了阅读推演；启动期是否触发 MC-01 的合并路径见该疑点的 unknown。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 启动期单 CPU。
+  not_covered:
+  - memmap_init_reserved_pages 与 reserve_bootmem_region 的细节
+  - managed_pages 是否被任何分配逻辑读取
+- id: mm.page_alloc.buddy_alloc
+  id_status: proposed_id
+  old_refs:
+  - mm.page_alloc.zoned_buddy (DR-002)
+  - mm.page_alloc.buddy_system (DR-003)
+  subsystem: mm.page_alloc
+  purpose: 按阶从区空闲链表取连续页块，拆分多余部分放回低阶链表，并按 gfp 选区与清零。
+  entries:
+  - mykernel/mm/page_alloc/mempolicy.c::alloc_pages
+  - mykernel/mm/page_alloc/buddy.c::__myos_alloc_pages
+  - mykernel/mm/page_alloc/buddy.c::__get_free_pages / get_zeroed_page
+  key_helpers:
+  - __rmqueue_smallest
+  - expand
+  - prep_new_page
+  - post_alloc_hook
+  - prep_compound_page
+  normal_path: alloc_pages 直接调 __myos_alloc_pages（Q05）；按 GFP_DMA/GFP_DMA32 决定起始下标，依次试 NORMAL→DMA32→DMA（A-PA06）；__rmqueue_smallest 从请求阶向上找非空链表，摘下块头后 expand 把多余的一半一半挂回低阶链表，并给 1<<order 个页加引用（A-PA07）；prep_new_page
+    按 __GFP_ZERO 清零、按 __GFP_COMP 组复合页。
+  failure_path: order > MAX_ORDER 返回 NULL；所有区都没有该阶块时返回 NULL，但循环上界是 nr_zones=5 而偏好表只有 3 项（MC-04）。
+  source_condition:
+    macros:
+    - MAX_ORDER（未定义 CONFIG_FORCE_MAX_ZONEORDER 时为 10）
+    resolution: resolved
+    note: options_flags.cmake 未定义 CONFIG_FORCE_MAX_ZONEORDER，MAX_ORDER=10、NR_PAGE_ORDERS=11（阅读 mmzone_const.h）。
+  anchors:
+  - A-PA06
+  - A-PA07
+  - A-PA08
+  - A-PA09
+  queries:
+  - Q05
+  - Q07
+  - Q08
+  - Q09
+  edges:
+  - E04
+  - E08
+  - E09
+  - E12
+  - E30
+  - E34
+  - E36
+  - E38
+  concerns:
+  - MC-02
+  - MC-03
+  - MC-04
+  dependency_risks:
+  - DR-05
+  implementation_evidence:
+    value: connected_body
+    reason: 入口、取块、拆分、引用计数、清零与复合页准备都有正文且相连。
+  correctness_evidence:
+    value: static_concern
+    reason: 无锁分配（MC-02）、高阶清零偏移（MC-03）、全部失败时越界读偏好表（MC-04）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 分配侧不取 zone->lock，释放侧取（Q07）；只有源码依据，无 SMP 或中断并发实测。
+  not_covered:
+  - 水位、回收、OOM、per-CPU 页表：本批未逐项检索，阅读所及未见活动实现（不作结论）
+  - 复合页尾页标志在释放时的处理
+- id: mm.page_alloc.buddy_free
+  id_status: proposed_id
+  old_refs:
+  - mm.page_alloc.zoned_buddy (DR-002)
+  - mm.page_alloc.buddy_system (DR-003)
+  subsystem: mm.page_alloc
+  purpose: 把页块还给区空闲链表，并与同阶空闲伙伴合并成更高阶块。
+  entries:
+  - mykernel/mm/page_alloc/buddy.c::__free_pages
+  - mykernel/mm/page_alloc/buddy.c::free_pages
+  key_helpers:
+  - __free_pages_ok
+  - __myos_free_one_page
+  - find_buddy_page_pfn
+  - page_is_buddy
+  - free_pages_prepare
+  normal_path: __free_pages → __free_pages_ok：清标志后在 zone->lock 内调 __myos_free_one_page（A-PA10）；该函数逐阶找伙伴、算合并后的起点（A-PA11），最后给合并块设阶并挂到对应链表（A-PA12）。
+  failure_path: 不检查引用计数、阶数是否匹配或复合页尾页；伙伴判断依赖 PageBuddy（A-PA13），而 PageBuddy 需要 page_type 的类型基值（A-PA17），page_type 从不被设置成该基值（A-PA18；mm 内只有按位清置 PG_buddy/PG_table 与 _mapcount 自增，Q34），所以合并分支永不进入（MC-01）。
+  source_condition:
+    macros:
+    - BUDDY_DEFINATION / DEBUG
+    resolution: partially_resolved
+    note: 'buddy.h 的内联函数位于 #if defined(BUDDY_DEFINATION) || !(DEBUG) 内（A-PA13）：Debug 构建由 buddy.c 定义、其他单元 extern 引用，非 Debug 构建为各单元 static inline；两种情况正文相同，只是链接形式不同。实际构建类型未知。'
+  anchors:
+  - A-PA10
+  - A-PA11
+  - A-PA12
+  - A-PA13
+  - A-PA17
+  - A-PA18
+  queries:
+  - Q05
+  - Q06
+  - Q07
+  - Q34
+  edges:
+  - E05
+  - E07
+  - E08
+  - E10
+  - E13
+  concerns:
+  - MC-01
+  dependency_risks:
+  - DR-05
+  implementation_evidence:
+    value: connected_body
+    reason: 释放正文完整并被 kmalloc、启动交接等路径调用；合并循环有正文，但缺“摘伙伴”步骤，且因 PageBuddy 恒假而不可达（MC-01）。
+  correctness_evidence:
+    value: static_concern
+    reason: 释放块永不合并，合并循环另有潜伏的“不摘伙伴”缺陷（MC-01）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 释放在 zone->lock + 关中断内；与无锁的分配侧没有互斥（MC-02）。
+  not_covered:
+  - free_pages_prepare 的返回值语义（函数体无 return，调用者不读，阅读记录）
+- id: mm.page_alloc.folio_ref_release
+  id_status: proposed_id
+  old_refs: []
+  subsystem: mm.page_alloc
+  purpose: 按引用计数释放页（put_page/folio_put），供缺页、COW 等路径交还页。
+  entries:
+  - mykernel/mm/page_alloc/buddy.h::folio_put / put_page
+  - mykernel/mm/page_alloc/buddy.c::__folio_put
+  key_helpers:
+  - folio_get
+  - page_ref_inc/dec
+  normal_path: folio_put 在引用降到 0 时调 __folio_put（A-PA14）。
+  failure_path: __folio_put 函数体全部被注释（A-PA15），降到 0 后什么也不做。
+  source_condition:
+    macros:
+    - BUDDY_DEFINATION / DEBUG
+    resolution: partially_resolved
+    note: 'folio_put 在 #if defined(BUDDY_DEFINATION) || !(DEBUG) 内，同上；构建类型未知。'
+  anchors:
+  - A-PA14
+  - A-PA15
+  queries:
+  - Q40
+  edges:
+  - E39
+  concerns:
+  - MC-05
+  dependency_risks: []
+  implementation_evidence:
+    value: partial_body
+    reason: 计数递减有正文，归还 buddy 的部分为空函数体。
+  correctness_evidence:
+    value: static_concern
+    reason: 经 put_page/folio_put 释放的页永不回到 buddy（MC-05）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 原子递减本身未分析。
+  not_covered:
+  - 哪些页实际走 folio_put（只核了 fault.c 的 COW/读缺页释放点）
+- id: mm.kmalloc.boot_init
+  id_status: proposed_id
+  old_refs: []
+  subsystem: mm.kmalloc
+  purpose: 启动期用静态 boot cache 自举出 kmem_cache 的 cache，再建 kmalloc 各尺寸 cache。
+  entries:
+  - mykernel/mm/misc/mm_init.c::mm_core_init（A-PA05）
+  - mykernel/mm/kmalloc/slub.c::kmem_cache_init
+  key_helpers:
+  - create_boot_cache
+  - bootstrap
+  - create_kmalloc_caches
+  - create_kmalloc_cache
+  normal_path: kmem_cache_init 用静态 boot_kmem_cache 建 "kmem_cache"，再 bootstrap 把它搬到 slab 分配的对象里（A-KM01），随后 create_kmalloc_caches 建下标 1..KMALLOC_SHIFT_HIGH 的尺寸 cache（阅读记录）。
+  failure_path: create_boot_cache 失败调 panic（阅读记录）；bootstrap 中 kmem_cache_zalloc 失败未检查（阅读记录）。
+  source_condition:
+    macros:
+    - KMALLOC_SHIFT_HIGH=(PAGE_SHIFT+1)
+    - KMALLOC_MAX_CACHE_SIZE=PAGE_SIZE
+    resolution: resolved
+    note: 两个宏为无条件定义（A-KM02 cpp_conditions 为空）。
+  anchors:
+  - A-KM01
+  - A-KM02
+  queries:
+  - Q04
+  edges:
+  - E06
+  concerns: []
+  dependency_risks: []
+  implementation_evidence:
+    value: connected_body
+    reason: 有调用者（mm_core_init），自举与尺寸 cache 建立均有正文。
+  correctness_evidence:
+    value: not_assessed
+    reason: bootstrap 未修正首个 slab 的 slab_cache 指针（阅读记录，未锚定，见 observed_not_anchored），本批未展开。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 启动期。
+  not_covered:
+  - slab_state 各状态的消费者
+  - kmalloc_info 下标与尺寸映射的完整核对
+- id: mm.kmalloc.object_allocator
+  id_status: old_id_kept
+  old_refs:
+  - mm.kmalloc.object_allocator (DR-003 节点)
+  - mm.kmalloc.slub_and_size_classes (DR-002)
+  subsystem: mm.kmalloc
+  purpose: 从 cache 的部分空闲 slab 取对象；没有时向页分配器要新 slab 并串好空闲链。
+  entries:
+  - mykernel/mm/kmalloc/slub.c::kmem_cache_alloc
+  - mykernel/mm/kmalloc/slub.h::kmem_cache_zalloc
+  key_helpers:
+  - slab_alloc
+  - get_from_partial_list
+  - alloc_single_from_partial
+  - alloc_init_new_slab
+  - alloc_slab
+  - online_new_empty_slab
+  - slab_post_alloc_hook
+  normal_path: slab_alloc 先在 list_lock 内从 partial 链取对象，取不到就 alloc_init_new_slab 再挂上 partial 链（A-KM06）；新 slab 的页来自 alloc_pages（A-KM05），对象用写在对象内 s->offset 处的指针串成空闲链（A-KM03、A-KM04）；__GFP_ZERO 时按 object_size
+    清零。
+  failure_path: alloc_pages 失败返回 NULL；get_freepointer/set_freepointer 遇到无效指针原地 while 自旋（阅读记录）。
+  source_condition:
+    macros:
+    - CONFIG_SLUB
+    - SLUB_DEFINATION / DEBUG
+    resolution: partially_resolved
+    note: 'CONFIG_SLUB 在 options_flags.cmake 定义；slub.h 内联函数受 #if defined(SLUB_DEFINATION) || !(DEBUG) 控制，构建类型未知。'
+  anchors:
+  - A-KM03
+  - A-KM04
+  - A-KM05
+  - A-KM06
+  queries:
+  - Q10
+  - Q13
+  - Q36
+  edges:
+  - E09
+  - E11
+  - E14
+  - E18
+  concerns:
+  - MC-08
+  dependency_risks:
+  - DR-04
+  implementation_evidence:
+    value: connected_body
+    reason: 分配、建 slab、串空闲链、取页全部有活动文本。
+  correctness_evidence:
+    value: static_concern
+    reason: 空闲指针固定在对象偏移 0 且首对象不跑构造函数（MC-08）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: partial/full 链在 n->list_lock + 关中断内修改；没有 per-CPU 快路径。
+  not_covered:
+  - alloc_slab 中 PG_head 自旋检查的可达性
+  - gfp_allowed_mask 在启动早期屏蔽了哪些位
+- id: mm.kmalloc.object_free
+  id_status: proposed_id
+  old_refs:
+  - mm.kmalloc.slub_and_size_classes (DR-002)
+  subsystem: mm.kmalloc
+  purpose: 把对象放回所在 slab，必要时把 slab 从 full 链移回 partial 链，或整块还给页分配器。
+  entries:
+  - mykernel/mm/kmalloc/slub.c::kmem_cache_free
+  key_helpers:
+  - slab_free
+  - free_to_partial_list
+  - free_single_to_partial
+  - offline_exceeded_empty_slab
+  - free_slab
+  normal_path: kmem_cache_free 用 virt_to_slab 找 slab，free_to_partial_list 在 list_lock 内归还对象（A-KM08）；锁外判断 inuse==0 或 partial 链过长则下线并 free_slab（A-KM07），free_slab 调 __free_pages（Q13）。
+  failure_path: 不检查对象是否属于该 cache、是否重复释放（kmem_cache_free 内 cache_from_obj 被注释，阅读记录）。
+  source_condition:
+    macros:
+    - MIN_PARTIAL=4
+    - MAX_PARTIAL=8
+    resolution: resolved
+    note: slub_const.h 无条件定义（阅读记录）。
+  anchors:
+  - A-KM07
+  - A-KM08
+  - A-KM09
+  queries:
+  - Q13
+  edges:
+  - E10
+  concerns:
+  - MC-07
+  dependency_risks: []
+  implementation_evidence:
+    value: connected_body
+    reason: 归还、链表迁移、整 slab 释放都有正文。
+  correctness_evidence:
+    value: static_concern
+    reason: partial 链过长时会释放仍有存活对象的 slab，且判断在锁外（MC-07）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 归还在锁内，下线判断在锁外。
+  not_covered:
+  - cache 销毁/收缩接口（未检索到，阅读记录）
+- id: mm.kmalloc.size_classes_and_large
+  id_status: proposed_id
+  old_refs:
+  - mm.kmalloc.slub_and_size_classes (DR-002)
+  subsystem: mm.kmalloc
+  purpose: kmalloc/kzalloc/kcalloc/kfree：小于等于一页走尺寸 cache，大于一页直接按阶要页。
+  entries:
+  - mykernel/mm/kmalloc/slub.h::kmalloc / kzalloc / kmalloc_array / kcalloc / kfree
+  - mykernel/mm/kmalloc/slab_common.c::__kmalloc / kmalloc_slab / kmalloc_large / free_large_kmalloc
+  key_helpers:
+  - size_to_index
+  normal_path: kmalloc 按 KMALLOC_MAX_CACHE_SIZE(=PAGE_SIZE) 分流（A-KM10、A-KM02）：小的经 __kmalloc→kmalloc_slab 找 cache，大的 kmalloc_large 以 __GFP_COMP 要页（Q13）；kfree 看页是否带 slab 标志决定还给 cache 还是按阶还页（A-KM11）。
+  failure_path: kmalloc(0) 返回 NULL；__kmalloc 对超过一页的尺寸原地自旋（A-KM12），非常量的 kmalloc_array/kcalloc 会直接进入它（A-KM13，MC-09）。
+  source_condition:
+    macros:
+    - SLUB_DEFINATION / DEBUG
+    resolution: partially_resolved
+    note: 'kmalloc/kfree 在 slub.h 的 #if defined(SLUB_DEFINATION) || !(DEBUG) 内（A-KM10 的 cpp_conditions）；构建类型未知。'
+  anchors:
+  - A-KM02
+  - A-KM10
+  - A-KM11
+  - A-KM12
+  - A-KM13
+  queries:
+  - Q13
+  - Q14
+  - Q36
+  edges:
+  - E11
+  - E12
+  - E13
+  - E14
+  concerns:
+  - MC-09
+  dependency_risks: []
+  implementation_evidence:
+    value: connected_body
+    reason: 分流、尺寸查表、大块分配与释放都有正文。
+  correctness_evidence:
+    value: static_concern
+    reason: 非常量大尺寸的数组分配会自旋（MC-09）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 无自身锁，依赖 cache 与页分配器。
+  not_covered:
+  - size_to_index 表与 kmalloc_info 的逐项对应
+  - free_large_kmalloc 对 0 阶 folio 的告警路径
+- id: mm.kmalloc.ctor_cache_state
+  id_status: proposed_id
+  old_refs: []
+  subsystem: mm.kmalloc
+  purpose: 带构造函数的 cache：对象状态由 ctor 初始化，并期望在分配/释放之间保持。
+  entries:
+  - mykernel/mm/kmalloc/slab_common.c::kmem_cache_create（ctor 参数）
+  - 带 ctor 的创建者（Q11）：sched/forkexec/fork.c::proc_caches_init（sighand_ctor）、block/bdev.c::bdev_cache_init（init_once）、fs/vfs/shmem.c::shmem_init_inodecache（shmem_init_inode）
+  key_helpers:
+  - setup_object
+  - set_freepointer
+  - sighand_ctor
+  normal_path: kmem_cache_create 把 ctor 存进 cache；新 slab 建链时对首对象之后的对象调 setup_object（ctor），随后把空闲指针写进对象的 s->offset（A-KM03、A-KM04）。
+  failure_path: s->offset 没有任何赋值（Q10 负检索），各 cache 的 offset 均为 0，ctor 写在对象开头的状态会被空闲指针覆盖；三个带 ctor 的 cache 在本 pin 都没有因此出错的使用者：sighand 对象分配后并不安装（A-KM14，DR-04），bdev 的 ctor 为空，shmem 分配后重新初始化（审查代理）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 活动文本。
+  anchors:
+  - A-KM03
+  - A-KM04
+  - A-KM14
+  queries:
+  - Q10
+  - Q11
+  - Q12
+  - Q33
+  edges:
+  - E15
+  concerns:
+  - MC-08
+  dependency_risks:
+  - DR-04
+  implementation_evidence:
+    value: partial_body
+    reason: ctor 被保存并调用，但对象布局不保留 ctor 状态，首对象不调用 ctor。
+  correctness_evidence:
+    value: static_concern
+    reason: 见 MC-08 与 DR-04。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析。
+  not_covered:
+  - SLAB_TYPESAFE_BY_RCU 语义（MyOS2 无 RCU 回收路径，未展开）
+- id: mm.vm_map.vma_list_lookup
+  id_status: proposed_id
+  old_refs:
+  - mm.vm_map.vma_and_syscalls (DR-002)
+  subsystem: mm.vm_map
+  purpose: 用按地址排序的双链表保存 VMA，并提供包含查询、相交查询、前后遍历。
+  entries:
+  - mykernel/mm/vm_map/util.c::__vma_link_to_list / __vma_unlink_from_list
+  - mykernel/mm/vm_map/vm_map.h::simple_find_vma / find_vma_intersection / find_vma_prev_to_addr / vma_lookup
+  key_helpers:
+  - vma_next_vma
+  - vma_prev_vma
+  - mm_next_vma
+  - mm_prev_vma
+  - for_each_vma(_topdown)
+  normal_path: simple_find_vma 只返回包含 addr 的 VMA（A-FT06）；find_vma_intersection 先找 vm_end 严格小于 start 的最后一个 VMA，再只检查它的后继（A-VM08、A-VM09）。
+  failure_path: vma_next_vma(NULL) 原地自旋（A-VM06）；链表操作前用 while 自旋断言成员关系（阅读记录）。
+  source_condition:
+    macros:
+    - VM_MAP_DEFINATION / DEBUG
+    resolution: partially_resolved
+    note: 'vm_map.h 的查询函数位于 #if defined(VM_MAP_DEFINATION) || !(DEBUG) 内（A-VM08 cpp_conditions）；构建类型未知。'
+  anchors:
+  - A-VM06
+  - A-VM08
+  - A-VM09
+  - A-FT06
+  queries:
+  - Q38
+  edges:
+  - E21
+  - E22
+  - E28
+  concerns:
+  - MC-13
+  dependency_risks:
+  - DR-05
+  implementation_evidence:
+    value: connected_body
+    reason: 链表与查询正文完整，被 mmap/munmap/缺页使用。
+  correctness_evidence:
+    value: static_concern
+    reason: 相交查询会漏掉相交 VMA（MC-13）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 没有任何锁保护 VMA 链（mmap 锁为空函数，A-VM02）。
+  not_covered:
+  - 没有平衡树/maple tree；mm_mt 只是链表头（阅读记录）
+- id: mm.vm_map.mmap_create
+  id_status: proposed_id
+  old_refs:
+  - mm.vm_map.vma_and_syscalls (DR-002)
+  subsystem: mm.vm_map
+  purpose: mmap(2)：检查参数与文件权限，选地址，清掉该范围旧映射，合并或新建 VMA 并挂到链表；文件映射交给文件的 mmap 钩子设 vm_ops。
+  entries:
+  - mykernel/mm/vm_map/mmap.c::MYOS_SYSCALL_DEFINE6(mmap)
+  - mykernel/mm/vm_map/util.c::vm_mmap / vm_mmap_pgoff
+  - mykernel/mm/vm_map/mmap.c::do_mmap / simple_mmap_region
+  key_helpers:
+  - __get_unmapped_area
+  - simple_munmap_vma_range
+  - simple_vma_merge
+  - vm_area_alloc
+  - call_mmap
+  - simple_vma_link
+  normal_path: 系统调用经 vm_mmap_pgoff 调 do_mmap（Q16、A-VM01）；do_mmap 求 vm_flags、取地址、校验文件权限后调 simple_mmap_region；后者先 simple_munmap_vma_range 清掉该范围（A-VM03），能合并则调整已有 VMA，否则 vm_area_alloc（Q15）新建，文件映射调 call_mmap→generic_file_mmap
+    设 vm_ops（Q17）。
+  failure_path: MAP_ANONYMOUS|MAP_HUGETLB 在系统调用入口原地 while (1)（A-VM17）；合并路径可能读未初始化指针（MC-14）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 活动文本。
+  anchors:
+  - A-VM01
+  - A-VM02
+  - A-VM03
+  - A-VM10
+  - A-VM11
+  - A-VM17
+  - A-VM18
+  queries:
+  - Q15
+  - Q16
+  - Q17
+  - Q21
+  - Q36
+  - Q37
+  edges:
+  - E16
+  - E17
+  - E18
+  - E19
+  - E20
+  - E21
+  - E23
+  concerns:
+  - MC-14
+  - MC-18
+  dependency_risks:
+  - DR-05
+  implementation_evidence:
+    value: connected_body
+    reason: 系统调用到 VMA 入链与文件钩子全程有活动文本。
+  correctness_evidence:
+    value: static_concern
+    reason: 合并时目标指针可能未初始化（MC-14）；无任何 mmap 锁（MC-18）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: mmap_write_lock_killable 恒返回 0、unlock 为空（A-VM02 所在头文件）。
+  not_covered:
+  - shmem_zero_setup（共享匿名映射）
+  - VM_DROPPABLE 等分支
+  - do_mmap 对可读映射一律加 PROT_EXEC（阅读记录，未锚定）
+- id: mm.vm_map.unmapped_area_search
+  id_status: proposed_id
+  old_refs:
+  - mm.vm_map.vma_and_syscalls (DR-002)
+  subsystem: mm.vm_map
+  purpose: 为非 MAP_FIXED 的映射在 mmap_base 以下找一段空闲地址。
+  entries:
+  - mykernel/mm/vm_map/mmap.c::__get_unmapped_area
+  - mykernel/mm/vm_map/mmap.c::simple_get_unmapped_area
+  - mykernel/mm/vm_map/mmap.c::simple_find_vm_unmapped_area_topdown
+  key_helpers:
+  - arch_pick_mmap_layout
+  normal_path: mm->get_unmapped_area 被设为 simple_get_unmapped_area、mmap_base 为 TASK_UNMAPPED_BASE（A-VM07）；有提示地址且不在任何 VMA 内时直接采用，否则调 topdown 搜索。
+  failure_path: topdown 搜索结果被条件里的赋值覆盖，总返回 (mmap_base - len) 页对齐（A-VM05，MC-11）；遍历耗尽时以 NULL 调 vma_next_vma 自旋（A-VM04，MC-12）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: Q18：没有文件系统提供 get_unmapped_area 钩子的活动赋值。
+  anchors:
+  - A-VM04
+  - A-VM05
+  - A-VM06
+  - A-VM07
+  queries:
+  - Q18
+  - Q37
+  edges:
+  - E16
+  concerns:
+  - MC-11
+  - MC-12
+  dependency_risks: []
+  implementation_evidence:
+    value: partial_body
+    reason: 搜索循环有正文，但结果被覆盖，实际行为等于固定地址。
+  correctness_evidence:
+    value: static_concern
+    reason: 见 MC-11、MC-12。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 只读遍历，依赖 VMA 链本身。
+  not_covered:
+  - bottomup 版本没有调用者（阅读记录）
+  - 提示地址只检查起点不检查长度（阅读记录）
+- id: mm.vm_map.munmap
+  id_status: proposed_id
+  old_refs:
+  - mm.vm_map.vma_and_syscalls (DR-002)
+  subsystem: mm.vm_map
+  purpose: munmap(2) 与 mmap 内部的清范围：拆分边界 VMA、摘掉范围内的 VMA，并（按设计）撤销页表映射。
+  entries:
+  - mykernel/mm/vm_map/mmap.c::MYOS_SYSCALL_DEFINE2(munmap)
+  - mykernel/mm/vm_map/mmap.c::__vm_munmap
+  - mykernel/mm/vm_map/mmap.c::simple_do_vma_munmap
+  key_helpers:
+  - __split_vma
+  - __simple_vma_adjust
+  - __vma_unlink_from_list
+  - simple_unmap_region
+  normal_path: 找第一个相交 VMA，必要时在起止点拆分，然后从 prev 的后继开始把范围内 VMA 摘链（A-VM13、A-VM14）。
+  failure_path: 摘下的 VMA 不释放（Q19 无此处调用）、页表与页不撤销（simple_unmap_region 全注释，A-VM15）；起点处于最低 VMA 或紧贴前一 VMA 时 find_vma_intersection 返回 NULL，munmap 什么也不做（MC-13）；拆分时 pgoff 计算错误（A-VM12，MC-15）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 活动文本；brk 也调用 simple_do_vma_munmap（Q16）。
+  anchors:
+  - A-VM12
+  - A-VM13
+  - A-VM14
+  - A-VM15
+  queries:
+  - Q16
+  - Q19
+  - Q20
+  - Q38
+  edges:
+  - E17
+  - E22
+  concerns:
+  - MC-13
+  - MC-15
+  - MC-16
+  dependency_risks: []
+  implementation_evidence:
+    value: partial_body
+    reason: VMA 层拆分与摘链有正文；页表撤销、TLB 刷新、VMA 释放缺失。
+  correctness_evidence:
+    value: static_concern
+    reason: 见 MC-13、MC-15、MC-16。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 无锁（__vm_munmap 内 mmap_write_lock_killable 调用被注释，阅读记录）。
+  not_covered:
+  - 拆分时 vm_ops->open 的调用效果
+- id: mm.vm_map.brk_stack_exec
+  id_status: proposed_id
+  old_refs:
+  - mm.vm_map.vma_and_syscalls (DR-002)
+  subsystem: mm.vm_map
+  purpose: brk 扩缩堆、exec 建栈 VMA 并向下扩栈、ELF 装载映射段与 bss。
+  entries:
+  - mykernel/mm/vm_map/mmap.c::vm_brk_flags / do_brk_flags
+  - mykernel/mm/vm_map/mmap.c::expand_stack
+  - mykernel/mm/vm_map/mmap.c::insert_vm_struct
+  key_helpers:
+  - simple_vma_merge
+  - vm_area_alloc
+  normal_path: binfmt_elf 的 elf_map 调 vm_mmap、elf_load 调 vm_brk_flags；brk 系统调用调 do_brk_flags 或 simple_do_vma_munmap（Q16）；exec 的 __bprm_mm_init 调 insert_vm_struct，setup_arg_pages 调 expand_stack（Q29）。
+  failure_path: do_brk_flags 也先清范围再合并/新建，继承 MC-13、MC-14 的前提；缺页路径中的 expand_stack 调用不可达（MC-22），栈只能靠 exec 时的预扩。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 活动文本。
+  anchors:
+  - A-VM19
+  queries:
+  - Q16
+  - Q29
+  - Q37
+  edges:
+  - E24
+  - E25
+  concerns:
+  - MC-22
+  dependency_risks: []
+  implementation_evidence:
+    value: connected_body
+    reason: do_brk_flags 正文锚定（A-VM19：先清范围、再尝试合并，否则新建 VMA）；expand_stack、insert_vm_struct 正文已读但未逐行锚定；调用关系由检索命中确认。
+  correctness_evidence:
+    value: static_concern
+    reason: 栈在缺页时无法增长（MC-22）；其余继承 vm_map 共用 helper 的疑点。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: expand_stack 在 page_table_lock 内改 vm_start（阅读记录）。
+  not_covered:
+  - brk 系统调用正文（arch/x86_64/myos/syscall.c）只有检索命中
+  - ELF 装载的段对齐与 total_size 处理
+- id: mm.vm_map.mm_lifecycle
+  id_status: proposed_id
+  old_refs: []
+  subsystem: mm.vm_map
+  purpose: fork 复制地址空间（VMA 与页表），进程退出/exec 换 mm 时释放旧地址空间。
+  entries:
+  - mykernel/sched/forkexec/fork.c::dup_mmap
+  - mykernel/sched/forkexec/fork.c::mmput / __mmput
+  key_helpers:
+  - vm_area_creat_dup
+  - copy_page_range
+  normal_path: dup_mmap 逐个复制 VMA 并调 copy_page_range（Q27）；mmput 在 mm_users 归零时调 __mmput。
+  failure_path: __mmput 函数体全部注释（A-VM16），旧地址空间的 VMA、页表、页都不释放；Q20 未检索到任何活动的拆除函数。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 活动文本。
+  anchors:
+  - A-VM16
+  - A-FT24
+  queries:
+  - Q20
+  - Q26
+  - Q27
+  edges:
+  - E26
+  concerns:
+  - MC-16
+  - MC-25
+  dependency_risks:
+  - DR-06
+  implementation_evidence:
+    value: partial_body
+    reason: 复制有正文；释放为空函数体。
+  correctness_evidence:
+    value: static_concern
+    reason: 地址空间永不拆除（MC-16）；fork 后不刷 TLB（MC-25）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: dup_mmap 不取任何 mmap 锁。
+  not_covered:
+  - mmdrop / pgd_free 的调用者
+  - mm_init 中页目录复制内核部分的细节
+- id: mm.fault.arch_entry
+  id_status: proposed_id
+  old_refs: []
+  subsystem: mm.fault
+  purpose: '#PF 异常入口：区分内核地址/用户地址，找 VMA，交给通用缺页处理，处理失败结果。'
+  entries:
+  - mykernel/arch/x86_64/myos/interrupt.c::exception_handler（调用点，Q22）
+  - mykernel/arch/x86_64/mm/fault.c::exc_page_fault / handle_page_fault / do_user_addr_fault
+  key_helpers:
+  - fault_in_kernel_space
+  - simple_find_vma
+  - myos_bad_area
+  - do_kern_addr_fault
+  normal_path: exception_handler 调 exc_page_fault（Q22）；handle_page_fault 按地址分流（A-FT01）；用户态缺页先开中断（A-FT03），simple_find_vma 找 VMA（A-FT04），然后调 myos_handle_mm_fault（A-FT08）。
+  failure_path: 内核地址缺页一律 while (1)（A-FT02）；找不到 VMA → myos_bad_area 打印后 while (1)（A-FT09）；处理结果非 0 时 while (fault != ENOERR)（A-FT08）；access_error 检查被注释（A-FT07）；栈增长分支不可达（A-FT05，MC-22）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 活动文本。
+  anchors:
+  - A-FT01
+  - A-FT02
+  - A-FT03
+  - A-FT04
+  - A-FT05
+  - A-FT07
+  - A-FT08
+  - A-FT09
+  queries:
+  - Q22
+  - Q32
+  - Q38
+  edges:
+  - E27
+  - E28
+  - E29
+  concerns:
+  - MC-22
+  - MC-23
+  - MC-24
+  dependency_risks:
+  - DR-01
+  implementation_evidence:
+    value: connected_body
+    reason: 从异常分发到通用处理有活动调用；错误出口没有信号路径。
+  correctness_evidence:
+    value: static_concern
+    reason: 见 MC-22、MC-23、MC-24。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 用户态缺页开中断后处理；不取 mmap 锁。
+  not_covered:
+  - mm 为 NULL 的内核线程访问用户地址（faulthandler 检查被注释，阅读记录）
+  - exception_handler 之前的汇编入口
+- id: mm.fault.pgtable_walk
+  id_status: proposed_id
+  old_refs: []
+  subsystem: mm.fault
+  purpose: 按缺页地址补齐 PUD/PMD/PTE 页表页（P4D 为折叠层，p4d_alloc 直接返回 pgd 项），读出原 PTE 并按状态分派。
+  entries:
+  - mykernel/mm/fault/fault.c::myos_handle_mm_fault
+  - mykernel/mm/fault/fault.c::handle_pte_fault
+  key_helpers:
+  - p4d_alloc
+  - pud_alloc
+  - pmd_alloc
+  - pte_alloc
+  - __pud_alloc
+  - __pmd_alloc
+  - __pgtbl_alloc
+  - __myos_pgtable_alloc_one
+  - pte_offset_map_nolock
+  normal_path: 逐级分配缺失的页表页，页表页来自 alloc_page 并清零（A-FT11）；任一级失败返回 VM_FAULT_OOM（A-FT10）；PTE 为空走缺页补映射（A-FT12），写缺页遇到不可写的已存在 PTE 走 do_wp_page（A-FT13），其余只置 young 后返回 0。
+  failure_path: 分配失败的 VM_FAULT_OOM 被入口当作非 0 结果自旋（MC-23）；__pud_alloc 等在返回 -ENOMEM 时不释放已取的 page_table_lock（阅读记录，未锚定）。
+  source_condition:
+    macros:
+    - PGALLOC_DEFINATION / DEBUG
+    resolution: partially_resolved
+    note: 'pgalloc.h 的分配函数位于 #if defined(PGALLOC_DEFINATION) || !(DEBUG) 内（A-FT11 cpp_conditions）；构建类型未知。'
+  anchors:
+  - A-FT10
+  - A-FT11
+  - A-FT12
+  - A-FT13
+  queries:
+  - Q39
+  edges:
+  - E29
+  - E30
+  - E31
+  - E32
+  - E33
+  concerns:
+  - MC-23
+  dependency_risks: []
+  implementation_evidence:
+    value: connected_body
+    reason: 页表补齐与 PTE 分派有正文。
+  correctness_evidence:
+    value: static_concern
+    reason: 失败结果被入口自旋处理（MC-23）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 上层页表用 mm->page_table_lock；PTE 级锁指针取自页表页的 page->private 位置，未见显式初始化（阅读记录）。
+  not_covered:
+  - 已存在 PTE 的 young/dirty 回写被注释（ptep_set_access_flags），只读执行缺页等可能反复触发（阅读推断，未锚定）
+- id: mm.fault.anonymous
+  id_status: proposed_id
+  old_refs:
+  - mm.fault.anon_file_cow (DR-002)
+  subsystem: mm.fault
+  purpose: 匿名映射首次访问：读映射共享零页，写分配一个私有新页。
+  entries:
+  - mykernel/mm/fault/fault.c::do_anonymous_page
+  key_helpers:
+  - alloc_anon_folio
+  - folio_prealloc
+  - folio_alloc(=folio_alloc_noprof)
+  - my_zero_pfn
+  normal_path: 读缺页把零页 pfn 以 vm_page_prot 映射为 special PTE（A-FT14）；零页 pfn 在 kernel_init 的 do_pre_smp_initcalls 中初始化（Q30）。写缺页经 alloc_anon_folio→folio_prealloc→folio_alloc 取页（A-FT15、A-FT16、Q23、A-FT17），VM_WRITE
+    时设可写+脏后写 PTE。
+  failure_path: 取页失败时，folio_alloc_noprof 内的 page_folio(NULL) 先读 NULL->compound_head（Q42、Q43），do_anonymous_page 中 if (!folio) goto oom 的判断到不了；这次内核空指针读按地址落入用户地址分支，后续结果 unknown（未核）。函数内的 VM_SHARED→SIGBUS 分支在
+    mmap 路径下不可达，因为共享匿名 VMA 带 dummy_vm_ops、不算匿名（RF-04）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 活动文本。
+  anchors:
+  - A-FT14
+  - A-FT15
+  - A-FT16
+  - A-FT17
+  queries:
+  - Q23
+  - Q24
+  - Q25
+  - Q30
+  - Q42
+  - Q43
+  edges:
+  - E31
+  - E34
+  - E35
+  concerns:
+  - MC-21
+  - MC-23
+  dependency_risks: []
+  implementation_evidence:
+    value: connected_body
+    reason: 读/写两条路径都有正文并接到页分配器。
+  correctness_evidence:
+    value: static_concern
+    reason: 写缺页映射的新页未清零（MC-21）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: PTE 设置不取 PTL（pte_offset_map_lock 被注释，阅读记录）。
+  not_covered:
+  - rmap、mm 计数、LRU 均被注释（阅读记录）
+- id: mm.fault.file_backed
+  id_status: proposed_id
+  old_refs:
+  - mm.fault.anon_file_cow (DR-002)
+  subsystem: mm.fault
+  purpose: 文件映射缺页：已缓存页直接映射，否则读文件进页缓存后映射；私有写做 COW，共享写未实现。
+  entries:
+  - mykernel/mm/fault/fault.c::do_fault
+  - mykernel/mm/vm_map/filemap.c::simple_filemap_fault / simple_filemap_map_page
+  key_helpers:
+  - do_read_fault
+  - do_fault_around
+  - __do_fault
+  - do_cow_fault
+  - do_shared_fault
+  - finish_fault
+  normal_path: 读缺页先 do_fault_around→map_single_page 映射已缓存页，未缓存则 __do_fault→vm_ops->fault=simple_filemap_fault：在 mapping->page_array[index] 放一个清零新页（A-FT25），同步调 f_op->read 读满一页（A-FT26），再 finish_fault 写 PTE（Q27）；私有写走
+    do_cow_fault 复制后映射。
+  failure_path: 共享写缺页 do_shared_fault 原地 while (1)（A-FT18）；vm_ops->fault 缺失时 while (1)（A-FT27，共享匿名映射即落入此处）；page_array 下标未与文件页数比较（A-FT25 中无检查，阅读推断）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: vm_ops 由 generic_file_mmap 设置（Q17）；块设备与 FAT32 的 f_op->mmap 都指向它。
+  anchors:
+  - A-FT18
+  - A-FT25
+  - A-FT26
+  - A-FT27
+  queries:
+  - Q17
+  - Q27
+  - Q39
+  edges:
+  - E32
+  - E36
+  - E37
+  concerns:
+  - MC-23
+  dependency_risks:
+  - DR-02
+  implementation_evidence:
+    value: connected_body
+    reason: 读缺页与私有写 COW 有正文；共享写只有占位自旋。
+  correctness_evidence:
+    value: static_concern
+    reason: 共享写自旋（MC-23）；页缓存下标边界未检查（阅读推断，不单列疑点）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: f_op->read 之下的块 I/O 等待未追踪（DR-02）。
+  not_covered:
+  - f_op->read 之下的文件系统与块设备路径
+  - BUG_ON 在当前配置下的实际效果（本批未复核）
+- id: mm.fault.cow
+  id_status: proposed_id
+  old_refs:
+  - mm.fault.anon_file_cow (DR-002)
+  subsystem: mm.fault
+  purpose: 写时复制：fork 时把父子 PTE 设为只读共享，之后写缺页复制出私有页。
+  entries:
+  - mykernel/mm/fault/fault.c::copy_page_range（fork，Q27）
+  - mykernel/mm/fault/fault.c::do_wp_page / wp_page_copy
+  key_helpers:
+  - copy_present_pte
+  - vm_normal_page
+  - folio_prealloc
+  - maybe_mkwrite
+  normal_path: fork 时 copy_present_pte 对 COW 映射清父 PTE 的写位并给子进程同样的只读 PTE（A-FT23）；写缺页时 do_wp_page 对私有映射总是复制（不复用），wp_page_copy 取新页、复制旧页内容、按 maybe_mkwrite 设写位（A-FT20、A-FT21、A-FT22）。
+  failure_path: 共享映射的写保护缺页原地 while (1)（A-FT19）；旧页为零页时新页不清零（A-FT20 + MC-21）；VMA 无 VM_WRITE 时新 PTE 仍不可写（MC-24）；取页失败时与匿名缺页相同，先在 page_folio 中读空指针，wp_page_copy 的 if (!new_folio) 到不了（Q42、Q43）。
+  source_condition:
+    macros:
+    - PGTABLE_DEFINATION / DEBUG
+    resolution: partially_resolved
+    note: 'maybe_mkwrite 在 pgtable.h 的 #if defined(PGTABLE_DEFINATION) || !(DEBUG) 内（A-FT22）；构建类型未知。'
+  anchors:
+  - A-FT19
+  - A-FT20
+  - A-FT21
+  - A-FT22
+  - A-FT23
+  - A-FT24
+  queries:
+  - Q26
+  - Q27
+  - Q40
+  edges:
+  - E26
+  - E33
+  - E38
+  - E39
+  concerns:
+  - MC-21
+  - MC-24
+  - MC-25
+  dependency_risks:
+  - DR-06
+  implementation_evidence:
+    value: connected_body
+    reason: fork 复制与写缺页复制都有正文且相连。
+  correctness_evidence:
+    value: static_concern
+    reason: 见 MC-21、MC-24、MC-25。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 无 TLB 刷新（Q26 负检索）；多线程/SMP 未分析。
+  not_covered:
+  - 复制时页引用计数与 mapcount 不增加（阅读记录，未锚定）
+edges:
+- id: E01
+  from: mm.page_alloc
+  also_applies_to:
+  - mm.kmalloc
+  - mm.vm_map
+  - mm.fault
+  to: external:mykernel/CMakeLists.txt::KERNEL_C_SRCS
+  kind: build
+  anchors:
+  - A-B01
+  hits:
+  - query: Q03
+    path: mykernel/scripts/options_flags.cmake
+    line: 75
+    enclosing: null
+  note: 四个目录的 .c 都由顶层 GLOB_RECURSE 列入 kernel 目标（子目录 CMakeLists 为 0 字节，Q02）；链接带 --gc-sections。列入构建不等于被链接保留，更不等于运行可达。
+- id: E02
+  from: mm.page_alloc.zone_layout
+  to: external:mykernel/arch/x86_64/kernel/setup.c::setup_arch
+  kind: init_order
+  anchors: []
+  hits:
+  - query: Q04
+    path: mykernel/arch/x86_64/kernel/setup.c
+    line: 254
+    enclosing: setup_arch
+  note: zone_sizes_init 由 setup_arch 调用（在 memblock 建立与直映射之后，阅读记录）。
+- id: E03
+  from: mm.page_alloc.mm_core_init
+  to: mm.page_alloc.zone_layout
+  kind: init_order
+  anchors: []
+  hits:
+  - query: Q04
+    path: mykernel/init/main.c
+    line: 138
+    enclosing: start_kernel
+  - query: Q04
+    path: mykernel/init/main.c
+    line: 144
+    enclosing: start_kernel
+  note: start_kernel 先 setup_arch（第 138 行，内含 zone_sizes_init）后 mm_core_init（第 144 行）；空闲链表头必须先建好，memblock_free_all 才能往里放块。
+- id: E04
+  from: mm.page_alloc.buddy_alloc
+  to: mm.page_alloc.zone_layout
+  kind: data
+  anchors:
+  - A-PA02
+  - A-PA06
+  hits: []
+  note: 分配的区循环上界读 nr_zones（=MAX_NR_ZONES=5），偏好表只有 3 项（MC-04）。
+- id: E05
+  from: mm.page_alloc.mm_core_init
+  to: mm.page_alloc.buddy_free
+  kind: call
+  anchors:
+  - A-PA04
+  hits:
+  - query: Q05
+    path: mykernel/mm/page_alloc/buddy.c
+    line: 571
+    enclosing: memblock_free_pages
+  note: 启动交接把空闲内存经 memblock_free_pages→__free_pages_ok 放进 buddy，走的就是普通释放路径。
+- id: E06
+  from: mm.kmalloc.boot_init
+  to: mm.page_alloc.mm_core_init
+  kind: init_order
+  anchors:
+  - A-PA05
+  hits:
+  - query: Q04
+    path: mykernel/mm/misc/mm_init.c
+    line: 409
+    enclosing: mm_core_init
+  - query: Q04
+    path: mykernel/mm/misc/mm_init.c
+    line: 411
+    enclosing: mm_core_init
+  note: mem_init（buddy 已填充）在 kmem_cache_init 之前；slab 自举要从 buddy 取页。
+- id: E07
+  from: mm.page_alloc.buddy_free
+  to: external:mykernel/mm/page_alloc/page-flags.h::PageBuddy
+  kind: data
+  anchors:
+  - A-PA13
+  - A-PA17
+  - A-PA18
+  hits: []
+  note: 合并判定读 page_type；page_type 从未被置成类型基值，PageBuddy 恒假（MC-01）。
+- id: E08
+  from: mm.page_alloc.buddy_alloc
+  to: mm.page_alloc.buddy_free
+  kind: data
+  anchors:
+  - A-PA07
+  - A-PA10
+  hits: []
+  note: 两边共用 zone->free_area；释放在 zone->lock 内、分配不取锁（MC-02）。
+- id: E09
+  from: mm.kmalloc.object_allocator
+  to: mm.page_alloc.buddy_alloc
+  kind: call
+  anchors:
+  - A-KM05
+  hits:
+  - query: Q13
+    path: mykernel/mm/kmalloc/slub.c
+    line: 105
+    enclosing: alloc_slab
+  note: 新 slab 的页来自 alloc_pages(oo_order)。
+- id: E10
+  from: mm.kmalloc.object_free
+  to: mm.page_alloc.buddy_free
+  kind: call
+  anchors: []
+  hits:
+  - query: Q13
+    path: mykernel/mm/kmalloc/slub.c
+    line: 251
+    enclosing: free_slab
+  note: 整 slab 释放走 __free_pages（不经 folio_put，因此不受 MC-05 影响）。
+- id: E11
+  from: mm.kmalloc.size_classes_and_large
+  to: mm.kmalloc.object_allocator
+  kind: call
+  anchors:
+  - A-KM10
+  hits:
+  - query: Q36
+    path: mykernel/mm/kmalloc/slab_common.c
+    line: 253
+    enclosing: __kmalloc
+  note: ≤PAGE_SIZE 的 kmalloc 经 __kmalloc→kmalloc_slab→kmem_cache_alloc。
+- id: E12
+  from: mm.kmalloc.size_classes_and_large
+  to: mm.page_alloc.buddy_alloc
+  kind: call
+  anchors: []
+  hits:
+  - query: Q13
+    path: mykernel/mm/kmalloc/slab_common.c
+    line: 268
+    enclosing: kmalloc_large
+  note: '>PAGE_SIZE 的 kmalloc 以 __GFP_COMP 直接按阶要页。'
+- id: E13
+  from: mm.kmalloc.size_classes_and_large
+  to: mm.page_alloc.buddy_free
+  kind: call
+  anchors: []
+  hits:
+  - query: Q13
+    path: mykernel/mm/kmalloc/slab_common.c
+    line: 283
+    enclosing: free_large_kmalloc
+  note: kfree 非 slab 页时按 folio 阶 __free_pages。
+- id: E14
+  from: mm.kmalloc.size_classes_and_large
+  to: mm.kmalloc.object_allocator
+  kind: data
+  anchors:
+  - A-KM11
+  hits:
+  - query: Q13
+    path: mykernel/mm/kmalloc/slub.c
+    line: 111
+    enclosing: alloc_slab
+  - query: Q13
+    path: mykernel/mm/kmalloc/slub.h
+    line: 192
+    enclosing: kfree
+  note: kfree 用 PG_slab（page->flags 位，由 alloc_slab 置位）决定归还对象；这是 flags 位，不受 page_type 未初始化影响。
+- id: E15
+  from: external:mykernel/sched/forkexec/fork.c::copy_sighand
+  to: mm.kmalloc.ctor_cache_state
+  kind: call
+  anchors:
+  - A-KM14
+  hits:
+  - query: Q11
+    path: mykernel/sched/forkexec/fork.c
+    line: 1654
+    enclosing: proc_caches_init
+  note: 唯一需要 ctor 状态的使用者分配后并不安装对象（DR-04），因此 MC-08 在本 pin 没有可达的有害后果。
+- id: E16
+  from: mm.vm_map.mmap_create
+  to: mm.vm_map.unmapped_area_search
+  kind: call
+  anchors:
+  - A-VM07
+  hits:
+  - query: Q37
+    path: mykernel/mm/vm_map/mmap.c
+    line: 522
+    enclosing: do_mmap
+  note: do_mmap→__get_unmapped_area→mm->get_unmapped_area（由 arch_pick_mmap_layout 设为 simple_get_unmapped_area）。
+- id: E17
+  from: mm.vm_map.mmap_create
+  to: mm.vm_map.munmap
+  kind: call
+  anchors:
+  - A-VM03
+  hits:
+  - query: Q16
+    path: mykernel/mm/vm_map/mmap.c
+    line: 149
+    enclosing: simple_munmap_vma_range
+  note: 建映射前先对目标范围做 VMA 层 munmap。
+- id: E18
+  from: mm.vm_map.mmap_create
+  to: mm.kmalloc.object_allocator
+  kind: call
+  anchors: []
+  hits:
+  - query: Q36
+    path: mykernel/mm/vm_map/mmap.c
+    line: 33
+    enclosing: vm_area_alloc
+  note: VMA 结构来自 vm_area_cachep。
+- id: E19
+  from: mm.vm_map.mmap_create
+  to: external:mykernel/sched/forkexec/fork.c::proc_caches_init
+  kind: init_order
+  anchors:
+  - A-KM17
+  hits:
+  - query: Q04
+    path: mykernel/init/main.c
+    line: 186
+    enclosing: start_kernel
+  note: vm_area_cachep 在 start_kernel 调 proc_caches_init 时创建，早于任何用户映射。
+- id: E20
+  from: mm.vm_map.mmap_create
+  to: external:mykernel/mm/vm_map/filemap.c::generic_file_mmap
+  kind: call
+  anchors: []
+  hits:
+  - query: Q17
+    path: mykernel/mm/vm_map/mmap.c
+    line: 693
+    enclosing: simple_mmap_region
+  - query: Q17
+    path: mykernel/mm/vm_map/filemap.c
+    line: 418
+    enclosing: generic_file_mmap
+  note: 间接调用 f_op->mmap；块设备与 FAT32 都指向 generic_file_mmap，它设 vm_ops=generic_file_vm_ops（缺页时的 ->fault）。
+- id: E21
+  from: mm.vm_map.mmap_create
+  to: mm.vm_map.vma_list_lookup
+  kind: call
+  anchors: []
+  hits:
+  - query: Q38
+    path: mykernel/mm/vm_map/mmap.c
+    line: 180
+    enclosing: simple_vma_link
+  - query: Q38
+    path: mykernel/mm/vm_map/mmap.c
+    line: 384
+    enclosing: simple_vma_merge
+  note: 入链与合并前的相交查询。
+- id: E22
+  from: mm.vm_map.munmap
+  to: mm.vm_map.vma_list_lookup
+  kind: call
+  anchors:
+  - A-VM14
+  hits:
+  - query: Q38
+    path: mykernel/mm/vm_map/mmap.c
+    line: 1131
+    enclosing: simple_do_vma_munmap
+  - query: Q38
+    path: mykernel/mm/vm_map/mmap.c
+    line: 1158
+    enclosing: simple_do_vma_munmap
+  note: 用 find_vma_intersection 找起点（MC-13），逐个摘链。
+- id: E23
+  from: external:mykernel/fs/vfs/binfmt_elf.c::elf_map
+  to: mm.vm_map.mmap_create
+  kind: call
+  anchors: []
+  hits:
+  - query: Q16
+    path: mykernel/fs/vfs/binfmt_elf.c
+    line: 343
+    enclosing: elf_map
+  - query: Q16
+    path: mykernel/fs/vfs/binfmt_elf.c
+    line: 347
+    enclosing: elf_map
+  note: ELF 段映射经 vm_mmap；对应 DR-003 中 sched.forkexec.user_process→mm.vm_map 的功能边（只沿用节点名）。
+- id: E24
+  from: external:mykernel/fs/vfs/binfmt_elf.c::elf_load
+  to: mm.vm_map.brk_stack_exec
+  kind: call
+  anchors: []
+  hits:
+  - query: Q16
+    path: mykernel/fs/vfs/binfmt_elf.c
+    line: 403
+    enclosing: elf_load
+  note: bss 零区经 vm_brk_flags。
+- id: E25
+  from: external:mykernel/sched/forkexec/exec.c::setup_arg_pages
+  to: mm.vm_map.brk_stack_exec
+  kind: call
+  anchors: []
+  hits:
+  - query: Q29
+    path: mykernel/sched/forkexec/exec.c
+    line: 540
+    enclosing: setup_arg_pages
+  - query: Q29
+    path: mykernel/sched/forkexec/exec.c
+    line: 127
+    enclosing: __bprm_mm_init
+  note: exec 建栈 VMA（insert_vm_struct）并预先扩栈（expand_stack）；这是 expand_stack 唯一可达的调用者（MC-22）。
+- id: E26
+  from: mm.vm_map.mm_lifecycle
+  to: mm.fault.cow
+  kind: call
+  anchors: []
+  hits:
+  - query: Q27
+    path: mykernel/sched/forkexec/fork.c
+    line: 218
+    enclosing: dup_mmap
+  note: fork 逐 VMA 调 copy_page_range 复制页表并写保护。
+- id: E27
+  from: external:mykernel/arch/x86_64/myos/interrupt.c::exception_handler
+  to: mm.fault.arch_entry
+  kind: call
+  anchors: []
+  hits:
+  - query: Q22
+    path: mykernel/arch/x86_64/myos/interrupt.c
+    line: 151
+    enclosing: exception_handler
+  note: '#PF 向量分发到 exc_page_fault；返回后 excep_hwint_context 在 !in_atomic() 时调 schedule()（Q32，DR-01）。'
+- id: E28
+  from: mm.fault.arch_entry
+  to: mm.vm_map.vma_list_lookup
+  kind: call
+  anchors:
+  - A-FT04
+  hits:
+  - query: Q38
+    path: mykernel/arch/x86_64/mm/fault.c
+    line: 276
+    enclosing: do_user_addr_fault
+  note: 缺页按“包含地址”查 VMA（MC-22）。
+- id: E29
+  from: mm.fault.arch_entry
+  to: mm.fault.pgtable_walk
+  kind: call
+  anchors:
+  - A-FT08
+  hits:
+  - query: Q22
+    path: mykernel/arch/x86_64/mm/fault.c
+    line: 323
+    enclosing: do_user_addr_fault
+  note: 结果非 0 即自旋（MC-23）。
+- id: E30
+  from: mm.fault.pgtable_walk
+  to: mm.page_alloc.buddy_alloc
+  kind: call
+  anchors:
+  - A-FT11
+  hits: []
+  note: PUD/PMD/PTE 页表页 alloc_page 并清零；页表页释放函数（pagetable_free→__free_pages）存在，其调用者本批未检索。
+- id: E31
+  from: mm.fault.pgtable_walk
+  to: mm.fault.anonymous
+  kind: call
+  anchors:
+  - A-FT12
+  hits:
+  - query: Q39
+    path: mykernel/mm/fault/fault.c
+    line: 1232
+    enclosing: do_pte_missing
+  note: vm_ops 为 NULL（vma_set_anonymous）才算匿名；新 VMA 默认带 dummy_vm_ops（A-VM18）。
+- id: E32
+  from: mm.fault.pgtable_walk
+  to: mm.fault.file_backed
+  kind: call
+  anchors:
+  - A-FT12
+  hits:
+  - query: Q39
+    path: mykernel/mm/fault/fault.c
+    line: 1234
+    enclosing: do_pte_missing
+  note: 非匿名 VMA（含只带 dummy_vm_ops 的共享匿名映射）走 do_fault。
+- id: E33
+  from: mm.fault.pgtable_walk
+  to: mm.fault.cow
+  kind: call
+  anchors:
+  - A-FT13
+  hits:
+  - query: Q27
+    path: mykernel/mm/fault/fault.c
+    line: 1273
+    enclosing: handle_pte_fault
+  note: 写缺页且 PTE 不可写 → do_wp_page。
+- id: E34
+  from: mm.fault.anonymous
+  to: mm.page_alloc.buddy_alloc
+  kind: call
+  anchors:
+  - A-FT15
+  - A-FT16
+  - A-FT17
+  hits:
+  - query: Q23
+    path: mykernel/mm/highmem/highmem_macro.h
+    line: 26
+    enclosing: null
+  note: folio_alloc 是 folio_alloc_noprof 的宏，后者忽略参数，取 0 阶 GFP_HIGHUSER_MOVABLE 页（无 __GFP_ZERO）。
+- id: E35
+  from: mm.fault.anonymous
+  to: external:mykernel/init/main.c::do_pre_smp_initcalls
+  kind: init_order
+  anchors:
+  - A-FT14
+  hits:
+  - query: Q30
+    path: mykernel/init/main.c
+    line: 255
+    enclosing: do_pre_smp_initcalls
+  note: 读缺页映射的零页 pfn 由 init_zero_pfn 设置，在 kernel_init 启动用户进程之前调用。
+- id: E36
+  from: mm.fault.file_backed
+  to: mm.page_alloc.buddy_alloc
+  kind: call
+  anchors:
+  - A-FT25
+  hits: []
+  note: 页缓存页 alloc_page(GFP_USER|__GFP_ZERO)，0 阶，清零有效。
+- id: E37
+  from: mm.fault.file_backed
+  to: external:<file>->f_op->read
+  kind: call
+  anchors:
+  - A-FT26
+  hits: []
+  note: 间接调用，端点保留；其下的文件系统与块设备等待未追踪（DR-02、LB-06）。
+- id: E38
+  from: mm.fault.cow
+  to: mm.page_alloc.buddy_alloc
+  kind: call
+  anchors:
+  - A-FT20
+  hits: []
+  note: wp_page_copy 经 folio_prealloc 取新页（与匿名写缺页同一取页函数）。
+- id: E39
+  from: mm.fault.cow
+  to: mm.page_alloc.folio_ref_release
+  kind: call
+  anchors: []
+  hits:
+  - query: Q40
+    path: mykernel/mm/fault/fault.c
+    line: 676
+    enclosing: wp_page_copy
+  - query: Q40
+    path: mykernel/mm/fault/fault.c
+    line: 680
+    enclosing: wp_page_copy
+  note: 旧页/新页经 folio_put 释放，最终 __folio_put 为空（MC-05）。
+link_breaks:
+- id: LB-01
+  where: mm.page_alloc.folio_ref_release → mm.page_alloc.buddy_free
+  anchors:
+  - A-PA15
+  queries:
+  - Q40
+  what: 引用降为 0 后 __folio_put 什么也不做；经 put_page/folio_put 释放的用户页（缺页、COW、exec 参数页）不回到 buddy。
+- id: LB-02
+  where: mm.vm_map.munmap → 页表 / TLB
+  anchors:
+  - A-VM15
+  queries:
+  - Q20
+  - Q26
+  what: munmap 只摘 VMA；simple_unmap_region 全部注释，没有清 PTE、释放页表或刷 TLB 的活动文本。
+- id: LB-03
+  where: 进程退出 / exec 换 mm → 地址空间拆除
+  anchors:
+  - A-VM16
+  queries:
+  - Q20
+  what: __mmput 全部注释；没有 exit_mmap/unmap_vmas/free_pgtables 等活动实现。
+- id: LB-04
+  where: mm.fault.arch_entry → expand_stack
+  anchors:
+  - A-FT05
+  - A-FT06
+  queries:
+  - Q29
+  what: VMA 查询只返回包含地址的 VMA，栈下方的缺页先到 myos_bad_area，扩栈分支不可达。
+- id: LB-05
+  where: 缺页错误 → 信号/进程终止
+  anchors:
+  - A-FT02
+  - A-FT08
+  - A-FT09
+  queries: []
+  what: 没有 SIGSEGV/SIGBUS 投递路径；所有未处理结果都在内核内 while 自旋（是否能被换下见 DR-01）。
+- id: LB-06
+  where: mm.fault.file_backed → 块设备读完成
+  anchors:
+  - A-FT26
+  queries: []
+  what: f_op->read 端点保留，未追到具体文件系统/块驱动与其等待机制；不能把文件缺页当作已闭合的链。
+- id: LB-07
+  where: VMA → 文件反向映射（i_mmap）
+  anchors: []
+  queries:
+  - Q41
+  what: vma_interval_tree_insert 只在注释中出现；文件页没有反向映射。
+- id: LB-08
+  where: buddy 释放 → 伙伴合并
+  anchors:
+  - A-PA17
+  - A-PA18
+  queries:
+  - Q34
+  what: PageBuddy 依赖 page_type 的类型基值，page_type 从不被设置成该值，合并分支永不进入。
+- id: LB-09
+  where: fork 写保护父 PTE → TLB 失效
+  anchors:
+  - A-FT24
+  queries:
+  - Q26
+  what: flush_tlb_mm 被注释，fork/exec/mm 目录中无活动的 TLB 刷新。
+m03_answers:
+  Q1_physical_pages:
+    question: 物理页从哪里准备并分配/归还？
+    answer: setup_arch 建立 memblock 与直映射后调 zone_sizes_init 建三区与空闲链表头（E02、A-PA01）；mm_core_init→mem_init→memblock_free_all 把空闲区间按对齐切块，经普通释放路径放进 buddy（E05、A-PA04）。分配：alloc_pages→__myos_alloc_pages 按 NORMAL→DMA32→DMA
+      取块并拆分（A-PA06、A-PA07）。归还：__free_pages→__free_pages_ok 在 zone->lock 内挂回链表，但伙伴从不合并（MC-01）；经 folio_put/put_page 的归还在 __folio_put 处断开（LB-01）。
+    breaks:
+    - LB-01
+    - LB-08
+    edges:
+    - E02
+    - E03
+    - E04
+    - E05
+    - E07
+    - E08
+  Q2_heap_consumes_pages:
+    question: 堆接口是否及如何消费页分配？
+    answer: 是。slab 新建时 alloc_pages(oo_order)（E09），整 slab 释放时 __free_pages（E10）；>PAGE_SIZE 的 kmalloc 直接按阶要页、kfree 按阶还页（E12、E13）。kmem_cache_init 在 mem_init 之后（E06）。kfree 依据 page->flags 的 PG_slab 位分派（E14），该位是
+      flags 位而非 page_type，不受 MC-01 根因影响。
+    breaks: []
+    edges:
+    - E06
+    - E09
+    - E10
+    - E11
+    - E12
+    - E13
+    - E14
+  Q3_vm_map_ranges_and_page_tables:
+    question: 虚拟映射怎样管理地址区间与页表？
+    answer: 只管地址区间：VMA 存在按地址排序的双链表中（E21、E22），mmap/brk/exec 建 VMA，VMA 结构来自 vm_area_cachep（E18、E19）；文件映射经 f_op->mmap 设 vm_ops（E20）。页表不由 vm_map 建立，而是在缺页时由 fault 补齐（E30）；vm_map 也从不拆页表——munmap 与地址空间拆除都断开（LB-02、LB-03），fork
+      时由 dup_mmap 调 fault 侧的 copy_page_range 复制（E26）。
+    breaks:
+    - LB-02
+    - LB-03
+    - LB-07
+    - LB-09
+    edges:
+    - E16
+    - E17
+    - E18
+    - E19
+    - E20
+    - E21
+    - E22
+    - E23
+    - E24
+    - E25
+    - E26
+  Q4_fault_to_page:
+    question: 缺页入口怎样到实际页获取/映射？
+    answer: exception_handler→exc_page_fault（E27）→do_user_addr_fault：simple_find_vma 找包含地址的 VMA（E28）→myos_handle_mm_fault 逐级补页表（页表页来自 buddy，E30）→按 PTE 状态分派：空 PTE 的匿名 VMA 走 do_anonymous_page（读映射零页，写取 folio_alloc
+      新页，E31、E34、E35），非匿名走 do_fault（读：页缓存或 simple_filemap_fault 取清零页并 f_op->read，E32、E36、E37；私有写：do_cow_fault），已存在只读 PTE 的写走 do_wp_page→wp_page_copy（E33、E38、E39）。所有错误出口都自旋（LB-05），栈增长断开（LB-04），文件读之下未追踪（LB-06）。
+    breaks:
+    - LB-04
+    - LB-05
+    - LB-06
+    edges:
+    - E27
+    - E28
+    - E29
+    - E30
+    - E31
+    - E32
+    - E33
+    - E34
+    - E35
+    - E36
+    - E37
+    - E38
+    - E39
+concerns:
+- id: MC-01
+  capability: mm.page_alloc.buddy_free
+  claim: 释放出的块永远不会与伙伴合并；合并循环本身还缺少“把伙伴从原链表摘下”的步骤，但该缺陷被前一个问题掩盖，在本 pin 不可达。
+  premise:
+  - PageBuddy(buddy) 判定 page_type 的高位类型基值（A-PA17）
+  - page_type 与 _mapcount 共用存储，初始化时 page_mapcount_reset 被注释（A-PA18），mem_map 整体清零；唯一写入是按位清/置 PG_buddy、PG_table 与 myos_* 中的 atomic_inc(_mapcount)（Q34）
+  path:
+  - __free_pages_ok → __myos_free_one_page（A-PA10）
+  - find_buddy_page_pfn → page_is_buddy → PageBuddy 恒假 → 返回 NULL（A-PA13）
+  - 循环第一次即 break，按原阶 set_buddy_order + add_to_free_list（A-PA11、A-PA12）
+  effect: 空闲块只会被拆小、不会再合大：长时间运行后高阶分配（kmalloc_large、多页 slab、order>0 请求）可能在总空闲足够时失败，失败后又进入 MC-04 的越界路径。若将来修好 page_type 初始化，合并循环会把仍在低阶链表上的伙伴并入高阶块（同一物理页出现在两条链），必须同时补“摘伙伴”。
+  counter_evidence:
+  - 启动交接 memblock_free_all 按对齐切块，同一区间内每块的同阶伙伴不是已释放的同阶块（审查代理按算术确认），因此即使 PageBuddy 正确，启动期也基本不会走合并
+  - 本 pin 中 PageBuddy 恒假这一结论依赖“没有其他代码把 page_type 设为 -1”；Q34 只检索了 mm 与 arch/x86_64/mm 目录
+  unknown:
+  - mm 目录之外是否有代码写 _mapcount/page_type（未全树检索）
+  - 实际负载下碎片化达到失败所需的时间
+  reachability: 每一次运行期释放都走这条“不合并”路径；双链缺陷潜伏。
+  anchors:
+  - A-PA10
+  - A-PA11
+  - A-PA12
+  - A-PA13
+  - A-PA17
+  - A-PA18
+  queries:
+  - Q05
+  - Q06
+  - Q34
+  independent_review: 初稿把后果写成“同一物理页上两条链、重复分配”；审查代理指出 PageBuddy 恒假使该后果不可达，主线回源确认（page-flags.h 第 480–491 行、mm_init.c 第 24 行），已改写并把原说法登记为 RF-01。
+  status: static_concern
+- id: MC-02
+  capability: mm.page_alloc.buddy_alloc
+  claim: 分配路径修改 zone->free_area 时不取任何锁，而释放路径在 zone->lock + 关中断内修改同一组链表，两者没有互斥。
+  premise:
+  - __myos_alloc_pages→__rmqueue_smallest→get_page_from_free_area/expand 直接改链表（A-PA07）
+  - buddy.c 中只有 __free_pages_ok 取 zone->lock（Q07，A-PA10）
+  path:
+  - 进程上下文分配中被中断，中断处理里分配或释放同一区 → 链表与 count 被并发修改
+  effect: 单 CPU 下只要中断上下文会分配/释放页就可能破坏空闲链；多 CPU 下任意并发分配都可能。
+  counter_evidence:
+  - __rmqueue_smallest 中对同一节点的第二次摘除是无害的空操作（list_header_delete_node 先判 contains，A-PA08），不构成额外破坏
+  - 若没有中断上下文分配、只有 BSP 运行，问题不会出现
+  unknown:
+  - 中断处理函数是否分配页或 kmalloc（未追踪）
+  - AP 是否启动并运行任务（CONFIG_NR_CPUS=256，AP 引导代码存在，未核）
+  reachability: 取决于上述两个未知。
+  anchors:
+  - A-PA07
+  - A-PA08
+  - A-PA10
+  queries:
+  - Q07
+  independent_review: 审查代理确认；补充 zone->lock 的 spin_lock_init 被注释但 pgdat 被 memset 0，0 值即解锁态。
+  status: static_concern
+- id: MC-03
+  capability: mm.page_alloc.buddy_alloc
+  claim: __GFP_ZERO 的高阶分配只清零第 0 页（外加第 1 页开头几个字节），其余页不清零。
+  premise:
+  - post_alloc_hook 对 i 循环调用 clear_page(page_to_virt(page) + i)，void* 加 i 是字节偏移（A-PA09）
+  path:
+  - alloc_pages(gfp|__GFP_ZERO, order>0) → prep_new_page → post_alloc_hook
+  effect: 调用者若依赖高阶清零，会读到旧数据。
+  counter_evidence:
+  - 当前活动调用者都不依赖它：alloc_low_pages 只经 alloc_low_page 以 num=1 调用（Q09）；get_zeroed_page 为 0 阶；kmalloc_large 自己 memset 全长；slab 路径在 prepare_alloc_flags 中去掉了 __GFP_ZERO（Q08 与审查代理）
+  unknown:
+  - 以后新增的高阶 __GFP_ZERO 调用者
+  reachability: 潜伏：本 pin 未找到依赖它的活动调用者。
+  anchors:
+  - A-PA09
+  queries:
+  - Q08
+  - Q09
+  independent_review: 审查代理确认并给出“潜伏”判断。
+  status: static_concern
+- id: MC-04
+  capability: mm.page_alloc.buddy_alloc
+  claim: 所有偏好区都分配失败时，区循环以 nr_zones=5 为上界读取 3 元素数组 prefered_zone_list 的下标 3、4（越界读，未定义行为）。
+  premise:
+  - prefered_zone_list 只有 NORMAL/DMA32/DMA 三项，上界为 NODE_DATA(0)->nr_zones（A-PA06）
+  - 'nr_zones = MAX_NR_ZONES（A-PA02），枚举无 #if，共 5 个区（A-PA03）'
+  path:
+  - NORMAL、DMA32、DMA 均无该阶块（或 GFP_DMA 请求从下标 2 开始、DMA 区失败）→ i=3,4 读数组外
+  effect: 越界值被当作区下标访问 node_zones，可能返回任意“区”里的块或访问非法内存，而不是干净地返回 NULL。
+  counter_evidence:
+  - 只在分配失败时触发；正常分配在前三项内返回
+  unknown:
+  - 编译后栈上越界读到的值
+  reachability: 内存耗尽或高阶碎片化（MC-01 会加剧）时可达；GFP_DMA 请求在 DMA 区单独失败时即可达（审查代理补充）。
+  anchors:
+  - A-PA02
+  - A-PA03
+  - A-PA06
+  queries: []
+  independent_review: 审查代理确认并补充 GFP_DMA 情形。
+  status: static_concern
+- id: MC-05
+  capability: mm.page_alloc.folio_ref_release
+  claim: 经 put_page/folio_put 释放的页永远不会回到 buddy。
+  premise:
+  - folio_put 在引用降到 0 时调 __folio_put（A-PA14）
+  - __folio_put 函数体全部注释（A-PA15）
+  path:
+  - 缺页、COW、exec 等路径的 folio_put/put_page（Q40）→ __folio_put 空操作
+  effect: 用户数据页与 COW 旧页只增不减；结合 MC-16（munmap/退出不拆页表），用户内存基本只分配不回收。
+  counter_evidence:
+  - 页表页、slab 页、大块 kmalloc 直接调 __free_pages，不受影响（审查代理列举）
+  unknown:
+  - 系统可用内存与工作负载决定多久耗尽
+  reachability: 每次 folio_put 降到 0 都发生。
+  anchors:
+  - A-PA14
+  - A-PA15
+  queries:
+  - Q40
+  independent_review: 审查代理确认；漏页调用点在 fault.c 与 exec.c。
+  status: static_concern
+- id: MC-07
+  capability: mm.kmalloc.object_free
+  claim: slab_free 在 partial 链长度达到 min_partial 时，会把仍有存活对象（inuse>0）的 slab 下线并把页还给 buddy；该判断在释放 list_lock 之后进行。
+  premise:
+  - 条件为 inuse==0 || partial.count >= min_partial（A-KM07）
+  - free_to_partial_list 已解锁（A-KM08）
+  - min_partial = max(4, min(8, ilog2(size)/2))（A-KM09）
+  path:
+  - kmem_cache_free → slab_free → free_to_partial_list（锁内）→ 锁外判断 → offline_exceeded_empty_slab + free_slab → __free_pages
+  effect: 仍被使用的对象所在页被还给 buddy，随后可能被重新分配并覆盖（释放后使用）。
+  counter_evidence:
+  - 新 slab 只在 partial 链为空时创建（A-KM06），partial 链增长要靠从多个 full slab 中各释放对象；顺序释放不会触发（审查代理）
+  unknown:
+  - 实际负载下单个 cache 的 partial 链能否达到 4–6
+  reachability: 条件性：需要同一 cache 的对象在 ≥min_partial 个已满 slab 上交错释放。
+  anchors:
+  - A-KM06
+  - A-KM07
+  - A-KM08
+  - A-KM09
+  queries:
+  - Q13
+  independent_review: 审查代理确认并补充可达性条件。
+  status: static_concern
+- id: MC-08
+  capability: mm.kmalloc.ctor_cache_state
+  claim: 所有 cache 的空闲指针都写在对象偏移 0，新 slab 的首对象不调用构造函数；因此带 ctor 的 cache 无法依赖“ctor 初始化的状态在分配/释放之间保持”。本 pin 没有找到受此影响而出错的使用者。
+  premise:
+  - s->offset 从未赋值（Q10 负检索），cache 结构经 kmem_cache_zalloc 或静态零初始化
+  - set_freepointer 写 object+offset（A-KM04）
+  - alloc_init_new_slab 只对 start 之后的对象调 setup_object（A-KM03）
+  path:
+  - kmem_cache_create(..., ctor) → 新 slab → 对象首 8 字节被空闲链指针覆盖 → 分配后未清除
+  effect: 依赖 ctor 状态位于对象开头的使用者会拿到垃圾值。
+  counter_evidence:
+  - 带 ctor 的 cache 有三个（Q11）：sighand_cache、bdev_cache（init_once 为空）、shmem_inode_cache（分配后重新初始化）
+  - sighand：copy_sighand 分配后安装语句被注释（A-KM14），任务结构整体复制而共用 init_sighand（Q33 只有静态初值一处写入），新对象的 siglock 从不被加锁（审查代理）
+  unknown:
+  - 以后新增依赖 ctor 状态的 cache
+  reachability: 机制始终存在；本 pin 无可达的有害后果（每次非 CLONE_SIGHAND 的 fork 泄漏一个 sighand 对象）。
+  anchors:
+  - A-KM03
+  - A-KM04
+  - A-KM14
+  queries:
+  - Q10
+  - Q11
+  - Q12
+  - Q33
+  independent_review: 初稿推出“首次锁 siglock 会自旋”；审查代理指出对象从未安装且另有两个 ctor cache，主线回源确认，原说法登记为 RF-02、RF-05。
+  status: static_concern
+- id: MC-09
+  capability: mm.kmalloc.size_classes_and_large
+  claim: 非编译期常量参数的 kmalloc_array/kcalloc 在总尺寸超过一页时进入 __kmalloc 的无限自旋。
+  premise:
+  - kmalloc_array 非常量时直接调 __kmalloc（A-KM13）
+  - __kmalloc 首句 while (size > KMALLOC_MAX_CACHE_SIZE);（A-KM12、A-KM02）
+  path:
+  - kcalloc/kmalloc_array(n, size) 且 n*size > PAGE_SIZE → __kmalloc 自旋
+  effect: 调用者卡死在内核中。
+  counter_evidence:
+  - kmalloc() 本身把大尺寸分给 kmalloc_large，不受影响（A-KM10）
+  - 唯一活动的 kcalloc 调用者 hpet_enable 的尺寸远小于一页（Q14 与审查代理）
+  unknown:
+  - 以后的大数组分配者
+  reachability: 潜伏。
+  anchors:
+  - A-KM02
+  - A-KM10
+  - A-KM12
+  - A-KM13
+  queries:
+  - Q14
+  independent_review: 审查代理确认并给出“潜伏”判断。
+  status: static_concern
+- id: MC-11
+  capability: mm.vm_map.unmapped_area_search
+  claim: topdown 选址把结果放在 if (gap = ~0) 中被赋值覆盖，总是返回 (mmap_base - len) 页对齐地址，与已有 VMA 无关。
+  premise:
+  - 条件中是赋值（A-VM05）
+  - mm->get_unmapped_area 固定为 simple_get_unmapped_area（A-VM07），文件系统未提供替代钩子（Q18）
+  path:
+  - 非 MAP_FIXED、无可用提示地址的 mmap → simple_get_unmapped_area → topdown → 固定地址 → simple_mmap_region 先对该范围做 VMA 层 munmap（A-VM03）
+  effect: 两次同长度的非固定 mmap 得到同一地址：要么旧 VMA 被摘掉（页表仍在，见 MC-16），要么因 MC-13 未找到而两个 VMA 重叠。
+  counter_evidence:
+  - MAP_FIXED 直接返回提示地址，不经此函数（审查代理）
+  - 提示地址非 0 且不落在任何 VMA 内时直接采用
+  unknown:
+  - 用户程序实际的 mmap 序列
+  reachability: 每次非固定、无提示的 mmap。
+  anchors:
+  - A-VM03
+  - A-VM05
+  - A-VM07
+  queries:
+  - Q18
+  - Q37
+  independent_review: 审查代理确认。
+  status: static_concern
+- id: MC-12
+  capability: mm.vm_map.unmapped_area_search
+  claim: topdown 遍历跑完（没有 break）时以 NULL 调 vma_next_vma，后者对 NULL 原地自旋。
+  premise:
+  - if (tmp == NULL) { next = vma_next_vma(tmp); ...（A-VM04）
+  - vma_next_vma 首句 while (vma == NULL);（A-VM06）
+  path:
+  - 所有 VMA 都在 high_limit(=mmap_base) 以上（全部 continue）或遍历耗尽 → tmp==NULL → 自旋
+  effect: 调用 mmap 的任务卡在内核。
+  counter_evidence:
+  - 遍历中只要某个 mmap_base 以下 VMA 与其后继（或 high_limit）之间的间隙不小于 len，或遍历到起点不高于 low_limit(=PAGE_SIZE) 的 VMA，循环就会 break 而不到达 NULL 分支；装载于低地址的静态程序通常满足前者，但这不是必然
+  unknown:
+  - MyOS2 实际运行的用户程序是否为动态链接 PIE：审查代理推导 PIE 主程序装在 ELF_ET_DYN_BASE（窗口 2/3 处）、栈在顶端，均高于 mmap_base（窗口 1/3），解释器首段以非 MAP_FIXED 映射时即触发；主线核对了这几个宏的定义，未运行
+  reachability: 条件性；对动态链接 PIE 的 exec 可能在装载解释器时触发。
+  anchors:
+  - A-VM04
+  - A-VM06
+  queries:
+  - Q37
+  independent_review: 审查代理确认，并给出比初稿更具体的触发场景。
+  status: static_concern
+- id: MC-13
+  capability: mm.vm_map.vma_list_lookup
+  claim: find_vma_intersection 只检查“最后一个 vm_end 严格小于 start 的 VMA”的后继：没有这样的前驱时返回 NULL；前驱的后继恰好止于 start 时也返回 NULL，即使更后面的 VMA 与范围相交。
+  premise:
+  - find_vma_prev_to_addr 用严格的 vm_end < addr（A-VM09）
+  - 只测一个后继（A-VM08）
+  path:
+  - munmap/mmap 清范围 → simple_do_vma_munmap → find_vma_intersection → NULL → 直接返回 0
+  effect: munmap 对“起点处于最低 VMA 或紧贴前一 VMA 的 VMA”什么也不做；mmap 覆盖时旧 VMA 不被摘除，造成重叠。合并路径中 curr 在 prev 非空时恒为 NULL。
+  counter_evidence:
+  - 当目标 VMA 前面有一个与其不相邻的 VMA 时，函数能正确找到
+  unknown:
+  - 用户 VMA 的相邻程度（ELF 段、bss、堆通常相邻）
+  reachability: 常见：任何以“紧贴前一 VMA 的 VMA 起点”为起点的 munmap。
+  anchors:
+  - A-VM08
+  - A-VM09
+  queries:
+  - Q38
+  independent_review: 审查代理确认；初稿另列的“prev 为 NULL 时 munmap 自旋”被其驳回（RF-03），其实际表现已并入本条。
+  status: static_concern
+- id: MC-14
+  capability: mm.vm_map.mmap_create
+  claim: simple_vma_merge 中 adjust_target 未初始化：prev 非空但不可合并、next 可合并时读取未初始化指针并交给 __simple_vma_adjust。
+  premise:
+  - adjust_target 只在 prev 可合并或 next 可合并且 prev==NULL 时赋值（A-VM10）
+  - 随后 if (adjust_target == NULL) 读取它（A-VM11）
+  - prev 来自 find_vma_prev_to_addr（vm_end < addr 严格），故 addr == prev->vm_end 永不成立，merge_prev 在 mmap/brk 路径恒为假（审查代理）
+  path:
+  - mmap/brk 新区间的结尾正好接上一个同标志、同文件、偏移连续的 VMA，且其前方存在任一 VMA
+  effect: 对栈上残值指针写 vm_start/vm_end/vm_pgoff，或在残值恰为 NULL 时对 NULL 解引用。
+  counter_evidence:
+  - prev 为 NULL 时 next 合并路径正确赋值
+  unknown:
+  - 编译后该栈槽的实际残值
+  reachability: 条件性但不罕见（例如 MAP_FIXED 或有提示地址的匿名映射紧贴下一个同类 VMA）。
+  anchors:
+  - A-VM10
+  - A-VM11
+  queries:
+  - Q38
+  independent_review: 审查代理确认，并指出 merge_prev 恒为假使其比初稿更容易触发。
+  status: static_concern
+- id: MC-15
+  capability: mm.vm_map.munmap
+  claim: __simple_vma_adjust 先改 vm_start，再用 (start - vm_pgoff) >> PAGE_SHIFT 更新 vm_pgoff：把页偏移当地址相减，结果错误。
+  premise:
+  - 三行顺序与表达式见 A-VM12
+  path:
+  - __split_vma（munmap 拆分）或合并 → __simple_vma_adjust → vm_pgoff 错 → 文件缺页 linear_page_index → page_array[pgoff]
+  effect: 拆分/合并后的文件映射读错文件页，或越界访问页缓存数组。
+  counter_evidence:
+  - munmap 总以 new_below=1 拆分，只卸尾部时得到错误 pgoff 的正是被删掉的那一段；头部/中间卸载或合并后存活的 VMA 才受影响（审查代理）
+  - 匿名 VMA 的 pgoff 不参与取页
+  unknown:
+  - 实际是否对文件映射做部分 munmap 或合并
+  reachability: 条件性。
+  anchors:
+  - A-VM12
+  queries: []
+  independent_review: 审查代理确认并补充受影响范围。
+  status: static_concern
+- id: MC-16
+  capability: mm.vm_map.munmap
+  claim: munmap 不撤销页表映射也不释放页与 VMA 结构；进程退出与 exec 换 mm 时地址空间也从不拆除。
+  premise:
+  - simple_unmap_region 全部注释（A-VM15）
+  - simple_do_vma_munmap 只摘链（A-VM14），vm_area_free 不在此路径（Q19）
+  - __mmput 全部注释（A-VM16），Q20 无活动的拆除实现
+  - fork/mm 目录无活动的 TLB 刷新（Q26）
+  path:
+  - munmap → 摘 VMA → PTE 仍在 → 原地址仍可访问；同范围新映射看到旧页
+  - exit/exec → mmput → __mmput 空
+  effect: munmap 不能撤销访问；用户内存、页表、VMA 只增不减。
+  counter_evidence:
+  - 无
+  unknown:
+  - exit_mm 被注释（审查代理）后任务退出时 mm 的其他引用
+  reachability: 每次 munmap/exit/exec。
+  anchors:
+  - A-VM14
+  - A-VM15
+  - A-VM16
+  queries:
+  - Q19
+  - Q20
+  - Q26
+  independent_review: 审查代理确认。
+  status: static_concern
+- id: MC-18
+  capability: mm.vm_map.mmap_create
+  claim: mmap 锁 API 全部是空函数，其中 mmap_read_lock_killable / mmap_read_trylock 返回未初始化的局部变量；缺页、munmap、brk 根本不调用锁。
+  premise:
+  - mmap_lock.h 中函数体为空或返回未初始化值（A-VM02）
+  - 调用点见 Q21
+  path:
+  - exec_mmap 调 mmap_read_lock_killable 并读其返回值（Q21 命中）
+  effect: VMA 链与页表没有任何 mm 级互斥；共享 mm 的并发操作完全不受保护。
+  counter_evidence:
+  - mmap_read_trylock 没有调用者（审查代理），未初始化返回值只通过 mmap_read_lock_killable 被读取
+  unknown:
+  - 是否存在共享 mm 的多线程（CLONE_VM）用户
+  reachability: 并发前提成立时。
+  anchors:
+  - A-VM01
+  - A-VM02
+  queries:
+  - Q21
+  independent_review: 审查代理确认并列出实际调用点。
+  status: static_concern
+- id: MC-21
+  capability: mm.fault.anonymous
+  claim: 匿名映射写缺页（以及对零页的 COW）映射的新页没有清零，用户可能读到该物理页原有的数据；由于 MC-05 用户页从不回收，这些数据只可能来自内核自身释放过的页或启动后未写过的内存。
+  premise:
+  - do_anonymous_page 写路径经 alloc_anon_folio（A-FT15）
+  - folio_prealloc 不使用 need_zero（A-FT16、Q24）
+  - folio_alloc 是忽略参数的 folio_alloc_noprof（Q23、A-FT17），GFP_HIGHUSER_MOVABLE 无 __GFP_ZERO（Q23）
+  - wp_page_copy 对零页也走 folio_prealloc 且不复制（A-FT20）
+  - fault 目录中没有活动的清页调用（Q25）
+  path:
+  - 用户首次写匿名页 / 对读过的零页再写 → 新页内容为物理页原有内容
+  effect: bss/堆/栈初值不确定，信息泄漏。
+  counter_evidence:
+  - 由于 MC-05，用户页从不回收，旧数据只能来自内核自身释放的页（slab、页表、大块 kmalloc 等）或未触碰过的内存（审查代理）
+  - 文件页缓存页使用 __GFP_ZERO（0 阶，清零有效）
+  unknown:
+  - 固件/QEMU 交付时物理内存是否为零
+  - ELF 装载器是否另行清零 bss 尾部
+  reachability: 每次匿名写缺页。
+  anchors:
+  - A-FT15
+  - A-FT16
+  - A-FT17
+  - A-FT20
+  queries:
+  - Q23
+  - Q24
+  - Q25
+  independent_review: 审查代理确认，补充 gup.c 的 alloc_page(GFP_USER) 同样不清零。
+  status: static_concern
+- id: MC-22
+  capability: mm.fault.arch_entry
+  claim: 缺页处理中的栈增长分支不可达：simple_find_vma 只返回包含地址的 VMA，随后的 vm_start <= address 判断恒真。
+  premise:
+  - A-FT06 的包含判定
+  - A-FT05 的恒真判断
+  - 找不到 VMA 直接 myos_bad_area（A-FT04）
+  path:
+  - 用户栈越过当前栈 VMA 下界 → 无包含 VMA → myos_bad_area → 自旋
+  effect: 栈只能使用 exec 预先扩出的大小，越界即卡死。
+  counter_evidence:
+  - exec 的 setup_arg_pages 预先调用 expand_stack（Q29），审查代理称预扩 32 页（主线未核数值）
+  unknown:
+  - 用户程序实际栈深
+  reachability: 栈超过预扩范围时。
+  anchors:
+  - A-FT04
+  - A-FT05
+  - A-FT06
+  queries:
+  - Q29
+  independent_review: 审查代理确认。
+  status: static_concern
+- id: MC-23
+  capability: mm.fault.arch_entry
+  claim: 任何未处理的缺页都让任务在内核内自旋而不是收到信号：内核地址缺页、找不到 VMA、处理结果非 0、共享写缺页、共享映射写保护缺页、VMA 无 ->fault（包括共享匿名映射）。
+  premise:
+  - A-FT02、A-FT08、A-FT09、A-FT18、A-FT19、A-FT27 的 while 自旋
+  - 新 VMA 默认 vm_ops=&dummy_vm_ops（A-VM18），共享匿名映射的 shmem_zero_setup 不改 vm_ops（审查代理），故不算匿名而进入 do_fault 的 ->fault 缺失分支
+  path:
+  - 异常入口开中断（审查代理：entry_64.S 在调用 excep_hwint_context 前 sti）→ 处理函数自旋 → 定时中断返回时若 !in_atomic() 则 schedule()（Q32）
+  effect: 出错进程不会被终止，持续占用 CPU 时间片；若自旋时持有锁或 in_atomic() 为真，则可能拖住整个系统。
+  counter_evidence:
+  - 中断出口会调 schedule()（Q32），因此在 in_atomic() 为假时其他任务仍可运行（审查代理）
+  unknown:
+  - 缺页时 preempt_count/in_atomic() 的值（继承 integration-03 GAP-02）
+  reachability: 任何用户程序的非法访问或未实现路径。
+  anchors:
+  - A-FT02
+  - A-FT08
+  - A-FT09
+  - A-FT18
+  - A-FT19
+  - A-FT27
+  - A-VM18
+  queries:
+  - Q32
+  independent_review: 审查代理确认并纠正共享匿名路径（RF-04）。
+  status: static_concern
+- id: MC-24
+  capability: mm.fault.arch_entry
+  claim: 没有访问权限检查：对没有 VM_WRITE 的私有映射写入，会反复缺页、每次复制出一个新的只读页，直到内存耗尽后进入 MC-23 的自旋。
+  premise:
+  - access_error 被注释（A-FT07）
+  - 写缺页遇到不可写 PTE 进入 do_wp_page（A-FT13）
+  - 新 PTE 只有 VM_WRITE 才设写位（A-FT21、A-FT22）
+  - 旧页经 folio_put 不回收（MC-05）
+  path:
+  - 写只读私有映射 → do_wp_page → wp_page_copy → 只读 PTE → 重试 → 再缺页 …
+  effect: 无 SIGSEGV；每次重试都分配新页且旧页不回收（MC-05），直至取页失败；取页失败时先在 page_folio 中读空指针（见 mm.fault.anonymous 的 failure_path），后续结果 unknown。
+  counter_evidence:
+  - VMA 带 VM_WRITE 时第二次缺页即成为可写，不循环
+  unknown:
+  - 用户程序写只读段的频率
+  reachability: 写只读私有映射时。
+  anchors:
+  - A-FT07
+  - A-FT13
+  - A-FT21
+  - A-FT22
+  queries: []
+  independent_review: 审查代理确认。
+  status: static_concern
+- id: MC-25
+  capability: mm.fault.cow
+  claim: fork 只清父 PTE 的写位、不刷 TLB，也不为共享页增加引用；父进程在下一次 CR3 重载前可能仍经旧的可写 TLB 项写共享页，子进程会看到。
+  premise:
+  - copy_present_pte 用 arch_ptep_set_wrprotect（仅 clear_bit）写保护父 PTE（A-FT23）
+  - flush_tlb_mm 被注释（A-FT24），fork/exec/mm 目录无活动刷新（Q26）
+  path:
+  - 父进程 fork 前写过某页（TLB 中有可写项）→ fork → 返回用户态继续写该页 → 写入共享物理页
+  effect: COW 隔离失效；页引用计数与实际映射数不一致（当前因 MC-05 只表现为泄漏，不会提前释放）。
+  counter_evidence:
+  - 上下文切换的 switch_mm 写 CR3 会清除非全局 TLB 项（审查代理），之后的写会正确触发 COW
+  unknown:
+  - 用户 PTE 是否带全局位（审查代理未核，主线未核）
+  - fork 返回后父进程在下次切换前写共享页的概率
+  reachability: fork 后、父进程下次切换前的窗口。
+  anchors:
+  - A-FT23
+  - A-FT24
+  queries:
+  - Q26
+  - Q27
+  independent_review: 审查代理确认。
+  status: static_concern
+refuted_claims:
+- id: RF-01
+  original: MC-01 初稿：合并时伙伴不摘链，导致同一物理页出现在两条空闲链、被重复分配。
+  verdict: 本 pin 不可达
+  why: PageBuddy 恒假，合并循环体从不执行（A-PA17、A-PA18、Q34）。缺陷本身保留为 MC-01 中的潜伏部分。
+  anchors:
+  - A-PA17
+  - A-PA18
+  queries:
+  - Q34
+  source: 独立只读审查代理逐条反驳式复核（未运行代码），主线随后回源复查其关键反证
+- id: RF-02
+  original: MC-08 初稿：fork 出的任务首次锁 siglock 时，因对象首 8 字节是空闲指针而自旋。
+  verdict: 驳回
+  why: copy_sighand 的安装语句被注释，任务共用静态 init_sighand（A-KM14、Q33）。
+  anchors:
+  - A-KM14
+  queries:
+  - Q33
+  source: 独立只读审查代理逐条反驳式复核（未运行代码），主线随后回源复查其关键反证
+- id: RF-03
+  original: MC-17 初稿：munmap 起点不晚于最低 VMA 时 prev 为 NULL，vma_next_vma(NULL) 自旋。
+  verdict: 驳回
+  why: find_vma_intersection 只会返回某个非空前驱的后继，不会返回第一个 VMA；该情形下函数直接返回 0（并入 MC-13）。
+  anchors:
+  - A-VM08
+  - A-VM13
+  - A-VM14
+  queries:
+  - Q38
+  source: 独立只读审查代理逐条反驳式复核（未运行代码），主线随后回源复查其关键反证
+- id: RF-04
+  original: MC-23 初稿：共享匿名映射经 do_anonymous_page 返回 VM_FAULT_SIGBUS 后由入口自旋。
+  verdict: 路径更正
+  why: vma_init 给新 VMA 设 dummy_vm_ops（A-VM18），shmem_zero_setup 不改它，共享匿名 VMA 不算匿名，进入 do_fault 的 ->fault 缺失自旋（A-FT27）；do_anonymous_page 的 VM_SHARED 分支在 mmap 路径下不可达。
+  anchors:
+  - A-VM18
+  - A-FT27
+  queries: []
+  source: 独立只读审查代理逐条反驳式复核（未运行代码），主线随后回源复查其关键反证
+- id: RF-05
+  original: MC-08 初稿：sighand_cache 是唯一带构造函数的 cache。
+  verdict: 驳回
+  why: bdev_cache（init_once）与 shmem_inode_cache（shmem_init_inode）也带 ctor（Q11）；两者在本 pin 无害。
+  anchors: []
+  queries:
+  - Q11
+  source: 独立只读审查代理逐条反驳式复核（未运行代码），主线随后回源复查其关键反证
+dependency_risks:
+- id: DR-01
+  depends_on:
+  - 中断/异常出口在 !in_atomic() 时调用 schedule()（Q32）
+  - integration-03 GAP-02：in_atomic()/preempt_count 实际值未追踪
+  - 调度器既有问题 W01/W02/DV-11/DV-13/DV-23（integration-03）
+  affects:
+  - mm.fault.arch_entry
+  - mm.fault.pgtable_walk
+  - mm.fault.anonymous
+  - mm.fault.file_backed
+  - mm.fault.cow
+  what: 缺页失败的自旋（MC-23、MC-24）是否只卡住出错任务，取决于中断出口能否把它换下；能否换下又依赖 in_atomic 与调度队列行为。
+  evidence_class: source_only
+  unknown:
+  - 缺页自旋时的 preempt_count
+  - 被换下后该任务回队与再选取的顺序
+- id: DR-02
+  depends_on:
+  - f_op->read 之下的文件系统与块设备路径（未追踪）
+  - integration-03 已登记的等待机制问题：swait 计数（V02/V03/V10/V11）、有限超时 DV-19
+  affects:
+  - mm.fault.file_backed
+  what: 文件映射缺页同步读文件；若底层读要等待完成通知或超时，缺页可靠性就受这些等待机制影响。
+  evidence_class: endpoint_retained_not_traced
+  unknown:
+  - 具体文件系统 read 是否等待、等待用哪种原语
+- id: DR-03
+  depends_on:
+  - V12 atomic 判负、V13 trylock、swait/completion/schedule_timeout/msleep 系列（integration-03 归集）
+  affects:
+  - mm.page_alloc
+  - mm.kmalloc
+  - mm.vm_map
+  - mm.fault
+  what: 负检索 Q28：mm 与 arch/x86_64/mm 的活动文本不直接使用这些已知有问题的原语；内存子系统直接依赖的是自旋锁（zone->lock、slab list_lock 用关中断版本；page_table_lock 与 PMD 级锁用不关中断的 spin_lock）与普通原子操作。
+  evidence_class: negative_search
+  unknown:
+  - 间接调用（经文件系统、驱动回调）未覆盖
+- id: DR-04
+  depends_on:
+  - MC-08 的 ctor/空闲指针机制
+  affects:
+  - mm.kmalloc.ctor_cache_state
+  - external:mykernel/sched/forkexec/fork.c::copy_sighand
+  what: copy_sighand 分配后不安装对象：不会触发锁问题，但每次非 CLONE_SIGHAND 的 fork 泄漏一个 sighand 对象。
+  evidence_class: source_only
+  unknown:
+  - 信号处理语义因共用 init_sighand 而产生的影响（范围外）
+- id: DR-05
+  depends_on:
+  - 中断上下文是否分配内存（未追踪）
+  - AP 是否运行（未核）
+  affects:
+  - mm.page_alloc.buddy_alloc
+  - mm.page_alloc.buddy_free
+  - mm.vm_map.vma_list_lookup
+  - mm.vm_map.mmap_create
+  what: 无锁分配（MC-02）与无锁 VMA 操作（MC-18）只有在并发前提成立时才出错；不能因存在 per-CPU 或 NR_CPUS 名字就认为支持 SMP。
+  evidence_class: source_only
+  unknown:
+  - 并发前提本身
+- id: DR-06
+  depends_on:
+  - 上下文切换中 switch_mm 写 CR3 的时机（调度器）
+  affects:
+  - mm.fault.cow
+  - mm.vm_map.mm_lifecycle
+  what: fork 后 COW 是否被绕过（MC-25）取决于父进程在下一次切换前是否写共享页；切换时机由调度器决定。
+  evidence_class: source_only
+  unknown:
+  - 用户 PTE 全局位
+  - fork 后的切换时机
+m04_usability:
+- capability: mm.page_alloc.zone_layout
+  explain_from_source: 可
+  host_verifiable_alone: 可（输入为人造 memblock 区间）
+  needs_real_kernel: 否
+  depends_on_known_defects: 无
+  status: 结构可讲；正确性未评估
+- capability: mm.page_alloc.mm_core_init
+  explain_from_source: 可
+  host_verifiable_alone: 部分（切块算术可宿主验证）
+  needs_real_kernel: 启动交接总量需要
+  depends_on_known_defects: 无
+  status: 结构可讲；数量未验证
+- capability: mm.page_alloc.buddy_alloc
+  explain_from_source: 可
+  host_verifiable_alone: 可
+  needs_real_kernel: 并发部分需要
+  depends_on_known_defects: 无（DR-05 的并发前提未知）
+  status: 有实现，正确性有疑点（MC-02/03/04）
+- capability: mm.page_alloc.buddy_free
+  explain_from_source: 可（须同时讲 MC-01）
+  host_verifiable_alone: 可
+  needs_real_kernel: 否
+  depends_on_known_defects: 无
+  status: 有实现，不合并（MC-01）
+- capability: mm.page_alloc.folio_ref_release
+  explain_from_source: 可（空实现本身就是结论）
+  host_verifiable_alone: 不必
+  needs_real_kernel: 否
+  depends_on_known_defects: 无
+  status: 归还缺失（MC-05）
+- capability: mm.kmalloc.boot_init
+  explain_from_source: 可
+  host_verifiable_alone: 部分
+  needs_real_kernel: 完整自举需要
+  depends_on_known_defects: 无
+  status: 结构可讲
+- capability: mm.kmalloc.object_allocator
+  explain_from_source: 可
+  host_verifiable_alone: 可（替换 alloc_pages）
+  needs_real_kernel: 并发部分需要
+  depends_on_known_defects: 无
+  status: 有实现；MC-08 机制性问题无当前受害者
+- capability: mm.kmalloc.object_free
+  explain_from_source: 可（须同时讲 MC-07）
+  host_verifiable_alone: 可
+  needs_real_kernel: 否
+  depends_on_known_defects: 无
+  status: 有实现，正确性有疑点（MC-07）
+- capability: mm.kmalloc.size_classes_and_large
+  explain_from_source: 可
+  host_verifiable_alone: 可
+  needs_real_kernel: 否
+  depends_on_known_defects: 无
+  status: 有实现；MC-09 潜伏
+- capability: mm.kmalloc.ctor_cache_state
+  explain_from_source: 可
+  host_verifiable_alone: 可
+  needs_real_kernel: 否
+  depends_on_known_defects: 无
+  status: 机制性问题（MC-08），本 pin 无受害者
+- capability: mm.vm_map.vma_list_lookup
+  explain_from_source: 可（须同时讲 MC-13）
+  host_verifiable_alone: 可（纯链表）
+  needs_real_kernel: 否
+  depends_on_known_defects: 无
+  status: 有实现，查询缺陷（MC-13）
+- capability: mm.vm_map.mmap_create
+  explain_from_source: 可
+  host_verifiable_alone: 部分（文件钩子需桩）
+  needs_real_kernel: 端到端需要
+  depends_on_known_defects: 无（锁为空，DR-05）
+  status: 有实现，正确性有疑点（MC-14/18）
+- capability: mm.vm_map.unmapped_area_search
+  explain_from_source: 可
+  host_verifiable_alone: 可
+  needs_real_kernel: MC-12 可达性需要
+  depends_on_known_defects: 无
+  status: 实际行为等于固定地址（MC-11/12）
+- capability: mm.vm_map.munmap
+  explain_from_source: 可
+  host_verifiable_alone: VMA 层可
+  needs_real_kernel: 页表后果需要
+  depends_on_known_defects: 无
+  status: 只有 VMA 层（MC-15/16）
+- capability: mm.vm_map.brk_stack_exec
+  explain_from_source: 部分（brk 正文未锚定）
+  host_verifiable_alone: 部分
+  needs_real_kernel: 需要
+  depends_on_known_defects: exec 的调度/等待前置未核
+  status: 调用链已核；正文未逐行锚定
+- capability: mm.vm_map.mm_lifecycle
+  explain_from_source: 可
+  host_verifiable_alone: 不适合
+  needs_real_kernel: 需要
+  depends_on_known_defects: fork 切换时机（DR-06）
+  status: 复制有、拆除无（MC-16）
+- capability: mm.fault.arch_entry
+  explain_from_source: 可
+  host_verifiable_alone: 否
+  needs_real_kernel: 需要
+  depends_on_known_defects: 自旋能否被换下依赖中断出口调度（DR-01）
+  status: 主路径可讲；错误出口均为自旋（MC-23）
+- capability: mm.fault.pgtable_walk
+  explain_from_source: 可
+  host_verifiable_alone: 部分（页表页内存可模拟）
+  needs_real_kernel: 需要
+  depends_on_known_defects: DR-01（失败结果）
+  status: 有实现
+- capability: mm.fault.anonymous
+  explain_from_source: 可
+  host_verifiable_alone: 否
+  needs_real_kernel: 需要
+  depends_on_known_defects: 无
+  status: 有实现，新页不清零（MC-21）
+- capability: mm.fault.file_backed
+  explain_from_source: 可（到 f_op->read 为止）
+  host_verifiable_alone: 否
+  needs_real_kernel: 需要
+  depends_on_known_defects: 块 I/O 等待（DR-02）
+  status: 读与私有写有实现，共享写占位
+- capability: mm.fault.cow
+  explain_from_source: 可
+  host_verifiable_alone: 否
+  needs_real_kernel: 需要
+  depends_on_known_defects: 上下文切换时机（DR-06）
+  status: 有实现，隔离不完整（MC-24/25）
+next_validation_candidates:
+- id: NV-1
+  purpose: 确认释放块是否合并（MC-01），以及给 page_type 置基值后合并循环是否会把伙伴留在原链表
+  minimal_observation: 从一个 3 阶块取 0 阶页再释放后，各阶 free_area 的节点集合与 count；PageBuddy 返回值
+  touches_pending_items: 否（纯 page_alloc）
+  preconditions:
+  - 宿主夹具执行授权（当前 host_fixture_execution_authorized=false）
+  - buddy.c 与所需头文件的宿主桩
+  kind: host
+  status: NOT_RUN
+- id: NV-2
+  purpose: 确认 slab_free 会释放仍有对象的 slab（MC-07）
+  minimal_observation: 让同一 cache 的 ≥min_partial 个已满 slab 各释放一个对象后，free_slab 被调用时该 slab 的 inuse
+  touches_pending_items: 否
+  preconditions:
+  - 宿主夹具执行授权
+  - alloc_pages/__free_pages 宿主替身
+  kind: host
+  status: NOT_RUN
+- id: NV-3
+  purpose: 确认 VMA 查询与选址缺陷（MC-11、MC-12、MC-13、MC-14、MC-15）
+  minimal_observation: 人造 VMA 链上 find_vma_intersection 的返回值、topdown 选址返回值、合并后 VMA 的 start/end/pgoff；自旋用看门狗超时记录为 INCOMPLETE_EVIDENCE 而非“无问题”
+  touches_pending_items: 否
+  preconditions:
+  - 宿主夹具执行授权
+  - MC-14 的未初始化读需要用填充值区分，记录编译器与优化级别
+  kind: host
+  status: NOT_RUN
+- id: NV-4
+  purpose: 确认匿名写缺页映射的新页是否带旧数据（MC-21）
+  minimal_observation: 内核先释放一批写满特征值的页，再让新进程首次写一个匿名页并读回其余字节
+  touches_pending_items: 是：需要用户进程运行，依赖调度与 exec 路径（DR-01）
+  preconditions:
+  - 完整内核构建与 QEMU 运行授权（当前均未授权）
+  - 可运行的用户程序
+  kind: real_kernel
+  status: NOT_RUN
+- id: NV-5
+  purpose: 确认 fork 后父进程能否绕过 COW（MC-25）
+  minimal_observation: 父进程 fork 前后连续写同一页、在任何切换之前子进程读该页的值；同时记录 CR3 切换时刻
+  touches_pending_items: 是：结果取决于调度切换时机（DR-06）
+  preconditions:
+  - 完整内核构建与 QEMU 运行授权
+  - 能控制或记录切换时机的手段
+  kind: real_kernel
+  status: NOT_RUN
+- id: NV-6
+  purpose: 确认非法访问/动态 PIE exec 时任务是否自旋、其他任务是否继续运行（MC-12、MC-23、DR-01）
+  minimal_observation: 触发一次非法用户访问（或 exec 一个动态 PIE）后，其他任务的进度计数与出错任务的状态；缺页时的 preempt_count
+  touches_pending_items: 是：依赖中断出口调度与 in_atomic（integration-03 GAP-02）
+  preconditions:
+  - 完整内核构建与 QEMU 运行授权
+  kind: real_kernel
+  status: NOT_RUN
+old_inputs_index:
+- id: OLD-01
+  old_id: mm.page_alloc
+  source: DR-002 + DR-003
+  disposition: subsystem_row
+  mapped_to:
+  - mm.page_alloc
+- id: OLD-02
+  old_id: mm.page_alloc.zoned_buddy
+  source: DR-002
+  disposition: refined
+  mapped_to:
+  - mm.page_alloc.buddy_alloc
+  - mm.page_alloc.buddy_free
+- id: OLD-03
+  old_id: mm.page_alloc.obvious_missing
+  source: DR-002
+  disposition: not_covered
+  mapped_to: []
+  note: 回收、OOM、per-CPU 页表等“缺失项”本批未逐项检索，不确认也不否认。
+- id: OLD-04
+  old_id: mm.page_alloc.mm_core_init
+  source: DR-003（init_order 端点）
+  disposition: kept_as_capability
+  mapped_to:
+  - mm.page_alloc.mm_core_init
+- id: OLD-05
+  old_id: mm.page_alloc.buddy_system
+  source: DR-003（functional 端点）
+  disposition: refined
+  mapped_to:
+  - mm.page_alloc.buddy_alloc
+  - mm.page_alloc.buddy_free
+- id: OLD-06
+  old_id: mm.kmalloc
+  source: DR-002 + DR-003
+  disposition: subsystem_row
+  mapped_to:
+  - mm.kmalloc
+- id: OLD-07
+  old_id: mm.kmalloc.slub_and_size_classes
+  source: DR-002
+  disposition: refined
+  mapped_to:
+  - mm.kmalloc.object_allocator
+  - mm.kmalloc.object_free
+  - mm.kmalloc.size_classes_and_large
+- id: OLD-08
+  old_id: mm.kmalloc.obvious_missing
+  source: DR-002
+  disposition: not_covered
+  mapped_to: []
+  note: per-CPU 快路径、cache 销毁等未逐项检索。
+- id: OLD-09
+  old_id: mm.kmalloc.object_allocator
+  source: DR-003（functional 端点）
+  disposition: kept_as_capability
+  mapped_to:
+  - mm.kmalloc.object_allocator
+- id: OLD-10
+  old_id: mm.vm_map
+  source: DR-002 + DR-003
+  disposition: subsystem_row
+  mapped_to:
+  - mm.vm_map
+- id: OLD-11
+  old_id: mm.vm_map.vma_and_syscalls
+  source: DR-002
+  disposition: refined
+  mapped_to:
+  - mm.vm_map.vma_list_lookup
+  - mm.vm_map.mmap_create
+  - mm.vm_map.unmapped_area_search
+  - mm.vm_map.munmap
+  - mm.vm_map.brk_stack_exec
+- id: OLD-12
+  old_id: mm.vm_map.obvious_missing
+  source: DR-002
+  disposition: not_covered
+  mapped_to: []
+  note: mprotect/mremap、ASLR 等未检索。
+- id: OLD-13
+  old_id: mm.fault
+  source: DR-002（DR-003 无此节点）
+  disposition: subsystem_row
+  mapped_to:
+  - mm.fault
+  note: DR-003 的边中没有任何 mm.fault 端点；本批的 fault 依赖全部是新增 proposed 边。
+- id: OLD-14
+  old_id: mm.fault.anon_file_cow
+  source: DR-002
+  disposition: refined
+  mapped_to:
+  - mm.fault.anonymous
+  - mm.fault.file_backed
+  - mm.fault.cow
+- id: OLD-15
+  old_id: mm.fault.obvious_missing
+  source: DR-002
+  disposition: not_covered
+  mapped_to: []
+  note: swap、大页等未检索。
+- id: OLD-16
+  old_id: DR-003 相交端点（四子系统之外）
+  source: DR-003
+  disposition: endpoint_only
+  mapped_to: []
+  note: init.kernel_sources、mm.early、mm.early.setup_arch、mm.early.memblock、mm.misc.zero_pfn、sched.scheduler.sched_init、sched.scheduler.multitasking、sched.forkexec.user_process、fs.vfs.root_mount、lock.futex.wait_wake、entry.trap_init
+    只作端点名使用，未盘点。
+uncovered_old_capabilities:
+- mm.early / mm.highmem / mm.misc（含 gup、percpu、init-mm）不在本批四个子系统内
+- arch/x86_64/mm 的直映射建立（init_mem_mapping 等）与 pgd_alloc/pgd_free 只作为端点
+- 各 obvious_missing 节点（OLD-03、OLD-08、OLD-12、OLD-15）
+- highmem 的 kmap 系列、filemap 的读写路径（generic_file_read_iter 等）
+anchors:
+- id: A-B01
+  path: mykernel/CMakeLists.txt
+  symbol: KERNEL_C_SRCS
+  kind: build
+  lines:
+  - 30
+  - 30
+  quote: file(GLOB_RECURSE KERNEL_C_SRCS ${PROJECT_SOURCE_DIR}/*.c)
+  cpp_conditions: []
+  role: 'build: every .c under mykernel/ (all four mm directories included) is a source of the kernel target'
+- id: A-PA01
+  path: mykernel/mm/page_alloc/mmzone.c
+  symbol: zone_sizes_init
+  kind: in_body
+  lines:
+  - 13
+  - 17
+  quote: "\tmax_zone_pfns[ZONE_DMA]\t\t= min((unsigned long)MAX_DMA_PFN, max_low_pfn);\n\tmax_zone_pfns[ZONE_DMA32]\t= min(MAX_DMA32_PFN, max_low_pfn);\n\tmax_zone_pfns[ZONE_NORMAL]\t= max_low_pfn;\n\n\t\
+    free_area_init(max_zone_pfns);"
+  cpp_conditions: []
+  role: zone limits from max_low_pfn, then free_area_init
+- id: A-PA02
+  path: mykernel/mm/misc/mm_init.c
+  symbol: calculate_node_totalpages
+  kind: in_body
+  lines:
+  - 185
+  - 185
+  quote: "\tpgdat->nr_zones = MAX_NR_ZONES;"
+  cpp_conditions: []
+  role: nr_zones is set to MAX_NR_ZONES
+- id: A-PA03
+  path: mykernel/mm/page_alloc/mmzone_const.h
+  symbol: enum zone_type
+  kind: type_member
+  lines:
+  - 73
+  - 75
+  quote: "\t\tZONE_MOVABLE,\n\t\tZONE_DEVICE,\n\t\t__MAX_NR_ZONES"
+  cpp_conditions: []
+  role: zone enum has MOVABLE and DEVICE before __MAX_NR_ZONES
+- id: A-PA04
+  path: mykernel/mm/early/memblock.c
+  symbol: memblock_free_all
+  kind: in_body
+  lines:
+  - 761
+  - 765
+  quote: "\t\t\tint order = min_t(int, MAX_ORDER, __ffs(start_pfn));\n\t\t\twhile (start_pfn + (1UL << order) > end_pfn)\n\t\t\t\torder--;\n\t\t\tmemblock_free_pages(pfn_to_page(start_pfn), start_pfn, order);\n\
+    \t\t\tstart_pfn += (1UL << order);"
+  cpp_conditions: []
+  role: 'boot hand-off: free ranges cut into aligned power-of-two chunks and given to the buddy allocator'
+- id: A-PA05
+  path: mykernel/mm/misc/mm_init.c
+  symbol: mm_core_init
+  kind: in_body
+  lines:
+  - 409
+  - 411
+  quote: "\tmem_init();\n\t// mem_init_print_info();\n\tkmem_cache_init();"
+  cpp_conditions: []
+  role: 'init order: mem_init (buddy filled) before kmem_cache_init (slab)'
+- id: A-PA06
+  path: mykernel/mm/page_alloc/buddy.c
+  symbol: __myos_alloc_pages
+  kind: in_body
+  lines:
+  - 459
+  - 460
+  quote: "\t\tint prefered_zone_list[] = {ZONE_NORMAL, ZONE_DMA32, ZONE_DMA};\n\t\tint max_prefered_idx = NODE_DATA(0)->nr_zones;"
+  cpp_conditions: []
+  role: 3-entry zone preference list, loop bound nr_zones
+- id: A-PA07
+  path: mykernel/mm/page_alloc/buddy.c
+  symbol: __rmqueue_smallest
+  kind: in_body
+  lines:
+  - 232
+  - 236
+  quote: "\t\tpage = get_page_from_free_area(area);\n\t\tif (page == NULL)\n\t\t\tcontinue;\n\n\t\tdel_page_from_free_list(page, area);"
+  cpp_conditions: []
+  role: allocation takes the list head without any zone lock
+- id: A-PA08
+  path: mykernel/lib/list/double_list.h
+  symbol: list_header_delete_node
+  kind: in_body
+  lines:
+  - 684
+  - 686
+  quote: "\t\t\tif (list_header_contains(lhdr_p, l_p)) {\n\t\t\t\tlist_del_init(l_p);\n\t\t\t\tlhdr_p->count--;"
+  cpp_conditions:
+  - '#if defined(LIST_DEFINATION) || !(DEBUG)'
+  role: 'counter-evidence: the second removal in __rmqueue_smallest is a no-op on an already removed node'
+- id: A-PA09
+  path: mykernel/mm/page_alloc/buddy.c
+  symbol: post_alloc_hook
+  kind: in_body
+  lines:
+  - 190
+  - 192
+  quote: "\tif (gfp_flags & __GFP_ZERO)\n\t\tfor (int i = 0; i < (1 << order); i++)\n\t\t\tclear_page((void *)page_to_virt(page) + i);"
+  cpp_conditions: []
+  role: __GFP_ZERO clears at byte offsets +i, not page offsets
+- id: A-PA10
+  path: mykernel/mm/page_alloc/buddy.c
+  symbol: __free_pages_ok
+  kind: in_body
+  lines:
+  - 415
+  - 416
+  quote: "\t__myos_free_one_page(page, pfn, zone, order);\n\tspin_unlock_irqrestore(&zone->lock, flags);"
+  cpp_conditions: []
+  role: free path runs under zone->lock
+- id: A-PA11
+  path: mykernel/mm/page_alloc/buddy.c
+  symbol: __myos_free_one_page
+  kind: in_body
+  lines:
+  - 281
+  - 285
+  quote: "\t\tbuddy = find_buddy_page_pfn(page, pfn, order, &buddy_pfn);\n\t\tif (buddy == NULL)\n\t\t\tbreak;\n\n\t\tcombined_pfn = buddy_pfn & pfn;"
+  cpp_conditions: []
+  role: 'merge loop: buddy found, combined pfn computed, buddy not unlinked'
+- id: A-PA12
+  path: mykernel/mm/page_alloc/buddy.c
+  symbol: __myos_free_one_page
+  kind: in_body
+  lines:
+  - 291
+  - 292
+  quote: "\tset_buddy_order(page, order);\n\tadd_to_free_list(page, zone, order);"
+  cpp_conditions: []
+  role: merged block added to the higher-order list
+- id: A-PA13
+  path: mykernel/mm/page_alloc/buddy.h
+  symbol: find_buddy_page_pfn
+  kind: in_body
+  lines:
+  - 450
+  - 452
+  quote: "\t\t\tif (page_is_buddy(page, buddy, order))\n\t\t\t\treturn buddy;\n\t\t\treturn NULL;"
+  cpp_conditions:
+  - '#if defined(BUDDY_DEFINATION) || !(DEBUG)'
+  role: buddy lookup only tests and returns
+- id: A-PA14
+  path: mykernel/mm/page_alloc/buddy.h
+  symbol: folio_put
+  kind: in_body
+  lines:
+  - 181
+  - 182
+  quote: "\t\t\tif (atomic_dec_and_test(&folio->page._refcount))\n\t\t\t\t__folio_put(folio);"
+  cpp_conditions:
+  - '#if defined(BUDDY_DEFINATION) || !(DEBUG)'
+  role: last reference calls __folio_put
+- id: A-PA15
+  path: mykernel/mm/page_alloc/buddy.c
+  symbol: __folio_put
+  kind: in_body_comment
+  lines:
+  - 634
+  - 638
+  quote: "\t// if (unlikely(folio_is_zone_device(folio)))\n\t// \tfree_zone_device_page(&folio->page);\n\t// else if (unlikely(folio_test_large(folio)))\n\t// \t__folio_put_large(folio);\n\t// else"
+  cpp_conditions: []
+  role: __folio_put body is entirely commented out
+- id: A-KM01
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: kmem_cache_init
+  kind: in_body
+  lines:
+  - 501
+  - 504
+  quote: "\tcreate_boot_cache(kmem_cache, \"kmem_cache\",\n\t\t\tsizeof(kmem_cache_s), SLAB_HWCACHE_ALIGN);\n\n\tkmem_cache = bootstrap(&boot_kmem_cache);"
+  cpp_conditions: []
+  role: boot cache then bootstrap into a slab-allocated kmem_cache
+- id: A-KM02
+  path: mykernel/mm/kmalloc/slub_const.h
+  symbol: KMALLOC_MAX_CACHE_SIZE
+  kind: macro
+  lines:
+  - 79
+  - 79
+  quote: "\t#define KMALLOC_MAX_CACHE_SIZE\tPAGE_SIZE"
+  cpp_conditions: []
+  role: slab size classes end at one page
+- id: A-KM03
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: alloc_init_new_slab
+  kind: in_body
+  lines:
+  - 136
+  - 140
+  quote: "\tslab->freelist = start;\n\tfor (idx = 0, p = start; idx < slab->objects - 1; idx++) {\n\t\tnext = p + s->size;\t\t// next_freelist_entry()\n\t\tnext = setup_object(s, next);\n\t\tset_freepointer(s,\
+    \ p, next);"
+  cpp_conditions: []
+  role: 'free list threading: ctor only on objects after the first; free pointer written into objects'
+- id: A-KM04
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: set_freepointer
+  kind: in_body
+  lines:
+  - 33
+  - 35
+  quote: "\tulong freeptr_addr = (ulong)this_obj + s->offset;\n\twhile (IS_INVAL_PTR((const void *)freeptr_addr));\n\t*(void **)freeptr_addr = next_obj;"
+  cpp_conditions: []
+  role: free pointer stored at object + s->offset
+- id: A-KM05
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: alloc_slab
+  kind: in_body
+  lines:
+  - 105
+  - 105
+  quote: "\tfolio_s *folio = (folio_s *)alloc_pages(alloc_gfp, oo_order(s->oo));"
+  cpp_conditions: []
+  role: slab pages come from alloc_pages
+- id: A-KM06
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: slab_alloc
+  kind: in_body
+  lines:
+  - 210
+  - 213
+  quote: "\twhile ((object = get_from_partial_list(s, n)) == NULL) {\n\t\tslab_s *slab = alloc_init_new_slab(s, gfpflags);\n\t\tif (unlikely(!slab))\n\t\t\treturn NULL;"
+  cpp_conditions: []
+  role: object from partial list, else a new slab
+- id: A-KM07
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: slab_free
+  kind: in_body
+  lines:
+  - 302
+  - 306
+  quote: "\tif (slab->inuse == 0 ||\n\t\tn->partial.count >= s->min_partial) {\n\n\t    offline_exceeded_empty_slab(s, n, slab);\n\t    free_slab(s, slab);"
+  cpp_conditions: []
+  role: discard condition uses OR with the partial-list length
+- id: A-KM08
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: free_to_partial_list
+  kind: in_body
+  lines:
+  - 288
+  - 289
+  quote: "\tfree_single_to_partial(s, slab, object);\n\tspin_unlock_irqrestore(&n->list_lock, flags);"
+  cpp_conditions: []
+  role: list_lock released before slab_free evaluates the discard condition
+- id: A-KM09
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: simple_kmem_cache_open
+  kind: in_body
+  lines:
+  - 433
+  - 434
+  quote: "\ts->min_partial = min_t(ulong, MAX_PARTIAL, ilog2(s->size) / 2);\n\ts->min_partial = max_t(ulong, MIN_PARTIAL, s->min_partial);"
+  cpp_conditions: []
+  role: min_partial bound
+- id: A-KM10
+  path: mykernel/mm/kmalloc/slub.h
+  symbol: kmalloc
+  kind: in_body
+  lines:
+  - 128
+  - 131
+  quote: "\t\t\tif (size > KMALLOC_MAX_CACHE_SIZE)\n\t\t\t\tret_val = kmalloc_large(size, flags);\n\t\t\telse\n\t\t\t\tret_val = __kmalloc(size, flags);"
+  cpp_conditions:
+  - '#if defined(SLUB_DEFINATION) || !(DEBUG)'
+  role: kmalloc splits large sizes to kmalloc_large
+- id: A-KM11
+  path: mykernel/mm/kmalloc/slub.h
+  symbol: kfree
+  kind: in_body
+  lines:
+  - 191
+  - 195
+  quote: "\t\t\tfolio = virt_to_folio(object);\n\t\t\tif (unlikely(!folio_test_slab(folio)))\n\t\t\t\tfree_large_kmalloc(folio, (void *)object);\n\t\t\telse\n\t\t\t\tkmem_cache_free(folio_slab(folio)->slab_cache,\
+    \ (void *)object);"
+  cpp_conditions:
+  - '#if defined(SLUB_DEFINATION) || !(DEBUG)'
+  role: kfree dispatch on the slab page flag
+- id: A-KM12
+  path: mykernel/mm/kmalloc/slab_common.c
+  symbol: __kmalloc
+  kind: in_body
+  lines:
+  - 248
+  - 248
+  quote: "\twhile (unlikely(size > KMALLOC_MAX_CACHE_SIZE));"
+  cpp_conditions: []
+  role: __kmalloc spins on sizes above one page
+- id: A-KM13
+  path: mykernel/mm/kmalloc/slub.h
+  symbol: kmalloc_array
+  kind: in_body
+  lines:
+  - 148
+  - 150
+  quote: "\t\t\tif (__builtin_constant_p(n) && __builtin_constant_p(size))\n\t\t\t\treturn kmalloc(bytes, flags);\n\t\t\treturn __kmalloc(bytes, flags);"
+  cpp_conditions:
+  - '#if defined(SLUB_DEFINATION) || !(DEBUG)'
+  role: non-constant kmalloc_array goes straight to __kmalloc
+- id: A-KM14
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_sighand
+  kind: in_body
+  lines:
+  - 758
+  - 759
+  quote: "\tsig = kmem_cache_alloc(sighand_cachep, GFP_KERNEL);\n\t// RCU_INIT_POINTER(tsk->sighand, sig);"
+  cpp_conditions: []
+  role: 'counter-evidence: the allocated sighand is never installed on the task'
+- id: A-KM17
+  path: mykernel/sched/forkexec/fork.c
+  symbol: proc_caches_init
+  kind: in_body
+  lines:
+  - 1672
+  - 1676
+  quote: "\tvm_area_cachep =\n\t\t\tkmem_cache_create(\"vm_area_struct\",\n\t\t\t\tsizeof(vma_s), __alignof__(vma_s),\n\t\t\t\tSLAB_PANIC|SLAB_ACCOUNT,\n\t\t\t\tNULL);"
+  cpp_conditions: []
+  role: VMA cache created in proc_caches_init
+- id: A-VM01
+  path: mykernel/mm/vm_map/util.c
+  symbol: vm_mmap_pgoff
+  kind: in_body
+  lines:
+  - 94
+  - 97
+  quote: "\tif (mmap_write_lock_killable(mm))\n\t\treturn -EINTR;\n\tret = do_mmap(file, addr, len, prot, flag, 0, pgoff);\n\tmmap_write_unlock(mm);"
+  cpp_conditions: []
+  role: 'mmap entry: lock call, do_mmap, unlock'
+- id: A-VM02
+  path: mykernel/include/linux/kernel/mmap_lock.h
+  symbol: mmap_read_trylock
+  kind: in_body
+  lines:
+  - 165
+  - 167
+  quote: "\t\t// ret = down_read_trylock(&mm->mmap_lock) != 0;\n\t\t// __mmap_lock_trace_acquire_returned(mm, false, ret);\n\t\treturn ret;"
+  cpp_conditions: []
+  role: mmap lock helpers are empty; the assignment is commented out and an uninitialised value is returned
+- id: A-VM03
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: simple_mmap_region
+  kind: in_body
+  lines:
+  - 662
+  - 664
+  quote: "\t/* Clear old maps, set up prev */\n\tif (simple_munmap_vma_range(mm, addr, len, &prev))\n\t\treturn -ENOMEM;"
+  cpp_conditions: []
+  role: mmap first unlinks whatever VMAs overlap the chosen range
+- id: A-VM04
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: simple_find_vm_unmapped_area_topdown
+  kind: in_body
+  lines:
+  - 839
+  - 840
+  quote: "\tif (tmp == NULL) {\n\t\tnext = vma_next_vma(tmp);"
+  cpp_conditions: []
+  role: after an exhausted walk, vma_next_vma(NULL)
+- id: A-VM05
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: simple_find_vm_unmapped_area_topdown
+  kind: in_body
+  lines:
+  - 850
+  - 853
+  quote: "\tif (gap = ~0) {\n\t\tgap = info->high_limit - info->length;\n\t\tgap &= PAGE_MASK;\n\t}"
+  cpp_conditions: []
+  role: 'assignment in condition: search result always replaced'
+- id: A-VM06
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: vma_next_vma
+  kind: in_body
+  lines:
+  - 85
+  - 85
+  quote: "\twhile (vma == NULL);"
+  cpp_conditions: []
+  role: NULL argument spins
+- id: A-VM07
+  path: mykernel/arch/x86_64/mm/vm_map/mmap_arch.c
+  symbol: arch_pick_mmap_layout
+  kind: in_body
+  lines:
+  - 11
+  - 12
+  quote: "\tmm->get_unmapped_area = simple_get_unmapped_area;\n\tmm->mmap_base = TASK_UNMAPPED_BASE;"
+  cpp_conditions: []
+  role: get_unmapped_area hook and mmap_base
+- id: A-VM08
+  path: mykernel/mm/vm_map/vm_map.h
+  symbol: find_vma_intersection
+  kind: in_body
+  lines:
+  - 342
+  - 346
+  quote: "\t\t\tvma_s *vma = find_vma_prev_to_addr(mm, start);\n\n\t\t\tif (vma != NULL && (vma = vma_next_vma(vma)) != NULL &&\n\t\t\t\t\t__vma_intersect_with_range(vma, start, end))\n\t\t\t\treturn vma;"
+  cpp_conditions:
+  - '#if defined(VM_MAP_DEFINATION) || !(DEBUG)'
+  role: only the successor of one predecessor is tested
+- id: A-VM09
+  path: mykernel/mm/vm_map/vm_map.h
+  symbol: find_vma_prev_to_addr
+  kind: in_body
+  lines:
+  - 302
+  - 304
+  quote: "\t\t\tfor_each_vma_topdown(mm, vma) {\n\t\t\t\tif (vma->vm_end < addr)\n\t\t\t\t\treturn vma;"
+  cpp_conditions:
+  - '#if defined(VM_MAP_DEFINATION) || !(DEBUG)'
+  role: predecessor = last VMA with vm_end strictly below addr
+- id: A-VM10
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: simple_vma_merge
+  kind: in_body
+  lines:
+  - 400
+  - 404
+  quote: "\tif (next != NULL && simple_can_vma_merge_before(next,\n\t\t\tvm_flags, file, pgoff+pglen)) {\n\t\tvma_end = next->vm_end;\n\t\tif (!prev)\n\t\t\tadjust_target = next;"
+  cpp_conditions: []
+  role: adjust_target set from next only when prev is NULL
+- id: A-VM11
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: simple_vma_merge
+  kind: in_body
+  lines:
+  - 411
+  - 412
+  quote: "\tif (adjust_target == NULL)\n\t\tadjust_target = curr;"
+  cpp_conditions: []
+  role: reads adjust_target, which may be unset
+- id: A-VM12
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: __simple_vma_adjust
+  kind: in_body
+  lines:
+  - 206
+  - 208
+  quote: "\tvma->vm_start = start;\n\tvma->vm_pgoff += (start - vma->vm_pgoff) >> PAGE_SHIFT;\n\tvma->vm_end = end;"
+  cpp_conditions: []
+  role: pgoff update subtracts vm_pgoff from an address
+- id: A-VM13
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: simple_do_vma_munmap
+  kind: in_body
+  lines:
+  - 1144
+  - 1144
+  quote: "\tprev = vma_prev_vma(vma);"
+  cpp_conditions: []
+  role: prev may be NULL
+- id: A-VM14
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: simple_do_vma_munmap
+  kind: in_body
+  lines:
+  - 1156
+  - 1159
+  quote: "\twhile ((tmp = vma_next_vma(prev)) != NULL && tmp->vm_end <= end) {\n\t\tBUG_ON(tmp == last);\n\t\t__vma_unlink_from_list(mm, tmp);\n\t}"
+  cpp_conditions: []
+  role: VMAs only unlinked
+- id: A-VM15
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: simple_unmap_region
+  kind: in_body_comment
+  lines:
+  - 1080
+  - 1082
+  quote: "\t// unmap_vmas(&tlb, mas, vma, start, end, tree_end, mm_wr_locked);\n\t// mas_set(mas, mt_start);\n\t// free_pgtables(&tlb, mas, vma, prev ? prev->vm_end : FIRST_USER_ADDRESS,"
+  cpp_conditions: []
+  role: page-table teardown commented out
+- id: A-VM16
+  path: mykernel/sched/forkexec/fork.c
+  symbol: __mmput
+  kind: in_body_comment
+  lines:
+  - 440
+  - 440
+  quote: "\t// exit_mmap(mm);"
+  cpp_conditions: []
+  role: address-space teardown commented out
+- id: A-FT01
+  path: mykernel/arch/x86_64/mm/fault.c
+  symbol: handle_page_fault
+  kind: in_body
+  lines:
+  - 399
+  - 402
+  quote: "\tif (unlikely(fault_in_kernel_space(address))) {\n\t\tdo_kern_addr_fault(regs, err_code, address);\n\t} else {\n\t\tdo_user_addr_fault(regs, err_code, address);"
+  cpp_conditions: []
+  role: '#PF split kernel/user address'
+- id: A-FT02
+  path: mykernel/arch/x86_64/mm/fault.c
+  symbol: do_kern_addr_fault
+  kind: in_body
+  lines:
+  - 153
+  - 153
+  quote: "\twhile (1);"
+  cpp_conditions: []
+  role: every kernel-address fault spins
+- id: A-FT03
+  path: mykernel/arch/x86_64/mm/fault.c
+  symbol: do_user_addr_fault
+  kind: in_body
+  lines:
+  - 235
+  - 237
+  quote: "\tif (user_mode(regs)) {\n\t\tlocal_irq_enable();\n\t\tflags |= FAULT_FLAG_USER;"
+  cpp_conditions: []
+  role: interrupts enabled for user-mode faults
+- id: A-FT04
+  path: mykernel/arch/x86_64/mm/fault.c
+  symbol: do_user_addr_fault
+  kind: in_body
+  lines:
+  - 276
+  - 280
+  quote: "\tvma = simple_find_vma(mm, address);\n\tif (unlikely(!vma)) {\n\t\tmyos_bad_area(regs, err_code, address);\n\t\treturn;\n\t}"
+  cpp_conditions: []
+  role: VMA lookup; no VMA -> myos_bad_area
+- id: A-FT05
+  path: mykernel/arch/x86_64/mm/fault.c
+  symbol: do_user_addr_fault
+  kind: in_body
+  lines:
+  - 281
+  - 282
+  quote: "\tif (likely(vma->vm_start <= address))\n\t\tgoto lock_mmap;"
+  cpp_conditions: []
+  role: always true for a containing VMA, stack branch skipped
+- id: A-FT06
+  path: mykernel/mm/vm_map/vm_map.h
+  symbol: simple_find_vma
+  kind: in_body
+  lines:
+  - 258
+  - 259
+  quote: "\t\t\t\tif (addr >= vma->vm_start && addr < vma->vm_end)\n\t\t\t\t\treturn vma;"
+  cpp_conditions:
+  - '#if defined(VM_MAP_DEFINATION) || !(DEBUG)'
+  role: lookup returns only a containing VMA
+- id: A-FT07
+  path: mykernel/arch/x86_64/mm/fault.c
+  symbol: do_user_addr_fault
+  kind: in_body_comment
+  lines:
+  - 304
+  - 304
+  quote: "\t// if (unlikely(access_error(error_code, vma))) {"
+  cpp_conditions: []
+  role: no access check
+- id: A-FT08
+  path: mykernel/arch/x86_64/mm/fault.c
+  symbol: do_user_addr_fault
+  kind: in_body
+  lines:
+  - 323
+  - 324
+  quote: "\tfault = myos_handle_mm_fault(vma, address, flags);\n\twhile (fault != ENOERR);"
+  cpp_conditions: []
+  role: any non-zero fault result spins
+- id: A-FT09
+  path: mykernel/arch/x86_64/mm/fault.c
+  symbol: myos_bad_area
+  kind: in_body
+  lines:
+  - 96
+  - 100
+  quote: "\tparse_PF_errcode(regs, address, buf);\n\t// if (!(err_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P)))\n\t// {\n\t\tcolor_printk(RED, BLACK, buf);\n\t\twhile (1);"
+  cpp_conditions: []
+  role: bad area prints and spins
+- id: A-FT10
+  path: mykernel/mm/fault/fault.c
+  symbol: myos_handle_mm_fault
+  kind: in_body
+  lines:
+  - 1339
+  - 1341
+  quote: "\tif (pte_alloc(mm, vmf.pmd_entp)) {\n\t\tgoto fail;\n\t}"
+  cpp_conditions: []
+  role: page-table allocation failure returns VM_FAULT_OOM
+- id: A-FT11
+  path: mykernel/mm/fault/pgalloc.h
+  symbol: __myos_pgtable_alloc_one
+  kind: in_body
+  lines:
+  - 63
+  - 67
+  quote: "\t\t\tpage = alloc_page(gfp);\n\t\t\tif (!page)\n\t\t\t\treturn NULL;\n\n\t\t\tmemset((void *)page_to_virt(page), 0, PAGE_SIZE);"
+  cpp_conditions:
+  - '#if defined(PGALLOC_DEFINATION) || !(DEBUG)'
+  role: page-table pages come from the buddy allocator and are zeroed
+- id: A-FT12
+  path: mykernel/mm/fault/fault.c
+  symbol: handle_pte_fault
+  kind: in_body
+  lines:
+  - 1256
+  - 1257
+  quote: "\tif (pte_none(vmf->orig_pte))\n\t\treturn do_pte_missing(vmf);"
+  cpp_conditions: []
+  role: empty PTE -> anonymous or file fault
+- id: A-FT13
+  path: mykernel/mm/fault/fault.c
+  symbol: handle_pte_fault
+  kind: in_body
+  lines:
+  - 1271
+  - 1273
+  quote: "\tif (vmf->flags & FAULT_FLAG_WRITE) {\n\t\tif (!pte_write(*vmf->pte_ptr))\n\t\t\treturn do_wp_page(vmf);"
+  cpp_conditions: []
+  role: write on a non-writable present PTE -> do_wp_page
+- id: A-FT14
+  path: mykernel/mm/fault/fault.c
+  symbol: do_anonymous_page
+  kind: in_body
+  lines:
+  - 797
+  - 799
+  quote: "\tif (!(vmf->flags & FAULT_FLAG_WRITE)) {\n\t\tentry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),\n\t\t\t\t\tvma->vm_page_prot));"
+  cpp_conditions: []
+  role: read fault maps the zero pfn
+- id: A-FT15
+  path: mykernel/mm/fault/fault.c
+  symbol: do_anonymous_page
+  kind: in_body
+  lines:
+  - 820
+  - 820
+  quote: "\tfolio = alloc_anon_folio(vmf);"
+  cpp_conditions: []
+  role: write fault takes a new page
+- id: A-FT16
+  path: mykernel/mm/fault/fault.c
+  symbol: folio_prealloc
+  kind: in_body
+  lines:
+  - 200
+  - 200
+  quote: "\treturn folio_alloc(GFP_HIGHUSER_MOVABLE, 0);"
+  cpp_conditions: []
+  role: need_zero is not used
+- id: A-FT17
+  path: mykernel/mm/page_alloc/mempolicy.c
+  symbol: folio_alloc_noprof
+  kind: in_body
+  lines:
+  - 116
+  - 116
+  quote: "\treturn page_folio(alloc_page(GFP_HIGHUSER_MOVABLE));"
+  cpp_conditions: []
+  role: arguments ignored; no __GFP_ZERO
+- id: A-FT18
+  path: mykernel/mm/fault/fault.c
+  symbol: do_shared_fault
+  kind: in_body
+  lines:
+  - 1139
+  - 1140
+  quote: "\tpr_alert(\"API not implemented - 'do_shared_fault'\\n\");\n\twhile (1);"
+  cpp_conditions: []
+  role: shared write fault spins
+- id: A-FT19
+  path: mykernel/mm/fault/fault.c
+  symbol: do_wp_page
+  kind: in_body
+  lines:
+  - 726
+  - 728
+  quote: "\tif (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {\n\t\t// catch this case, handler temporarily not implemented\n\t\twhile (1);"
+  cpp_conditions: []
+  role: shared write-protect fault spins
+- id: A-FT20
+  path: mykernel/mm/fault/fault.c
+  symbol: wp_page_copy
+  kind: in_body
+  lines:
+  - 569
+  - 570
+  quote: "\tpfn_is_zero = is_zero_pfn(pte_pfn(vmf->orig_pte));\n\tnew_folio = folio_prealloc(mm, vma, vmf->address, pfn_is_zero);"
+  cpp_conditions: []
+  role: COW of the zero page also uses folio_prealloc
+- id: A-FT21
+  path: mykernel/mm/fault/fault.c
+  symbol: wp_page_copy
+  kind: in_body
+  lines:
+  - 622
+  - 622
+  quote: "\t\t\tentry = maybe_mkwrite(pte_mkdirty(entry), vma);"
+  cpp_conditions: []
+  role: new PTE writable only with VM_WRITE
+- id: A-FT22
+  path: mykernel/mm/fault/pgtable.h
+  symbol: maybe_mkwrite
+  kind: in_body
+  lines:
+  - 155
+  - 157
+  quote: "\t\t\tif (likely(vma->vm_flags & VM_WRITE))\n\t\t\t\tpte = pte_mkwrite(pte);\n\t\t\treturn pte;"
+  cpp_conditions:
+  - '#if defined(PGTABLE_DEFINATION) || !(DEBUG)'
+  role: maybe_mkwrite semantics
+- id: A-FT23
+  path: mykernel/mm/fault/fault.c
+  symbol: copy_present_pte
+  kind: in_body
+  lines:
+  - 225
+  - 228
+  quote: "\tif (is_cow_mapping(vm_flags) && pte_write(pte)) {\n\t\tarch_ptep_set_wrprotect(src_pte_ptr);\n\t\tpte = pte_wrprotect(pte);\n\t}"
+  cpp_conditions: []
+  role: fork write-protects the parent PTE
+- id: A-FT24
+  path: mykernel/sched/forkexec/fork.c
+  symbol: dup_mmap
+  kind: in_body_comment
+  lines:
+  - 230
+  - 230
+  quote: "\t// flush_tlb_mm(oldmm);"
+  cpp_conditions: []
+  role: no TLB flush after write-protecting the parent
+- id: A-FT25
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: simple_filemap_fault
+  kind: in_body
+  lines:
+  - 127
+  - 130
+  quote: "\tpage_s **pgcache_ptr = &mapping->page_array[index];\n\tBUG_ON(*pgcache_ptr != NULL);\n\t*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);\n\tvirt_addr_t vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);"
+  cpp_conditions: []
+  role: page-cache slot, new zeroed page
+- id: A-FT26
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: simple_filemap_fault
+  kind: in_body
+  lines:
+  - 132
+  - 132
+  quote: "\tfile->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);"
+  cpp_conditions: []
+  role: synchronous file read into the page
+- id: A-PA16
+  path: mykernel/mm/misc/mm_init.c
+  symbol: alloc_node_mem_map
+  kind: in_body
+  lines:
+  - 313
+  - 314
+  quote: "\t\tif (!map) {\n\t\t\twhile (1);"
+  cpp_conditions: []
+  role: mem_map allocation failure spins
+- id: A-VM17
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: MYOS_SYSCALL_DEFINE6
+  kind: in_body
+  lines:
+  - 1330
+  - 1332
+  quote: "\t} else if (flags & MAP_HUGETLB) {\n\t\t// currently unsupported\n\t\twhile (1);"
+  cpp_conditions: []
+  role: mmap(2) with MAP_ANONYMOUS|MAP_HUGETLB spins (definition generated by MYOS_SYSCALL_DEFINE6(mmap, ...))
+- id: A-PA17
+  path: mykernel/mm/page_alloc/page-flags.h
+  symbol: PageBuddy
+  kind: in_body
+  lines:
+  - 481
+  - 481
+  quote: "\t\t\treturn ( (page->page_type & (PAGE_TYPE_BASE | PG_buddy)) == PAGE_TYPE_BASE );"
+  cpp_conditions:
+  - '#if defined(BUDDY_DEFINATION) || !(DEBUG)'
+  role: PageBuddy needs the PAGE_TYPE_BASE bits set in page_type
+- id: A-PA18
+  path: mykernel/mm/misc/mm_init.c
+  symbol: __init_single_page
+  kind: in_body_comment
+  lines:
+  - 24
+  - 24
+  quote: "\t// page_mapcount_reset(page);"
+  cpp_conditions: []
+  role: page_type/_mapcount is never reset to the type base pattern
+- id: A-VM18
+  path: mykernel/mm/vm_map/vm_map.h
+  symbol: vma_init
+  kind: in_body
+  lines:
+  - 101
+  - 101
+  quote: "\t\t\tvma->vm_ops = &dummy_vm_ops;"
+  cpp_conditions:
+  - '#if defined(VM_MAP_DEFINATION) || !(DEBUG)'
+  role: new VMAs get non-NULL dummy vm_ops (not anonymous unless vma_set_anonymous)
+- id: A-VM19
+  path: mykernel/mm/vm_map/mmap.c
+  symbol: do_brk_flags
+  kind: in_body
+  lines:
+  - 1218
+  - 1221
+  quote: "\t/* Can we just expand an old private anonymous mapping? */\n\tvma = simple_vma_merge(mm, prev, addr, addr + len, flags, NULL, pgoff);\n\tif (vma)\n\t\tgoto out;"
+  cpp_conditions: []
+  role: 'brk: try to merge, else allocate a new VMA'
+- id: A-FT27
+  path: mykernel/mm/fault/fault.c
+  symbol: do_fault
+  kind: in_body
+  lines:
+  - 1195
+  - 1197
+  quote: "\tif (!vma->vm_ops->fault) {\n\t\tpr_alert(\"VMA has no vm_ops->fault\\n\");\n\t\twhile (1);"
+  cpp_conditions: []
+  role: VMA without ->fault (e.g. shared anonymous with dummy ops) spins
+queries:
+- id: Q01
+  purpose: 'M01 entry index: the four subsystem API headers included by mm/mm_api.h'
+  args:
+  - -n
+  - -E
+  - '#include "(fault|kmalloc|page_alloc|vm_map)/'
+  paths:
+  - mykernel/mm/mm_api.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: Q02
+  purpose: 'build: per-directory CMakeLists of the four subsystems are empty (sources come from the top-level GLOB)'
+  type: size
+  paths:
+  - mykernel/mm/page_alloc/CMakeLists.txt
+  - mykernel/mm/kmalloc/CMakeLists.txt
+  - mykernel/mm/vm_map/CMakeLists.txt
+  - mykernel/mm/fault/CMakeLists.txt
+  expect: size
+  expected_bytes:
+  - 0
+  - 0
+  - 0
+  - 0
+- id: Q03
+  purpose: 'build: linker garbage collection of unreferenced sections is requested'
+  args:
+  - -n
+  - -F
+  - -e
+  - --gc-sections
+  paths:
+  - mykernel/scripts/options_flags.cmake
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q04
+  purpose: init callers of setup_arch / zone_sizes_init / mem_init / memblock_free_all / mm_core_init / proc_caches_init
+  args:
+  - -n
+  - -w
+  - -E
+  - setup_arch|zone_sizes_init|mem_init|memblock_free_all|mm_core_init|proc_caches_init|kmem_cache_init
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 29
+  expected_hits_active: 21
+- id: Q05
+  purpose: 'page_alloc internal calls: __free_pages_ok, __myos_alloc_pages, __rmqueue_smallest'
+  args:
+  - -n
+  - -w
+  - -E
+  - __free_pages_ok|__myos_alloc_pages|__rmqueue_smallest
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 9
+  expected_hits_active: 8
+- id: Q06
+  purpose: only unlink helper of the buddy free lists and its callers
+  args:
+  - -n
+  - -w
+  - -E
+  - del_page_from_free_list|list_header_delete_node
+  paths:
+  - mykernel/mm/page_alloc
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q07
+  purpose: locks taken inside buddy.c
+  args:
+  - -n
+  - -E
+  - spin_(lock|unlock)\w*\(
+  paths:
+  - mykernel/mm/page_alloc/buddy.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q08
+  purpose: users of __GFP_ZERO (reachability of the high-order zeroing path)
+  args:
+  - -n
+  - -w
+  - __GFP_ZERO
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 24
+  expected_hits_active: 14
+- id: Q09
+  purpose: alloc_low_page(s) callers and order
+  args:
+  - -n
+  - -E
+  - alloc_low_pages?\(
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 8
+- id: Q10
+  purpose: no assignment to a kmem_cache free-pointer offset field in mm/kmalloc
+  args:
+  - -n
+  - -E
+  - (->|\.)offset\s*=[^=]
+  paths:
+  - mykernel/mm/kmalloc
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: Q11
+  purpose: kmem_cache_create callers and constructor users
+  args:
+  - -n
+  - -w
+  - -E
+  - kmem_cache_create|sighand_ctor|init_once|shmem_init_inode
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 31
+  expected_hits_active: 24
+- id: Q12
+  purpose: explicit initialisation of a sighand siglock
+  args:
+  - -n
+  - -E
+  - spin_lock_init\([^)]*siglock
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q13
+  purpose: kmalloc -> page allocator edges in mm/kmalloc
+  args:
+  - -n
+  - -w
+  - -E
+  - alloc_pages|__free_pages|__folio_set_slab|folio_test_slab
+  paths:
+  - mykernel/mm/kmalloc
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 7
+- id: Q14
+  purpose: callers of __kmalloc and kmalloc_array
+  args:
+  - -n
+  - -w
+  - -E
+  - __kmalloc|kmalloc_array|kcalloc
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 16
+  expected_hits_active: 11
+- id: Q15
+  purpose: VMA cache users
+  args:
+  - -n
+  - -w
+  - vm_area_cachep
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 7
+  expected_hits_active: 6
+- id: Q16
+  purpose: mmap / munmap / brk entry chain
+  args:
+  - -n
+  - -w
+  - -E
+  - vm_mmap_pgoff|vm_mmap|__vm_munmap|vm_brk_flags|do_brk_flags|simple_do_vma_munmap
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 27
+  expected_hits_active: 24
+- id: Q17
+  purpose: file mmap hook and file vm_ops
+  args:
+  - -n
+  - -w
+  - -E
+  - generic_file_mmap|generic_file_vm_ops|call_mmap
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 10
+  expected_hits_active: 9
+- id: Q18
+  purpose: filesystem-provided get_unmapped_area hooks
+  args:
+  - -n
+  - -E
+  - \.get_unmapped_area\s*=
+  paths:
+  - mykernel
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 0
+- id: Q19
+  purpose: callers of vm_area_free
+  args:
+  - -n
+  - -w
+  - vm_area_free
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 6
+  expected_hits_active: 6
+- id: Q20
+  purpose: address-space / page-table teardown functions
+  args:
+  - -n
+  - -w
+  - -E
+  - exit_mmap|unmap_vmas|free_pgtables|zap_page_range|unmap_page_range|zap_pte_range
+  paths:
+  - mykernel
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 0
+- id: Q21
+  purpose: mmap lock helper users
+  args:
+  - -n
+  - -E
+  - mmap_(read|write)_(lock|trylock|unlock)\w*\(
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 31
+  expected_hits_active: 22
+- id: Q22
+  purpose: page-fault entry and core handler callers
+  args:
+  - -n
+  - -w
+  - -E
+  - exc_page_fault|myos_handle_mm_fault|handle_mm_fault
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 6
+- id: Q23
+  purpose: folio_alloc macro and GFP_HIGHUSER_MOVABLE definition
+  args:
+  - -n
+  - -E
+  - define\s+(folio_alloc|GFP_HIGHUSER_MOVABLE)\b
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q24
+  purpose: need_zero inside the fault code
+  args:
+  - -n
+  - -w
+  - need_zero
+  paths:
+  - mykernel/mm/fault/fault.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 1
+- id: Q25
+  purpose: explicit page clearing on the anonymous fault path
+  args:
+  - -n
+  - -w
+  - -E
+  - clear_user_highpage|clear_highpage|vma_alloc_zeroed_movable_folio|clear_page
+  paths:
+  - mykernel/mm/fault
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 0
+- id: Q26
+  purpose: TLB flush in fork / exec / mm code
+  args:
+  - -n
+  - -E
+  - flush_tlb\w*\(|__flush_tlb\w*\(
+  paths:
+  - mykernel/sched
+  - mykernel/mm
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 0
+- id: Q27
+  purpose: fork copy and fault finish callers
+  args:
+  - -n
+  - -w
+  - -E
+  - copy_page_range|finish_fault|do_wp_page|wp_page_copy
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 14
+  expected_hits_active: 12
+- id: Q28
+  purpose: known-defect primitives (V02-V13 families) used by the mm code
+  args:
+  - -n
+  - -w
+  - -E
+  - atomic_add_negative|spin_trylock|raw_spin_trylock|swait_event|swake_up_one|wait_for_completion|complete|down|down_timeout|schedule_timeout|msleep|wake_up_process
+  paths:
+  - mykernel/mm
+  - mykernel/arch/x86_64/mm
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 15
+  expected_hits_active: 0
+- id: Q29
+  purpose: stack growth and exec-time VMA insertion callers
+  args:
+  - -n
+  - -w
+  - -E
+  - expand_stack|insert_vm_struct
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 7
+- id: Q30
+  purpose: zero page initialisation call
+  args:
+  - -n
+  - -w
+  - init_zero_pfn
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: Q31
+  purpose: helpers seen while reading but not anchored in this batch (callers only)
+  args:
+  - -n
+  - -w
+  - -E
+  - myos_map_range|myos_creat_one_page_mapping|myos_get_one_page_from_mapping
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 8
+- id: Q32
+  purpose: 'interrupt/exception exit: schedule() unless in_atomic()'
+  args:
+  - -n
+  - -E
+  - in_atomic\(\)|schedule\(\);
+  paths:
+  - mykernel/arch/x86_64/myos/interrupt.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q33
+  purpose: writers of a task's sighand pointer
+  args:
+  - -n
+  - -E
+  - (->|\.)sighand\s*=[^=]
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q34
+  purpose: page_type / _mapcount writers (PageBuddy precondition)
+  args:
+  - -n
+  - -E
+  - page_type\s*(=|\|=|&=)|_mapcount\)|page_mapcount_reset
+  paths:
+  - mykernel/mm
+  - mykernel/arch/x86_64/mm
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 17
+  expected_hits_active: 14
+- id: Q35
+  purpose: build-type switch of header inline bodies
+  args:
+  - -n
+  - -E
+  - define\s+PREFIX_STATIC_INLINE
+  paths:
+  - mykernel/include/linux/compiler/myos_debug_option.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q36
+  purpose: kmem_cache_alloc callers inside mm
+  args:
+  - -n
+  - -w
+  - kmem_cache_alloc
+  paths:
+  - mykernel/mm
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 9
+  expected_hits_active: 7
+- id: Q37
+  purpose: __get_unmapped_area callers
+  args:
+  - -n
+  - -w
+  - __get_unmapped_area
+  paths:
+  - mykernel/mm
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 5
+- id: Q38
+  purpose: VMA list helper callers
+  args:
+  - -n
+  - -w
+  - -E
+  - __vma_link_to_list|__vma_unlink_from_list|find_vma_intersection|simple_find_vma
+  paths:
+  - mykernel
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 27
+  expected_hits_active: 25
+- id: Q39
+  purpose: missing-PTE dispatch
+  args:
+  - -n
+  - -w
+  - -E
+  - do_anonymous_page|do_fault|do_pte_missing
+  paths:
+  - mykernel/mm/fault/fault.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 6
+  expected_hits_active: 6
+- id: Q40
+  purpose: folio_put / put_page users in the fault code
+  args:
+  - -n
+  - -w
+  - -E
+  - folio_put|put_page
+  paths:
+  - mykernel/mm/fault/fault.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 13
+  expected_hits_active: 10
+- id: Q42
+  purpose: page_folio dereferences the page pointer (NULL on allocation failure)
+  args:
+  - -n
+  - -F
+  - READ_ONCE(page->compound_head)
+  paths:
+  - mykernel/mm/page_alloc/page-flags.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q43
+  purpose: page_folio macro definition
+  args:
+  - -n
+  - -E
+  - define\s+page_folio\(
+  paths:
+  - mykernel/mm/page_alloc/page-flags_macro.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q41
+  purpose: file rmap (i_mmap interval tree) maintenance
+  args:
+  - -n
+  - -E
+  - vma_interval_tree_insert\w*\(
+  paths:
+  - mykernel
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 0
+m00_value_table:
+  source: scheduler-integration-03/facts-and-regressions.yaml 的 future_regressions/NR-6（结果冻结 b7fa83583e35）输入；原 pick_next_task_myos 规则按 myos_rt.c 逐行手推，Python 只做算术核对，不执行原函数
+  span:
+  - 100
+  - 200
+  idle: I
+  start_current: I
+  variants:
+  - id: original_idle_key_zero
+    kind: derived_from_source_not_run
+    steps:
+    - step: P1
+      at: 100
+      current: I
+      charge: 0
+      selected: N2
+      queue_after: N1,I
+      rule: count=2，摘队首 N2；current 为 idle → 尾插（myos_rt.c 第 30–34 行）；idle 不计费（第 49–50 行）
+    - step: P2
+      at: 130
+      current: N2
+      charge: 30
+      selected: N1
+      queue_after: N2,I
+      rule: 摘 N1 后队列 [I0]；比较对象固定为首节点 I0，0 > 0 为假 → 插在 I 前；随后计费 N2=30（第 37–45、49–50 行）
+    - step: P3
+      at: 150
+      current: N1
+      charge: 20
+      selected: N2
+      queue_after: I
+      rule: N1 已写 TASK_UNINTERRUPTIBLE，不回插（第 28 行），但计费 N1=20；@160 wake_up_process(N1) 头插 → [N1,I]
+    - step: P4
+      at: 170
+      current: N2
+      charge: 20
+      selected: N1
+      queue_after: I,N2
+      rule: 摘 N1 后 [I0]；30 > 0 为真，游标走到 anchor，N2 插在尾部（I0 之后）；N2=50
+    - step: P5
+      at: 190
+      current: N1
+      charge: 20
+      selected: I
+      queue_after: N1,N2
+      rule: 摘队首 I；N1 键 20 与首节点 N2(50) 比较为假 → 插在 N2 前；N1=40；返回 idle
+    - step: P6
+      at: 200
+      current: I
+      charge: 0
+      selected: N1
+      queue_after: N2,I
+      rule: current 为 idle：摘 N1，idle 尾插，不计费
+    expected:
+      N2: 50
+      N1: 40
+      idle_interval: 10
+  - id: original_idle_key_max
+    kind: derived_from_source_not_run
+    steps:
+    - step: P1
+      at: 100
+      current: I
+      charge: 0
+      selected: N2
+      queue_after: N1,I
+      rule: 同上
+    - step: P2
+      at: 130
+      current: N2
+      charge: 30
+      selected: N1
+      queue_after: N2,I
+      rule: 0 > 2^64-1 为假 → 插在 I 前
+    - step: P3
+      at: 150
+      current: N1
+      charge: 20
+      selected: N2
+      queue_after: I
+      rule: 不回插但计费；@160 唤醒头插 → [N1,I]
+    - step: P4
+      at: 170
+      current: N2
+      charge: 20
+      selected: N1
+      queue_after: N2,I
+      rule: 30 > 2^64-1 为假 → 插在 I 前；N2=50
+    - step: P5
+      at: 190
+      current: N1
+      charge: 20
+      selected: N2
+      queue_after: N1,I
+      rule: 摘 N2；20 > 2^64-1 为假 → [N1,I]；N1=40
+    - step: P6
+      at: 200
+      current: N2
+      charge: 10
+      selected: N1
+      queue_after: N2,I
+      rule: 摘 N1；N2 插在 I 前；N2=60
+    expected:
+      N2: 60
+      N1: 40
+      idle_interval: 0
+  - id: candidate_A_or_B_spec_both_idle_keys
+    kind: spec_expectation_not_implemented_not_run
+    steps:
+    - step: P1
+      at: 100
+      current: I
+      charge: 0
+      selected: N2
+      queue_after: N1,I
+      rule: idle 尾插不计费（A/B 不变）
+    - step: P2
+      at: 130
+      current: N2
+      charge: 30
+      selected: N1
+      queue_after: N2,I
+      rule: A-R1 先计费到 30，再按 A-R4 以身份把非 idle 插在 idle 前
+    - step: P3
+      at: 150
+      current: N1
+      charge: 20
+      selected: N2
+      queue_after: I
+      rule: 阻塞不回插但计费；@160 唤醒：A 头插、B 有序插入，结果均为 [N1,I]
+    - step: P4
+      at: 170
+      current: N2
+      charge: 20
+      selected: N1
+      queue_after: N2,I
+      rule: 计费到 50 后插在 idle 前
+    - step: P5
+      at: 190
+      current: N1
+      charge: 20
+      selected: N2
+      queue_after: N1,I
+      rule: 计费到 40 后插在 idle 前
+    - step: P6
+      at: 200
+      current: N2
+      charge: 10
+      selected: N1
+      queue_after: N2,I
+      rule: 计费到 60
+    expected:
+      N2: 60
+      N1: 40
+      idle_interval: 0
+gaps:
+- id: GAP-M01
+  what: 构建类型（Debug 与否）未知：决定各 *_DEFINATION 头文件内联函数的链接形式（Q35）
+  status: open
+- id: GAP-M02
+  what: --gc-sections 之后实际保留的函数集合未知（无 ELF/链接 map）
+  status: open
+- id: GAP-M03
+  what: 中断上下文是否分配内存、AP 是否运行任务未追踪（MC-02、MC-18、DR-05）
+  status: open
+- id: GAP-M04
+  what: f_op->read 之下的文件系统与块设备路径及其等待原语未追踪（DR-02、LB-06）
+  status: open
+- id: GAP-M05
+  what: 缺页自旋时 in_atomic()/preempt_count 的值（继承 integration-03 GAP-02）
+  status: open
+- id: GAP-M06
+  what: 实际用户程序类型（静态/动态 PIE）与 mmap 序列，决定 MC-11/MC-12/MC-13 的触发频率
+  status: open
+- id: GAP-M07
+  what: 用户 PTE 是否带全局位（影响 MC-25 的 TLB 推断）
+  status: open
+- id: GAP-M08
+  what: Q34 只覆盖 mm 与 arch/x86_64/mm；全树是否另有 page_type/_mapcount 写入者未查（MC-01 的前提）
+  status: open
+- id: GAP-M09
+  what: observed_not_anchored 中的阅读记录未展开、未锚定
+  status: open
+- id: GAP-M10
+  what: 初稿的 MC-01 双链后果、MC-08 sighand 自旋、MC-17 munmap 自旋经独立审查后已收窄或驳回（RF-01…RF-05）
+  status: narrowed_or_closed
+observed_not_anchored:
+- mm/page_alloc/buddy.h::myos_page_zone：pfn 不在任何区时函数末尾没有 return
+- mm/kmalloc/slub.c::bootstrap：未把首个 slab 的 slab_cache 改指新的 kmem_cache（初始化内存未被回收，影响有限）
+- mm/vm_map/mmap.c::do_mmap：READ_IMPLIES_EXEC 的 personality 条件被注释，可读映射一律加 PROT_EXEC
+- mm/fault/pgalloc.c::__pud_alloc/__pmd_alloc/__pgtbl_alloc：分配失败返回 -ENOMEM 时不释放已取的锁
+- mm/fault/fault.c::myos_map_range/myos_creat_one_page_mapping：pte_alloc_map 后检查的是 pmd 而非 pte，alloc_page 结果不判空（myos_get_user_pages 使用后者，Q31）
+- mm/vm_map/filemap.c::simple_filemap_fault：page_array 下标未与文件页数比较
+- mm/fault/fault.c::handle_pte_fault：已存在 PTE 的 young/dirty 回写被注释，非写缺页可能重复触发
+- mm/page_alloc/page-flags.h：PageTable 等其他 page_type 判定同样依赖未初始化的 page_type
+- mm/early/memblock.c::memblock_free_all：局部变量 pages 未初始化即累加（结果未被使用）

@@ -1,0 +1,2008 @@
+{
+ "check": "META_TESTS",
+ "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2-meta/meta-csmqto5c",
+ "frozen_manifest_names_match": true,
+ "tests": [
+  {
+   "id": "M01",
+   "input_label": "HARNESS_META_TEST",
+   "requirement": "no valid observation -> no OBSERVED_AS_PREDICTED / NO_FAILURE / COUNTEREVIDENCE",
+   "old": {
+    "v05({'cases': {}})": {
+     "verdict": "OBSERVED_AS_PREDICTED",
+     "sub": {}
+    },
+    "run_all.evaluate(empty)": {
+     "V02": "COUNTEREVIDENCE",
+     "V03": "COMPARATOR_INVALID",
+     "V09": "COUNTEREVIDENCE",
+     "V10": "COUNTEREVIDENCE",
+     "V11": "COUNTEREVIDENCE",
+     "V04": "COUNTEREVIDENCE",
+     "V05": "OBSERVED_AS_PREDICTED",
+     "V06": "COUNTEREVIDENCE",
+     "V07": "COUNTEREVIDENCE",
+     "V08": "composite",
+     "V12": "COUNTEREVIDENCE",
+     "V13": "COUNTEREVIDENCE",
+     "V14": "COUNTEREVIDENCE"
+    }
+   },
+   "new": {
+    "v05({'cases': {}})": {
+     "status": "INCOMPLETE_EVIDENCE",
+     "result": null,
+     "reasons": [
+      "v05_state_not_in_mask: case record missing"
+     ]
+    },
+    "evaluate_all(empty)": {
+     "V02": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v02_single: case record missing"
+      ]
+     },
+     "V03": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v03_second_wake_direct: case record missing",
+       "v03_second_wake_via_complete: case record missing",
+       "v03_all_two_waiters: case record missing"
+      ]
+     },
+     "V04": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: case record missing"
+      ]
+     },
+     "V05": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v05_state_not_in_mask: case record missing"
+      ]
+     },
+     "V06": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v06_double_wake: case record missing"
+      ]
+     },
+     "V07": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v07_cpu_metadata: case record missing"
+      ]
+     },
+     "V09": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v09_schedule_timeout_values: case record missing",
+       "v09_uninterruptible_wrapper: case record missing",
+       "v09_msleep_bounded: case record missing"
+      ]
+     },
+     "V10": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v10_done_preset_fast_path: case record missing",
+       "v10_infinite_notify_during_schedule: case record missing",
+       "v10_finite_timeout_no_notifier: case record missing"
+      ]
+     },
+     "V11": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v11_wait_then_notify_then_reuse: case record missing"
+      ]
+     },
+     "V12": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v12_add_test_negative: case record missing"
+      ]
+     },
+     "V13": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v13_trylock: case record missing"
+      ]
+     },
+     "V08": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v08_pick_combinations: case record missing",
+       "v08_sequence_idle_requeue: case record missing",
+       "v08_sequence_idle_switched_out_blocked: case record missing",
+       "v08_vruntime_requeue_order: case record missing"
+      ]
+     },
+     "V14_model": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v14: case record missing",
+       "v14_control: case record missing"
+      ]
+     }
+    }
+   },
+   "old_summary": "v05 -> OBSERVED_AS_PREDICTED; dispatch false results: ['COMPARATOR_INVALID', 'COUNTEREVIDENCE', 'OBSERVED_AS_PREDICTED', 'composite']",
+   "new_summary": "v05 -> INCOMPLETE_EVIDENCE; behaviour verdicts on empty input: 0",
+   "old_side_status": "failure_demonstrated",
+   "met": true
+  },
+  {
+   "id": "M02",
+   "input_label": "HARNESS_META_TEST (derived from delivered V05 events)",
+   "requirement": "missing label/association detected",
+   "variants": {
+    "drop_label_group_task_new": {
+     "events_kept": 8,
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v05_state_not_in_mask: missing events: ('mask_case', 'task_new_via_wake_up_process'), ('q', 'task_new_via_wake_up_process')"
+      ]
+     }
+    },
+    "drop_q_of_uninterruptible_mask": {
+     "events_kept": 9,
+     "old": {
+      "verdict": "COUNTEREVIDENCE",
+      "sub": {}
+     },
+     "new": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v05_state_not_in_mask: missing events: ('q', 'uninterruptible_mask_interruptible')"
+      ]
+     }
+    },
+    "truncate_last_two_events": {
+     "events_kept": 8,
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INCOMPLETE_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v05_state_not_in_mask: missing events: ('mask_case', 'current_uninterruptible_mask_interruptible'), ('q', 'current_path')"
+      ]
+     }
+    },
+    "control_delivered_five_groups": {
+     "new": {
+      "status": "VALID",
+      "result": "OBSERVED_AS_PREDICTED",
+      "reasons": [
+       null
+      ]
+     }
+    }
+   },
+   "old_summary": {
+    "drop_label_group_task_new": "OBSERVED_AS_PREDICTED",
+    "drop_q_of_uninterruptible_mask": "COUNTEREVIDENCE",
+    "truncate_last_two_events": "OBSERVED_AS_PREDICTED"
+   },
+   "new_summary": {
+    "drop_label_group_task_new": "INCOMPLETE_EVIDENCE",
+    "drop_q_of_uninterruptible_mask": "INCOMPLETE_EVIDENCE",
+    "truncate_last_two_events": "INCOMPLETE_EVIDENCE",
+    "control_delivered_five_groups": "VALID"
+   },
+   "old_side_status": "failure_demonstrated",
+   "met": true
+  },
+  {
+   "id": "M03",
+   "input_label": "HARNESS_META_TEST",
+   "requirement": "duplicates/conflicts/type errors/unparsable lines give an invalid-evidence state",
+   "variants": {
+    "duplicate_conflicting_ret": {
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: duplicate or conflicting events: ('ret', None)"
+      ]
+     }
+    },
+    "wrong_field_type": {
+     "old": {
+      "verdict": "COUNTEREVIDENCE",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: q field task_state has type str, expected int"
+      ]
+     }
+    },
+    "unparsable_line": {
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: stdout line 2 not JSON"
+      ]
+     }
+    },
+    "duplicate_q_dict_override": {
+     "old": {
+      "verdict": "COMPARATOR_INVALID",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v06_double_wake: duplicate or conflicting events: ('q', 'after_second')"
+      ]
+     }
+    }
+   },
+   "old_summary": {
+    "duplicate_conflicting_ret": "OBSERVED_AS_PREDICTED",
+    "wrong_field_type": "COUNTEREVIDENCE",
+    "unparsable_line": "OBSERVED_AS_PREDICTED",
+    "duplicate_q_dict_override": "COMPARATOR_INVALID"
+   },
+   "new_summary": {
+    "duplicate_conflicting_ret": "INVALID_EVIDENCE",
+    "wrong_field_type": "INVALID_EVIDENCE",
+    "unparsable_line": "INVALID_EVIDENCE",
+    "duplicate_q_dict_override": "INVALID_EVIDENCE"
+   },
+   "old_side_status": "failure_demonstrated",
+   "met": true
+  },
+  {
+   "id": "M04",
+   "input_label": "HARNESS_META_TEST",
+   "requirement": "unreliable runs are not behaviour evidence; not reported as kernel counterevidence",
+   "variants": {
+    "timed_out": {
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: run timed_out=True"
+      ]
+     }
+    },
+    "collect_timed_out": {
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: output collection timed out"
+      ]
+     }
+    },
+    "case_status_ERROR_with_output": {
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "ERROR",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: case error: None"
+      ]
+     }
+    },
+    "repeat_not_identical": {
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: repeat run missing or not identical"
+      ]
+     }
+    },
+    "terminal_state_killed": {
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v04_noncurrent_wake: terminal_state='timeout_group_killed'"
+      ]
+     }
+    }
+   },
+   "old_summary": {
+    "timed_out": "OBSERVED_AS_PREDICTED",
+    "collect_timed_out": "OBSERVED_AS_PREDICTED",
+    "case_status_ERROR_with_output": "OBSERVED_AS_PREDICTED",
+    "repeat_not_identical": "OBSERVED_AS_PREDICTED",
+    "terminal_state_killed": "OBSERVED_AS_PREDICTED"
+   },
+   "new_summary": {
+    "timed_out": "INVALID_EVIDENCE",
+    "collect_timed_out": "INVALID_EVIDENCE",
+    "case_status_ERROR_with_output": "ERROR",
+    "repeat_not_identical": "INVALID_EVIDENCE",
+    "terminal_state_killed": "INVALID_EVIDENCE"
+   },
+   "old_side_status": "failure_demonstrated",
+   "met": true
+  },
+  {
+   "id": "M05",
+   "input_label": "HARNESS_META_TEST (exit codes altered on delivered records)",
+   "requirement": "exit code checked together with events/case contract; 0/42/43 controls accepted",
+   "variants": {
+    "v02_valid_events_exit_42": {
+     "old": {
+      "verdict": "COUNTEREVIDENCE",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v02_single: exit code 42 inconsistent with case contract 0"
+      ]
+     }
+    },
+    "v03_stop_event_exit_0": {
+     "old": {
+      "verdict": "COUNTEREVIDENCE",
+      "sub": {
+       "second_wake_direct": "COUNTEREVIDENCE",
+       "second_wake_via_complete": "OBSERVED_AS_PREDICTED",
+       "all_locked_two_waiters": "OBSERVED_AS_PREDICTED"
+      }
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v03_second_wake_direct: exit code 0 inconsistent with case contract 42"
+      ]
+     }
+    },
+    "v09_msleep_step_cap_exit_0": {
+     "old": {
+      "verdict": "OBSERVED_AS_PREDICTED",
+      "sub": {}
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v09_msleep_bounded: exit code 0 inconsistent with case contract 43"
+      ]
+     }
+    },
+    "v03_exit_42_without_stop_event": {
+     "old": {
+      "verdict": "COMPARATOR_INVALID",
+      "sub": {
+       "second_wake_direct": "COMPARATOR_INVALID",
+       "second_wake_via_complete": "OBSERVED_AS_PREDICTED",
+       "all_locked_two_waiters": "OBSERVED_AS_PREDICTED"
+      }
+     },
+     "new": {
+      "status": "INVALID_EVIDENCE",
+      "result": null,
+      "reasons": [
+       "v03_second_wake_direct: missing events: ('ttwu_invalid_task', None); controlled stop 42 without final ttwu_invalid_task event"
+      ]
+     }
+    },
+    "controls_delivered": {
+     "exit_0_v02": {
+      "status": "VALID",
+      "result": "OBSERVED_AS_PREDICTED",
+      "reasons": [
+       null
+      ]
+     },
+     "exit_42_v03": {
+      "status": "VALID",
+      "result": "OBSERVED_AS_PREDICTED",
+      "reasons": [
+       null
+      ]
+     },
+     "exit_43_v09": {
+      "status": "VALID",
+      "result": "OBSERVED_AS_PREDICTED",
+      "reasons": [
+       null
+      ]
+     }
+    }
+   },
+   "old_summary": {
+    "v02_valid_events_exit_42": "COUNTEREVIDENCE",
+    "v03_stop_event_exit_0": "COUNTEREVIDENCE",
+    "v09_msleep_step_cap_exit_0": "OBSERVED_AS_PREDICTED",
+    "v03_exit_42_without_stop_event": "COMPARATOR_INVALID"
+   },
+   "new_summary": {
+    "v02_valid_events_exit_42": "INVALID_EVIDENCE",
+    "v03_stop_event_exit_0": "INVALID_EVIDENCE",
+    "v09_msleep_step_cap_exit_0": "INVALID_EVIDENCE",
+    "v03_exit_42_without_stop_event": "INVALID_EVIDENCE",
+    "controls_delivered": {
+     "exit_0_v02": "VALID",
+     "exit_42_v03": "VALID",
+     "exit_43_v09": "VALID"
+    }
+   },
+   "old_side_status": "failure_demonstrated",
+   "met": true
+  },
+  {
+   "id": "M06",
+   "input_label": "HARNESS_META_TEST",
+   "requirement": "identity false/exception -> zero dynamic calls, accurate blocked/error record",
+   "variants": {
+    "gate_false": {
+     "exit_code": 3,
+     "status": "BLOCKED_IDENTITY",
+     "stand_in_calls": {
+      "h00": 0,
+      "stage": 0,
+      "fixtures": 0
+     },
+     "record_dynamic_calls": {
+      "h00": 0,
+      "fixtures": 0
+     },
+     "infrastructure_errors": [
+      "identity gate closed: ['ok', 'core_review_record']"
+     ]
+    },
+    "identity_raises": {
+     "exit_code": 3,
+     "status": "ERROR_IDENTITY",
+     "stand_in_calls": {
+      "h00": 0,
+      "stage": 0,
+      "fixtures": 0
+     },
+     "record_dynamic_calls": {
+      "h00": 0,
+      "fixtures": 0
+     },
+     "infrastructure_errors": [
+      "identity gate closed: RuntimeError: HARNESS_META_TEST identity failure"
+     ]
+    },
+    "real_identity_on_bad_repo": {
+     "exit_code": 3,
+     "status": "ERROR_IDENTITY",
+     "stand_in_calls": {
+      "h00": 0,
+      "stage": 0,
+      "fixtures": 0
+     },
+     "record_dynamic_calls": {
+      "h00": 0,
+      "fixtures": 0
+     },
+     "infrastructure_errors": [
+      "identity gate closed: RuntimeError: git rev-parse rc=128 fatal: cannot change to '/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2-meta/meta-csmqto5c/no-such-repo': No such file or directory\n"
+     ]
+    }
+   },
+   "old": {
+    "phase_A_dynamic_entry_calls": {
+     "gate_false": 2,
+     "identity_raises": 2,
+     "h00_fails": 2
+    }
+   },
+   "old_summary": {
+    "gate_false": 2,
+    "identity_raises": 2,
+    "h00_fails": 2
+   },
+   "new_summary": {
+    "gate_false": [
+     3,
+     "BLOCKED_IDENTITY",
+     {
+      "h00": 0,
+      "stage": 0,
+      "fixtures": 0
+     }
+    ],
+    "identity_raises": [
+     3,
+     "ERROR_IDENTITY",
+     {
+      "h00": 0,
+      "stage": 0,
+      "fixtures": 0
+     }
+    ],
+    "real_identity_on_bad_repo": [
+     3,
+     "ERROR_IDENTITY",
+     {
+      "h00": 0,
+      "stage": 0,
+      "fixtures": 0
+     }
+    ]
+   },
+   "old_side_status": "failure_demonstrated (Phase A A2)",
+   "met": true
+  },
+  {
+   "id": "M07",
+   "input_label": "HARNESS_META_TEST",
+   "requirement": "failed/timed-out H00 blocks dynamic fixtures; independent read-only check continues; partial report",
+   "variants": {
+    "h00_probe_failed": {
+     "exit_code": 2,
+     "status": "PARTIAL",
+     "fixtures_stand_in_calls": 0,
+     "stage_v01": {
+      "returncode": 0,
+      "timed_out": false,
+      "source": "frozen a1e7c2277705"
+     },
+     "report_generated": true,
+     "generator_errors": [],
+     "cases": {
+      "V00": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V01": [
+       "VALID",
+       "NO_FAILURE_IN_SCOPE"
+      ],
+      "V02": [
+       "BLOCKED",
+       null
+      ],
+      "V03": [
+       "BLOCKED",
+       null
+      ],
+      "V04": [
+       "BLOCKED",
+       null
+      ],
+      "V05": [
+       "BLOCKED",
+       null
+      ],
+      "V06": [
+       "BLOCKED",
+       null
+      ],
+      "V07": [
+       "BLOCKED",
+       null
+      ],
+      "V08": [
+       "BLOCKED",
+       null
+      ],
+      "V09": [
+       "BLOCKED",
+       null
+      ],
+      "V10": [
+       "BLOCKED",
+       null
+      ],
+      "V11": [
+       "BLOCKED",
+       null
+      ],
+      "V12": [
+       "BLOCKED",
+       null
+      ],
+      "V13": [
+       "BLOCKED",
+       null
+      ],
+      "V14": [
+       "BLOCKED",
+       null
+      ],
+      "V00_A46_correction": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ]
+     }
+    },
+    "h00_raised_timeout": {
+     "exit_code": 2,
+     "status": "PARTIAL",
+     "fixtures_stand_in_calls": 0,
+     "stage_v01": {
+      "returncode": 0,
+      "timed_out": false,
+      "source": "frozen a1e7c2277705"
+     },
+     "report_generated": true,
+     "generator_errors": [],
+     "cases": {
+      "V00": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V01": [
+       "VALID",
+       "NO_FAILURE_IN_SCOPE"
+      ],
+      "V02": [
+       "BLOCKED",
+       null
+      ],
+      "V03": [
+       "BLOCKED",
+       null
+      ],
+      "V04": [
+       "BLOCKED",
+       null
+      ],
+      "V05": [
+       "BLOCKED",
+       null
+      ],
+      "V06": [
+       "BLOCKED",
+       null
+      ],
+      "V07": [
+       "BLOCKED",
+       null
+      ],
+      "V08": [
+       "BLOCKED",
+       null
+      ],
+      "V09": [
+       "BLOCKED",
+       null
+      ],
+      "V10": [
+       "BLOCKED",
+       null
+      ],
+      "V11": [
+       "BLOCKED",
+       null
+      ],
+      "V12": [
+       "BLOCKED",
+       null
+      ],
+      "V13": [
+       "BLOCKED",
+       null
+      ],
+      "V14": [
+       "BLOCKED",
+       null
+      ],
+      "V00_A46_correction": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ]
+     }
+    }
+   },
+   "old": {
+    "phase_A_h00_fails": {
+     "mode": "h00_fails",
+     "calls": {
+      "stage_script": [
+       "h00_hardening.py",
+       "v00_anchors.py",
+       "v01_structure.py",
+       "static_checks.py"
+      ],
+      "fixtures": 1,
+      "evaluate": 1
+     },
+     "main_exception": null,
+     "dynamic_entry_calls": 2
+    }
+   },
+   "old_summary": {
+    "stage_script": [
+     "h00_hardening.py",
+     "v00_anchors.py",
+     "v01_structure.py",
+     "static_checks.py"
+    ],
+    "fixtures": 1,
+    "evaluate": 1
+   },
+   "new_summary": {
+    "h00_probe_failed": [
+     2,
+     0,
+     [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     [
+      "BLOCKED",
+      null
+     ]
+    ],
+    "h00_raised_timeout": [
+     2,
+     0,
+     [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     [
+      "BLOCKED",
+      null
+     ]
+    ]
+   },
+   "old_side_status": "failure_demonstrated (Phase A A2 h00_fails)",
+   "met": true
+  },
+  {
+   "id": "M08",
+   "input_label": "HARNESS_META_TEST (derived from this run's real V00/V01 records)",
+   "requirement": "no hard-coded NO_FAILURE / fixed conclusions in YAML, text or CA summary",
+   "variants": {
+    "real_base": {
+     "V00": [
+      "VALID",
+      "COUNTEREVIDENCE",
+      [
+       {
+        "id": "A46",
+        "verdict_mech": "OUTSIDE_OR_PARTIAL_DEFINITION"
+       }
+      ]
+     ],
+     "V01": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE",
+      []
+     ],
+     "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+     "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+     "counts": {
+      "COUNTEREVIDENCE": 2,
+      "NO_FAILURE_IN_SCOPE": 2,
+      "OBSERVED_AS_PREDICTED": 11
+     },
+     "generator_errors": []
+    },
+    "v01_referenced_paths_missing": {
+     "V00": [
+      "VALID",
+      "COUNTEREVIDENCE",
+      [
+       {
+        "id": "A46",
+        "verdict_mech": "OUTSIDE_OR_PARTIAL_DEFINITION"
+       }
+      ]
+     ],
+     "V01": [
+      "VALID",
+      "COUNTEREVIDENCE",
+      [
+       "referenced_paths_exist"
+      ]
+     ],
+     "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+     "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+     "counts": {
+      "COUNTEREVIDENCE": 3,
+      "OBSERVED_AS_PREDICTED": 11,
+      "NO_FAILURE_IN_SCOPE": 1
+     },
+     "generator_errors": []
+    },
+    "v01_parse_failure": {
+     "V00": [
+      "VALID",
+      "COUNTEREVIDENCE",
+      [
+       {
+        "id": "A46",
+        "verdict_mech": "OUTSIDE_OR_PARTIAL_DEFINITION"
+       }
+      ]
+     ],
+     "V01": [
+      "VALID",
+      "COUNTEREVIDENCE",
+      [
+       "all_six_parse"
+      ]
+     ],
+     "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+     "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+     "counts": {
+      "COUNTEREVIDENCE": 3,
+      "OBSERVED_AS_PREDICTED": 11,
+      "NO_FAILURE_IN_SCOPE": 1
+     },
+     "generator_errors": []
+    },
+    "v00_A46_changed_to_match": {
+     "V00": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED",
+      []
+     ],
+     "V01": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE",
+      []
+     ],
+     "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+     "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+     "counts": {
+      "OBSERVED_AS_PREDICTED": 12,
+      "NO_FAILURE_IN_SCOPE": 2,
+      "COUNTEREVIDENCE": 1
+     },
+     "generator_errors": []
+    },
+    "v00_A35_changed_to_quote_not_found": {
+     "V00": [
+      "VALID",
+      "COUNTEREVIDENCE",
+      [
+       {
+        "id": "A46",
+        "verdict_mech": "OUTSIDE_OR_PARTIAL_DEFINITION"
+       },
+       {
+        "id": "A35",
+        "verdict_mech": "QUOTE_NOT_FOUND"
+       }
+      ]
+     ],
+     "V01": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE",
+      []
+     ],
+     "CA-06": "CONTRADICTED_OR_UNSUPPORTED_AT_SOURCE_LEVEL",
+     "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+     "counts": {
+      "COUNTEREVIDENCE": 2,
+      "NO_FAILURE_IN_SCOPE": 2,
+      "OBSERVED_AS_PREDICTED": 11
+     },
+     "generator_errors": []
+    }
+   },
+   "old": {
+    "phase_A_old_make_results_V01": {
+     "baseline_real_replay": [
+      "NO_FAILURE_IN_SCOPE",
+      "EXECUTED"
+     ],
+     "v01_paths_missing_and_parse_failed": [
+      "NO_FAILURE_IN_SCOPE",
+      "EXECUTED"
+     ],
+     "missing_static_stage": null,
+     "fixture_blocked_compile": null
+    }
+   },
+   "old_summary": {
+    "baseline_real_replay": [
+     "NO_FAILURE_IN_SCOPE",
+     "EXECUTED"
+    ],
+    "v01_paths_missing_and_parse_failed": [
+     "NO_FAILURE_IN_SCOPE",
+     "EXECUTED"
+    ],
+    "missing_static_stage": null,
+    "fixture_blocked_compile": null
+   },
+   "new_summary": {
+    "real_base": [
+     "COUNTEREVIDENCE",
+     "NO_FAILURE_IN_SCOPE",
+     "SUPPORTED_AT_SOURCE_LEVEL"
+    ],
+    "v01_referenced_paths_missing": [
+     "COUNTEREVIDENCE",
+     "COUNTEREVIDENCE",
+     "SUPPORTED_AT_SOURCE_LEVEL"
+    ],
+    "v01_parse_failure": [
+     "COUNTEREVIDENCE",
+     "COUNTEREVIDENCE",
+     "SUPPORTED_AT_SOURCE_LEVEL"
+    ],
+    "v00_A46_changed_to_match": [
+     "OBSERVED_AS_PREDICTED",
+     "NO_FAILURE_IN_SCOPE",
+     "SUPPORTED_AT_SOURCE_LEVEL"
+    ],
+    "v00_A35_changed_to_quote_not_found": [
+     "COUNTEREVIDENCE",
+     "NO_FAILURE_IN_SCOPE",
+     "CONTRADICTED_OR_UNSUPPORTED_AT_SOURCE_LEVEL"
+    ]
+   },
+   "old_side_status": "failure_demonstrated (Phase A A5: V01 stays NO_FAILURE_IN_SCOPE)",
+   "met": true
+  },
+  {
+   "id": "M09",
+   "input_label": "HARNESS_META_TEST (real partial run with injected compile failure, case exception and skipped stage; variant B: static stage reported failed after writing its output)",
+   "requirement": "no crash; full list of not-executed layers, affected CA, still-valid items; complete control = M12",
+   "injection": {
+    "broken_fixture": "fx_prims",
+    "case_error": [
+     "fx_sched",
+     "v06_double_wake"
+    ],
+    "skip_stage": "static_checks.py"
+   },
+   "exit_code": 2,
+   "run_status": "PARTIAL",
+   "yaml_renders": true,
+   "cases": {
+    "V00": [
+     "VALID",
+     "COUNTEREVIDENCE"
+    ],
+    "V01": [
+     "VALID",
+     "NO_FAILURE_IN_SCOPE"
+    ],
+    "V02": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V03": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V04": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V05": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V06": [
+     "ERROR",
+     null
+    ],
+    "V07": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V08": [
+     "INCOMPLETE_EVIDENCE",
+     null
+    ],
+    "V09": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V10": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V11": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V12": [
+     "BLOCKED",
+     null
+    ],
+    "V13": [
+     "BLOCKED",
+     null
+    ],
+    "V14": [
+     "INCOMPLETE_EVIDENCE",
+     null
+    ],
+    "V00_A46_correction": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ]
+   },
+   "ca_rulings": {
+    "CA-01": "UNDETERMINED_MISSING_EVIDENCE",
+    "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+    "CA-03": "SUPPORTED_IN_SCOPE",
+    "CA-04": "SUPPORTED_IN_SCOPE",
+    "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+    "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+    "CA-07": "UNDETERMINED_MISSING_EVIDENCE"
+   },
+   "layers_not_executed": [
+    "V04.smp_or_real_scheduler",
+    "V05.irq_or_signal_context",
+    "V06.host_original_slice_serial",
+    "V06.concurrent_wakeups",
+    "V07.ap_migration",
+    "V08.limited_model_reachability",
+    "V08.global_reachability",
+    "V09.real_timer_expiry",
+    "V10.real_timer_or_scheduler",
+    "V11.real_context_switch",
+    "V12.host_original_asm_single_thread",
+    "V12.multicore_atomicity",
+    "V13.host_original_slice_serial",
+    "V13.smp_stress",
+    "V14.source_and_build_reference",
+    "V14.existing_elf"
+   ],
+   "infrastructure_errors": [
+    "V06 evidence status ERROR",
+    "V12 evidence status BLOCKED",
+    "V13 evidence status BLOCKED",
+    "V08 evidence status INCOMPLETE_EVIDENCE",
+    "stage static_checks.py not completed"
+   ],
+   "generator_errors": [],
+   "variant_static_stage_failed": {
+    "exit_code": 2,
+    "run_status": "PARTIAL",
+    "yaml_renders": true,
+    "static_stage_real_returncode": 0,
+    "static_json_left_in_stage_dir": true,
+    "stage_outputs_usable": {
+     "v00": true,
+     "v01": true,
+     "static": false,
+     "a46": true
+    },
+    "cases": {
+     "V00": [
+      "VALID",
+      "COUNTEREVIDENCE"
+     ],
+     "V01": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "V02": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V03": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V04": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V05": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V06": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "V07": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V08": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "V09": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V10": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V11": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V12": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V13": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V14": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "V00_A46_correction": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ]
+    },
+    "ca_rulings": {
+     "CA-01": "SUPPORTED_IN_SCOPE",
+     "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+     "CA-03": "SUPPORTED_IN_SCOPE",
+     "CA-04": "SUPPORTED_IN_SCOPE",
+     "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+     "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+     "CA-07": "SUPPORTED_IN_SCOPE"
+    },
+    "layers_not_executed": [
+     "V04.smp_or_real_scheduler",
+     "V05.irq_or_signal_context",
+     "V06.concurrent_wakeups",
+     "V07.ap_migration",
+     "V08.limited_model_reachability",
+     "V08.global_reachability",
+     "V09.real_timer_expiry",
+     "V10.real_timer_or_scheduler",
+     "V11.real_context_switch",
+     "V12.multicore_atomicity",
+     "V13.smp_stress",
+     "V14.source_and_build_reference",
+     "V14.existing_elf"
+    ],
+    "infrastructure_errors": [
+     "V08 evidence status INCOMPLETE_EVIDENCE",
+     "stage static_checks.py not completed"
+    ],
+    "generator_errors": []
+   },
+   "met_variants": {
+    "partial_run": true,
+    "static_stage_failed": true
+   },
+   "old": {
+    "missing_static_stage": {
+     "returncode": 1,
+     "generated": false,
+     "error_tail": [
+      "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/a5_missing_static_stage/static.json'"
+     ]
+    },
+    "fixture_blocked_compile": {
+     "returncode": 1,
+     "generated": false,
+     "error_tail": [
+      "KeyError: 'run'"
+     ]
+    }
+   },
+   "old_summary": {
+    "missing_static_stage": {
+     "returncode": 1,
+     "generated": false,
+     "error_tail": [
+      "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/a5_missing_static_stage/static.json'"
+     ]
+    },
+    "fixture_blocked_compile": {
+     "returncode": 1,
+     "generated": false,
+     "error_tail": [
+      "KeyError: 'run'"
+     ]
+    }
+   },
+   "new_summary": {
+    "exit": 2,
+    "cases": {
+     "V00": [
+      "VALID",
+      "COUNTEREVIDENCE"
+     ],
+     "V01": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "V02": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V03": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V04": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V05": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V06": [
+      "ERROR",
+      null
+     ],
+     "V07": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V08": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "V09": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V10": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V11": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "V12": [
+      "BLOCKED",
+      null
+     ],
+     "V13": [
+      "BLOCKED",
+      null
+     ],
+     "V14": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "V00_A46_correction": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ]
+    },
+    "ca": {
+     "CA-01": "UNDETERMINED_MISSING_EVIDENCE",
+     "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+     "CA-03": "SUPPORTED_IN_SCOPE",
+     "CA-04": "SUPPORTED_IN_SCOPE",
+     "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+     "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+     "CA-07": "UNDETERMINED_MISSING_EVIDENCE"
+    },
+    "static_stage_failed": {
+     "exit": 2,
+     "V08": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "V14": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+     "CA-05": "UNDETERMINED_MISSING_EVIDENCE"
+    }
+   },
+   "old_side_status": "failure_demonstrated (Phase A A5: FileNotFoundError / KeyError)",
+   "met": true
+  },
+  {
+   "id": "M10",
+   "input_label": "HARNESS_META_TEST (local commits only in a --shared scratch clone; no remote writes)",
+   "requirement": "legit successor replays; wrong branch / non-descendant / changed originals / bad remote are rejected",
+   "variants": {
+    "legit_successor_head": {
+     "gate_ok": true,
+     "closed_by": [],
+     "error": null,
+     "remote_relation": "equal",
+     "originals": {
+      "changed_or_missing": [],
+      "pilot_changed_since_pilot_head": []
+     }
+    },
+    "legit_equal_head": {
+     "gate_ok": true,
+     "closed_by": [],
+     "error": null,
+     "remote_relation": "equal",
+     "originals": {
+      "changed_or_missing": [],
+      "pilot_changed_since_pilot_head": []
+     }
+    },
+    "legit_local_ahead_of_remote": {
+     "gate_ok": true,
+     "closed_by": [],
+     "error": null,
+     "remote_relation": "remote_is_ancestor_of_head",
+     "originals": {
+      "changed_or_missing": [],
+      "pilot_changed_since_pilot_head": []
+     }
+    },
+    "wrong_branch_name": {
+     "gate_ok": false,
+     "closed_by": [
+      "on_execution_branch"
+     ],
+     "error": null,
+     "remote_relation": "equal",
+     "originals": {
+      "changed_or_missing": [],
+      "pilot_changed_since_pilot_head": []
+     }
+    },
+    "non_descendant_head": {
+     "gate_ok": false,
+     "closed_by": [
+      "head_descends_from_reviewed_core",
+      "originals_unchanged",
+      "remote_descends_from_reviewed_core"
+     ],
+     "error": null,
+     "remote_relation": "equal",
+     "originals": {
+      "changed_or_missing": [
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/MANIFEST.md",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/evidence.md",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/build.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/build_evidence.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/evaluate.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/final_check.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/fx_common.h",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/fx_jiffies.c",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/fx_list.inc.c",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/fx_prims.c",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/fx_sched.c",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/fx_wait.c",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/h00_hardening.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/harness.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/locate.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/make_results.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/readback.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/run_all.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/static_checks.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/v00_anchors.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/v00_semantic_review.yaml",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/v01_structure.py",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/MANIFEST.md",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/evidence.md",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml"
+      ],
+      "pilot_changed_since_pilot_head": [
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/MANIFEST.md",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/evidence.md",
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml"
+      ]
+     }
+    },
+    "pilot_original_changed": {
+     "gate_ok": false,
+     "closed_by": [
+      "originals_unchanged"
+     ],
+     "error": null,
+     "remote_relation": "equal",
+     "originals": {
+      "changed_or_missing": [
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml"
+      ],
+      "pilot_changed_since_pilot_head": [
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml"
+      ]
+     }
+    },
+    "core_original_changed": {
+     "gate_ok": false,
+     "closed_by": [
+      "originals_unchanged"
+     ],
+     "error": null,
+     "remote_relation": "equal",
+     "originals": {
+      "changed_or_missing": [
+       "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml"
+      ],
+      "pilot_changed_since_pilot_head": []
+     }
+    },
+    "remote_reset_to_master": {
+     "gate_ok": false,
+     "closed_by": [
+      "remote_descends_from_reviewed_core"
+     ],
+     "error": null,
+     "remote_relation": "remote_is_ancestor_of_head",
+     "originals": {
+      "changed_or_missing": [],
+      "pilot_changed_since_pilot_head": []
+     }
+    },
+    "remote_ahead_of_local": {
+     "gate_ok": false,
+     "closed_by": [
+      "remote_on_same_line"
+     ],
+     "error": null,
+     "remote_relation": "remote_is_descendant_of_head",
+     "originals": {
+      "changed_or_missing": [],
+      "pilot_changed_since_pilot_head": []
+     }
+    }
+   },
+   "session_repo_is_shallow": "true",
+   "scratch_repo_method": "git init + alternates (read-only) + copied shallow file; objects written only to scratch",
+   "real_repo_gate_ok": true,
+   "real_repo_execution": {
+    "branch": "claude/dazzling-cori-q0dnyt",
+    "head_short12": "f9ae2bce9a64",
+    "remote_relation": "equal"
+   },
+   "main_repo_object_store_unchanged": true,
+   "old": {
+    "phase_A_old_identity_remote_heads_match": {
+     "master==pin.master": true,
+     "time==pin.time": true,
+     "agent/MYOS2-LEAD-002==pin.review": false,
+     "claude/dazzling-cori-q0dnyt==pin.pilot_head": false
+    },
+    "phase_A_old_identity_gate": {
+     "disposition_is_ALLOW_CORE": true,
+     "packet_matches": true,
+     "pr_matches_17": true,
+     "branch_matches": true,
+     "reviewed_head_matches_pin": true,
+     "reviewed_inputs_match_pins": true,
+     "ALLOW_CORE_bound_to_this_execution": true
+    }
+   },
+   "old_summary": "old identity has no head/branch/originals inputs; it flags the legit advance as a mismatch and the run continues anyway",
+   "new_summary": {
+    "legit_successor_head": [
+     true,
+     []
+    ],
+    "legit_equal_head": [
+     true,
+     []
+    ],
+    "legit_local_ahead_of_remote": [
+     true,
+     []
+    ],
+    "wrong_branch_name": [
+     false,
+     [
+      "on_execution_branch"
+     ]
+    ],
+    "non_descendant_head": [
+     false,
+     [
+      "head_descends_from_reviewed_core",
+      "originals_unchanged",
+      "remote_descends_from_reviewed_core"
+     ]
+    ],
+    "pilot_original_changed": [
+     false,
+     [
+      "originals_unchanged"
+     ]
+    ],
+    "core_original_changed": [
+     false,
+     [
+      "originals_unchanged"
+     ]
+    ],
+    "remote_reset_to_master": [
+     false,
+     [
+      "remote_descends_from_reviewed_core"
+     ]
+    ],
+    "remote_ahead_of_local": [
+     false,
+     [
+      "remote_on_same_line"
+     ]
+    ]
+   },
+   "old_side_status": "failure_demonstrated (Phase A A3/A4 misblock without enforcement)",
+   "met": true
+  },
+  {
+   "id": "M11",
+   "input_label": "real network reads + one HARNESS_META_TEST injected timeout",
+   "requirement": "--out parsed with/without field=value; HTTP/timeout/object/bytes/field all in status",
+   "variants": {
+    "with_field_object": {
+     "argv_tail": [
+      "transport_marker=MYOS2-CLOUD-PILOT-20260925-K7P4",
+      "--out",
+      "<file>"
+     ],
+     "exit": 0,
+     "stderr_tail": "",
+     "ok": true,
+     "mode": "object",
+     "relation": null,
+     "channels": [
+      {
+       "http_code": "200",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": true,
+       "field_ok": true,
+       "ok": true
+      },
+      {
+       "http_code": "200",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": true,
+       "field_ok": true,
+       "ok": true
+      }
+     ]
+    },
+    "without_field_object": {
+     "argv_tail": [
+      "--out",
+      "<file>"
+     ],
+     "exit": 0,
+     "stderr_tail": "",
+     "ok": true,
+     "mode": "object",
+     "relation": null,
+     "channels": [
+      {
+       "http_code": "200",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": true,
+       "field_ok": true,
+       "ok": true
+      },
+      {
+       "http_code": "200",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": true,
+       "field_ok": true,
+       "ok": true
+      }
+     ]
+    },
+    "with_field_branch_mode": {
+     "argv_tail": [
+      "transport_marker=MYOS2-CLOUD-PILOT-20260925-K7P4",
+      "--mode",
+      "branch",
+      "--out",
+      "<file>"
+     ],
+     "exit": 0,
+     "stderr_tail": "",
+     "ok": true,
+     "mode": "branch",
+     "relation": "descendant_with_identical_blob",
+     "channels": [
+      {
+       "http_code": "200",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": true,
+       "field_ok": true,
+       "ok": true
+      },
+      {
+       "http_code": "200",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": true,
+       "field_ok": true,
+       "ok": true
+      }
+     ]
+    },
+    "missing_path": {
+     "argv_tail": [
+      "--out",
+      "<file>"
+     ],
+     "exit": 1,
+     "stderr_tail": "",
+     "ok": false,
+     "mode": "object",
+     "relation": null,
+     "channels": [
+      {
+       "http_code": "404",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": false,
+       "field_ok": true,
+       "ok": false
+      },
+      {
+       "http_code": "404",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": false,
+       "field_ok": true,
+       "ok": false
+      }
+     ]
+    },
+    "wrong_field_value": {
+     "argv_tail": [
+      "transport_marker=WRONG-HARNESS_META_TEST",
+      "--out",
+      "<file>"
+     ],
+     "exit": 1,
+     "stderr_tail": "",
+     "ok": false,
+     "mode": "object",
+     "relation": null,
+     "channels": [
+      {
+       "http_code": "200",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": true,
+       "field_ok": false,
+       "ok": false
+      },
+      {
+       "http_code": "200",
+       "curl_exit": 0,
+       "timed_out": false,
+       "byte_identical": true,
+       "field_ok": false,
+       "ok": false
+      }
+     ]
+    },
+    "malformed_field": {
+     "argv_tail": [
+      "transport_marker",
+      "--out",
+      "<file>"
+     ],
+     "exit": 2,
+     "stderr_tail": "field_value must be NAME=VALUE\n",
+     "ok": null,
+     "mode": null,
+     "relation": null,
+     "channels": null
+    },
+    "injected_curl_timeout": {
+     "ok": false,
+     "channels": [
+      {
+       "timed_out": true,
+       "transport_ok": false,
+       "ok": false
+      },
+      {
+       "timed_out": true,
+       "transport_ok": false,
+       "ok": false
+      }
+     ]
+    }
+   },
+   "old": {
+    "no_field_with_out": {
+     "returncode": 1,
+     "stderr_last": [
+      "ValueError: not enough values to unpack (expected 2, got 1)"
+     ]
+    },
+    "with_field_with_out": {
+     "returncode": 1,
+     "stderr_last": []
+    }
+   },
+   "old_summary": {
+    "no_field_with_out": 1,
+    "with_field_with_out": 1
+   },
+   "new_summary": {
+    "with_field_object": 0,
+    "without_field_object": 0,
+    "with_field_branch_mode": 0,
+    "missing_path": 1,
+    "wrong_field_value": 1,
+    "malformed_field": 2,
+    "injected_curl_timeout": false
+   },
+   "old_side_status": "failure_demonstrated (Phase A A3 CLI ValueError)",
+   "met": true
+  },
+  {
+   "id": "M12",
+   "input_label": "REAL same-source run (not a meta test)",
+   "requirement": "frozen sources/predictions, full valid data -> scoped conclusions; old A46 still fails; A46-C/ASM checked separately",
+   "canonical_status": "COMPLETE",
+   "canonical_exit": 0,
+   "evaluation": {
+    "V02": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V03": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V04": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V05": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V06": [
+     "VALID",
+     "NO_FAILURE_IN_SCOPE"
+    ],
+    "V07": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V09": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V10": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V11": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V12": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V13": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V08": [
+     "VALID",
+     "COUNTEREVIDENCE"
+    ],
+    "V14_model": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V00": [
+     "VALID",
+     "COUNTEREVIDENCE"
+    ],
+    "V01": [
+     "VALID",
+     "NO_FAILURE_IN_SCOPE"
+    ],
+    "V00_A46_correction": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ]
+   },
+   "expanded_source_sha256_first_segment": {
+    "frozen_old_builder": {
+     "fx_wait": "036edc1945a17973",
+     "fx_sched": "657e9616e16446d0",
+     "fx_prims": "e1788bdb3d9a2e43",
+     "fx_jiffies": "5369f8fda7307d88"
+    },
+    "revised_builder": {
+     "fx_wait": "036edc1945a17973",
+     "fx_sched": "657e9616e16446d0",
+     "fx_prims": "e1788bdb3d9a2e43",
+     "fx_jiffies": "5369f8fda7307d88"
+    },
+    "identical": true
+   },
+   "old_A46_failing": [
+    {
+     "id": "A46",
+     "verdict_mech": "OUTSIDE_OR_PARTIAL_DEFINITION"
+    }
+   ],
+   "a46_correction": [
+    "VALID",
+    "OBSERVED_AS_PREDICTED"
+   ],
+   "old_summary": "n/a (this row is the real replay)",
+   "new_summary": {
+    "V02": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V03": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V04": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V05": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V06": [
+     "VALID",
+     "NO_FAILURE_IN_SCOPE"
+    ],
+    "V07": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V09": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V10": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V11": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V12": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V13": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V08": [
+     "VALID",
+     "COUNTEREVIDENCE"
+    ],
+    "V14_model": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ],
+    "V00": [
+     "VALID",
+     "COUNTEREVIDENCE"
+    ],
+    "V01": [
+     "VALID",
+     "NO_FAILURE_IN_SCOPE"
+    ],
+    "V00_A46_correction": [
+     "VALID",
+     "OBSERVED_AS_PREDICTED"
+    ]
+   },
+   "old_side_status": "not_applicable",
+   "met": true
+  }
+ ],
+ "delivered_records": {
+  "fx_wait": [
+   "v02_single",
+   "v03_all_two_waiters",
+   "v03_second_wake_direct",
+   "v03_second_wake_via_complete",
+   "v09_msleep_bounded",
+   "v09_schedule_timeout_values",
+   "v09_uninterruptible_wrapper",
+   "v10_done_preset_fast_path",
+   "v10_finite_timeout_no_notifier",
+   "v10_infinite_notify_during_schedule",
+   "v11_wait_then_notify_then_reuse"
+  ],
+  "fx_sched": [
+   "v04_noncurrent_wake",
+   "v05_state_not_in_mask",
+   "v06_double_wake",
+   "v07_cpu_metadata",
+   "v08_pick_combinations",
+   "v08_sequence_idle_requeue",
+   "v08_sequence_idle_switched_out_blocked",
+   "v08_vruntime_requeue_order"
+  ],
+  "fx_prims": [
+   "v12_add_test_negative",
+   "v13_trylock"
+  ],
+  "fx_jiffies": [
+   "v14"
+  ],
+  "fx_jiffies_control": [
+   "v14_control"
+  ]
+ },
+ "met": {
+  "M01": true,
+  "M02": true,
+  "M03": true,
+  "M04": true,
+  "M05": true,
+  "M06": true,
+  "M07": true,
+  "M08": true,
+  "M09": true,
+  "M10": true,
+  "M11": true,
+  "M12": true
+ },
+ "all_met": true
+}
