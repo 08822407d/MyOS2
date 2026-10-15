@@ -352,3 +352,9 @@ status: READY_WAITING_FOR_OWNER_SUPPLEMENT | BLOCKED
 > 你按照Mnemosyne定的AI对话/agent任务命名规则为自己起名
 
 会话复述 [MI]：按 Mnemosyne 显示名注册表 §7（对话命名规范，MNEMOSYNE-246 并入、§7.7 默认适用，2026-10-08 起 Claude Code 会话默认命名）给本会话起 §7.1 格式的名字并设置桌面端会话标题；登记记录见 `10-session-naming-record.md`。
+
+### 第 10 条 · 2026-10-16（Owner 对话原话，逐字）
+
+> 如果你创建的pr可以合并的话,你就自行合并,我不会去复核
+
+会话复述 [MI]：Owner 修改工作令 §4.7 与暂定执行源 S2 中"PR 到 master 由 Owner 合并"一条——自本条起，**本会话（MYOS2-LEAD-001，UUID 3bfbb342…）自己创建的 PR，只要可合并（无冲突、受保护路径差异为空），由本会话自行合并，Owner 不复核**。本会话的执行边界 [MI]：仅限本会话创建的 PR（分支 agent/MYOS2-LEAD-001 及本会话日后为任务产出开的 agent/ 分支）；合并方式一律 merge commit（保留提交与署名尾注，不 squash/rebase）；合并前仍做受保护路径机械证明；不删长期分支 agent/MYOS2-LEAD-001；其他会话的 PR（MYOS2-LEAD-002、GPT 任务 PR、旧 PR #1~#5）不在此列；仍禁直推 master、禁 force-push。
