@@ -346,3 +346,15 @@ status: READY_WAITING_FOR_OWNER_SUPPLEMENT | BLOCKED
 > 之前在Mnemosyne所属claude code本地任务/对话中开展了MyOS2项目分析工作,然后移交出去了,应该就是直接移交给本对话的,现在那个旧对话要"退休"归档了,但是它说这个任务的交接还没收尾,它说交接时的资料包在" ~/Downloads/startup-packages-2026-09-02"位置,而交接收尾的具体要求在其中某文件中有说明.不过你可以不在其中遍历文件后找出要求,你可以尝试直接问那个claude code对话,它在插件里显示的名字是"Mnemosyne FABLE5-REVIEW2-001"
 
 会话复述 [MI]：Mnemosyne 侧原主导会话（起草本工作令者）即将退场归档，称本任务交接尚未收尾；收尾要求在交接包目录 `~/Downloads/startup-packages-2026-09-02` 的某文件中。Owner 授权本会话直接向该会话（插件名 "Mnemosyne FABLE5-REVIEW2-001"）发消息询问收尾要求（此前工作令 §10 的接手确认曾因其不在线走了兜底）。本会话按其答复执行收尾中属于本会话的部分，跨仓库写入仍需 Owner 同意。
+
+### 第 9 条 · 2026-10-15（Owner 对话原话，逐字）
+
+> 你按照Mnemosyne定的AI对话/agent任务命名规则为自己起名
+
+会话复述 [MI]：按 Mnemosyne 显示名注册表 §7（对话命名规范，MNEMOSYNE-246 并入、§7.7 默认适用，2026-10-08 起 Claude Code 会话默认命名）给本会话起 §7.1 格式的名字并设置桌面端会话标题；登记记录见 `10-session-naming-record.md`。
+
+### 第 10 条 · 2026-10-16（Owner 对话原话，逐字）
+
+> 如果你创建的pr可以合并的话,你就自行合并,我不会去复核
+
+会话复述 [MI]：Owner 修改工作令 §4.7 与暂定执行源 S2 中"PR 到 master 由 Owner 合并"一条——自本条起，**本会话（MYOS2-LEAD-001，UUID 3bfbb342…）自己创建的 PR，只要可合并（无冲突、受保护路径差异为空），由本会话自行合并，Owner 不复核**。本会话的执行边界 [MI]：仅限本会话创建的 PR（分支 agent/MYOS2-LEAD-001 及本会话日后为任务产出开的 agent/ 分支）；合并方式一律 merge commit（保留提交与署名尾注，不 squash/rebase）；合并前仍做受保护路径机械证明；不删长期分支 agent/MYOS2-LEAD-001；其他会话的 PR（MYOS2-LEAD-002、GPT 任务 PR、旧 PR #1~#5）不在此列；仍禁直推 master、禁 force-push。
