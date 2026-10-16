@@ -1,0 +1,3156 @@
+{
+ "pin_time": "a039d9803ade",
+ "queries": [
+  {
+   "id": "Q01",
+   "command": "git grep -n -E #include \"(fault|kmalloc|page_alloc|vm_map)/ <time> -- mykernel/mm/mm_api.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/mm/mm_api.h",
+     "line": 10,
+     "text": "#include \"fault/memfault_api.h\"",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/mm_api.h",
+     "line": 12,
+     "text": "#include \"kmalloc/kmalloc_api.h\"",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/mm_api.h",
+     "line": 14,
+     "text": "#include \"page_alloc/page_alloc_api.h\"",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/mm_api.h",
+     "line": 15,
+     "text": "#include \"vm_map/vm_map_api.h\"",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q02",
+   "type": "size",
+   "returncode": 0,
+   "hits": [
+    {
+     "path": "mykernel/mm/page_alloc/CMakeLists.txt",
+     "bytes": 0
+    },
+    {
+     "path": "mykernel/mm/kmalloc/CMakeLists.txt",
+     "bytes": 0
+    },
+    {
+     "path": "mykernel/mm/vm_map/CMakeLists.txt",
+     "bytes": 0
+    },
+    {
+     "path": "mykernel/mm/fault/CMakeLists.txt",
+     "bytes": 0
+    }
+   ]
+  },
+  {
+   "id": "Q03",
+   "command": "git grep -n -F -e --gc-sections <time> -- mykernel/scripts/options_flags.cmake",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/scripts/options_flags.cmake",
+     "line": 75,
+     "text": "set(CMAKE_EXE_LINKER_FLAGS \"-Wl,--build-id=none,--gc-sections\")",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q04",
+   "command": "git grep -n -w -E setup_arch|zone_sizes_init|mem_init|memblock_free_all|mm_core_init|proc_caches_init|kmem_cache_init <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 29,
+   "hits_active": 21,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/kernel/setup.c",
+     "line": 7,
+     "text": "* This file contains the setup_arch() code, which handles the architecture-dependent",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/kernel/setup.c",
+     "line": 165,
+     "text": "* setup_arch - architecture-specific boot-time initializations",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/kernel/setup.c",
+     "line": 169,
+     "text": "void __init setup_arch(char **cmdline_p)",
+     "active": true,
+     "enclosing": "setup_arch"
+    },
+    {
+     "path": "mykernel/arch/x86_64/kernel/setup.c",
+     "line": 254,
+     "text": "zone_sizes_init();",
+     "active": true,
+     "enclosing": "setup_arch"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 891,
+     "text": "void __init mem_init(void)",
+     "active": true,
+     "enclosing": "mem_init"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 899,
+     "text": "memblock_free_all();",
+     "active": true,
+     "enclosing": "mem_init"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 904,
+     "text": "//  * initialized, and memblock_free_all() initializes all the reserved",
+     "active": false,
+     "enclosing": "mem_init"
+    },
+    {
+     "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+     "line": 164,
+     "text": "//  * setup_arch(), but percpu data also needs to be available in",
+     "active": false,
+     "enclosing": "setup_per_cpu_areas"
+    },
+    {
+     "path": "mykernel/include/linux/init/init.h",
+     "line": 156,
+     "text": "void setup_arch(char **);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/init/main.c",
+     "line": 138,
+     "text": "setup_arch(NULL);",
+     "active": true,
+     "enclosing": "start_kernel"
+    },
+    {
+     "path": "mykernel/init/main.c",
+     "line": 144,
+     "text": "mm_core_init();",
+     "active": true,
+     "enclosing": "start_kernel"
+    },
+    {
+     "path": "mykernel/init/main.c",
+     "line": 186,
+     "text": "proc_caches_init();",
+     "active": true,
+     "enclosing": "start_kernel"
+    },
+    {
+     "path": "mykernel/mm/early/earlymem_api.h",
+     "line": 23,
+     "text": "void memblock_free_all(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/early/memblock.c",
+     "line": 68,
+     "text": "* As the system boot progresses, the architecture specific mem_init()",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/early/memblock.c",
+     "line": 540,
+     "text": "* internal data may be destroyed (after execution of memblock_free_all)",
+     "active": false,
+     "enclosing": "memblock_alloc_internal"
+    },
+    {
+     "path": "mykernel/mm/early/memblock.c",
+     "line": 736,
+     "text": "* memblock_free_all - release free pages to the buddy allocator",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/early/memblock.c",
+     "line": 739,
+     "text": "memblock_free_all(void) {",
+     "active": true,
+     "enclosing": "memblock_free_all"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/kmalloc_api.h",
+     "line": 22,
+     "text": "void __init kmem_cache_init(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 487,
+     "text": "void __init kmem_cache_init(void)",
+     "active": true,
+     "enclosing": "kmem_cache_init"
+    },
+    {
+     "path": "mykernel/mm/misc/mm_init.c",
+     "line": 393,
+     "text": "void __init mm_core_init(void)",
+     "active": true,
+     "enclosing": "mm_core_init"
+    },
+    {
+     "path": "mykernel/mm/misc/mm_init.c",
+     "line": 409,
+     "text": "mem_init();",
+     "active": true,
+     "enclosing": "mm_core_init"
+    },
+    {
+     "path": "mykernel/mm/misc/mm_init.c",
+     "line": 411,
+     "text": "kmem_cache_init();",
+     "active": true,
+     "enclosing": "mm_core_init"
+    },
+    {
+     "path": "mykernel/mm/misc/mm_misc_api.h",
+     "line": 11,
+     "text": "void mm_core_init(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/misc/mm_misc_api.h",
+     "line": 37,
+     "text": "extern void mem_init(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/mmzone.c",
+     "line": 3,
+     "text": "void __init zone_sizes_init(void)",
+     "active": true,
+     "enclosing": "zone_sizes_init"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page_alloc_api.h",
+     "line": 27,
+     "text": "extern void zone_sizes_init(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/printk/printk.c",
+     "line": 589,
+     "text": "* early_printk) - sometimes before setup_arch() completes - be careful",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1648,
+     "text": "void __init proc_caches_init(void)",
+     "active": true,
+     "enclosing": "proc_caches_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/forkexec_api.h",
+     "line": 54,
+     "text": "extern void proc_caches_init(void);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q05",
+   "command": "git grep -n -w -E __free_pages_ok|__myos_alloc_pages|__rmqueue_smallest <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 9,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 222,
+     "text": "// static __always_inline page_s *__rmqueue_smallest(struct zone *zone,",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 225,
+     "text": "*__rmqueue_smallest(zone_s *zone, uint order) {",
+     "active": true,
+     "enclosing": "__rmqueue_smallest"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 398,
+     "text": "__free_pages_ok(page_s *page, uint order) {",
+     "active": true,
+     "enclosing": "__free_pages_ok"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 444,
+     "text": "page_s *__myos_alloc_pages(gfp_t gfp, uint order)",
+     "active": true,
+     "enclosing": "__myos_alloc_pages"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 476,
+     "text": "page_s *page = __rmqueue_smallest(zone, order);",
+     "active": true,
+     "enclosing": "__myos_alloc_pages"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 518,
+     "text": "__free_pages_ok(page, order);",
+     "active": true,
+     "enclosing": "__free_pages"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 571,
+     "text": "__free_pages_ok(page, order);",
+     "active": true,
+     "enclosing": "memblock_free_pages"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/mempolicy.c",
+     "line": 108,
+     "text": "page = __myos_alloc_pages(gfp, order);",
+     "active": true,
+     "enclosing": "alloc_pages"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page_alloc_api.h",
+     "line": 34,
+     "text": "page_s *__myos_alloc_pages(gfp_t gfp, uint order);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q06",
+   "command": "git grep -n -w -E del_page_from_free_list|list_header_delete_node <time> -- mykernel/mm/page_alloc",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 90,
+     "text": "del_page_from_free_list(page_s *page, List_hdr_s *area) {",
+     "active": true,
+     "enclosing": "del_page_from_free_list"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 91,
+     "text": "list_header_delete_node(area, &page->buddy_list);",
+     "active": true,
+     "enclosing": "del_page_from_free_list"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 236,
+     "text": "del_page_from_free_list(page, area);",
+     "active": true,
+     "enclosing": "__rmqueue_smallest"
+    }
+   ]
+  },
+  {
+   "id": "Q07",
+   "command": "git grep -n -E spin_(lock|unlock)\\w*\\( <time> -- mykernel/mm/page_alloc/buddy.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 410,
+     "text": "spin_lock_irqsave(&zone->lock, flags);",
+     "active": true,
+     "enclosing": "__free_pages_ok"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 416,
+     "text": "spin_unlock_irqrestore(&zone->lock, flags);",
+     "active": true,
+     "enclosing": "__free_pages_ok"
+    }
+   ]
+  },
+  {
+   "id": "Q08",
+   "command": "git grep -n -w __GFP_ZERO <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 24,
+   "hits_active": 14,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 66,
+     "text": "return (void *)__get_free_pages(GFP_ATOMIC | __GFP_ZERO, order);",
+     "active": true,
+     "enclosing": "alloc_low_pages"
+    },
+    {
+     "path": "mykernel/include/linux/device/device.h",
+     "line": 202,
+     "text": "// \treturn devm_kmalloc(dev, size, gfp | __GFP_ZERO);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/device/device.h",
+     "line": 217,
+     "text": "// \treturn devm_kmalloc_array(dev, n, size, flags | __GFP_ZERO);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/bitmap.c",
+     "line": 1394,
+     "text": "// \treturn bitmap_alloc(nbits, flags | __GFP_ZERO);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/bitmap.c",
+     "line": 1407,
+     "text": "// \treturn bitmap_alloc_node(nbits, flags | __GFP_ZERO, node);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/bitmap.c",
+     "line": 1445,
+     "text": "// \treturn devm_bitmap_alloc(dev, nbits, flags | __GFP_ZERO);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/pgalloc_const.h",
+     "line": 5,
+     "text": "#define GFP_PGTABLE_KERNEL\t(GFP_KERNEL | __GFP_ZERO)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/kmalloc_api.h",
+     "line": 43,
+     "text": "* See kmem_cache_zalloc() for a shortcut of adding __GFP_ZERO to flags.",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 271,
+     "text": "if (flags & __GFP_ZERO)",
+     "active": true,
+     "enclosing": "kmalloc_large"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 66,
+     "text": "return kmem_cache_alloc(k, flags | __GFP_ZERO);",
+     "active": true,
+     "enclosing": "kmem_cache_zalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 103,
+     "text": "* %__GFP_ZERO",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 161,
+     "text": "return kmalloc_array(n, size, flags | __GFP_ZERO);",
+     "active": true,
+     "enclosing": "kcalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 171,
+     "text": "return kmalloc(size, flags | __GFP_ZERO);",
+     "active": true,
+     "enclosing": "kzalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 246,
+     "text": "if (flags & __GFP_ZERO)",
+     "active": true,
+     "enclosing": "slab_post_alloc_hook"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_macro.h",
+     "line": 99,
+     "text": "kmalloc_node(_size, (_flags)|__GFP_ZERO, _node)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 151,
+     "text": "//  * Otherwise, the poison pattern will be overwritten for __GFP_ZERO",
+     "active": false,
+     "enclosing": "post_alloc_hook"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 190,
+     "text": "if (gfp_flags & __GFP_ZERO)",
+     "active": true,
+     "enclosing": "post_alloc_hook"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy.c",
+     "line": 540,
+     "text": "return __get_free_pages(gfp_mask | __GFP_ZERO, 0);",
+     "active": true,
+     "enclosing": "get_zeroed_page"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy_const.h",
+     "line": 215,
+     "text": "* %__GFP_ZERO returns a zeroed page on success.",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy_const.h",
+     "line": 218,
+     "text": "* __GFP_ZERO is set.",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy_const.h",
+     "line": 226,
+     "text": "#define __GFP_ZERO\t\t\t\t((__force gfp_t)___GFP_ZERO)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 129,
+     "text": "*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);",
+     "active": true,
+     "enclosing": "simple_filemap_fault"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 220,
+     "text": "*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);",
+     "active": true,
+     "enclosing": "simple_filemap_read"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 326,
+     "text": "*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);",
+     "active": true,
+     "enclosing": "generic_perform_write"
+    }
+   ]
+  },
+  {
+   "id": "Q09",
+   "command": "git grep -n -E alloc_low_pages?\\( <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 63,
+     "text": "*alloc_low_pages(uint num) {",
+     "active": true,
+     "enclosing": "alloc_low_pages"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 727,
+     "text": "pte = alloc_low_page();",
+     "active": true,
+     "enclosing": "phys_pmd_init"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 806,
+     "text": "pmd = alloc_low_page();",
+     "active": true,
+     "enclosing": "phys_pud_init"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 850,
+     "text": "p4d = alloc_low_page();",
+     "active": true,
+     "enclosing": "__kernel_physical_mapping_init"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/page/page_api_arch.h",
+     "line": 19,
+     "text": "void *alloc_low_pages(uint num);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/page/page_arch.h",
+     "line": 30,
+     "text": "*alloc_low_page(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/page/page_arch.h",
+     "line": 91,
+     "text": "*alloc_low_page(void) {",
+     "active": true,
+     "enclosing": "alloc_low_page"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/page/page_arch.h",
+     "line": 92,
+     "text": "return alloc_low_pages(1);",
+     "active": true,
+     "enclosing": "alloc_low_page"
+    }
+   ]
+  },
+  {
+   "id": "Q10",
+   "command": "git grep -n -E (->|\\.)offset\\s*=[^=] <time> -- mykernel/mm/kmalloc",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "Q11",
+   "command": "git grep -n -w -E kmem_cache_create|sighand_ctor|init_once|shmem_init_inode <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 31,
+   "hits_active": 24,
+   "hits": [
+    {
+     "path": "mykernel/block/bdev.c",
+     "line": 94,
+     "text": "init_once(void *data) {",
+     "active": true,
+     "enclosing": "init_once"
+    },
+    {
+     "path": "mykernel/block/bdev.c",
+     "line": 113,
+     "text": "bdev_cachep = kmem_cache_create(\"bdev_cache\", sizeof(bdev_inode_s),",
+     "active": true,
+     "enclosing": "bdev_cache_init"
+    },
+    {
+     "path": "mykernel/block/bdev.c",
+     "line": 116,
+     "text": "init_once);",
+     "active": true,
+     "enclosing": "bdev_cache_init"
+    },
+    {
+     "path": "mykernel/fs/vfs/dcache.c",
+     "line": 388,
+     "text": "dentry_cache = kmem_cache_create(\"dentry\",",
+     "active": true,
+     "enclosing": "dcache_init"
+    },
+    {
+     "path": "mykernel/fs/vfs/dcache.c",
+     "line": 414,
+     "text": "names_cachep = kmem_cache_create(\"names_cache\", PATH_MAX, 0,",
+     "active": true,
+     "enclosing": "vfs_caches_init"
+    },
+    {
+     "path": "mykernel/fs/vfs/file_table.c",
+     "line": 134,
+     "text": "filp_cachep = kmem_cache_create(\"filp\", sizeof(file_s), 0,",
+     "active": true,
+     "enclosing": "files_init"
+    },
+    {
+     "path": "mykernel/fs/vfs/inode.c",
+     "line": 356,
+     "text": "inode_cachep = kmem_cache_create(\"inode_cache\",",
+     "active": true,
+     "enclosing": "inode_init"
+    },
+    {
+     "path": "mykernel/fs/vfs/shmem.c",
+     "line": 354,
+     "text": "static void shmem_init_inode(void *foo)",
+     "active": true,
+     "enclosing": "shmem_init_inode"
+    },
+    {
+     "path": "mykernel/fs/vfs/shmem.c",
+     "line": 363,
+     "text": "kmem_cache_create(\"shmem_inode_cache\",",
+     "active": true,
+     "enclosing": "shmem_init_inodecache"
+    },
+    {
+     "path": "mykernel/fs/vfs/shmem.c",
+     "line": 366,
+     "text": "shmem_init_inode);",
+     "active": true,
+     "enclosing": "shmem_init_inodecache"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/kmalloc_api.h",
+     "line": 34,
+     "text": "kmem_cache_create(const char *name, uint size, uint align,",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 66,
+     "text": "* kmem_cache_create - Create a cache.",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 91,
+     "text": "kmem_cache_create(const char *name, uint size, uint align,",
+     "active": true,
+     "enclosing": "kmem_cache_create"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 119,
+     "text": "EXPORT_SYMBOL(kmem_cache_create);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_const.h",
+     "line": 101,
+     "text": "* Flags to pass to kmem_cache_create().",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_const.h",
+     "line": 120,
+     "text": "/* Panic if kmem_cache_create() fails */",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_const.h",
+     "line": 162,
+     "text": "* Alternatively, make the ctor passed to kmem_cache_create() initialize",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_const.h",
+     "line": 164,
+     "text": "* sighand_ctor(), and anon_vma_ctor().  Such a ctor permits readers",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_const.h",
+     "line": 201,
+     "text": "/* Legal flag mask for kmem_cache_create(), for various configurations */",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_const.h",
+     "line": 228,
+     "text": "/* Common flags permitted for kmem_cache_create */",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_macro.h",
+     "line": 73,
+     "text": "kmem_cache_create(#__struct,\t\t\\",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1624,
+     "text": "sighand_ctor(void *data) {",
+     "active": true,
+     "enclosing": "sighand_ctor"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1642,
+     "text": "mm_cachep = kmem_cache_create(\"mm_struct\",",
+     "active": true,
+     "enclosing": "mm_cache_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1651,
+     "text": "kmem_cache_create(\"sighand_cache\",",
+     "active": true,
+     "enclosing": "proc_caches_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1654,
+     "text": "SLAB_ACCOUNT, sighand_ctor);",
+     "active": true,
+     "enclosing": "proc_caches_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1656,
+     "text": "kmem_cache_create(\"signal_cache\",",
+     "active": true,
+     "enclosing": "proc_caches_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1661,
+     "text": "kmem_cache_create(\"files_cache\",",
+     "active": true,
+     "enclosing": "proc_caches_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1666,
+     "text": "kmem_cache_create(\"fs_cache\",",
+     "active": true,
+     "enclosing": "proc_caches_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1673,
+     "text": "kmem_cache_create(\"vm_area_struct\",",
+     "active": true,
+     "enclosing": "proc_caches_init"
+    },
+    {
+     "path": "mykernel/sched/task/pid.c",
+     "line": 501,
+     "text": "kmem_cache_create(\"pid\",",
+     "active": true,
+     "enclosing": "pid_idr_init"
+    },
+    {
+     "path": "mykernel/sched/task/pid_namespace.c",
+     "line": 36,
+     "text": "*pkc =  kmem_cache_create(name,",
+     "active": true,
+     "enclosing": "create_pid_cachep"
+    }
+   ]
+  },
+  {
+   "id": "Q12",
+   "command": "git grep -n -E spin_lock_init\\([^)]*siglock <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1626,
+     "text": "spin_lock_init(&sighand->siglock);",
+     "active": true,
+     "enclosing": "sighand_ctor"
+    }
+   ]
+  },
+  {
+   "id": "Q13",
+   "command": "git grep -n -w -E alloc_pages|__free_pages|__folio_set_slab|folio_test_slab <time> -- mykernel/mm/kmalloc",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 7,
+   "hits": [
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 268,
+     "text": "page_s *page = alloc_pages(flags | __GFP_COMP, get_order(size));",
+     "active": true,
+     "enclosing": "kmalloc_large"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 283,
+     "text": "__free_pages(folio_page(folio, 0), order);",
+     "active": true,
+     "enclosing": "free_large_kmalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 105,
+     "text": "folio_s *folio = (folio_s *)alloc_pages(alloc_gfp, oo_order(s->oo));",
+     "active": true,
+     "enclosing": "alloc_slab"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 111,
+     "text": "__folio_set_slab(folio);",
+     "active": true,
+     "enclosing": "alloc_slab"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 251,
+     "text": "__free_pages(&folio->page, order);",
+     "active": true,
+     "enclosing": "free_slab"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 47,
+     "text": "if (!folio_test_slab(folio))",
+     "active": true,
+     "enclosing": "virt_to_slab"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 192,
+     "text": "if (unlikely(!folio_test_slab(folio)))",
+     "active": true,
+     "enclosing": "kfree"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub_macro.h",
+     "line": 10,
+     "text": "* folio_test_slab() is true.",
+     "active": false,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q14",
+   "command": "git grep -n -w -E __kmalloc|kmalloc_array|kcalloc <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 16,
+   "hits_active": 11,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/kernel/hpet.c",
+     "line": 433,
+     "text": "hc = kcalloc(channels, sizeof(*hc), GFP_KERNEL);",
+     "active": true,
+     "enclosing": "hpet_enable"
+    },
+    {
+     "path": "mykernel/lib/bitmap.c",
+     "line": 1387,
+     "text": "// \treturn kmalloc_array(BITS_TO_LONGS(nbits), sizeof(unsigned long),",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/string/string_helpers.c",
+     "line": 163,
+     "text": "// \tints = kcalloc(nints + 1, sizeof(*ints), GFP_KERNEL);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/string/string_helpers.c",
+     "line": 739,
+     "text": "// \tnames = kcalloc(n + 1, sizeof(char *), gfp);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/kmalloc_api.h",
+     "line": 31,
+     "text": "void *__kmalloc(size_t size, gfp_t flags) __alloc_size(1);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 246,
+     "text": "void *__kmalloc(size_t size, gfp_t flags)",
+     "active": true,
+     "enclosing": "__kmalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 258,
+     "text": "EXPORT_SYMBOL(__kmalloc);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 28,
+     "text": "*kmalloc_array(size_t n, size_t size, gfp_t flags);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 30,
+     "text": "*kcalloc(size_t n, size_t size, gfp_t flags);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 131,
+     "text": "ret_val = __kmalloc(size, flags);",
+     "active": true,
+     "enclosing": "kmalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 136,
+     "text": "* kmalloc_array - allocate memory for an array.",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 143,
+     "text": "*kmalloc_array(size_t n, size_t size, gfp_t flags) {",
+     "active": true,
+     "enclosing": "kmalloc_array"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 150,
+     "text": "return __kmalloc(bytes, flags);",
+     "active": true,
+     "enclosing": "kmalloc_array"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 153,
+     "text": "* kcalloc - allocate memory for an array. The memory is set to zero.",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 160,
+     "text": "*kcalloc(size_t n, size_t size, gfp_t flags) {",
+     "active": true,
+     "enclosing": "kcalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 161,
+     "text": "return kmalloc_array(n, size, flags | __GFP_ZERO);",
+     "active": true,
+     "enclosing": "kcalloc"
+    }
+   ]
+  },
+  {
+   "id": "Q15",
+   "command": "git grep -n -w vm_area_cachep <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 7,
+   "hits_active": 6,
+   "hits": [
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 33,
+     "text": "vma_s *vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);",
+     "active": true,
+     "enclosing": "vm_area_alloc"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 42,
+     "text": "vma_s *new = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);",
+     "active": true,
+     "enclosing": "vm_area_creat_dup"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 58,
+     "text": "kmem_cache_free(vm_area_cachep, vma);",
+     "active": true,
+     "enclosing": "vm_area_free"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 7,
+     "text": "extern kmem_cache_s *vm_area_cachep;",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 62,
+     "text": "kmem_cache_s *vm_area_cachep;",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1671,
+     "text": "// vm_area_cachep = KMEM_CACHE(vma_s, SLAB_PANIC|SLAB_ACCOUNT);",
+     "active": false,
+     "enclosing": "proc_caches_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1672,
+     "text": "vm_area_cachep =",
+     "active": true,
+     "enclosing": "proc_caches_init"
+    }
+   ]
+  },
+  {
+   "id": "Q16",
+   "command": "git grep -n -w -E vm_mmap_pgoff|vm_mmap|__vm_munmap|vm_brk_flags|do_brk_flags|simple_do_vma_munmap <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 27,
+   "hits_active": 24,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 83,
+     "text": "if (simple_do_vma_munmap(mm, newbrk, oldbrk))",
+     "active": true,
+     "enclosing": "MYOS_SYSCALL_DEFINE1"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 103,
+     "text": "if (do_brk_flags(oldbrk, newbrk-oldbrk, 0) < 0)",
+     "active": true,
+     "enclosing": "MYOS_SYSCALL_DEFINE1"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 343,
+     "text": "map_addr = vm_mmap(filep, addr, total_size, prot, type, off);",
+     "active": true,
+     "enclosing": "elf_map"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 347,
+     "text": "map_addr = vm_mmap(filep, addr, size, prot, type, off);",
+     "active": true,
+     "enclosing": "elf_map"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 403,
+     "text": "error = vm_brk_flags(zero_start, zero_end - zero_start,",
+     "active": true,
+     "enclosing": "elf_load"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 1111,
+     "text": "// \terror = vm_mmap(NULL, 0, PAGE_SIZE, PROT_READ | PROT_EXEC,",
+     "active": false,
+     "enclosing": "load_elf_binary"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 149,
+     "text": "return simple_do_vma_munmap(mm, start, start + len);",
+     "active": true,
+     "enclosing": "simple_munmap_vma_range"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1125,
+     "text": "simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)",
+     "active": true,
+     "enclosing": "simple_do_vma_munmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1170,
+     "text": "__vm_munmap(ulong start, size_t len)",
+     "active": true,
+     "enclosing": "__vm_munmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1178,
+     "text": "ret = simple_do_vma_munmap(mm, start, start + len);",
+     "active": true,
+     "enclosing": "__vm_munmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1191,
+     "text": "// static int do_brk_flags(unsigned long addr, unsigned long len,",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1194,
+     "text": "do_brk_flags(ulong addr, ulong len, ulong flags)",
+     "active": true,
+     "enclosing": "do_brk_flags"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1250,
+     "text": "vm_brk_flags(ulong addr, ulong request, ulong flags)",
+     "active": true,
+     "enclosing": "vm_brk_flags"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1265,
+     "text": "ret = do_brk_flags(addr, len, flags);",
+     "active": true,
+     "enclosing": "vm_brk_flags"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1294,
+     "text": "* Similarly in do_mmap and in do_brk_flags.",
+     "active": false,
+     "enclosing": "insert_vm_struct"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1335,
+     "text": "retval = vm_mmap_pgoff(file, addr, len, prot, flags, pgoff);",
+     "active": true,
+     "enclosing": "MYOS_SYSCALL_DEFINE6"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1345,
+     "text": "return __vm_munmap(addr, len);",
+     "active": true,
+     "enclosing": "MYOS_SYSCALL_DEFINE2"
+    },
+    {
+     "path": "mykernel/mm/vm_map/util.c",
+     "line": 88,
+     "text": "ulong vm_mmap_pgoff(file_s *file, ulong addr, ulong len,",
+     "active": true,
+     "enclosing": "vm_mmap_pgoff"
+    },
+    {
+     "path": "mykernel/mm/vm_map/util.c",
+     "line": 102,
+     "text": "ulong vm_mmap(file_s *file, ulong addr, ulong len,",
+     "active": true,
+     "enclosing": "vm_mmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/util.c",
+     "line": 110,
+     "text": "return vm_mmap_pgoff(file, addr, len, prot, flag, offset >> PAGE_SHIFT);",
+     "active": true,
+     "enclosing": "vm_mmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 45,
+     "text": "extern int simple_do_vma_munmap(mm_s *, ulong start, ulong end);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 48,
+     "text": "extern int __must_check vm_brk_flags(ulong, ulong, ulong);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 50,
+     "text": "extern int __vm_munmap(ulong start, size_t len);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 51,
+     "text": "#define vm_munmap __vm_munmap",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 52,
+     "text": "extern ulong __must_check vm_mmap(file_s *,",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 67,
+     "text": "extern ulong  __must_check vm_mmap_pgoff(file_s *,",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 72,
+     "text": "int do_brk_flags(ulong addr, ulong len, ulong flags);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q17",
+   "command": "git grep -n -w -E generic_file_mmap|generic_file_vm_ops|call_mmap <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 10,
+   "hits_active": 9,
+   "hits": [
+    {
+     "path": "mykernel/block/fops.c",
+     "line": 275,
+     "text": ".mmap\t\t\t= generic_file_mmap,",
+     "active": true,
+     "enclosing": "def_blk_fops"
+    },
+    {
+     "path": "mykernel/fs/fat/myos_fat32.c",
+     "line": 362,
+     "text": ".mmap\t\t\t= generic_file_mmap,",
+     "active": true,
+     "enclosing": "FAT32_file_ops"
+    },
+    {
+     "path": "mykernel/include/linux/fs/fs.h",
+     "line": 1954,
+     "text": "static inline int call_mmap(file_s *file, vma_s *vma) {",
+     "active": true,
+     "enclosing": "call_mmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 184,
+     "text": "const vm_ops_s generic_file_vm_ops = {",
+     "active": true,
+     "enclosing": "generic_file_vm_ops"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 411,
+     "text": "int generic_file_mmap(file_s *file, vma_s *vma)",
+     "active": true,
+     "enclosing": "generic_file_mmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 418,
+     "text": "vma->vm_ops = &generic_file_vm_ops;",
+     "active": true,
+     "enclosing": "generic_file_mmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 421,
+     "text": "EXPORT_SYMBOL(generic_file_mmap);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 693,
+     "text": "error = call_mmap(file, vma);",
+     "active": true,
+     "enclosing": "simple_mmap_region"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 714,
+     "text": "* If vm_flags changed after call_mmap(), we should try merge",
+     "active": false,
+     "enclosing": "simple_mmap_region"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 16,
+     "text": "extern int generic_file_mmap(file_s *, vma_s *);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q18",
+   "command": "git grep -n -E \\.get_unmapped_area\\s*= <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/drivers/char/mem.c",
+     "line": 148,
+     "text": "// \t.get_unmapped_area\t= get_unmapped_area_zero,",
+     "active": false,
+     "enclosing": "zero_fops"
+    },
+    {
+     "path": "mykernel/fs/vfs/shmem.c",
+     "line": 371,
+     "text": "// .get_unmapped_area\t= shmem_get_unmapped_area,",
+     "active": false,
+     "enclosing": "shmem_file_operations"
+    }
+   ]
+  },
+  {
+   "id": "Q19",
+   "command": "git grep -n -w vm_area_free <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 6,
+   "hits_active": 6,
+   "hits": [
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 55,
+     "text": "vm_area_free(vma_s *vma)",
+     "active": true,
+     "enclosing": "vm_area_free"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 729,
+     "text": "vm_area_free(vma);",
+     "active": true,
+     "enclosing": "simple_mmap_region"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 791,
+     "text": "vm_area_free(vma);",
+     "active": true,
+     "enclosing": "simple_mmap_region"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 28,
+     "text": "void vm_area_free(vma_s *);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 141,
+     "text": "vm_area_free(vma);",
+     "active": true,
+     "enclosing": "__bprm_mm_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 237,
+     "text": "vm_area_free(tmp);",
+     "active": true,
+     "enclosing": "dup_mmap"
+    }
+   ]
+  },
+  {
+   "id": "Q20",
+   "command": "git grep -n -w -E exit_mmap|unmap_vmas|free_pgtables|zap_page_range|unmap_page_range|zap_pte_range <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/pgtable-generic.c",
+     "line": 137,
+     "text": "* Note that free_pgtables(), used after unmapping detached vmas, or when",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 84,
+     "text": "*    bdi.wb->list_lock\t\t(zap_pte_range->set_page_dirty)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 85,
+     "text": "*    ->inode->i_lock\t\t(zap_pte_range->set_page_dirty)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 86,
+     "text": "*    ->private_lock\t\t(zap_pte_range->__set_page_dirty_buffers)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1080,
+     "text": "// unmap_vmas(&tlb, mas, vma, start, end, tree_end, mm_wr_locked);",
+     "active": false,
+     "enclosing": "simple_unmap_region"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1082,
+     "text": "// free_pgtables(&tlb, mas, vma, prev ? prev->vm_end : FIRST_USER_ADDRESS,",
+     "active": false,
+     "enclosing": "simple_unmap_region"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 439,
+     "text": "// khugepaged_exit(mm); /* must run before exit_mmap */",
+     "active": false,
+     "enclosing": "__mmput"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 440,
+     "text": "// exit_mmap(mm);",
+     "active": false,
+     "enclosing": "__mmput"
+    }
+   ]
+  },
+  {
+   "id": "Q21",
+   "command": "git grep -n -E mmap_(read|write)_(lock|trylock|unlock)\\w*\\( <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 31,
+   "hits_active": 22,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/mm/fault.c",
+     "line": 352,
+     "text": "// mmap_read_unlock(mm);",
+     "active": false,
+     "enclosing": "do_user_addr_fault"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 114,
+     "text": "// mmap_write_unlock(mm);",
+     "active": false,
+     "enclosing": "MYOS_SYSCALL_DEFINE1"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 123,
+     "text": "// mmap_write_unlock(mm);",
+     "active": false,
+     "enclosing": "MYOS_SYSCALL_DEFINE1"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 266,
+     "text": "if (mmap_write_lock_killable(mm))",
+     "active": true,
+     "enclosing": "create_elf_tables"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 269,
+     "text": "mmap_write_unlock(mm);",
+     "active": true,
+     "enclosing": "create_elf_tables"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 104,
+     "text": "static inline void mmap_write_lock(mm_s *mm)",
+     "active": true,
+     "enclosing": "mmap_write_lock"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 111,
+     "text": "static inline void mmap_write_lock_nested(mm_s *mm, int subclass)",
+     "active": true,
+     "enclosing": "mmap_write_lock_nested"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 118,
+     "text": "static inline int mmap_write_lock_killable(mm_s *mm)",
+     "active": true,
+     "enclosing": "mmap_write_lock_killable"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 129,
+     "text": "static inline void mmap_write_unlock(mm_s *mm)",
+     "active": true,
+     "enclosing": "mmap_write_unlock"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 143,
+     "text": "static inline void mmap_read_lock(mm_s *mm)",
+     "active": true,
+     "enclosing": "mmap_read_lock"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 150,
+     "text": "static inline int mmap_read_lock_killable(mm_s *mm)",
+     "active": true,
+     "enclosing": "mmap_read_lock_killable"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 160,
+     "text": "static inline bool mmap_read_trylock(mm_s *mm)",
+     "active": true,
+     "enclosing": "mmap_read_trylock"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 170,
+     "text": "static inline void mmap_read_unlock(mm_s *mm)",
+     "active": true,
+     "enclosing": "mmap_read_unlock"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/mmap_lock.h",
+     "line": 176,
+     "text": "static inline void mmap_read_unlock_non_owner(mm_s *mm)",
+     "active": true,
+     "enclosing": "mmap_read_unlock_non_owner"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1175,
+     "text": "// if (mmap_write_lock_killable(mm))",
+     "active": false,
+     "enclosing": "__vm_munmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1180,
+     "text": "// \tmmap_write_unlock(mm);",
+     "active": false,
+     "enclosing": "__vm_munmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1262,
+     "text": "// if (mmap_write_lock_killable(mm))",
+     "active": false,
+     "enclosing": "vm_brk_flags"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1266,
+     "text": "// mmap_write_unlock(mm);",
+     "active": false,
+     "enclosing": "vm_brk_flags"
+    },
+    {
+     "path": "mykernel/mm/vm_map/util.c",
+     "line": 94,
+     "text": "if (mmap_write_lock_killable(mm))",
+     "active": true,
+     "enclosing": "vm_mmap_pgoff"
+    },
+    {
+     "path": "mykernel/mm/vm_map/util.c",
+     "line": 97,
+     "text": "mmap_write_unlock(mm);",
+     "active": true,
+     "enclosing": "vm_mmap_pgoff"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 74,
+     "text": "mmap_read_lock(mm);",
+     "active": true,
+     "enclosing": "get_arg_page"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 80,
+     "text": "mmap_read_unlock(mm);",
+     "active": true,
+     "enclosing": "get_arg_page"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 110,
+     "text": "if (mmap_write_lock_killable(mm)) {",
+     "active": true,
+     "enclosing": "__bprm_mm_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 132,
+     "text": "mmap_write_unlock(mm);",
+     "active": true,
+     "enclosing": "__bprm_mm_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 138,
+     "text": "mmap_write_unlock(mm);",
+     "active": true,
+     "enclosing": "__bprm_mm_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 487,
+     "text": "if (mmap_write_lock_killable(mm))",
+     "active": true,
+     "enclosing": "setup_arg_pages"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 545,
+     "text": "mmap_write_unlock(mm);",
+     "active": true,
+     "enclosing": "setup_arg_pages"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 642,
+     "text": "ret = mmap_read_lock_killable(old_mm);",
+     "active": true,
+     "enclosing": "exec_mmap"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 673,
+     "text": "mmap_read_unlock(old_mm);",
+     "active": true,
+     "enclosing": "exec_mmap"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 229,
+     "text": "// mmap_write_unlock(mm);",
+     "active": false,
+     "enclosing": "dup_mmap"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 231,
+     "text": "// mmap_write_unlock(oldmm);",
+     "active": false,
+     "enclosing": "dup_mmap"
+    }
+   ]
+  },
+  {
+   "id": "Q22",
+   "command": "git grep -n -w -E exc_page_fault|myos_handle_mm_fault|handle_mm_fault <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 6,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/asm/idtentry.h",
+     "line": 395,
+     "text": "extern void exc_page_fault(pt_regs_s *regs, unsigned long error_code);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/fault.c",
+     "line": 322,
+     "text": "// fault = handle_mm_fault(vma, address, flags, regs);",
+     "active": false,
+     "enclosing": "do_user_addr_fault"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/fault.c",
+     "line": 323,
+     "text": "fault = myos_handle_mm_fault(vma, address, flags);",
+     "active": true,
+     "enclosing": "do_user_addr_fault"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/fault.c",
+     "line": 416,
+     "text": "exc_page_fault(pt_regs_s *regs, ulong error_code)",
+     "active": true,
+     "enclosing": "exc_page_fault"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/interrupt.c",
+     "line": 151,
+     "text": "exc_page_fault(regs, regs->orig_ax);",
+     "active": true,
+     "enclosing": "exception_handler"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1307,
+     "text": "// vm_fault_t handle_mm_fault(vma_s *vma, unsigned long address,",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1309,
+     "text": "vm_fault_t myos_handle_mm_fault(vma_s *vma,",
+     "active": true,
+     "enclosing": "myos_handle_mm_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/memfault_api.h",
+     "line": 27,
+     "text": "extern vm_fault_t myos_handle_mm_fault(vma_s *vma,",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q23",
+   "command": "git grep -n -E define\\s+(folio_alloc|GFP_HIGHUSER_MOVABLE)\\b <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/mm/highmem/highmem_macro.h",
+     "line": 26,
+     "text": "#define folio_alloc\t\t\t\tfolio_alloc_noprof",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy_const.h",
+     "line": 318,
+     "text": "#define GFP_HIGHUSER_MOVABLE\t(GFP_HIGHUSER | __GFP_MOVABLE | \\",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q24",
+   "command": "git grep -n -w need_zero <time> -- mykernel/mm/fault/fault.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 180,
+     "text": "*folio_prealloc(mm_s *src_mm, vma_s *vma, ulong addr, bool need_zero) {",
+     "active": true,
+     "enclosing": "folio_prealloc"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 183,
+     "text": "// if (need_zero)",
+     "active": false,
+     "enclosing": "folio_prealloc"
+    }
+   ]
+  },
+  {
+   "id": "Q25",
+   "command": "git grep -n -w -E clear_user_highpage|clear_highpage|vma_alloc_zeroed_movable_folio|clear_page <time> -- mykernel/mm/fault",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 184,
+     "text": "// \tnew_folio = vma_alloc_zeroed_movable_folio(vma, addr);",
+     "active": false,
+     "enclosing": "folio_prealloc"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 502,
+     "text": "// \t\tclear_page(kaddr);",
+     "active": false,
+     "enclosing": "__wp_page_copy_user"
+    }
+   ]
+  },
+  {
+   "id": "Q26",
+   "command": "git grep -n -E flush_tlb\\w*\\(|__flush_tlb\\w*\\( <time> -- mykernel/sched mykernel/mm",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1293,
+     "text": "// \t\tflush_tlb_fix_spurious_fault(vmf->vma, vmf->address,",
+     "active": false,
+     "enclosing": "handle_pte_fault"
+    },
+    {
+     "path": "mykernel/mm/misc/mm_misc_types.h",
+     "line": 164,
+     "text": "// \t\t/* See flush_tlb_batched_pending() */",
+     "active": false,
+     "enclosing": "struct mm_struct"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 230,
+     "text": "// flush_tlb_mm(oldmm);",
+     "active": false,
+     "enclosing": "dup_mmap"
+    }
+   ]
+  },
+  {
+   "id": "Q27",
+   "command": "git grep -n -w -E copy_page_range|finish_fault|do_wp_page|wp_page_copy <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 14,
+   "hits_active": 12,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 394,
+     "text": "copy_page_range(vma_s *dst_vma, vma_s *src_vma)",
+     "active": true,
+     "enclosing": "copy_page_range"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 551,
+     "text": "wp_page_copy(vm_fault_s *vmf) {",
+     "active": true,
+     "enclosing": "wp_page_copy"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 713,
+     "text": "do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {",
+     "active": true,
+     "enclosing": "do_wp_page"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 767,
+     "text": "return wp_page_copy(vmf);",
+     "active": true,
+     "enclosing": "do_wp_page"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 919,
+     "text": "* finish_fault - finish page fault once we have prepared the page to fault",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 933,
+     "text": "vm_fault_t finish_fault(vm_fault_s *vmf)",
+     "active": true,
+     "enclosing": "finish_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1097,
+     "text": "ret |= finish_fault(vmf);",
+     "active": true,
+     "enclosing": "do_read_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1125,
+     "text": "ret |= finish_fault(vmf);",
+     "active": true,
+     "enclosing": "do_cow_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1166,
+     "text": "ret |= finish_fault(vmf);",
+     "active": true,
+     "enclosing": "do_shared_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1273,
+     "text": "return do_wp_page(vmf);",
+     "active": true,
+     "enclosing": "handle_pte_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/memfault_api.h",
+     "line": 23,
+     "text": "int copy_page_range(vma_s *dst_vma, vma_s *src_vma);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/memfault_api.h",
+     "line": 25,
+     "text": "vm_fault_t finish_fault(vm_fault_s *vmf);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 12,
+     "text": "* management can be a bitch. See 'mm/memory.c': 'copy_page_range()'",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 218,
+     "text": "retval = copy_page_range(tmp, mpnt);",
+     "active": true,
+     "enclosing": "dup_mmap"
+    }
+   ]
+  },
+  {
+   "id": "Q28",
+   "command": "git grep -n -w -E atomic_add_negative|spin_trylock|raw_spin_trylock|swait_event|swake_up_one|wait_for_completion|complete|down|down_timeout|schedule_timeout|msleep|wake_up_process <time> -- mykernel/mm mykernel/arch/x86_64/mm",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 15,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/mm/fault.c",
+     "line": 408,
+     "text": "* upside down.",
+     "active": false,
+     "enclosing": "handle_page_fault"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 25,
+     "text": "* down. It returns the last physical address mapped.",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/init.c",
+     "line": 505,
+     "text": "* in bottom-up, otherwise we setup direct mapping in top-down.",
+     "active": false,
+     "enclosing": "init_mem_mapping"
+    },
+    {
+     "path": "mykernel/arch/x86_64/mm/mmu/mmu_arch.c",
+     "line": 101,
+     "text": "// \t *  to cause trouble down the road.  It's better than",
+     "active": false,
+     "enclosing": "switch_mm_irqs_off"
+    },
+    {
+     "path": "mykernel/mm/early/memblock_const.h",
+     "line": 36,
+     "text": "/* We are using top down, so it is safe to use 0 here */",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 651,
+     "text": "// \t * the barrier present in the atomic_add_negative",
+     "active": false,
+     "enclosing": "wp_page_copy"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1042,
+     "text": "* fault_around_pages * PAGE_SIZE rounded down to the machine page size",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/fault_const.h",
+     "line": 24,
+     "text": "*\t\t\t\tfsync() to complete (for synchronous page faults",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/pgtable-generic.c",
+     "line": 101,
+     "text": "* addr, reached by walking down the mm's pgd, p4d, pud for addr: either while",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy_const.h",
+     "line": 135,
+     "text": "* %__GFP_FS can call down to the low-level FS. Clearing the flag avoids the",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy_types.h",
+     "line": 162,
+     "text": "* atomic_inc_and_test() and atomic_add_negative(-1).",
+     "active": false,
+     "enclosing": "struct page"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/mempolicy.c",
+     "line": 66,
+     "text": "grows down?",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 251,
+     "text": "* to complete; it doesn't prevent readahead.",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 317,
+     "text": "* the area passed down from mprotect_fixup, never extending beyond one",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 264,
+     "text": "* find_vma() - Find the VMA for a given address top-down.",
+     "active": false,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q29",
+   "command": "git grep -n -w -E expand_stack|insert_vm_struct <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 7,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/mm/fault.c",
+     "line": 287,
+     "text": "if (unlikely(expand_stack(vma, address))) {",
+     "active": true,
+     "enclosing": "do_user_addr_fault"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 992,
+     "text": "expand_stack(vma_s *vma, ulong address)",
+     "active": true,
+     "enclosing": "expand_stack"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1276,
+     "text": "insert_vm_struct(mm_s *mm, vma_s *vma)",
+     "active": true,
+     "enclosing": "insert_vm_struct"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 40,
+     "text": "extern int insert_vm_struct(mm_s *, vma_s *);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 57,
+     "text": "extern int expand_stack(vma_s *vma, ulong address);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 127,
+     "text": "err = insert_vm_struct(mm, vma);",
+     "active": true,
+     "enclosing": "__bprm_mm_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 532,
+     "text": "//  * Align this down to a page boundary as expand_stack",
+     "active": false,
+     "enclosing": "setup_arg_pages"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 540,
+     "text": "ret = expand_stack(vma, stack_base);",
+     "active": true,
+     "enclosing": "setup_arg_pages"
+    }
+   ]
+  },
+  {
+   "id": "Q30",
+   "command": "git grep -n -w init_zero_pfn <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/init/main.c",
+     "line": 252,
+     "text": "extern int init_zero_pfn(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/init/main.c",
+     "line": 255,
+     "text": "init_zero_pfn();",
+     "active": true,
+     "enclosing": "do_pre_smp_initcalls"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 69,
+     "text": "init_zero_pfn(void) {",
+     "active": true,
+     "enclosing": "init_zero_pfn"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 73,
+     "text": "early_initcall(init_zero_pfn);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q31",
+   "command": "git grep -n -w -E myos_map_range|myos_creat_one_page_mapping|myos_get_one_page_from_mapping <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1368,
+     "text": "pte_t *myos_creat_one_page_mapping(mm_s *mm,",
+     "active": true,
+     "enclosing": "myos_creat_one_page_mapping"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1406,
+     "text": "page_s *myos_get_one_page_from_mapping(mm_s *mm, virt_addr_t addr)",
+     "active": true,
+     "enclosing": "myos_get_one_page_from_mapping"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1440,
+     "text": "int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)",
+     "active": true,
+     "enclosing": "myos_map_range"
+    },
+    {
+     "path": "mykernel/mm/fault/memfault_api.h",
+     "line": 35,
+     "text": "extern pte_t *myos_creat_one_page_mapping(mm_s *mm,",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/memfault_api.h",
+     "line": 37,
+     "text": "extern page_s *myos_get_one_page_from_mapping(mm_s *mm, virt_addr_t addr);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/fault/memfault_api.h",
+     "line": 38,
+     "text": "extern int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/misc/gup.c",
+     "line": 13,
+     "text": "page_s *pg = myos_get_one_page_from_mapping(mm, addr);",
+     "active": true,
+     "enclosing": "myos_get_user_pages"
+    },
+    {
+     "path": "mykernel/mm/misc/gup.c",
+     "line": 17,
+     "text": "myos_creat_one_page_mapping(mm, addr, pg);",
+     "active": true,
+     "enclosing": "myos_get_user_pages"
+    }
+   ]
+  },
+  {
+   "id": "Q32",
+   "command": "git grep -n -E in_atomic\\(\\)|schedule\\(\\); <time> -- mykernel/arch/x86_64/myos/interrupt.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/interrupt.c",
+     "line": 128,
+     "text": "if (!in_atomic())",
+     "active": true,
+     "enclosing": "excep_hwint_context"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/interrupt.c",
+     "line": 129,
+     "text": "schedule();",
+     "active": true,
+     "enclosing": "excep_hwint_context"
+    }
+   ]
+  },
+  {
+   "id": "Q33",
+   "command": "git grep -n -E (->|\\.)sighand\\s*=[^=] <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/init/init_task.c",
+     "line": 124,
+     "text": ".sighand\t\t\t= &init_sighand,",
+     "active": true,
+     "enclosing": "init_task"
+    }
+   ]
+  },
+  {
+   "id": "Q34",
+   "command": "git grep -n -E page_type\\s*(=|\\|=|&=)|_mapcount\\)|page_mapcount_reset <time> -- mykernel/mm mykernel/arch/x86_64/mm",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 17,
+   "hits_active": 14,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1396,
+     "text": "atomic_inc(&(page->_mapcount));",
+     "active": true,
+     "enclosing": "myos_creat_one_page_mapping"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1475,
+     "text": "atomic_inc(&(newpage->_mapcount));",
+     "active": true,
+     "enclosing": "myos_map_range"
+    },
+    {
+     "path": "mykernel/mm/misc/mm_init.c",
+     "line": 24,
+     "text": "// page_mapcount_reset(page);",
+     "active": false,
+     "enclosing": "__init_single_page"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy_types.h",
+     "line": 24,
+     "text": "* bytes in the mapcount union, but you must call page_mapcount_reset()",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/buddy_types.h",
+     "line": 143,
+     "text": "* (page_type == _mapcount == -1).",
+     "active": false,
+     "enclosing": "struct page"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 471,
+     "text": "folio->page.page_type &= ~PG_buddy;",
+     "active": true,
+     "enclosing": "__folio_set_buddy"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 476,
+     "text": "folio->page.page_type |= PG_buddy;",
+     "active": true,
+     "enclosing": "__folio_clear_buddy"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 486,
+     "text": "page->page_type &= ~PG_buddy;",
+     "active": true,
+     "enclosing": "__SetPageBuddy"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 491,
+     "text": "page->page_type |= PG_buddy;",
+     "active": true,
+     "enclosing": "__ClearPageBuddy"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 532,
+     "text": "folio->page.page_type &= ~PG_table;",
+     "active": true,
+     "enclosing": "__folio_set_pgtable"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 537,
+     "text": "folio->page.page_type |= PG_table;",
+     "active": true,
+     "enclosing": "__folio_clear_pgtable"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 547,
+     "text": "page->page_type &= ~PG_table;",
+     "active": true,
+     "enclosing": "__SetPageTable"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 552,
+     "text": "page->page_type |= PG_table;",
+     "active": true,
+     "enclosing": "__ClearPageTable"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags_macro.h",
+     "line": 220,
+     "text": "folio->page.page_type &= ~PG_##lname;\t\t\\",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags_macro.h",
+     "line": 224,
+     "text": "folio->page.page_type |= PG_##lname;\t\t\\",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags_macro.h",
+     "line": 235,
+     "text": "page->page_type &= ~PG_##lname;\t\t\t\t\\",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags_macro.h",
+     "line": 239,
+     "text": "page->page_type |= PG_##lname;\t\t\t\t\\",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q35",
+   "command": "git grep -n -E define\\s+PREFIX_STATIC_INLINE <time> -- mykernel/include/linux/compiler/myos_debug_option.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/include/linux/compiler/myos_debug_option.h",
+     "line": 8,
+     "text": "#\tdefine PREFIX_STATIC_INLINE static inline",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/compiler/myos_debug_option.h",
+     "line": 13,
+     "text": "#\tdefine PREFIX_STATIC_INLINE",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q36",
+   "command": "git grep -n -w kmem_cache_alloc <time> -- mykernel/mm",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 9,
+   "hits_active": 7,
+   "hits": [
+    {
+     "path": "mykernel/mm/kmalloc/kmalloc_api.h",
+     "line": 38,
+     "text": "* kmem_cache_alloc - Allocate an object",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/kmalloc_api.h",
+     "line": 47,
+     "text": "void *kmem_cache_alloc(kmem_cache_s *cachep, gfp_t flags) __malloc;",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slab_common.c",
+     "line": 253,
+     "text": "ret = kmem_cache_alloc(s, flags);",
+     "active": true,
+     "enclosing": "__kmalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 227,
+     "text": "void *kmem_cache_alloc(kmem_cache_s *s, gfp_t gfpflags) {",
+     "active": true,
+     "enclosing": "kmem_cache_alloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 230,
+     "text": "EXPORT_SYMBOL(kmem_cache_alloc);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 66,
+     "text": "return kmem_cache_alloc(k, flags | __GFP_ZERO);",
+     "active": true,
+     "enclosing": "kmem_cache_zalloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 177,
+     "text": "* @object: pointer returned by kmalloc() or kmem_cache_alloc()",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 33,
+     "text": "vma_s *vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);",
+     "active": true,
+     "enclosing": "vm_area_alloc"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 42,
+     "text": "vma_s *new = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);",
+     "active": true,
+     "enclosing": "vm_area_creat_dup"
+    }
+   ]
+  },
+  {
+   "id": "Q37",
+   "command": "git grep -n -w __get_unmapped_area <time> -- mykernel/mm",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 522,
+     "text": "addr = __get_unmapped_area(file, addr, len, pgoff, flags, vm_flags);",
+     "active": true,
+     "enclosing": "do_mmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 946,
+     "text": "__get_unmapped_area(file_s *file, ulong addr, ulong len,",
+     "active": true,
+     "enclosing": "__get_unmapped_area"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 985,
+     "text": "EXPORT_SYMBOL(__get_unmapped_area);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1207,
+     "text": "mapped_addr = __get_unmapped_area(NULL, addr, len, 0, MAP_FIXED, 0);",
+     "active": true,
+     "enclosing": "do_brk_flags"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 61,
+     "text": "extern ulong __get_unmapped_area(file_s *, ulong, ulong, ulong, ulong, vm_flags_t);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q38",
+   "command": "git grep -n -w -E __vma_link_to_list|__vma_unlink_from_list|find_vma_intersection|simple_find_vma <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 27,
+   "hits_active": 25,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/mm/fault.c",
+     "line": 276,
+     "text": "vma = simple_find_vma(mm, address);",
+     "active": true,
+     "enclosing": "do_user_addr_fault"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 110,
+     "text": "// next = simple_find_vma(mm, oldbrk);",
+     "active": false,
+     "enclosing": "MYOS_SYSCALL_DEFINE1"
+    },
+    {
+     "path": "mykernel/mm/misc/gup.c",
+     "line": 9,
+     "text": "vma_s *vma = simple_find_vma(mm, addr);",
+     "active": true,
+     "enclosing": "myos_get_user_pages"
+    },
+    {
+     "path": "mykernel/mm/misc/init-mm.c",
+     "line": 67,
+     "text": "__vma_link_to_list(&init_mm, &init_vma, NULL);",
+     "active": true,
+     "enclosing": "setup_initial_init_mm"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 180,
+     "text": "__vma_link_to_list(mm, vma, prev);",
+     "active": true,
+     "enclosing": "simple_vma_link"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 212,
+     "text": "__vma_unlink_from_list(mm, next);",
+     "active": true,
+     "enclosing": "__simple_vma_adjust"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 384,
+     "text": "curr = find_vma_intersection(mm, prev ? prev->vm_end : 0, end);",
+     "active": true,
+     "enclosing": "simple_vma_merge"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 527,
+     "text": "if (find_vma_intersection(mm, addr, addr + len))",
+     "active": true,
+     "enclosing": "do_mmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 925,
+     "text": "if (!simple_find_vma(mm, addr))",
+     "active": true,
+     "enclosing": "simple_get_unmapped_area"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1107,
+     "text": "__vma_link_to_list(mm, new, vma_prev_vma(vma));",
+     "active": true,
+     "enclosing": "__split_vma"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1112,
+     "text": "__vma_link_to_list(mm, new, vma);",
+     "active": true,
+     "enclosing": "__split_vma"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1131,
+     "text": "vma = find_vma_intersection(mm, start, end);",
+     "active": true,
+     "enclosing": "simple_do_vma_munmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1147,
+     "text": "last = simple_find_vma(mm, end);",
+     "active": true,
+     "enclosing": "simple_do_vma_munmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1158,
+     "text": "__vma_unlink_from_list(mm, tmp);",
+     "active": true,
+     "enclosing": "simple_do_vma_munmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/util.c",
+     "line": 15,
+     "text": "void __vma_link_to_list(mm_s *mm, vma_s *vma, vma_s *prev)",
+     "active": true,
+     "enclosing": "__vma_link_to_list"
+    },
+    {
+     "path": "mykernel/mm/vm_map/util.c",
+     "line": 30,
+     "text": "void __vma_unlink_from_list(mm_s *mm, vma_s *vma)",
+     "active": true,
+     "enclosing": "__vma_unlink_from_list"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 51,
+     "text": "*simple_find_vma(mm_s *mm, ulong addr);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 64,
+     "text": "*find_vma_intersection(mm_s *mm, ulong start, ulong end);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 255,
+     "text": "*simple_find_vma(mm_s *mm, ulong addr) {",
+     "active": true,
+     "enclosing": "simple_find_vma"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 289,
+     "text": "vma_s *vma = simple_find_vma(mm, addr);",
+     "active": true,
+     "enclosing": "find_vma_prev"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 328,
+     "text": "* find_vma_intersection() - Look up the first VMA which intersects the interval",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 338,
+     "text": "*find_vma_intersection(mm_s *mm, ulong start, ulong end) {",
+     "active": true,
+     "enclosing": "find_vma_intersection"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 361,
+     "text": "vma_s *vma = simple_find_vma(mm, addr);",
+     "active": true,
+     "enclosing": "vma_lookup"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map.h",
+     "line": 401,
+     "text": "vma_s *vma = simple_find_vma(mm, vm_start);",
+     "active": true,
+     "enclosing": "find_exact_vma"
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 62,
+     "text": "extern vma_s * simple_find_vma(mm_s * mm, ulong addr);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 65,
+     "text": "void __vma_link_to_list(mm_s *mm, vma_s *vma, vma_s *prev);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/vm_map_api.h",
+     "line": 66,
+     "text": "void __vma_unlink_from_list(mm_s *mm, vma_s *vma);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q39",
+   "command": "git grep -n -w -E do_anonymous_page|do_fault|do_pte_missing <time> -- mykernel/mm/fault/fault.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 6,
+   "hits_active": 6,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 778,
+     "text": "do_anonymous_page(vm_fault_s *vmf) {",
+     "active": true,
+     "enclosing": "do_anonymous_page"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1187,
+     "text": "do_fault(vm_fault_s *vmf) {",
+     "active": true,
+     "enclosing": "do_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1230,
+     "text": "do_pte_missing(vm_fault_s *vmf) {",
+     "active": true,
+     "enclosing": "do_pte_missing"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1232,
+     "text": "return do_anonymous_page(vmf);",
+     "active": true,
+     "enclosing": "do_pte_missing"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1234,
+     "text": "return do_fault(vmf);",
+     "active": true,
+     "enclosing": "do_pte_missing"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1257,
+     "text": "return do_pte_missing(vmf);",
+     "active": true,
+     "enclosing": "handle_pte_fault"
+    }
+   ]
+  },
+  {
+   "id": "Q40",
+   "command": "git grep -n -w -E folio_put|put_page <time> -- mykernel/mm/fault/fault.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 13,
+   "hits_active": 10,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 193,
+     "text": "// \tfolio_put(new_folio);",
+     "active": false,
+     "enclosing": "folio_prealloc"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 583,
+     "text": "folio_put(new_folio);",
+     "active": true,
+     "enclosing": "wp_page_copy"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 585,
+     "text": "folio_put(old_folio);",
+     "active": true,
+     "enclosing": "wp_page_copy"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 676,
+     "text": "folio_put(new_folio);",
+     "active": true,
+     "enclosing": "wp_page_copy"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 680,
+     "text": "folio_put(old_folio);",
+     "active": true,
+     "enclosing": "wp_page_copy"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 688,
+     "text": "folio_put(old_folio);",
+     "active": true,
+     "enclosing": "wp_page_copy"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 866,
+     "text": "folio_put(folio);",
+     "active": true,
+     "enclosing": "do_anonymous_page"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1101,
+     "text": "folio_put(folio);",
+     "active": true,
+     "enclosing": "do_read_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1127,
+     "text": "put_page(vmf->page);",
+     "active": true,
+     "enclosing": "do_cow_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1132,
+     "text": "folio_put(folio);",
+     "active": true,
+     "enclosing": "do_cow_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1133,
+     "text": "// put_page(vmf->cow_page);",
+     "active": false,
+     "enclosing": "do_cow_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1161,
+     "text": "// \t\tfolio_put(folio);",
+     "active": false,
+     "enclosing": "do_shared_fault"
+    },
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 1170,
+     "text": "folio_put(folio);",
+     "active": true,
+     "enclosing": "do_shared_fault"
+    }
+   ]
+  },
+  {
+   "id": "Q42",
+   "command": "git grep -n -F READ_ONCE(page->compound_head) <time> -- mykernel/mm/page_alloc/page-flags.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 127,
+     "text": "ulong head = READ_ONCE(page->compound_head);",
+     "active": true,
+     "enclosing": "_compound_head"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 134,
+     "text": "return READ_ONCE(page->compound_head) & 1;",
+     "active": true,
+     "enclosing": "PageTail"
+    },
+    {
+     "path": "mykernel/mm/page_alloc/page-flags.h",
+     "line": 139,
+     "text": "READ_ONCE(page->compound_head) & 1;",
+     "active": true,
+     "enclosing": "PageCompound"
+    }
+   ]
+  },
+  {
+   "id": "Q43",
+   "command": "git grep -n -E define\\s+page_folio\\( <time> -- mykernel/mm/page_alloc/page-flags_macro.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/mm/page_alloc/page-flags_macro.h",
+     "line": 23,
+     "text": "#define page_folio(p)\t\t(_Generic((p),\t\t\t\t\t\t\t\\",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q41",
+   "command": "git grep -n -E vma_interval_tree_insert\\w*\\( <time> -- mykernel",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 164,
+     "text": "// vma_interval_tree_insert(vma, &mapping->i_mmap);",
+     "active": false,
+     "enclosing": "vma_link_file"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 205,
+     "text": "// vma_interval_tree_insert_after(tmp, mpnt,",
+     "active": false,
+     "enclosing": "dup_mmap"
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,2888 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+track_id: MYOS2-LEAD-002
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-SCHED-INTEGRATION-03
+phase: scoped_source_integration
+record_type: scheduler_integration_facts_and_regressions
+produced_by: Claude Code 云端会话执行者（claude.ai/code）；模型名不写入仓库产物，见 execution_model_selection
+execution_model_selection: unknown_or_not_attestable
+execution_surface: claude.ai/code 托管云端会话容器；只读 git 对象查询与 Python 文本处理（git 2.43.0、Python 3.11.15，均为容器既有工具）
+date: '2026-10-02'
+base_snapshot: kernel=time a039d9803ade；workspace=master de3bb1df906a；主线 40bc4faa4202（16 号任务书、CORE-SCHED-ORDER-02 审查回执，开工时固定）；被审执行头 f36b89b8a53a；见证结果冻结点 5078686e8267。均为短 SHA
+status: static_facts_derivations_and_candidate_spec
+acceptance_ceiling: PASS_PENDING_LOCAL
+kernel_change_made: false
+patch_or_diff_produced: false
+c_or_asm_compiled_or_run: false
+verifier_or_w_v_m_n_rerun: false
+layers:
+  source_facts: 已读活动文本（或明确标为注释/声明/条件未解），逐字引文，由 scripts/verify_anchors.py 机械核对
+  call_edges: 直接文本调用/引用边，来自 records/d01_index.json；不是完整调用图
+  derivations: INFERRED：给出前提事实与假设；不是执行结果
+  witness_refs: 已交 W01-W08（5078686e8267）与旧 V04-V08（core，已审范围内）记录值；本任务未重跑
+  policy_proposals: 候选修改规格与 Owner 取舍；未实施、未授权
+  future_regressions: 未来回归规格，状态一律 NOT_RUN
+rebuild:
+  d01_index: cd scheduler-integration-03/scripts && python3 scan_index.py ../records/d01_index.json
+  anchors: python3 verify_anchors.py ../facts-and-regressions.yaml ../records/anchors_check.json ../integration.md
+  scope: python3 check_scope.py start|stage|docs <results_commit>
+d01_index_summary:
+  file: records/d01_index.json
+  queries: 44
+  query_errors: []
+  lines_total: 495
+  hits_classified: 398
+  list_primitive_users_counted_not_classified: 97
+  by_class:
+    conditional_unresolved: 20
+    declaration_or_comment: 235
+    visible_active_text: 143
+  files_read: 152
+  definitions_unlocated:
+  - __set_task_cpu
+  - myos_wake_up_new_task
+  - fair_sched_class
+  - idle_sched_class
+  - rt_sched_class
+  - dl_sched_class
+  - stop_sched_class
+  - HAVE_ARCH_BUG_ON
+  - ttwu_queue
+  - ttwu_state_match
+  direct_edges: 78
+  limit: 'direct text search only: an alias, macro expansion, function pointer or computed access that does not spell the searched token is not covered; absence of a hit is not absence of a writer or caller'
+source_facts:
+- id: SF-C1-01
+  chains:
+  - C1
+  class: source_fact
+  statement: init_task 静态初值：__state 为 TASK_RUNNING。
+  path: mykernel/init/init_task.c
+  symbol: init_task
+  lines:
+  - 73
+  - 76
+  quote: "task_s init_task __aligned(L1_CACHE_BYTES) = {\n\t.thread_info\t\t= INIT_THREAD_INFO(init_task),\n\t// .stack_refcount\t\t= REFCOUNT_INIT(1),\n\t.__state\t\t\t= TASK_RUNNING,"
+- id: SF-C1-02
+  chains:
+  - C1
+  - LST
+  class: source_fact
+  statement: init_task 的 rt.run_list 静态自环，rt.time_slice = RR_TIMESLICE。
+  path: mykernel/init/init_task.c
+  symbol: init_task
+  lines:
+  - 98
+  - 101
+  quote: "\t.rt\t\t= {\n\t\t.run_list\t\t\t= LIST_HEAD_INIT(init_task.rt.run_list),\n\t\t.time_slice\t\t\t= RR_TIMESLICE,\n\t},"
+- id: SF-C1-03
+  chains:
+  - C1
+  - ACC
+  class: source_fact
+  statement: init_task 的 se.vruntime 静态初值写为 -1（标注为 MyOS2 自有成员初始化）。
+  path: mykernel/init/init_task.c
+  symbol: init_task
+  lines:
+  - 224
+  - 227
+  quote: "/* MyOS2 initiate members */\n\t.se\t\t\t\t\t= {\n\t\t.vruntime\t\t\t= -1,\n\t},"
+- id: SF-C1-04
+  chains:
+  - C1
+  - ACC
+  class: declaration_or_comment
+  statement: se.vruntime 声明为 u64；sched_entity 中其他上游成员均被注释。
+  path: mykernel/sched/scheduler/scheduler_types.h
+  symbol: struct sched_entity
+  lines:
+  - 17
+  - 17
+  quote: "\t\tu64\t\t\t\tvruntime;"
+- id: SF-C1-05
+  chains:
+  - C1
+  class: source_fact
+  statement: 每 CPU pcpu_hot.current_task 初值为 &init_task（current 由 get_current 读取该成员）。
+  path: mykernel/arch/x86_64/smp/percpu_area.c
+  symbol: pcpu_hot
+  lines:
+  - 15
+  - 16
+  quote: "DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot) = {\n\t.current_task\t= &init_task,"
+- id: SF-C1-06
+  chains:
+  - C1
+  class: source_fact
+  statement: start_kernel 直接调用 sched_init。
+  path: mykernel/init/main.c
+  symbol: start_kernel
+  lines:
+  - 153
+  - 153
+  quote: "\tsched_init();"
+- id: SF-C1-07
+  chains:
+  - C1
+  class: source_fact
+  statement: sched_init 以当时的 current（引导任务）调用 init_idle。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: sched_init
+  lines:
+  - 1628
+  - 1628
+  quote: "\tinit_idle(current, smp_processor_id());"
+- id: SF-C1-08
+  chains:
+  - C1
+  class: declaration_or_comment
+  statement: init_idle 中对 __sched_fork(0, idle) 的调用被注释：idle 的 vruntime 不在此处清零。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: init_idle
+  lines:
+  - 1401
+  - 1401
+  quote: "\t// __sched_fork(0, idle);"
+- id: SF-C1-09
+  chains:
+  - C1
+  class: source_fact
+  statement: init_idle 写 rq->idle、idle->on_rq、idle->on_cpu；rq->curr 的上游 RCU 写入被注释。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: init_idle
+  lines:
+  - 1436
+  - 1439
+  quote: "\trq->idle = idle;\n\t// rcu_assign_pointer(rq->curr, idle);\n\tidle->on_rq = TASK_ON_RQ_QUEUED;\n\tidle->on_cpu = 1;"
+- id: SF-C1-10
+  chains:
+  - C1
+  - C5
+  class: source_fact
+  statement: idle 的 sched_class 设为 myos_rt_sched_class（上游 idle_sched_class 行被注释）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: init_idle
+  lines:
+  - 1449
+  - 1450
+  quote: "\t// idle->sched_class = &idle_sched_class;\n\tidle->sched_class = &myos_rt_sched_class;"
+- id: SF-C1-11
+  chains:
+  - C1
+  class: source_fact
+  statement: init_idle 的 MyOS2 部分：rq->curr = idle，并把 running_lhdr 初始化为空（不把 idle 放入队列）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: init_idle
+  lines:
+  - 1456
+  - 1458
+  quote: "\t/* MyOS2 initiations */\n\trq->curr = idle;\n\tINIT_LIST_HEADER_S(&rq->myos.running_lhdr);"
+- id: SF-C1-12
+  chains:
+  - C1
+  - LST
+  class: source_fact
+  statement: INIT_LIST_HEADER_S 把 count 置 0、anchor 自环。
+  path: mykernel/lib/list/double_list.h
+  symbol: INIT_LIST_HEADER_S
+  lines:
+  - 155
+  - 158
+  quote: "\t\tINIT_LIST_HEADER_S(List_hdr_s *lhdr) {\n\t\t\tWRITE_ONCE(lhdr->count, 0);\n\t\t\tINIT_LIST_S(&lhdr->anchor);\n\t\t}"
+- id: SF-C1-13
+  chains:
+  - C1
+  - ACC
+  class: declaration_or_comment
+  statement: myos_rq 只有 running_lhdr 与 last_jiffies 两个 MyOS2 成员；last_jiffies 注释为“当前任务装入时的绝对 jiffies”。
+  path: mykernel/sched/runqueue/runqueue_types.h
+  symbol: struct myos_rq
+  lines:
+  - 193
+  - 197
+  quote: "\tstruct myos_rq {\n\t\t// MyOS2 variables\n\t\tList_hdr_s\t\trunning_lhdr;\n\t\tulong\t\t\tlast_jiffies;\t// abs jiffies when curr-task loaded\n\t};"
+- id: SF-C1-14
+  chains:
+  - C1
+  - ACC
+  class: source_fact
+  statement: 每 CPU runqueues 定义无显式初值。
+  path: mykernel/arch/x86_64/smp/percpu_area.c
+  symbol: runqueues
+  lines:
+  - 25
+  - 25
+  quote: DEFINE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
+- id: SF-C1-15
+  chains:
+  - C1
+  - C2
+  class: source_fact
+  statement: rest_init 先以 kernel_thread 创建 kernel_init。
+  path: mykernel/init/main.c
+  symbol: rest_init
+  lines:
+  - 93
+  - 93
+  quote: "\tpid = kernel_thread(kernel_init, NULL, \"kthd: kernel_init\", CLONE_FS);"
+- id: SF-C1-16
+  chains:
+  - C1
+  - C2
+  class: source_fact
+  statement: rest_init 再以 kernel_thread 创建 kthreadd。
+  path: mykernel/init/main.c
+  symbol: rest_init
+  lines:
+  - 106
+  - 106
+  quote: "\tpid = kernel_thread(kthreadd, NULL, \"kthreadd\", CLONE_FS | CLONE_FILES);"
+- id: SF-C1-17
+  chains:
+  - C1
+  - C5
+  class: source_fact
+  statement: 引导 idle 在 rest_init 末尾先调用 schedule_preempt_disabled，再进入 cpu_startup_entry。
+  path: mykernel/init/main.c
+  symbol: rest_init
+  lines:
+  - 126
+  - 128
+  quote: "\tschedule_preempt_disabled();\n\t/* Call into cpu_idle with preempt disabled */\n\tcpu_startup_entry();"
+- id: SF-C1-18
+  chains:
+  - C1
+  - C5
+  class: source_fact
+  statement: do_idle 无条件 set_preempt_need_resched（只改 preempt 计数位，见 SF-C5-23；等待循环整体被注释）。
+  path: mykernel/sched/misc/idle.c
+  symbol: do_idle
+  lines:
+  - 76
+  - 76
+  quote: "\tset_preempt_need_resched();"
+- id: SF-C1-19
+  chains:
+  - C1
+  - C5
+  class: source_fact
+  statement: do_idle 随后调用 schedule_idle。
+  path: mykernel/sched/misc/idle.c
+  symbol: do_idle
+  lines:
+  - 92
+  - 92
+  quote: "\tschedule_idle();"
+- id: SF-C1-20
+  chains:
+  - C1
+  - C5
+  class: source_fact
+  statement: schedule_idle 在 need_resched() 为真时循环调用 __schedule(SM_NONE)。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: schedule_idle
+  lines:
+  - 1237
+  - 1239
+  quote: "\tdo {\n\t\t__schedule(SM_NONE);\n\t} while (need_resched());"
+- id: SF-C1-21
+  chains:
+  - C1
+  - ACC
+  class: source_fact
+  statement: start_kernel 在 sched_init（第 153 行）之前调用 setup_per_cpu_areas。
+  path: mykernel/init/main.c
+  symbol: start_kernel
+  lines:
+  - 140
+  - 140
+  quote: "\tsetup_per_cpu_areas();"
+- id: SF-C1-22
+  chains:
+  - C1
+  - ACC
+  class: source_fact
+  statement: 每 CPU 首块把 __per_cpu_load 起的模板复制到数据区起点（单元 0）。
+  path: mykernel/mm/misc/percpu.c
+  symbol: simple_pcpu_setup_first_chunk
+  lines:
+  - 356
+  - 356
+  quote: "\tmemcpy(pcpu_first_chunk->data, &__per_cpu_load, static_size);"
+- id: SF-C1-23
+  chains:
+  - C1
+  class: source_fact
+  statement: 每 CPU 单元偏移按 i * static_size 设置；只有单元 0 位于上一条复制的目标处。
+  path: mykernel/mm/misc/percpu.c
+  symbol: simple_pcpu_setup_first_chunk
+  lines:
+  - 362
+  - 363
+  quote: "\tfor (int i = 0; i < nr_cpu_ids; i++)\n\t\t((ulong *)pcpu_unit_offsets)[i] = i * static_size;"
+- id: SF-C1-24
+  chains:
+  - C1
+  class: source_fact
+  statement: sched_init 的 for_each_possible_cpu 循环中活动写入只有 rq->cpu 与 rq->online；不写 running_lhdr、last_jiffies、idle、curr。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: sched_init
+  lines:
+  - 1571
+  - 1572
+  quote: "\t\trq->cpu = i;\n\t\trq->online = 0;"
+- id: SF-C1-25
+  chains:
+  - C1
+  - C5
+  class: source_fact
+  statement: cpu_startup_entry 以 while (1) 反复调用 do_idle（do_idle 的等待循环被注释，idle 每轮都进入 __schedule）。
+  path: mykernel/sched/misc/idle.c
+  symbol: cpu_startup_entry
+  lines:
+  - 105
+  - 106
+  quote: "\twhile (1)\n\t\tdo_idle();"
+- id: SF-C2-01
+  chains:
+  - C2
+  class: source_fact
+  statement: kernel_thread 经 kernel_clone 创建任务。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: kernel_thread
+  lines:
+  - 1550
+  - 1550
+  quote: "\treturn kernel_clone(&args);"
+- id: SF-C2-02
+  chains:
+  - C2
+  class: source_fact
+  statement: kernel_clone 以 NUMA_NO_NODE 调用 copy_process。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: kernel_clone
+  lines:
+  - 1485
+  - 1485
+  quote: "\tp = copy_process(NULL, trace, NUMA_NO_NODE, args);"
+- id: SF-C2-03
+  chains:
+  - C2
+  class: source_fact
+  statement: copy_process 以 current 为模板调用 dup_task_struct。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_process
+  lines:
+  - 959
+  - 959
+  quote: "\tp = dup_task_struct(current, node);"
+- id: SF-C2-04
+  chains:
+  - C2
+  class: source_fact
+  statement: dup_task_struct 中 if 的条件行之后是一条注释行，紧随的分配语句成为 if 的唯一语句体（仅 node == NUMA_NO_NODE 时分配）。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: dup_task_struct
+  lines:
+  - 278
+  - 280
+  quote: "\tif (node == NUMA_NO_NODE)\n\t\t// node = tsk_fork_get_node(orig);\n\ttsk = alloc_task_struct_node(node);"
+- id: SF-C2-05
+  chains:
+  - C2
+  - ACC
+  class: source_fact
+  statement: dup_task_struct 整体复制父任务结构：sched_class、rt.time_slice、se.vruntime、on_rq 等随之继承，直到后续覆盖。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: dup_task_struct
+  lines:
+  - 288
+  - 288
+  quote: "\t\t*tsk = *orig;"
+- id: SF-C2-06
+  chains:
+  - C2
+  class: source_fact
+  statement: copy_process 调用 sched_fork。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_process
+  lines:
+  - 1104
+  - 1104
+  quote: "\tretval = sched_fork(clone_flags, p);"
+- id: SF-C2-07
+  chains:
+  - C2
+  class: source_fact
+  statement: sched_fork 先调用 __sched_fork。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: sched_fork
+  lines:
+  - 621
+  - 621
+  quote: "\t__sched_fork(clone_flags, p);"
+- id: SF-C2-08
+  chains:
+  - C2
+  class: source_fact
+  statement: sched_fork 把新任务置为 TASK_NEW。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: sched_fork
+  lines:
+  - 627
+  - 627
+  quote: "\tp->__state = TASK_NEW;"
+- id: SF-C2-09
+  chains:
+  - C2
+  - C5
+  class: declaration_or_comment
+  statement: sched_fork 中按优先级设置 sched_class 的上游代码被注释：新任务的类只来自结构复制。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: sched_fork
+  lines:
+  - 659
+  - 662
+  quote: "\t// else if (rt_prio(p->prio))\n\t// \tp->sched_class = &rt_sched_class;\n\t// else\n\t// \tp->sched_class = &fair_sched_class;"
+- id: SF-C2-10
+  chains:
+  - C2
+  class: source_fact
+  statement: sched_fork 置 on_cpu = 0。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: sched_fork
+  lines:
+  - 670
+  - 670
+  quote: "\tp->on_cpu = 0;"
+- id: SF-C2-11
+  chains:
+  - C2
+  - ACC
+  class: source_fact
+  statement: __sched_fork 把 se.vruntime 置 0（G04）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __sched_fork
+  lines:
+  - 582
+  - 582
+  quote: "\tp->se.vruntime\t\t\t= 0;"
+- id: SF-C2-12
+  chains:
+  - C2
+  - LST
+  class: source_fact
+  statement: __sched_fork 以 INIT_LIST_S 自环 rt.run_list；rt.time_slice 的重置被注释（time_slice 保持继承值）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __sched_fork
+  lines:
+  - 599
+  - 602
+  quote: "\t// INIT_LIST_HEAD(&p->rt.run_list);\n\tINIT_LIST_S(&p->rt.run_list);\n\t// p->rt.timeout\t\t= 0;\n\t// p->rt.time_slice\t= sched_rr_timeslice;"
+- id: SF-C2-13
+  chains:
+  - C2
+  class: source_fact
+  statement: kernel_clone 在 copy_process 成功后调用 wake_up_new_task。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: kernel_clone
+  lines:
+  - 1516
+  - 1516
+  quote: "\twake_up_new_task(p);"
+- id: SF-C2-14
+  chains:
+  - C2
+  class: source_fact
+  statement: wake_up_new_task 固定取 CPU0 的 runqueue，并把状态写为 TASK_RUNNING。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: wake_up_new_task
+  lines:
+  - 688
+  - 691
+  quote: "\trq_s *rq = &(per_cpu(runqueues, 0));\n\n\t// raw_spin_lock_irqsave(&p->pi_lock, rf.flags);\n\tWRITE_ONCE(p->__state, TASK_RUNNING);"
+- id: SF-C2-15
+  chains:
+  - C2
+  class: declaration_or_comment
+  statement: wake_up_new_task 中 __set_task_cpu/select_task_rq 的上游放置被注释。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: wake_up_new_task
+  lines:
+  - 702
+  - 702
+  quote: "\t// __set_task_cpu(p, select_task_rq(p, task_cpu(p), WF_FORK));"
+- id: SF-C2-16
+  chains:
+  - C2
+  - LST
+  class: source_fact
+  statement: wake_up_new_task 无 contains 检查地头插 running_lhdr（G03）；函数无返回值。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: wake_up_new_task
+  lines:
+  - 721
+  - 722
+  quote: "\tlist_header_add_to_head(&rq->myos.running_lhdr, &p->rt.run_list);\n}"
+- id: SF-C2-17
+  chains:
+  - C2
+  class: source_fact
+  statement: kernel_clone 向调用者返回新任务的 pid 数值。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: kernel_clone
+  lines:
+  - 1527
+  - 1529
+  quote: "\tput_pid(pid_struct);\n\n\treturn nr;"
+- id: SF-C2-18
+  chains:
+  - C2
+  class: source_fact
+  statement: copy_process 返回前已把新任务挂入 all_task_lhdr 并 attach_pid（早于 wake_up_new_task）。
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_process
+  lines:
+  - 1335
+  - 1336
+  quote: "\t\t\tlist_header_add_to_tail(&all_task_lhdr, &p->tasks);\n\t\t\tattach_pid(p, PIDTYPE_TGID);"
+- id: SF-C2-19
+  chains:
+  - C2
+  - C3
+  class: source_fact
+  statement: kthread_run 宏在 kthread_create 成功后调用 wake_up_process（普通唤醒路径）。
+  path: mykernel/sched/forkexec/forkexec_macro.h
+  symbol: kthread_run
+  lines:
+  - 29
+  - 33
+  quote: "\t#define kthread_run(threadfn, data, namefmt, ...)\t({\t\\\n\t\t\t\ttask_s *__k\t\t\t\t\t\t\t\t\t\\\n\t\t\t\t\t= kthread_create(threadfn, data,\t\t\\\n\t\t\t\t\t\tnamefmt, ## __VA_ARGS__);\t\t\t\\\n\t\t\t\tif (!IS_ERR(__k)) wake_up_process(__k);\t\t\\"
+- id: SF-C2-20
+  chains:
+  - C2
+  class: declaration_or_comment
+  statement: kthread_run 的注释写的是 myos_wake_up_new_task()，与活动宏体不一致；以活动文本为准。
+  path: mykernel/sched/forkexec/forkexec_macro.h
+  symbol: kthread_run
+  lines:
+  - 26
+  - 27
+  quote: "\t * Description: Convenient wrapper for kthread_create() followed by\n\t * myos_wake_up_new_task().  Returns the kthread or ERR_PTR(-ENOMEM)."
+- id: SF-C2-21
+  chains:
+  - C2
+  - C3
+  class: source_fact
+  statement: 新 kthread 第一次运行时先把自身置为 TASK_UNINTERRUPTIBLE 再登记结果。
+  path: mykernel/sched/forkexec/kthread.c
+  symbol: kthread
+  lines:
+  - 197
+  - 198
+  quote: "\t__set_current_state(TASK_UNINTERRUPTIBLE);\n\tcreate->result = current;"
+- id: SF-C2-22
+  chains:
+  - C2
+  class: source_fact
+  statement: rest_init 用 kernel_thread 返回的 pid 查任务并直接解引用，不检查负值（只记录调用者可见返回的用法）。
+  path: mykernel/init/main.c
+  symbol: rest_init
+  lines:
+  - 100
+  - 101
+  quote: "\ttsk = find_task_by_pid_ns(pid, &init_pid_ns);\n\ttsk->flags |= PF_NO_SETAFFINITY;"
+- id: SF-C3-01
+  chains:
+  - C3
+  class: source_fact
+  statement: __set_current_state 仅写 current->__state；set_current_state 与 set_special_state 都定义为它。
+  path: mykernel/sched/runqueue/runqueue_macro.h
+  symbol: __set_current_state
+  lines:
+  - 64
+  - 67
+  quote: "\t#define __set_current_state(state_value)\t\t\t\t\t\\\n\t\t\tdo {\t\t\t\t\t\t\t\t\t\t\t\t\\\n\t\t\t\tWRITE_ONCE(current->__state, (state_value));\t\\\n\t\t\t} while (0)"
+- id: SF-C3-02
+  chains:
+  - C3
+  - C5
+  class: source_fact
+  statement: schedule：非 RUNNING 时调用 sched_submit_work（其主体全部被注释），然后进入 __schedule_loop(SM_NONE)。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: schedule
+  lines:
+  - 1209
+  - 1211
+  quote: "\tif (!task_is_running(tsk))\n\t\tsched_submit_work(tsk);\n\t__schedule_loop(SM_NONE);"
+- id: SF-C3-03
+  chains:
+  - C3
+  class: declaration_or_comment
+  statement: __schedule 中上游按 prev_state 出队（block_task）的代码被注释：阻塞任务不在此处离队。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1110
+  - 1111
+  quote: "\t// \t\tblock_task(rq, prev, flags);\n\t// \t\tblock = true;"
+- id: SF-C3-04
+  chains:
+  - C3
+  - C4
+  class: source_fact
+  statement: pick_next_task_myos 只在 current 仍为 TASK_RUNNING 时把它插回；阻塞的 current 在切换时被留在队外。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 27
+  - 28
+  quote: "\t\t// and insert curr_task back to running_list\n\t\tif (curr_task->__state == TASK_RUNNING)"
+- id: SF-C3-05
+  chains:
+  - C3
+  class: source_fact
+  statement: 代表性睡眠路径：schedule_timeout 的 MAX_SCHEDULE_TIMEOUT 分支直接 schedule()。
+  path: mykernel/time/timer/timer.c
+  symbol: schedule_timeout
+  lines:
+  - 774
+  - 775
+  quote: "\t\tschedule();\n\t\tgoto out;"
+- id: SF-C3-26
+  chains:
+  - C3
+  class: source_fact
+  statement: schedule_timeout 的有限超时分支：挂上定时器后 schedule() 被注释，随即 del_timer_sync 删除定时器。
+  path: mykernel/time/timer/timer.c
+  symbol: schedule_timeout
+  lines:
+  - 797
+  - 799
+  quote: "\t__mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);\n\t// schedule();\n\tdel_timer_sync(&timer.timer);"
+- id: SF-C3-27
+  chains:
+  - C3
+  class: source_fact
+  statement: schedule_timeout_interruptible 先把 current 写为 TASK_INTERRUPTIBLE 再调用 schedule_timeout。
+  path: mykernel/time/timer/timer.c
+  symbol: schedule_timeout_interruptible
+  lines:
+  - 814
+  - 815
+  quote: "\t__set_current_state(TASK_INTERRUPTIBLE);\n\treturn schedule_timeout(timeout);"
+- id: SF-C3-28
+  chains:
+  - C3
+  - C2
+  class: conditional_unresolved
+  statement: task_cpu 读取 task_thread_info(p)->cpu，即任务的 CPU 元数据所在（位于 SCHEDULER_DEFINATION || !(DEBUG) 条件块内）。
+  path: mykernel/sched/scheduler/scheduler.h
+  symbol: task_cpu
+  lines:
+  - 49
+  - 50
+  quote: "\t\ttask_cpu(const task_s *p) {\n\t\t\treturn READ_ONCE(task_thread_info(p)->cpu);"
+- id: SF-C3-29
+  chains:
+  - C3
+  - C2
+  class: declaration_or_comment
+  statement: MyOS2 的 enqueue_task 函数体全部被注释：按调度类入队的语句不存在于活动文本中。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: enqueue_task
+  lines:
+  - 35
+  - 37
+  quote: "\t// \tupdate_rq_clock(rq);\n\n\t// p->sched_class->enqueue_task(rq, p, flags);"
+- id: SF-C3-30
+  chains:
+  - C3
+  - C2
+  class: source_fact
+  statement: activate_task 只调用（空的）enqueue_task，on_rq 写入是注释。running_lhdr 的入队只发生在显式的 list_header_* 调用中（d01 F01）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: activate_task
+  lines:
+  - 84
+  - 86
+  quote: "\tenqueue_task(rq, p, flags);\n\n\t// WRITE_ONCE(p->on_rq, TASK_ON_RQ_QUEUED);"
+- id: SF-C3-31
+  chains:
+  - C3
+  class: source_fact
+  statement: del_timer_sync 是 timer_delete_sync 的宏别名。
+  path: mykernel/time/timer/timer_macro.h
+  symbol: del_timer_sync
+  lines:
+  - 25
+  - 25
+  quote: "\t#define del_timer_sync\ttimer_delete_sync"
+- id: SF-C3-32
+  chains:
+  - C3
+  class: source_fact
+  statement: __timer_delete_sync 以 cpu_relax 忙等重试，活动文本中没有 schedule()（等待运行中回调的行被注释）。
+  path: mykernel/time/timer/timer.c
+  symbol: __timer_delete_sync
+  lines:
+  - 642
+  - 646
+  quote: "\t\tif (unlikely(ret < 0)) {\n\t\t\t// del_timer_wait_running(timer);\n\t\t\tcpu_relax();\n\t\t}\n\t} while (ret < 0);"
+- id: SF-C3-33
+  chains:
+  - C3
+  class: source_fact
+  statement: schedule_timeout 结尾原样返回 timeout（非负时）。
+  path: mykernel/time/timer/timer.c
+  symbol: schedule_timeout
+  lines:
+  - 804
+  - 805
+  quote: " out:\n\treturn timeout < 0 ? 0 : timeout;"
+- id: SF-C3-34
+  chains:
+  - C3
+  class: conditional_unresolved
+  statement: 信号量等待循环：先写等待状态、解锁，再调用 schedule_timeout(timeout)。
+  path: mykernel/lock_IPC/semaphore/semaphore.h
+  symbol: ___down_common
+  lines:
+  - 55
+  - 57
+  quote: "\t\t\t\t__set_current_state(state);\n\t\t\t\tspin_unlock_irq(&sem->lock);\n\t\t\t\ttimeout = schedule_timeout(timeout);"
+- id: SF-C3-35
+  chains:
+  - C3
+  class: source_fact
+  statement: __down_timeout 把调用方的有限 timeout 传入等待循环。
+  path: mykernel/lock_IPC/semaphore/semaphore.c
+  symbol: __down_timeout
+  lines:
+  - 198
+  - 200
+  quote: "__down_timeout(sema_t *sem, long timeout) {\n\treturn __down_common(sem,\n\t\t\tTASK_UNINTERRUPTIBLE, timeout);"
+- id: SF-C3-36
+  chains:
+  - C3
+  class: declaration_or_comment
+  statement: __schedule 中上游区分“抢占”与“自愿睡眠”的条件 !preempt && prev_state 是注释：抢占入口与自愿睡眠共用 pick 中同一道“非 RUNNING 不插回”的门。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1085
+  - 1085
+  quote: "\t// } else if (!preempt && prev_state) {"
+- id: SF-C3-37
+  chains:
+  - C3
+  class: source_fact
+  statement: do_task_dead 写 TASK_DEAD 后直接调用 __schedule(SM_NONE)，返回后执行 BUG()。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: do_task_dead
+  lines:
+  - 1180
+  - 1181
+  quote: "\t__schedule(SM_NONE);\n\tBUG();"
+- id: SF-C3-38
+  chains:
+  - C3
+  class: source_fact
+  statement: kthreadd 的等待写法：先写 TASK_INTERRUPTIBLE，再检查请求列表，为空才 schedule()，然后写回 TASK_RUNNING。
+  path: mykernel/sched/forkexec/kthread.c
+  symbol: kthreadd
+  lines:
+  - 342
+  - 345
+  quote: "\t\tset_current_state(TASK_INTERRUPTIBLE);\n\t\tif (list_header_is_empty(&kthread_create_list))\n\t\t\tschedule();\n\t\t__set_current_state(TASK_RUNNING);"
+- id: SF-C3-06
+  chains:
+  - C3
+  class: source_fact
+  statement: 代表性唤醒者：定时器回调 process_timeout 调用 wake_up_process。
+  path: mykernel/time/timer/timer.c
+  symbol: process_timeout
+  lines:
+  - 42
+  - 44
+  quote: "process_timeout(timer_list_s *t) {\n\tproc_timer_s *timeout = from_timer(timeout, t, timer);\n\twake_up_process(timeout->task);"
+- id: SF-C3-07
+  chains:
+  - C3
+  class: source_fact
+  statement: 代表性唤醒者：信号量 __up 摘下等待者后调用 wake_up_process。
+  path: mykernel/lock_IPC/semaphore/semaphore.c
+  symbol: __up
+  lines:
+  - 208
+  - 210
+  quote: "\tlist_del(&waiter->list);\n\twaiter->up = true;\n\twake_up_process(waiter->task);"
+- id: SF-C3-08
+  chains:
+  - C3
+  class: source_fact
+  statement: 代表性唤醒者：swake_up_locked 直接调用 try_to_wake_up。
+  path: mykernel/kactive/swait/swait.c
+  symbol: swake_up_locked
+  lines:
+  - 28
+  - 30
+  quote: "\tcurr = list_headr_first_container(&q->task_list_hdr, typeof(*curr), task_list);\n\ttry_to_wake_up(curr->task, TASK_NORMAL, wake_flags);\n\tlist_del_init(&curr->task_list);"
+- id: SF-C3-09
+  chains:
+  - C3
+  class: source_fact
+  statement: wake_up_process 以 TASK_NORMAL 调用 try_to_wake_up 并原样返回其结果。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: wake_up_process
+  lines:
+  - 556
+  - 559
+  quote: "int wake_up_process(task_s *p)\n{\n\treturn try_to_wake_up(p, TASK_NORMAL, 0);\n}"
+- id: SF-C3-10
+  chains:
+  - C3
+  class: source_fact
+  statement: wake_up_state 以给定 state 调用 try_to_wake_up。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: wake_up_state
+  lines:
+  - 562
+  - 565
+  quote: "int wake_up_state(task_s *p, uint state)\n{\n\treturn try_to_wake_up(p, state, 0);\n}"
+- id: SF-C3-11
+  chains:
+  - C3
+  class: source_fact
+  statement: try_to_wake_up 中 cpu 与 success 均初始化为 0。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: try_to_wake_up
+  lines:
+  - 330
+  - 331
+  quote: "\tulong flags;\n\tint cpu = 0, success = 0;"
+- id: SF-C3-12
+  chains:
+  - C3
+  class: source_fact
+  statement: try_to_wake_up 对 p == current 走快速路径。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: try_to_wake_up
+  lines:
+  - 334
+  - 334
+  quote: "\tif (p == current) {"
+- id: SF-C3-13
+  chains:
+  - C3
+  class: source_fact
+  statement: 快速路径只把 current 写为 TASK_RUNNING 并跳到 out，不入队。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: try_to_wake_up
+  lines:
+  - 350
+  - 352
+  quote: "\t\tWRITE_ONCE(p->__state, TASK_RUNNING);\n\t\t// trace_sched_wakeup(p);\n\t\tgoto out;"
+- id: SF-C3-14
+  chains:
+  - C3
+  class: declaration_or_comment
+  statement: 非 current 路径上的 ttwu_state_match 状态掩码检查被注释：state 参数在活动文本中不被使用。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: try_to_wake_up
+  lines:
+  - 363
+  - 364
+  quote: "\t// if (!ttwu_state_match(p, state, &success))\n\t// \tgoto unlock;"
+- id: SF-C3-15
+  chains:
+  - C3
+  class: source_fact
+  statement: 非 current 路径先写 TASK_WAKING。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: try_to_wake_up
+  lines:
+  - 425
+  - 425
+  quote: "\tWRITE_ONCE(p->__state, TASK_WAKING);"
+- id: SF-C3-16
+  chains:
+  - C3
+  class: source_fact
+  statement: 以 cpu（为 0）调用 select_task_rq。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: try_to_wake_up
+  lines:
+  - 462
+  - 462
+  quote: "\tcpu = select_task_rq(p, cpu, wake_flags | WF_TTWU);"
+- id: SF-C3-17
+  chains:
+  - C3
+  class: conditional_unresolved
+  statement: select_task_rq 的活动文本直接返回传入的 cpu（scheduler.h:45 条件块内；在 scheduler_core.c 翻译单元内由第 1 行的 SCHEDULER_DEFINATION 解出）。
+  path: mykernel/sched/scheduler/scheduler.h
+  symbol: select_task_rq
+  lines:
+  - 79
+  - 79
+  quote: "\t\t\treturn cpu;"
+- id: SF-C3-18
+  chains:
+  - C3
+  class: source_fact
+  statement: try_to_wake_up 无条件调用 set_task_cpu（外层 task_cpu 比较被注释）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: try_to_wake_up
+  lines:
+  - 471
+  - 471
+  quote: "\t\tset_task_cpu(p, cpu);"
+- id: SF-C3-19
+  chains:
+  - C3
+  class: source_fact
+  statement: out 之后只有 preempt_enable 并返回 success；活动文本中没有把 success 置为非 0 的写入（ttwu_stat 等在 out 后被注释）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: try_to_wake_up
+  lines:
+  - 480
+  - 482
+  quote: "\tpreempt_enable();\n\n\treturn success;"
+- id: SF-C3-20
+  chains:
+  - C3
+  class: declaration_or_comment
+  statement: set_task_cpu 中上游的迁移职责（task_cpu 比较、migrate_task_rq）被注释。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: set_task_cpu
+  lines:
+  - 167
+  - 169
+  quote: "\t// if (task_cpu(p) != new_cpu) {\n\t// \tif (p->sched_class->migrate_task_rq)\n\t// \t\tp->sched_class->migrate_task_rq(p, new_cpu);"
+- id: SF-C3-21
+  chains:
+  - C3
+  class: declaration_or_comment
+  statement: set_task_cpu 中 __set_task_cpu 一行是注释（mykernel/ 中它只有注释命中、没有活动定义）；活动文本里没有对 task_thread_info(p)->cpu 的写入。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: set_task_cpu
+  lines:
+  - 175
+  - 175
+  quote: "\t// __set_task_cpu(p, new_cpu);"
+- id: SF-C3-22
+  chains:
+  - C3
+  - LST
+  class: source_fact
+  statement: MyOS2 活动文本：取目标 CPU 队列，写 TASK_RUNNING，若节点不在该队列则头插（G02）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: set_task_cpu
+  lines:
+  - 177
+  - 180
+  quote: "\trq_s *target_rq = &(per_cpu(runqueues, new_cpu));\n\tp->__state = TASK_RUNNING;\n\tif (!list_header_contains(&target_rq->myos.running_lhdr, &p->rt.run_list))\n\t\tlist_header_add_to_head(&target_rq->myos.running_lhdr, &p->rt.run_list);"
+- id: SF-C3-23
+  chains:
+  - C3
+  class: source_fact
+  statement: wake_up_state 的直接调用者：signal_wake_up_state。
+  path: mykernel/lock_IPC/signal/signal.c
+  symbol: signal_wake_up_state
+  lines:
+  - 377
+  - 377
+  quote: "\tif (!wake_up_state(t, state | TASK_INTERRUPTIBLE))"
+- id: SF-C3-24
+  chains:
+  - C3
+  class: source_fact
+  statement: 在 d01 直接文本命中的唤醒调用者中，唯一使用返回值的一处：返回 0 时调用 kick_process。
+  path: mykernel/lock_IPC/signal/signal.c
+  symbol: signal_wake_up_state
+  lines:
+  - 377
+  - 378
+  quote: "\tif (!wake_up_state(t, state | TASK_INTERRUPTIBLE))\n\t\tkick_process(t);"
+- id: SF-C3-25
+  chains:
+  - C3
+  class: source_fact
+  statement: kick_process 的活动文本只读取 task_cpu(p) 到局部变量；跨 CPU 重调度被注释。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: kick_process
+  lines:
+  - 200
+  - 203
+  quote: "\tint cpu = task_cpu(p);\n\n\t// if ((cpu != smp_processor_id()) && task_curr(p))\n\t// \tsmp_send_reschedule(cpu);"
+- id: SF-C4-01
+  chains:
+  - C4
+  class: source_fact
+  statement: pick_next_task_myos 接收 rq 与 prev。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 5
+  - 5
+  quote: static task_s *pick_next_task_myos(rq_s *rq, task_s *prev)
+- id: SF-C4-02
+  chains:
+  - C4
+  class: source_fact
+  statement: 函数以 current（不是 prev 参数）作为被替换任务。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 9
+  - 10
+  quote: "\tretval = curr_task = current;\n\tsched_rt_entity_s *rt = &curr_task->rt;"
+- id: SF-C4-03
+  chains:
+  - C4
+  - ACC
+  class: source_fact
+  statement: used_jiffies = jiffies - last_jiffies，在任何分支前计算。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 12
+  - 12
+  quote: "\tulong used_jiffies = jiffies - myos_rq->last_jiffies;"
+- id: SF-C4-04
+  chains:
+  - C4
+  - C5
+  class: source_fact
+  statement: 切换条件：need_resched、current 为 idle、用满 time_slice 或 current 非 RUNNING 之一成立，并且队列 count > 0。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 14
+  - 18
+  quote: "\tif ((need_resched() ||\n\t\tcurr_task == rq->idle ||\n\t\tused_jiffies >= rt->time_slice ||\n\t\tcurr_task->__state != TASK_RUNNING) &&\n\t\tmyos_rq->running_lhdr.count > 0)"
+- id: SF-C4-05
+  chains:
+  - C4
+  class: source_fact
+  statement: BUG_ON 条件要求 count <= 0，但它位于已要求 count > 0 的块内。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 20
+  - 21
+  quote: "\t\tBUG_ON(curr_task->__state != TASK_RUNNING &&\n\t\t\t\tmyos_rq->running_lhdr.count <= 0);"
+- id: SF-C4-06
+  chains:
+  - C4
+  - LST
+  class: source_fact
+  statement: 取队首（list_header_remove_head）；返回 NULL 时原地自旋。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 24
+  - 25
+  quote: "\t\tList_s * next_lp = list_header_remove_head(&myos_rq->running_lhdr);\n\t\twhile (next_lp == NULL);"
+- id: SF-C4-07
+  chains:
+  - C4
+  - LST
+  class: source_fact
+  statement: current 为 idle 时用 list_header_add_to_tail 插到队尾。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 30
+  - 34
+  quote: "\t\t\tif (curr_task == rq->idle)\n\t\t\t{\n\t\t\t\t// insert idle task to cpu's running-list tail\n\t\t\t\tlist_header_add_to_tail(&myos_rq->running_lhdr, &rt->run_list);\n\t\t\t}"
+- id: SF-C4-08
+  chains:
+  - C4
+  class: source_fact
+  statement: 非 idle 插回：比较对象 tmp_rt 只在循环前取一次（首节点）；循环条件先比较 vruntime，再判断 tmp_list 是否为 anchor。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 37
+  - 40
+  quote: "\t\t\t\tList_s * tmp_list = myos_rq->running_lhdr.anchor.next;\n\t\t\t\tsched_rt_entity_s *tmp_rt = container_of(tmp_list, sched_rt_entity_s, run_list);\n\t\t\t\twhile ((curr_task->se.vruntime > container_of(tmp_rt, task_s, rt)->se.vruntime) &&\n\t\t\t\t\t\ttmp_list != &myos_rq->running_lhdr.anchor)"
+- id: SF-C4-09
+  chains:
+  - C4
+  - LST
+  class: source_fact
+  statement: 循环内只前移 tmp_list；结束后 list_add_to_prev 插到 tmp_list 之前，并手工 count++。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 42
+  - 45
+  quote: "\t\t\t\t\ttmp_list = tmp_list->next;\n\t\t\t\t}\n\t\t\t\tlist_add_to_prev(&rt->run_list, tmp_list);\n\t\t\t\tmyos_rq->running_lhdr.count++;"
+- id: SF-C4-10
+  chains:
+  - C4
+  - ACC
+  class: source_fact
+  statement: 计费在插回之后：非 idle 的 current 才加 used_jiffies（G07）。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 49
+  - 50
+  quote: "\t\tif (curr_task != rq->idle)\n\t\t\tcurr_task->se.vruntime += used_jiffies;"
+- id: SF-C4-11
+  chains:
+  - C4
+  - ACC
+  class: source_fact
+  statement: 返回任务取自先前摘下的队首；last_jiffies 只在切换块内更新为 jiffies。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 52
+  - 54
+  quote: "\t\tsched_rt_entity_s *next_rt = container_of(next_lp, sched_rt_entity_s, run_list);\n\t\tretval = container_of(next_rt, task_s, rt);\n\t\tmyos_rq->last_jiffies = jiffies;"
+- id: SF-C4-12
+  chains:
+  - C4
+  - C5
+  class: source_fact
+  statement: 无论是否切换，rq->curr 都被写为返回值。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: pick_next_task_myos
+  lines:
+  - 56
+  - 57
+  quote: "\trq->curr = retval;\n\treturn retval;"
+- id: SF-C5-01
+  chains:
+  - C5
+  class: source_fact
+  statement: __schedule 以 rq->curr 作为 prev。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1032
+  - 1034
+  quote: "\tcpu = smp_processor_id();\n\trq = cpu_rq(cpu);\n\tprev = rq->curr;"
+- id: SF-C5-02
+  chains:
+  - C5
+  class: source_fact
+  statement: scheduler_core.c 把 pick_next_task 宏别名为 __pick_next_task。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: pick_next_task
+  lines:
+  - 976
+  - 976
+  quote: "#define pick_next_task\t__pick_next_task"
+- id: SF-C5-03
+  chains:
+  - C5
+  class: source_fact
+  statement: __schedule 通过该别名取得 next。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1116
+  - 1116
+  quote: "\tnext = pick_next_task(rq, prev, &rf);"
+- id: SF-C5-04
+  chains:
+  - C5
+  class: source_fact
+  statement: scheduler_core.c 第 1 行定义 SCHEDULER_DEFINATION。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: SCHEDULER_DEFINATION
+  lines:
+  - 1
+  - 1
+  quote: '#define SCHEDULER_DEFINATION'
+- id: SF-C5-05
+  chains:
+  - C5
+  class: conditional_unresolved
+  statement: '__pick_next_task 用 for_each_class 遍历调度类（位于 #if defined(SCHEDULER_DEFINATION) || !(DEBUG) 块内）。'
+  path: mykernel/sched/scheduler/scheduler.h
+  symbol: __pick_next_task
+  lines:
+  - 258
+  - 258
+  quote: "\t\t\tfor_each_class(class) {"
+- id: SF-C5-06
+  chains:
+  - C5
+  class: conditional_unresolved
+  statement: 对每个类调用其 pick_next_task 钩子，非 NULL 即返回。
+  path: mykernel/sched/scheduler/scheduler.h
+  symbol: __pick_next_task
+  lines:
+  - 264
+  - 266
+  quote: "\t\t\t\t\tp = class->pick_next_task(rq, prev);\n\t\t\t\t\tif (p)\n\t\t\t\t\t\treturn p;"
+- id: SF-C5-07
+  chains:
+  - C5
+  class: conditional_unresolved
+  statement: 所有类都返回 NULL 时 BUG()。
+  path: mykernel/sched/scheduler/scheduler.h
+  symbol: __pick_next_task
+  lines:
+  - 276
+  - 276
+  quote: "\t\t\tBUG(); /* The idle class should always have a runnable task. */"
+- id: SF-C5-08
+  chains:
+  - C5
+  class: source_fact
+  statement: DEFINE_SCHED_CLASS 把 name##_sched_class 放入 .data.sched_class 段。
+  path: mykernel/sched/scheduler/scheduler_macro.h
+  symbol: DEFINE_SCHED_CLASS
+  lines:
+  - 15
+  - 18
+  quote: "\t#define DEFINE_SCHED_CLASS(name)\t\t\t\t\t\\\n\t\t\tconst sched_class_s name##_sched_class\t\t\\\n\t\t\t\t__aligned(__alignof__(sched_class_s))\t\\\n\t\t\t\t\t__section(\".data.sched_class\")"
+- id: SF-C5-09
+  chains:
+  - C5
+  class: source_fact
+  statement: for_each_class 遍历 __sched_class_highest 到 __sched_class_lowest。
+  path: mykernel/sched/scheduler/scheduler_macro.h
+  symbol: for_each_class
+  lines:
+  - 25
+  - 28
+  quote: "\t#define for_each_class(class)\t\t\t\\\n\t\t\tfor_class_range(class,\t\t\t\\\n\t\t\t\t__sched_class_highest,\t\t\\\n\t\t\t\t\t__sched_class_lowest)"
+- id: SF-C5-10
+  chains:
+  - C5
+  class: source_fact
+  statement: 链接脚本在 .data.sched_class 段前后定义两个边界符号。
+  path: mykernel/arch/x86_64/kernel.lds
+  symbol: .data.sched_class
+  lines:
+  - 63
+  - 67
+  quote: "\t.data.sched_class ALIGN(8) : AT(ADDR(.data.sched_class) - __START_KERNEL_map)\n\t{\n\t\t__sched_class_highest = .;\n\t\tKEEP(*(.data.sched_class))\n\t\t__sched_class_lowest = .;"
+- id: SF-C5-11
+  chains:
+  - C5
+  class: source_fact
+  statement: myos_rt 类只填 yield_task 与 pick_next_task 两个钩子。
+  path: mykernel/sched/scheduler/myos_rt.c
+  symbol: DEFINE_SCHED_CLASS(myos_rt)
+  lines:
+  - 65
+  - 68
+  quote: "DEFINE_SCHED_CLASS(myos_rt) = {\n\t.yield_task\t\t\t= yield_task_fair_myos,\n\t.pick_next_task\t\t= pick_next_task_myos,\n};"
+- id: SF-C5-12
+  chains:
+  - C5
+  class: source_fact
+  statement: sched_yield 系统调用经 current->sched_class 调 yield_task（myos_rt 中为 resched_curr）。
+  path: mykernel/sched/syscall.c
+  symbol: MYOS_SYSCALL_DEFINE0
+  lines:
+  - 32
+  - 32
+  quote: "\t\tcurrent->sched_class->yield_task(rq);"
+- id: SF-C5-13
+  chains:
+  - C5
+  class: source_fact
+  statement: resched_curr 对本 CPU 置 need_resched 标志。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: resched_curr
+  lines:
+  - 744
+  - 747
+  quote: "\tif (cpu == smp_processor_id()) {\n\t\tset_tsk_need_resched(curr);\n\t\tset_preempt_need_resched();\n\t\treturn;"
+- id: SF-C5-14
+  chains:
+  - C5
+  class: source_fact
+  statement: 每次异常/硬件中断处理之后，若不在原子上下文就调用 schedule()。
+  path: mykernel/arch/x86_64/myos/interrupt.c
+  symbol: excep_hwint_context
+  lines:
+  - 128
+  - 129
+  quote: "\tif (!in_atomic())\n\t\tschedule();"
+- id: SF-C5-15
+  chains:
+  - C5
+  - ACC
+  class: source_fact
+  statement: HPET 中断处理：jiffies++ 后再 do_timer(1)；不置 need_resched。
+  path: mykernel/arch/x86_64/kernel/hpet.c
+  symbol: HPET_handler
+  lines:
+  - 527
+  - 528
+  quote: "\tjiffies++;\n\tdo_timer(1);"
+- id: SF-C5-16
+  chains:
+  - C5
+  class: source_fact
+  statement: prev != next 时才计切换次数并进入切换。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1124
+  - 1125
+  quote: "\tif (likely(prev != next)) {\n\t\trq->nr_switches++;"
+- id: SF-C5-17
+  chains:
+  - C5
+  class: source_fact
+  statement: __schedule 调用 context_switch。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1162
+  - 1162
+  quote: "\t\trq = context_switch(rq, prev, next, &rf);"
+- id: SF-C5-18
+  chains:
+  - C5
+  class: source_fact
+  statement: 架构切换函数把每 CPU current_task 写为 next。
+  path: mykernel/arch/x86_64/sched/context/process64_arch.c
+  symbol: __switch_to
+  lines:
+  - 380
+  - 380
+  quote: "\t*this_cpu_ptr(&pcpu_hot.current_task) = next_p;"
+- id: SF-C5-19
+  chains:
+  - C5
+  class: conditional_unresolved
+  statement: __schedule_loop 在 need_resched() 为真时重复 __schedule。
+  path: mykernel/sched/scheduler/scheduler.h
+  symbol: __schedule_loop
+  lines:
+  - 282
+  - 286
+  quote: "\t\t\tdo {\n\t\t\t\tpreempt_disable();\n\t\t\t\t__schedule(sched_mode);\n\t\t\t\tsched_preempt_enable_no_resched();\n\t\t\t} while (need_resched());"
+- id: SF-C5-20
+  chains:
+  - C5
+  - ACC
+  class: source_fact
+  statement: __schedule 在调用 pick_next_task 之前关闭本地中断。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1041
+  - 1041
+  quote: "\tlocal_irq_disable();"
+- id: SF-C5-21
+  chains:
+  - C5
+  - ACC
+  class: source_fact
+  statement: __schedule 结束前重新开启本地中断。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1169
+  - 1169
+  quote: "\tlocal_irq_enable();"
+- id: SF-C5-22
+  chains:
+  - C5
+  class: source_fact
+  statement: need_resched() 读取 current 的 TIF_NEED_RESCHED 线程标志。
+  path: mykernel/sched/task/task_macro.h
+  symbol: need_resched
+  lines:
+  - 14
+  - 15
+  quote: "\t#define need_resched()\t\\\n\t\t\t\ttest_tsk_need_resched(current)"
+- id: SF-C5-23
+  chains:
+  - C5
+  class: conditional_unresolved
+  statement: set_preempt_need_resched 只改 preempt 计数中的 PREEMPT_NEED_RESCHED 位，不写 TIF 标志。
+  path: mykernel/arch/x86_64/sched/preempt/preempt_arch.h
+  symbol: set_preempt_need_resched
+  lines:
+  - 81
+  - 82
+  quote: "\t\tset_preempt_need_resched(void) {\n\t\t\t__preempt_count_ref &= ~PREEMPT_NEED_RESCHED;"
+- id: SF-C5-24
+  chains:
+  - C5
+  class: source_fact
+  statement: 外部中断公共路径在调用 excep_hwint_context 之前执行 sti：中断后的 schedule() 在开中断状态下开始，直到 __schedule 内才关中断。
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: sa_entintr_retp
+  lines:
+  - 315
+  - 317
+  quote: "\tsti\n\n\tcallq \t\texcep_hwint_context"
+- id: SF-C5-25
+  chains:
+  - C5
+  class: source_fact
+  statement: 异常向量桩同样压入向量号后跳到 sa_entintr_retp（与外部中断共用 excep_hwint_context → schedule() 尾部；IDT 门安装未读）。
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: idt_handler_array
+  lines:
+  - 342
+  - 343
+  quote: "\tpushq\t\t$vector\t\t# 72(%rsp) Vector number\n\tjmp\t\t\tsa_entintr_retp"
+- id: SF-C5-26
+  chains:
+  - C5
+  - C2
+  class: source_fact
+  statement: 新任务第一次被切入时经 ret_from_fork_asm 调用 ret_from_fork，不回到 __schedule 的尾部。
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: ret_from_fork_asm
+  lines:
+  - 272
+  - 272
+  quote: "\tcall\t\tret_from_fork\t\t\t/* rdi: 'prev' task parameter */"
+- id: SF-C5-27
+  chains:
+  - C5
+  class: source_fact
+  statement: 每 CPU 的 preempt_count 静态初值为 INIT_PREEMPT_COUNT。
+  path: mykernel/arch/x86_64/smp/percpu_area.c
+  symbol: pcpu_hot
+  lines:
+  - 17
+  - 17
+  quote: "\t.preempt_count\t= INIT_PREEMPT_COUNT,"
+- id: SF-C5-28
+  chains:
+  - C5
+  class: source_fact
+  statement: INIT_PREEMPT_COUNT 定义为 PREEMPT_OFFSET（非 0：启动时 in_atomic() 为真，此后在哪里递减未追踪）。
+  path: mykernel/sched/scheduler/preempt_const.h
+  symbol: INIT_PREEMPT_COUNT
+  lines:
+  - 56
+  - 56
+  quote: "\t#define INIT_PREEMPT_COUNT\t\tPREEMPT_OFFSET"
+- id: SF-C5-29
+  chains:
+  - C5
+  class: conditional_unresolved
+  statement: 对 class->pick_next_task 的非空检查是注释，调用是无条件的。
+  path: mykernel/sched/scheduler/scheduler.h
+  symbol: __pick_next_task
+  lines:
+  - 263
+  - 264
+  quote: "\t\t\t\t// if (class->pick_next_task) {\n\t\t\t\t\tp = class->pick_next_task(rq, prev);"
+- id: SF-C5-30
+  chains:
+  - C5
+  - ACC
+  class: source_fact
+  statement: __schedule 在 pick 之后才清除 prev 的 need_resched（TIF）与 preempt 位——即使没有切换。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1118
+  - 1119
+  quote: "\tclear_tsk_need_resched(prev);\n\tclear_preempt_need_resched();"
+- id: SF-ACC-01
+  chains:
+  - ACC
+  class: source_fact
+  statement: do_timer 把 jiffies_64 加上 ticks。
+  path: mykernel/time/timekeeping/timekeeping.c
+  symbol: do_timer
+  lines:
+  - 270
+  - 273
+  quote: "void do_timer(ulong ticks)\n{\n\tjiffies_64 += ticks;\n}"
+- id: SF-ACC-02
+  chains:
+  - ACC
+  class: source_fact
+  statement: 链接脚本令 jiffies 与 jiffies_64 同址。
+  path: mykernel/arch/x86_64/kernel.lds
+  symbol: jiffies
+  lines:
+  - 17
+  - 17
+  quote: jiffies = jiffies_64;
+- id: SF-ACC-03
+  chains:
+  - ACC
+  class: source_fact
+  statement: jiffies_64 初值为 INITIAL_JIFFIES。
+  path: mykernel/time/timer/timer.c
+  symbol: jiffies_64
+  lines:
+  - 38
+  - 38
+  quote: __visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;
+- id: SF-ACC-04
+  chains:
+  - ACC
+  class: declaration_or_comment
+  statement: rt.time_slice 为 uint；run_list 与 time_slice 是 sched_rt_entity 仅有的活动成员。
+  path: mykernel/sched/scheduler/scheduler_types.h
+  symbol: struct sched_rt_entity
+  lines:
+  - 42
+  - 46
+  quote: "\tstruct sched_rt_entity {\n\t\tList_s\t\trun_list;\n\t\t// unsigned long timeout;\n\t\t// unsigned long watchdog_stamp;\n\t\tuint\t\ttime_slice;"
+- id: SF-ACC-05
+  chains:
+  - ACC
+  class: source_fact
+  statement: __schedule 的切换计数指向 prev->nivcsw（仅计数，不计时）。
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: __schedule
+  lines:
+  - 1069
+  - 1069
+  quote: "\tswitch_count = &prev->nivcsw;"
+- id: SF-ACC-06
+  chains:
+  - ACC
+  class: declaration_or_comment
+  statement: jiffies 声明为 ulong volatile（x86_64 上与 u64 的 jiffies_64 同宽）。
+  path: mykernel/time/systick/systick_api.h
+  symbol: jiffies
+  lines:
+  - 25
+  - 25
+  quote: "\textern ulong volatile __cacheline_aligned_in_smp __jiffy_arch_data jiffies;"
+- id: SF-ACC-07
+  chains:
+  - ACC
+  class: source_fact
+  statement: RR_TIMESLICE 定义为 100 * HZ / 1000。
+  path: mykernel/sched/runqueue/runqueue_const.h
+  symbol: RR_TIMESLICE
+  lines:
+  - 10
+  - 10
+  quote: "\t#define RR_TIMESLICE\t\t\t(100 * HZ / 1000)"
+- id: SF-ACC-08
+  chains:
+  - ACC
+  class: source_fact
+  statement: HZ 定义为 1000。
+  path: mykernel/include/linux/kernel/asm-generic/param.h
+  symbol: HZ
+  lines:
+  - 9
+  - 9
+  quote: "\t#define HZ\t\t\t\t1000\t\t/* Internal kernel timer frequency */"
+- id: SF-ACC-09
+  chains:
+  - ACC
+  class: source_fact
+  statement: INITIAL_JIFFIES 定义为 (ulong)(uint)(-300*HZ)。
+  path: mykernel/time/systick/systick_const.h
+  symbol: INITIAL_JIFFIES
+  lines:
+  - 69
+  - 69
+  quote: "\t#define INITIAL_JIFFIES ((ulong)(uint) (-300*HZ))"
+- id: SF-LST-01
+  chains:
+  - LST
+  class: conditional_unresolved
+  statement: 'list 原语定义位于 #if defined(LIST_DEFINATION) || !(DEBUG) 块内。'
+  path: mykernel/lib/list/double_list.h
+  symbol: LIST_DEFINATION
+  lines:
+  - 138
+  - 138
+  quote: "\t#if defined(LIST_DEFINATION) || !(DEBUG)"
+- id: SF-LST-02
+  chains:
+  - LST
+  class: source_fact
+  statement: __list_add_valid 在邻居为空、邻接关系不一致或新节点等于前/后邻居时原地无限自旋。
+  path: mykernel/lib/list/double_list.h
+  symbol: __list_add_valid
+  lines:
+  - 163
+  - 165
+  quote: "\t\t\twhile ((prev == NULL) || (next == NULL) ||\n\t\t\t\t\t(next->prev != prev) || (prev->next != next) ||\n\t\t\t\t\t(new == prev || new == next));"
+- id: SF-LST-03
+  chains:
+  - LST
+  class: source_fact
+  statement: __list_add_between 改写四个链接。
+  path: mykernel/lib/list/double_list.h
+  symbol: __list_add_between
+  lines:
+  - 193
+  - 196
+  quote: "\t\t\tnext->prev = new;\n\t\t\tnew->next = next;\n\t\t\tnew->prev = prev;\n\t\t\tWRITE_ONCE(prev->next, new);"
+- id: SF-LST-04
+  chains:
+  - LST
+  class: source_fact
+  statement: list_add_to_next 把新节点放在 head 之后。
+  path: mykernel/lib/list/double_list.h
+  symbol: list_add_to_next
+  lines:
+  - 208
+  - 209
+  quote: "\t\tlist_add_to_next(List_s *new, List_s *head) {\n\t\t\t__list_add_between(new, head, head->next);"
+- id: SF-LST-05
+  chains:
+  - LST
+  class: source_fact
+  statement: list_add_to_prev 把新节点放在 head 之前。
+  path: mykernel/lib/list/double_list.h
+  symbol: list_add_to_prev
+  lines:
+  - 221
+  - 222
+  quote: "\t\tlist_add_to_prev(List_s *new, List_s *head) {\n\t\t\t__list_add_between(new, head->prev, head);"
+- id: SF-LST-06
+  chains:
+  - LST
+  class: source_fact
+  statement: list_del_init 摘下节点后把它重新自环。
+  path: mykernel/lib/list/double_list.h
+  symbol: list_del_init
+  lines:
+  - 280
+  - 282
+  quote: "\t\tlist_del_init(List_s *entry) {\n\t\t\t__list_del_entry(entry);\n\t\t\tINIT_LIST_HEAD(entry);"
+- id: SF-LST-07
+  chains:
+  - LST
+  class: source_fact
+  statement: list_header_contains 从 anchor 遍历整环查找节点。
+  path: mykernel/lib/list/double_list.h
+  symbol: list_header_contains
+  lines:
+  - 637
+  - 640
+  quote: "\t\t\tlist_header_foreach(tmp, lhdr_p) {\n\t\t\t\tif (tmp == l_p)\n\t\t\t\t\treturn true;\n\t\t\t}"
+- id: SF-LST-08
+  chains:
+  - LST
+  class: source_fact
+  statement: list_header_add_to_head：插到 anchor 之后并 count++（G06）。
+  path: mykernel/lib/list/double_list.h
+  symbol: list_header_add_to_head
+  lines:
+  - 646
+  - 648
+  quote: "\t\tlist_header_add_to_head(List_hdr_s *lhdr_p, List_s *l_p) {\n\t\t\tlist_add_to_next(l_p, &lhdr_p->anchor);\n\t\t\tlhdr_p->count++;"
+- id: SF-LST-09
+  chains:
+  - LST
+  class: source_fact
+  statement: list_header_remove_head：count > 0 时摘下 anchor.next、count--，否则返回 NULL。
+  path: mykernel/lib/list/double_list.h
+  symbol: list_header_remove_head
+  lines:
+  - 653
+  - 657
+  quote: "\t\t\tif (lhdr_p->count > 0) {\n\t\t\t\tList_s *ret_val = lhdr_p->anchor.next;\n\t\t\t\tlist_del_init(ret_val);\n\t\t\t\tlhdr_p->count--;\n\t\t\t\treturn ret_val;"
+- id: SF-LST-10
+  chains:
+  - LST
+  class: source_fact
+  statement: list_header_add_to_tail：插到 anchor 之前并 count++。
+  path: mykernel/lib/list/double_list.h
+  symbol: list_header_add_to_tail
+  lines:
+  - 664
+  - 666
+  quote: "\t\tlist_header_add_to_tail(List_hdr_s *lhdr_p, List_s *l_p) {\n\t\t\tlist_add_to_prev(l_p, &lhdr_p->anchor);\n\t\t\tlhdr_p->count++;"
+- id: SF-LST-11
+  chains:
+  - LST
+  class: source_fact
+  statement: list_header_foreach 以 anchor 为起止遍历。
+  path: mykernel/lib/list/double_list_macro.h
+  symbol: list_header_foreach
+  lines:
+  - 340
+  - 341
+  quote: "\t#define list_header_foreach(pos, lhdr)\t\\\n\t\t\t\tlist_for_each(pos, &((lhdr)->anchor))"
+- id: SF-LST-13
+  chains:
+  - LST
+  class: declaration_or_comment
+  statement: List_hdr_s 只有 anchor 与 ulong count 两个成员（count 无符号：count <= 0 即 count == 0）。
+  path: mykernel/lib/list/double_list_types.h
+  symbol: struct list_hdr
+  lines:
+  - 13
+  - 16
+  quote: "\tstruct list_hdr {\n\t\tList_s\t\tanchor;\n\t\tulong\t\tcount;\n\t};"
+- id: SF-LST-14
+  chains:
+  - LST
+  class: conditional_unresolved
+  statement: 现有原语 list_is_empty_entry 以 head->next == head 做 O(1) 自环判定（list_empty 是其宏别名）。
+  path: mykernel/lib/list/double_list.h
+  symbol: list_is_empty_entry
+  lines:
+  - 430
+  - 431
+  quote: "\t\tlist_is_empty_entry(const List_s *head) {\n\t\t\treturn READ_ONCE(head->next) == head;"
+- id: SF-C1-26
+  chains:
+  - C1
+  - C3
+  class: source_fact
+  statement: cpu_rq(cpu) 定义为 &per_cpu(runqueues, (cpu))：init_idle 用的 cpu_rq 与 wake_up_new_task/set_task_cpu 用的 per_cpu(runqueues, …) 是同一对象族。
+  path: mykernel/sched/runqueue/runqueue_macro.h
+  symbol: cpu_rq
+  lines:
+  - 88
+  - 88
+  quote: "\t#define cpu_rq(cpu)\t\t\t(&per_cpu(runqueues, (cpu)))"
+- id: SF-LST-12
+  chains:
+  - LST
+  class: source_fact
+  statement: double_list.c 第 1 行定义 LIST_DEFINATION。
+  path: mykernel/lib/list/double_list.c
+  symbol: LIST_DEFINATION
+  lines:
+  - 1
+  - 1
+  quote: '#define LIST_DEFINATION'
+call_edges:
+- edge: start_kernel -> sched_init -> init_idle
+  kind: direct_call
+  evidence:
+  - SF-C1-06
+  - SF-C1-07
+- edge: rest_init -> kernel_thread(x2) -> kernel_clone
+  kind: direct_call
+  evidence:
+  - SF-C1-15
+  - SF-C1-16
+  - SF-C2-01
+- edge: kernel_clone -> copy_process -> dup_task_struct / sched_fork -> __sched_fork
+  kind: direct_call
+  evidence:
+  - SF-C2-02
+  - SF-C2-03
+  - SF-C2-06
+  - SF-C2-07
+- edge: kernel_clone -> wake_up_new_task -> list_header_add_to_head
+  kind: direct_call
+  evidence:
+  - SF-C2-13
+  - SF-C2-16
+- edge: wake_up_process / wake_up_state -> try_to_wake_up -> select_task_rq, set_task_cpu -> list_header_contains, list_header_add_to_head
+  kind: direct_call
+  evidence:
+  - SF-C3-09
+  - SF-C3-10
+  - SF-C3-16
+  - SF-C3-18
+  - SF-C3-22
+- edge: swake_up_locked -> try_to_wake_up
+  kind: direct_call
+  evidence:
+  - SF-C3-08
+- edge: 12 active wake_up_process call lines (NVMe_transfer, ATA_disk_transfer, XHCI_transfer, devtmpfs_submit_req, wakeup_softirqd, kick_pool, create_worker, __up, kthread_run-style macro, __kthread_create_on_node, free_pid, process_timeout)
+  kind: direct_call_return_value_discarded
+  evidence:
+  - records/d01_index.json E03
+  - SF-C3-06
+  - SF-C3-07
+- edge: signal_wake_up_state -> wake_up_state (uses return value) -> kick_process
+  kind: direct_call
+  evidence:
+  - SF-C3-24
+  - SF-C3-25
+- edge: excep_hwint_context -> schedule (after every exception/hardware interrupt when !in_atomic())
+  kind: direct_call
+  evidence:
+  - SF-C5-14
+- edge: schedule -> __schedule_loop -> __schedule; schedule_idle / do_task_dead / preempt_schedule_* -> __schedule
+  kind: direct_call
+  evidence:
+  - SF-C3-02
+  - SF-C5-19
+  - SF-C1-20
+  - records/d01_index.json E09
+- edge: __schedule -> pick_next_task (macro) -> __pick_next_task -> for_each_class -> class->pick_next_task
+  kind: macro_alias_then_function_pointer
+  evidence:
+  - SF-C5-02
+  - SF-C5-03
+  - SF-C5-05
+  - SF-C5-06
+- edge: myos_rt_sched_class.pick_next_task = pick_next_task_myos (in section .data.sched_class)
+  kind: designated_initializer_in_linker_section
+  evidence:
+  - SF-C5-08
+  - SF-C5-10
+  - SF-C5-11
+- edge: __schedule -> context_switch -> switch_to -> __switch_to writes pcpu_hot.current_task
+  kind: direct_call_then_macro
+  evidence:
+  - SF-C5-17
+  - SF-C5-18
+  limit: 'switch_to 宏到 __switch_to 的展开链未逐段引用（定义位置见 d01 definitions: switch_to）'
+- edge: sched_yield syscall -> current->sched_class->yield_task (= yield_task_fair_myos) -> resched_curr
+  kind: function_pointer
+  evidence:
+  - SF-C5-12
+  - SF-C5-11
+  - SF-C5-13
+- edge: HPET_handler -> jiffies++, do_timer(1) -> jiffies_64 += 1
+  kind: direct_call
+  evidence:
+  - SF-C5-15
+  - SF-ACC-01
+aliases_and_conditions:
+- kind: local_alias
+  text: myos_rt.c:7 myos_rq = &rq->myos（pick_next_task_myos 内 running_lhdr/last_jiffies 均经此别名访问）
+  source: records/d01_index.json aliases.local
+- kind: local_alias
+  text: myos_rt.c:10 rt = &curr_task->rt（idle 尾插与非 idle 插回都经 &rt->run_list）
+  source: SF-C4-02
+- kind: local_alias
+  text: scheduler_core.c:177 target_rq = &(per_cpu(runqueues, new_cpu))；688 rq = &(per_cpu(runqueues, 0))
+  source: SF-C3-22, SF-C2-14
+- kind: macro_alias
+  text: 'scheduler_core.c:976 #define pick_next_task __pick_next_task'
+  source: SF-C5-02
+- kind: macro_alias
+  text: double_list.h:127-128 list_add -> list_add_to_next；list_add_tail -> list_add_to_prev
+  source: records/d01_index.json aliases.macro
+- kind: macro_alias
+  text: runqueue_macro.h:69,85 set_current_state 与 set_special_state 都展开为 __set_current_state
+  source: SF-C3-01
+- kind: linker_alias
+  text: kernel.lds:17 jiffies = jiffies_64（同一地址）
+  source: SF-ACC-02
+- kind: fixed_cursor
+  text: myos_rt.c:38 tmp_rt 只在循环前由 tmp_list 算一次，此后不随游标更新（W01 的来源）
+  source: SF-C4-08
+- kind: macro_alias
+  text: current → get_current() → 每 CPU pcpu_hot.current_task；另有独立的每 CPU 变量 current_task（percpu_area.c:14），二者不是同一对象
+  source: SF-C1-05, SF-C5-18
+- kind: macro_alias
+  text: runqueue_macro.h:88 cpu_rq(cpu) = &per_cpu(runqueues, (cpu))：init_idle、wake_up_new_task、set_task_cpu 用的是同一族对象
+  source: SF-C1-26
+- kind: macro_alias
+  text: task_macro.h:14 need_resched() = test_tsk_need_resched(current)（TIF 标志，不是 preempt 位）
+  source: SF-C5-22
+- kind: call_alias
+  text: wake_up_process、wake_up_state、swake_up_locked 都直接进入 try_to_wake_up
+  source: SF-C3-08, SF-C3-09, SF-C3-10
+- kind: macro_alias
+  text: timer_macro.h:25 del_timer_sync → timer_delete_sync → __timer_delete_sync
+  source: SF-C3-31, SF-C3-32
+- kind: macro_alias
+  text: double_list.h:133 list_empty → list_is_empty_entry（O(1) 自环判定）
+  source: SF-LST-14
+- kind: condition
+  text: 'scheduler.h:45 #if defined(SCHEDULER_DEFINATION) || !(DEBUG)：DEBUG 取决于 CMAKE_BUILD_TYPE（options_flags.cmake 16-23 行）；scheduler_core.c 第 1 行定义 SCHEDULER_DEFINATION，故该文件内两种构建类型都编译这些定义；其他包含者在 DEBUG 构建中只得到 extern 声明。只解析到这一层。'
+  source: SF-C5-04, SF-C5-05
+  status: resolved_for_scheduler_core_c_only
+- kind: condition
+  text: 'double_list.h:138 #if defined(LIST_DEFINATION) || !(DEBUG)：double_list.c 第 1 行定义 LIST_DEFINATION；非 DEBUG 构建中每个包含者得到同一 static inline 正文。注意 PREFIX_STATIC_INLINE 用 #ifndef DEBUG（看是否定义），这里用 !(DEBUG)（看取值）；若 DEBUG 被定义为 0，两者不一致、本结论不适用。cmake 只给 -DDEBUG 或 -DRELEASE，不会出现这种情形。'
+  source: SF-LST-01, SF-LST-12
+  status: resolved_same_body_either_way
+- kind: condition
+  text: INITIAL_JIFFIES 在 systick_const.h:69 与 systick_macro.h:227 各定义一次（正文相同）；哪一个生效未追踪。
+  source: SF-ACC-09
+  status: unresolved_harmless_same_text
+- kind: unresolved
+  text: in_atomic() 在 excep_hwint_context 中的取值（preempt_count 的实际演变）未追踪：中断后 schedule() 是否真正进入，取决于运行期计数。
+  source: SF-C5-14
+  status: unresolved
+chains:
+- chain: C1
+  name: 初始化 / idle（分三步）
+  steps:
+  - step: C1a 初始化
+    entry_and_direct_calls: start_kernel → setup_per_cpu_areas（SF-C1-21）→ sched_init（每 CPU 循环只写 rq->cpu、rq->online，SF-C1-24）→ init_idle(current, smp_processor_id())（SF-C1-07）。
+    state_in_out: init_task 静态 __state = TASK_RUNNING；init_idle 不写 __state。
+    key_in_out: init_task.se.vruntime 静态 -1 → 2^64-1（DV-01）；init_idle 不调 __sched_fork（SF-C1-08）。
+    queue_and_count_ops: INIT_LIST_HEADER_S：count = 0、anchor 自环；idle 不入队。
+    idle_special_handling: init_idle 写 rq->idle = idle、rq->curr = idle、idle->sched_class = &myos_rt_sched_class、on_rq、on_cpu 与 comm；rq->curr 之后由 pick 与 __schedule 改写。直接文本中 rq->idle 的读者只有 pick 的三处比较；idle 以 rq->idle 身份（不是键）被识别。
+    caller_visible_return: void。
+    evidence:
+    - SF-C1-01
+    - SF-C1-02
+    - SF-C1-03
+    - SF-C1-04
+    - SF-C1-05
+    - SF-C1-06
+    - SF-C1-07
+    - SF-C1-08
+    - SF-C1-09
+    - SF-C1-10
+    - SF-C1-11
+    - SF-C1-12
+    - SF-C1-13
+    - SF-C1-14
+    - SF-C1-21
+    - SF-C1-22
+    - SF-C1-23
+    - SF-C1-24
+    - SF-C1-26
+    coverage_limit: current 是否就是 init_task 依赖“此前没有 __switch_to”的前提；init_task 静态初始化器中没有 .sched_class（直接文本），init_idle 之前它的 sched_class 为静态零值（推导，DV-24）。last_jiffies 无显式初始化（DV-17）。只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+  - step: C1b 首次选择（rest_init）
+    entry_and_direct_calls: rest_init：kernel_thread(kernel_init) → kernel_thread(kthreadd)（各经 C2 首次入队）→ schedule_preempt_disabled() → schedule → __schedule_loop → __schedule → pick（SF-C1-15/16/17）。
+    state_in_out: idle 仍为 RUNNING；首次切换时被尾插（需 RUNNING，SF-C3-04）。
+    key_in_out: 两个新任务键 0；idle 键 2^64-1。
+    queue_and_count_ops: INFERRED：若两次创建之间没有出队，队列为 kthreadd, kernel_init（后入者在前，DV-04）；首次切换摘下 kthreadd、尾插 idle。
+    idle_special_handling: current == rq->idle 使切换条件成立（仍需 count > 0）；idle 不计费。
+    caller_visible_return: schedule 无返回值；kernel_thread 返回 pid，rest_init 不检查负值（SF-C2-22）。
+    evidence:
+    - SF-C1-15
+    - SF-C1-16
+    - SF-C1-17
+    - SF-C2-16
+    - SF-C4-04
+    - SF-C4-07
+    - SF-C3-04
+    coverage_limit: 第一次切换是否更早由中断后的 schedule() 触发取决于 in_atomic（GAP-02），DV-04 只给条件推导。只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+  - step: C1c idle 循环与出入队
+    entry_and_direct_calls: cpu_startup_entry → while (1) do_idle → set_preempt_need_resched（只改 preempt 位）→ schedule_idle → __schedule（SF-C1-18/19/20/25）。
+    state_in_out: idle 专用文本不写非 RUNNING 状态；通用睡眠写法是否作用于 idle 未追踪（GAP-07）。
+    key_in_out: 不计费，键保持 2^64-1。
+    queue_and_count_ops: idle 每轮都进入 pick：count > 0 时被切出并尾插（count 先 - 1 再 + 1）；count == 0 时 pick 返回 idle、不动 last_jiffies。idle 被选回时经 remove_head 摘下并自环（SF-LST-09、SF-LST-06）。
+    idle_special_handling: 直接文本中 rq->idle 的读者只有 pick 的三处比较（不是全称结论）。
+    caller_visible_return: cpu_startup_entry 不返回。
+    evidence:
+    - SF-C1-18
+    - SF-C1-19
+    - SF-C1-20
+    - SF-C1-25
+    - SF-C5-22
+    - SF-C5-23
+    - SF-LST-06
+    - SF-LST-09
+    coverage_limit: 只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+- chain: C2
+  name: 新任务首次入队
+  entry_and_direct_calls: kernel_thread / fork 系统调用体 → kernel_clone → copy_process(NULL, trace, NUMA_NO_NODE, args) → dup_task_struct(current, node) → sched_fork → __sched_fork；copy_process 成功后 kernel_clone → wake_up_new_task → list_header_add_to_head。kthread 接口经 kthreadd → create_kthread → kernel_thread 间接到达；kthread_run 宏随后再调用 wake_up_process（普通唤醒，SF-C2-19；其注释所写的 myos_wake_up_new_task 与活动宏体不符，SF-C2-20）。新 kthread 首次运行即把自己置为 TASK_UNINTERRUPTIBLE（SF-C2-21），之后的入队走 C3b、键为当时累计值。
+  state_in_out: 复制父任务 __state → sched_fork 写 TASK_NEW → wake_up_new_task 写 TASK_RUNNING。
+  key_in_out: 复制父任务 se.vruntime → __sched_fork 无条件写 0；wake_up_new_task 不读写键。rt.time_slice 随结构复制继承父任务（__sched_fork 中的重置被注释）。零键只属于首次入队，不外推到之后的唤醒。 继承来源按调用者不同：rest_init 的 kernel_thread（父为引导 idle）、kthreadd 中的 create_kthread（父为 kthreadd）、fork 系统调用体（父为发起的用户任务）；三者继承的 sched_class、time_slice 与 thread_info（含 task_cpu 读取的 cpu 字段，SF-C3-28）各取其父。
+  queue_and_count_ops: __sched_fork 以 INIT_LIST_S 使节点自环；wake_up_new_task 固定取 CPU0 队列，不检查 contains，直接头插（count + 1）。与 set_task_cpu 的“先 contains 再头插”不同。本函数内的加锁行是注释（SF-C2-14 中的 raw_spin_lock_irqsave），链接写入与 count++ 无锁。
+  idle_special_handling: 无 idle 判断。父任务为 idle 时，子任务继承 sched_class 与 time_slice，键被置 0（不继承 2^64-1）。
+  caller_visible_return: wake_up_new_task 为 void；kernel_clone 成功时在头插之后返回 pid 数值，copy_process 失败时返回错误码且不入队。rest_init 不检查负值即按 pid 查任务并解引用（SF-C2-22）。
+  evidence:
+  - SF-C2-01
+  - SF-C2-02
+  - SF-C2-03
+  - SF-C2-04
+  - SF-C2-05
+  - SF-C2-06
+  - SF-C2-07
+  - SF-C2-08
+  - SF-C2-09
+  - SF-C2-10
+  - SF-C2-11
+  - SF-C2-12
+  - SF-C2-13
+  - SF-C2-14
+  - SF-C2-15
+  - SF-C2-16
+  - SF-C2-17
+  - SF-C2-18
+  - SF-C2-19
+  - SF-C2-20
+  - SF-C2-21
+  - SF-C2-22
+  coverage_limit: copy_process 中与调度无关的分配/复制步骤未逐行读；别名或 memset 式写入未排除。kernel_clone 的直接调用者按 d01 E20 只有 kernel_thread 与 fork 系统调用体。没有证明从开机真实可达，不覆盖并发。 只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+- chain: C3
+  name: 睡眠后重新唤醒入队（分两步）
+  steps:
+  - step: C3a 睡眠：离开队列
+    entry_and_direct_calls: 离队入口共四类，都落到 pick 中同一道“非 RUNNING 不插回”的门（SF-C3-04；上游区分抢占的条件是注释，SF-C3-36）：(1) 自愿：任务写非 RUNNING（set_current_state 等，SF-C3-01）后 schedule()（SF-C3-02），触发项为 state；(2) 中断/异常后 excep_hwint_context 的 schedule()（!in_atomic() 时，SF-C5-14），触发项为 state 或时间片；(3) preempt_schedule* 的 __schedule(SM_PREEMPT)（sched_mode 在活动文本中不影响 pick）；(4) do_task_dead 写 TASK_DEAD 后直接 __schedule（SF-C3-37）。
+    state_in_out: __state 由任务自己写为非 RUNNING；调度路径不改它。
+    key_in_out: 切换时阻塞 current 仍被计入 used_jiffies（W05）。
+    queue_and_count_ops: __schedule 中按 prev_state 出队的上游代码被注释；离队完全依赖 pick 摘下队首后不把非 RUNNING 的 current 插回（count 只因摘队首 - 1）。
+    idle_special_handling: 规则同样适用于 idle：idle 若以非 RUNNING 被切出也不会插回（V08 的前提）。
+    caller_visible_return: schedule 无返回值。do_task_dead：count > 0 时被切出、不插回但计费；count == 0 时 pick 返回 current、prev == next 不切换，回到 do_task_dead 后执行 BUG()（可达性依赖 V08 的开放问题）。
+    evidence:
+    - SF-C3-01
+    - SF-C3-02
+    - SF-C3-03
+    - SF-C3-04
+    - SF-C3-05
+    - SF-C3-26
+    - SF-C3-27
+    - SF-C3-31
+    - SF-C3-32
+    - SF-C3-33
+    - SF-C3-34
+    - SF-C3-35
+    - SF-C5-14
+    - SF-C3-36
+    - SF-C3-37
+    - SF-C3-38
+    coverage_limit: 只列代表性睡眠写法；全部睡眠点未枚举。在可见行内，schedule_timeout 只有 MAX_SCHEDULE_TIMEOUT 分支调用 schedule()，有限超时分支的 schedule() 被注释（SF-C3-26，DV-19）。count == 0 时 pick 不切换、返回阻塞的 current（V08，可达性依赖 idle 以非 RUNNING 被切出，GAP-07）。 第三种时点见 DV-23：任务写非 RUNNING 之后、检查自身条件之前被中断后的 schedule() 切出。只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+  - step: C3b 普通唤醒：重新入队
+    entry_and_direct_calls: wake_up_process(p) / wake_up_state(p, s) / swake_up_locked → try_to_wake_up → [p == current：只写 TASK_RUNNING] 或 [写 TASK_WAKING → select_task_rq(p, 0) → set_task_cpu(p, 0) → list_header_contains → list_header_add_to_head]。
+    state_in_out: 无状态掩码检查（ttwu_state_match 被注释），state 参数在活动文本中不用：任何状态（含 TASK_NEW、TASK_RUNNING）都被写为 TASK_WAKING 再写 TASK_RUNNING（V05）。
+    key_in_out: 本路径不写 se.vruntime：保持睡前累计值。__sched_fork 的零键不适用于再次唤醒。
+    queue_and_count_ops: set_task_cpu：节点不在 CPU0 队列时头插（count + 1）；已在队列时只写状态（V06）。
+    set_task_cpu_myos_vs_upstream: 上游同名函数只负责 CPU 迁移记账（在本函数中以注释保留：task_cpu 比较、migrate_task_rq、__set_task_cpu）；MyOS2 活动文本改为“写 TASK_RUNNING + 条件头插入队”；活动文本中没有写 task_thread_info(p)->cpu（SF-C3-28，V07 宿主观察元数据不变）。入队是 MyOS2 的副作用，不是上游职责；MyOS2 的 enqueue_task/activate_task 函数体为空或被注释（SF-C3-29/30），所以入队只发生在显式的 list_header_* 调用中。 set_task_cpu 的活动直接调用只有 try_to_wake_up:471（d01 E01）；__set_task_cpu 在 mykernel/ 只有注释命中、没有活动定义（d01 definitions 列为未能定位）。
+    idle_special_handling: 无 idle 判断；唤醒已在队尾的 idle 时 contains 阻止重复。
+    caller_visible_return: success 在活动文本中从未被置非 0 → 恒返回 0。d01 E03 的 12 行 wake_up_process 调用都丢弃返回值；signal_wake_up_state 用返回值 → 总调用 kick_process，而其活动文本只读 task_cpu 到局部变量（无副作用）。
+    evidence:
+    - SF-C3-06
+    - SF-C3-07
+    - SF-C3-08
+    - SF-C3-09
+    - SF-C3-10
+    - SF-C3-11
+    - SF-C3-12
+    - SF-C3-13
+    - SF-C3-14
+    - SF-C3-15
+    - SF-C3-16
+    - SF-C3-17
+    - SF-C3-18
+    - SF-C3-19
+    - SF-C3-20
+    - SF-C3-21
+    - SF-C3-22
+    - SF-C3-23
+    - SF-C3-24
+    - SF-C3-25
+    - SF-C3-28
+    - SF-C3-29
+    - SF-C3-30
+    coverage_limit: 直接调用者只列 d01 文本命中；经回调/函数指针的间接唤醒未排除（GAP-06）。并发唤醒未分析（单 CPU、无并发假设）。 只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+- chain: C2×C3
+  name: 接合处：首次入队前被普通唤醒（TASK_NEW）
+  entry_and_direct_calls: copy_process 返回前已 attach_pid 并挂入任务表（SF-C2-18）→ 若此时有唤醒者对 p 调 try_to_wake_up（无状态检查，SF-C3-14）→ set_task_cpu 头插 → 随后 kernel_clone → wake_up_new_task 再次无检查头插（SF-C2-16）。
+  state_in_out: TASK_NEW → TASK_WAKING → TASK_RUNNING（唤醒）→ TASK_RUNNING（首次入队）。
+  key_in_out: 键 0，不变。
+  queue_and_count_ops: 三种结果（DV-13）：(i) p 仍在队首 → __list_add_valid 因 new == next 自旋；(ii) p 在队中非队首 → 校验通过、环被破坏、count 多 1；(iii) p 已被 pick 取出正在运行 → 运行中的任务被链入环（破坏 I4）。
+  idle_special_handling: 无。
+  caller_visible_return: 无可见错误返回。
+  evidence:
+  - SF-C2-18
+  - SF-C3-14
+  - SF-C3-22
+  - SF-C2-16
+  - SF-LST-02
+  - SF-LST-04
+  coverage_limit: 是否存在这样的唤醒者未确立（GAP-08）；结论是条件性风险，不是已观察到的缺陷。只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+- chain: C4
+  name: 运行后回插（pick_next_task_myos）
+  entry_and_direct_calls: __schedule → pick_next_task（宏）→ __pick_next_task → for_each_class → class->pick_next_task；“段内只有 myos_rt_sched_class，其钩子即 pick_next_task_myos(rq, prev)”是推导（DV-12）。函数以 current 为对象，prev 参数未用。
+  state_in_out: 不写 __state；current 为 RUNNING 才插回。
+  key_in_out: 非 idle 的 current 在插回之后才加 used_jiffies；插回位置按计费前的键（W02、W07 第 1 步）。
+  queue_and_count_ops: 条件成立且 count > 0 时：摘队首（count - 1）；只有 current 仍为 RUNNING 才插回——idle：list_header_add_to_tail（count + 1）；非 idle：比较对象固定为首节点、循环条件先比较键再判 anchor（W01），list_add_to_prev + 手工 count++，位置只能是队首或队尾（DV-18）。
+  idle_special_handling: idle 尾插、不计费（W06）。
+  caller_visible_return: 切换时返回摘下的队首任务。不切换有两条路径：(a) 四个触发条件都不成立（W08 第 1 步）；(b) count == 0（阻塞的 current 也原样返回，V08）。两者都返回 current、不计费、不动 last_jiffies。所有路径都写 rq->curr。
+  evidence:
+  - SF-C4-01
+  - SF-C4-02
+  - SF-C4-03
+  - SF-C4-04
+  - SF-C4-05
+  - SF-C4-06
+  - SF-C4-07
+  - SF-C4-08
+  - SF-C4-09
+  - SF-C4-10
+  - SF-C4-11
+  - SF-C4-12
+  coverage_limit: W01–W08 以宿主进程运行原函数（5078686e8267），不含真实中断/上下文切换；本任务未重跑。 只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+- chain: C5
+  name: 下一任务选取 / 分派
+  entry_and_direct_calls: 触发点：自愿 schedule()（sched_yield、schedule_timeout、守护线程循环等，d01 E18）；每次异常/外部中断之后 excep_hwint_context 的 schedule()（!in_atomic() 时；中断与异常桩都经 sa_entintr_retp，调用前已 sti，SF-C5-24/25；启动时 preempt_count 为 INIT_PREEMPT_COUNT，非 0，SF-C5-27/28）；schedule_idle；do_task_dead；preempt_schedule*（包括 try_to_wake_up 结尾 preempt_enable 可能经 preempt_schedule 进入的宏生成入口，条件依 preempt 计数，未追踪）。__schedule 关本地中断 → prev = rq->curr → pick_next_task 宏 → __pick_next_task → for_each_class 遍历 .data.sched_class 段 → class->pick_next_task。
+  state_in_out: —
+  key_in_out: 选择不读键：返回 list_header_remove_head 的队首（W07 第 2 步选 A25，而 C20 在队）。
+  queue_and_count_ops: 见 C4。
+  idle_special_handling: 段内类的文本命中只有 DEFINE_SCHED_CLASS(myos_rt)（d01 E14）；pick_next_task_myos 至少返回 current，故 BUG() 在“段内只有 myos_rt”的前提下不可达（DV-12）。
+  class_setting: idle 的 sched_class 在 init_idle 设为 &myos_rt_sched_class；其他任务只经 dup_task_struct 的结构复制继承（sched_fork 中的设置被注释）。分派遍历链接段，不读 prev->sched_class；sched_yield 系统调用读 current->sched_class->yield_task。
+  caller_visible_return: next；prev != next 时 nr_switches++、rq->curr 再写、context_switch → __switch_to 写每 CPU current_task。
+  trigger_note: pick 读的 need_resched() 是 current 的 TIF_NEED_RESCHED（SF-C5-22），直接文本中只有 resched_curr 设置它，其唯一活动直接调用者是 yield_task_fair_myos（sched_yield）。do_idle 的 set_preempt_need_resched 只改 preempt 计数位（SF-C5-23），不使 need_resched() 为真；HPET_handler 不设任何标志。时间片到期靠“中断后 schedule() → pick 中 used_jiffies >= time_slice”判定。唤醒路径不调用 resched_curr，被唤醒者的头插优先只在下一次 pick 进入切换分支时兑现，不是立即抢占。 各入口的触发项：sched_yield 靠 need_resched（经 resched_curr）；中断后的 schedule() 靠时间片或 state；schedule_idle 靠 current == idle；阻塞靠 state。__schedule 在 pick 之后无条件清除 need_resched（SF-C5-30）：count == 0 时 yield 的请求被消耗而没有发生切换。__pick_next_task 对钩子的非空检查是注释（SF-C5-29）。
+  evidence:
+  - SF-C5-01
+  - SF-C5-02
+  - SF-C5-03
+  - SF-C5-04
+  - SF-C5-05
+  - SF-C5-06
+  - SF-C5-07
+  - SF-C5-08
+  - SF-C5-09
+  - SF-C5-10
+  - SF-C5-11
+  - SF-C5-12
+  - SF-C5-13
+  - SF-C5-14
+  - SF-C5-15
+  - SF-C5-16
+  - SF-C5-17
+  - SF-C5-18
+  - SF-C5-19
+  - SF-C5-20
+  - SF-C5-21
+  - SF-C5-22
+  - SF-C5-23
+  - SF-C5-24
+  - SF-C5-25
+  - SF-C5-26
+  - SF-C5-27
+  - SF-C5-28
+  - SF-C1-10
+  - SF-C5-29
+  - SF-C5-30
+  coverage_limit: 链接段内容只按文本推断，未运行链接器（GAP-04）；switch_to 宏展开未逐段引用（GAP-03）；in_atomic 的演变未追踪（GAP-02）。新任务第一次被切入时经 ret_from_fork_asm → ret_from_fork，不回到 __schedule 尾部（SF-C5-26），其开中断/计数恢复路径未追踪。只到局部直接调用链，不宣称从开机可达所有状态。 只覆盖 CPU0：CPU≥1 的队列在直接文本中既无初始化也无入队者（函数指针、别名不排除，DV-16）；SMP 不在范围内。
+  switch_in_kinds: 两种切入：(a) 切回曾被切出的任务——__switch_to 返回到它当初的 __schedule 尾部，执行 local_irq_enable（SF-C5-21）；(b) 首次切入新任务——经 ret_from_fork_asm 调 ret_from_fork，不回到 __schedule 尾部（SF-C5-26），其开中断与计数恢复路径未追踪。
+accounting:
+  last_jiffies:
+    writers:
+    - SF-C4-11（仅 pick 切换块：= jiffies）
+    readers:
+    - SF-C4-03（pick 开头：used_jiffies = jiffies - last_jiffies）
+    initialisation: 无显式写入（SF-C1-13、SF-C1-14）；初值取决于每 CPU 区段复制（GAP-01）。DV-02：第一次切换必定是 idle 切出、不计费，因此初值不进入任何非 idle 任务的计费。
+    d01: F02：3 行命中（1 声明、2 活动，均在 myos_rt.c）
+  se_vruntime_writers:
+  - SF-C1-03 init_task 静态 -1（u64 → 2^64-1）
+  - SF-C2-05 dup_task_struct 整体复制父值
+  - SF-C2-11 __sched_fork 置 0（仅 fork 路径）
+  - SF-C4-10 pick 切换时对非 idle current 累加 used_jiffies（在插回之后）
+  se_vruntime_readers:
+  - SF-C4-08 非 idle 插回比较（只与首节点比较）
+  se_vruntime_note: d01 F03 只有这些直接文本命中；别名、指针或 memcpy 式写入不排除。唤醒路径（C3b）不写键。
+  rt_time_slice: init_task 静态 RR_TIMESLICE = 100 * HZ / 1000 = 100（HZ = 1000，SF-ACC-07/08）；新任务复制继承（SF-C2-12：重置被注释）；只在 pick 条件中读取（SF-C4-04）；无递减或重填。
+  jiffies: HPET_handler 先 jiffies++ 再 do_timer(1)（SF-C5-15），do_timer 写 jiffies_64 += ticks（SF-ACC-01），链接脚本令 jiffies 与 jiffies_64 同址（SF-ACC-02），jiffies 声明为 ulong（SF-ACC-06）→ DV-10：每次 HPET 中断计数器加 2。初值 INITIAL_JIFFIES = (ulong)(uint)(-300*HZ)（SF-ACC-03/09）。 jiffies 的直接文本写入只有 HPET_handler 与 do_timer（d01 F09 与 jiffies 命中；别名、汇编不排除）；“每次中断 +2”只是推导，HPET 是否真正投递见 GAP-09。
+  conservation: DV-20：相邻两次切换之间的非 idle 时间恰好计入一次，idle 时间按设计丢弃；把计费前移到定位之前不改变计费量。
+  other_active_accounting_points: d01 F10（sum_exec_runtime/exec_start/prev_sum_exec_runtime）10 行全部是注释或声明；F11 只有 __schedule 中的 nr_switches++ 与 nivcsw 计数（只计次数）。未见其他活动的调度时间记账点（限直接文本）。
+  preserved_normal_behaviours:
+  - witness: W05
+    behaviour: 阻塞的 current 不插回，但已用的 10 仍计入（A 15 → 25，队列 C20,D30,I）
+    source: SF-C3-04（只插回 RUNNING）+ SF-C4-10（计费不看 state，只看是否 idle）
+  - witness: W06
+    behaviour: idle 尾插、不计费（I 的键 7 不变）
+    source: SF-C4-07 + SF-C4-10
+  - witness: W07 第 2 步
+    behaviour: 同一 jiffies 的第二次切换不重复计费（used 0）
+    source: SF-C4-11（last_jiffies 在第 1 步切换时置为 110）+ SF-C4-03
+  - witness: W08
+    behaviour: 第一次不切换：队列、键、last_jiffies 都不变；第二次切换才计入累计的 5
+    source: SF-C4-04（条件不成立时整个块跳过）+ SF-C4-11（last_jiffies 只在块内更新）
+  - witness: W03
+    behaviour: 零增量回插位置正确（A15 在 C20 前）
+    source: SF-C4-08/09（首次比较 15 > 20 不成立）
+  - witness: W04
+    behaviour: 相等键：A15 + 5 = 20 插在 C20 前，P 成立；并列时新插回者在前
+    source: SF-C4-08（严格大于才前进）
+  switch_paths:
+  - path: 进入切换块
+    effect: 非 idle 的 current 计费（不论 state）；基线 last_jiffies 重置
+    witness:
+    - W05
+    - W06
+    - W07
+  - path: count > 0 但四个触发条件都不成立
+    effect: 不计费、不动基线、返回 current
+    witness:
+    - W08 第 1 步
+  - path: count == 0
+    effect: 不计费、不动基线、返回 current（可能是非 RUNNING 的 current）
+    witness:
+    - V08（函数层）
+  non_per_task_time: rq->clock 由 update_rq_clock 推进，在 TSC 不可用时经 native_sched_clock 由 jiffies_64 派生（d01 F09：tsc.c:237）；nr_switches 与 nivcsw 只计次数（nvcsw 的赋值是注释）。这些都不是按任务的调度计费。
+derivations:
+- id: DV-01
+  statement: 引导 idle（init_task）的 se.vruntime 为 2^64-1，并在整个运行中保持不变。
+  premises:
+  - SF-C1-03
+  - SF-C1-04
+  - SF-C1-08
+  - SF-C4-10
+  - SF-C1-07
+  assumptions:
+  - C 语言把 -1 转换为无符号类型得到该类型最大值；目标 ABI 中 u64 为 64 位（树内无断言）
+  - init_task 没有其他直接文本写入者（d01 F03；别名/指针未排除）
+  - sched_init 中的 current 就是 init_task（SF-C1-05 初值；需假设此前没有 __switch_to）
+- id: DV-02
+  statement: 第一次真正的切换必定发生在 current 为 idle 时；idle 不计费，因此 last_jiffies 的初值（无论是多少）都不会计入任何非 idle 任务；之后每个非 idle 任务的计费区间都从某次切换写入的 last_jiffies 开始。
+  premises:
+  - SF-C1-05
+  - SF-C1-07
+  - SF-C1-11
+  - SF-C4-04
+  - SF-C4-10
+  - SF-C4-11
+  assumptions:
+  - 切换前没有其他任务成为 current（直接文本中 current 只由 __switch_to 改写，rq->curr 由 pick 与 __schedule 改写；别名、汇编不排除）
+  - 单 CPU
+- id: DV-03
+  statement: idle 在第一次以 RUNNING 状态被切出时尾插进入队列；此后只要 idle 每次都以 RUNNING 被切出，任何非 idle 任务为 current 时 idle 都在队列中，因此 count ≥ 1。count == 0 而 current 非 idle 的组合（core V08）只能出现在 idle 以非 RUNNING 被切出之后。
+  premises:
+  - SF-C1-11
+  - SF-C4-06
+  - SF-C4-07
+  - SF-C3-04
+  assumptions:
+  - running_lhdr 的写入者只有 init_idle、wake_up_new_task、set_task_cpu、pick（d01 F01）
+  - 单 CPU、无并发修改
+- id: DV-04
+  statement: rest_init 的两次 kernel_thread 各把一个键为 0 的新任务头插 CPU0 队列（后入者在前：kthreadd 在 kernel_init 之前）；若此后的第一次切换发生在 schedule_preempt_disabled，则 idle 被尾插、队首任务（后创建的 kthreadd）被选中。若两次创建之间已有中断后的 schedule() 进入 pick，则第一次切换可能更早发生、选中 kernel_init——取决于 in_atomic，未定（GAP-02）。
+  premises:
+  - SF-C1-15
+  - SF-C1-16
+  - SF-C1-17
+  - SF-C2-16
+  - SF-C5-14
+  - SF-C4-04
+  assumptions:
+  - kernel_thread 成功
+  - 期间没有其他唤醒
+- id: DV-05
+  statement: pick 中的 BUG_ON 不能触发：其条件要求 count <= 0，而它所在的块已要求 count > 0，二者之间没有对 count 的写入。它检测不到任何状态。紧随其后的 while (next_lp == NULL); 只在 count == 0 时成立（此处不可能），且失败表现为关中断自旋；它发现不了“count 非 0 而链表为空”的失配——那时 remove_head 会把 anchor 本身当作任务节点返回。
+  premises:
+  - SF-C4-04
+  - SF-C4-05
+  - SF-LST-13
+  - SF-LST-09
+  assumptions:
+  - 第 18 行与第 20 行之间没有并发修改（__schedule 已关本地中断，SF-C5-20）
+- id: DV-06
+  statement: 键为 0 的新任务头插进一个原本按键非降序的队列后，顺序仍非降序（所有键为 u64 ≥ 0）；在多个键为 0 的任务之间，后入者在前。
+  premises:
+  - SF-C2-11
+  - SF-C2-16
+  - SF-LST-08
+  assumptions:
+  - sched_fork 与 wake_up_new_task 之间没有其他键写入（直接文本）
+  - 队列原本有序
+- id: DV-07
+  statement: 高键睡眠任务被普通唤醒时头插：结构安全与记账不受影响，头插优先成立，按更新键排序被破坏（四栏见 high_key_wake_state_derivation）。
+  premises:
+  - SF-C3-15
+  - SF-C3-18
+  - SF-C3-22
+  - SF-LST-07
+  - SF-LST-08
+  - SF-LST-02
+  assumptions:
+  - X 不在队列、X != current、单 CPU 0、无并发
+- id: DV-08
+  statement: 头插造成的逆序在后续切换中按后进先出被消费（pick 先摘队首）。但只要队首还有未被消费的高键唤醒任务，即使回插循环修好（按游标比较），回插位置也只是“第一个键不小于自己的节点之前”，可能落在该高键任务之前、从而排在更低键任务之前。例：从 B10,C20,I 出发，先唤醒 Y40、再唤醒 X35（队列 X35,Y40,B10,C20,I），随后切换一次摘下 X35，队列 Y40,B10,C20,I；current A 键 25 回插 → A25,Y40,B10,C20,I。候选 A 因此不能承诺全局升序。
+  premises:
+  - SF-C4-06
+  - SF-C4-08
+  - SF-C3-22
+  assumptions:
+  - 回插采用“停在第一个键不小于自己的节点”的规则
+- id: DV-09
+  statement: pick 先摘队首、后插回 current，因此只要 count ≥ 1，一次切换不会再次选中刚运行的任务。回插按键正确排序后，键远低于其他任务的任务（新任务键 0、长时间睡眠的任务）会与次低键任务交替运行，直到键追上；现有游标缺陷在部分输入下把这类任务送到队尾，掩盖了这一效果。这是“按键排序”本身的结果，不是新缺陷，但会在修复后变得可见。
+  premises:
+  - SF-C4-06
+  - SF-C4-08
+  - SF-C4-09
+  - SF-C2-11
+  assumptions:
+  - 各任务持续可运行、单 CPU
+- id: DV-10
+  statement: 每次 HPET 中断使 jiffies（= jiffies_64）加 2：time_slice = 100 相当于 50 次 HPET 中断。这只影响计费量纲，不改变排序关系。
+  premises:
+  - SF-C5-15
+  - SF-ACC-01
+  - SF-ACC-02
+  - SF-ACC-06
+  - SF-ACC-07
+  assumptions:
+  - 链接脚本的符号赋值使二者同址
+  - 未执行验证
+- id: DV-11
+  statement: 现有代码已经会读取 anchor 的“所属任务”：进入切换块时若 count == 1、current 是 RUNNING 的非 idle 任务（例如只有一个普通任务可运行、idle 在队尾、时间片到期），摘下队首（idle）后队列为空，tmp_list 即 &anchor，第 39 行先求 container_of(anchor) 的 se.vruntime，再判断 tmp_list != anchor 退出循环。读到的值不影响结果（current 成为唯一节点、count 回到 1），但这是经 anchor 算出的伪 task_s 指针读取——类型混淆的读，不属于任何任务对象（task_s 与 rq_s 的布局偏移未读，所以不断言越界到哪里）；这种状态在“单个普通任务 + idle”时每个时间片都会出现（文本推导，未执行）。若只让比较对象随游标前进而不调换条件顺序，游标走到 anchor 的情形还会增加（键大于全部节点且 idle 不在其后）。引导 idle 的键为 2^64-1，可让遍历在 idle 前停下，但它挡不住“摘除后队列为空”的情形。A-R3（先判 anchor 再求任务）同时消除这两种读取。
+  premises:
+  - SF-C4-04
+  - SF-C4-06
+  - SF-C4-08
+  - SF-C4-09
+  - SF-LST-06
+  - SF-LST-09
+  - SF-C1-12
+  - DV-01
+  - DV-03
+  assumptions:
+  - 比较使用严格大于
+  - 单 CPU、无并发
+  - 摘下的节点与空队列的 anchor 都是自环（list_del_init、INIT_LIST_HEADER_S）
+  correction_note: 本条更正了 SCHED-ORDER-02 中“只改游标才会读 anchor 容器”与本报告初稿“只有 idle 不在队列时才会读到”两处说法：读取在现有代码的常见状态下已经发生（L4 读取面发现，核验后采纳）。
+- id: DV-12
+  statement: __pick_next_task 只调用链接段中的类；文本中放入该段的只有 myos_rt_sched_class，且 pick_next_task_myos 至少返回 current（非 NULL），因此 BUG() 在该前提下不可达；任务结构中的 sched_class 字段不影响分派。 钩子的非空检查是注释、调用无条件（SF-C5-29）：段内若有未填 pick_next_task 的对象会经 NULL 调用。
+  premises:
+  - SF-C5-05
+  - SF-C5-06
+  - SF-C5-07
+  - SF-C5-08
+  - SF-C5-09
+  - SF-C5-10
+  - SF-C5-11
+  - SF-C4-12
+  - SF-C5-29
+  assumptions:
+  - 链接器只把 __section(".data.sched_class") 对象放入该段（未运行链接器，GAP-04）
+- id: DV-13
+  statement: 若某个尚处于 TASK_NEW 的任务在 wake_up_new_task 之前被 try_to_wake_up（无状态检查）入队，随后 wake_up_new_task 无 contains 地再次头插：若节点仍在队首，__list_add_valid 因 new == next 原地自旋（挂死）；若不在队首，节点被重新链接，环被破坏且 count 多加 1。是否存在这样的唤醒者未确立（GAP-08）。 第三种情形：若 p 在两次入队之间已被 pick 取出并正在运行，wake_up_new_task 的头插能通过校验，运行中的任务被链入环（破坏 I4）。
+  premises:
+  - SF-C3-14
+  - SF-C3-22
+  - SF-C2-16
+  - SF-C2-18
+  - SF-LST-02
+  - SF-LST-04
+  assumptions:
+  - 唤醒者在 copy_process 与 wake_up_new_task 之间持有新任务指针（copy_process 返回前已 attach_pid 并挂入 all_task_lhdr，SF-C2-18，因此按 pid 或任务表找到它在文本上可能）
+- id: DV-15
+  statement: on_rq 不能当作 running_lhdr 成员判据：活动文本中它只在 init_idle 被写为 TASK_ON_RQ_QUEUED，而 idle 此时是 current、队列为空；pick 尾插或摘下 idle 都不改它；d01 F12 中没有活动读取。规格若要用它，必须同时规定所有入队/出队入口维护它。
+  premises:
+  - SF-C1-09
+  - SF-C1-11
+  - SF-C4-06
+  - SF-C4-07
+  assumptions:
+  - d01 F12 只覆盖直接文本 on_rq
+- id: DV-16
+  statement: 直接文本中只有引导 CPU 的 runqueue 经 init_idle 初始化：sched_init 的每 CPU 循环只写 cpu 与 online，init_idle 的直接调用只有 sched_init 一处。其他 CPU 的 running_lhdr 没有直接文本初始化，其内容未核（不能当作已初始化的空环）。当前文本中唤醒与新任务都固定进 CPU0（SF-C3-16/17、SF-C2-14），set_task_cpu 以 new_cpu ≥ 1 的直接文本调用者不存在（函数指针、别名不排除），所以不触发；两种候选都必须保持“只用 CPU0 队列”的前提，不承诺其他 CPU。
+  premises:
+  - SF-C1-24
+  - SF-C1-07
+  - SF-C1-22
+  - SF-C1-23
+  - SF-C1-26
+  - SF-C3-17
+  - SF-C2-14
+  assumptions:
+  - 引导 CPU 的编号为 0（smp_processor_id 读 setup_per_cpu_areas 写入的 cpu_number）
+  - 其他 CPU 单元不接收模板复制（SF-C1-23）；其内存内容与后续每 CPU 分配是否重叠未核（GAP-01）
+- id: DV-17
+  statement: last_jiffies 的启动值很可能为 0：runqueues 无初始化器，单元 0 由模板复制（SF-C1-22），所有直接写入都在 pick 切换块内。这只是推导；DV-02 已说明它不影响任何非 idle 计费。
+  premises:
+  - SF-C1-14
+  - SF-C1-21
+  - SF-C1-22
+  - SF-C4-11
+  assumptions:
+  - 模板中该对象为零字节且被完整装载（未核，GAP-01）
+  - sched_init 前没有写入落到 runqueues 字节上，包括 setup_per_cpu_areas 之前 GS 基址仍指向模板时的早期每 CPU 写入
+- id: DV-18
+  statement: 现有非 idle 回插只会落在队首或队尾：比较对象固定为摘除后的首节点 N1，curr 的键在循环中不变，所以第一个合取项在整个循环里是常量。为假时插在 N1 前（队首）；为真时游标一直走到 anchor，插在 anchor 前（队尾，idle 在队时落在 idle 之后）。W01 为后者，W02、W03、W04、W07 第 1 步、W08 第 2 步为前者。
+  premises:
+  - SF-C4-08
+  - SF-C4-09
+  assumptions: []
+- id: DV-19
+  statement: schedule_timeout 的有限超时分支在可见行内没有活动的 schedule()（第 798 行被注释）。它调用的 __mod_timer 与 del_timer_sync（宏别名 timer_delete_sync → __timer_delete_sync，以 cpu_relax 忙等）在 timer.c 的直接文本中也不调用 schedule()；它们再调用的其他文件中的函数（锁原语等）未逐一读取。在“这些被调函数都不调度”的前提下：先写非 RUNNING 状态再以有限超时调用它的任务会立即返回、仍处于非 RUNNING 状态继续运行，且返回值等于传入的 timeout（不减少）。之后任何一次进入切换分支的 pick（例如中断后的 schedule()）都会把它切出且不插回，而为它挂的定时器已被删除。已知活动使用者：信号量 down_timeout 的等待循环（__down_timeout → ___down_common），它会反复写等待状态并调用 schedule_timeout，超时永不减少；被切出后要靠 up() 的 wake_up_process 回队。schedule_timeout_interruptible 等包装的调用者未枚举（GAP-10）。
+  premises:
+  - SF-C3-26
+  - SF-C3-27
+  - SF-C3-31
+  - SF-C3-32
+  - SF-C3-33
+  - SF-C3-34
+  - SF-C3-35
+  - SF-C3-04
+  - SF-C5-14
+  - SF-C3-07
+  assumptions:
+  - timer.c 之外被调函数不调度（未读）
+  - 单 CPU
+- id: DV-20
+  statement: pick 层面的计费守恒：设相邻两次切换时 jiffies 为 t_k 与 t_{k+1}，期间的 current 若非 idle，就在第 k+1 次切换时恰好被计入 t_{k+1} - t_k；若是 idle，这段时间被丢弃、不归任何任务。不切换的调用既不计费也不移动基线。所以不会重复计费，也不会丢失非 idle 的时间；把计费前移到定位之前（A-R1）只改变插入位置，不改变任何计费量（W05–W08 的计费结果保持）。
+  premises:
+  - SF-C4-03
+  - SF-C4-04
+  - SF-C4-10
+  - SF-C4-11
+  - DV-02
+  assumptions:
+  - current 只在切换时改变（DV-02 的前提）
+  - 单 CPU
+- id: DV-21
+  statement: running_lhdr 的结构安全依赖所有写入者共同维持：I0 写入前环已初始化；I1 从 anchor 正向遍历能回到 anchor；I2 每个任务节点至多出现一次；I3 count 等于节点数；I4 正在运行的任务不在环中（例外：pick 插回之后、真实上下文切换 __switch_to 之前，旧任务仍在运行而节点已在环中）；I5 idle 至多出现一次。原语本身不校验这些：count 只由 header 层与 pick 的手工 count++ 维护；__list_add_valid 只在新节点紧邻插入点、邻居为空或互指不一致时以永久自旋“报错”（源码语义；无副作用的空循环在优化编译下可能被视为终止并删除，产物行为未核，GAP-11），节点若已链在同一环的非相邻位置，插入会静默破坏环；list_header_contains 的终止依赖 I1，只查目标环。init_idle 建立 I0/I3；set_task_cpu 用 contains 保 I2（仅同一环）；wake_up_new_task 依赖调用者保证节点未链；pick 依赖 I4 成立（否则可能自旋或让运行中的任务留在环中）。
+  premises:
+  - SF-C1-12
+  - SF-LST-02
+  - SF-LST-03
+  - SF-LST-07
+  - SF-LST-08
+  - SF-LST-09
+  - SF-LST-10
+  - SF-LST-13
+  - SF-C3-22
+  - SF-C2-16
+  - SF-C4-06
+  - SF-C4-09
+  assumptions:
+  - 单 CPU、无并发
+- id: DV-22
+  statement: 每次非 current 唤醒都调用 set_task_cpu，每次都做一次 list_header_contains：节点不在环中时（正常唤醒的典型情形）要走完整个环。已读路径中“未链”的节点都是自环（init_task 静态 LIST_HEAD_INIT、__sched_fork 的 INIT_LIST_S、remove_head 的 list_del_init），所以在“所有摘除都用 list_del_init”的前提下，节点自环可作为 O(1) 的“不在任何环中”判定，并能覆盖 contains 查不到的跨环情形；现成原语 list_is_empty_entry 就是这种判定（SF-LST-14）。现有调度写入者都没有使用它；set_task_cpu 还在 contains 之前就把状态写为 TASK_RUNNING。
+  premises:
+  - SF-C3-18
+  - SF-C3-22
+  - SF-LST-07
+  - SF-LST-06
+  - SF-C1-02
+  - SF-C2-12
+  - SF-LST-09
+  - SF-LST-14
+  assumptions:
+  - running_lhdr 节点不经 list_del（会写 POISON）摘除——直接文本命中中未见
+- id: DV-14
+  statement: pick 中两次读取 jiffies（第 12 行与第 54 行）之间不会有 HPET 计数：__schedule 在调用 pick 前关闭本地中断。
+  premises:
+  - SF-C5-20
+  - SF-C5-03
+  - SF-C4-03
+  - SF-C4-11
+  assumptions:
+  - pick 只经 __schedule 调用（d01 E10/E11）
+- id: DV-23
+  statement: 第三种离队时点：任务写入非 RUNNING 状态之后、检查自身等待条件之前（例如 kthreadd 第 342–343 行之间），若中断后的 schedule() 进入 pick，它会因 state 被切出且不插回；上游用来让抢占不出队的条件在这里是注释（SF-C3-36）。如果唤醒者已经在它写状态之前完成（例如请求已在列表中），这个任务要等下一次唤醒才能回到队列。
+  premises:
+  - SF-C3-38
+  - SF-C5-14
+  - SF-C3-04
+  - SF-C3-36
+  assumptions:
+  - 中断上下文 in_atomic() 为假（未解，GAP-02）
+  - 不借用上游抢占语义
+  status: 条件性风险，NOT_RUN，不是已观察到的缺陷
+- id: DV-24
+  statement: 任务的 sched_class 只在 init_idle 中以 ->sched_class = 的形式写入（直接文本命中，d01 E15）；init_task 的静态初始化器中没有 .sched_class，所以 init_idle 之前 init_task 的 sched_class 为静态零值。其他任务经 dup_task_struct 的整体复制继承，前提是第一次 fork 发生在 sched_init 之后（main.c 中 sched_init 在第 153 行，rest_init 在其后）。分派不读这个字段；直接文本中唯一的活动读者是 sched_yield。
+  premises:
+  - SF-C1-10
+  - SF-C2-05
+  - SF-C1-06
+  - SF-C5-12
+  - SF-C1-01
+  assumptions:
+  - 没有更早的 fork 路径（未追踪）
+  - 别名、函数指针、宏生成写入不排除
+high_key_wake_state_derivation:
+  label: INFERRED（源码状态推导，未新增宿主运行）
+  preconditions:
+  - CPU0 队列：B10, C20, I（I 为引导 idle，键 2^64-1）
+  - X 键 35，__state 非 RUNNING，节点自环且不在队列，X != current
+  - 单 CPU、无并发修改；调用 wake_up_process(X)
+  steps:
+  - try_to_wake_up：p != current → 写 TASK_WAKING（SF-C3-15）→ select_task_rq 返回 0（SF-C3-16/17）→ set_task_cpu(X, 0)（SF-C3-18）
+  - set_task_cpu：写 TASK_RUNNING；list_header_contains 遍历得 false（SF-LST-07）→ list_header_add_to_head（SF-C3-22）
+  - list_add_to_next(X, anchor)：__list_add_valid(X, anchor, B) 各条件都不成立 → 链接；count 3 → 4（SF-LST-02/04/08）
+  - 结果：X35, B10, C20, I；返回 0（SF-C3-19）
+  before:
+  - B10
+  - C20
+  - I(2^64-1)
+  after:
+  - X35
+  - B10
+  - C20
+  - I(2^64-1)
+  columns:
+    structural_safety:
+      verdict: 保持
+      detail: 按 DV-21 逐项：I0 CPU0 环已由 init_idle 初始化；I1 链接一致，__list_add_valid 通过；I2 X 只链入一次（contains 只查同一环）；I3 count 与节点数同增 1；I4 current 不受影响；I5 idle 仍只出现一次。
+    accounting_conservation:
+      verdict: 保持
+      detail: 唤醒路径不写 se.vruntime、不写 last_jiffies；X 的 35 保持睡前累计值；没有任何时间被重复或遗漏计入。
+    head_first_wake_priority:
+      verdict: 成立
+      detail: 下一次进入切换分支的 pick 先摘队首 → 选中 X35，先于 B10。唤醒路径不调用 resched_curr，所以这不是立即抢占：要等时间片到期、current 阻塞、current 为 idle 或 sched_yield。两次切换之间若又有唤醒（Y）或新任务首次入队，它们会排到 X 之前（后进先出）。
+    ordering_by_updated_key:
+      verdict: 被破坏
+      detail: 队首 35 > 次节点 10；直到 X 被摘下前，队列不满足非降序；选中的 X 不是最小键。X 的 35 已包含它阻塞前那次切换的计费（W05 型）。现有代码中逆序还有另一来源——pick 的回插（W01、W02/W07 第 1 步）；即使只把唤醒改成有序插入，也推不出全局升序。
+  policy_meaning: 这是“唤醒头插优先”与“按更新键排序”两种契约的分歧点，不是结构错误。现有源码只实现前者；把它判为缺陷还是政策，取决于 OD-1。
+  contrast_new_task: 新任务以键 0 头插时（DV-06），四栏中前三栏相同，第四栏在原队列有序时也保持——所以并非每次头插都是失序。
+  common_premises:
+  - 单 CPU0、无并发
+  - X != current；X 的节点自环（上次被 pick 摘下时 list_del_init，SF-LST-06）
+  - 唤醒目标为 CPU0：try_to_wake_up 中 cpu = 0（SF-C3-11），select_task_rq 原样返回（SF-C3-17）
+  - 插入校验链：list_add_to_next → __list_add_between → __list_add_valid（SF-LST-04/03/02）
+  - 非 current 路径先写 TASK_WAKING（SF-C3-15）
+witness_refs:
+- id: W01
+  source: scheduler-order-02/results.yaml @ 5078686e8267
+  input: A 键 25 RUNNING，used 0，need_resched 1；队列 B10,C20,D30,I0
+  recorded_after: C20,D30,I0,A25；返回 B
+  finding: 比较对象停在首节点（C20），游标走到 anchor → A 落到 idle 之后。W01 不读 anchor 容器（比较对象固定为 C20）；A-R2 下 A25 停在 D30 前，也不会走到 idle
+  supports:
+  - A-R2
+  - B-R1
+- id: W02
+  source: 同上
+  input: A 键 15，used 10
+  recorded_after: A25,C20,D30,I0（A 计费 +10）
+  finding: 先按旧键 15 插回、后计费 → A25 在 C20 前；循环未进入
+  supports:
+  - A-R1
+  - B-R1
+- id: W07
+  source: 同上
+  input: 第 1 步同 W02；第 2 步 current B 键 10，used 0
+  recorded_after: 第 1 步 A25,C20,D30,I0；第 2 步返回 A（25），C20 仍在队；B10 回插到 C20 前，无计费
+  finding: 失序影响下一次选择（selected_key_is_queue_minimum = false）；同一时刻不重复计费
+  supports:
+  - A-R1
+  - B-R5（选择=最小键）
+  - 保持：不重复计费
+- id: W03
+  source: 同上
+  input: A 键 15，used 0
+  recorded_after: A15,C20,D30,I0
+  finding: 零增量正常
+  supports:
+  - 保持
+- id: W04
+  source: 同上
+  input: A 键 15，used 5
+  recorded_after: A20,C20,D30,I0（+5）
+  finding: A 先按旧键 15 定位到 C20 前，再计费成 20；结果满足 P，但原函数中并没有发生并列比较，W04 不是并列见证。候选 A 下它成为第一个真正的并列输入（20 对 20），按 A-R6 结果仍为 A20,C20,D30,I0
+  supports:
+  - 保持（结果不变）
+  - A-R6 的首个并列输入（NOT_RUN）
+- id: W05
+  source: 同上
+  input: A 键 15，state 2（非 RUNNING），used 10
+  recorded_after: C20,D30,I0；A 不在队，键 25
+  finding: 阻塞者不回队但计费
+  supports:
+  - 保持
+- id: W06
+  source: 同上
+  input: current 为 idle（键 7），used 10；队列 B10,C20,D30
+  recorded_after: C20,D30,I7；idle 键不变
+  finding: idle 尾插不计费
+  supports:
+  - 保持
+- id: W08
+  source: 同上
+  input: need_resched 0，used 5 < 100；两步
+  recorded_after: 第 1 步不切换，队列/键/last_jiffies 不变；第 2 步切换，A +5 → A20,C20,D30,I0
+  finding: 不切换不计费，累计留到切换时计入
+  supports:
+  - 保持
+- id: W-idle-key-note
+  source: 同上 + DV-01
+  finding: W 夹具中 idle 键取 0 或 7；源码中的引导 idle 键为 2^64-1。W01/W02/W07 的结论不依赖 idle 键（比较对象停在首节点；W02 首次比较即停），但修复后的边界需按真实键复核（NR-4）。
+  supports:
+  - NR-4
+- id: V04
+  source: core/results.yaml @ f36b89b8a53a（core 已审范围内引用，未重跑）
+  finding: 非 current 唤醒：入自有 CPU0 队列、置 RUNNING、返回 0
+  supports:
+  - C3b 现状
+  - B 必须保持项
+- id: V05
+  source: 同上
+  finding: 状态不在 mask 内（含 TASK_NEW）仍被唤醒入队；与函数注释合同冲突
+  supports:
+  - C3b 现状
+  - DV-13
+- id: V06
+  source: 同上
+  finding: 串行连续唤醒三次只有一个节点；并发未测
+  supports:
+  - contains 防重复（A/B 均保持）
+  - NR-5
+- id: V07
+  source: 同上
+  finding: set_task_cpu 不更新任务 CPU 元数据；唤醒与新任务都进 CPU0
+  supports:
+  - C3b 上游/MyOS2 区分
+  - SMP 不在本规格
+- id: V08
+  source: 同上
+  finding: count == 0 时返回阻塞的 current；非 idle current 下 count == 0 依赖 idle 以非 RUNNING 被切出
+  supports:
+  - DV-03
+  - GAP-07
+- id: W-scope-note
+  source: scheduler-order-02 MANIFEST
+  finding: W01–W08 只执行了 pick_next_task_myos；首次入队与唤醒路径只能引用冻结的 V04–V07，范围限于其已审结论。本任务没有做任何动态测试。
+  supports: []
+candidate_changes:
+  A:
+    title: 兼容现有入口语义的局部修复
+    keeps:
+    - wake_up_new_task 与 set_task_cpu 的头插（新任务/唤醒任务在下一次切换被选中，除非其后又有头插）
+    - 选择 = 摘队首
+    - idle 尾插、不计费
+    - 切换条件（SF-C4-04）
+    - last_jiffies 只在切换时更新
+    - 阻塞 current 不插回但计费（W05）
+    - 同一时刻不重复计费（W07 第 2 步）
+    - 不切换不计费（W08）
+    - contains 防重复（V06）
+    requirements:
+    - id: A-R1
+      text: 计费时点：在切换块内先对非 idle 的 current 记入 used_jiffies，再用更新后的键决定插回位置。
+      evidence:
+      - W02
+      - W07
+    - id: A-R2
+      text: 比较对象随游标：插回扫描的每一步都与游标当前所在节点的任务键比较。
+      evidence:
+      - W01
+    - id: A-R3
+      text: anchor 先判：在把游标节点换算为任务之前，先判断游标是否已回到 anchor；不得对 anchor 求所属任务。这同时消除现有代码在“摘除后队列为空”时已发生的伪任务指针读取。
+      evidence:
+      - DV-11
+    - id: A-R4
+      text: idle 边界：非 idle 的插回位置不得越过 idle；以 rq->idle 身份判断，不依赖 idle 键恰好为最大值。
+      evidence:
+      - W01
+      - DV-01
+    - id: A-R5
+      text: 计数：链接与 count + 1 作为一个操作完成，语义等同 header 原语；保持前置条件“current 的节点此刻未链接”（它在被选中时已经 remove_head + list_del_init 自环）。
+      evidence:
+      - SF-C4-09
+      - SF-LST-09
+      - SF-LST-06
+    - id: A-R6
+      text: 并列：插在第一个键不小于自己的节点之前，与现行比较用严格大于一致。现有 W 记录中没有真正的并列比较（W04 是先按旧键定位后计费）；A 下 W04 成为首个并列输入，预期结果不变。
+      evidence:
+      - SF-C4-08
+      - W04
+    optional_hardening_separate_review:
+    - id: A-O1
+      text: 可选的防御性初始化：在 init_idle（或等价初始化点）显式写 last_jiffies = jiffies。按 DV-02 不改变现有任何计费输出，只去掉对初值的依赖；若采用，受影响符号增加 scheduler_core.c::init_idle。
+    - id: A-O2
+      text: 可选的结构加固（与排序政策无关）：首次入队前确认节点未链接（可用 DV-22 的 O(1) 自环判定），或在普通唤醒中不处理 TASK_NEW。后者会改变 V05 记录的现状，需单独决定；两者都针对 DV-13，可达性未定。
+    observable_change: 只在 W01、W02、W07 这类输入上改变插回位置与随后的选择：W01、W02 变为 C20,A25,D30,I；W07 第 1 步变为 C20,A25,D30,I，第 2 步改选 C20（仍保持同一 jiffies 不重复计费）。W03–W06、W08 的记录应保持不变（预期，NOT_RUN）。唤醒、新任务和选择规则不变。
+    affected_symbols:
+    - mykernel/sched/scheduler/myos_rt.c::pick_next_task_myos（唯一必改符号）
+    - 可选：mykernel/lib/list/double_list.h 新增“插到指定节点前并计数”的 header 原语（若采用，影响 lib/list，需单独评审）
+    guarantees:
+    - 消除 W01、W02 两类已见证的回插失序
+    - 消除现有代码在“摘除后队列为空”时经 anchor 求伪任务指针的读取（DV-11）
+    - 若插回前队列（除 idle 外）非降序且 idle 若在队则为末节点，插回后仍如此（A 下由 idle 尾插、A-R4 与两个头插入口共同维持）
+    - anchor 边界与 idle 位置在结构上安全
+    - W03–W06、W08 的记录不变；W07 只保持“同一 jiffies 不重复计费”，选择结果按上条改变
+    cannot_promise:
+    - 全局始终升序：唤醒头插仍可在队首制造逆序（DV-07），逆序未消费前回插位置可能落在更低键之前（DV-08）
+    - 选中任务为最小键：唤醒后仍会出现 W07 第 2 步型选择
+    preconditions:
+    - 单 CPU0 队列（V07 现状；其他 CPU 队列未初始化，DV-16）
+    - running_lhdr 的直接文本写入者仍只有四个（d01 F01）
+    - pick 仍在 __schedule 关中断后调用
+    risks:
+    - 修复后低键任务（新任务键 0、长睡任务）的追赶交替变得可见（DV-09）
+    - 若 A-R4 只靠 idle 键哨兵，将来 idle 被计费或键被改写时，普通任务可能被插到 idle 之后
+    - BUG_ON 仍检测不到任何状态（DV-05），不应被当作保护
+    existing_evidence:
+    - W01
+    - W02
+    - W07
+    - W03–W08 正常对照
+    - G02/G03（头插源码）
+    remaining_validation:
+    - 修改后的函数在宿主夹具上重跑 W01–W08（两次完整输出）
+    - NR-3、NR-4、NR-6（A 预期列）
+    - 不需要改调用者
+    order: 可最先准备；实施仍需 Owner 的内核修改授权（当前 kernel_change_authorized = false）。
+  B:
+    title: 统一队列顺序契约
+    contract: running_lhdr 中非 idle 节点按更新后的 se.vruntime 非降序；idle 若在队，恒为最后一个节点；选择 = 摘除前的队首 = 队列中（不含正在运行的 current）的最小键。因为 pick 先摘队首再插回 current，current 自身即使键更小也不会在同一次切换被再次选中（W07 第 2 步在 B 下选 C20，而 current B10 更小）。
+    requirements:
+    - id: B-R1
+      text: 回插：A-R1 至 A-R6 全部适用。
+    - id: B-R2
+      text: 普通唤醒（set_task_cpu）：由头插改为按键有序插入，与回插使用同一比较规则、同一“先判 anchor 再求任务”顺序，位置在 idle 之前；保留 contains 防重复（或改用 DV-22 的自环判定）；仍写 TASK_RUNNING。p == current 的快速路径不入队可保留：该任务随后由 pick 的有序回插处理。
+    - id: B-R3
+      text: 首次入队（wake_up_new_task）：在 B-R1、B-R2 已使队列保持有序的前提下，键 0（或按 OD-2 钳制后等于队首键的键）头插的结果与有序插入相同（DV-06），所以排序位置可以不改；现有代码中这一前提不成立（W01/W02 的回插失序），不能单独只改唤醒。需要补上“节点未链”的前置保护（现在没有 contains，DV-13/DV-21）。
+    - id: B-R4
+      text: idle：init_idle 仍建空队列；idle 仍由 pick 尾插、不计费；排序判断以 rq->idle 身份排除 idle，不依赖其键。
+    - id: B-R5
+      text: 选择：仍为摘队首，由不变量保证其为队列（不含 current）中的最小键；调试构建可断言“队首键 ≤ 次节点键”（不在本规格实现）。
+    - id: B-R6
+      text: 键下限（见 OD-2）：新任务与唤醒任务入队时是否把键钳制到不低于当时队首非 idle 任务的键。
+    lost_or_changed:
+    - 键高于队首非 idle 任务的被唤醒任务不再在下一次切换运行（失去头插优先）；新任务键 0 仍排在队首，首次入队的“下一次切换即运行”不变；设 OD-2 下限时，键不高于队首的唤醒任务也仍到队首
+    - I/O 守护线程（NVMe/ATA/XHCI 的 rq_deamon）、workqueue worker、kthreadd、softirqd、信号量与定时器等待者被唤醒后的等待时间改由其键决定
+    - 不设下限时，键为 0 的新任务和长睡任务反而先运行，并与最低键任务交替直到追上（DV-09）
+    affected_symbols:
+    - mykernel/sched/scheduler/myos_rt.c::pick_next_task_myos
+    - mykernel/sched/scheduler/scheduler_core.c::set_task_cpu
+    - mykernel/sched/scheduler/scheduler_core.c::wake_up_new_task（只需补前置保护，排序位置可不改）
+    - 共用的有序插入 helper（位置待定：myos_rt.c 静态函数需导出给 scheduler_core.c，或 double_list.h 新原语；可能涉及 scheduler_api.h 声明）
+    affected_callers_behaviour_level:
+    - d01 E03 的 12 行 wake_up_process 调用
+    - swake_up_locked → try_to_wake_up
+    - signal_wake_up_state → wake_up_state
+    - kernel_clone → wake_up_new_task（经 kernel_thread、fork 系统调用、create_kthread）
+    must_keep:
+    - A 的全部保持项
+    - contains 防重复（V06）
+    - 唤醒仍写 TASK_RUNNING 并进 CPU0（V04/V07 现状；其他 CPU 的队列未初始化，DV-16；SMP 不在本规格）
+    - 唤醒返回值语义不变（恒 0；调用者无依赖变化）
+    risks:
+    - 唤醒延迟语义改变（见上）
+    - 有序插入每次 O(n) 扫描，与 contains 的 O(n) 叠加（可用 DV-22 的自环判定去掉后者）
+    - 不设下限时出现新任务追赶突发
+    - 需同源复跑 V04–V07 以确认已审行为未被意外改变
+    existing_evidence:
+    - G02
+    - G03
+    - G04
+    - W01
+    - W02
+    - W07
+    - DV-07
+    - DV-08
+    remaining_validation:
+    - A 的全部
+    - NR-1、NR-2、NR-5、NR-6（B 预期列）
+    - V04–V07 同源复跑（仅在其已审范围内）
+    order: 在 A 之后；仅在 OD-1 选择 B 并对 OD-2 作答后准备。
+owner_decisions:
+- id: OD-1
+  question: 运行队列的目标契约：保留“唤醒/新任务头插优先”（以候选 A 为终态），还是采用“全队按更新后 vruntime 非降序、选最小键”（候选 B）？
+  recommendation: 先实施 A（不改政策，只修两处已见证的回插缺陷）；把 B 定为后续目标契约。
+  reason: 活动文本中对运行队列做排序比较的只有回插循环，它比较的是 se.vruntime（SF-C4-08 的源码事实）；B 给出一条可机械检查的不变量（队首 = 最小键、全队非降序），W07 第 2 步型选择可以直接判为失败，便于学习和回归。头插优先目前没有任何键或标志表达，是隐含行为，难以测试和解释。这一建议基于项目学习与可验证性，不是对作者意图的推断。
+  impact: 选 B：需改 set_task_cpu 的插入位置并给 wake_up_new_task 补前置保护；键高于队首的被唤醒任务（守护线程、等待者）不再插队，新任务仍在队首。只选 A：唤醒后仍会出现“选中非最小键”，文档与回归须把选择定义为“取队首”。
+  safe_default_if_unanswered: 只准备 A；不修改 set_task_cpu、wake_up_new_task；回归按 A 的预期列判定。
+- id: OD-2
+  question: 新任务与被唤醒任务入队时是否设键下限？（B 下必须回答；A 下只影响修复后的追赶行为，不需实现）
+  recommendation: 设最小钳制：入队键取 max(自身键, 当时队首非 idle 任务的键)；队空时保持自身键。不引入 CFS 的 min_vruntime 或权重体系。
+  reason: 否则键为 0 的新任务和长睡任务会长时间与最低键任务交替、压后其余任务（DV-09）；该规则局部、可测，并保留“新任务尽快运行一次”的效果。
+  impact: 新任务的首次位置仍是队首（钳制后的键等于队首键，按 A-R6 排在其前）；改变的是新任务与长睡任务的键值及之后的追赶时长；需要 NR-1 子例 2、NR-2、NR-6 覆盖。
+  safe_default_if_unanswered: B 不实施；即使 OD-1 选了 B，也在本项有答复之前不准备 B（与候选 B 的先后要求一致）。
+future_regressions:
+- id: NR-1
+  status: NOT_RUN
+  gap: 睡眠 → 唤醒 → 选取的接合处；A/B 政策差异
+  input: CPU0 队列 B10, C20, I（键 2^64-1）；X 键 35、TASK_UNINTERRUPTIBLE、不在队列；current A 键 15、RUNNING；调用原 try_to_wake_up(X, TASK_NORMAL, 0)，再以 need_resched = 1、used = 0 调 pick 一次
+  observe: 唤醒后队列顺序、count、X.__state、返回值；pick 返回者、pick 后队列、计费
+  expected:
+    original: 唤醒后 X35,B10,C20,I（count 4，返回 0）；pick 先摘 X 并选中它；A15 因比较对象停在 B10 而落到 idle 之后：B10,C20,I,A15
+    A: 唤醒后同原函数；pick 选 X；A15 插到 C20 前：B10,A15,C20,I
+    B: 唤醒后 B10,C20,X35,I；pick 选 B10；A15 插到 C20 前：A15,C20,X35,I
+  subcase_2: 从 B10,C20,I 出发、两次唤醒之间没有 pick，先后唤醒 X35、Y5：原函数与 A 得到 Y5,X35,B10,C20,I（唤醒者后进先出）；B 在 OD-2 未设下限时得到 Y5,B10,C20,X35,I，设下限时 Y 的键钳到 10，得到 Y10,B10,C20,X35,I
+  judgement: 原函数与 A 的记录按 A 政策判合规；同一记录按 B 政策判 VALID + VIOLATED（B 的实现应选 B10，而不是 X）
+  record_rules: 未来执行要求：同一输入在两个独立进程各完整运行一次，保存完整 stdout/stderr/退出码/终态；缺任一必需快照判 INCOMPLETE_EVIDENCE、不给排序结论；记录完整而违反候选策略判 VALID + VIOLATED（反证），不得判 COMPARATOR_INVALID；“按队首选择符合代码”与“选到目标策略要求的任务（A：队首；B：队列中不含 current 的最小键）”分栏报告。
+- id: NR-2
+  status: NOT_RUN
+  gap: 新任务首次入队：零键并列与继承的 time_slice
+  input: 队列 B0（另一尚未运行的新任务）, C20, I；父任务 time_slice = 50；夹具按 dup_task_struct 的整体复制构造子任务，再调用原 sched_fork 与 wake_up_new_task
+  observe: 子任务键、状态序列（TASK_NEW → TASK_RUNNING）、time_slice、队列顺序与 count
+  expected:
+    original_and_A: N0,B0,C20,I；time_slice = 50（继承）
+    B: 与并列规则一致的有序位置（A-R6 规则下 N0,B0,C20,I）；设 OD-2 下限时 N 键钳到 0（队首 B0）
+  judgement: time_slice 继承是现状记录，不判失败；并列顺序按所选规则判定
+  record_rules: 未来执行要求：同一输入在两个独立进程各完整运行一次，保存完整 stdout/stderr/退出码/终态；缺任一必需快照判 INCOMPLETE_EVIDENCE、不给排序结论；记录完整而违反候选策略判 VALID + VIOLATED（反证），不得判 COMPARATOR_INVALID；“按队首选择符合代码”与“选到目标策略要求的任务（A：队首；B：队列中不含 current 的最小键）”分栏报告。
+- id: NR-3
+  status: NOT_RUN
+  gap: anchor 边界与 idle 身份判定：现有代码（子例 0）与修改后的回插
+  input: pick 先摘队首，再插回 current。子例 0（现有代码已触发）：调用前队列只有 I（2^64-1），current A 键 50、RUNNING、非 idle，used = time_slice；子例 1：调用前队列 B10, C20, D30（不含 idle 的构造态）；子例 2：B10, C20, D30, I，idle 键取 0（检验 A-R4 的身份判定，另做 2^64-1 变体）；子例 1/2 的 current A 键 50、RUNNING、非 idle，used 0，need_resched 1
+  observe: A 的位置；是否读取 anchor 所属“任务”——在夹具中按 offsetof 算出 container_of(anchor) 的被读地址，把该地址放在 PROT_NONE 守护页上（或设硬件观察点），探针不进被测函数；若读访问无法被检测，记 INCOMPLETE_EVIDENCE，不记“无读取”
+  expected:
+    original: 子例 0：选中 I，A 成为唯一节点，但第 39 行读取了 anchor 容器（DV-11，应被检测到）。子例 1、2 都选中 B：子例 1 为 C20,D30,A50（比较对象停在首节点 C20，不读 anchor 容器）；子例 2 为 C20,D30,I0,A50（W01 型）
+    A_and_B: 子例 0：选中 I，A 为唯一节点，无 anchor 容器读取；子例 1：C20,D30,A50 且无 anchor 容器读取；子例 2：C20,D30,A50,I0（只靠 idle 键哨兵的实现会得到 C20,D30,I0,A50，判 VALID + VIOLATED）
+  judgement: anchor 容器读取一旦出现即为结构失败，不论最终顺序
+  record_rules: 未来执行要求：同一输入在两个独立进程各完整运行一次，保存完整 stdout/stderr/退出码/终态；缺任一必需快照判 INCOMPLETE_EVIDENCE、不给排序结论；记录完整而违反候选策略判 VALID + VIOLATED（反证），不得判 COMPARATOR_INVALID；“按队首选择符合代码”与“选到目标策略要求的任务（A：队首；B：队列中不含 current 的最小键）”分栏报告。
+- id: NR-4
+  status: NOT_RUN
+  gap: 真实 idle 键（init_task 静态值）
+  input: W01、W02、W07 的声明输入，只把 idle 键改为 2^64-1
+  observe: 同 W01、W02、W07
+  expected:
+    original: 与 W01/W02/W07 记录相同（缺陷与 idle 键无关）
+    A_and_B: W01 → C20,A25,D30,I；W02 → C20,A25,D30,I（先计费到 25 再定位）；W07 第 2 步摘下并选中 C20，B10 插回后 B10,A25,D30,I
+  judgement: 原函数结果若与 W 记录不同，说明 W 结论依赖 idle 键，需回到 15 号范围复核
+  record_rules: 未来执行要求：同一输入在两个独立进程各完整运行一次，保存完整 stdout/stderr/退出码/终态；缺任一必需快照判 INCOMPLETE_EVIDENCE、不给排序结论；记录完整而违反候选策略判 VALID + VIOLATED（反证），不得判 COMPARATOR_INVALID；“按队首选择符合代码”与“选到目标策略要求的任务（A：队首；B：队列中不含 current 的最小键）”分栏报告。
+- id: NR-5
+  status: NOT_RUN
+  gap: 睡眠/唤醒接合：current 快速路径与重复唤醒
+  input: 子例 1：current A 已写 TASK_UNINTERRUPTIBLE、尚未 schedule；调用 try_to_wake_up(A)，随后 need_resched = 0、used < time_slice 调 pick。子例 2：B 在队列中，连续 wake_up_process(B) 两次
+  observe: A 是否被插入队列、A 状态、count、pick 是否切换；子例 2 的 count 与 B 节点出现次数
+  expected:
+    original_A_B: 子例 1：A 不入队、状态 RUNNING、pick 不切换；子例 2：只有一个 B 节点、count 不变
+  judgement: 出现重复节点或 count 与节点数不符即结构失败
+  record_rules: 未来执行要求：同一输入在两个独立进程各完整运行一次，保存完整 stdout/stderr/退出码/终态；缺任一必需快照判 INCOMPLETE_EVIDENCE、不给排序结论；记录完整而违反候选策略判 VALID + VIOLATED（反证），不得判 COMPARATOR_INVALID；“按队首选择符合代码”与“选到目标策略要求的任务（A：队首；B：队列中不含 current 的最小键）”分栏报告。
+- id: NR-6
+  status: NOT_RUN
+  gap: 生命周期全链的计费守恒与不变量（多步）
+  input: 起点：idle 为 current，队列为空，jiffies = last_jiffies = 100，每次 pick 前 need_resched = 1；idle 键取 2^64-1，另做 idle 键 0 的变体。依次：wake_up_new_task(N1)、wake_up_new_task(N2)（键 0，队列 N2,N1）→ P1 @100（idle → N2，idle 尾插）→ P2 @130（N2 计 30，选 N1）→ N1 写 TASK_UNINTERRUPTIBLE 后 P3 @150（N1 计 20、不回队，选 N2）→ @160 wake_up_process(N1)（头插）→ P4 @170（N2 计 20，选 N1）→ P5 @190（N1 计 20，选 N2）→ P6 @200（N2 计 10，选 N1）；共 6 次 pick
+  observe: 每步队列、count、current、各任务键、last_jiffies、返回值
+  expected:
+    all: 计费只覆盖被切换关闭的区间：N2 = 30 + 20 + 10 = 60，N1 = 20 + 20 = 40，合计 100 = 200 − 100；idle 从不计费；无重复节点；count = 节点数；idle 至多出现一次。idle 键为最大值时原函数、A、B 三者每步相同；idle 键为 0 时原函数在 P4 把 N2 排到 I0 之后、P5 选中 idle（N1、N2 仍可运行），A/B 则保持 idle 在尾、P5 选 N2——这是 A-R4 身份判定的回归点
+    selection: 原函数与 A：队首；B：队列（不含 current）中的最小键
+  judgement: 守恒或结构不变量失败即失败；选择按所选政策分栏判定
+  record_rules: 未来执行要求：同一输入在两个独立进程各完整运行一次，保存完整 stdout/stderr/退出码/终态；缺任一必需快照判 INCOMPLETE_EVIDENCE、不给排序结论；记录完整而违反候选策略判 VALID + VIOLATED（反证），不得判 COMPARATOR_INVALID；“按队首选择符合代码”与“选到目标策略要求的任务（A：队首；B：队列中不含 current 的最小键）”分栏报告。
+gaps:
+- id: GAP-01
+  what: 每 CPU 模板中 runqueues 的实际字节与装载未核（只读了模板复制与单元偏移的源码，SF-C1-21/22/23），last_jiffies 初值与其他 CPU 的 running_lhdr 内容只是推导
+  effect: DV-02 表明 last_jiffies 初值不进入任何非 idle 计费；其他 CPU 不在本规格范围（DV-16）
+  status: open
+- id: GAP-02
+  what: in_atomic()/preempt_count 的实际演变未追踪（只知启动初值为 INIT_PREEMPT_COUNT，非 0，SF-C5-27/28）
+  effect: 中断后是否真正进入 schedule()、try_to_wake_up 结尾的 preempt_enable 是否会进入 __schedule 都未定；DV-04 的第一次切换时点因此未定
+  status: open
+- id: GAP-03
+  what: switch_to 宏到 __switch_to 的展开链与汇编未逐段引用
+  effect: 只引用了 current_task 的写入行
+  status: open
+- id: GAP-04
+  what: 链接段 .data.sched_class 的实际内容未经链接器验证
+  effect: DV-12 以文本命中为前提
+  status: open
+- id: GAP-05
+  what: 其他 CPU 的 idle/runqueue 初始化与 SMP 启动未读
+  effect: 所有结论限于 CPU0；唤醒与新任务在文本上都进 CPU0（V07）
+  status: open
+- id: GAP-06
+  what: 经回调/函数指针的间接唤醒者未枚举
+  effect: 直接调用者只列 d01 文本命中
+  status: open
+- id: GAP-07
+  what: idle 能否以非 RUNNING 被切出（V08 可达性）
+  effect: 决定 count == 0 分支是否可达
+  status: open
+- id: GAP-08
+  what: 是否存在在 copy_process 与 wake_up_new_task 之间唤醒新任务的调用者
+  effect: 决定 DV-13 的挂死/破环风险是否可达
+  status: open
+- id: GAP-10
+  what: 除信号量 down_timeout 外，使用有限超时的 schedule_timeout 活动调用者（含 schedule_timeout_interruptible 等包装的调用者）未枚举；__mod_timer、timer_delete_sync 在 timer.c 之外的被调函数未读
+  effect: 决定 DV-19 的失唤醒/忙等风险是否可达
+  status: open
+- id: GAP-11
+  what: 源码中的无副作用空循环（__list_add_valid、__list_del_entry_valid、pick 的 while (next_lp == NULL);）在实际编译产物中是否保留为永久自旋
+  effect: DV-05/DV-13/DV-21 中“自旋挂死”只是源码语义
+  status: open
+- id: GAP-09
+  what: HPET 实际中断频率与 jiffies 双增的运行确认
+  effect: DV-10 只是源码推导
+  status: open
+- id: GAP-NARROWED
+  what: 已由文本关闭或收窄的读取面缺口（不再列为开放）
+  effect: select_task_rq 原样返回 cpu（SF-C3-17）；cpu_rq 即 &per_cpu(runqueues, cpu)（SF-C1-26）；DEBUG 只在 Debug 构建定义、为二选一（options_flags.cmake 16-23 行）；类段在直接文本中只有 myos_rt（DV-12，仍为推导）；jiffies 与 jiffies_64 同宽（SF-ACC-06）；del_timer_sync 是 timer_delete_sync 的宏别名（SF-C3-31）
+  status: narrowed_or_closed
+stop_points:
+  ready_to_prepare:
+  - 候选 A（只改 pick_next_task_myos）：规格完整，可准备实现与回归计划（W01–W08 重跑 + NR-3、NR-4、NR-6 的 A 列）；实施需 Owner 的内核修改授权
+  needs_policy_decision_first:
+  - 候选 B（OD-1）
+  - 键下限（OD-2）
+  cannot_promise_runtime_unknown:
+  - CA-02 全局可达性
+  - 真实 HPET 频率、in_atomic 与中断时机
+  - SMP 与真实上下文切换
+  - idle 以非 RUNNING 切出（V08）
+  - TASK_NEW 唤醒风险的可达性（DV-13）
+  - 有限超时 schedule_timeout 的失唤醒风险的可达性（DV-19）
+  - 中断窗口离队风险的可达性（DV-23，GAP-02）
+  - jiffies 每次中断加 2（DV-10，未执行）
+  not_this_task: 不是第二波全量完成，也不是新一轮研究清单；不追加实验、补丁或 QEMU 任务。

@@ -1,0 +1,78 @@
+{
+ "commit_short12": "0d62c4d19711",
+ "dest": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/order02/official/frozen",
+ "files": [
+  {
+   "path": "core/fixtures/fx_common.h",
+   "bytes": 1854,
+   "sha256_segments": [
+    "5c3b5baaeb652c16",
+    "2676d7b4ad193f26",
+    "4ea329133dc4817d",
+    "2c754ed1ee0fb906"
+   ],
+   "unchanged_at_head": true,
+   "role": "fixture header (copied next to the template)"
+  },
+  {
+   "path": "core/fixtures/fx_list.inc.c",
+   "bytes": 3054,
+   "sha256_segments": [
+    "146d23b7aa2d1e4b",
+    "1bed214a8b8d716e",
+    "a8eadb69f4222fb2",
+    "45ff21540f35ad3f"
+   ],
+   "unchanged_at_head": true,
+   "role": "verbatim list primitives via //@@ORIG (copied next to the template)"
+  },
+  {
+   "path": "core/fixtures/locate.py",
+   "bytes": 11783,
+   "sha256_segments": [
+    "2b89aff5cc0524fa",
+    "e0ec3fb1f5806ea6",
+    "535bca63abdd7474",
+    "7ba58873e207e2a7"
+   ],
+   "unchanged_at_head": true,
+   "role": "locator used by build2.Builder"
+  },
+  {
+   "path": "core/fixtures/fx_sched.c",
+   "bytes": 10795,
+   "sha256_segments": [
+    "65c8f613d9854c93",
+    "d12fee7ba824eb14",
+    "1c9b2acc61b297e5",
+    "e1ccf8799b577929"
+   ],
+   "unchanged_at_head": true,
+   "role": "reference only: type choices; not compiled"
+  },
+  {
+   "path": "core/recheck-01/fixtures/build2.py",
+   "bytes": 6681,
+   "sha256_segments": [
+    "d3979aa307bbdb87",
+    "05c10bfd850d04bb",
+    "33a2cf0843e7fcea",
+    "aae5ff31490b794a"
+   ],
+   "unchanged_at_head": true,
+   "role": "Builder.expand, CFLAGS, COMPILE_LIMIT_S, RUN_LIMIT_S"
+  },
+  {
+   "path": "core/recheck-01/fixtures/harness2.py",
+   "bytes": 7501,
+   "sha256_segments": [
+    "9b9c5c23698a13a1",
+    "c00fb33adb1828dc",
+    "28505ae9a3ad53f3",
+    "bea48be70a932a01"
+   ],
+   "unchanged_at_head": true,
+   "role": "run_pg (bounded runs), blob/short12 of the time pin"
+  }
+ ]
+}

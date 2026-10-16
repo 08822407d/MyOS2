@@ -1,0 +1,58 @@
+{
+ "mode": "object",
+ "target_commit_short12": "eb75b3100601",
+ "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/facts_check.json",
+ "field": null,
+ "expected_blob_available": true,
+ "expected_bytes": 2340,
+ "expected_sha256_segments": [
+  "1ec5d3b60799bb34",
+  "8c7695d5d85a7ccf",
+  "798c0dada57b466f",
+  "f4cd888e14577eff"
+ ],
+ "channels": [
+  {
+   "channel": "raw.githubusercontent.com",
+   "url": "https://raw.githubusercontent.com/08822407d/MyOS2/<commit:eb75b3100601>/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/facts_check.json",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 2340,
+   "sha256_segments": [
+    "1ec5d3b60799bb34",
+    "8c7695d5d85a7ccf",
+    "798c0dada57b466f",
+    "f4cd888e14577eff"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_ok": true,
+   "ok": true
+  },
+  {
+   "channel": "api.github.com_contents_raw",
+   "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/facts_check.json?ref=<commit:eb75b3100601>",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 2340,
+   "sha256_segments": [
+    "1ec5d3b60799bb34",
+    "8c7695d5d85a7ccf",
+    "798c0dada57b466f",
+    "f4cd888e14577eff"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_ok": true,
+   "ok": true
+  }
+ ],
+ "binding": "fetched at the target commit itself",
+ "ok": true
+}
