@@ -1,0 +1,95 @@
+{
+ "record": "L04_WRITE_AREA_BOUNDARY",
+ "target": "index (staged)",
+ "unstaged": [],
+ "untracked": [],
+ "changes_vs_cloud_head": [
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/RECEIPT.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/deferred-findings.yaml"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l01_identity.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/facts_check.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/queries.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/run.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/stderr.txt"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/stdout.txt"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02_compare.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l03_map_spotcheck.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/pr17_state.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/resume-map.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/resume-map.yaml"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/scripts/make_local_records.py"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/scripts/run_uv05_recheck.py"
+  }
+ ],
+ "only_additions_under_local": true,
+ "frozen_files_identity": {
+  "files": 1324,
+  "identical": 1324,
+  "differing": [],
+  "missing": [],
+  "method": "mode, type and blob id per path; equal blob id means equal bytes"
+ },
+ "cloud_files_identity": {
+  "files": 5,
+  "identical": 5,
+  "differing": [],
+  "missing": [],
+  "method": "mode, type and blob id per path; equal blob id means equal bytes"
+ },
+ "remote_exec_head": "9c36fb3ba7ff",
+ "remote_exec_head_is_cloud_head": true,
+ "commands_run": [
+  "git diff --name-status --no-renames",
+  "git diff --name-status --no-renames --cached 9c36fb3ba7ff",
+  "git ls-files --others --exclude-standard",
+  "git ls-files -s -z",
+  "git ls-remote origin refs/heads/claude/dazzling-cori-q0dnyt",
+  "git ls-tree -r -z --full-tree 293a9e3ef5f4",
+  "git ls-tree -r -z --full-tree 9c36fb3ba7ff",
+  "git rev-parse 9c36fb3ba7ff"
+ ]
+}

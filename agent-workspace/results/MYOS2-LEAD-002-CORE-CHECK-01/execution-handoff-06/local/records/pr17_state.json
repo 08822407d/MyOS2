@@ -1,0 +1,22 @@
+{
+ "record": "PR17_STATE",
+ "command": "gh pr view 17 -R 08822407d/MyOS2 --json number,state,isDraft,mergedAt,closedAt,baseRefName,headRefName,headRefOid,updatedAt,comments",
+ "retrieved_utc": "2026-10-25T10:59:27Z",
+ "number": 17,
+ "state": "OPEN",
+ "isDraft": true,
+ "mergedAt": null,
+ "closedAt": null,
+ "base": "master",
+ "head_ref": "claude/dazzling-cori-q0dnyt",
+ "head_short12": "9c36fb3ba7ff",
+ "updatedAt": "2026-10-25T10:23:15Z",
+ "comments": [
+  {
+   "author": "08822407d",
+   "createdAt": "2026-10-25T10:23:15Z",
+   "first_line": "CORE-EXECUTION-HANDOFF-06 / CLOUD_CLOSE 已完成。"
+  }
+ ],
+ "note": "只读查询；评论只取首行；评论账户为 08822407d，不能据此区分执行者"
+}

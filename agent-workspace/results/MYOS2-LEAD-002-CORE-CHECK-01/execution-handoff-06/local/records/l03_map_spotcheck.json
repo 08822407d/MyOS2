@@ -1,0 +1,304 @@
+{
+ "record": "L03_MAP_SPOTCHECK",
+ "source": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/resume-map.yaml",
+ "rows": [
+  {
+   "package": "pilot",
+   "entry_files_exist": [
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/MANIFEST.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/evidence.md",
+     true
+    ]
+   ],
+   "frozen_is_commit": true,
+   "review_exists": true,
+   "verdict_fields_checked": 8,
+   "verdict_fields_verbatim_ok": 8,
+   "errata_paths_checked": 3,
+   "errata_paths_ok": 3
+  },
+  {
+   "package": "core",
+   "entry_files_exist": [
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/MANIFEST.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/evidence.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/",
+     true
+    ]
+   ],
+   "frozen_is_commit": true,
+   "review_exists": true,
+   "verdict_fields_checked": 10,
+   "verdict_fields_verbatim_ok": 10,
+   "errata_paths_checked": 5,
+   "errata_paths_ok": 5
+  },
+  {
+   "package": "recheck-01",
+   "entry_files_exist": [
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/MANIFEST.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/evidence.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/results.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/observations/run.json",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/observations/static.json",
+     true
+    ]
+   ],
+   "frozen_is_commit": true,
+   "review_exists": true,
+   "verdict_fields_checked": 12,
+   "verdict_fields_verbatim_ok": 12,
+   "errata_paths_checked": 7,
+   "errata_paths_ok": 7
+  },
+  {
+   "package": "consumer-fix-02",
+   "entry_files_exist": [
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/MANIFEST.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/evidence.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/results.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/observations/n06_revalidation.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/observations/consumer_tests.json",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/fixtures/consumer3.py",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/fixtures/make_results3.py",
+     true
+    ]
+   ],
+   "frozen_is_commit": true,
+   "review_exists": true,
+   "verdict_fields_checked": 14,
+   "verdict_fields_verbatim_ok": 14,
+   "errata_paths_checked": 4,
+   "errata_paths_ok": 4
+  },
+  {
+   "package": "scheduler-order-02",
+   "entry_files_exist": [
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/MANIFEST.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/evidence.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/results.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/observations/runs.json",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/observations/controls.json",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/fixtures/fx_order.c",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/fixtures/evaluate_order.py",
+     true
+    ]
+   ],
+   "frozen_is_commit": true,
+   "review_exists": true,
+   "verdict_fields_checked": 12,
+   "verdict_fields_verbatim_ok": 12,
+   "errata_paths_checked": 5,
+   "errata_paths_ok": 5
+  },
+  {
+   "package": "scheduler-integration-03",
+   "entry_files_exist": [
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/MANIFEST.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/integration.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/facts-and-regressions.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/evidence.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/records/d01_index.json",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/records/anchors_check.json",
+     true
+    ]
+   ],
+   "frozen_is_commit": true,
+   "review_exists": true,
+   "verdict_fields_checked": 18,
+   "verdict_fields_verbatim_ok": 18,
+   "errata_paths_checked": 8,
+   "errata_paths_ok": 8
+  },
+  {
+   "package": "mm-baseline-04",
+   "entry_files_exist": [
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/MANIFEST.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/memory-baseline.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/integration-03-disposition.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/facts-and-dependencies.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/evidence.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/facts_check.json",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_facts_check.py",
+     true
+    ]
+   ],
+   "frozen_is_commit": true,
+   "review_exists": true,
+   "verdict_fields_checked": 9,
+   "verdict_fields_verbatim_ok": 9,
+   "errata_paths_checked": 6,
+   "errata_paths_ok": 6
+  },
+  {
+   "package": "user-vfs-baseline-05",
+   "entry_files_exist": [
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/MANIFEST.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/user-vfs-baseline.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/mm-04-disposition.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/deferred-findings.yaml",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/evidence.md",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/records/facts_check.json",
+     true
+    ],
+    [
+     "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_facts_check.py",
+     true
+    ]
+   ],
+   "frozen_is_commit": true,
+   "review_exists": true,
+   "verdict_fields_checked": 8,
+   "verdict_fields_verbatim_ok": 8,
+   "errata_paths_checked": 3,
+   "errata_paths_ok": 3
+  }
+ ],
+ "scope_note": "paths, ids and verbatim field values only; not a semantic check of the map text",
+ "all_ok": true,
+ "commands_run": [
+  "git cat-file -t 10ecb7dd0bdb",
+  "git cat-file -t 22934124fe92",
+  "git cat-file -t 5078686e8267",
+  "git cat-file -t 77faf51e9a43",
+  "git cat-file -t 7e2fa84a9823",
+  "git cat-file -t b7fa83583e35",
+  "git cat-file -t eb75b3100601",
+  "git cat-file -t efb9846b88ec",
+  "git ls-tree -r --name-only HEAD",
+  "git ls-tree -r --name-only origin/agent/MYOS2-LEAD-002",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-core-review.md",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-pilot-review.md",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-01-review.md",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-02-review.md",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-MM-BASELINE-04-review.md",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-INTEGRATION-03-review.md",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-ORDER-02-review.md",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-VFS-BASELINE-05-review.md"
+ ]
+}
