@@ -1,0 +1,2120 @@
+{
+ "pin_time": "a039d9803ade",
+ "queries": [
+  {
+   "id": "QB-01",
+   "command": "git grep -n -w -F myos_root_sb <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 32,
+     "text": "super_block_s *myos_root_sb = NULL;",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 44,
+     "text": "myos_root_mnt.mnt.mnt_sb = myos_root_sb;",
+     "active": true,
+     "enclosing": "set_init_mount"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 46,
+     "text": "myos_root_mnt.mnt.mnt_root = myos_root_sb->s_root;",
+     "active": true,
+     "enclosing": "set_init_mount"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 55,
+     "text": "taskfs_p->root.dentry = myos_root_sb->s_root;",
+     "active": true,
+     "enclosing": "set_init_taskfs"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 126,
+     "text": "myos_root_sb = mount_fs(\"FAT32\", gpt_pe, fat32_sb);",
+     "active": true,
+     "enclosing": "myos_switch_to_root_disk"
+    }
+   ]
+  },
+  {
+   "id": "QB-02",
+   "command": "git grep -n -w -F myos_root_mnt <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 34,
+     "text": "mount_s myos_root_mnt =",
+     "active": true,
+     "enclosing": "myos_root_mnt"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 36,
+     "text": ".mnt_parent\t\t= &myos_root_mnt,",
+     "active": true,
+     "enclosing": "myos_root_mnt"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 38,
+     "text": ".mnt_mounts\t\t= LIST_HEADER_INIT(myos_root_mnt.mnt_mounts),",
+     "active": true,
+     "enclosing": "myos_root_mnt"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 39,
+     "text": ".mnt_child\t\t= LIST_INIT(myos_root_mnt.mnt_child),",
+     "active": true,
+     "enclosing": "myos_root_mnt"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 44,
+     "text": "myos_root_mnt.mnt.mnt_sb = myos_root_sb;",
+     "active": true,
+     "enclosing": "set_init_mount"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 45,
+     "text": "myos_root_mnt.mnt_mountpoint =",
+     "active": true,
+     "enclosing": "set_init_mount"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 46,
+     "text": "myos_root_mnt.mnt.mnt_root = myos_root_sb->s_root;",
+     "active": true,
+     "enclosing": "set_init_mount"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 57,
+     "text": "taskfs_p->root.mnt = &myos_root_mnt.mnt;",
+     "active": true,
+     "enclosing": "set_init_taskfs"
+    }
+   ]
+  },
+  {
+   "id": "QB-03",
+   "command": "git grep -n -w -F BOOT_FS_IDX <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 23,
+     "text": "#define BOOT_FS_IDX 0",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 125,
+     "text": "if (i == BOOT_FS_IDX)",
+     "active": true,
+     "enclosing": "myos_switch_to_root_disk"
+    }
+   ]
+  },
+  {
+   "id": "QB-04",
+   "command": "git grep -n -F PartitionTypeGUID[0] != 0 <time> -- mykernel/fs/vfs/myos_vfs.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 113,
+     "text": "for (int i = 0; gpt_pes[i].PartitionTypeGUID[0] != 0; i++)",
+     "active": true,
+     "enclosing": "myos_switch_to_root_disk"
+    }
+   ]
+  },
+  {
+   "id": "QB-05",
+   "command": "git grep -n -E kernel_thread\\(.*CLONE_FS|CLONE_FS [|] CLONE_FILES [|] SIGCHLD <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/init/main.c",
+     "line": 93,
+     "text": "pid = kernel_thread(kernel_init, NULL, \"kthd: kernel_init\", CLONE_FS);",
+     "active": true,
+     "enclosing": "rest_init"
+    },
+    {
+     "path": "mykernel/init/main.c",
+     "line": 106,
+     "text": "pid = kernel_thread(kthreadd, NULL, \"kthreadd\", CLONE_FS | CLONE_FILES);",
+     "active": true,
+     "enclosing": "rest_init"
+    },
+    {
+     "path": "mykernel/sched/forkexec/kthread.c",
+     "line": 223,
+     "text": "CLONE_FS | CLONE_FILES | SIGCHLD);",
+     "active": true,
+     "enclosing": "create_kthread"
+    }
+   ]
+  },
+  {
+   "id": "QB-06",
+   "command": "git grep -n -F &init_fs <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/init/init_task.c",
+     "line": 118,
+     "text": ".fs\t\t\t\t\t= &init_fs,",
+     "active": true,
+     "enclosing": "init_task"
+    },
+    {
+     "path": "mykernel/sched/misc/fs_struct.c",
+     "line": 138,
+     "text": "// .seq\t\t= SEQCNT_SPINLOCK_ZERO(init_fs.seq, &init_fs.lock),",
+     "active": false,
+     "enclosing": "init_fs"
+    }
+   ]
+  },
+  {
+   "id": "QB-07",
+   "command": "git grep -n -E set_fs_(root|pwd)\\( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/init.c",
+     "line": 54,
+     "text": "set_fs_pwd(current->fs, &path);",
+     "active": true,
+     "enclosing": "init_chdir"
+    },
+    {
+     "path": "mykernel/fs/vfs/init.c",
+     "line": 76,
+     "text": "set_fs_root(current->fs, &path);",
+     "active": true,
+     "enclosing": "init_chroot"
+    },
+    {
+     "path": "mykernel/fs/vfs/namespace.c",
+     "line": 665,
+     "text": "set_fs_pwd(curr->fs, &root);",
+     "active": true,
+     "enclosing": "init_mount_tree"
+    },
+    {
+     "path": "mykernel/fs/vfs/namespace.c",
+     "line": 666,
+     "text": "set_fs_root(curr->fs, &root);",
+     "active": true,
+     "enclosing": "init_mount_tree"
+    },
+    {
+     "path": "mykernel/sched/misc/fs_struct.c",
+     "line": 9,
+     "text": "void set_fs_root(taskfs_s *fs, const path_s *path)",
+     "active": true,
+     "enclosing": "set_fs_root"
+    },
+    {
+     "path": "mykernel/sched/misc/fs_struct.c",
+     "line": 30,
+     "text": "void set_fs_pwd(taskfs_s *fs, const path_s *path)",
+     "active": true,
+     "enclosing": "set_fs_pwd"
+    },
+    {
+     "path": "mykernel/sched/misc/sched_misc_api.h",
+     "line": 44,
+     "text": "extern void set_fs_root(taskfs_s *, const path_s *);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/misc/sched_misc_api.h",
+     "line": 45,
+     "text": "extern void set_fs_pwd(taskfs_s *, const path_s *);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-08",
+   "command": "git grep -n -E vfs_kern_mount\\(&internal_fs_type|register_filesystem\\(&dev_fs_type\\) <time> -- mykernel/drivers/base/devtmpfs.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 415,
+     "text": "mnt = vfs_kern_mount(&internal_fs_type, 0, \"devtmpfs\", opts);",
+     "active": true,
+     "enclosing": "devtmpfs_init"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 421,
+     "text": "err = register_filesystem(&dev_fs_type);",
+     "active": true,
+     "enclosing": "devtmpfs_init"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 439,
+     "text": "unregister_filesystem(&dev_fs_type);",
+     "active": true,
+     "enclosing": "devtmpfs_init"
+    }
+   ]
+  },
+  {
+   "id": "QB-09",
+   "command": "git grep -n -F init_mount( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 6,
+   "hits_active": 6,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 390,
+     "text": "err = init_mount(\"devtmpfs\", \"/\", \"devtmpfs\", DEVTMPFS_MFLAGS);",
+     "active": true,
+     "enclosing": "devtmpfsd"
+    },
+    {
+     "path": "mykernel/fs/vfs/init.c",
+     "line": 16,
+     "text": "int init_mount(const char *dev_name, const char *dir_name,",
+     "active": true,
+     "enclosing": "init_mount"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 42,
+     "text": "void set_init_mount()",
+     "active": true,
+     "enclosing": "set_init_mount"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 142,
+     "text": "set_init_mount();",
+     "active": true,
+     "enclosing": "myos_switch_to_root_disk"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 145,
+     "text": "int err = init_mount(\"devtmpfs\", \"/dev\", \"devtmpfs\", MS_SILENT);",
+     "active": true,
+     "enclosing": "myos_switch_to_root_disk"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/init_syscalls.h",
+     "line": 5,
+     "text": "init_mount(const char *dev_name, const char *dir_name,",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-10",
+   "command": "git grep -n -I -E mkdir.*dev <time> -- make_install.sh scripts/ myinitramfs/CMakeLists.txt mykernel/CMakeLists.txt",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QB-11",
+   "command": "git grep -n -w -F devtmpfs_init <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/base_init.c",
+     "line": 25,
+     "text": "devtmpfs_init();",
+     "active": true,
+     "enclosing": "driver_init"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 381,
+     "text": "* calls.  That call is done while devtmpfs_init, which is marked __init,",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 409,
+     "text": "int devtmpfs_init(void)",
+     "active": true,
+     "enclosing": "devtmpfs_init"
+    },
+    {
+     "path": "mykernel/include/linux/drivers/base.h",
+     "line": 179,
+     "text": "extern int devtmpfs_init(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/drivers/base.h",
+     "line": 181,
+     "text": "// static inline int devtmpfs_init(void) { return 0; }",
+     "active": false,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-12",
+   "command": "git grep -n -w -F tty_init <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/drivers/char/mem.c",
+     "line": 206,
+     "text": "return tty_init();",
+     "active": true,
+     "enclosing": "chr_dev_init"
+    },
+    {
+     "path": "mykernel/drivers/char/tty_io.c",
+     "line": 156,
+     "text": "int tty_init(void)",
+     "active": true,
+     "enclosing": "tty_init"
+    },
+    {
+     "path": "mykernel/include/linux/device/tty.h",
+     "line": 358,
+     "text": "int tty_init(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/device/tty.h",
+     "line": 380,
+     "text": "// static inline int __init tty_init(void)",
+     "active": false,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-13",
+   "command": "git grep -n -F myos_device_create( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/core.c",
+     "line": 236,
+     "text": "device_s *myos_device_create(class_s *class, dev_t devt, const char* devname)",
+     "active": true,
+     "enclosing": "myos_device_create"
+    },
+    {
+     "path": "mykernel/drivers/char/mem.c",
+     "line": 203,
+     "text": "myos_device_create(mem_class, devt, memdev.name);",
+     "active": true,
+     "enclosing": "chr_dev_init"
+    },
+    {
+     "path": "mykernel/drivers/char/tty_io.c",
+     "line": 163,
+     "text": "myos_device_create(tty_class, MKDEV(TTYAUX_MAJOR, 0), \"tty\");",
+     "active": true,
+     "enclosing": "tty_init"
+    },
+    {
+     "path": "mykernel/drivers/char/tty_io.c",
+     "line": 170,
+     "text": "myos_device_create(tty_class, MKDEV(TTYAUX_MAJOR, 1), \"console\");",
+     "active": true,
+     "enclosing": "tty_init"
+    },
+    {
+     "path": "mykernel/include/linux/device/device.h",
+     "line": 992,
+     "text": "device_s *myos_device_create(class_s *class, dev_t devt, const char* devname);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-14",
+   "command": "git grep -n -E devtmpfs_(create|delete)_node\\( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/core.c",
+     "line": 108,
+     "text": "devtmpfs_create_node(dev);",
+     "active": true,
+     "enclosing": "device_add"
+    },
+    {
+     "path": "mykernel/drivers/base/core.c",
+     "line": 200,
+     "text": "// \tdevtmpfs_delete_node(dev);",
+     "active": false,
+     "enclosing": "device_del"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 109,
+     "text": "int devtmpfs_create_node(device_s *dev)",
+     "active": true,
+     "enclosing": "devtmpfs_create_node"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 133,
+     "text": "int devtmpfs_delete_node(device_s *dev)",
+     "active": true,
+     "enclosing": "devtmpfs_delete_node"
+    },
+    {
+     "path": "mykernel/include/linux/drivers/base.h",
+     "line": 201,
+     "text": "int devtmpfs_create_node(device_s *dev);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/drivers/base.h",
+     "line": 202,
+     "text": "int devtmpfs_delete_node(device_s *dev);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/drivers/base.h",
+     "line": 204,
+     "text": "// static inline int devtmpfs_create_node(struct device *dev) { return 0; }",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/drivers/base.h",
+     "line": 205,
+     "text": "// static inline int devtmpfs_delete_node(struct device *dev) { return 0; }",
+     "active": false,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-15",
+   "command": "git grep -n -E req->mode (=|[|]=)  <time> -- mykernel/drivers/base/devtmpfs.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 114,
+     "text": "req->mode = 0;",
+     "active": true,
+     "enclosing": "devtmpfs_create_node"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 122,
+     "text": "req->mode = 0600;",
+     "active": true,
+     "enclosing": "devtmpfs_create_node"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 124,
+     "text": "req->mode |= S_IFBLK;",
+     "active": true,
+     "enclosing": "devtmpfs_create_node"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 126,
+     "text": "req->mode |= S_IFCHR;",
+     "active": true,
+     "enclosing": "devtmpfs_create_node"
+    }
+   ]
+  },
+  {
+   "id": "QB-16",
+   "command": "git grep -n -E kern_path_create\\(AT_FDCWD, nodename|vfs_mknod\\(path\\.dentry->d_inode, dentry, mode, dev->devt\\) <time> -- mykernel/drivers/base/devtmpfs.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 200,
+     "text": "dentry = kern_path_create(AT_FDCWD, nodename, &path, 0);",
+     "active": true,
+     "enclosing": "handle_create"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 203,
+     "text": "dentry = kern_path_create(AT_FDCWD, nodename, &path, 0);",
+     "active": true,
+     "enclosing": "handle_create"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 208,
+     "text": "err = vfs_mknod(path.dentry->d_inode, dentry, mode, dev->devt);",
+     "active": true,
+     "enclosing": "handle_create"
+    }
+   ]
+  },
+  {
+   "id": "QB-17",
+   "command": "git grep -n -F i_op->mknod( <time> -- mykernel/fs/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 890,
+     "text": "error = dir->i_op->mknod(dir, dentry, mode, dev);",
+     "active": true,
+     "enclosing": "vfs_mknod"
+    }
+   ]
+  },
+  {
+   "id": "QB-18",
+   "command": "git grep -n -F inode = shmem_get_inode(dir->i_sb, dir, mode, dev, VM_NORESERVE); <time> -- mykernel/fs/vfs/shmem.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/shmem.c",
+     "line": 187,
+     "text": "inode = shmem_get_inode(dir->i_sb, dir, mode, dev, VM_NORESERVE);",
+     "active": true,
+     "enclosing": "shmem_mknod"
+    }
+   ]
+  },
+  {
+   "id": "QB-19",
+   "command": "git grep -n -E \\.open = chrdev_open|i_fop = &def_chr_fops <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/drivers/char/char_dev.c",
+     "line": 96,
+     "text": ".open = chrdev_open,",
+     "active": true,
+     "enclosing": "def_chr_fops"
+    },
+    {
+     "path": "mykernel/fs/vfs/inode.c",
+     "line": 382,
+     "text": "inode->i_fop = &def_chr_fops;",
+     "active": true,
+     "enclosing": "init_special_inode"
+    }
+   ]
+  },
+  {
+   "id": "QB-20",
+   "command": "git grep -n -E cdev->ops = fops|cdev_init\\(&console_cdev, &console_fops\\) <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/drivers/char/char_dev.c",
+     "line": 175,
+     "text": "cdev->ops = fops;",
+     "active": true,
+     "enclosing": "cdev_init"
+    },
+    {
+     "path": "mykernel/drivers/char/tty_io.c",
+     "line": 165,
+     "text": "cdev_init(&console_cdev, &console_fops);",
+     "active": true,
+     "enclosing": "tty_init"
+    }
+   ]
+  },
+  {
+   "id": "QB-21",
+   "command": "git grep -n -E cdev_map = kobj_map_init|chrdev_init\\(\\); <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/drivers/char/char_dev.c",
+     "line": 188,
+     "text": "cdev_map = kobj_map_init(base_probe);",
+     "active": true,
+     "enclosing": "chrdev_init"
+    },
+    {
+     "path": "mykernel/fs/vfs/dcache.c",
+     "line": 423,
+     "text": "chrdev_init();",
+     "active": true,
+     "enclosing": "vfs_caches_init"
+    }
+   ]
+  },
+  {
+   "id": "QB-22",
+   "command": "git grep -n -E p_kb = \\(kbd_inbuf_s \\*\\)kzalloc|init_keyboard\\(\\);|myos_devices_init\\(\\); <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/device.c",
+     "line": 25,
+     "text": "init_keyboard();",
+     "active": true,
+     "enclosing": "init_cdev_intr"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/keyboard.c",
+     "line": 46,
+     "text": "p_kb = (kbd_inbuf_s *)kzalloc(sizeof(kbd_inbuf_s), GFP_KERNEL);",
+     "active": true,
+     "enclosing": "init_keyboard"
+    },
+    {
+     "path": "mykernel/init/main.c",
+     "line": 184,
+     "text": "myos_devices_init();",
+     "active": true,
+     "enclosing": "start_kernel"
+    }
+   ]
+  },
+  {
+   "id": "QB-23",
+   "command": "git grep -n -w -F FMODE_CAN_WRITE <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 228,
+     "text": "if (!(file->f_mode & FMODE_CAN_WRITE))",
+     "active": true,
+     "enclosing": "__kernel_write_iter"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 293,
+     "text": "if (!(file->f_mode & FMODE_CAN_WRITE))",
+     "active": true,
+     "enclosing": "vfs_write"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 352,
+     "text": "// if (!(file->f_mode & FMODE_CAN_WRITE))",
+     "active": false,
+     "enclosing": "vfs_writev"
+    },
+    {
+     "path": "mykernel/include/linux/fs/fs.h",
+     "line": 108,
+     "text": "#define FMODE_CAN_WRITE\t\t\t((__force fmode_t)0x40000)",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-24",
+   "command": "git grep -n -E f_mode[[:space:]]*([|]=|=[^=]) <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "mykernel/block/fops.c",
+     "line": 68,
+     "text": "filp->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC;",
+     "active": true,
+     "enclosing": "blkdev_open"
+    },
+    {
+     "path": "mykernel/block/fops.c",
+     "line": 71,
+     "text": "filp->f_mode |= FMODE_NDELAY;",
+     "active": true,
+     "enclosing": "blkdev_open"
+    },
+    {
+     "path": "mykernel/block/fops.c",
+     "line": 73,
+     "text": "filp->f_mode |= FMODE_EXCL;",
+     "active": true,
+     "enclosing": "blkdev_open"
+    },
+    {
+     "path": "mykernel/block/fops.c",
+     "line": 75,
+     "text": "filp->f_mode |= FMODE_WRITE_IOCTL;",
+     "active": true,
+     "enclosing": "blkdev_open"
+    },
+    {
+     "path": "mykernel/fs/vfs/file_table.c",
+     "line": 60,
+     "text": "f->f_mode = OPEN_FMODE(flags);",
+     "active": true,
+     "enclosing": "__alloc_file"
+    }
+   ]
+  },
+  {
+   "id": "QB-25",
+   "command": "git grep -n -F Pos.FB_addr = <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/drivers/char/tty_io.c",
+     "line": 195,
+     "text": "Pos.FB_addr = (unsigned int *)framebuffer.FB_virbase;",
+     "active": true,
+     "enclosing": "myos_init_video"
+    }
+   ]
+  },
+  {
+   "id": "QB-26",
+   "command": "git grep -n -E __SYSCALL\\(__NR_(read|write|open|close|ioctl|writev|dup|dup2|fcntl),  <time> -- mykernel/arch/x86_64/include/asm/syscalls_64.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 9,
+   "hits_active": 9,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 4,
+     "text": "__SYSCALL(__NR_read, sys_read)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 5,
+     "text": "__SYSCALL(__NR_write, sys_write)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 6,
+     "text": "__SYSCALL(__NR_open, sys_open)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 7,
+     "text": "__SYSCALL(__NR_close, sys_close)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 20,
+     "text": "__SYSCALL(__NR_ioctl, sys_ioctl)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 22,
+     "text": "__SYSCALL(__NR_writev, sys_writev)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 26,
+     "text": "__SYSCALL(__NR_dup, sys_dup)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 27,
+     "text": "__SYSCALL(__NR_dup2, sys_dup2)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 38,
+     "text": "__SYSCALL(__NR_fcntl, sys_fcntl)",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-27",
+   "command": "git grep -n -E __NR_(openat|dup3) <time> -- mykernel/arch/x86_64/include/asm/syscalls_64.h",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QB-28",
+   "command": "git grep -n -E define[[:space:]]+__NR_(syscalls|openat|dup3)[[:space:]] <time> -- mykernel/arch/x86_64/include/asm/unistd_64.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+     "line": 312,
+     "text": "#define __NR_openat\t\t\t\t257",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+     "line": 354,
+     "text": "#define __NR_dup3\t\t\t\t292",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+     "line": 443,
+     "text": "#\tdefine\t__NR_syscalls\t453",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-29",
+   "command": "git grep -n -F __x64_sys_ni_syscall <time> -- mykernel/arch/x86_64/entry/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/common.c",
+     "line": 19,
+     "text": "long __x64_sys_ni_syscall(const pt_regs_s *regs) {",
+     "active": true,
+     "enclosing": "__x64_sys_ni_syscall"
+    },
+    {
+     "path": "mykernel/arch/x86_64/entry/common.c",
+     "line": 38,
+     "text": "// \tregs->ax = __x64_sys_ni_syscall(regs);",
+     "active": false,
+     "enclosing": "do_syscall_64"
+    },
+    {
+     "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+     "line": 31,
+     "text": "default: return __x64_sys_ni_syscall(regs);",
+     "active": true,
+     "enclosing": "x64_sys_call"
+    }
+   ]
+  },
+  {
+   "id": "QB-30",
+   "command": "git grep -n -E CMAKE_C_COMPILER|MUSL_PATH|add_subdirectory <time> -- myinitramfs/CMakeLists.txt",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 6,
+   "hits_active": 6,
+   "hits": [
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 40,
+     "text": "set(MUSL_PATH /home/cheyh/projs/musl/build)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 41,
+     "text": "set(CMAKE_C_COMPILER ${MUSL_PATH}/exec/bin/musl-gcc)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 43,
+     "text": "set(MUSL_INC_PATH ${MUSL_PATH}/include)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 44,
+     "text": "set(MUSL_LIB_PATH ${MUSL_PATH}/lib)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 47,
+     "text": "add_subdirectory(myinit)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 48,
+     "text": "add_subdirectory(myshell)",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-31",
+   "command": "git grep -n -w -F freopen <time> -- myinitramfs/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 6,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 11,
+     "text": "freopen(\"/dev/console\", \"r\", stdin);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 12,
+     "text": "freopen(\"/dev/console\", \"w\", stdout);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 13,
+     "text": "freopen(\"/dev/console\", \"w\", stderr);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/stdio.h",
+     "line": 251,
+     "text": "// extern FILE *freopen(const char *__restrict __filename,",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/stdio.h",
+     "line": 258,
+     "text": "// extern FILE *__REDIRECT(freopen, (const char *__restrict __filename, const char *__restrict __modes, FILE *__restrict __stream), freopen64)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/stdio.h",
+     "line": 262,
+     "text": "// #define freopen freopen64",
+     "active": false,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-32",
+   "command": "git grep -n -E open_last_lookups\\(nd, flags\\)|if \\(!\\(open_flag & O_CREAT\\)\\) <time> -- mykernel/fs/vfs/namei.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 672,
+     "text": "if (!(open_flag & O_CREAT))",
+     "active": true,
+     "enclosing": "open_last_lookups"
+    },
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 725,
+     "text": "(s = open_last_lookups(nd, flags)) != NULL)",
+     "active": true,
+     "enclosing": "path_openat"
+    }
+   ]
+  },
+  {
+   "id": "QB-33",
+   "command": "git grep -n -w -F syscall_return_via_sysret <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/entry_64.S",
+     "line": 184,
+     "text": "SYM_CODE_START(syscall_return_via_sysret)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/entry/entry_64.S",
+     "line": 282,
+     "text": "jmp\t\t\tsyscall_return_via_sysret",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/arch_task.c",
+     "line": 39,
+     "text": "\"jmp\tsyscall_return_via_sysret\t\\n\\t\"",
+     "active": true,
+     "enclosing": "kjmp_to_doexecve"
+    }
+   ]
+  },
+  {
+   "id": "QB-34",
+   "command": "git grep -n -w -F ret_from_fork_asm <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/entry_64.S",
+     "line": 255,
+     "text": "SYM_CODE_START(ret_from_fork_asm)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/entry/entry_64.S",
+     "line": 298,
+     "text": "SYM_CODE_END(ret_from_fork_asm)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/sched/context/context_api_arch.h",
+     "line": 11,
+     "text": "asmlinkage void ret_from_fork_asm(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+     "line": 98,
+     "text": "frame->ret_addr = (reg_t)ret_from_fork_asm;",
+     "active": true,
+     "enclosing": "copy_thread"
+    }
+   ]
+  },
+  {
+   "id": "QB-35",
+   "command": "git grep -n -F copy_thread(p, args) <time> -- mykernel/sched/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1143,
+     "text": "retval = copy_thread(p, args);",
+     "active": true,
+     "enclosing": "copy_process"
+    }
+   ]
+  },
+  {
+   "id": "QB-36",
+   "command": "git grep -n -E p->flags [|]= PF_KTHREAD|\\.kthread[[:space:]]*= 1|flags &= ~PF_KTHREAD|current->flags & PF_KTHREAD <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/arch_task.c",
+     "line": 17,
+     "text": "curr->flags &= ~PF_KTHREAD;",
+     "active": true,
+     "enclosing": "kjmp_to_doexecve"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 1386,
+     "text": "if (WARN_ON_ONCE(current->flags & PF_KTHREAD))",
+     "active": true,
+     "enclosing": "kernel_execve"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 962,
+     "text": "p->flags &= ~PF_KTHREAD;",
+     "active": true,
+     "enclosing": "copy_process"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 964,
+     "text": "p->flags |= PF_KTHREAD;",
+     "active": true,
+     "enclosing": "copy_process"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1545,
+     "text": ".kthread\t\t= 1,",
+     "active": true,
+     "enclosing": "kernel_thread"
+    }
+   ]
+  },
+  {
+   "id": "QB-37",
+   "command": "git grep -n -E regs = current_pt_regs\\(\\);|START_THREAD\\(elf_ex, regs, elf_entry, bprm->p\\); <time> -- mykernel/fs/vfs/binfmt_elf.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 1115,
+     "text": "regs = current_pt_regs();",
+     "active": true,
+     "enclosing": "load_elf_binary"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 1131,
+     "text": "START_THREAD(elf_ex, regs, elf_entry, bprm->p);",
+     "active": true,
+     "enclosing": "load_elf_binary"
+    }
+   ]
+  },
+  {
+   "id": "QB-38",
+   "command": "git grep -n -E regs->flags[[:space:]]*= X86_EFLAGS_IF <time> -- mykernel/arch/x86_64/sched/context/process64_arch.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/sched/context/process64_arch.c",
+     "line": 298,
+     "text": "regs->flags\t\t= X86_EFLAGS_IF | X86_EFLAGS_FIXED;",
+     "active": true,
+     "enclosing": "start_thread_common"
+    }
+   ]
+  },
+  {
+   "id": "QB-39",
+   "command": "git grep -n -w -F top_of_stack <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/asm/current.h",
+     "line": 23,
+     "text": "ulong\t\ttop_of_stack;",
+     "active": true,
+     "enclosing": "struct pcpu_hot"
+    },
+    {
+     "path": "mykernel/arch/x86_64/kbuild/asm-offsets.c",
+     "line": 93,
+     "text": "OFFSET(X86_top_of_stack, pcpu_hot, top_of_stack);",
+     "active": true,
+     "enclosing": "common"
+    },
+    {
+     "path": "mykernel/arch/x86_64/sched/context/process64_arch.c",
+     "line": 381,
+     "text": "*this_cpu_ptr(&pcpu_hot.top_of_stack) = task_top_of_stack(next_p);",
+     "active": true,
+     "enclosing": "__switch_to"
+    },
+    {
+     "path": "mykernel/arch/x86_64/smp/percpu_area.c",
+     "line": 18,
+     "text": ".top_of_stack\t= TOP_OF_INIT_STACK,",
+     "active": true,
+     "enclosing": "DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s,pcpu_hot)"
+    }
+   ]
+  },
+  {
+   "id": "QB-40",
+   "command": "git grep -n -E ALERT_DUMMY_SYSCALL\\((dup|dup2), <time> -- mykernel/fs/syscall.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 105,
+     "text": "ALERT_DUMMY_SYSCALL(dup, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_dup"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 123,
+     "text": "ALERT_DUMMY_SYSCALL(dup2, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_dup2"
+    }
+   ]
+  },
+  {
+   "id": "QB-41",
+   "command": "git grep -n -F strncmp(name->name, dir_p->d_name.name, name->len) <time> -- mykernel/fs/vfs/dcache.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/dcache.c",
+     "line": 144,
+     "text": "if (dir_p != NULL && !strncmp(name->name, dir_p->d_name.name, name->len))",
+     "active": true,
+     "enclosing": "__d_lookup"
+    }
+   ]
+  },
+  {
+   "id": "QB-42",
+   "command": "git grep -n -F memdev_s memdev = devlist[minor]; <time> -- mykernel/drivers/char/mem.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/drivers/char/mem.c",
+     "line": 193,
+     "text": "memdev_s memdev = devlist[minor];",
+     "active": true,
+     "enclosing": "chr_dev_init"
+    }
+   ]
+  },
+  {
+   "id": "QB-43",
+   "command": "git grep -n -F syscall_exit_to_user_mode(regs); <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/common.c",
+     "line": 49,
+     "text": "syscall_exit_to_user_mode(regs);",
+     "active": true,
+     "enclosing": "do_syscall_64"
+    },
+    {
+     "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+     "line": 79,
+     "text": "syscall_exit_to_user_mode(regs);",
+     "active": true,
+     "enclosing": "ret_from_fork"
+    }
+   ]
+  },
+  {
+   "id": "QB-44",
+   "command": "git grep -n -E CONFIG_DEVMEM|CONFIG_DEVPORT <time> -- mykernel/scripts/options_flags.cmake",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QB-45",
+   "command": "git grep -n -F ROOTBLK_NVME <time> -- mykernel/scripts/options_flags.cmake",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/scripts/options_flags.cmake",
+     "line": 71,
+     "text": "# \t-DROOTBLK_NVME \\",
+     "active": false,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-46",
+   "command": "git grep -n -E define[[:space:]]+ROOTBLK_TRANSFER <time> -- mykernel/arch/x86_64/include/obsolete/device.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/obsolete/device.h",
+     "line": 48,
+     "text": "#define ROOTBLK_TRANSFER(cmd, blk_idx, count, buffer)\t\\",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/obsolete/device.h",
+     "line": 55,
+     "text": "#define ROOTBLK_TRANSFER(cmd, blk_idx, count, buffer)\t\\",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QB-47",
+   "command": "git grep -n -E nd->root = current->fs->root;|nd->path = current->fs->pwd; <time> -- mykernel/fs/vfs/namei.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 553,
+     "text": "nd->root = current->fs->root;",
+     "active": true,
+     "enclosing": "path_init"
+    },
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 557,
+     "text": "nd->path = current->fs->pwd;",
+     "active": true,
+     "enclosing": "path_init"
+    }
+   ]
+  },
+  {
+   "id": "QB-48",
+   "command": "git grep -n -E \\.mknod <time> -- mykernel/fs/fat/",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QB-49",
+   "command": "git grep -n -F while (err); <time> -- mykernel/drivers/base/devtmpfs.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 435,
+     "text": "while (err);",
+     "active": true,
+     "enclosing": "devtmpfs_init"
+    }
+   ]
+  },
+  {
+   "id": "QB-50",
+   "command": "git grep -n -w -F ELF_PLAT_INIT <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/asm/elf.h",
+     "line": 87,
+     "text": "// #define ELF_PLAT_INIT(_r, load_addr)\t\t\t\\",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 1116,
+     "text": "// #ifdef ELF_PLAT_INIT",
+     "active": false,
+     "enclosing": "load_elf_binary"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 1127,
+     "text": "// ELF_PLAT_INIT(regs, reloc_func_desc);",
+     "active": false,
+     "enclosing": "load_elf_binary"
+    }
+   ]
+  },
+  {
+   "id": "QB-51",
+   "command": "git grep -n -E lookup_flags [|]= LOOKUP_ <time> -- mykernel/fs/vfs/open.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 9,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 158,
+     "text": "lookup_flags |= LOOKUP_DIRECTORY;",
+     "active": true,
+     "enclosing": "build_open_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 160,
+     "text": "lookup_flags |= LOOKUP_FOLLOW;",
+     "active": true,
+     "enclosing": "build_open_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 163,
+     "text": "lookup_flags |= LOOKUP_NO_XDEV;",
+     "active": true,
+     "enclosing": "build_open_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 165,
+     "text": "lookup_flags |= LOOKUP_NO_MAGICLINKS;",
+     "active": true,
+     "enclosing": "build_open_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 167,
+     "text": "lookup_flags |= LOOKUP_NO_SYMLINKS;",
+     "active": true,
+     "enclosing": "build_open_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 169,
+     "text": "lookup_flags |= LOOKUP_BENEATH;",
+     "active": true,
+     "enclosing": "build_open_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 171,
+     "text": "lookup_flags |= LOOKUP_IN_ROOT;",
+     "active": true,
+     "enclosing": "build_open_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 176,
+     "text": "lookup_flags |= LOOKUP_CACHED;",
+     "active": true,
+     "enclosing": "build_open_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 288,
+     "text": "// \t\tlookup_flags |= LOOKUP_REVAL;",
+     "active": false,
+     "enclosing": "sys_chdir"
+    }
+   ]
+  },
+  {
+   "id": "QB-52",
+   "command": "git grep -n -E int flags = op->lookup_flags;|filp = path_openat\\(&nd, op, flags\\); <time> -- mykernel/fs/vfs/namei.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 756,
+     "text": "int flags = op->lookup_flags;",
+     "active": true,
+     "enclosing": "do_filp_open"
+    },
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 760,
+     "text": "filp = path_openat(&nd, op, flags);",
+     "active": true,
+     "enclosing": "do_filp_open"
+    },
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 762,
+     "text": "// \tfilp = path_openat(&nd, op, flags);",
+     "active": false,
+     "enclosing": "do_filp_open"
+    }
+   ]
+  },
+  {
+   "id": "QB-53",
+   "command": "git grep -n -F d_is_dir(mp->m_dentry) <time> -- mykernel/fs/vfs/namespace.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namespace.c",
+     "line": 370,
+     "text": "// if (d_is_dir(mp->m_dentry) !=",
+     "active": false,
+     "enclosing": "graft_tree"
+    }
+   ]
+  },
+  {
+   "id": "QB-54",
+   "command": "git grep -n -E static task_s \\*thread;|wake_up_process\\(thread\\); <time> -- mykernel/drivers/base/devtmpfs.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 41,
+     "text": "static task_s *thread;",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 101,
+     "text": "wake_up_process(thread);",
+     "active": true,
+     "enclosing": "devtmpfs_submit_req"
+    }
+   ]
+  },
+  {
+   "id": "QB-55",
+   "command": "git grep -n -E req_s \\*req = kzalloc|struct req req; <time> -- mykernel/drivers/base/devtmpfs.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 112,
+     "text": "req_s *req = kzalloc(sizeof(req_s), GFP_KERNEL);",
+     "active": true,
+     "enclosing": "devtmpfs_create_node"
+    },
+    {
+     "path": "mykernel/drivers/base/devtmpfs.c",
+     "line": 136,
+     "text": "struct req req;",
+     "active": true,
+     "enclosing": "devtmpfs_delete_node"
+    }
+   ]
+  },
+  {
+   "id": "QB-56",
+   "command": "git grep -n -E x->done--;|spin_lock_irq\\(&x->wait\\.lock\\);|__finish_swait\\(&x->wait, &wait\\); <time> -- mykernel/kactive/completion/completion.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/kactive/completion/completion.h",
+     "line": 59,
+     "text": "spin_lock_irq(&x->wait.lock);",
+     "active": true,
+     "enclosing": "do_wait_for_common"
+    },
+    {
+     "path": "mykernel/kactive/completion/completion.h",
+     "line": 61,
+     "text": "__finish_swait(&x->wait, &wait);",
+     "active": true,
+     "enclosing": "do_wait_for_common"
+    },
+    {
+     "path": "mykernel/kactive/completion/completion.h",
+     "line": 66,
+     "text": "x->done--;",
+     "active": true,
+     "enclosing": "do_wait_for_common"
+    },
+    {
+     "path": "mykernel/kactive/completion/completion.h",
+     "line": 75,
+     "text": "spin_lock_irq(&x->wait.lock);",
+     "active": true,
+     "enclosing": "wait_for_common"
+    }
+   ]
+  },
+  {
+   "id": "QB-57",
+   "command": "git grep -n -F fs->in_exec <time> -- mykernel/sched/forkexec/exec.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 1265,
+     "text": "curr->fs->in_exec = 0;",
+     "active": true,
+     "enclosing": "bprm_execve"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 1284,
+     "text": "current->fs->in_exec = 0;",
+     "active": true,
+     "enclosing": "bprm_execve"
+    }
+   ]
+  },
+  {
+   "id": "QB-58",
+   "command": "git grep -n -E fc->ops = &legacy_fs_context_ops;|\\.get_tree[[:space:]]+= legacy_get_tree, <time> -- mykernel/fs/vfs/fs_context.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/fs_context.c",
+     "line": 162,
+     "text": ".get_tree\t\t\t= legacy_get_tree,",
+     "active": true,
+     "enclosing": "legacy_fs_context_ops"
+    },
+    {
+     "path": "mykernel/fs/vfs/fs_context.c",
+     "line": 174,
+     "text": "fc->ops = &legacy_fs_context_ops;",
+     "active": true,
+     "enclosing": "legacy_init_fs_context"
+    }
+   ]
+  },
+  {
+   "id": "QB-59",
+   "command": "git grep -n -F inode->i_op = &shmem_dir_inode_operations; <time> -- mykernel/fs/vfs/shmem.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/shmem.c",
+     "line": 150,
+     "text": "inode->i_op = &shmem_dir_inode_operations;",
+     "active": true,
+     "enclosing": "shmem_get_inode"
+    }
+   ]
+  },
+  {
+   "id": "QB-60",
+   "command": "git grep -n -F p->data = data; <time> -- mykernel/drivers/base/map.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/drivers/base/map.c",
+     "line": 63,
+     "text": "p->data = data;",
+     "active": true,
+     "enclosing": "kobj_map"
+    }
+   ]
+  },
+  {
+   "id": "QB-61",
+   "command": "git grep -n -E inode->i_cdev = p = new;|list_header_add_to_head\\(&inode->i_devices, &p->list\\); <time> -- mykernel/drivers/char/char_dev.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/drivers/char/char_dev.c",
+     "line": 57,
+     "text": "inode->i_cdev = p = new;",
+     "active": true,
+     "enclosing": "chrdev_open"
+    },
+    {
+     "path": "mykernel/drivers/char/char_dev.c",
+     "line": 58,
+     "text": "list_header_add_to_head(&inode->i_devices, &p->list);",
+     "active": true,
+     "enclosing": "chrdev_open"
+    }
+   ]
+  },
+  {
+   "id": "QB-62",
+   "command": "git grep -n -E kernel_thread\\(kthread, create|kthread_exit\\(ret\\); <time> -- mykernel/sched/forkexec/kthread.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/kthread.c",
+     "line": 214,
+     "text": "kthread_exit(ret);",
+     "active": true,
+     "enclosing": "kthread"
+    },
+    {
+     "path": "mykernel/sched/forkexec/kthread.c",
+     "line": 222,
+     "text": "pid = kernel_thread(kthread, create, create->full_name,",
+     "active": true,
+     "enclosing": "create_kthread"
+    }
+   ]
+  },
+  {
+   "id": "QB-63",
+   "command": "git grep -n -E copy_fs\\(clone_flags, p\\)|fs->users\\+\\+; <time> -- mykernel/sched/forkexec/fork.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 712,
+     "text": "fs->users++;",
+     "active": true,
+     "enclosing": "copy_fs"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1125,
+     "text": "retval = copy_fs(clone_flags, p);",
+     "active": true,
+     "enclosing": "copy_process"
+    }
+   ]
+  },
+  {
+   "id": "QB-64",
+   "command": "git grep -n -F lower_32_bits(flags) | CLONE_VM <time> -- mykernel/sched/forkexec/fork.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1539,
+     "text": ".flags\t\t\t= ((lower_32_bits(flags) | CLONE_VM |",
+     "active": true,
+     "enclosing": "kernel_thread"
+    }
+   ]
+  },
+  {
+   "id": "QB-65",
+   "command": "git grep -n -E exit_to_user_mode_loop\\(regs, 0\\);|__syscall_exit_to_user_mode_work\\(regs\\); <time> -- mykernel/entry/common.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/entry/common.c",
+     "line": 66,
+     "text": "exit_to_user_mode_loop(regs, 0);",
+     "active": true,
+     "enclosing": "__syscall_exit_to_user_mode_work"
+    },
+    {
+     "path": "mykernel/entry/common.c",
+     "line": 72,
+     "text": "__syscall_exit_to_user_mode_work(regs);",
+     "active": true,
+     "enclosing": "syscall_exit_to_user_mode"
+    }
+   ]
+  },
+  {
+   "id": "QB-66",
+   "command": "git grep -n -F return prev_p; <time> -- mykernel/arch/x86_64/sched/context/process64_arch.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/sched/context/process64_arch.c",
+     "line": 421,
+     "text": "return prev_p;",
+     "active": true,
+     "enclosing": "__switch_to"
+    }
+   ]
+  },
+  {
+   "id": "QB-67",
+   "command": "git grep -n -E unshare_fs|copy_fs_struct <time> -- mykernel/sched/forkexec/exec.c",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QB-68",
+   "command": "git grep -n -F curr->fs->pwd = path; <time> -- mykernel/fs/vfs/open.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 283,
+     "text": "curr->fs->pwd = path;",
+     "active": true,
+     "enclosing": "sys_chdir"
+    }
+   ]
+  },
+  {
+   "id": "QB-69",
+   "command": "git grep -n -E ^long do_creatat\\(|return do_creatat\\(AT_FDCWD|error = dir->i_op->create\\(dir, dentry, mode\\); <time> -- mykernel/fs/vfs/namei.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 899,
+     "text": "long do_creatat(int dfd, filename_s *name, umode_t mode)",
+     "active": true,
+     "enclosing": "do_creatat"
+    },
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 921,
+     "text": "error = dir->i_op->create(dir, dentry, mode);",
+     "active": true,
+     "enclosing": "do_creatat"
+    },
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 934,
+     "text": "return do_creatat(AT_FDCWD, getname(pathname), mode);",
+     "active": true,
+     "enclosing": "sys_creat"
+    }
+   ]
+  },
+  {
+   "id": "QB-70",
+   "command": "git grep -n -w -E chdir|chroot <time> -- myinitramfs/myinit/",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  }
+ ]
+}
