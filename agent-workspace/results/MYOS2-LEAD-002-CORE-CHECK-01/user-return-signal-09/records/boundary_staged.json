@@ -1,0 +1,99 @@
+{
+ "record": "D04_WRITE_AREA_BOUNDARY",
+ "base": "8983a9235c8a",
+ "target": "index (staged)",
+ "comparison": "mode and full object id of every path, compared in memory; only paths, counts and 12-character commit ids are written",
+ "base_files": 1366,
+ "base_files_identical": 1366,
+ "differing": [],
+ "missing": [],
+ "added": [
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/MANIFEST.md",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/evidence.md",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/facts-and-boundaries.yaml",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/boundary_staged.json",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/queries.json",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/rs_check.json",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/run.json",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/return-paths.dot",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/scripts/rs_check.py",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/stdio-08-disposition.md",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/user-return-signal.md"
+ ],
+ "changes_vs_base": [
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/MANIFEST.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/deferred-findings.yaml"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/evidence.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/facts-and-boundaries.yaml"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/boundary_staged.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/queries.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/rs_check.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/run.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/return-paths.dot"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/scripts/rs_check.py"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/stdio-08-disposition.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/user-return-signal.md"
+  }
+ ],
+ "unstaged": [],
+ "untracked": [],
+ "remote_exec_head": "8983a9235c8a",
+ "head": "8983a9235c8a",
+ "checks": {
+  "base_files_identical_by_full_object": true,
+  "has_additions": true,
+  "additions_only_under_prefix": true,
+  "diff_only_added_under_prefix": true,
+  "nothing_unstaged": true,
+  "nothing_untracked": true,
+  "head_is_base": true,
+  "remote_exec_head_is_base": true
+ },
+ "ok": true,
+ "commands_run": [
+  "git diff --cached --name-status --no-renames 8983a9235c8a",
+  "git diff --name-status --no-renames",
+  "git ls-files --others --exclude-standard",
+  "git ls-files -s -z",
+  "git ls-remote origin refs/heads/claude/dazzling-cori-q0dnyt",
+  "git ls-tree -r -z --full-tree 8983a9235c8a",
+  "git rev-parse 8983a9235c8a^{commit}",
+  "git rev-parse HEAD"
+ ]
+}

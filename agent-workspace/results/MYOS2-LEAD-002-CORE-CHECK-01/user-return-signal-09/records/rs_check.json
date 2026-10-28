@@ -1,0 +1,1803 @@
+{
+ "check": "USER_RETURN_SIGNAL_09",
+ "pin_time": "a039d9803ade",
+ "base": "8983a9235c8a",
+ "anchors": {
+  "total": 75,
+  "ok": 75,
+  "by_kind": {
+   "asm_range": 2,
+   "build": 0,
+   "in_body": 60,
+   "initializer": 0,
+   "macro": 13,
+   "type_member": 0
+  },
+  "failures": []
+ },
+ "markdown_tags": {
+  "files": {
+   "user-return-signal.md": [
+    9,
+    9
+   ],
+   "stdio-08-disposition.md": [
+    7,
+    7
+   ]
+  },
+  "total": 16,
+  "ok": 16,
+  "failures": []
+ },
+ "queries": {
+  "total": 262,
+  "tool_failures": 0,
+  "hit_refs_checked": 353,
+  "hit_refs_with_expect": 353,
+  "errors": [],
+  "ok": true
+ },
+ "anchor_roles": {
+  "total": 75,
+  "errors": [],
+  "ok": true
+ },
+ "structure_checks": {
+  "total": 110,
+  "ok": 110,
+  "rows": [
+   {
+    "id": "SD-01",
+    "kind": "body_regex",
+    "path": "mykernel/debug/panic.c",
+    "symbol": "panic",
+    "ok": true,
+    "span": [
+     36,
+     37,
+     214
+    ],
+    "regex": "\\b(?:for|while)\\s*\\(|\\bunreachable\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-02",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "arch_do_signal_or_restart",
+    "ok": true,
+    "span": [
+     243,
+     244,
+     277
+    ],
+    "regex": "regs->(?:ax|ip)\\s*(?:=|-=)",
+    "active_matches": 4,
+    "expected": 4
+   },
+   {
+    "id": "SD-03",
+    "kind": "body_regex",
+    "path": "mykernel/entry/common.c",
+    "symbol": "exit_to_user_mode_loop",
+    "ok": true,
+    "span": [
+     14,
+     15,
+     57
+    ],
+    "regex": "\\bti_work\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-04",
+    "kind": "body_regex",
+    "path": "mykernel/entry/common.c",
+    "symbol": "exit_to_user_mode_loop",
+    "ok": true,
+    "span": [
+     14,
+     15,
+     57
+    ],
+    "regex": ";",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-05",
+    "kind": "body_regex",
+    "path": "mykernel/entry/common.c",
+    "symbol": "__syscall_exit_to_user_mode_work",
+    "ok": true,
+    "span": [
+     61,
+     62,
+     67
+    ],
+    "regex": "\\bexit_to_user_mode_loop\\s*\\(\\s*regs\\s*,\\s*0\\s*\\)",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-06",
+    "kind": "body_regex",
+    "path": "mykernel/entry/common.c",
+    "symbol": "__syscall_exit_to_user_mode_work",
+    "ok": true,
+    "span": [
+     61,
+     62,
+     67
+    ],
+    "regex": ";",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-07",
+    "kind": "body_regex",
+    "path": "mykernel/entry/common.c",
+    "symbol": "syscall_exit_to_user_mode",
+    "ok": true,
+    "span": [
+     69,
+     70,
+     75
+    ],
+    "regex": ";",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-08",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/entry/common.c",
+    "symbol": "do_syscall_64",
+    "ok": true,
+    "span": [
+     24,
+     25,
+     86
+    ],
+    "regex": "\\bregs->(?:cx|ip|r11|flags|cs|ss)\\b",
+    "active_matches": 8,
+    "expected": 8
+   },
+   {
+    "id": "SD-09",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/entry/common.c",
+    "symbol": "do_syscall_64",
+    "ok": true,
+    "span": [
+     24,
+     25,
+     86
+    ],
+    "regex": "\\bregs->sp\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-10",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/entry/common.c",
+    "symbol": "do_syscall_64",
+    "ok": true,
+    "span": [
+     24,
+     25,
+     86
+    ],
+    "regex": "\\bTASK_SIZE_MAX\\b|X86_EFLAGS_RF\\s*\\|\\s*X86_EFLAGS_TF",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-11",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "arch_do_signal_or_restart",
+    "ok": true,
+    "span": [
+     243,
+     244,
+     277
+    ],
+    "regex": "\\bsyscall_get_nr\\s*\\(\\s*current\\s*,\\s*regs\\s*\\)\\s*!=\\s*-1",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-12",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "arch_do_signal_or_restart",
+    "ok": true,
+    "span": [
+     243,
+     244,
+     277
+    ],
+    "regex": "\\b(?:raw_)?local_irq_(?:disable|save)\\s*\\(|\\bcli\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-13",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "\\bsyscall_get_nr\\s*\\(\\s*current\\s*,\\s*regs\\s*\\)\\s*!=\\s*-1",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-14",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "\\bregs->(?:ax\\s*=\\s*(?:-EINTR|regs->orig_ax)|ip\\s*-=\\s*2)\\s*;",
+    "active_matches": 4,
+    "expected": 4
+   },
+   {
+    "id": "SD-15",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "\\bsignal_setup_done\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-16",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "\\bregs->flags\\s*&=\\s*~\\(X86_EFLAGS_DF\\|X86_EFLAGS_RF\\|X86_EFLAGS_TF\\)",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-17",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "\\b(?:raw_)?local_irq_(?:disable|save)\\s*\\(|\\bcli\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-18",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "__unsafe_setup_sigcontext",
+    "ok": true,
+    "span": [
+     97,
+     99,
+     135
+    ],
+    "regex": "\\bunsafe_put_user\\s*\\(\\s*regs->",
+    "active_matches": 20,
+    "expected": 20
+   },
+   {
+    "id": "SD-19",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\bregs->(?:di|si|dx|ax|ip|sp|cs)\\s*=",
+    "active_matches": 7,
+    "expected": 7
+   },
+   {
+    "id": "SD-20",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "\\bregs->(?:bx|cx|dx|si|di|bp|ax|sp|ip|r8|r9|r10|r11|r12|r13|r14|r15)\\s*=\\s*sc\\.",
+    "active_matches": 17,
+    "expected": 17
+   },
+   {
+    "id": "SD-21",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "\\bregs->(?:cs|ss)\\s*=\\s*sc\\.(?:cs|ss)\\s*\\|\\s*0x03\\s*;",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-22",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "\\bforce_valid_ss\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-23",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "sys_rt_sigreturn",
+    "ok": true,
+    "span": [
+     244,
+     245,
+     277
+    ],
+    "regex": "\\bregs\\s*=\\s*current_pt_regs\\s*\\(\\s*\\)",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-24",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "sys_rt_sigreturn",
+    "ok": true,
+    "span": [
+     244,
+     245,
+     277
+    ],
+    "regex": "\\breturn\\s+regs->ax\\s*;",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-25",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\bspin_(?:un)?lock_irq\\s*\\(\\s*&sighand->siglock\\s*\\)",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-26",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/spinlock/spinlock_smp.h",
+    "symbol": "raw_spin_unlock_irq",
+    "ok": true,
+    "span": [
+     115,
+     117,
+     121
+    ],
+    "regex": "\\b(?:local_irq_enable|preempt_enable)\\s*\\(",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-27",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "syscall_get_nr\\s*\\(\\s*current\\s*,\\s*regs\\s*\\)\\s*!=\\s*-1",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-28",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "arch_do_signal_or_restart",
+    "ok": true,
+    "span": [
+     243,
+     244,
+     277
+    ],
+    "regex": "syscall_get_nr\\s*\\(\\s*current\\s*,\\s*regs\\s*\\)\\s*!=\\s*-1",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-29",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "case\\s+-ERESTART\\w*\\s*:",
+    "active_matches": 4,
+    "expected": 4
+   },
+   {
+    "id": "SD-30",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "arch_do_signal_or_restart",
+    "ok": true,
+    "span": [
+     243,
+     244,
+     277
+    ],
+    "regex": "case\\s+-ERESTART\\w*\\s*:",
+    "active_matches": 4,
+    "expected": 4
+   },
+   {
+    "id": "SD-31",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "\\bdefault\\s*:",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-32",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "arch_do_signal_or_restart",
+    "ok": true,
+    "span": [
+     243,
+     244,
+     277
+    ],
+    "regex": "\\bdefault\\s*:",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-33",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "regs->ip\\s*-=\\s*2",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-34",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "arch_do_signal_or_restart",
+    "ok": true,
+    "span": [
+     243,
+     244,
+     277
+    ],
+    "regex": "regs->ip\\s*-=\\s*2",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-35",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "arch_do_signal_or_restart",
+    "ok": true,
+    "span": [
+     243,
+     244,
+     277
+    ],
+    "regex": "\\brestore_saved_sigmask\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-36",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\bdo_group_exit\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-37",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\bregs->(?:di|ax|si|dx|ip|sp|cs)\\s*=(?!=)",
+    "active_matches": 7,
+    "expected": 7
+   },
+   {
+    "id": "SD-38",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\bforce_valid_ss\\s*\\(\\s*regs\\s*\\)",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-39",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "regs->flags\\s*&=\\s*~\\s*\\(\\s*X86_EFLAGS_DF\\s*\\|\\s*X86_EFLAGS_RF\\s*\\|\\s*X86_EFLAGS_TF\\s*\\)",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-40",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "__unsafe_setup_sigcontext",
+    "ok": true,
+    "span": [
+     97,
+     99,
+     135
+    ],
+    "regex": "unsafe_put_user\\s*\\(\\s*regs->(?:ax|ip)\\s*,",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-41",
+    "kind": "body_regex",
+    "path": "mykernel/block/fops.c",
+    "symbol": "blkdev_llseek",
+    "ok": true,
+    "span": [
+     25,
+     26,
+     34
+    ],
+    "regex": "\\breturn\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-42",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/libfs.c",
+    "symbol": "dcache_dir_lseek",
+    "ok": true,
+    "span": [
+     181,
+     182,
+     217
+    ],
+    "regex": "\\breturn\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-43",
+    "kind": "body_regex",
+    "path": "mykernel/fs/syscall.c",
+    "symbol": "sys_lseek",
+    "ok": true,
+    "span": [
+     75,
+     77,
+     91
+    ],
+    "regex": "\\breturn\\s+ret\\s*;",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-44",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "sys_rt_sigreturn",
+    "ok": true,
+    "span": [
+     244,
+     245,
+     277
+    ],
+    "regex": "\\brestore_sigcontext\\s*\\(\\s*regs\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-45",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/include/asm/syscall.h",
+    "symbol": "syscall_get_error",
+    "ok": true,
+    "span": [
+     57,
+     58,
+     73
+    ],
+    "regex": "\\berror\\s*=\\s*regs->ax\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-46",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "__unsafe_setup_sigcontext",
+    "ok": true,
+    "span": [
+     97,
+     99,
+     135
+    ],
+    "regex": "unsafe_put_user\\(regs->(?:ax|ip),",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-47",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\bregs->(?:ax|ip|sp|cs)\\s*=[^=]",
+    "active_matches": 4,
+    "expected": 4
+   },
+   {
+    "id": "SD-48",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "sys_rt_sigreturn",
+    "ok": true,
+    "span": [
+     244,
+     245,
+     277
+    ],
+    "regex": "\\bcurrent_pt_regs\\s*\\(\\s*\\)",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-49",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "\\bregs->(?:cx|sp|ip|r11|cs|ss|flags)\\s*=[^=]",
+    "active_matches": 7,
+    "expected": 7
+   },
+   {
+    "id": "SD-50",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "\\bforce_valid_ss\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-51",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "X86_EFLAGS_DF\\|X86_EFLAGS_RF\\|X86_EFLAGS_TF",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-52",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/myos/interrupt.c",
+    "symbol": "excep_hwint_context",
+    "ok": true,
+    "span": [
+     119,
+     120,
+     130
+    ],
+    "regex": "\\b(?:arch_do_signal_or_restart|exit_to_user_mode_loop|syscall_exit_to_user_mode)\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-53",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "__unsafe_setup_sigcontext",
+    "ok": true,
+    "span": [
+     97,
+     99,
+     135
+    ],
+    "regex": "current->thread\\.(?:trap_nr|error_code|cr2)\\b",
+    "active_matches": 3,
+    "expected": 3
+   },
+   {
+    "id": "SD-54",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "get_sigframe",
+    "ok": true,
+    "span": [
+     34,
+     36,
+     106
+    ],
+    "regex": "\\bsp\\s*=\\s*regs->sp\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-55",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "get_sigframe",
+    "ok": true,
+    "span": [
+     34,
+     36,
+     106
+    ],
+    "regex": "\\bsp\\s*=\\s*\\(ulong\\)\\s*ka->sa\\.sa_restorer\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-56",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/syscall.c",
+    "symbol": "sys_rt_sigaction",
+    "ok": true,
+    "span": [
+     22,
+     25,
+     44
+    ],
+    "regex": "\\baccess_ok\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-57",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/syscall.c",
+    "symbol": "sys_rt_sigprocmask",
+    "ok": true,
+    "span": [
+     55,
+     56,
+     82
+    ],
+    "regex": "\\baccess_ok\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-58",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "sigprocmask",
+    "ok": true,
+    "span": [
+     1134,
+     1135,
+     1159
+    ],
+    "regex": "\\bsigdelsetmask\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-59",
+    "kind": "body_regex",
+    "path": "mykernel/include/linux/kernel/uaccess.h",
+    "symbol": "_inline_copy_from_user",
+    "ok": true,
+    "span": [
+     149,
+     150,
+     167
+    ],
+    "regex": "\\baccess_ok\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-60",
+    "kind": "body_regex",
+    "path": "mykernel/include/linux/kernel/uaccess.h",
+    "symbol": "_inline_copy_to_user",
+    "ok": true,
+    "span": [
+     171,
+     172,
+     181
+    ],
+    "regex": "\\baccess_ok\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-61",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\bspin_unlock_irq\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-62",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\bgoto\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-63",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\bPF_SIGNALED\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-64",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "dequeue_synchronous_signal",
+    "ok": true,
+    "span": [
+     308,
+     309,
+     351
+    ],
+    "regex": "\\blist_header_for_each_container\\s*\\(",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-65",
+    "kind": "body_regex",
+    "path": "mykernel/sched/forkexec/fork.c",
+    "symbol": "copy_sighand",
+    "ok": true,
+    "span": [
+     750,
+     751,
+     773
+    ],
+    "regex": "RCU_INIT_POINTER|->sighand\\s*=[^=]",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-66",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.h",
+    "symbol": "init_sigpending",
+    "ok": true,
+    "span": [
+     386,
+     388,
+     391
+    ],
+    "regex": "\\bsigemptyset\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-67",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "setup_rt_frame",
+    "ok": true,
+    "span": [
+     146,
+     148,
+     163
+    ],
+    "regex": "\\breturn\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-68",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "get_sigframe",
+    "ok": true,
+    "span": [
+     34,
+     36,
+     106
+    ],
+    "regex": "\\baccess_ok\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-69",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\breturn\\s+-EFAULT\\b",
+    "active_matches": 3,
+    "expected": 3
+   },
+   {
+    "id": "SD-70",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\b(access_ok|user_access_begin)\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-71",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\buc_flags\\s*=[^=]",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-72",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "\\b(signal_setup_done|force_sigsegv)\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-73",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "sys_rt_sigreturn",
+    "ok": true,
+    "span": [
+     244,
+     245,
+     277
+    ],
+    "regex": "\\bget_user\\s*\\(",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-74",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "\\bregs->\\w+\\s*=[^=]",
+    "active_matches": 21,
+    "expected": 21
+   },
+   {
+    "id": "SD-75",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "\\b(fpu__restore_sig|force_valid_ss)\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-76",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "sys_rt_sigreturn",
+    "ok": true,
+    "span": [
+     244,
+     245,
+     277
+    ],
+    "regex": "\\baccess_ok\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-77",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "return\\s+false\\s*;",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-78",
+    "kind": "body_regex",
+    "path": "mykernel/include/linux/kernel/uaccess.h",
+    "symbol": "_inline_copy_from_user",
+    "ok": true,
+    "span": [
+     149,
+     150,
+     167
+    ],
+    "regex": "access_ok",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-79",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "sys_rt_sigreturn",
+    "ok": true,
+    "span": [
+     244,
+     245,
+     277
+    ],
+    "regex": "\\b(signal_fault|force_sig\\w*|send_sig\\w*)\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-80",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\b(access_ok|user_access_begin|stac|clac)\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-81",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "get_sigframe",
+    "ok": true,
+    "span": [
+     34,
+     36,
+     106
+    ],
+    "regex": "\\baccess_ok\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-82",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "\\bgoto\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-83",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "__unsafe_setup_sigcontext",
+    "ok": true,
+    "span": [
+     97,
+     99,
+     135
+    ],
+    "regex": "\\bgoto\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-84",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "(?<![.>\\w])uc_flags\\b",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-85",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "(?<![.>\\w])uc_flags\\s*=(?!=)",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-86",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "UC_STRICT_RESTORE_SS|force_valid_ss\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-87",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "get_sigframe",
+    "ok": true,
+    "span": [
+     34,
+     36,
+     106
+    ],
+    "regex": "fpu__alloc_mathframe|copy_fpstate_to_sigframe",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-88",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "get_sigframe",
+    "ok": true,
+    "span": [
+     34,
+     36,
+     106
+    ],
+    "regex": "\\b(math_size|buf_fx)\\b",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-89",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "fpu__clear_user_states",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-90",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "restore_sigcontext",
+    "ok": true,
+    "span": [
+     47,
+     49,
+     94
+    ],
+    "regex": "fpstate",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-91",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/sched/context/process64_arch.c",
+    "symbol": "__switch_to",
+    "ok": true,
+    "span": [
+     317,
+     320,
+     422
+    ],
+    "regex": "switch_fpu",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-92",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "do_sigaction",
+    "ok": true,
+    "span": [
+     1164,
+     1165,
+     1227
+    ],
+    "regex": "sa_flags\\s*&=\\s*UAPI_SA_FLAGS",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-93",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "do_sigaction",
+    "ok": true,
+    "span": [
+     1164,
+     1165,
+     1227
+    ],
+    "regex": "sigaction_compat_abi|SA_RESTORER",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-94",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "SA_RESTORER",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-95",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+    "symbol": "x64_setup_rt_frame",
+    "ok": true,
+    "span": [
+     160,
+     161,
+     237
+    ],
+    "regex": "return\\s+-EFAULT",
+    "active_matches": 3,
+    "expected": 3
+   },
+   {
+    "id": "SD-96",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "\\bfailed\\b",
+    "active_matches": 3,
+    "expected": 3
+   },
+   {
+    "id": "SD-97",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/lock_IPC/signal/signal.c",
+    "symbol": "handle_signal",
+    "ok": true,
+    "span": [
+     165,
+     166,
+     223
+    ],
+    "regex": "signal_setup_done|force_sig",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-98",
+    "kind": "body_regex",
+    "path": "mykernel/include/linux/kernel/uaccess.h",
+    "symbol": "copy_from_user",
+    "ok": true,
+    "span": [
+     185,
+     186,
+     194
+    ],
+    "regex": "check_copy_size|access_ok",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-99",
+    "kind": "body_regex",
+    "path": "mykernel/include/linux/kernel/uaccess.h",
+    "symbol": "_inline_copy_from_user",
+    "ok": true,
+    "span": [
+     149,
+     150,
+     167
+    ],
+    "regex": "access_ok|valid_user_address|should_fail_usercopy",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-100",
+    "kind": "body_regex",
+    "path": "mykernel/include/linux/kernel/uaccess.h",
+    "symbol": "_inline_copy_from_user",
+    "ok": true,
+    "span": [
+     149,
+     150,
+     167
+    ],
+    "regex": "raw_copy_from_user\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-101",
+    "kind": "body_regex",
+    "path": "mykernel/include/linux/kernel/uaccess.h",
+    "symbol": "_inline_copy_to_user",
+    "ok": true,
+    "span": [
+     171,
+     172,
+     181
+    ],
+    "regex": "\\baccess_ok\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-102",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/include/asm/uaccess_64.h",
+    "symbol": "copy_user_generic",
+    "ok": true,
+    "span": [
+     102,
+     103,
+     123
+    ],
+    "regex": "access_ok|valid_user_address|TASK_SIZE",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-103",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\b(?:do_group_exit|do_exit|do_signal_stop|do_coredump)\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-104",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\bcontinue\\b",
+    "active_matches": 3,
+    "expected": 3
+   },
+   {
+    "id": "SD-105",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\bbreak\\b",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-106",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\btask_sigpending\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-107",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "get_signal",
+    "ok": true,
+    "span": [
+     802,
+     803,
+     1050
+    ],
+    "regex": "\\bspin_(?:un)?lock_irq\\s*\\(",
+    "active_matches": 2,
+    "expected": 2
+   },
+   {
+    "id": "SD-108",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.c",
+    "symbol": "dequeue_synchronous_signal",
+    "ok": true,
+    "span": [
+     308,
+     309,
+     351
+    ],
+    "regex": "\\bsigdelset\\s*\\(",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SD-109",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/signal/signal.h",
+    "symbol": "init_sigpending",
+    "ok": true,
+    "span": [
+     386,
+     388,
+     391
+    ],
+    "regex": "\\bsigemptyset\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SD-110",
+    "kind": "body_regex",
+    "path": "mykernel/lock_IPC/spinlock/spinlock_smp.h",
+    "symbol": "raw_spin_lock_irq",
+    "ok": true,
+    "span": [
+     72,
+     74,
+     78
+    ],
+    "regex": "\\b(?:local_irq_disable|preempt_disable|arch_spin_lock)\\s*\\(",
+    "active_matches": 3,
+    "expected": 3
+   }
+  ]
+ },
+ "value_tables": {
+  "VT-RESTART": {
+   "values": {
+    "ERESTARTSYS": 512,
+    "ERESTARTNOINTR": 513,
+    "ERESTARTNOHAND": 514,
+    "ERESTART_RESTARTBLOCK": 516,
+    "SA_RESTART": 268435456,
+    "SA_RESTORER": 67108864,
+    "__NR_restart_syscall": 219,
+    "__NR_rt_sigreturn": 15,
+    "EINTR": 4,
+    "MAX_ERRNO": 4095,
+    "__NR_syscalls": 453,
+    "in_active_table:__NR_restart_syscall": false,
+    "in_active_table:__NR_rt_sigreturn": true,
+    "in_active_table:__NR_rt_sigaction": true,
+    "in_active_table:__NR_rt_sigprocmask": true
+   },
+   "differs": [],
+   "ok": true
+  },
+  "ok": true
+ },
+ "external_ids_loaded": 732,
+ "structure": {
+  "errors": [],
+  "limits": {
+   "capabilities": [
+    10,
+    15
+   ],
+   "edges": [
+    21,
+    40
+   ],
+   "anchors": [
+    75,
+    75
+   ],
+   "candidates": [
+    4,
+    4
+   ]
+  },
+  "recount": {
+   "capabilities": 10,
+   "edges": 21,
+   "edges_indirect": 2,
+   "anchors": 75,
+   "anchors_by_kind": {
+    "asm_range": 2,
+    "build": 0,
+    "in_body": 60,
+    "initializer": 0,
+    "macro": 13,
+    "type_member": 0
+   },
+   "anchors_by_theme": {
+    "D00": 22,
+    "D01": 11,
+    "D02": 22,
+    "D03": 20
+   },
+   "queries": 262,
+   "structure_checks": 110,
+   "value_tables": 1,
+   "gap_status": 2,
+   "next_validation_candidates": 4,
+   "sr08_dispositions": 2,
+   "return_frame_transitions": 36,
+   "frame_fields": 19,
+   "restart_conditions": 19,
+   "fact_notes": 2
+  },
+  "ok": true
+ },
+ "deferred_findings": {
+  "errors": [],
+  "recount": {
+   "findings": 14,
+   "evidence_appends": 2,
+   "errata": 3,
+   "findings_by_status": {
+    "deferred_owner_not_ready": 13,
+    "needs_evidence": 1,
+    "superseded_interpretation": 0
+   }
+  },
+  "errata_quotes_checked": 63,
+  "ok": true
+ },
+ "dot": {
+  "nodes": 15,
+  "edges": 21,
+  "errors": [],
+  "ok": true
+ },
+ "hex40_in_package": [],
+ "all_ok": true,
+ "scan_index_repo_rebound": true
+}
