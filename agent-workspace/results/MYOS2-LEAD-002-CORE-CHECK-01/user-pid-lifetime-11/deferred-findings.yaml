@@ -1,0 +1,178 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+track_id: MYOS2-LEAD-002
+followup_id: CORE-USER-PID-LIFETIME-11
+record_type: incremental_deferred_findings_and_evidence_appends
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+produced_by: "ChatGPT普通对话；Owner选择GPT-6 / Extra，backend未独立认证"
+date: "2026-10-31"
+base_snapshot: "source=time @ a039d9803ade；old=848e2acdf7e1"
+read_channel: connector
+policy_ref: "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+scope: "仅本批PID数字发布/所有权/退出断点新发现；旧05、10编号和状态均冻结"
+counts: {findings: 6, evidence_appends: 3, errata_candidates: 1}
+findings:
+  - qualified_id: CORE-USER-PID-LIFETIME-11::PID11-F01
+    id: PID11-F01
+    title: "简化IDR以NULL作占号预留不能排他，后续idr_replace可覆盖"
+    kind: [source_fact, conditional_inference]
+    status: deferred_owner_not_ready
+    source_ref: "source=time @ a039d9803ade；new_result=user-pid-lifetime-11/facts-and-boundaries.yaml::anchors"
+    claim: "alloc_pid在idr_alloc/idr_alloc_cyclic传入ptr=NULL；idr_alloc_u32检查slot==NULL后又把NULL写回该槽，未建立区别于空闲的占位状态。后面的idr_replace未检查目标槽是否已经被其它发布者改变，因此在指定set_tid、循环游标回绕或并发等前提下存在数字重复分配/覆盖风险。"
+    premises:
+      - "两个分配者在首个pid_s对象发布前选择了相同槽，或请求指定相同ID"
+      - "随后至少一个分配者进入idr_replace发布阶段；缓存和namespace指针有效"
+    impact: "可能破坏PID数字到对象的一对一映射和后继pid_task查找；不声称每次fork必重复或观察到覆盖"
+    counter_evidence:
+      - "idr_alloc_cyclic会推进idr_next，常见连续调用可能得到不同数；不能因此宣称立即碰撞"
+      - "pidmap_lock保护单段扫描/发布，但不覆盖两阶段之间全部时段"
+    unknown:
+      - "实际竞争调度、槽重用频率和PID对象丢失后果NOT_RUN"
+    evidence: [PID11-A13, PID11-A66, PID11-A67, PID11-A70]
+    related: [CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F03]
+    owner_action_now: none
+    blocks: {static_work: false, future_runtime_or_fix: "separate authorization needed"}
+    reopen_conditions: "未来获得有界构建/运行/并发验证授权，或IDR实现变更时回源"
+    ai_suggestion_not_adopted: "只供未来专项评估，不实施内核变更"
+  - qualified_id: CORE-USER-PID-LIFETIME-11::PID11-F02
+    id: PID11-F02
+    title: "idr_find直接以用户正pid下标读32768槽数组，无边界校验"
+    kind: [source_fact, conditional_language_risk]
+    status: deferred_owner_not_ready
+    source_ref: "source=time @ a039d9803ade；new_result=user-pid-lifetime-11/facts-and-boundaries.yaml::anchors"
+    claim: "mykernel/lib/idr/idr.c::idr_find以idr->idr_rt[id]直接访问数组；idr_init_base仅按MYOS_IDR_BUF_SIZE=32768分配指针数组。sys_kill正pid经find_vpid→find_pid_ns→idr_find没有对这一上界的活动检查。故有效namespace前提下，输入pid>=32768可造成越界访问的源码风险。"
+    premises:
+      - "用户kill传入可表示的正pid>=32768"
+      - "在该版本已初始化的PID命名空间中，当前调用确实到达idr_find，且上述数组长度不经外部变更"
+    impact: "不能保证返回NULL/-ESRCH；可能存在语言层越界读取，具体硬件后果不预测"
+    counter_evidence:
+      - "idr_alloc_u32的分配循环最多访问32767槽，但查询接口不是分配接口，不能把它的边界自动施加给idr_find"
+      - "正常分配给出的PID未必超过上界，不覆盖用户直接输入任意正数的情形"
+    unknown:
+      - "编译器优化和实际内存结果、是否发生硬件异常均NOT_RUN"
+    evidence: [PID11-A24, PID11-A25, PID11-A72, PID11-A73, PID11-A74, PID11-A93, PID11-A94]
+    related: [CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F03]
+    owner_action_now: none
+    blocks: {static_work: false, future_runtime_or_fix: "separate authorization needed"}
+    reopen_conditions: "未来需明确授权的有界负例验证；现在不修内核"
+    ai_suggestion_not_adopted: "只供未来专项评估，不实施内核变更"
+  - qualified_id: CORE-USER-PID-LIFETIME-11::PID11-F03
+    id: PID11-F03
+    title: "名字带get的task查询helper不增加task对象引用"
+    kind: [source_fact, conditional_concurrency_risk]
+    status: deferred_owner_not_ready
+    source_ref: "source=time @ a039d9803ade；new_result=user-pid-lifetime-11/facts-and-boundaries.yaml::anchors"
+    claim: "get_pid_task与find_get_task_by_vpid的get_task_struct及RCU锁均被注释，返回的task_s*未在这些helper中加task引用。另find_vpid/pid_task也返回裸指针；即便get_pid持有pid_s.count，也不等于task_s引用。"
+    premises:
+      - "调用者在其它线程/CPU可能detach/释放task时仍使用返回指针"
+      - "没有调用方额外持有task引用或任务生存锁（由具体调用者另核）"
+    impact: "指针生命周期安全性未证明；不能从名字自动推断引用所有权"
+    counter_evidence:
+      - "get_task_pid与find_get_pid确实调用get_pid增加pid_s对象引用，但不是task引用"
+      - "当前exit路径缺PID完整释放连接，不等于未来或其它路径绝无任务回收"
+    unknown:
+      - "实际并发UAF是否可达及外部调用者如何保护task未穷尽"
+    evidence: [PID11-A34, PID11-A35, PID11-A36, PID11-A37, PID11-A43, PID11-A31, PID11-A32]
+    related: [CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F03, CORE-USER-VFS-BASELINE-05::UV-15]
+    owner_action_now: none
+    blocks: {static_work: false, future_runtime_or_fix: "separate authorization needed"}
+    reopen_conditions: "新增任务显式审计特定get helper调用者、对象回收后再判断"
+    ai_suggestion_not_adopted: "只供未来专项评估，不实施内核变更"
+  - qualified_id: CORE-USER-PID-LIFETIME-11::PID11-F04
+    id: PID11-F04
+    title: "do_exit将未初始化group_dead传给exit_notify"
+    kind: [source_fact, conditional_language_risk]
+    status: deferred_owner_not_ready
+    source_ref: "source=time @ a039d9803ade；new_result=user-pid-lifetime-11/facts-and-boundaries.yaml::anchors"
+    claim: "do_exit在函数开头声明int group_dead；原先的atomic_dec_and_test赋值语句和相关处理均被注释；活动代码仍调用exit_notify(tsk,group_dead)。这一实参在所读控制流中未得到已赋值来源，故不能把其后控制流视作完全定义良好。"
+    premises:
+      - "调用do_exit，并抵达exit_notify实参求值"
+      - "没有外部编译器特殊约束提供合法已赋值值"
+    impact: "后续exit_notify和do_task_dead的运行结果不能据源码名字固定；C语言层可能出现未定义行为"
+    counter_evidence:
+      - "exit_notify的活动正文没有读取group_dead，不代表调用方读取未初始化实参已得到可靠定义"
+      - "group_dead相关Linux原代码仍作为注释存在"
+    unknown:
+      - "编译、内联优化、真实exit行为NOT_RUN"
+    evidence: [PID11-A79, PID11-A80, PID11-A83]
+    related: [CORE-USER-VFS-BASELINE-05::UV-15]
+    owner_action_now: none
+    blocks: {static_work: false, future_runtime_or_fix: "separate authorization needed"}
+    reopen_conditions: "需获准的编译/运行验证或对应赋值源文改变"
+    ai_suggestion_not_adopted: "只供未来专项评估，不实施内核变更"
+  - qualified_id: CORE-USER-PID-LIFETIME-11::PID11-F05
+    id: PID11-F05
+    title: "exit_notify将PIDTYPE_PID误作为pid_ns_s*实参查1号任务"
+    kind: [source_fact, conditional_language_risk]
+    status: deferred_owner_not_ready
+    source_ref: "source=time @ a039d9803ade；new_result=user-pid-lifetime-11/facts-and-boundaries.yaml::anchors"
+    claim: "exit_notify当tsk->children.count!=0时调用find_task_by_pid_ns(1,PIDTYPE_PID)，但真实接口签名第二参数为pid_ns_s *ns；PIDTYPE_PID是enum的第一个值0，find_pid_ns随后会解引用ns->idr。若编译接受此调用并达到非空孩子分支，不能从它得到合法的1号任务指针保证。"
+    premises:
+      - "do_exit控制定义良好地进入exit_notify（另受F04限制）"
+      - "children.count非零，且编译/调用确实进入find_task_by_pid_ns"
+    impact: "旧05 C6对‘退出把子任务改挂到1号’的无条件总结失去支持；实际崩溃/重挂结果未验证"
+    counter_evidence:
+      - "没有孩子时不会执行这一调用，不能推广成每次exit都进入非法PID查询"
+      - "find_task_by_pid_ns正确调用应传真实namespace指针，而不是pid_type"
+    unknown:
+      - "真正编译诊断、空指针行为及子任务重挂运行结果NOT_RUN"
+    evidence: [PID11-A75, PID11-A76, PID11-A33, PID11-A49, PID11-A24]
+    related: [CORE-USER-VFS-BASELINE-05::UV-15]
+    owner_action_now: none
+    blocks: {static_work: false, future_runtime_or_fix: "separate authorization needed"}
+    reopen_conditions: "交主线决定05文档勘误；源码修复仍需另行授权"
+    ai_suggestion_not_adopted: "只供未来专项评估，不实施内核变更"
+  - qualified_id: CORE-USER-PID-LIFETIME-11::PID11-F06
+    id: PID11-F06
+    title: "非初始PID namespace的get/put引用路径含潜伏进展问题"
+    kind: [source_fact, conditional_inference, evidence_gap]
+    status: needs_evidence
+    source_ref: "source=time @ a039d9803ade；new_result=user-pid-lifetime-11/facts-and-boundaries.yaml::anchors"
+    claim: "get_pid_ns对非init namespace的refcount_inc被注释；put_pid_ns在while(ns!=&init_pid_ns)中关键计数、parent推进及释放被注释。若有非初始namespace传入put_pid_ns，该函数体按所读活动语句没有使ns变为init的步骤；不能认定该引用管理能正常收束。"
+    premises:
+      - "非初始namespace确已创建且某条路径调用put_pid_ns"
+      - "固定源码未通过其他未核宏使循环状态改变"
+    impact: "潜伏不退出/引用不平衡风险；本用户sys_fork flags=0不意味着已创建新namespace"
+    counter_evidence:
+      - "默认init_pid_ns时while条件为假，不能把此潜伏问题直接算作正常fork的必经错误"
+      - "新PID namespace是否可由现有用户入口创建尚未全量追踪"
+    unknown:
+      - "PID namespace外部初始化、非初始namespace调用者和运行时实际行为未穷尽"
+    evidence: [PID11-A50, PID11-A51, PID11-A20, PID11-A09]
+    related: [CORE-USER-VFS-BASELINE-05::UV-15]
+    owner_action_now: none
+    blocks: {static_work: false, future_runtime_or_fix: "separate authorization needed"}
+    reopen_conditions: "需独立授权的namespace专项；当前不扩大此任务范围"
+    ai_suggestion_not_adopted: "只供未来专项评估，不实施内核变更"
+evidence_appends:
+  - target: CORE-USER-VFS-BASELINE-05::UV-14
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "alloc_pid出错跳bad_fork_cleanup_thread，然后经失败清理标签向后落到__cleanup_sighand；无须新编一个重复sighand根因。"
+    evidence: [PID11-A52, PID11-A60, PID11-A61]
+  - target: CORE-USER-VFS-BASELINE-05::UV-15
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "exit当前直接路径有do_task_dead与exit_notify，但未接到detach_pid/free_pid/idr_remove；另新增group_dead未赋值、exit_notify的namespace参数错位前提。旧退出/等待问题不自行重编号或改状态。"
+    evidence: [PID11-A75, PID11-A76, PID11-A79, PID11-A83, PID11-A84b, PID11-A30, PID11-A22]
+  - target: CORE-USER-SIGNAL-SEND-WAKE-10::SW10-F03
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "现已核find_vpid/pid_task是裸查找，不增加task引用；持pid_s引用也不是持task_s引用。kill正pid查找的并发生存仍未知，不重复签发同根因。"
+    evidence: [PID11-A25, PID11-A31, PID11-A32, PID11-A35, PID11-A94]
+errata_candidates:
+  - id: PID11-ER01
+    target: CORE-USER-VFS-BASELINE-05::sched.forkexec.exit_path
+    related_entry: CORE-USER-VFS-BASELINE-05::UV-15
+    old_locations: ["user-vfs-baseline-05/user-vfs-baseline.md::C6 第365行", "user-vfs-baseline-05/deferred-findings.yaml::UV-15.claim"]
+    kind: documentation_erratum_candidate
+    status: awaiting_mainline_disposition
+    statement_to_qualify: "exit_notify已将子任务挂到PID1；该说法没有考虑group_dead未初始化及find_task_by_pid_ns第二形参被传PIDTYPE_PID常量"
+    proposed_reading: "仅保留exit_notify存在重新链接子任务列表的活动代码；有孩子时查询PID1的namespace参数类型错误，无法保证实际找到1号任务与改挂成功；整个退出过程还受未初始化group_dead前提限制"
+    evidence: [PID11-A75, PID11-A76, PID11-A33, PID11-A49, PID11-A83]
+    owner_action_now: none
+    note: "仅报告候选，不修改旧05原件、不自行签旧审查变更"
+not_covered: ["全部PID namespace创建者","所有退出路径和任务指针调用者","底层slab/IDR并发正确性","编译/运行/QEMU/硬件","外部libc"]
+owner_decisions_requested_now: []
