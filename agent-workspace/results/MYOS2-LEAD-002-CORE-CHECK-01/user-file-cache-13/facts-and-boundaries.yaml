@@ -88,7 +88,7 @@ edges:
   - {id: FC13-E28, from: FC13-N29, to: FC13-N30, kind: call, status: conditional_dynamic, condition: "vm_ops.fault dispatch", anchors: [FC13-A74]}
   - {id: FC13-E29, from: FC13-N30, to: FC13-N16, kind: data, status: binding_generic, condition: "generic VM ops fault target", anchors: [FC13-A52]}
   - {id: FC13-E30, from: FC13-N31, to: FC13-N29, kind: call, status: conditional, condition: "private COW enters __do_fault directly", anchors: [FC13-A75]}
-  - {id: FC13-E31, from: FC13-N26, to: FC13-N32, kind: call, status: conditional, condition: "fallback successful path calls finish_fault", anchors: [FC13-A72]}
+  - {id: FC13-E31, from: FC13-N26, to: FC13-N32, kind: call, status: conditional, condition: "fallback successful path calls finish_fault", anchors: [FC13-A86]}
   - {id: FC13-E32, from: FC13-N32, to: FC13-N36, kind: data, status: conditional, condition: "PTE set after accepted vmf.page", anchors: [FC13-A77]}
   - {id: FC13-E33, from: FC13-N21, to: FC13-N22, kind: call, status: conditional, condition: "file-backed map uses call_mmap", anchors: [FC13-A79]}
   - {id: FC13-E34, from: FC13-N22, to: FC13-N23, kind: call, status: conditional_dynamic, condition: "call_mmap uses file.f_op->mmap", anchors: [FC13-A15]}
@@ -101,7 +101,7 @@ edges:
   - {id: FC13-E41, from: FC13-N11, to: FC13-N08, kind: call, status: conditional, condition: "__lookup_hash also checks existing dentry", anchors: [FC13-A06]}
   - {id: FC13-E42, from: FC13-N40, to: FC13-N01, kind: data, status: latent, condition: "iput accepts inode; no active release in selected body", anchors: [FC13-A19]}
   - {id: FC13-E43, from: FC13-N16, to: FC13-N06, kind: data, status: conditional, condition: "vmf.page stored cache slot pointer", anchors: [FC13-A47]}
-  - {id: FC13-E44, from: FC13-N39, to: FC13-N06, kind: data, status: latent, condition: "folio_put exists not an observed slot-specific cleanup", anchors: [FC13-A83]}
+  - {id: FC13-E44, from: FC13-N31, to: FC13-N39, kind: call, status: conditional, condition: "do_cow_fault error cleanup invokes folio_put on its own preallocated folio; not cache slot release", anchors: [FC13-A87]}
   - {id: FC13-E45, from: FC13-N15, to: FC13-N38, kind: data, status: conditional, condition: "write path copies user data to page", anchors: [FC13-A67]}
 effects:
   - id: FC13-X01
@@ -1047,4 +1047,20 @@ anchors:
       	// else
       	// 	__folio_put_small(folio);
       }
-self_check: {source_files: 12, anchors: 85, nodes: 42, edges: 45, states: 17, ownership: 10, cases: 16, effects: 11, full_parser: NOT_RUN, runtime: NOT_RUN}
+  - id: FC13-A86
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1096, 1098]
+    quote: |
+      
+      	ret |= finish_fault(vmf);
+      	folio = page_folio(vmf->page);
+  - id: FC13-A87
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1131, 1133]
+    quote: |
+      uncharge_out:
+      	folio_put(folio);
+      	// put_page(vmf->cow_page);
+self_check: {source_files: 12, anchors: 87, nodes: 42, edges: 45, states: 17, ownership: 10, cases: 16, effects: 11, full_parser: NOT_RUN, runtime: NOT_RUN}
