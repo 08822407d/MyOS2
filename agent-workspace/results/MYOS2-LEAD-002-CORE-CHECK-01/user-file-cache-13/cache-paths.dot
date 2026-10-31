@@ -1,8 +1,7 @@
-// CORE-USER-FILE-CACHE-13; fixed time @ a039d9803ade; exact facts IDs.
-// call: caller->callee; data: consumer->provider. Writes/ref changes are effects.
-// conditional/dynamic/binding edges dashed; latent references dotted; active statements solid.
-// Binding data edge is not a direct call to the concrete target.
-// No global init_order: __lookup_slow cache creation conditional on lookup path.
+// CORE-USER-FILE-CACHE-13; fixed time @ a039d9803ade; facts IDs matched.
+// call = caller->callee; data = consumer->provider, effects describe writes/allocations/refcounts.
+// solid active statement; dashed conditional/indirect/binding; dotted latent interface.
+// Dynamic f_op/vm_ops binding data is not an unconditional direct call.
 digraph FileCache13 {
   rankdir=LR;
   node [shape=box,fontsize=9];
@@ -91,6 +90,7 @@ digraph FileCache13 {
   "FC13-N11" -> "FC13-N08" [id="FC13-E41",label="FC13-E41 call [conditional]",style=dashed];
   "FC13-N40" -> "FC13-N01" [id="FC13-E42",label="FC13-E42 data [latent]",style=dotted];
   "FC13-N16" -> "FC13-N06" [id="FC13-E43",label="FC13-E43 data [conditional]",style=dashed];
-  "FC13-N39" -> "FC13-N06" [id="FC13-E44",label="FC13-E44 data [latent]",style=dotted];
+  "FC13-N31" -> "FC13-N39" [id="FC13-E44",label="FC13-E44 call [conditional]",style=dashed];
   "FC13-N15" -> "FC13-N38" [id="FC13-E45",label="FC13-E45 data [conditional]",style=dashed];
+  "FC13-N31" -> "FC13-N32" [id="FC13-E46",label="FC13-E46 call [conditional]",style=dashed];
 }
