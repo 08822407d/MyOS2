@@ -1,0 +1,1713 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-PGTABLE-COPY-16
+record_type: bounded_fork_pagetable_copy_facts
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+model_per_owner: GPT-6
+effort_per_owner: Extra
+backend_identity: unknown_or_not_attestable
+date: "2026-11-01"
+read_channel: connector
+source_pin: "time @ a039d9803ade"
+results_base: "6ea1003c2ae1"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+edge_direction: {call: "caller -> callee with source call or explicit macro binding", data: "consumer -> provider; mutations live in effects", init_order: "later consumer -> earlier initializer when explicit"}
+scope: "fork nonshared dup_mmap copy_page_range through COW PTE and lower table allocation / errors; not global COW correctness"
+limits: ["P4D folded in selected source; no preprocessor execution", "NULL and uninitialized-lock conditions may make nominal errno paths undefined", "no page refcount or TLB runtime certification", "source pins do not prove actual scheduling or hardware state"]
+nodes:
+  - {id: PC16-N01, label: "dup_mmap"}
+  - {id: PC16-N02, label: "dup_mm"}
+  - {id: PC16-N03, label: "copy_mm"}
+  - {id: PC16-N04, label: "mmput"}
+  - {id: PC16-N05, label: "copy_page_range"}
+  - {id: PC16-N06, label: "copy_p4d_range"}
+  - {id: PC16-N07, label: "copy_pud_range"}
+  - {id: PC16-N08, label: "copy_pmd_range"}
+  - {id: PC16-N09, label: "copy_pte_range"}
+  - {id: PC16-N10, label: "copy_present_pte"}
+  - {id: PC16-N11, label: "pgd_offset macro"}
+  - {id: PC16-N12, label: "pgd_none_or_clear_bad macro"}
+  - {id: PC16-N13, label: "p4d_alloc folded"}
+  - {id: PC16-N14, label: "p4d_offset macro"}
+  - {id: PC16-N15, label: "p4d_ent_none_or_clear_bad"}
+  - {id: PC16-N16, label: "pud_alloc"}
+  - {id: PC16-N17, label: "__pud_alloc"}
+  - {id: PC16-N18, label: "pud_offset macro"}
+  - {id: PC16-N19, label: "pud_ent_none_or_clear_bad"}
+  - {id: PC16-N20, label: "pmd_alloc"}
+  - {id: PC16-N21, label: "__pmd_alloc"}
+  - {id: PC16-N22, label: "pmd_offset macro"}
+  - {id: PC16-N23, label: "pmd_ent_none_or_clear_bad"}
+  - {id: PC16-N24, label: "pte_alloc_map_lock macro"}
+  - {id: PC16-N25, label: "pgtble_alloc_map_lock"}
+  - {id: PC16-N26, label: "pgtble_alloc"}
+  - {id: PC16-N27, label: "__pgtbl_alloc"}
+  - {id: PC16-N28, label: "pte_offset_map_lock"}
+  - {id: PC16-N29, label: "__pte_offset_map_lock"}
+  - {id: PC16-N30, label: "__pte_offset_map"}
+  - {id: PC16-N31, label: "pte_unmap_unlock macro"}
+  - {id: PC16-N32, label: "is_cow_mapping"}
+  - {id: PC16-N33, label: "pte_write alias"}
+  - {id: PC16-N34, label: "arch_ptep_set_wrprotect"}
+  - {id: PC16-N35, label: "pte_wrprotect"}
+  - {id: PC16-N36, label: "pte_mkclean"}
+  - {id: PC16-N37, label: "pte_mkold"}
+  - {id: PC16-N38, label: "set_pte_at"}
+  - {id: PC16-N39, label: "set_pte"}
+  - {id: PC16-N40, label: "src VMA / src mm"}
+  - {id: PC16-N41, label: "dst VMA / dst mm"}
+  - {id: PC16-N42, label: "source pgd,p4d,pud,pmd"}
+  - {id: PC16-N43, label: "destination page-table pages"}
+  - {id: PC16-N44, label: "source PTE memory"}
+  - {id: PC16-N45, label: "destination PTE memory"}
+  - {id: PC16-N46, label: "shared data-page PFN"}
+  - {id: PC16-N47, label: "pte_present alias"}
+  - {id: PC16-N48, label: "pte_none alias"}
+  - {id: PC16-N49, label: "handle_pte_fault"}
+  - {id: PC16-N50, label: "do_wp_page"}
+  - {id: PC16-N51, label: "VMA vm_flags"}
+  - {id: PC16-N52, label: "range boundary macros"}
+  - {id: PC16-N53, label: "flush_tlb_mm commented"}
+  - {id: PC16-N54, label: "physical data-page ref operations (unobserved)"}
+  - {id: PC16-N55, label: "pte lock/outparam"}
+edges:
+  - {id: PC16-E01, from: PC16-N01, to: PC16-N05, kind: call, status: conditional, condition: "not VM_WIPEONFORK and VMA copied", anchors: [PC16-A010, PC16-A009]}
+  - {id: PC16-E02, from: PC16-N02, to: PC16-N01, kind: call, status: conditional, condition: "nonshared dup_mm after successful mm_init", anchors: [PC16-A002]}
+  - {id: PC16-E03, from: PC16-N02, to: PC16-N04, kind: call, status: conditional, condition: "dup_mmap error enters mmput", anchors: [PC16-A003]}
+  - {id: PC16-E04, from: PC16-N05, to: PC16-N11, kind: call, status: active, condition: "pgd_offset for child and parent from VMA.mm", anchors: [PC16-A072, PC16-A073, PC16-A119]}
+  - {id: PC16-E05, from: PC16-N05, to: PC16-N12, kind: call, status: conditional, condition: "source PGD entry none/bad test", anchors: [PC16-A075, PC16-A120]}
+  - {id: PC16-E06, from: PC16-N05, to: PC16-N06, kind: call, status: conditional, condition: "source PGD present and passes none/bad", anchors: [PC16-A076]}
+  - {id: PC16-E07, from: PC16-N06, to: PC16-N13, kind: call, status: active, condition: "p4d_alloc on destination pgd pointer, folded", anchors: [PC16-A060, PC16-A085]}
+  - {id: PC16-E08, from: PC16-N06, to: PC16-N14, kind: call, status: active, condition: "source p4d_offset macro", anchors: [PC16-A062, PC16-A119]}
+  - {id: PC16-E09, from: PC16-N06, to: PC16-N15, kind: call, status: conditional, condition: "none/bad source P4D", anchors: [PC16-A064]}
+  - {id: PC16-E10, from: PC16-N06, to: PC16-N07, kind: call, status: conditional, condition: "source P4D not none/bad", anchors: [PC16-A065]}
+  - {id: PC16-E11, from: PC16-N07, to: PC16-N16, kind: call, status: active, condition: "pud_alloc invoked before source PUD none test", anchors: [PC16-A052]}
+  - {id: PC16-E12, from: PC16-N16, to: PC16-N17, kind: call, status: conditional, condition: "dest P4D none and allocation needed", anchors: [PC16-A087]}
+  - {id: PC16-E13, from: PC16-N07, to: PC16-N18, kind: call, status: active, condition: "source pud_offset", anchors: [PC16-A054]}
+  - {id: PC16-E14, from: PC16-N07, to: PC16-N19, kind: call, status: conditional, condition: "source PUD none/bad test", anchors: [PC16-A056]}
+  - {id: PC16-E15, from: PC16-N07, to: PC16-N08, kind: call, status: conditional, condition: "source PUD not none/bad", anchors: [PC16-A057]}
+  - {id: PC16-E16, from: PC16-N08, to: PC16-N20, kind: call, status: active, condition: "pmd_alloc before source PMD none check", anchors: [PC16-A044]}
+  - {id: PC16-E17, from: PC16-N20, to: PC16-N21, kind: call, status: conditional, condition: "dest PUD none needs allocation", anchors: [PC16-A089]}
+  - {id: PC16-E18, from: PC16-N08, to: PC16-N22, kind: call, status: active, condition: "source pmd_offset macro", anchors: [PC16-A046]}
+  - {id: PC16-E19, from: PC16-N08, to: PC16-N23, kind: call, status: conditional, condition: "source PMD none/bad", anchors: [PC16-A048]}
+  - {id: PC16-E20, from: PC16-N08, to: PC16-N09, kind: call, status: conditional, condition: "source PMD nonempty", anchors: [PC16-A049]}
+  - {id: PC16-E21, from: PC16-N09, to: PC16-N24, kind: call, status: active, condition: "destination pte_alloc_map_lock alias", anchors: [PC16-A029, PC16-A110]}
+  - {id: PC16-E22, from: PC16-N24, to: PC16-N25, kind: call, status: active, condition: "macro alias to pgtble_alloc_map_lock", anchors: [PC16-A110, PC16-A091]}
+  - {id: PC16-E23, from: PC16-N25, to: PC16-N26, kind: call, status: active, condition: "map lock helper checks pgtble_alloc", anchors: [PC16-A092]}
+  - {id: PC16-E24, from: PC16-N26, to: PC16-N27, kind: call, status: conditional, condition: "destination PMD none", anchors: [PC16-A090, PC16-A111]}
+  - {id: PC16-E25, from: PC16-N25, to: PC16-N28, kind: call, status: conditional, condition: "after pgtble_alloc success", anchors: [PC16-A092]}
+  - {id: PC16-E26, from: PC16-N09, to: PC16-N28, kind: call, status: conditional, condition: "source pte_offset_map_lock after dst success", anchors: [PC16-A032]}
+  - {id: PC16-E27, from: PC16-N28, to: PC16-N29, kind: call, status: active, condition: "pte_offset_map_lock wrapper", anchors: [PC16-A143]}
+  - {id: PC16-E28, from: PC16-N29, to: PC16-N30, kind: call, status: active, condition: "__pte_offset_map_lock maps PTE", anchors: [PC16-A138]}
+  - {id: PC16-E29, from: PC16-N09, to: PC16-N31, kind: call, status: conditional, condition: "dst failure or normal end unlock", anchors: [PC16-A030, PC16-A041, PC16-A042]}
+  - {id: PC16-E30, from: PC16-N09, to: PC16-N48, kind: call, status: conditional, condition: "pte_none(*src_ptr) -> continue", anchors: [PC16-A035, PC16-A157]}
+  - {id: PC16-E31, from: PC16-N09, to: PC16-N47, kind: call, status: conditional, condition: "nonempty PTE checked for present; nonpresent busy", anchors: [PC16-A036, PC16-A156]}
+  - {id: PC16-E32, from: PC16-N09, to: PC16-N10, kind: call, status: conditional, condition: "nonempty present PTE", anchors: [PC16-A038]}
+  - {id: PC16-E33, from: PC16-N10, to: PC16-N32, kind: call, status: conditional, condition: "check COW mapping", anchors: [PC16-A019, PC16-A122]}
+  - {id: PC16-E34, from: PC16-N10, to: PC16-N33, kind: call, status: conditional, condition: "if COW mapping also pte_write", anchors: [PC16-A019, PC16-A155]}
+  - {id: PC16-E35, from: PC16-N10, to: PC16-N34, kind: call, status: conditional, condition: "COW and original PTE writable, mutate source memory", anchors: [PC16-A020]}
+  - {id: PC16-E36, from: PC16-N10, to: PC16-N35, kind: call, status: conditional, condition: "COW and original PTE writable, child local write-protect", anchors: [PC16-A021]}
+  - {id: PC16-E37, from: PC16-N10, to: PC16-N36, kind: call, status: conditional, condition: "VM_SHARED child local mark clean", anchors: [PC16-A023]}
+  - {id: PC16-E38, from: PC16-N10, to: PC16-N37, kind: call, status: active, condition: "child local mark old", anchors: [PC16-A024]}
+  - {id: PC16-E39, from: PC16-N10, to: PC16-N38, kind: call, status: active, condition: "install child PTE", anchors: [PC16-A025]}
+  - {id: PC16-E40, from: PC16-N38, to: PC16-N39, kind: call, status: active, condition: "set_pte_at calls set_pte", anchors: [PC16-A145]}
+  - {id: PC16-E41, from: PC16-N10, to: PC16-N44, kind: data, status: active, condition: "reads src_pte_ptr and pte local value", anchors: [PC16-A018]}
+  - {id: PC16-E42, from: PC16-N10, to: PC16-N45, kind: data, status: active, condition: "writes to dst PTE pointer after local changes", anchors: [PC16-A025]}
+  - {id: PC16-E43, from: PC16-N10, to: PC16-N46, kind: data, status: conditional, condition: "child PTE derived from same source physical page PFN bits", anchors: [PC16-A018, PC16-A025]}
+  - {id: PC16-E44, from: PC16-N10, to: PC16-N51, kind: data, status: active, condition: "uses source VMA vm_flags for COW/shared", anchors: [PC16-A018]}
+  - {id: PC16-E45, from: PC16-N05, to: PC16-N40, kind: data, status: active, condition: "source mm and VMA address range", anchors: [PC16-A069, PC16-A071]}
+  - {id: PC16-E46, from: PC16-N05, to: PC16-N41, kind: data, status: active, condition: "destination VMA mm for child PGD", anchors: [PC16-A072]}
+  - {id: PC16-E47, from: PC16-N07, to: PC16-N43, kind: data, status: conditional, condition: "destination PUD allocation may publish new lower table", anchors: [PC16-A087, PC16-A098]}
+  - {id: PC16-E48, from: PC16-N08, to: PC16-N43, kind: data, status: conditional, condition: "destination PMD allocation may publish new lower table", anchors: [PC16-A089, PC16-A103]}
+  - {id: PC16-E49, from: PC16-N09, to: PC16-N43, kind: data, status: conditional, condition: "destination PTE page allocated before checking source entries", anchors: [PC16-A029, PC16-A108]}
+  - {id: PC16-E50, from: PC16-N17, to: PC16-N43, kind: data, status: conditional, condition: "__pud_alloc installs newly allocated directory page", anchors: [PC16-A098]}
+  - {id: PC16-E51, from: PC16-N21, to: PC16-N43, kind: data, status: conditional, condition: "__pmd_alloc installs newly allocated directory page", anchors: [PC16-A103]}
+  - {id: PC16-E52, from: PC16-N27, to: PC16-N43, kind: data, status: conditional, condition: "__pgtbl_alloc installs new PTE table", anchors: [PC16-A108]}
+  - {id: PC16-E53, from: PC16-N29, to: PC16-N55, kind: data, status: conditional, condition: "source PTE lock output is valid only on success", anchors: [PC16-A141]}
+  - {id: PC16-E54, from: PC16-N31, to: PC16-N55, kind: data, status: active, condition: "pte_unmap_unlock requires valid ptl", anchors: [PC16-A112]}
+  - {id: PC16-E55, from: PC16-N09, to: PC16-N52, kind: call, status: active, condition: "pte loop increments end by PAGE_SIZE and pointer", anchors: [PC16-A040]}
+  - {id: PC16-E56, from: PC16-N08, to: PC16-N52, kind: call, status: active, condition: "pmd_addr_end boundary macro", anchors: [PC16-A047, PC16-A118]}
+  - {id: PC16-E57, from: PC16-N07, to: PC16-N52, kind: call, status: active, condition: "pud_addr_end boundary macro", anchors: [PC16-A055, PC16-A117]}
+  - {id: PC16-E58, from: PC16-N06, to: PC16-N52, kind: call, status: active, condition: "p4d_addr_end boundary macro", anchors: [PC16-A063, PC16-A116]}
+  - {id: PC16-E59, from: PC16-N05, to: PC16-N52, kind: call, status: active, condition: "pgd_addr_end boundary macro", anchors: [PC16-A074, PC16-A114]}
+  - {id: PC16-E60, from: PC16-N49, to: PC16-N50, kind: call, status: conditional, condition: "later present write-protected PTE + FAULT_FLAG_WRITE", anchors: [PC16-A081, PC16-A082]}
+  - {id: PC16-E61, from: PC16-N01, to: PC16-N53, kind: data, status: commented, condition: "flush_tlb_mm(oldmm) commented in dup_mmap", anchors: [PC16-A012]}
+  - {id: PC16-E62, from: PC16-N17, to: PC16-N55, kind: data, status: conditional, condition: "PUD alloc holds page-table lock before possible failure", anchors: [PC16-A095, PC16-A096]}
+  - {id: PC16-E63, from: PC16-N21, to: PC16-N55, kind: data, status: conditional, condition: "PMD alloc holds lock before possible failure", anchors: [PC16-A100, PC16-A101]}
+  - {id: PC16-E64, from: PC16-N27, to: PC16-N55, kind: data, status: conditional, condition: "PTE alloc holds lock before possible failure", anchors: [PC16-A105, PC16-A106]}
+  - {id: PC16-E65, from: PC16-N05, to: PC16-N42, kind: data, status: active, condition: "reads source upper table entries", anchors: [PC16-A073, PC16-A075]}
+  - {id: PC16-E66, from: PC16-N09, to: PC16-N44, kind: data, status: active, condition: "source PTE entry consumed with src lock valid", anchors: [PC16-A032, PC16-A035]}
+  - {id: PC16-E67, from: PC16-N09, to: PC16-N45, kind: data, status: conditional, condition: "child PTE page address allocated before copy", anchors: [PC16-A029, PC16-A038]}
+  - {id: PC16-E68, from: PC16-N01, to: PC16-N51, kind: data, status: active, condition: "source VMA flags gate DONTCOPY, WIPEONFORK", anchors: [PC16-A004, PC16-A009]}
+  - {id: PC16-E69, from: PC16-N03, to: PC16-N02, kind: call, status: conditional, condition: "copy_mm nonshared invokes dup_mm", anchors: [PC16-A001]}
+case_matrix:
+  - id: PC16-M01
+    input: "source VMA has VM_DONTCOPY"
+    source_result: "dup_mmap skips duplicate VMA and copy_page_range"
+    limits: "no new child VMA/PTE from this iteration"
+    anchors: [PC16-A004]
+  - id: PC16-M02
+    input: "VMA copied with VM_WIPEONFORK"
+    source_result: "new child VMA/link and optional file ref; copy_page_range skipped"
+    limits: "no copied child present PTE by this path"
+    anchors: [PC16-A005, PC16-A008, PC16-A009]
+  - id: PC16-M03
+    input: "CLONE_VM fork"
+    source_result: "copy_mm shares mm with mmget; dup_mmap not called"
+    limits: "same PTE object, not an independent child table"
+    anchors: [PC16-A001]
+  - id: PC16-M04
+    input: "nonshared fork new mm root"
+    source_result: "mm_init pgd_alloc; dup_mmap then copy_page_range"
+    limits: "root PGD allocation not newly copied data pages"
+    anchors: [PC16-A014, PC16-A002, PC16-A010]
+  - id: PC16-M05
+    input: "source PGD none"
+    source_result: "copy_page_range skips source PGD, no p4d alloc on that entry"
+    limits: "do-while tail advances; child root remains from mm_init"
+    anchors: [PC16-A075, PC16-A078]
+  - id: PC16-M06
+    input: "source P4D none/bad"
+    source_result: "p4d_alloc is folded pointer; skip lower copy, bad may be cleared in source"
+    limits: "source bad clearing is a side effect, no data page allocated"
+    anchors: [PC16-A060, PC16-A064, PC16-A126]
+  - id: PC16-M07
+    input: "source PUD none; higher level present"
+    source_result: "copy_pud_range may allocate destination PUD table before checking source entry"
+    limits: "empty child PUD table may exist despite no copied leaf"
+    anchors: [PC16-A052, PC16-A056, PC16-A098]
+  - id: PC16-M08
+    input: "source PMD none; higher levels present"
+    source_result: "copy_pmd_range may allocate destination PMD table first"
+    limits: "empty child PMD table may persist"
+    anchors: [PC16-A044, PC16-A048, PC16-A103]
+  - id: PC16-M09
+    input: "source PTE none"
+    source_result: "copy_pte_range allocated/locked destination PTE table before src_none continue"
+    limits: "tail increments addr and pointers, child PTE left empty"
+    anchors: [PC16-A029, PC16-A035, PC16-A040]
+  - id: PC16-M10
+    input: "source PTE nonnone but nonpresent"
+    source_result: "while(!pte_present) busy loop; copy_nonpresent_pte commented"
+    limits: "not a swap copy or an EIO return"
+    anchors: [PC16-A036, PC16-A037]
+  - id: PC16-M11
+    input: "private COW mapping VM_MAYWRITE&&!VM_SHARED, writable source PTE"
+    source_result: "arch_ptep_set_wrprotect parent memory; local child pte_wrprotect; set_pte_at child"
+    limits: "both PTE RW cleared under valid pointers; PFN inherited, data page ref not increased by selected path"
+    anchors: [PC16-A122, PC16-A019, PC16-A020, PC16-A021, PC16-A025]
+  - id: PC16-M12
+    input: "private COW mapping but original PTE not writable"
+    source_result: "no parent RW write, child local pte_mkold and install"
+    limits: "both read-only if source was read-only; no additional get_page"
+    anchors: [PC16-A019, PC16-A024, PC16-A025]
+  - id: PC16-M13
+    input: "shared mapping, source PTE writable"
+    source_result: "is_cow false; child local pte_mkclean then pte_mkold; install"
+    limits: "parent RW/dirty/young untouched by child-only transforms; child RW inherited"
+    anchors: [PC16-A122, PC16-A022, PC16-A023, PC16-A024, PC16-A025]
+  - id: PC16-M14
+    input: "nonshared non-COW read-only mapping"
+    source_result: "no parent PTE write-protect, child pte_mkold and install"
+    limits: "PFN copied, no data page allocation/ref increment in copy_present_pte"
+    anchors: [PC16-A019, PC16-A018, PC16-A025]
+  - id: PC16-M15
+    input: "pud_alloc and __pud_alloc allocation failure"
+    source_result: "-ENOMEM returned before spin_unlock(ptl) in __pud_alloc"
+    limits: "lock may remain held, upper layer may report -ENOMEM only if control returns safely"
+    anchors: [PC16-A095, PC16-A097, PC16-A099]
+  - id: PC16-M16
+    input: "pmd_alloc and __pmd_alloc allocation failure"
+    source_result: "-ENOMEM returned before spin_unlock(ptl) in __pmd_alloc"
+    limits: "lock may remain held; partially installed higher table possible"
+    anchors: [PC16-A100, PC16-A102, PC16-A104]
+  - id: PC16-M17
+    input: "pte_alloc_map_lock lower allocation failure"
+    source_result: "__pgtbl_alloc returns -ENOMEM before spin_unlock, dst_pte_ptr=NULL then pte_unmap_unlock(NULL,uninitialized dst_ptl)"
+    limits: "no reliable -ENOMEM without invalid lock premise; cannot assert clean failure"
+    anchors: [PC16-A105, PC16-A107, PC16-A030, PC16-A112]
+  - id: PC16-M18
+    input: "src pte_offset_map_lock NULL"
+    source_result: "copy_pte_range fails to test src_pte_ptr before *src_pte_ptr"
+    limits: "invalid pointer precondition; no fixed return or outcome"
+    anchors: [PC16-A032, PC16-A139, PC16-A035]
+  - id: PC16-M19
+    input: "copy_present_pte ret path"
+    source_result: "returns 0; copy_pte_range EAGAIN check not triggered by this body, then always returns 0"
+    limits: "EAGAIN comment not an implemented allocation retry; upper errors only allocation paths"
+    anchors: [PC16-A026, PC16-A039, PC16-A043]
+  - id: PC16-M20
+    input: "several leaf PTEs copied, later lower allocation failure"
+    source_result: "prior parent PTEs may be write-protected, child tables/PTEs installed; error may propagate as -ENOMEM"
+    limits: "dup_mm free_pt mmput only; no proof of parent permission or child tables rollback"
+    anchors: [PC16-A020, PC16-A025, PC16-A050, PC16-A077, PC16-A003, PC16-A015]
+  - id: PC16-M21
+    input: "valid nonempty range crosses PTE/PMD/PUD/PGD boundaries"
+    source_result: "do/while tail increments pointers and addr to next boundary; continue hits condition and updates"
+    limits: "depends on correct valid/aligned VMA range, table extent, no overflow"
+    anchors: [PC16-A040, PC16-A051, PC16-A059, PC16-A067, PC16-A078, PC16-A114]
+  - id: PC16-M22
+    input: "empty/reversed/unaligned source VMA range"
+    source_result: "copy_page_range is do-while with initial access, no upfront start<end/alignment gate"
+    limits: "cannot guarantee zero iterations or safe completion"
+    anchors: [PC16-A069, PC16-A074, PC16-A078]
+  - id: PC16-M23
+    input: "copied private write-protected child PTE later write-faults"
+    source_result: "handle_pte_fault checks FAULT_FLAG_WRITE and !pte_write then do_wp_page"
+    limits: "shared/mayshare WP stalls in current do_wp_page, private copy not re-audited; no guaranteed COW success"
+    anchors: [PC16-A080, PC16-A082, PC16-A083, PC16-A084]
+states:
+  - id: PC16-S01
+    stage: "new nonshared mm"
+    source_fact: "PGD root created by mm_init; before dup_mmap"
+    limits: "root distinct from leaf tables/data pages"
+    anchors: [PC16-A014, PC16-A002]
+  - id: PC16-S02
+    stage: "source upper directory absent"
+    source_fact: "early continue skips deeper table allocation"
+    limits: "source bad entry may be cleared"
+    anchors: [PC16-A075, PC16-A064]
+  - id: PC16-S03
+    stage: "destination PUD/PMD tables allocated"
+    source_fact: "created before lower source none/bad checks"
+    limits: "empty tables persist even without copied PTE"
+    anchors: [PC16-A052, PC16-A044]
+  - id: PC16-S04
+    stage: "source PTE none"
+    source_fact: "after dest table allocation, copy loop skips installing a child PTE"
+    limits: "tail increment still executes"
+    anchors: [PC16-A029, PC16-A035, PC16-A040]
+  - id: PC16-S05
+    stage: "private present writable"
+    source_fact: "parent actual RW cleared, child copied RW cleared"
+    limits: "data PFN shared without observed get_page"
+    anchors: [PC16-A020, PC16-A021, PC16-A025]
+  - id: PC16-S06
+    stage: "shared present writable"
+    source_fact: "parent unchanged, child flags dirty/young cleared"
+    limits: "child PFN same source; no observed page ref bump"
+    anchors: [PC16-A023, PC16-A024, PC16-A025]
+  - id: PC16-S07
+    stage: "nonpresent nonempty"
+    source_fact: "busy until pte_present; no copy_nonpresent_pte active"
+    limits: "current flow does not return for stable nonpresent PTE"
+    anchors: [PC16-A036, PC16-A037]
+  - id: PC16-S08
+    stage: "lower table allocation failure"
+    source_fact: "lock may remain held; pte failure also attempts unlock with uninit ptl"
+    limits: "result validity preconditions unmet; no fixed runtime"
+    anchors: [PC16-A097, PC16-A102, PC16-A107, PC16-A030]
+  - id: PC16-S09
+    stage: "partial copy then error"
+    source_fact: "parent PTE rights and child page tables already possibly changed"
+    limits: "dup_mm/mmput not full rollback"
+    anchors: [PC16-A020, PC16-A025, PC16-A003, PC16-A015]
+ownership:
+  - id: PC16-O01
+    holder: "mm.pgd parent & child"
+    object: "PGD root pages"
+    reference_effect: "child pgd_alloc done in mm_init before dup_mmap"
+    limits: "not copying user data pages"
+    anchors: [PC16-A014, PC16-A072]
+  - id: PC16-O02
+    holder: "destination PUD/PMD/PTE pages"
+    object: "page-table allocator pages"
+    reference_effect: "__myos_pgtable_alloc_one alloc_page and zero, installs at lower levels"
+    limits: "source empty entries may still trigger parent-table alloc"
+    anchors: [PC16-A093, PC16-A098, PC16-A103, PC16-A108]
+  - id: PC16-O03
+    holder: "source PTE memory"
+    object: "parent page-table entry"
+    reference_effect: "arch_ptep_set_wrprotect writes parent RW bit on COW+writable"
+    limits: "not just local child pte change"
+    anchors: [PC16-A020, PC16-A147]
+  - id: PC16-O04
+    holder: "child PTE memory"
+    object: "distinct leaf entry in newly allocated table"
+    reference_effect: "set_pte_at stores derived PTE flags/PFN"
+    limits: "does not allocate separate data page"
+    anchors: [PC16-A025, PC16-A145]
+  - id: PC16-O05
+    holder: "data physical page"
+    object: "same PFN in child as read from source pte"
+    reference_effect: "copy_present_pte does not call get_page/folio_get/mapcount/rmap"
+    limits: "absence limited to this selected copy chain"
+    anchors: [PC16-A018, PC16-A025]
+  - id: PC16-O06
+    holder: "table locks"
+    object: "spinlock_t pointers"
+    reference_effect: "__pud/__pmd/__pgtbl allocation use lockptr and failure returns"
+    limits: "unbalanced on allocation failure branch"
+    anchors: [PC16-A095, PC16-A097, PC16-A100, PC16-A102, PC16-A105, PC16-A107]
+  - id: PC16-O07
+    holder: "PTE map lockout"
+    object: "spinlock_t* src_ptl/dst_ptl"
+    reference_effect: "helper only sets *ptlp when mapping succeeds"
+    limits: "dest failure invokes unlock using unset dst_ptl"
+    anchors: [PC16-A028, PC16-A030, PC16-A141, PC16-A112]
+  - id: PC16-O08
+    holder: "VMA/file copy"
+    object: "dst_vma->vm_mm and vm_file"
+    reference_effect: "dup_mmap copies VMA, rebinds mm, increments file ref"
+    limits: "does not imply source physical page ref"
+    anchors: [PC16-A006, PC16-A007, PC16-A008]
+  - id: PC16-O09
+    holder: "fork error cleanup"
+    object: "dup_mm mmput"
+    reference_effect: "mmput reaches __mmput with exit_mmap disabled"
+    limits: "may not undo copied parent PTE changes/child tables"
+    anchors: [PC16-A003, PC16-A015, PC16-A016]
+  - id: PC16-O10
+    holder: "TLB effects"
+    object: "parent writable PTE modified"
+    reference_effect: "dup_mmap flush_tlb_mm is commented"
+    limits: "does not guarantee parent CPU TLB sees new permission immediately"
+    anchors: [PC16-A020, PC16-A012]
+effects:
+  - id: PC16-X01
+    actor: "dup_mmap"
+    description: "skip VM_DONTCOPY, duplicate VMA and optionally skip PTE by VM_WIPEONFORK"
+    anchors: [PC16-A004, PC16-A005, PC16-A009, PC16-A010]
+  - id: PC16-X02
+    actor: "copy_page_range"
+    description: "reads VMA range/pgd and traverses PGD boundaries"
+    anchors: [PC16-A069, PC16-A074, PC16-A078]
+  - id: PC16-X03
+    actor: "upper none/bad helpers"
+    description: "source bad upper directory may be cleared, source none skips work"
+    anchors: [PC16-A126, PC16-A128, PC16-A130, PC16-A075]
+  - id: PC16-X04
+    actor: "lower allocation"
+    description: "new destination page-table pages allocated/installed at PUD/PMD/PTE level"
+    anchors: [PC16-A098, PC16-A103, PC16-A108]
+  - id: PC16-X05
+    actor: "copy_present_pte COW"
+    description: "if VM_MAYWRITE&&!VM_SHARED and original writable, clear parent PTE RW and local child RW"
+    anchors: [PC16-A122, PC16-A019, PC16-A020, PC16-A021]
+  - id: PC16-X06
+    actor: "copy_present_pte shared"
+    description: "child local dirty/young cleared; parent dirty/young not modified"
+    anchors: [PC16-A023, PC16-A024]
+  - id: PC16-X07
+    actor: "copy_present_pte install"
+    description: "set_pte_at(dst) writes derived PTE with same source PFN bits"
+    anchors: [PC16-A018, PC16-A025, PC16-A145]
+  - id: PC16-X08
+    actor: "copy_pte_range"
+    description: "src pte_none continue tail, nonpresent busy loop"
+    anchors: [PC16-A035, PC16-A036, PC16-A040]
+  - id: PC16-X09
+    actor: "pte locking"
+    description: "dst allocation failed invokes pte_unmap_unlock with unset dst_ptl"
+    anchors: [PC16-A030, PC16-A028, PC16-A112]
+  - id: PC16-X10
+    actor: "alloc failures"
+    description: "__pud/__pmd/__pgtbl allocation error returns with spin_lock active"
+    anchors: [PC16-A095, PC16-A097, PC16-A100, PC16-A102, PC16-A105, PC16-A107]
+  - id: PC16-X11
+    actor: "return propagation"
+    description: "lower nonzero -> -ENOMEM at parent; copy_pte_range always returns 0 after valid normal finish"
+    anchors: [PC16-A050, PC16-A058, PC16-A066, PC16-A077, PC16-A043]
+  - id: PC16-X12
+    actor: "partial-failure rollback"
+    description: "dup_mm free_pt calls mmput while __mmput exit_mmap/mmdrop disabled"
+    anchors: [PC16-A003, PC16-A015, PC16-A016]
+  - id: PC16-X13
+    actor: "parent TLB"
+    description: "flush_tlb_mm(oldmm) in dup_mmap commented, no active flush in copy_present_pte"
+    anchors: [PC16-A012, PC16-A020]
+  - id: PC16-X14
+    actor: "later write fault"
+    description: "existing write-protected PTE routed to do_wp_page conditionally"
+    anchors: [PC16-A081, PC16-A082]
+anchors:
+  - id: PC16-A001
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [692, 694]
+    quote: |
+      		mm = oldmm;
+      	} else if ((mm = dup_mm(tsk, oldmm)) == NULL) {
+      			return -ENOMEM;
+  - id: PC16-A002
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mm"
+    observed_lines: [665, 667]
+    quote: |
+      
+      	if ((err = dup_mmap(mm, oldmm)) != 0)
+      		goto free_pt;
+  - id: PC16-A003
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mm"
+    observed_lines: [671, 673]
+    quote: |
+      free_pt:
+      	mmput(mm);
+      fail_nomem:
+  - id: PC16-A004
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [172, 174]
+    quote: |
+      
+      		if (mpnt->vm_flags & VM_DONTCOPY) {
+      			// vm_stat_account(mm, mpnt->vm_flags, -vma_pages(mpnt));
+  - id: PC16-A005
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [187, 189]
+    quote: |
+      		}
+      		if ((tmp = vm_area_creat_dup(mpnt)) == NULL)
+      			goto fail_nomem;
+  - id: PC16-A006
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [189, 191]
+    quote: |
+      			goto fail_nomem;
+      		tmp->vm_mm = mm;
+      		// retval = dup_userfaultfd(tmp, &uf);
+  - id: PC16-A007
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [198, 200]
+    quote: |
+      
+      			get_file(file);
+      			i_mmap_lock_write(mapping);
+  - id: PC16-A008
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [213, 215]
+    quote: |
+      		 */
+      		list_header_add_to_tail(&mm->mm_mt, &tmp->list);
+      
+  - id: PC16-A009
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [216, 218]
+    quote: |
+      		mm->map_count++;
+      		if (!(tmp->vm_flags & VM_WIPEONFORK))
+      			retval = copy_page_range(tmp, mpnt);
+  - id: PC16-A010
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [217, 219]
+    quote: |
+      		if (!(tmp->vm_flags & VM_WIPEONFORK))
+      			retval = copy_page_range(tmp, mpnt);
+      
+  - id: PC16-A011
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [222, 224]
+    quote: |
+      
+      		if (retval)
+      			goto out;
+  - id: PC16-A012
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [229, 231]
+    quote: |
+      	// mmap_write_unlock(mm);
+      	// flush_tlb_mm(oldmm);
+      	// mmap_write_unlock(oldmm);
+  - id: PC16-A013
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [238, 240]
+    quote: |
+      fail_nomem:
+      	retval = -ENOMEM;
+      	// vm_unacct_memory(charge);
+  - id: PC16-A014
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_init"
+    observed_lines: [401, 403]
+    quote: |
+      
+      	mm->pgd = pgd_alloc(mm);
+      	if (!mm->pgd)
+  - id: PC16-A015
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "__mmput"
+    observed_lines: [439, 441]
+    quote: |
+      	// khugepaged_exit(mm); /* must run before exit_mmap */
+      	// exit_mmap(mm);
+      	// mm_put_huge_zero_page(mm);
+  - id: PC16-A016
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "__mmput"
+    observed_lines: [449, 451]
+    quote: |
+      	// 	module_put(mm->binfmt->module);
+      	// mmdrop(mm);
+      }
+  - id: PC16-A017
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [213, 215]
+    quote: |
+      static inline int
+      copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
+      		pte_t *dst_pte_ptr, pte_t *src_pte_ptr, ulong addr) {
+  - id: PC16-A018
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [218, 220]
+    quote: |
+      	ulong vm_flags = src_vma->vm_flags;
+      	pte_t pte = *src_pte_ptr;
+      
+  - id: PC16-A019
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [224, 226]
+    quote: |
+      	 */
+      	if (is_cow_mapping(vm_flags) && pte_write(pte)) {
+      		arch_ptep_set_wrprotect(src_pte_ptr);
+  - id: PC16-A020
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [225, 227]
+    quote: |
+      	if (is_cow_mapping(vm_flags) && pte_write(pte)) {
+      		arch_ptep_set_wrprotect(src_pte_ptr);
+      		pte = pte_wrprotect(pte);
+  - id: PC16-A021
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [226, 228]
+    quote: |
+      		arch_ptep_set_wrprotect(src_pte_ptr);
+      		pte = pte_wrprotect(pte);
+      	}
+  - id: PC16-A022
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [233, 235]
+    quote: |
+      	 */
+      	if (vm_flags & VM_SHARED)
+      		pte = pte_mkclean(pte);
+  - id: PC16-A023
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [234, 236]
+    quote: |
+      	if (vm_flags & VM_SHARED)
+      		pte = pte_mkclean(pte);
+      	pte = pte_mkold(pte);
+  - id: PC16-A024
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [235, 237]
+    quote: |
+      		pte = pte_mkclean(pte);
+      	pte = pte_mkold(pte);
+      
+  - id: PC16-A025
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [237, 239]
+    quote: |
+      
+      	set_pte_at(dst_vma->vm_mm, addr, dst_pte_ptr, pte);
+      	return 0;
+  - id: PC16-A026
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_present_pte"
+    observed_lines: [238, 240]
+    quote: |
+      	set_pte_at(dst_vma->vm_mm, addr, dst_pte_ptr, pte);
+      	return 0;
+      }
+  - id: PC16-A027
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [243, 245]
+    quote: |
+      static int
+      copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_entp,
+      		pmd_t *src_pmd_entp, ulong addr, ulong end) {
+  - id: PC16-A028
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [250, 252]
+    quote: |
+      	pte_t *orig_src_pte_ptr, *orig_dst_pte_ptr;
+      	spinlock_t *src_ptl, *dst_ptl;
+      	int ret = 0;
+  - id: PC16-A029
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [253, 255]
+    quote: |
+      
+      	dst_pte_ptr = pte_alloc_map_lock(dst_mm, dst_pmd_entp, addr, &dst_ptl);
+      	if (!dst_pte_ptr) {
+  - id: PC16-A030
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [255, 257]
+    quote: |
+      	if (!dst_pte_ptr) {
+      		pte_unmap_unlock(dst_pte_ptr, dst_ptl);
+      		/* ret == 0 */
+  - id: PC16-A031
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [257, 259]
+    quote: |
+      		/* ret == 0 */
+      		return -ENOMEM;
+      	}
+  - id: PC16-A032
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [260, 262]
+    quote: |
+      	// src_pte_ptr = pte_offset_map_nolock(src_mm, src_pmd_entp, addr, &src_ptl);;
+      	src_pte_ptr = pte_offset_map_lock(src_mm, src_pmd_entp, addr, &src_ptl);;
+      	orig_src_pte_ptr = src_pte_ptr;
+  - id: PC16-A033
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [262, 264]
+    quote: |
+      	orig_src_pte_ptr = src_pte_ptr;
+      	orig_dst_pte_ptr = dst_pte_ptr;
+      
+  - id: PC16-A034
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [264, 266]
+    quote: |
+      
+      	do {
+      		if (pte_none(*src_pte_ptr)) {
+  - id: PC16-A035
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [265, 267]
+    quote: |
+      	do {
+      		if (pte_none(*src_pte_ptr)) {
+      			continue;
+  - id: PC16-A036
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [269, 271]
+    quote: |
+      		// swap currently not supported.
+      		while (unlikely(!pte_present(*src_pte_ptr)));
+      		// if (unlikely(!pte_present(*src_pte_ptr))) {
+  - id: PC16-A037
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [271, 273]
+    quote: |
+      		// if (unlikely(!pte_present(*src_pte_ptr))) {
+      		// 	ret = copy_nonpresent_pte(dst_mm, src_mm,
+      		// 				  dst_pte_ptr, src_pte_ptr,
+  - id: PC16-A038
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [290, 292]
+    quote: |
+      		/* copy_present_pte() will clear `*prealloc' if consumed */
+      		ret = copy_present_pte(dst_vma, src_vma,
+      				dst_pte_ptr, src_pte_ptr, addr);
+  - id: PC16-A039
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [296, 298]
+    quote: |
+      		 */
+      		if (unlikely(ret == -EAGAIN))
+      			break;
+  - id: PC16-A040
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [298, 300]
+    quote: |
+      			break;
+      	} while (dst_pte_ptr++, src_pte_ptr++, addr += PAGE_SIZE, addr != end);
+      
+  - id: PC16-A041
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [300, 302]
+    quote: |
+      
+      	pte_unmap_unlock(orig_src_pte_ptr, src_ptl);
+      	pte_unmap_unlock(orig_dst_pte_ptr, dst_ptl);
+  - id: PC16-A042
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [301, 303]
+    quote: |
+      	pte_unmap_unlock(orig_src_pte_ptr, src_ptl);
+      	pte_unmap_unlock(orig_dst_pte_ptr, dst_ptl);
+      	// cond_resched();
+  - id: PC16-A043
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pte_range"
+    observed_lines: [304, 306]
+    quote: |
+      
+      	return 0;
+      }
+  - id: PC16-A044
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pmd_range"
+    observed_lines: [316, 318]
+    quote: |
+      
+      	dst_pmd_entp = pmd_alloc(dst_mm, dst_pud_entp, addr);
+      	if (!dst_pmd_entp)
+  - id: PC16-A045
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pmd_range"
+    observed_lines: [318, 320]
+    quote: |
+      	if (!dst_pmd_entp)
+      		return -ENOMEM;
+      	src_pmd_entp = pmd_offset(src_pud_entp, addr);
+  - id: PC16-A046
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pmd_range"
+    observed_lines: [319, 321]
+    quote: |
+      		return -ENOMEM;
+      	src_pmd_entp = pmd_offset(src_pud_entp, addr);
+      
+  - id: PC16-A047
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pmd_range"
+    observed_lines: [322, 324]
+    quote: |
+      	do {
+      		next = pmd_addr_end(addr, end);
+      		// MyOS2 doesn't support huge-page and swap,
+  - id: PC16-A048
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pmd_range"
+    observed_lines: [325, 327]
+    quote: |
+      		// So here skip corresponding check and handling
+      		if (pmd_ent_none_or_clear_bad(src_pmd_entp))
+      			continue;
+  - id: PC16-A049
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pmd_range"
+    observed_lines: [327, 329]
+    quote: |
+      			continue;
+      		if (copy_pte_range(dst_vma, src_vma,
+      				dst_pmd_entp, src_pmd_entp, addr, next))
+  - id: PC16-A050
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pmd_range"
+    observed_lines: [329, 331]
+    quote: |
+      				dst_pmd_entp, src_pmd_entp, addr, next))
+      			return -ENOMEM;
+      	} while (dst_pmd_entp++, src_pmd_entp++, addr = next, addr != end);
+  - id: PC16-A051
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pmd_range"
+    observed_lines: [330, 332]
+    quote: |
+      			return -ENOMEM;
+      	} while (dst_pmd_entp++, src_pmd_entp++, addr = next, addr != end);
+      
+  - id: PC16-A052
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pud_range"
+    observed_lines: [344, 346]
+    quote: |
+      
+      	dst_pud_entp = pud_alloc(dst_mm, dst_p4d_entp, addr);
+      	if (!dst_pud_entp)
+  - id: PC16-A053
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pud_range"
+    observed_lines: [346, 348]
+    quote: |
+      	if (!dst_pud_entp)
+      		return -ENOMEM;
+      	src_pud_entp = pud_offset(src_p4d_entp, addr);
+  - id: PC16-A054
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pud_range"
+    observed_lines: [347, 349]
+    quote: |
+      		return -ENOMEM;
+      	src_pud_entp = pud_offset(src_p4d_entp, addr);
+      
+  - id: PC16-A055
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pud_range"
+    observed_lines: [350, 352]
+    quote: |
+      	do {
+      		next = pud_addr_end(addr, end);
+      		// MyOS2 doesn't support huge-page and swap,
+  - id: PC16-A056
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pud_range"
+    observed_lines: [353, 355]
+    quote: |
+      		// So here skip corresponding check and handling
+      		if (pud_ent_none_or_clear_bad(src_pud_entp))
+      			continue;
+  - id: PC16-A057
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pud_range"
+    observed_lines: [355, 357]
+    quote: |
+      			continue;
+      		if (copy_pmd_range(dst_vma, src_vma,
+      				dst_pud_entp, src_pud_entp, addr, next))
+  - id: PC16-A058
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pud_range"
+    observed_lines: [357, 359]
+    quote: |
+      				dst_pud_entp, src_pud_entp, addr, next))
+      			return -ENOMEM;
+      	} while (dst_pud_entp++, src_pud_entp++, addr = next, addr != end);
+  - id: PC16-A059
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_pud_range"
+    observed_lines: [358, 360]
+    quote: |
+      			return -ENOMEM;
+      	} while (dst_pud_entp++, src_pud_entp++, addr = next, addr != end);
+      
+  - id: PC16-A060
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_p4d_range"
+    observed_lines: [375, 377]
+    quote: |
+      
+      	dst_p4d_entp = p4d_alloc(dst_mm, dst_pgd_entp, addr);
+      	if (!dst_p4d_entp)
+  - id: PC16-A061
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_p4d_range"
+    observed_lines: [377, 379]
+    quote: |
+      	if (!dst_p4d_entp)
+      		return -ENOMEM;
+      	src_p4d_entp = p4d_offset(src_pgd_entp, addr);
+  - id: PC16-A062
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_p4d_range"
+    observed_lines: [378, 380]
+    quote: |
+      		return -ENOMEM;
+      	src_p4d_entp = p4d_offset(src_pgd_entp, addr);
+      
+  - id: PC16-A063
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_p4d_range"
+    observed_lines: [381, 383]
+    quote: |
+      	do {
+      		next = p4d_addr_end(addr, end);
+      		if (p4d_ent_none_or_clear_bad(src_p4d_entp))
+  - id: PC16-A064
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_p4d_range"
+    observed_lines: [382, 384]
+    quote: |
+      		next = p4d_addr_end(addr, end);
+      		if (p4d_ent_none_or_clear_bad(src_p4d_entp))
+      			continue;
+  - id: PC16-A065
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_p4d_range"
+    observed_lines: [384, 386]
+    quote: |
+      			continue;
+      		if (copy_pud_range(dst_vma, src_vma,
+      				dst_p4d_entp, src_p4d_entp, addr, next))
+  - id: PC16-A066
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_p4d_range"
+    observed_lines: [386, 388]
+    quote: |
+      				dst_p4d_entp, src_p4d_entp, addr, next))
+      			return -ENOMEM;
+      	} while (dst_p4d_entp++, src_p4d_entp++, addr = next, addr != end);
+  - id: PC16-A067
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_p4d_range"
+    observed_lines: [387, 389]
+    quote: |
+      			return -ENOMEM;
+      	} while (dst_p4d_entp++, src_p4d_entp++, addr = next, addr != end);
+      
+  - id: PC16-A068
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [393, 395]
+    quote: |
+      int
+      copy_page_range(vma_s *dst_vma, vma_s *src_vma)
+      {
+  - id: PC16-A069
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [396, 398]
+    quote: |
+      	ulong next;
+      	ulong addr = src_vma->vm_start;
+      	ulong end = src_vma->vm_end;
+  - id: PC16-A070
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [397, 399]
+    quote: |
+      	ulong addr = src_vma->vm_start;
+      	ulong end = src_vma->vm_end;
+      	mm_s *dst_mm = dst_vma->vm_mm;
+  - id: PC16-A071
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [399, 401]
+    quote: |
+      	mm_s *dst_mm = dst_vma->vm_mm;
+      	mm_s *src_mm = src_vma->vm_mm;
+      	pgd_t *src_pgd_entp, *dst_pgd_entp;
+  - id: PC16-A072
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [403, 405]
+    quote: |
+      
+      	dst_pgd_entp = pgd_offset(dst_mm, addr);
+      	src_pgd_entp = pgd_offset(src_mm, addr);
+  - id: PC16-A073
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [404, 406]
+    quote: |
+      	dst_pgd_entp = pgd_offset(dst_mm, addr);
+      	src_pgd_entp = pgd_offset(src_mm, addr);
+      
+  - id: PC16-A074
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [407, 409]
+    quote: |
+      	do {
+      		next = pgd_addr_end(addr, end);
+      		if (pgd_none_or_clear_bad(src_pgd_entp))
+  - id: PC16-A075
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [408, 410]
+    quote: |
+      		next = pgd_addr_end(addr, end);
+      		if (pgd_none_or_clear_bad(src_pgd_entp))
+      			continue;
+  - id: PC16-A076
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [410, 412]
+    quote: |
+      			continue;
+      		if (copy_p4d_range(dst_vma, src_vma,
+      				dst_pgd_entp, src_pgd_entp, addr, next)) {
+  - id: PC16-A077
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [412, 414]
+    quote: |
+      				dst_pgd_entp, src_pgd_entp, addr, next)) {
+      			ret = -ENOMEM;
+      			break;
+  - id: PC16-A078
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [415, 417]
+    quote: |
+      		}
+      	} while (dst_pgd_entp++, src_pgd_entp++, addr = next, addr != end);
+      
+  - id: PC16-A079
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "copy_page_range"
+    observed_lines: [417, 419]
+    quote: |
+      
+      	return ret;
+      }
+  - id: PC16-A080
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1255, 1257]
+    quote: |
+      
+      	if (pte_none(vmf->orig_pte))
+      		return do_pte_missing(vmf);
+  - id: PC16-A081
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1271, 1273]
+    quote: |
+      	if (vmf->flags & FAULT_FLAG_WRITE) {
+      		if (!pte_write(*vmf->pte_ptr))
+      			return do_wp_page(vmf);
+  - id: PC16-A082
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "handle_pte_fault"
+    observed_lines: [1272, 1274]
+    quote: |
+      		if (!pte_write(*vmf->pte_ptr))
+      			return do_wp_page(vmf);
+      		else if (likely(vmf->flags & FAULT_FLAG_WRITE))
+  - id: PC16-A083
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_wp_page"
+    observed_lines: [725, 727]
+    quote: |
+      	 */
+      	if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
+      		// catch this case, handler temporarily not implemented
+  - id: PC16-A084
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_wp_page"
+    observed_lines: [766, 768]
+    quote: |
+      	// pte_unmap_unlock(vmf->pte, vmf->ptl);
+      	return wp_page_copy(vmf);
+      }
+  - id: PC16-A085
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "p4d_alloc"
+    observed_lines: [76, 78]
+    quote: |
+      		p4d_t
+      		*p4d_alloc(mm_s *mm, pgd_t *pgd_entp, ulong vaddr) {
+      			return ((p4d_t *)pgd_entp);
+  - id: PC16-A086
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pud_alloc"
+    observed_lines: [82, 84]
+    quote: |
+      		pud_t
+      		*pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong vaddr) {
+      			return (p4d_ent_is_none(*p4d_entp)) && __pud_alloc(mm, p4d_entp) ?
+  - id: PC16-A087
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pud_alloc"
+    observed_lines: [83, 85]
+    quote: |
+      		*pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong vaddr) {
+      			return (p4d_ent_is_none(*p4d_entp)) && __pud_alloc(mm, p4d_entp) ?
+      						NULL : pud_entp_from_vaddr_and_p4d_entp(p4d_entp, vaddr);
+  - id: PC16-A088
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pmd_alloc"
+    observed_lines: [89, 91]
+    quote: |
+      		pmd_t
+      		*pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong vaddr) {
+      			return (pud_ent_is_none(*pud_entp)) && __pmd_alloc(mm, pud_entp)?
+  - id: PC16-A089
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pmd_alloc"
+    observed_lines: [90, 92]
+    quote: |
+      		*pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong vaddr) {
+      			return (pud_ent_is_none(*pud_entp)) && __pmd_alloc(mm, pud_entp)?
+      						NULL: pmd_entp_from_vaddr_and_pud_entp(pud_entp, vaddr);
+  - id: PC16-A090
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pgtble_alloc"
+    observed_lines: [96, 98]
+    quote: |
+      		int
+      		pgtble_alloc(mm_s *mm, pmd_t *pmd_entp) {
+      			return (unlikely(pmd_none(*(pmd_entp))) && __pte_alloc(mm, pmd_entp));
+  - id: PC16-A091
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pgtble_alloc_map_lock"
+    observed_lines: [107, 109]
+    quote: |
+      		pte_t
+      		*pgtble_alloc_map_lock(mm_s *mm, pmd_t *pmd_entp,
+      				ulong vaddr, spinlock_t **ptlp) {
+  - id: PC16-A092
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "pgtble_alloc_map_lock"
+    observed_lines: [109, 111]
+    quote: |
+      				ulong vaddr, spinlock_t **ptlp) {
+      			return (pgtble_alloc(mm, pmd_entp) ?
+      						NULL : pte_offset_map_lock(mm, pmd_entp, vaddr, ptlp));
+  - id: PC16-A093
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "__myos_pgtable_alloc_one"
+    observed_lines: [62, 64]
+    quote: |
+      
+      			page = alloc_page(gfp);
+      			if (!page)
+  - id: PC16-A094
+    path: "mykernel/mm/fault/pgalloc.h"
+    symbol: "__myos_pgtable_alloc_one"
+    observed_lines: [66, 68]
+    quote: |
+      
+      			memset((void *)page_to_virt(page), 0, PAGE_SIZE);
+      			__SetPageTable(page);
+  - id: PC16-A095
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [11, 13]
+    quote: |
+      {
+      	spinlock_t *ptl = p4d_lock(mm, p4d_entp);
+      	if (p4d_ent_none_or_clear_bad(p4d_entp) ||
+  - id: PC16-A096
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [16, 18]
+    quote: |
+      		pud_t *new = pud_alloc_one(mm);
+      		if (!new)
+      			return -ENOMEM;
+  - id: PC16-A097
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [17, 19]
+    quote: |
+      		if (!new)
+      			return -ENOMEM;
+      
+  - id: PC16-A098
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [21, 23]
+    quote: |
+      		smp_wmb();	/* See comment in pmd_install() */
+      		p4d_populate(mm, p4d_entp, new);
+      	}
+  - id: PC16-A099
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pud_alloc"
+    observed_lines: [23, 25]
+    quote: |
+      	}
+      	spin_unlock(ptl);
+      	return 0;
+  - id: PC16-A100
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [33, 35]
+    quote: |
+      {
+      	spinlock_t *ptl = pud_lock(mm, pud_entp);
+      	if (pud_ent_none_or_clear_bad(pud_entp) ||
+  - id: PC16-A101
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [38, 40]
+    quote: |
+      		pmd_t *new = pmd_alloc_one(mm);
+      		if (!new)
+      			return -ENOMEM;
+  - id: PC16-A102
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [39, 41]
+    quote: |
+      		if (!new)
+      			return -ENOMEM;
+      
+  - id: PC16-A103
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [43, 45]
+    quote: |
+      		smp_wmb();	/* See comment in pmd_install() */
+      		pud_populate(mm, pud_entp, new);
+      	}
+  - id: PC16-A104
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pmd_alloc"
+    observed_lines: [45, 47]
+    quote: |
+      	}
+      	spin_unlock(ptl);
+      	return 0;
+  - id: PC16-A105
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [51, 53]
+    quote: |
+      {
+      	spinlock_t *ptl = pmd_lock(mm, pmd_entp);
+      	if (pmd_ent_none_or_clear_bad(pmd_entp) ||
+  - id: PC16-A106
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [56, 58]
+    quote: |
+      		pte_t *new = pte_alloc_one(mm);
+      		if (!new)
+      			return -ENOMEM;
+  - id: PC16-A107
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [57, 59]
+    quote: |
+      		if (!new)
+      			return -ENOMEM;
+      
+  - id: PC16-A108
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [61, 63]
+    quote: |
+      		smp_wmb();	/* See comment in pmd_install() */
+      		pmd_populate_kernel(mm, pmd_entp, new);
+      	}
+  - id: PC16-A109
+    path: "mykernel/mm/fault/pgalloc.c"
+    symbol: "__pgtbl_alloc"
+    observed_lines: [63, 65]
+    quote: |
+      	}
+      	spin_unlock(ptl);
+      	return 0;
+  - id: PC16-A110
+    path: "mykernel/mm/fault/pgalloc_macro.h"
+    symbol: "pte_alloc_map_lock alias"
+    observed_lines: [6, 8]
+    quote: |
+      	#define pte_alloc_map			pgtble_alloc_map
+      	#define pte_alloc_map_lock		pgtble_alloc_map_lock
+      
+  - id: PC16-A111
+    path: "mykernel/mm/fault/memfault_api.h"
+    symbol: "__pte_alloc alias"
+    observed_lines: [32, 34]
+    quote: |
+      	int __pgtbl_alloc(mm_s *mm, pmd_t *pmd_entp);
+      	#define __pte_alloc __pgtbl_alloc
+      
+  - id: PC16-A112
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "pte_unmap_unlock macro"
+    observed_lines: [9, 11]
+    quote: |
+      	#define pte_unmap_unlock(pte, ptl)	do {	\
+      				spin_unlock(ptl);				\
+      				pte_unmap(pte);					\
+  - id: PC16-A113
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "pte_unmap_unlock macro"
+    observed_lines: [10, 12]
+    quote: |
+      				spin_unlock(ptl);				\
+      				pte_unmap(pte);					\
+      			} while (0)
+  - id: PC16-A114
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "pgd_ent_bound_end"
+    observed_lines: [23, 25]
+    quote: |
+      	 */
+      	#define pgd_ent_bound_end(addr, end) ({							\
+      				unsigned long __boundary = 							\
+  - id: PC16-A115
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "pgd_ent_bound_end"
+    observed_lines: [26, 28]
+    quote: |
+      					((addr) + PGDIR_SIZE) & PGDIR_MASK;				\
+      				(__boundary - 1 < (end) - 1)? __boundary: (end);	\
+      			})
+  - id: PC16-A116
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "p4d_ent_bound_end"
+    observed_lines: [33, 35]
+    quote: |
+      	 */
+      	#define p4d_ent_bound_end(addr, end) ({							\
+      				unsigned long __boundary =							\
+  - id: PC16-A117
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "pud_ent_bound_end"
+    observed_lines: [43, 45]
+    quote: |
+      	 */
+      	#define pud_ent_bound_end(addr, end) ({							\
+      				unsigned long __boundary =							\
+  - id: PC16-A118
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "pmd_ent_bound_end"
+    observed_lines: [53, 55]
+    quote: |
+      	 */
+      	#define pmd_ent_bound_end(addr, end) ({							\
+      				unsigned long __boundary =							\
+  - id: PC16-A119
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "offset aliases"
+    observed_lines: [76, 78]
+    quote: |
+      	#define pgd_offset		pgd_entp_in_mm
+      	#define p4d_offset		p4d_entp_from_vaddr_and_pgd_entp
+      	#define pud_offset		pud_entp_from_vaddr_and_p4d_entp
+  - id: PC16-A120
+    path: "mykernel/mm/fault/pgtable_macro.h"
+    symbol: "pgd_none_or_clear_bad alias"
+    observed_lines: [95, 97]
+    quote: |
+      	#define pgdp_get				p4d_entp_get_ent
+      	#define pgd_none_or_clear_bad	p4d_ent_none_or_clear_bad
+      
+  - id: PC16-A121
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "is_cow_mapping"
+    observed_lines: [161, 163]
+    quote: |
+      		bool
+      		is_cow_mapping(vm_flags_t flags) {
+      			// must VM_MAYWRITE and not VM_SHARED
+  - id: PC16-A122
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "is_cow_mapping"
+    observed_lines: [163, 165]
+    quote: |
+      			// must VM_MAYWRITE and not VM_SHARED
+      			return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+      		}
+  - id: PC16-A123
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "pgd_entp_in_mm"
+    observed_lines: [169, 171]
+    quote: |
+      		pgd_t
+      		*pgd_entp_in_mm(mm_s *mmp, ulong vaddr) {
+      			return (mmp->pgd + pgd_index(vaddr));
+  - id: PC16-A124
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "p4d_entp_from_vaddr_and_pgd_entp"
+    observed_lines: [199, 201]
+    quote: |
+      				pgd_t *pgd_entp, ulong vaddr) {
+      			return ((p4d_t *)pgd_entp);
+      		};
+  - id: PC16-A125
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "p4d_ent_none_or_clear_bad"
+    observed_lines: [179, 181]
+    quote: |
+      				return 1;
+      			if (p4d_ent_is_bad(*p4d_entp)) {
+      				p4d_ent_clear(p4d_entp);
+  - id: PC16-A126
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "p4d_ent_none_or_clear_bad"
+    observed_lines: [180, 182]
+    quote: |
+      			if (p4d_ent_is_bad(*p4d_entp)) {
+      				p4d_ent_clear(p4d_entp);
+      				return 1;
+  - id: PC16-A127
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "pud_ent_none_or_clear_bad"
+    observed_lines: [220, 222]
+    quote: |
+      				return 1;
+      			if (pud_ent_is_bad(*pud_entp)) {
+      				pud_ent_clear(pud_entp);
+  - id: PC16-A128
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "pud_ent_none_or_clear_bad"
+    observed_lines: [221, 223]
+    quote: |
+      			if (pud_ent_is_bad(*pud_entp)) {
+      				pud_ent_clear(pud_entp);
+      				return 1;
+  - id: PC16-A129
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "pmd_ent_none_or_clear_bad"
+    observed_lines: [261, 263]
+    quote: |
+      				return 1;
+      			if (pmd_ent_is_bad(*pmd_entp)) {
+      				pmd_ent_clear(pmd_entp);
+  - id: PC16-A130
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "pmd_ent_none_or_clear_bad"
+    observed_lines: [262, 264]
+    quote: |
+      			if (pmd_ent_is_bad(*pmd_entp)) {
+      				pmd_ent_clear(pmd_entp);
+      				return 1;
+  - id: PC16-A131
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "pgtbl_entp_from_vaddr_and_pmd_entp"
+    observed_lines: [321, 323]
+    quote: |
+      		pte_t
+      		*pgtbl_entp_from_vaddr_and_pmd_entp(pmd_t *pmd_entp, ulong vaddr) {
+      			return (pte_t *)pmd_page_vaddr(*pmd_entp) +
+  - id: PC16-A132
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "pte_unmap"
+    observed_lines: [334, 336]
+    quote: |
+      		void
+      		pte_unmap(pte_t *pte_p) {
+      			// rcu_read_unlock();
+  - id: PC16-A133
+    path: "mykernel/mm/fault/pgtable.h"
+    symbol: "mm_inc_nr_ptes"
+    observed_lines: [458, 460]
+    quote: |
+      		mm_inc_nr_ptes(mm_s *mm) {
+      			atomic_long_add(PTRS_PER_PTE * sizeof(pte_t),
+      					&mm->pgtables_bytes);
+  - id: PC16-A134
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map"
+    observed_lines: [56, 58]
+    quote: |
+      
+      pte_t
+      *__pte_offset_map(pmd_t *pmd, ulong addr, pmd_t *pmdvalp)
+  - id: PC16-A135
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map"
+    observed_lines: [70, 72]
+    quote: |
+      	// if (unlikely(pmd_none(pmdval) || is_pmd_migration_entry(pmdval)))
+      	if (unlikely(pmd_none(pmdval)))
+      		goto nomap;
+  - id: PC16-A136
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map"
+    observed_lines: [74, 76]
+    quote: |
+      	// 	goto nomap;
+      	if (unlikely(pmd_bad(pmdval))) {
+      		pmd_clear_bad(pmd);
+  - id: PC16-A137
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map"
+    observed_lines: [78, 80]
+    quote: |
+      	}
+      	return __pte_map(&pmdval, addr);
+      nomap:
+  - id: PC16-A138
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map_lock"
+    observed_lines: [149, 151]
+    quote: |
+      again:
+      	ptep = __pte_offset_map(pmdp, addr, &pmdval);
+      	if (unlikely(!ptep))
+  - id: PC16-A139
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map_lock"
+    observed_lines: [150, 152]
+    quote: |
+      	ptep = __pte_offset_map(pmdp, addr, &pmdval);
+      	if (unlikely(!ptep))
+      		return ptep;
+  - id: PC16-A140
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map_lock"
+    observed_lines: [153, 155]
+    quote: |
+      	ptl = pte_lockptr(mm, &pmdval);
+      	spin_lock(ptl);
+      	if (likely(pmd_same(pmdval, pmdp_get_lockless(pmdp)))) {
+  - id: PC16-A141
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map_lock"
+    observed_lines: [155, 157]
+    quote: |
+      	if (likely(pmd_same(pmdval, pmdp_get_lockless(pmdp)))) {
+      		*ptlp = ptl;
+      		return ptep;
+  - id: PC16-A142
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "__pte_offset_map_lock"
+    observed_lines: [158, 160]
+    quote: |
+      	}
+      	pte_unmap_unlock(ptep, ptl);
+      	goto again;
+  - id: PC16-A143
+    path: "mykernel/mm/fault/pgtable-generic.c"
+    symbol: "pte_offset_map_lock"
+    observed_lines: [167, 169]
+    quote: |
+      	pte_t *pte;
+      	__cond_lock(*ptlp, pte = __pte_offset_map_lock(mm, pmd_entp, addr, ptlp));
+      	return pte;
+  - id: PC16-A144
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "set_pte_at"
+    observed_lines: [210, 212]
+    quote: |
+      		void
+      		set_pte_at(mm_s *mm, ulong addr, pte_t *ptep, pte_t pte) {
+      			// page_table_check_pte_set(mm, addr, ptep, pte);
+  - id: PC16-A145
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "set_pte_at"
+    observed_lines: [212, 214]
+    quote: |
+      			// page_table_check_pte_set(mm, addr, ptep, pte);
+      			set_pte(ptep, pte);
+      		}
+  - id: PC16-A146
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "arch_ptep_set_wrprotect"
+    observed_lines: [217, 219]
+    quote: |
+      		void
+      		arch_ptep_set_wrprotect(pte_t *ptep) {
+      			clear_bit(_PAGE_BIT_RW, (ulong *)&ptep->val);
+  - id: PC16-A147
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "arch_ptep_set_wrprotect"
+    observed_lines: [218, 220]
+    quote: |
+      		arch_ptep_set_wrprotect(pte_t *ptep) {
+      			clear_bit(_PAGE_BIT_RW, (ulong *)&ptep->val);
+      		}
+  - id: PC16-A148
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "pte_wrprotect"
+    observed_lines: [249, 251]
+    quote: |
+      		pte_t
+      		pte_wrprotect(pte_t pte) {
+      			return pte_clear_flags(pte, _PAGE_RW);
+  - id: PC16-A149
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "pte_mkclean"
+    observed_lines: [237, 239]
+    quote: |
+      		pte_t
+      		pte_mkclean(pte_t pte) {
+      			return pte_clear_flags(pte, _PAGE_DIRTY);
+  - id: PC16-A150
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "pte_mkold"
+    observed_lines: [243, 245]
+    quote: |
+      		pte_t
+      		pte_mkold(pte_t pte) {
+      			return pte_clear_flags(pte, _PAGE_ACCESSED);
+  - id: PC16-A151
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "pte_writable"
+    observed_lines: [204, 206]
+    quote: |
+      		int
+      		pte_writable(pte_t pte) {
+      			return arch_pte_flags(pte) & _PAGE_RW;
+  - id: PC16-A152
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "pte_is_present"
+    observed_lines: [417, 419]
+    quote: |
+      		int
+      		pte_is_present(pte_t pte) {
+      			return arch_pte_flags(pte) &
+  - id: PC16-A153
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "pte_is_none"
+    observed_lines: [412, 414]
+    quote: |
+      		int
+      		pte_is_none(pte_t pte) {
+      			return !(pte.val & ~(_PAGE_KNL_ERRATUM_MASK));
+  - id: PC16-A154
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h"
+    symbol: "set_pte"
+    observed_lines: [605, 607]
+    quote: |
+      		void
+      		set_pte(pte_t *pte_ptr, pte_t pte) {
+      			WRITE_ONCE(*(pte_ptr), (pte));
+  - id: PC16-A155
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h"
+    symbol: "pte_write alias"
+    observed_lines: [28, 30]
+    quote: |
+      
+      	#define pte_write(ptep)		pte_writable(ptep)
+      	#define pte_present			pte_is_present
+  - id: PC16-A156
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h"
+    symbol: "pte_present alias"
+    observed_lines: [29, 31]
+    quote: |
+      	#define pte_write(ptep)		pte_writable(ptep)
+      	#define pte_present			pte_is_present
+      	#define pte_none			pte_is_none
+  - id: PC16-A157
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h"
+    symbol: "pte_none alias"
+    observed_lines: [30, 32]
+    quote: |
+      	#define pte_present			pte_is_present
+      	#define pte_none			pte_is_none
+      
+  - id: PC16-A158
+    path: "mykernel/mm/vm_map/vm_map_const.h"
+    symbol: "VM_MAYWRITE"
+    observed_lines: [84, 86]
+    quote: |
+      	#	define VM_MAYREAD			0x00000010	/* limits for mprotect() etc */
+      	#	define VM_MAYWRITE			0x00000020
+      	#	define VM_MAYEXEC			0x00000040
+  - id: PC16-A159
+    path: "mykernel/mm/vm_map/vm_map_const.h"
+    symbol: "VM_SHARED"
+    observed_lines: [80, 82]
+    quote: |
+      	#	define VM_EXEC				0x00000004
+      	#	define VM_SHARED			0x00000008
+      
+  - id: PC16-A160
+    path: "mykernel/mm/vm_map/vm_map_const.h"
+    symbol: "VM_DONTCOPY"
+    observed_lines: [100, 102]
+    quote: |
+      
+      	#	define VM_DONTCOPY			0x00020000	/* Do not copy this vma on fork */
+      	#	define VM_DONTEXPAND		0x00040000	/* Cannot expand with mremap() */
+  - id: PC16-A161
+    path: "mykernel/mm/vm_map/vm_map_const.h"
+    symbol: "VM_WIPEONFORK"
+    observed_lines: [108, 110]
+    quote: |
+      	#	define VM_ARCH_1			0x01000000	/* Architecture-specific flag */
+      	#	define VM_WIPEONFORK		0x02000000	/* Wipe VMA contents in child. */
+      	#	define VM_DONTDUMP			0x04000000	/* Do not include in the core dump */
+self_check: {source_files: 12, anchors: 161, nodes: 55, edges: 69, cases: 23, states: 9, ownership: 10, effects: 14, kernel_runtime: NOT_RUN, yaml_graphviz_formal_parser: NOT_RUN}
