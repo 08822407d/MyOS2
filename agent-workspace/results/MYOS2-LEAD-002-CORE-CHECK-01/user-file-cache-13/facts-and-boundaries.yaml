@@ -1,0 +1,1050 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-FILE-CACHE-13
+record_type: bounded_file_cache_identity_state_and_ownership
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+model_per_owner: GPT-6
+effort_per_owner: Extra
+backend_identity: unknown_or_not_attestable
+date: "2026-10-31"
+read_channel: connector
+source_pin: "time @ a039d9803ade"
+result_base: "16b77f23003f"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+edge_direction: {call: "caller -> callee, indirect requires binding", data: "consumer -> provider", init_order: "later consumer -> prior initializer"}
+coverage_limits: ["specific FAT32 fops and generic_file_vm_ops only","no full inode/VM allocator verification","cache byte readiness and page ref lifetime not proven","no full VFS/FS/IO/concurrency/runtime"]
+nodes:
+  - {id: FC13-N01, label: "inode_s/i_data"}
+  - {id: FC13-N02, label: "inode_s.i_mapping"}
+  - {id: FC13-N03, label: "file_s.f_mapping"}
+  - {id: FC13-N04, label: "address_space.page_array"}
+  - {id: FC13-N05, label: "address_space.nrpages"}
+  - {id: FC13-N06, label: "cached page_s*"}
+  - {id: FC13-N07, label: "open_last_lookups"}
+  - {id: FC13-N08, label: "__d_lookup"}
+  - {id: FC13-N09, label: "__lookup_slow"}
+  - {id: FC13-N10, label: "kzalloc"}
+  - {id: FC13-N11, label: "__lookup_hash"}
+  - {id: FC13-N12, label: "myos_do_dentry_open"}
+  - {id: FC13-N13, label: "generic_file_read_iter"}
+  - {id: FC13-N14, label: "simple_filemap_read"}
+  - {id: FC13-N15, label: "generic_perform_write"}
+  - {id: FC13-N16, label: "simple_filemap_fault"}
+  - {id: FC13-N17, label: "simple_filemap_map_page"}
+  - {id: FC13-N18, label: "file.f_op.read dispatch"}
+  - {id: FC13-N19, label: "FAT32_read"}
+  - {id: FC13-N20, label: "FAT32_file_ops"}
+  - {id: FC13-N21, label: "simple_mmap_region"}
+  - {id: FC13-N22, label: "call_mmap"}
+  - {id: FC13-N23, label: "file.f_op.mmap dispatch"}
+  - {id: FC13-N24, label: "generic_file_mmap"}
+  - {id: FC13-N25, label: "generic_file_vm_ops"}
+  - {id: FC13-N26, label: "do_read_fault"}
+  - {id: FC13-N27, label: "do_fault_around"}
+  - {id: FC13-N28, label: "vm_ops.map_single_page dispatch"}
+  - {id: FC13-N29, label: "__do_fault"}
+  - {id: FC13-N30, label: "vm_ops.fault dispatch"}
+  - {id: FC13-N31, label: "do_cow_fault"}
+  - {id: FC13-N32, label: "finish_fault"}
+  - {id: FC13-N33, label: "alloc_page"}
+  - {id: FC13-N34, label: "fput"}
+  - {id: FC13-N35, label: "file.f_count"}
+  - {id: FC13-N36, label: "PTE"}
+  - {id: FC13-N37, label: "page_to_virt data"}
+  - {id: FC13-N38, label: "read buffer"}
+  - {id: FC13-N39, label: "folio_put API"}
+  - {id: FC13-N40, label: "iput API"}
+  - {id: FC13-N41, label: "VMA.vm_file"}
+  - {id: FC13-N42, label: "vm_fault.pgoff"}
+edges:
+  - {id: FC13-E01, from: FC13-N07, to: FC13-N08, kind: call, status: conditional, condition: "cache lookup !O_CREAT", anchors: [FC13-A01]}
+  - {id: FC13-E02, from: FC13-N07, to: FC13-N09, kind: call, status: conditional, condition: "dentry cache miss", anchors: [FC13-A02]}
+  - {id: FC13-E03, from: FC13-N09, to: FC13-N10, kind: call, status: conditional, condition: "positive nrpages conditional allocation", anchors: [FC13-A04]}
+  - {id: FC13-E04, from: FC13-N09, to: FC13-N05, kind: data, status: conditional, condition: "uses inode i_size to compute nrpages", anchors: [FC13-A03]}
+  - {id: FC13-E05, from: FC13-N09, to: FC13-N04, kind: data, status: conditional, condition: "assigns page_array container pointer", anchors: [FC13-A04]}
+  - {id: FC13-E06, from: FC13-N12, to: FC13-N02, kind: data, status: active, condition: "copies inode->i_mapping to file->f_mapping", anchors: [FC13-A23]}
+  - {id: FC13-E07, from: FC13-N03, to: FC13-N02, kind: data, status: active, condition: "file references inode mapping", anchors: [FC13-A23]}
+  - {id: FC13-E08, from: FC13-N02, to: FC13-N01, kind: data, status: active, condition: "mapping embedded inode.i_data", anchors: [FC13-A16, FC13-A18]}
+  - {id: FC13-E09, from: FC13-N13, to: FC13-N14, kind: call, status: conditional, condition: "nonzero count", anchors: [FC13-A63, FC13-A64]}
+  - {id: FC13-E10, from: FC13-N14, to: FC13-N04, kind: data, status: active, condition: "indexes by pgcache_pos>>PAGE_SHIFT", anchors: [FC13-A56]}
+  - {id: FC13-E11, from: FC13-N14, to: FC13-N33, kind: call, status: conditional, condition: "allocates on empty slot", anchors: [FC13-A57]}
+  - {id: FC13-E12, from: FC13-N14, to: FC13-N18, kind: call, status: conditional_dynamic, condition: "FOP read after storing slot pointer", anchors: [FC13-A58]}
+  - {id: FC13-E13, from: FC13-N14, to: FC13-N37, kind: call, status: conditional, condition: "uses page_to_virt on slot pointer", anchors: [FC13-A59]}
+  - {id: FC13-E14, from: FC13-N14, to: FC13-N38, kind: data, status: conditional, condition: "memcpy cached bytes into iterator buffer", anchors: [FC13-A61]}
+  - {id: FC13-E15, from: FC13-N15, to: FC13-N04, kind: data, status: active, condition: "uses same array for buffered write", anchors: [FC13-A65]}
+  - {id: FC13-E16, from: FC13-N15, to: FC13-N18, kind: call, status: conditional_dynamic, condition: "write miss invokes read callback", anchors: [FC13-A66]}
+  - {id: FC13-E17, from: FC13-N16, to: FC13-N04, kind: data, status: active, condition: "fault index = vmf.pgoff", anchors: [FC13-A43]}
+  - {id: FC13-E18, from: FC13-N16, to: FC13-N33, kind: call, status: conditional, condition: "fault alloc_page after BUG_ON", anchors: [FC13-A45]}
+  - {id: FC13-E19, from: FC13-N16, to: FC13-N18, kind: call, status: conditional_dynamic, condition: "fault file f_op->read", anchors: [FC13-A46]}
+  - {id: FC13-E20, from: FC13-N16, to: FC13-N03, kind: data, status: active, condition: "mapping borrowed from file f_mapping", anchors: [FC13-A42]}
+  - {id: FC13-E21, from: FC13-N16, to: FC13-N42, kind: data, status: active, condition: "vmf.pgoff source", anchors: [FC13-A43, FC13-A69]}
+  - {id: FC13-E22, from: FC13-N17, to: FC13-N04, kind: data, status: active, condition: "cache map indexed by pgoff", anchors: [FC13-A49]}
+  - {id: FC13-E23, from: FC13-N17, to: FC13-N36, kind: data, status: conditional, condition: "raw PTE write on nonNULL page", anchors: [FC13-A50]}
+  - {id: FC13-E24, from: FC13-N26, to: FC13-N27, kind: call, status: conditional, condition: "read fault tries map around", anchors: [FC13-A70]}
+  - {id: FC13-E25, from: FC13-N27, to: FC13-N28, kind: call, status: conditional_dynamic, condition: "vm_ops.map_single_page dispatch", anchors: [FC13-A73]}
+  - {id: FC13-E26, from: FC13-N28, to: FC13-N17, kind: data, status: binding_generic, condition: "generic VM ops map-single-page target", anchors: [FC13-A53]}
+  - {id: FC13-E27, from: FC13-N26, to: FC13-N29, kind: call, status: conditional, condition: "fallback after nonzero fast result", anchors: [FC13-A72]}
+  - {id: FC13-E28, from: FC13-N29, to: FC13-N30, kind: call, status: conditional_dynamic, condition: "vm_ops.fault dispatch", anchors: [FC13-A74]}
+  - {id: FC13-E29, from: FC13-N30, to: FC13-N16, kind: data, status: binding_generic, condition: "generic VM ops fault target", anchors: [FC13-A52]}
+  - {id: FC13-E30, from: FC13-N31, to: FC13-N29, kind: call, status: conditional, condition: "private COW enters __do_fault directly", anchors: [FC13-A75]}
+  - {id: FC13-E31, from: FC13-N26, to: FC13-N32, kind: call, status: conditional, condition: "fallback successful path calls finish_fault", anchors: [FC13-A72]}
+  - {id: FC13-E32, from: FC13-N32, to: FC13-N36, kind: data, status: conditional, condition: "PTE set after accepted vmf.page", anchors: [FC13-A77]}
+  - {id: FC13-E33, from: FC13-N21, to: FC13-N22, kind: call, status: conditional, condition: "file-backed map uses call_mmap", anchors: [FC13-A79]}
+  - {id: FC13-E34, from: FC13-N22, to: FC13-N23, kind: call, status: conditional_dynamic, condition: "call_mmap uses file.f_op->mmap", anchors: [FC13-A15]}
+  - {id: FC13-E35, from: FC13-N23, to: FC13-N24, kind: data, status: binding_FAT32, condition: "FAT32 f_op.mmap target", anchors: [FC13-A31]}
+  - {id: FC13-E36, from: FC13-N24, to: FC13-N25, kind: data, status: active, condition: "sets VMA.vm_ops generic pointer", anchors: [FC13-A68]}
+  - {id: FC13-E37, from: FC13-N18, to: FC13-N19, kind: data, status: binding_FAT32, condition: "FAT32 f_op.read target", anchors: [FC13-A29]}
+  - {id: FC13-E38, from: FC13-N13, to: FC13-N20, kind: data, status: binding_FAT32, condition: "read_iter generic_file_read_iter", anchors: [FC13-A30]}
+  - {id: FC13-E39, from: FC13-N14, to: FC13-N03, kind: data, status: active, condition: "filemap reader's f_mapping", anchors: [FC13-A54]}
+  - {id: FC13-E40, from: FC13-N34, to: FC13-N35, kind: data, status: active, condition: "file f_count decrement", anchors: [FC13-A27]}
+  - {id: FC13-E41, from: FC13-N11, to: FC13-N08, kind: call, status: conditional, condition: "__lookup_hash also checks existing dentry", anchors: [FC13-A06]}
+  - {id: FC13-E42, from: FC13-N40, to: FC13-N01, kind: data, status: latent, condition: "iput accepts inode; no active release in selected body", anchors: [FC13-A19]}
+  - {id: FC13-E43, from: FC13-N16, to: FC13-N06, kind: data, status: conditional, condition: "vmf.page stored cache slot pointer", anchors: [FC13-A47]}
+  - {id: FC13-E44, from: FC13-N39, to: FC13-N06, kind: data, status: latent, condition: "folio_put exists not an observed slot-specific cleanup", anchors: [FC13-A83]}
+  - {id: FC13-E45, from: FC13-N15, to: FC13-N38, kind: data, status: conditional, condition: "write path copies user data to page", anchors: [FC13-A67]}
+effects:
+  - id: FC13-X01
+    actor: "slow lookup"
+    description: "assigns nrpages and page_array"
+    anchors: [FC13-A03, FC13-A04]
+  - id: FC13-X02
+    actor: "open"
+    description: "borrows mapping, possible i_size truncate"
+    anchors: [FC13-A23, FC13-A25]
+  - id: FC13-X03
+    actor: "ordinary miss"
+    description: "publish pointer then read backend"
+    anchors: [FC13-A57, FC13-A58]
+  - id: FC13-X04
+    actor: "ordinary hit"
+    description: "copy cached bytes into buffer"
+    anchors: [FC13-A61]
+  - id: FC13-X05
+    actor: "fault"
+    description: "BUG_ON occupied slot then fill/publish pointer, return0"
+    anchors: [FC13-A44, FC13-A47, FC13-A48]
+  - id: FC13-X06
+    actor: "map page"
+    description: "PTE update if nonNULL cache pointer"
+    anchors: [FC13-A50]
+  - id: FC13-X07
+    actor: "FAT32 backend"
+    description: "i_size trim/ROOTBLK_TRANSFER/return count or errno"
+    anchors: [FC13-A35, FC13-A36, FC13-A40]
+  - id: FC13-X08
+    actor: "write"
+    description: "read on cold cached slot then memcpy writer bytes"
+    anchors: [FC13-A66, FC13-A67]
+  - id: FC13-X09
+    actor: "file mapping"
+    description: "get_file increments file ref"
+    anchors: [FC13-A78]
+  - id: FC13-X10
+    actor: "fput"
+    description: "file count decrement and free file object"
+    anchors: [FC13-A27, FC13-A28]
+  - id: FC13-X11
+    actor: "read fault"
+    description: "zero from map_single_page bypasses fallback"
+    anchors: [FC13-A71, FC13-A72]
+states:
+  - id: FC13-S01
+    stage: "new inode"
+    source_fact: "i_mapping linked to embedded i_data, page_array not set here"
+    limit: "FAT inode kmalloc nonzero, no blanket initialized pointer guarantee"
+    anchors: [FC13-A16, FC13-A18, FC13-A20]
+  - id: FC13-S02
+    stage: "dentry cache hit"
+    source_fact: "open_last_lookups skips slow lookup and its capacity assignment"
+    limit: "no per-open rebuild"
+    anchors: [FC13-A01, FC13-A02]
+  - id: FC13-S03
+    stage: "slow lookup positive size"
+    source_fact: "nrpages=ceil(i_size/PAGE_SIZE), allocates array with kzalloc"
+    limit: "no result check"
+    anchors: [FC13-A03, FC13-A04]
+  - id: FC13-S04
+    stage: "zero length"
+    source_fact: "nrpages=0 and conditional kzalloc skipped"
+    limit: "page_array not guaranteed initialized"
+    anchors: [FC13-A03, FC13-A18]
+  - id: FC13-S05
+    stage: "array allocation failure"
+    source_fact: "lookup returns dentry without testing kzalloc result"
+    limit: "later index has pointer precondition"
+    anchors: [FC13-A04, FC13-A05]
+  - id: FC13-S06
+    stage: "cold ordinary read"
+    source_fact: "stores alloc_page into slot before f_op.read"
+    limit: "no in-flight/readiness marker"
+    anchors: [FC13-A57, FC13-A58]
+  - id: FC13-S07
+    stage: "read completes full or short"
+    source_fact: "caller discards ssize_t, retains slot"
+    limit: "file bytes unverified, partial tail may be zero"
+    anchors: [FC13-A58, FC13-A35]
+  - id: FC13-S08
+    stage: "read backend errors"
+    source_fact: "backend negative/zero result unused"
+    limit: "no data status or automatic retry"
+    anchors: [FC13-A58, FC13-A37]
+  - id: FC13-S09
+    stage: "ordinary hit"
+    source_fact: "page_to_virt and memcpy on nonNULL slot"
+    limit: "no active page ref acquisition or ready check"
+    anchors: [FC13-A59, FC13-A61]
+  - id: FC13-S10
+    stage: "cache-mapped PTE"
+    source_fact: "map_single_page checks only page pointer and writes PTE"
+    limit: "no get_page or ready check"
+    anchors: [FC13-A49, FC13-A50]
+  - id: FC13-S11
+    stage: "cold mapped fallback"
+    source_fact: "map_single_page NOPAGE then __do_fault"
+    limit: "simple_filemap_fault does direct allocation"
+    anchors: [FC13-A51, FC13-A72, FC13-A45]
+  - id: FC13-S12
+    stage: "direct fault occupied slot"
+    source_fact: "BUG_ON nonNULL slot ahead of allocation"
+    limit: "private COW can bypass fast map check"
+    anchors: [FC13-A44, FC13-A75]
+  - id: FC13-S13
+    stage: "page allocation failed"
+    source_fact: "page_to_virt unconditionally consumes result"
+    limit: "cannot assign fixed errno or crash"
+    anchors: [FC13-A45, FC13-A46]
+  - id: FC13-S14
+    stage: "over-capacity index"
+    source_fact: "no nrpages check at read/fault/map_page sites"
+    limit: "undefined pointer indexing precondition"
+    anchors: [FC13-A56, FC13-A43, FC13-A49]
+  - id: FC13-S15
+    stage: "size changed after lookup"
+    source_fact: "O_TRUNC assigns inode i_size=0"
+    limit: "does not resize/reset page array on this path"
+    anchors: [FC13-A25, FC13-A03]
+  - id: FC13-S16
+    stage: "file close"
+    source_fact: "fput decrements file ref; may free file object"
+    limit: "no cache array/page teardown in fput"
+    anchors: [FC13-A26, FC13-A28]
+  - id: FC13-S17
+    stage: "buffered write"
+    source_fact: "also reads missing cache page then writes bytes"
+    limit: "no dirty/flush proof in this body"
+    anchors: [FC13-A66, FC13-A67]
+ownership:
+  - id: FC13-O01
+    holder: "inode.i_data"
+    reference_effect: "embedded address_space, mapping host and inode.i_mapping link"
+    limit: "not separately referenced by f_count"
+    anchors: [FC13-A16, FC13-A18]
+  - id: FC13-O02
+    holder: "file.f_mapping"
+    reference_effect: "borrowed pointer from inode.i_mapping"
+    limit: "copying pointer does not get_page or mapping reference"
+    anchors: [FC13-A23]
+  - id: FC13-O03
+    holder: "VMA.vm_file"
+    reference_effect: "get_file increments file f_count"
+    limit: "does not refcount cached page"
+    anchors: [FC13-A78, FC13-A12]
+  - id: FC13-O04
+    holder: "page_array slots"
+    reference_effect: "kzalloc pointer array on conditional lookup"
+    limit: "no explicit paired free in inspected close"
+    anchors: [FC13-A04, FC13-A28]
+  - id: FC13-O05
+    holder: "cache slot page_s*"
+    reference_effect: "alloc_page result kept, no ready bit"
+    limit: "map/read hits have no get_page call"
+    anchors: [FC13-A57, FC13-A50]
+  - id: FC13-O06
+    holder: "PTE"
+    reference_effect: "writes page mapping without get_page in selected map function"
+    limit: "PTE is not a page reference count"
+    anchors: [FC13-A50]
+  - id: FC13-O07
+    holder: "read buffer"
+    reference_effect: "memcpy uses cache page pointer"
+    limit: "no page pin in simple_filemap_read"
+    anchors: [FC13-A61]
+  - id: FC13-O08
+    holder: "file close fput"
+    reference_effect: "f_count-- then kmem_cache_free(file) if zero"
+    limit: "no page_array invalidation here"
+    anchors: [FC13-A27, FC13-A28]
+  - id: FC13-O09
+    holder: "inode iput"
+    reference_effect: "no active release in current body"
+    limit: "not proof cache pages released"
+    anchors: [FC13-A19]
+  - id: FC13-O10
+    holder: "folio_put"
+    reference_effect: "counter decrement interface"
+    limit: "not called on cache hit by selected functions"
+    anchors: [FC13-A83]
+case_matrix:
+  - id: FC13-M01
+    input: "zero-length read_iter count=0"
+    source_result: "returns0 before array access"
+    limit: "ITER_ZERO/EOF semantics not cache data validation"
+    anchors: [FC13-A63, FC13-A03]
+  - id: FC13-M02
+    input: "zero length with positive read/fault"
+    source_result: "no page_array creation at slow lookup"
+    limit: "index unsafe if reached"
+    anchors: [FC13-A03, FC13-A56]
+  - id: FC13-M03
+    input: "partial last file page"
+    source_result: "ceil(i_size/PAGE_SIZE) slots; FAT32_read clips requested count"
+    limit: "slot size not valid file bytes"
+    anchors: [FC13-A03, FC13-A35]
+  - id: FC13-M04
+    input: "first or middle cold page"
+    source_result: "alloc_page pointer assigned before disk read"
+    limit: "not ready until unverified completion"
+    anchors: [FC13-A57, FC13-A58]
+  - id: FC13-M05
+    input: "page_index==nrpages or greater"
+    source_result: "unbounded array indexing"
+    limit: "no fixed return/crash guarantee"
+    anchors: [FC13-A56, FC13-A43]
+  - id: FC13-M06
+    input: "cached dentry"
+    source_result: "skip slow allocator"
+    limit: "not every open sets capacity"
+    anchors: [FC13-A01, FC13-A02]
+  - id: FC13-M07
+    input: "kzalloc fails"
+    source_result: "lookup still returns dentry"
+    limit: "no propagated ENOMEM from array allocation"
+    anchors: [FC13-A04, FC13-A05]
+  - id: FC13-M08
+    input: "alloc_page fails"
+    source_result: "page_to_virt before any success guard"
+    limit: "language result unknown"
+    anchors: [FC13-A45, FC13-A46]
+  - id: FC13-M09
+    input: "FAT32 negative/zero/short read"
+    source_result: "result ignored, page pointer retained"
+    limit: "data validity unverified"
+    anchors: [FC13-A58, FC13-A40]
+  - id: FC13-M10
+    input: "ordinary cache hit"
+    source_result: "memcpy without IO status"
+    limit: "page ref/readiness not checked"
+    anchors: [FC13-A59, FC13-A61]
+  - id: FC13-M11
+    input: "mmap cache hit"
+    source_result: "raw PTE write and return0"
+    limit: "no ref/readiness check"
+    anchors: [FC13-A50]
+  - id: FC13-M12
+    input: "mmap cache miss"
+    source_result: "VM_FAULT_NOPAGE, __do_fault fallback"
+    limit: "specific generic VM binding only"
+    anchors: [FC13-A51, FC13-A72]
+  - id: FC13-M13
+    input: "direct file fault cache populated"
+    source_result: "BUG_ON existing pointer"
+    limit: "COW calls __do_fault directly"
+    anchors: [FC13-A44, FC13-A75]
+  - id: FC13-M14
+    input: "aligned read end"
+    source_result: "end%PAGE_SIZE - inpage_start for final page"
+    limit: "can be zero/negative old UV-06"
+    anchors: [FC13-A60]
+  - id: FC13-M15
+    input: "O_TRUNC after lookup"
+    source_result: "size changes no array resize"
+    limit: "capacity may be stale"
+    anchors: [FC13-A25, FC13-A03]
+  - id: FC13-M16
+    input: "fput final ref"
+    source_result: "file freed without cache teardown in body"
+    limit: "whole tree unknown"
+    anchors: [FC13-A28]
+anchors:
+  - id: FC13-A01
+    path: "mykernel/fs/vfs/namei.c"
+    symbol: "open_last_lookups"
+    observed_lines: [673, 675]
+    quote: |
+      	{
+      		dentry = __d_lookup(dir, &nd->last);
+      		if (dentry == NULL)
+  - id: FC13-A02
+    path: "mykernel/fs/vfs/namei.c"
+    symbol: "open_last_lookups"
+    observed_lines: [676, 678]
+    quote: |
+      		{
+      			dentry = __lookup_slow(&nd->last, dir, nd->flags);
+      		}
+  - id: FC13-A03
+    path: "mykernel/fs/vfs/namei.c"
+    symbol: "__lookup_slow"
+    observed_lines: [333, 335]
+    quote: |
+      	inode = dentry->d_inode;
+      	inode->i_mapping->nrpages = ALIGN(inode->i_size, PAGE_SIZE) >> PAGE_SHIFT;
+      	if (inode->i_mapping->nrpages > 0)
+  - id: FC13-A04
+    path: "mykernel/fs/vfs/namei.c"
+    symbol: "__lookup_slow"
+    observed_lines: [335, 337]
+    quote: |
+      	if (inode->i_mapping->nrpages > 0)
+      		inode->i_mapping->page_array =
+      			kzalloc(inode->i_mapping->nrpages * sizeof(page_s *), GFP_KERNEL);
+  - id: FC13-A05
+    path: "mykernel/fs/vfs/namei.c"
+    symbol: "__lookup_slow"
+    observed_lines: [341, 343]
+    quote: |
+      
+      	return dentry;
+      }
+  - id: FC13-A06
+    path: "mykernel/fs/vfs/namei.c"
+    symbol: "__lookup_hash"
+    observed_lines: [354, 356]
+    quote: |
+      {
+      	dentry_s *dentry = __d_lookup(base, name);
+      	dentry_s *old;
+  - id: FC13-A07
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "address_space"
+    observed_lines: [387, 389]
+    quote: |
+      		inode_s				*host;
+      		page_s				**page_array;
+      		// xarray_s			i_pages;
+  - id: FC13-A08
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "address_space"
+    observed_lines: [398, 400]
+    quote: |
+      		rwsem_t				i_mmap_rwsem;
+      		ulong				nrpages;
+      		pgoff_t				writeback_index;
+  - id: FC13-A09
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "inode"
+    observed_lines: [561, 563]
+    quote: |
+      		super_block_s		*i_sb;
+      		addr_spc_s			*i_mapping;
+      
+  - id: FC13-A10
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "inode"
+    observed_lines: [633, 635]
+    quote: |
+      	// 	file_s_lock_context	*i_flctx;
+      		addr_spc_s			i_data;
+      		List_hdr_s			i_devices;
+  - id: FC13-A11
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "file"
+    observed_lines: [892, 894]
+    quote: |
+      	// #endif /* #ifdef CONFIG_EPOLL */
+      	addr_spc_s				*f_mapping;
+      	// 	errseq_t		f_wb_err;
+  - id: FC13-A12
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "get_file"
+    observed_lines: [905, 907]
+    quote: |
+      	static inline file_s *get_file(file_s *f) {
+      		atomic_long_inc(&f->f_count);
+      		return f;
+  - id: FC13-A13
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "file_operations"
+    observed_lines: [1862, 1864]
+    quote: |
+      		loff_t		(*llseek) (file_s *file, loff_t pos, int);
+      		ssize_t		(*read) (file_s *file, char *buf, size_t size, loff_t *pos);
+      		ssize_t		(*write) (file_s *file, const char *buf, size_t size, loff_t *pos);
+  - id: FC13-A14
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "file_operations"
+    observed_lines: [1872, 1874]
+    quote: |
+      		// long		(*compat_ioctl) (file_s *, unsigned int, unsigned long);
+      		int			(*mmap) (file_s *, vma_s *);
+      		int			(*open) (inode_s *, file_s *);
+  - id: FC13-A15
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "call_mmap"
+    observed_lines: [1954, 1956]
+    quote: |
+      	static inline int call_mmap(file_s *file, vma_s *vma) {
+      		return file->f_op->mmap(file, vma);
+      	}
+  - id: FC13-A16
+    path: "mykernel/fs/vfs/inode.c"
+    symbol: "inode_init_always"
+    observed_lines: [88, 90]
+    quote: |
+      	static const file_ops_s no_open_fops = {.open = no_open};
+      	addr_spc_s *const mapping = &inode->i_data;
+      
+  - id: FC13-A17
+    path: "mykernel/fs/vfs/inode.c"
+    symbol: "inode_init_always"
+    observed_lines: [125, 127]
+    quote: |
+      	mapping->a_ops = &empty_aops;
+      	mapping->host = inode;
+      	mapping->flags = 0;
+  - id: FC13-A18
+    path: "mykernel/fs/vfs/inode.c"
+    symbol: "inode_init_always"
+    observed_lines: [136, 138]
+    quote: |
+      	inode->i_private = NULL;
+      	inode->i_mapping = mapping;
+      	// INIT_HLIST_HEAD(&inode->i_dentry);	/* buggered by rcu freeing */
+  - id: FC13-A19
+    path: "mykernel/fs/vfs/inode.c"
+    symbol: "iput"
+    observed_lines: [336, 338]
+    quote: |
+      
+      	// BUG_ON(inode->i_state & I_CLEAR);
+      // retry:
+  - id: FC13-A20
+    path: "mykernel/fs/fat/inode.c"
+    symbol: "fat_alloc_inode"
+    observed_lines: [239, 241]
+    quote: |
+      	msdos_inode_info_s *ei;
+      	ei = kmalloc(sizeof(msdos_inode_info_s), GFP_KERNEL);
+      	if (ei == NULL)
+  - id: FC13-A21
+    path: "mykernel/fs/fat/inode.c"
+    symbol: "fat_fill_inode"
+    observed_lines: [174, 176]
+    quote: |
+      		// MSDOS_I(inode)->i_logstart = MSDOS_I(inode)->i_start;
+      		inode->i_size	= de->size;
+      		// inode->i_op = &fat_file_inode_operations;
+  - id: FC13-A22
+    path: "mykernel/fs/fat/inode.c"
+    symbol: "fat_fill_inode"
+    observed_lines: [178, 180]
+    quote: |
+      		inode->i_op		= &vfat_dir_inode_operations;
+      		inode->i_fop	= &FAT32_file_ops;
+      		inode->i_mapping->a_ops = &fat_aops;
+  - id: FC13-A23
+    path: "mykernel/fs/vfs/open.c"
+    symbol: "myos_do_dentry_open"
+    observed_lines: [50, 52]
+    quote: |
+      	f->f_inode = inode;
+      	f->f_mapping = inode->i_mapping;
+      
+  - id: FC13-A24
+    path: "mykernel/fs/vfs/open.c"
+    symbol: "myos_do_dentry_open"
+    observed_lines: [52, 54]
+    quote: |
+      
+      	f->f_op = inode->i_fop;
+      	if(f->f_op && f->f_op->open)
+  - id: FC13-A25
+    path: "mykernel/fs/vfs/open.c"
+    symbol: "myos_do_dentry_open"
+    observed_lines: [58, 60]
+    quote: |
+      	{
+      		f->f_path.dentry->d_inode->i_size = 0;
+      	}
+  - id: FC13-A26
+    path: "mykernel/fs/vfs/open.c"
+    symbol: "filp_close"
+    observed_lines: [329, 331]
+    quote: |
+      	// }
+      	fput(filp);
+      	return retval;
+  - id: FC13-A27
+    path: "mykernel/fs/vfs/file_table.c"
+    symbol: "fput"
+    observed_lines: [109, 111]
+    quote: |
+      {
+      	if (atomic_long_dec_and_test(&file->f_count)) {
+      		task_s *task = current;
+  - id: FC13-A28
+    path: "mykernel/fs/vfs/file_table.c"
+    symbol: "fput"
+    observed_lines: [126, 128]
+    quote: |
+      
+      		kmem_cache_free(filp_cachep, file);
+      	}
+  - id: FC13-A29
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_file_ops"
+    observed_lines: [356, 358]
+    quote: |
+      	.open			= FAT32_open,
+      	.read			= FAT32_read,
+      	.write			= FAT32_write,
+  - id: FC13-A30
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_file_ops"
+    observed_lines: [359, 361]
+    quote: |
+      	.llseek			= FAT32_lseek,
+      	.read_iter		= generic_file_read_iter,
+      	.write_iter		= generic_file_write_iter,
+  - id: FC13-A31
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_file_ops"
+    observed_lines: [361, 363]
+    quote: |
+      	.write_iter		= generic_file_write_iter,
+      	.mmap			= generic_file_mmap,
+      	.iterate_shared	= FAT32_getdents64,
+  - id: FC13-A32
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [113, 115]
+    quote: |
+      
+      ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
+      {
+  - id: FC13-A33
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [125, 127]
+    quote: |
+      	long offset = *position % fsbi->bytes_per_cluster;
+      	char * buffer = (char *)kmalloc(fsbi->bytes_per_cluster, GFP_KERNEL);
+      
+  - id: FC13-A34
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [128, 130]
+    quote: |
+      	if(!cluster)
+      		return -EFAULT;
+      	for(i = 0; i < index; i++)
+  - id: FC13-A35
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [133, 135]
+    quote: |
+      	if(*position + count > filp->f_path.dentry->d_inode->i_size)
+      		index = count = filp->f_path.dentry->d_inode->i_size - *position;
+      	else
+  - id: FC13-A36
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [141, 143]
+    quote: |
+      		sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
+      		if(ROOTBLK_TRANSFER(CMD_READ, sector,
+      				fsbi->sector_per_cluster, (unchar *)buffer))
+  - id: FC13-A37
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [145, 147]
+    quote: |
+      			color_printk(RED, BLACK, "FAT32 FS(read) read disk ERROR!!!!!!!!!!\n");
+      			ret_val = -EIO;
+      			break;
+  - id: FC13-A38
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [154, 156]
+    quote: |
+      		else
+      			memcpy(buf, buffer + offset, length);
+      
+  - id: FC13-A39
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [159, 161]
+    quote: |
+      		offset -= offset;
+      		*position += length;
+      	} while(index && (cluster = FAT32_read_FAT_Entry(fsbi, cluster)));
+  - id: FC13-A40
+    path: "mykernel/fs/fat/myos_fat32.c"
+    symbol: "FAT32_read"
+    observed_lines: [164, 166]
+    quote: |
+      	if(!index)
+      		ret_val = count;
+      	return ret_val;
+  - id: FC13-A41
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [118, 120]
+    quote: |
+      	file_s *file = vmf->vma->vm_file;
+      	if (IS_ERR_OR_NULL(file))
+      		return VM_FAULT_ERROR;
+  - id: FC13-A42
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [121, 123]
+    quote: |
+      	addr_spc_s *mapping = file->f_mapping;
+      	if (IS_ERR_OR_NULL(mapping))
+      		return VM_FAULT_ERROR;
+  - id: FC13-A43
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [126, 128]
+    quote: |
+      	loff_t pos = index << PAGE_SHIFT;
+      	page_s **pgcache_ptr = &mapping->page_array[index];
+      	BUG_ON(*pgcache_ptr != NULL);
+  - id: FC13-A44
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [127, 129]
+    quote: |
+      	page_s **pgcache_ptr = &mapping->page_array[index];
+      	BUG_ON(*pgcache_ptr != NULL);
+      	*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
+  - id: FC13-A45
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [128, 130]
+    quote: |
+      	BUG_ON(*pgcache_ptr != NULL);
+      	*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
+      	virt_addr_t vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
+  - id: FC13-A46
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [131, 133]
+    quote: |
+      
+      	file->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);
+      	vmf->page = *pgcache_ptr;
+  - id: FC13-A47
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [132, 134]
+    quote: |
+      	file->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);
+      	vmf->page = *pgcache_ptr;
+      
+  - id: FC13-A48
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_fault"
+    observed_lines: [134, 136]
+    quote: |
+      
+      	return 0;
+      }
+  - id: FC13-A49
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [146, 148]
+    quote: |
+      
+      	page = mapping->page_array[pgoff];
+      	if (page != NULL) {
+  - id: FC13-A50
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [148, 150]
+    quote: |
+      	if (page != NULL) {
+      		*vmf->pte_ptr = mk_pte(page,
+      			__pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
+  - id: FC13-A51
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_map_page"
+    observed_lines: [153, 155]
+    quote: |
+      	else
+      		return VM_FAULT_NOPAGE;
+      }
+  - id: FC13-A52
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_file_vm_ops"
+    observed_lines: [184, 186]
+    quote: |
+      const vm_ops_s generic_file_vm_ops = {
+      	.fault				= simple_filemap_fault,
+      	.map_single_page	= simple_filemap_map_page,
+  - id: FC13-A53
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_file_vm_ops"
+    observed_lines: [185, 187]
+    quote: |
+      	.fault				= simple_filemap_fault,
+      	.map_single_page	= simple_filemap_map_page,
+      	.page_mkwrite		= filemap_page_mkwrite,
+  - id: FC13-A54
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [207, 209]
+    quote: |
+      	file_s *filp = iocb->ki_filp;
+      	addr_spc_s *mapping = filp->f_mapping;
+      	inode_s *inode = mapping->host;
+  - id: FC13-A55
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [212, 214]
+    quote: |
+      		start = iocb->ki_pos,
+      		end = start + iter->kvec->iov_len;
+      	
+  - id: FC13-A56
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [217, 219]
+    quote: |
+      		virt_addr_t vaddr = 0;
+      		page_s **pgcache_ptr = &(mapping->page_array[pgcache_pos >> PAGE_SHIFT]);
+      		if (*pgcache_ptr == NULL) {
+  - id: FC13-A57
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [219, 221]
+    quote: |
+      		if (*pgcache_ptr == NULL) {
+      			*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
+      			vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
+  - id: FC13-A58
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [221, 223]
+    quote: |
+      			vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
+      			filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &temp_pos);
+      		}
+  - id: FC13-A59
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [223, 225]
+    quote: |
+      		}
+      		BUG_ON(*pgcache_ptr == NULL);
+      		vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
+  - id: FC13-A60
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [231, 233]
+    quote: |
+      		else
+      			len = end % PAGE_SIZE - inpage_start;
+      
+  - id: FC13-A61
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [233, 235]
+    quote: |
+      
+      		memcpy(bufp, (void *)(vaddr + inpage_start), len);
+      		bufp += len;
+  - id: FC13-A62
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "simple_filemap_read"
+    observed_lines: [236, 238]
+    quote: |
+      	}
+      	return bufp - iter->kvec->iov_base;
+      }
+  - id: FC13-A63
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_file_read_iter"
+    observed_lines: [268, 270]
+    quote: |
+      
+      	if (!count)
+      		return 0; /* skip atime */
+  - id: FC13-A64
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_file_read_iter"
+    observed_lines: [304, 306]
+    quote: |
+      
+      	return simple_filemap_read(iocb, iter);
+      }
+  - id: FC13-A65
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_perform_write"
+    observed_lines: [323, 325]
+    quote: |
+      		virt_addr_t vaddr = 0;
+      		page_s **pgcache_ptr = &(mapping->page_array[pgcache_pos >> PAGE_SHIFT]);
+      		if (*pgcache_ptr == NULL) {
+  - id: FC13-A66
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_perform_write"
+    observed_lines: [327, 329]
+    quote: |
+      			vaddr = (virt_addr_t)page_to_virt(*pgcache_ptr);
+      			filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &temp_pos);
+      		}
+  - id: FC13-A67
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_perform_write"
+    observed_lines: [339, 341]
+    quote: |
+      
+      		memcpy((void *)(vaddr + inpage_start), bufp, len);
+      		bufp += len;
+  - id: FC13-A68
+    path: "mykernel/mm/vm_map/filemap.c"
+    symbol: "generic_file_mmap"
+    observed_lines: [417, 419]
+    quote: |
+      	// file_accessed(file);
+      	vma->vm_ops = &generic_file_vm_ops;
+      	return 0;
+  - id: FC13-A69
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "myos_handle_mm_fault"
+    observed_lines: [1318, 1320]
+    quote: |
+      		.flags		= flags,
+      		.pgoff		= linear_page_index(vma, address),
+      		.gfp_mask	= __get_fault_gfp_mask(vma),
+  - id: FC13-A70
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1087, 1089]
+    quote: |
+      	// if (should_fault_around(vmf)) {
+      		ret = do_fault_around(vmf);
+      		if (ret == 0)
+  - id: FC13-A71
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1088, 1090]
+    quote: |
+      		ret = do_fault_around(vmf);
+      		if (ret == 0)
+      			return ret;
+  - id: FC13-A72
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_read_fault"
+    observed_lines: [1092, 1094]
+    quote: |
+      
+      	ret = __do_fault(vmf);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+  - id: FC13-A73
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_fault_around"
+    observed_lines: [1069, 1071]
+    quote: |
+      	// 		vmf->pgoff + to_pte - pte_off);
+      	ret = vmf->vma->vm_ops->map_single_page(vmf,
+      			vmf->pgoff + from_pte - pte_off);
+  - id: FC13-A74
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "__do_fault"
+    observed_lines: [900, 902]
+    quote: |
+      
+      	ret = vma->vm_ops->fault(vmf);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
+  - id: FC13-A75
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1115, 1117]
+    quote: |
+      
+      	ret = __do_fault(vmf);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+  - id: FC13-A76
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1126, 1128]
+    quote: |
+      	// unlock_page(vmf->page);
+      	put_page(vmf->page);
+      	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+  - id: FC13-A77
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "finish_fault"
+    observed_lines: [1014, 1016]
+    quote: |
+      	entry = mk_pte(page, vma->vm_page_prot);
+      	set_pte(vmf->pte_ptr, entry);
+      	// type = is_cow ? MM_ANONPAGES : mm_counter_file(folio);
+  - id: FC13-A78
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [691, 693]
+    quote: |
+      	if (file) {
+      		vma->vm_file = get_file(file);
+      		error = call_mmap(file, vma);
+  - id: FC13-A79
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [692, 694]
+    quote: |
+      		vma->vm_file = get_file(file);
+      		error = call_mmap(file, vma);
+      		if (error != -ENOERR)
+  - id: FC13-A80
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [782, 784]
+    quote: |
+      unmap_and_free_vma:
+      	fput(vma->vm_file);
+      	vma->vm_file = NULL;
+  - id: FC13-A81
+    path: "mykernel/mm/page_alloc/buddy.h"
+    symbol: "get_page"
+    observed_lines: [186, 188]
+    quote: |
+      		void
+      		get_page(page_s *page) {
+      			folio_get(page_folio(page));
+  - id: FC13-A82
+    path: "mykernel/mm/page_alloc/buddy.h"
+    symbol: "put_page"
+    observed_lines: [198, 200]
+    quote: |
+      			// 	return;
+      			folio_put(page_folio(page));
+      		}
+  - id: FC13-A83
+    path: "mykernel/mm/page_alloc/buddy.h"
+    symbol: "folio_put"
+    observed_lines: [180, 182]
+    quote: |
+      			// Equal to do folio_ref_dec()
+      			if (atomic_dec_and_test(&folio->page._refcount))
+      				__folio_put(folio);
+  - id: FC13-A84
+    path: "mykernel/mm/page_alloc/buddy.h"
+    symbol: "linear_page_index"
+    observed_lines: [214, 216]
+    quote: |
+      			// 	return linear_hugepage_index(vma, address);
+      			pgoff = (address - vma->vm_start) >> PAGE_SHIFT;
+      			pgoff += vma->vm_pgoff;
+  - id: FC13-A85
+    path: "mykernel/mm/page_alloc/buddy.c"
+    symbol: "__folio_put"
+    observed_lines: [638, 640]
+    quote: |
+      	// else
+      	// 	__folio_put_small(folio);
+      }
+self_check: {source_files: 12, anchors: 85, nodes: 42, edges: 45, states: 17, ownership: 10, cases: 16, effects: 11, full_parser: NOT_RUN, runtime: NOT_RUN}
