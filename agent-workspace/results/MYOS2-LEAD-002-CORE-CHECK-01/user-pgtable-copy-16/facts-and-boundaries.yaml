@@ -67,7 +67,7 @@ nodes:
   - {id: PC16-N49, label: "handle_pte_fault"}
   - {id: PC16-N50, label: "do_wp_page"}
   - {id: PC16-N51, label: "VMA vm_flags"}
-  - {id: PC16-N52, label: "range boundary macros"}
+  - {id: PC16-N52, label: "range-boundary macros and PAGE_SIZE step"}
   - {id: PC16-N53, label: "flush_tlb_mm commented"}
   - {id: PC16-N54, label: "physical data-page ref operations (unobserved)"}
   - {id: PC16-N55, label: "pte lock/outparam"}
@@ -126,7 +126,7 @@ edges:
   - {id: PC16-E52, from: PC16-N27, to: PC16-N43, kind: data, status: conditional, condition: "__pgtbl_alloc installs new PTE table", anchors: [PC16-A108]}
   - {id: PC16-E53, from: PC16-N29, to: PC16-N55, kind: data, status: conditional, condition: "source PTE lock output is valid only on success", anchors: [PC16-A141]}
   - {id: PC16-E54, from: PC16-N31, to: PC16-N55, kind: data, status: active, condition: "pte_unmap_unlock requires valid ptl", anchors: [PC16-A112]}
-  - {id: PC16-E55, from: PC16-N09, to: PC16-N52, kind: call, status: active, condition: "pte loop increments end by PAGE_SIZE and pointer", anchors: [PC16-A040]}
+  - {id: PC16-E55, from: PC16-N09, to: PC16-N52, kind: data, status: active, condition: "PTE loop consumes PAGE_SIZE step for address/pointer increment; not a call to boundary helper", anchors: [PC16-A040]}
   - {id: PC16-E56, from: PC16-N08, to: PC16-N52, kind: call, status: active, condition: "pmd_addr_end boundary macro", anchors: [PC16-A047, PC16-A118]}
   - {id: PC16-E57, from: PC16-N07, to: PC16-N52, kind: call, status: active, condition: "pud_addr_end boundary macro", anchors: [PC16-A055, PC16-A117]}
   - {id: PC16-E58, from: PC16-N06, to: PC16-N52, kind: call, status: active, condition: "p4d_addr_end boundary macro", anchors: [PC16-A063, PC16-A116]}
