@@ -59,6 +59,8 @@ nodes:
   - {id: VL14-N41, label: "vm_ops.close dynamic"}
   - {id: VL14-N42, label: "__vma_intersect_with_range"}
   - {id: VL14-N43, label: "mm_next_vma (iterator)"}
+  - {id: VL14-N44, label: "do_mmap"}
+  - {id: VL14-N45, label: "simple_vma_link"}
 edges:
   - {id: VL14-E01, from: VL14-N01, to: VL14-N02, kind: call, status: active, condition: "sys_munmap invokes __vm_munmap", anchors: [VL14-A003]}
   - {id: VL14-E02, from: VL14-N02, to: VL14-N03, kind: call, status: active, condition: "no guard in __vm_munmap; start+len computed", anchors: [VL14-A007]}
@@ -93,13 +95,13 @@ edges:
   - {id: VL14-E31, from: VL14-N26, to: VL14-N27, kind: call, status: conditional, condition: "vm_area_alloc uses vma_init if allocated", anchors: [VL14-A039]}
   - {id: VL14-E32, from: VL14-N25, to: VL14-N10, kind: call, status: conditional, condition: "file-backed mmap get_file", anchors: [VL14-A044]}
   - {id: VL14-E33, from: VL14-N25, to: VL14-N28, kind: call, status: conditional_dynamic, condition: "file mapping calls call_mmap(file,vma)", anchors: [VL14-A045]}
-  - {id: VL14-E34, from: VL14-N25, to: VL14-N13, kind: call, status: conditional, condition: "new mapping path simple_vma_link then __vma_link_to_list", anchors: [VL14-A046]}
+  - {id: VL14-E34, from: VL14-N25, to: VL14-N45, kind: call, status: conditional, condition: "simple_mmap_region directly invokes simple_vma_link", anchors: [VL14-A046]}
   - {id: VL14-E35, from: VL14-N25, to: VL14-N40, kind: call, status: conditional, condition: "mmap failure/merge cleanup fput", anchors: [VL14-A050, VL14-A048]}
   - {id: VL14-E36, from: VL14-N25, to: VL14-N20, kind: call, status: conditional, condition: "mmap error/merge frees allocated VMA", anchors: [VL14-A052, VL14-A048]}
   - {id: VL14-E37, from: VL14-N25, to: VL14-N21, kind: call, status: conditional, condition: "mmap error path invokes no-op simple_unmap_region", anchors: [VL14-A051]}
   - {id: VL14-E38, from: VL14-N25, to: VL14-N41, kind: call, status: conditional_dynamic, condition: "mmap error invokes VM ops close if present", anchors: [VL14-A049]}
   - {id: VL14-E39, from: VL14-N31, to: VL14-N30, kind: call, status: active, condition: "sys_mmap calls vm_mmap_pgoff after fget", anchors: [VL14-A006]}
-  - {id: VL14-E40, from: VL14-N30, to: VL14-N25, kind: call, status: active, condition: "vm_mmap_pgoff -> do_mmap -> simple_mmap_region; intermediate do_mmap not yet node", anchors: [VL14-A088]}
+  - {id: VL14-E40, from: VL14-N30, to: VL14-N44, kind: call, status: active, condition: "vm_mmap_pgoff directly invokes do_mmap", anchors: [VL14-A088]}
   - {id: VL14-E41, from: VL14-N32, to: VL14-N03, kind: call, status: conditional, condition: "brk shrink invokes simple_do_vma_munmap", anchors: [VL14-A057]}
   - {id: VL14-E42, from: VL14-N33, to: VL14-N34, kind: call, status: conditional, condition: "do_brk_flags invokes simple_munmap_vma_range", anchors: [VL14-A058]}
   - {id: VL14-E43, from: VL14-N36, to: VL14-N37, kind: call, status: conditional, condition: "mmput when mm_users decrement zero", anchors: [VL14-A101]}
@@ -116,6 +118,8 @@ edges:
   - {id: VL14-E54, from: VL14-N03, to: VL14-N17, kind: data, status: active, condition: "split/unlink decisions based on VMA intervals", anchors: [VL14-A011, VL14-A014]}
   - {id: VL14-E55, from: VL14-N06, to: VL14-N15, kind: data, status: active, condition: "top-down iterator accesses mm.mt", anchors: [VL14-A061, VL14-A079]}
   - {id: VL14-E56, from: VL14-N43, to: VL14-N15, kind: data, status: active, condition: "forward iterator uses list head", anchors: [VL14-A077]}
+  - {id: VL14-E57, from: VL14-N44, to: VL14-N25, kind: call, status: conditional, condition: "do_mmap calls simple_mmap_region after address and flags gates", anchors: [VL14-A105]}
+  - {id: VL14-E58, from: VL14-N45, to: VL14-N13, kind: call, status: active, condition: "simple_vma_link directly invokes __vma_link_to_list", anchors: [VL14-A106]}
 case_matrix:
   - id: VL14-M01
     input: "no overlapping VMA"
@@ -1241,4 +1245,20 @@ anchors:
       
       	// exit_mm();
       
-self_check: {source_files: 14, anchors: 104, nodes: 43, edges: 56, cases: 23, states: 13, ownership: 10, effects: 12, formal_parse: NOT_RUN, runtime: NOT_RUN}
+  - id: VL14-A105
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "do_mmap"
+    observed_lines: [642, 644]
+    quote: |
+      
+      	addr = simple_mmap_region(file, addr, len, vm_flags, pgoff);
+      
+  - id: VL14-A106
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_vma_link"
+    observed_lines: [179, 181]
+    quote: |
+      
+      	__vma_link_to_list(mm, vma, prev);
+      	vma_link_file(vma);
+self_check: {source_files: 14, anchors: 106, nodes: 45, edges: 58, cases: 23, states: 13, ownership: 10, effects: 12, formal_parse: NOT_RUN, runtime: NOT_RUN}
