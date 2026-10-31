@@ -1710,4 +1710,12 @@ anchors:
       	#	define VM_ARCH_1			0x01000000	/* Architecture-specific flag */
       	#	define VM_WIPEONFORK		0x02000000	/* Wipe VMA contents in child. */
       	#	define VM_DONTDUMP			0x04000000	/* Do not include in the core dump */
-self_check: {source_files: 12, anchors: 161, nodes: 55, edges: 69, cases: 23, states: 9, ownership: 10, effects: 14, kernel_runtime: NOT_RUN, yaml_graphviz_formal_parser: NOT_RUN}
+  - id: PC16-A162
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [689, 691]
+    quote: |
+      
+      	if (clone_flags & CLONE_VM) {
+      		mmget(oldmm);
+self_check: {source_files: 12, anchors: 162, nodes: 55, edges: 69, cases: 23, states: 9, ownership: 10, effects: 14, kernel_runtime: NOT_RUN, yaml_graphviz_formal_parser: NOT_RUN}
