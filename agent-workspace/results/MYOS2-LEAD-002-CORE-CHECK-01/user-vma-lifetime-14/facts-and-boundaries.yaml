@@ -1261,4 +1261,12 @@ anchors:
       
       	__vma_link_to_list(mm, vma, prev);
       	vma_link_file(vma);
-self_check: {source_files: 14, anchors: 106, nodes: 45, edges: 58, cases: 23, states: 13, ownership: 10, effects: 12, formal_parse: NOT_RUN, runtime: NOT_RUN}
+  - id: VL14-A107
+    path: "mykernel/mm/vm_map/vm_map_api.h"
+    symbol: "vm_munmap alias"
+    observed_lines: [49, 51]
+    quote: |
+      	// extern int vm_munmap(ulong, size_t);
+      	extern int __vm_munmap(ulong start, size_t len);
+      	#define vm_munmap __vm_munmap
+self_check: {source_files: 15, anchors: 107, nodes: 45, edges: 58, cases: 23, states: 13, ownership: 10, effects: 12, formal_parse: NOT_RUN, runtime: NOT_RUN}
