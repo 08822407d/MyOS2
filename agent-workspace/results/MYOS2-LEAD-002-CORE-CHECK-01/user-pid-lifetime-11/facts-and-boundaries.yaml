@@ -1,0 +1,1427 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-PID-LIFETIME-11
+record_type: bounded_pid_identity_lifecycle_facts
+produced_by: "ChatGPT普通对话，Owner选择GPT-6/Extra（backend unknown）"
+date: "2026-10-31"
+read_channel: connector
+base_snapshot: "time @ a039d9803ade；execution_old @ 848e2acdf7e1"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+evidence_class: "固定time源码活动行与条件性推断；不是运行证据"
+edge_direction: {call: "caller -> callee; latent/commented are not active", data: "consumer -> provider", init_order: "later user -> required prior"}
+scope: "普通sys_fork的PID创建、IDR发布、引用所有权、do_exit链路及必要直接原语"
+not_covered: ["全部namespace实现","完整调度器或slab正确性","所有PID分配消费者","外部libc","并发运行/硬件","其他阶段分析"]
+unknown:
+  - "NULL ptr reservation in simplified IDR does not secure slot; actual collision depends on cyclic cursor, explicit tid and concurrency"
+  - "new task links are attached without active tasklist write lock; query holds no RCU/task ref in selected kill path"
+  - "group_dead read before assignment and exit_notify wrong argument type mean post-notify execution cannot be guaranteed"
+  - "release_task/detach_pid/free_pid lack active reachability from the examined exit path; cannot guarantee recycling or no reuse"
+  - "nested pid namespace refcount and put_pid_ns are not fully validated; new namespaces may have separate latent issues"
+queries:
+  - {id: PID11-Q01, paths: "mykernel/sched/{syscall.c,forkexec/fork.c,task/pid.c}", literals: "kernel_clone,copy_process,alloc_pid,attach_pid", result: "read full bounded functions; no blanket nonexistence claim"}
+  - {id: PID11-Q02, paths: "mykernel/lib/idr/{idr.c,idr.h,idr_const.h}", literals: "idr_alloc_u32,idr_alloc_cyclic,idr_replace,idr_find,MYOS_IDR_BUF_SIZE", result: "direct implementation is array based; max argument not enforced by scan; NULL assignment not exclusive reservation"}
+  - {id: PID11-Q03, paths: "mykernel/sched/task/{pid.c,pid.h,pid_api.h,pid_namespace.c}", literals: "get_pid,put_pid,get_pid_task,get_task_pid,find_get_pid,find_get_task_by_vpid", result: "read direct bodies and commented lock/ref operations; no whole-repository claim"}
+  - {id: PID11-Q04, paths: "mykernel/sched/forkexec/{exit.c,exec.c},sched/task/pid.c,sched/scheduler/scheduler_core.c", literals: "detach_pid,release_task,free_pid,exit_notify,do_task_dead", result: "no active detach call in examined exit.c; release_task here only commented/declared, not proof of whole-tree absence"}
+  - {id: PID11-Q05, paths: "mykernel/lock_IPC/signal/signal.c", literals: "kill_proc_info,find_vpid,pid_task", result: "bridge to previously preserved signal10 raw target lookup"}
+nodes:
+  - {id: PID11-N01, label: "sys_fork"}
+  - {id: PID11-N02, label: "kernel_clone"}
+  - {id: PID11-N03, label: "copy_process"}
+  - {id: PID11-N04, label: "alloc_pid"}
+  - {id: PID11-N05, label: "idr_alloc"}
+  - {id: PID11-N06, label: "idr_alloc_cyclic"}
+  - {id: PID11-N07, label: "idr_alloc_u32"}
+  - {id: PID11-N08, label: "idr_replace"}
+  - {id: PID11-N09, label: "PID namespace IDR table"}
+  - {id: PID11-N10, label: "pid_s object"}
+  - {id: PID11-N11, label: "init_task_pid"}
+  - {id: PID11-N12, label: "attach_pid"}
+  - {id: PID11-N13, label: "pid_s.tasks[] / task.pid_links[]"}
+  - {id: PID11-N14, label: "find_vpid"}
+  - {id: PID11-N15, label: "find_pid_ns"}
+  - {id: PID11-N16, label: "idr_find"}
+  - {id: PID11-N17, label: "pid_task"}
+  - {id: PID11-N18, label: "get_task_pid"}
+  - {id: PID11-N19, label: "get_pid"}
+  - {id: PID11-N20, label: "pid_vnr"}
+  - {id: PID11-N21, label: "pid_nr_ns"}
+  - {id: PID11-N22, label: "put_pid"}
+  - {id: PID11-N23, label: "wake_up_new_task"}
+  - {id: PID11-N24, label: "start_kernel"}
+  - {id: PID11-N25, label: "pid_idr_init"}
+  - {id: PID11-N26, label: "get_pid_task"}
+  - {id: PID11-N27, label: "find_get_pid"}
+  - {id: PID11-N28, label: "find_get_task_by_vpid"}
+  - {id: PID11-N29, label: "find_task_by_vpid"}
+  - {id: PID11-N30, label: "find_task_by_pid_ns"}
+  - {id: PID11-N31, label: "__task_pid_nr_ns"}
+  - {id: PID11-N32, label: "task_tgid_vnr"}
+  - {id: PID11-N33, label: "sys_getpid"}
+  - {id: PID11-N34, label: "sys_getppid"}
+  - {id: PID11-N35, label: "sys_exit"}
+  - {id: PID11-N36, label: "sys_exit_group"}
+  - {id: PID11-N37, label: "do_group_exit"}
+  - {id: PID11-N38, label: "do_exit"}
+  - {id: PID11-N39, label: "exit_notify"}
+  - {id: PID11-N40, label: "do_task_dead"}
+  - {id: PID11-N41, label: "detach_pid (not linked to exit)"}
+  - {id: PID11-N42, label: "__change_pid (latent)"}
+  - {id: PID11-N43, label: "free_pid (latent at exit)"}
+  - {id: PID11-N44, label: "idr_remove"}
+  - {id: PID11-N45, label: "release_task (only declaration/commented)"}
+  - {id: PID11-N46, label: "kill_proc_info (10 bridge)"}
+  - {id: PID11-N47, label: "init_struct_pid (static)"}
+edges:
+  - {id: PID11-E01, from: PID11-N01, to: PID11-N02, kind: call, status: active, condition: "fork user entry", anchors: [PID11-A02]}
+  - {id: PID11-E02, from: PID11-N02, to: PID11-N03, kind: call, status: active, condition: "copy_process before returning number", anchors: [PID11-A62]}
+  - {id: PID11-E03, from: PID11-N03, to: PID11-N04, kind: call, status: conditional, condition: "pid_struct != &init_struct_pid", anchors: [PID11-A52]}
+  - {id: PID11-E04, from: PID11-N04, to: PID11-N05, kind: call, status: conditional, condition: "set_tid nonzero branch", anchors: [PID11-A12]}
+  - {id: PID11-E05, from: PID11-N04, to: PID11-N06, kind: call, status: conditional, condition: "default cyclic branch", anchors: [PID11-A13]}
+  - {id: PID11-E06, from: PID11-N06, to: PID11-N07, kind: call, status: active, condition: "delegated scan, wrap conditional", anchors: [PID11-A68]}
+  - {id: PID11-E07, from: PID11-N05, to: PID11-N07, kind: call, status: active, condition: "delegated idr_alloc_u32", anchors: [PID11-A69]}
+  - {id: PID11-E08, from: PID11-N04, to: PID11-N08, kind: call, status: conditional, condition: "after all reservations and adding flag", anchors: [PID11-A17]}
+  - {id: PID11-E09, from: PID11-N07, to: PID11-N09, kind: data, status: active, condition: "examines and stores a slot; NULL reservation nonexclusive", anchors: [PID11-A66]}
+  - {id: PID11-E10, from: PID11-N08, to: PID11-N09, kind: data, status: active, condition: "mutates IDR slot to pid_s; see effects", anchors: [PID11-A70]}
+  - {id: PID11-E11, from: PID11-N03, to: PID11-N11, kind: call, status: conditional, condition: "p->pid != 0 and leader/child branches", anchors: [PID11-A56]}
+  - {id: PID11-E12, from: PID11-N03, to: PID11-N12, kind: call, status: conditional, condition: "PID, and leader TGID/PGID/SID", anchors: [PID11-A58]}
+  - {id: PID11-E13, from: PID11-N12, to: PID11-N13, kind: data, status: active, condition: "adds task node to pid tasks list", anchors: [PID11-A27]}
+  - {id: PID11-E14, from: PID11-N02, to: PID11-N18, kind: call, status: active, condition: "get_task_pid after copy_process success", anchors: [PID11-A63]}
+  - {id: PID11-E15, from: PID11-N18, to: PID11-N19, kind: call, status: active, condition: "get_pid increments pid ref if non-NULL", anchors: [PID11-A35]}
+  - {id: PID11-E16, from: PID11-N02, to: PID11-N20, kind: call, status: active, condition: "pid_vnr for return number", anchors: [PID11-A63]}
+  - {id: PID11-E17, from: PID11-N20, to: PID11-N21, kind: call, status: active, condition: "namespace-qualified numeric view", anchors: [PID11-A38]}
+  - {id: PID11-E18, from: PID11-N02, to: PID11-N22, kind: call, status: active, condition: "put temporary pid ref after wake", anchors: [PID11-A65]}
+  - {id: PID11-E19, from: PID11-N02, to: PID11-N23, kind: call, status: active, condition: "wake_up_new_task after list attach", anchors: [PID11-A64]}
+  - {id: PID11-E20, from: PID11-N24, to: PID11-N25, kind: call, status: active, condition: "pid_idr_init called in start_kernel", anchors: [PID11-A92]}
+  - {id: PID11-E21, from: PID11-N25, to: PID11-N09, kind: data, status: active, condition: "init IDR and reserve static slot0 via object pointer", anchors: [PID11-A41]}
+  - {id: PID11-E22, from: PID11-N25, to: PID11-N47, kind: data, status: active, condition: "register init_struct_pid at slot0", anchors: [PID11-A42]}
+  - {id: PID11-E23, from: PID11-N14, to: PID11-N15, kind: call, status: active, condition: "find_vpid uses current PID namespace", anchors: [PID11-A25]}
+  - {id: PID11-E24, from: PID11-N15, to: PID11-N16, kind: call, status: active, condition: "calls idr_find", anchors: [PID11-A24]}
+  - {id: PID11-E25, from: PID11-N16, to: PID11-N09, kind: data, status: active, condition: "returns pointer from IDR slot", anchors: [PID11-A72]}
+  - {id: PID11-E26, from: PID11-N17, to: PID11-N13, kind: data, status: active, condition: "reads pid->tasks[type] first hlist entry", anchors: [PID11-A32]}
+  - {id: PID11-E27, from: PID11-N26, to: PID11-N17, kind: call, status: active, condition: "get_pid_task does not get_task_struct", anchors: [PID11-A36]}
+  - {id: PID11-E28, from: PID11-N27, to: PID11-N14, kind: call, status: active, condition: "find_get_pid source", anchors: [PID11-A37]}
+  - {id: PID11-E29, from: PID11-N27, to: PID11-N19, kind: call, status: active, condition: "get_pid increments count; RCU commented", anchors: [PID11-A37]}
+  - {id: PID11-E30, from: PID11-N28, to: PID11-N29, kind: call, status: active, condition: "find_get_task_by_vpid delegates without task ref", anchors: [PID11-A34]}
+  - {id: PID11-E31, from: PID11-N29, to: PID11-N30, kind: call, status: active, condition: "find_task_by_vpid body inspected", anchors: [PID11-A33]}
+  - {id: PID11-E32, from: PID11-N30, to: PID11-N15, kind: call, status: active, condition: "find_pid_ns with supplied ns", anchors: [PID11-A33]}
+  - {id: PID11-E33, from: PID11-N30, to: PID11-N17, kind: call, status: active, condition: "pid_task(PIDTYPE_PID)", anchors: [PID11-A33]}
+  - {id: PID11-E34, from: PID11-N31, to: PID11-N21, kind: call, status: active, condition: "pid_nr_ns(r... pointer and caller ns)", anchors: [PID11-A40]}
+  - {id: PID11-E35, from: PID11-N32, to: PID11-N31, kind: call, status: active, condition: "task_tgid_vnr wraps __task_pid_nr_ns", anchors: [PID11-A47]}
+  - {id: PID11-E36, from: PID11-N33, to: PID11-N32, kind: call, status: active, condition: "getpid obtains TGID in current namespace", anchors: [PID11-A06]}
+  - {id: PID11-E37, from: PID11-N34, to: PID11-N32, kind: call, status: active, condition: "getppid uses real_parent, RCU commented", anchors: [PID11-A07]}
+  - {id: PID11-E38, from: PID11-N46, to: PID11-N14, kind: call, status: conditional, condition: "kill positive PID path from 10", anchors: [PID11-A93]}
+  - {id: PID11-E39, from: PID11-N46, to: PID11-N17, kind: call, status: conditional, condition: "pid_task(PIDTYPE_PID) on lookup result", anchors: [PID11-A94]}
+  - {id: PID11-E40, from: PID11-N35, to: PID11-N38, kind: call, status: active, condition: "sys_exit invokes do_exit", anchors: [PID11-A03]}
+  - {id: PID11-E41, from: PID11-N36, to: PID11-N37, kind: call, status: active, condition: "exit_group invokes do_group_exit", anchors: [PID11-A04]}
+  - {id: PID11-E42, from: PID11-N37, to: PID11-N38, kind: call, status: active, condition: "do_group_exit invokes do_exit", anchors: [PID11-A85]}
+  - {id: PID11-E43, from: PID11-N38, to: PID11-N39, kind: call, status: conditional_undefined, condition: "group_dead uninitialized as argument", anchors: [PID11-A83]}
+  - {id: PID11-E44, from: PID11-N39, to: PID11-N30, kind: call, status: conditional_invalid_argument, condition: "if children nonempty: PIDTYPE_PID passed instead of pid_ns_s*", anchors: [PID11-A76]}
+  - {id: PID11-E45, from: PID11-N38, to: PID11-N40, kind: call, status: conditional_undefined, condition: "only if exit_notify and prior actions return", anchors: [PID11-A84]}
+  - {id: PID11-E46, from: PID11-N41, to: PID11-N42, kind: call, status: latent_unlinked_exit, condition: "detach_pid defined, no exit call in examined sources", anchors: [PID11-A30]}
+  - {id: PID11-E47, from: PID11-N42, to: PID11-N43, kind: call, status: latent_conditional, condition: "all pid task lists empty", anchors: [PID11-A29]}
+  - {id: PID11-E48, from: PID11-N43, to: PID11-N44, kind: call, status: latent_outside_exit, condition: "free_pid removes IDR slots, but not reached by current exit", anchors: [PID11-A22]}
+  - {id: PID11-E49, from: PID11-N43, to: PID11-N22, kind: call, status: latent_outside_exit, condition: "free_pid releases own ref", anchors: [PID11-A23]}
+  - {id: PID11-E50, from: PID11-N03, to: PID11-N43, kind: call, status: inactive_failure_label, condition: "free_pid code exists below labels, post-allocation active goto not seen", anchors: [PID11-A60]}
+  - {id: PID11-E51, from: PID11-N39, to: PID11-N45, kind: call, status: commented, condition: "release_task inside exit_notify commented out", anchors: [PID11-A78]}
+  - {id: PID11-E52, from: PID11-N17, to: PID11-N10, kind: data, status: active, condition: "reads a pid_s object and its per-type list", anchors: [PID11-A31]}
+  - {id: PID11-E53, from: PID11-N04, to: PID11-N10, kind: data, status: active, condition: "creates pid_s and initializes count/tasks before publish", anchors: [PID11-A15]}
+  - {id: PID11-E54, from: PID11-N04, to: PID11-N09, kind: data, status: active, condition: "IDR reservation and later publish, distinct effects", anchors: [PID11-A13]}
+effects:
+  - {id: PID11-FX01, actor: "idr_alloc_u32", description: "idr_rt[slot] = ptr; ptr==NULL in alloc_pid => no distinguishable occupied marker", anchors: [PID11-A66, PID11-A67]}
+  - {id: PID11-FX02, actor: "idr_replace", description: "idr_rt[id] = pid_s*; old entry read without shown validation", anchors: [PID11-A70]}
+  - {id: PID11-FX03, actor: "attach_pid", description: "hlist_add_head_rcu task->pid_links to pid->tasks[type]", anchors: [PID11-A27]}
+  - {id: PID11-FX04, actor: "get_pid/put_pid", description: "pid count increments/decrements only; no task_s reference", anchors: [PID11-A43, PID11-A20]}
+  - {id: PID11-FX05, actor: "free_pid", description: "pid_allocated decremented, idr_remove, then put_pid", anchors: [PID11-A21, PID11-A22, PID11-A23]}
+  - {id: PID11-FX06, actor: "exit_notify", description: "children list relocated conditionally; no PID detach/IDR remove in this function", anchors: [PID11-A75, PID11-A76]}
+  - {id: PID11-FX07, actor: "do_task_dead", description: "TASK_DEAD state and __schedule; no PID detach", anchors: [PID11-A86, PID11-A87]}
+state_matrix:
+  - id: PID11-ST01
+    stage: "before_alloc_pid"
+    condition: "task memory/namespace copying incomplete; no new PID assigned"
+    observability: "may early ERR_PTR; copy_process returns error"
+    limit: "no new IDR entry"
+    anchors: [PID11-A52]
+  - id: PID11-ST02
+    stage: "idr_slot_NULL_scan"
+    condition: "idr_alloc or idr_alloc_cyclic returns numeric id while ptr==NULL"
+    observability: "idr_find slot reads NULL"
+    limit: "new task pid_s not published; NULL slot is not exclusive marker in this implementation"
+    anchors: [PID11-A12, PID11-A13, PID11-A66]
+  - id: PID11-ST03
+    stage: "partial_nested_namespace_reservation"
+    condition: "one or more levels succeeded, later level failed"
+    observability: "out_free removes prior level slots"
+    limit: "does not imply visible task; prior numeric allocation may have been vulnerable to reuse"
+    anchors: [PID11-A14, PID11-A18]
+  - id: PID11-ST04
+    stage: "pid_s_initialized"
+    condition: "numbers set, get_pid_ns called, refcount=1, tasks heads empty"
+    observability: "no task list yet"
+    limit: "not the same as task association"
+    anchors: [PID11-A15]
+  - id: PID11-ST05
+    stage: "pid_object_published"
+    condition: "idr_replace stores pid_s at each upid namespace slot"
+    observability: "find_pid_ns can return pid_s if valid slot/index"
+    limit: "pid_task still NULL while tasks[] empty"
+    anchors: [PID11-A17, PID11-A70]
+  - id: PID11-ST06
+    stage: "task_identity_fields_set"
+    condition: "copy_process writes pid/tgid and initializes links"
+    observability: "task_pid_ptr now points pid_s, not yet necessarily linked"
+    limit: "kernel_clone not yet woken child"
+    anchors: [PID11-A53, PID11-A54, PID11-A56]
+  - id: PID11-ST07
+    stage: "task_links_attached"
+    condition: "attach_pid adds hlist nodes for leader and PID type"
+    observability: "pid_task(PIDTYPE_PID) may obtain raw task_s*"
+    limit: "not an ownership ref/scheduling guarantee"
+    anchors: [PID11-A58, PID11-A59, PID11-A27]
+  - id: PID11-ST08
+    stage: "fork_return_and_wake"
+    condition: "kernel_clone gets PID ref, computes nr, wakes new task, drops temp ref"
+    observability: "returns nr if defined and reaches end"
+    limit: "separate wake scheduler; no runtime guarantee"
+    anchors: [PID11-A63, PID11-A64, PID11-A65]
+  - id: PID11-ST09
+    stage: "fork_failure_before_alloc"
+    condition: "copy_* step fails before alloc_pid"
+    observability: "copy_process cleanup labels then ERR_PTR"
+    limit: "may invoke earlier resource cleanup; no new PID to free"
+    anchors: [PID11-A52, PID11-A61]
+  - id: PID11-ST10
+    stage: "alloc_pid_failure_during_slot_assignment"
+    condition: "alloc_pid out_free removes previously assigned upid slots and frees pid cache"
+    observability: "ERR_PTR(retval) to copy_process cleanup_thread"
+    limit: "publication not completed; source semantics conditional to valid IDR"
+    anchors: [PID11-A18, PID11-A19]
+  - id: PID11-ST11
+    stage: "fork_postpublish_failure_label"
+    condition: "free_pid appears under bad_fork_free_pid but no observed active postalloc error jumps into it"
+    observability: "not shown reachable for normal fork from current source paths"
+    limit: "cannot claim successful publication is rolled back on every hypothetical later failure"
+    anchors: [PID11-A60]
+  - id: PID11-ST12
+    stage: "do_exit_before_notify"
+    condition: "exit_code set, cleanup calls; group_dead uninitialized"
+    observability: "exit_notify called with uninitialized argument"
+    limit: "cannot promise later exit completion"
+    anchors: [PID11-A79, PID11-A80, PID11-A83]
+  - id: PID11-ST13
+    stage: "exit_notify_with_children"
+    condition: "if children count !=0, find_task_by_pid_ns(1,PIDTYPE_PID)"
+    observability: "argument has enum type/value0, not pid_ns_s*"
+    limit: "reparent result is not proven; possible null namespace dereference if reached"
+    anchors: [PID11-A75, PID11-A76, PID11-A33]
+  - id: PID11-ST14
+    stage: "do_task_dead_if_reached"
+    condition: "set TASK_DEAD then __schedule and BUG/fallback loop"
+    observability: "task cannot be said to have been released by active exit"
+    limit: "current exit path does not call detach_pid/free_pid"
+    anchors: [PID11-A84, PID11-A86, PID11-A87]
+  - id: PID11-ST15
+    stage: "hypothetical_detach"
+    condition: "detach_pid->__change_pid removes link, checks other link types"
+    observability: "if no tasks then free_pid/id_remove/put_pid"
+    limit: "latent API, not evidenced reachable from current exit"
+    anchors: [PID11-A28, PID11-A29, PID11-A30, PID11-A22]
+  - id: PID11-ST16
+    stage: "hypothetical_reuse_after_free"
+    condition: "idr_remove slot becomes NULL, allocator can find it again"
+    observability: "requires actual free_pid path and valid initialized IDR"
+    limit: "not established for live exited task in current main exit"
+    anchors: [PID11-A71, PID11-A66]
+ownership:
+  - id: PID11-OWN01
+    api: "find_pid_ns / find_vpid"
+    input: "nr + namespace/current ns"
+    return: "pid_s* or NULL"
+    reference_effect: "none"
+    release_counterpart: "none; only lookup"
+    limits: "needs RCU/tasklist for stable lifetime, not acquired here"
+    anchors: [PID11-A24, PID11-A25]
+  - id: PID11-OWN02
+    api: "pid_task"
+    input: "pid_s* + pid_type"
+    return: "task_s* or NULL"
+    reference_effect: "none"
+    release_counterpart: "none; raw HList entry"
+    limits: "source has no task ref; caller must ensure lifetime"
+    anchors: [PID11-A31, PID11-A32]
+  - id: PID11-OWN03
+    api: "get_pid"
+    input: "pid_s*"
+    return: "same pid_s* or NULL"
+    reference_effect: "pid ref++ for nonNULL"
+    release_counterpart: "put_pid"
+    limits: "caller must hold stable pointer before increment"
+    anchors: [PID11-A43, PID11-A20]
+  - id: PID11-OWN04
+    api: "put_pid"
+    input: "pid_s*"
+    return: "void"
+    reference_effect: "pid ref--; free cache if zero"
+    release_counterpart: "self"
+    limits: "put_pid_ns non-init behavior not generally validated"
+    anchors: [PID11-A20]
+  - id: PID11-OWN05
+    api: "get_task_pid"
+    input: "task_s* + type"
+    return: "pid_s* or NULL"
+    reference_effect: "pid ref++ via get_pid"
+    release_counterpart: "put_pid by caller (kernel_clone observed)"
+    limits: "RCU calls commented; task source must be valid"
+    anchors: [PID11-A35, PID11-A43]
+  - id: PID11-OWN06
+    api: "find_get_pid"
+    input: "nr"
+    return: "pid_s* or NULL"
+    reference_effect: "pid ref++ if lookup nonNULL"
+    release_counterpart: "put_pid by caller"
+    limits: "RCU commented, pinning race not solved"
+    anchors: [PID11-A37]
+  - id: PID11-OWN07
+    api: "get_pid_task"
+    input: "pid_s* + type"
+    return: "task_s* or NULL"
+    reference_effect: "no task ref increase"
+    release_counterpart: "none here"
+    limits: "commented get_task_struct"
+    anchors: [PID11-A36]
+  - id: PID11-OWN08
+    api: "find_get_task_by_vpid"
+    input: "nr"
+    return: "task_s* or NULL"
+    reference_effect: "no task ref increase"
+    release_counterpart: "none here"
+    limits: "commented get_task_struct and RCU"
+    anchors: [PID11-A34]
+  - id: PID11-OWN09
+    api: "find_task_by_pid_ns"
+    input: "nr + pid_ns_s*"
+    return: "task_s* or NULL conditional on valid ns"
+    reference_effect: "no ref increase"
+    release_counterpart: "none here"
+    limits: "exit_notify passes PIDTYPE_PID instead of ns pointer"
+    anchors: [PID11-A33, PID11-A76]
+  - id: PID11-OWN10
+    api: "task_tgid_vnr / __task_pid_nr_ns / pid_nr_ns"
+    input: "task,type,ns or current namespace"
+    return: "pid_t; 0 on unmatched/null pid"
+    reference_effect: "none"
+    release_counterpart: "none"
+    limits: "ns must be valid when pid nonnull; no RCU pin in helper"
+    anchors: [PID11-A47, PID11-A40, PID11-A38]
+  - id: PID11-OWN11
+    api: "kill_proc_info (10 bridge)"
+    input: "positive pid"
+    return: "raw task_s* via pid_task"
+    reference_effect: "none"
+    release_counterpart: "none"
+    limits: "no active RCU/ref protection in read signal chain"
+    anchors: [PID11-A93, PID11-A94]
+anchors:
+  - id: PID11-A01
+    path: "mykernel/sched/syscall.c"
+    symbol: "sys_fork"
+    observed_lines: [51, 53]
+    quote: |
+      MYOS_SYSCALL_DEFINE0(fork)
+      {
+      	barrier();
+  - id: PID11-A02
+    path: "mykernel/sched/syscall.c"
+    symbol: "sys_fork"
+    observed_lines: [60, 64]
+    quote: |
+      	kclone_args_s args = {
+      		// .flags = CLONE_FILES,
+      		.exit_signal = SIGCHLD,
+      	};
+      	return kernel_clone(&args);
+  - id: PID11-A03
+    path: "mykernel/sched/syscall.c"
+    symbol: "sys_exit"
+    observed_lines: [68, 72]
+    quote: |
+      MYOS_SYSCALL_DEFINE1(exit, int, error_code)
+      {
+      	ALERT_DUMMY_SYSCALL(exit, IF_ALERT_DUMMY_SYSCALL);
+      
+      	do_exit(error_code);
+  - id: PID11-A04
+    path: "mykernel/sched/syscall.c"
+    symbol: "sys_exit_group"
+    observed_lines: [133, 137]
+    quote: |
+      MYOS_SYSCALL_DEFINE1(exit_group, int, error_code)
+      {
+      	ALERT_DUMMY_SYSCALL(exit_group, IF_ALERT_DUMMY_SYSCALL);
+      
+      	do_group_exit((error_code & 0xff) << 8);
+  - id: PID11-A05
+    path: "mykernel/sched/syscall.c"
+    symbol: "sys_wait4"
+    observed_lines: [76, 80]
+    quote: |
+      MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
+      		int, options, void *, rusage)
+      {
+      
+      }
+  - id: PID11-A06
+    path: "mykernel/sched/syscall.c"
+    symbol: "sys_getpid"
+    observed_lines: [44, 48]
+    quote: |
+      // #define __NR_getpid			39
+      MYOS_SYSCALL_DEFINE0(getpid)
+      {
+      	return task_tgid_vnr(current);
+      }
+  - id: PID11-A07
+    path: "mykernel/sched/syscall.c"
+    symbol: "sys_getppid"
+    observed_lines: [119, 123]
+    quote: |
+      	// rcu_read_lock();
+      	pid = task_tgid_vnr(current->real_parent);
+      	// rcu_read_unlock();
+      
+      	return pid;
+  - id: PID11-A08
+    path: "mykernel/sched/task/pid.c"
+    symbol: "init_struct_pid"
+    observed_lines: [44, 48]
+    quote: |
+      pid_s init_struct_pid = {
+      	.count		= ATOMIC_INIT(1),
+      	.tasks		= {
+      		{ .first = NULL },
+      		{ .first = NULL },
+  - id: PID11-A09
+    path: "mykernel/sched/task/pid.c"
+    symbol: "init_pid_ns"
+    observed_lines: [76, 80]
+    quote: |
+      pid_ns_s init_pid_ns = {
+      	// .ns.count		= REFCOUNT_INIT(2),
+      	.idr			= IDR_INIT(init_pid_ns.idr),
+      	.pid_allocated	= PIDNS_ADDING,
+      	.level			= 0,
+  - id: PID11-A09b
+    path: "mykernel/sched/task/pid.c"
+    symbol: "init_pid_ns"
+    observed_lines: [81, 81]
+    quote: |
+      	.child_reaper	= &init_task,
+  - id: PID11-A10
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [178, 179]
+    quote: |
+      	if (set_tid_size > ns->level + 1)
+      		return ERR_PTR(-EINVAL);
+  - id: PID11-A11
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [181, 183]
+    quote: |
+      	pid = kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
+      	if (!pid)
+      		return ERR_PTR(retval);
+  - id: PID11-A12
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [209, 213]
+    quote: |
+      		// idr_preload(GFP_KERNEL);
+      		spin_lock_irq(&pidmap_lock);
+      
+      		if (tid) {
+      			nr = idr_alloc(&tmp->idr, NULL,
+  - id: PID11-A12b
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [214, 214]
+    quote: |
+      					tid, tid + 1, GFP_ATOMIC);
+  - id: PID11-A13
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [230, 234]
+    quote: |
+      			/*
+      			 * Store a null pointer so find_pid_ns does not find
+      			 * a partially initialized PID (see below).
+      			 */
+      			nr = idr_alloc_cyclic(&tmp->idr, NULL,
+  - id: PID11-A13b
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [235, 235]
+    quote: |
+      					pid_min, pid_max, GFP_ATOMIC);
+  - id: PID11-A14
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [240, 244]
+    quote: |
+      		if (nr < 0) {
+      			retval = (nr == -ENOSPC) ? -EAGAIN : nr;
+      			goto out_free;
+      		}
+      
+  - id: PID11-A14b
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [245, 247]
+    quote: |
+      		pid->numbers[i].nr = nr;
+      		pid->numbers[i].ns = tmp;
+      		tmp = tmp->parent;
+  - id: PID11-A15
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [260, 264]
+    quote: |
+      	get_pid_ns(ns);
+      	refcount_set(&pid->count, 1);
+      	spin_lock_init(&pid->lock);
+      	for (type = 0; type < PIDTYPE_MAX; ++type)
+      		INIT_HLIST_HEAD(&pid->tasks[type]);
+  - id: PID11-A16
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [269, 272]
+    quote: |
+      	upid = pid->numbers + ns->level;
+      	spin_lock_irq(&pidmap_lock);
+      	if (!(ns->pid_allocated & PIDNS_ADDING))
+      		goto out_unlock;
+  - id: PID11-A17
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [274, 278]
+    quote: |
+      	pid->ino = ++pidfs_ino;
+      	for ( ; upid >= pid->numbers; --upid) {
+      		/* Make the PID visible to find_pid_ns. */
+      		idr_replace(&upid->ns->idr, pid, upid->nr);
+      		upid->ns->pid_allocated++;
+  - id: PID11-A18
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [288, 292]
+    quote: |
+      out_free:
+      	spin_lock_irq(&pidmap_lock);
+      	while (++i <= ns->level) {
+      		upid = pid->numbers + i;
+      		idr_remove(&upid->ns->idr, upid->nr);
+  - id: PID11-A19
+    path: "mykernel/sched/task/pid.c"
+    symbol: "alloc_pid"
+    observed_lines: [299, 302]
+    quote: |
+      	spin_unlock_irq(&pidmap_lock);
+      
+      	kmem_cache_free(ns->pid_cachep, pid);
+      	return ERR_PTR(retval);
+  - id: PID11-A20
+    path: "mykernel/sched/task/pid.c"
+    symbol: "put_pid"
+    observed_lines: [118, 122]
+    quote: |
+      	ns = pid->numbers[pid->level].ns;
+      	if (refcount_dec_and_test(&pid->count)) {
+      		kmem_cache_free(ns->pid_cachep, pid);
+      		put_pid_ns(ns);
+      	}
+  - id: PID11-A21
+    path: "mykernel/sched/task/pid.c"
+    symbol: "free_pid"
+    observed_lines: [132, 136]
+    quote: |
+      	spin_lock_irqsave(&pidmap_lock, flags);
+      	for (i = 0; i <= pid->level; i++) {
+      		upid_s *upid = pid->numbers + i;
+      		pid_ns_s *ns = upid->ns;
+      		switch (--ns->pid_allocated) {
+  - id: PID11-A22
+    path: "mykernel/sched/task/pid.c"
+    symbol: "free_pid"
+    observed_lines: [150, 154]
+    quote: |
+      		}
+      
+      		idr_remove(&ns->idr, upid->nr);
+      	}
+      	spin_unlock_irqrestore(&pidmap_lock, flags);
+  - id: PID11-A23
+    path: "mykernel/sched/task/pid.c"
+    symbol: "free_pid"
+    observed_lines: [156, 159]
+    quote: |
+      	// call_rcu(&pid->rcu, delayed_put_pid);
+      
+      	put_pid(pid);
+      }
+  - id: PID11-A24
+    path: "mykernel/sched/task/pid.c"
+    symbol: "find_pid_ns"
+    observed_lines: [305, 307]
+    quote: |
+      pid_s *find_pid_ns(int nr, pid_ns_s *ns) {
+      	return idr_find(&ns->idr, nr);
+      }
+  - id: PID11-A25
+    path: "mykernel/sched/task/pid.c"
+    symbol: "find_vpid"
+    observed_lines: [310, 312]
+    quote: |
+      pid_s *find_vpid(int nr) {
+      	return find_pid_ns(nr, task_active_pid_ns(current));
+      }
+  - id: PID11-A26
+    path: "mykernel/sched/task/pid.c"
+    symbol: "task_pid_ptr"
+    observed_lines: [315, 319]
+    quote: |
+      static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
+      	if (type == PIDTYPE_PID)
+      		return &task->thread_pid;
+      	else
+      		return &task->signal->pids[type];
+  - id: PID11-A27
+    path: "mykernel/sched/task/pid.c"
+    symbol: "attach_pid"
+    observed_lines: [323, 327]
+    quote: |
+       * attach_pid() must be called with the tasklist_lock write-held.
+       */
+      void attach_pid(task_s *task, enum pid_type type) {
+      	pid_s *pid = *task_pid_ptr(task, type);
+      	hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
+  - id: PID11-A28
+    path: "mykernel/sched/task/pid.c"
+    symbol: "__change_pid"
+    observed_lines: [336, 340]
+    quote: |
+      	pid = *pid_ptr;
+      
+      	hlist_del_init(&task->pid_links[type]);
+      	*pid_ptr = new;
+      
+  - id: PID11-A29
+    path: "mykernel/sched/task/pid.c"
+    symbol: "__change_pid"
+    observed_lines: [346, 350]
+    quote: |
+      	for (tmp = PIDTYPE_MAX; --tmp >= 0; )
+      		if (pid_has_task(pid, tmp))
+      			return;
+      
+      	free_pid(pid);
+  - id: PID11-A30
+    path: "mykernel/sched/task/pid.c"
+    symbol: "detach_pid"
+    observed_lines: [353, 355]
+    quote: |
+      void detach_pid(task_s *task, enum pid_type type) {
+      	__change_pid(task, type, NULL);
+      }
+  - id: PID11-A31
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_task"
+    observed_lines: [364, 368]
+    quote: |
+      task_s *pid_task(pid_s *pid, enum pid_type type)
+      {
+      	task_s *result = NULL;
+      	if (pid) {
+      		HList_s *first;
+  - id: PID11-A32
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_task"
+    observed_lines: [371, 375]
+    quote: |
+      		first = hlist_first_rcu(&pid->tasks[type]);
+      		if (first)
+      			result = hlist_entry(first, task_s, pid_links[(type)]);
+      	}
+      	return result;
+  - id: PID11-A33
+    path: "mykernel/sched/task/pid.c"
+    symbol: "find_task_by_pid_ns"
+    observed_lines: [382, 386]
+    quote: |
+      task_s *find_task_by_pid_ns(pid_t nr, pid_ns_s *ns)
+      {
+      	// RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
+      	// 		 "find_task_by_pid_ns() needs rcu_read_lock() protection");
+      	return pid_task(find_pid_ns(nr, ns), PIDTYPE_PID);
+  - id: PID11-A34
+    path: "mykernel/sched/task/pid.c"
+    symbol: "find_get_task_by_vpid"
+    observed_lines: [398, 402]
+    quote: |
+      	// rcu_read_lock();
+      	task = find_task_by_vpid(nr);
+      	// if (task)
+      	// 	get_task_struct(task);
+      	// rcu_read_unlock();
+  - id: PID11-A35
+    path: "mykernel/sched/task/pid.c"
+    symbol: "get_task_pid"
+    observed_lines: [409, 413]
+    quote: |
+      	pid_s *pid;
+      	// rcu_read_lock();
+      	pid = get_pid(rcu_dereference(*task_pid_ptr(task, type)));
+      	// rcu_read_unlock();
+      	return pid;
+  - id: PID11-A36
+    path: "mykernel/sched/task/pid.c"
+    symbol: "get_pid_task"
+    observed_lines: [420, 424]
+    quote: |
+      	// rcu_read_lock();
+      	result = pid_task(pid, type);
+      	// if (result)
+      	// 	get_task_struct(result);
+      	// rcu_read_unlock();
+  - id: PID11-A37
+    path: "mykernel/sched/task/pid.c"
+    symbol: "find_get_pid"
+    observed_lines: [433, 437]
+    quote: |
+      	// rcu_read_lock();
+      	pid = get_pid(find_vpid(nr));
+      	// rcu_read_unlock();
+      
+      	return pid;
+  - id: PID11-A38
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_nr_ns"
+    observed_lines: [450, 454]
+    quote: |
+      	pid_t nr = 0;
+      
+      	if (pid && ns->level <= pid->level) {
+      		upid = &pid->numbers[ns->level];
+      		if (upid->ns == ns)
+  - id: PID11-A39
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_nr_ns"
+    observed_lines: [454, 457]
+    quote: |
+      		if (upid->ns == ns)
+      			nr = upid->nr;
+      	}
+      	return nr;
+  - id: PID11-A40
+    path: "mykernel/sched/task/pid.c"
+    symbol: "__task_pid_nr_ns"
+    observed_lines: [473, 477]
+    quote: |
+      	if (!ns)
+      		ns = task_active_pid_ns(current);
+      	nr = pid_nr_ns(rcu_dereference(*task_pid_ptr(task, type)), ns);
+      	// rcu_read_unlock();
+      
+  - id: PID11-A40b
+    path: "mykernel/sched/task/pid.c"
+    symbol: "__task_pid_nr_ns"
+    observed_lines: [478, 478]
+    quote: |
+      	return nr;
+  - id: PID11-A41
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_idr_init"
+    observed_lines: [498, 502]
+    quote: |
+      	idr_init(&init_pid_ns.idr);
+      
+      	init_pid_ns.pid_cachep =
+      			kmem_cache_create("pid",
+      			struct_size_t(pid_s, numbers, 1),
+  - id: PID11-A41b
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_idr_init"
+    observed_lines: [503, 503]
+    quote: |
+      			__alignof__(pid_s),
+  - id: PID11-A42
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_idr_init"
+    observed_lines: [508, 511]
+    quote: |
+      	/* MyOS2 init_pid_ns initiate simple-idr by hand */
+      	idr_s *init_pid_ns_idr = &init_pid_ns.idr;
+      	init_pid_ns_idr->idr_rt[0] = &init_struct_pid;
+      	init_pid_ns_idr->idr_next++;
+  - id: PID11-A43
+    path: "mykernel/sched/task/pid.h"
+    symbol: "get_pid"
+    observed_lines: [59, 63]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		pid_s
+      		*get_pid(pid_s *pid) {
+      			if (pid) refcount_inc(&pid->count);
+      			return pid;
+  - id: PID11-A43b
+    path: "mykernel/sched/task/pid.h"
+    symbol: "get_pid"
+    observed_lines: [64, 64]
+    quote: |
+      		}
+  - id: PID11-A44
+    path: "mykernel/sched/task/pid.h"
+    symbol: "pid_has_task"
+    observed_lines: [66, 70]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		bool
+      		pid_has_task(pid_s *pid, enum pid_type type) {
+      			return !hlist_empty(&pid->tasks[type]);
+      		}
+  - id: PID11-A45
+    path: "mykernel/sched/task/pid.h"
+    symbol: "ns_of_pid"
+    observed_lines: [84, 88]
+    quote: |
+      		*ns_of_pid(pid_s *pid) {
+      			pid_ns_s *ns = NULL;
+      			if (pid)
+      				ns = pid->numbers[pid->level].ns;
+      			return ns;
+  - id: PID11-A46
+    path: "mykernel/sched/task/pid.h"
+    symbol: "task_pid"
+    observed_lines: [123, 125]
+    quote: |
+      		pid_s
+      		*task_pid(task_s *task) {
+      			return task->thread_pid;
+  - id: PID11-A47
+    path: "mykernel/sched/task/pid.h"
+    symbol: "task_tgid_vnr"
+    observed_lines: [170, 174]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		pid_t
+      		task_tgid_vnr(task_s *tsk) {
+      			return __task_pid_nr_ns(tsk, PIDTYPE_TGID, NULL);
+      		}
+  - id: PID11-A48
+    path: "mykernel/sched/task/pid_api.h"
+    symbol: "task_active_pid_ns"
+    observed_lines: [12, 12]
+    quote: |
+      	#define task_active_pid_ns(tsk)	ns_of_pid(task_pid(tsk))
+  - id: PID11-A49
+    path: "mykernel/sched/task/pid_const.h"
+    symbol: "pid_type"
+    observed_lines: [6, 10]
+    quote: |
+      	enum pid_type {
+      		PIDTYPE_PID,
+      		PIDTYPE_TGID,
+      		PIDTYPE_PGID,
+      		PIDTYPE_SID,
+  - id: PID11-A49b
+    path: "mykernel/sched/task/pid_const.h"
+    symbol: "pid_type"
+    observed_lines: [11, 11]
+    quote: |
+      		PIDTYPE_MAX,
+  - id: PID11-A50
+    path: "mykernel/sched/task/pid_namespace.h"
+    symbol: "get_pid_ns"
+    observed_lines: [24, 28]
+    quote: |
+      		*get_pid_ns(pid_ns_s *ns) {
+      			// if (ns != &init_pid_ns)
+      			// 	refcount_inc(&ns->ns.count);
+      			return ns;
+      		}
+  - id: PID11-A51
+    path: "mykernel/sched/task/pid_namespace.c"
+    symbol: "put_pid_ns"
+    observed_lines: [113, 117]
+    quote: |
+      
+      	while (ns != &init_pid_ns) {
+      		// parent = ns->parent;
+      		// if (!refcount_dec_and_test(&ns->ns.count))
+      		// 	break;
+  - id: PID11-A51b
+    path: "mykernel/sched/task/pid_namespace.c"
+    symbol: "put_pid_ns"
+    observed_lines: [118, 120]
+    quote: |
+      		// destroy_pid_namespace(ns);
+      		// ns = parent;
+      	}
+  - id: PID11-A52
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1149, 1153]
+    quote: |
+      	if (pid_struct != &init_struct_pid) {
+      		pid_struct = alloc_pid(p->nsproxy->pid_ns_for_children,args->set_tid, args->set_tid_size);
+      		if (IS_ERR(pid_struct)) {
+      			retval = PTR_ERR(pid_struct);
+      			goto bad_fork_cleanup_thread;
+  - id: PID11-A52b
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1154, 1154]
+    quote: |
+      		}
+  - id: PID11-A53
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1205, 1209]
+    quote: |
+      	/* ok, now we should be set up.. */
+      	p->pid = pid_nr(pid_struct);
+      	if (clone_flags & CLONE_THREAD) {
+      		// p->group_leader = current->group_leader;
+      		p->tgid = current->tgid;
+  - id: PID11-A54
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1210, 1213]
+    quote: |
+      	} else {
+      		// p->group_leader = p;
+      		p->tgid = p->pid;
+      	}
+  - id: PID11-A55
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "init_task_pid"
+    observed_lines: [846, 850]
+    quote: |
+      static inline void
+      init_task_pid(task_s *task, enum pid_type type, pid_s *pid_struct) {
+      	if (type == PIDTYPE_PID)
+      		task->thread_pid = pid_struct;
+      	else
+  - id: PID11-A55b
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "init_task_pid"
+    observed_lines: [851, 851]
+    quote: |
+      		task->signal->pids[type] = pid_struct;
+  - id: PID11-A56
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1310, 1314]
+    quote: |
+      	init_task_pid_links(p);
+      	if (likely(p->pid != 0)) {
+      		ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
+      
+      		init_task_pid(p, PIDTYPE_PID, pid_struct);
+  - id: PID11-A57
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1315, 1318]
+    quote: |
+      		if (thread_group_leader(p)) {
+      			init_task_pid(p, PIDTYPE_TGID, pid_struct);
+      			init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));
+      			init_task_pid(p, PIDTYPE_SID, task_session(current));
+  - id: PID11-A58
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1333, 1337]
+    quote: |
+      			list_header_add_to_tail(&p->real_parent->children, &p->sibling);
+      			// list_add_tail_rcu(&p->tasks, &init_task.tasks);
+      			list_header_add_to_tail(&all_task_lhdr, &p->tasks);
+      			attach_pid(p, PIDTYPE_TGID);
+      			attach_pid(p, PIDTYPE_PGID);
+  - id: PID11-A59
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1347, 1351]
+    quote: |
+      			// list_add_tail_rcu(&p->thread_node,
+      			// 		  &p->signal->thread_head);
+      		}
+      		attach_pid(p, PIDTYPE_PID);
+      		nr_threads++;
+  - id: PID11-A60
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1385, 1389]
+    quote: |
+      bad_fork_free_pid:
+      	if (pid_struct != &init_struct_pid)
+      		free_pid(pid_struct);
+      bad_fork_cleanup_thread:
+      	exit_thread(p);
+  - id: PID11-A61
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1424, 1427]
+    quote: |
+      bad_fork_free:
+      	WRITE_ONCE(p->__state, TASK_DEAD);
+      	put_task_stack(p);
+      	delayed_free_task(p);
+  - id: PID11-A62
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "kernel_clone"
+    observed_lines: [1485, 1489]
+    quote: |
+      	p = copy_process(NULL, trace, NUMA_NO_NODE, args);
+      	// add_latent_entropy();
+      
+      	if (IS_ERR(p))
+      		return PTR_ERR(p);
+  - id: PID11-A63
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "kernel_clone"
+    observed_lines: [1497, 1499]
+    quote: |
+      	pid_struct = get_task_pid(p, PIDTYPE_PID);
+      	nr = pid_vnr(pid_struct);
+      
+  - id: PID11-A64
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "kernel_clone"
+    observed_lines: [1515, 1517]
+    quote: |
+      
+      	wake_up_new_task(p);
+      
+  - id: PID11-A65
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "kernel_clone"
+    observed_lines: [1527, 1529]
+    quote: |
+      	put_pid(pid_struct);
+      
+      	return nr;
+  - id: PID11-A66
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_alloc_u32"
+    observed_lines: [53, 57]
+    quote: |
+      	for (int slot_idx = id; slot_idx < MYOS_IDR_BUF_SIZE; slot_idx++)
+      	{
+      		void **tmp_slot = &idr->idr_rt[slot_idx];
+      		if (*tmp_slot == NULL)
+      		{
+  - id: PID11-A66b
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_alloc_u32"
+    observed_lines: [58, 58]
+    quote: |
+      			*tmp_slot = ptr;
+  - id: PID11-A67
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_alloc_u32"
+    observed_lines: [58, 61]
+    quote: |
+      			*tmp_slot = ptr;
+      			*nextid = slot_idx;
+      			return 0;
+      		}
+  - id: PID11-A68
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_alloc_cyclic"
+    observed_lines: [137, 141]
+    quote: |
+      	err = idr_alloc_u32(idr, ptr, &id, max, gfp);
+      	if ((err == -ENOSPC) && (id > start)) {
+      		id = start;
+      		err = idr_alloc_u32(idr, ptr, &id, max, gfp);
+      	}
+  - id: PID11-A68b
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_alloc_cyclic"
+    observed_lines: [142, 145]
+    quote: |
+      	if (err)
+      		return err;
+      
+      	idr->idr_next = id + 1;
+  - id: PID11-A69
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_alloc"
+    observed_lines: [94, 98]
+    quote: |
+      	if (WARN_ON_ONCE(start < 0))
+      		return -EINVAL;
+      
+      	ret = idr_alloc_u32(idr, ptr, &id, end > 0 ?
+      				end - 1 : MYOS_IDR_BUF_SIZE, gfp);
+  - id: PID11-A69b
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_alloc"
+    observed_lines: [99, 102]
+    quote: |
+      	if (ret)
+      		return ret;
+      
+      	return id;
+  - id: PID11-A70
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_replace"
+    observed_lines: [318, 322]
+    quote: |
+      	// __radix_tree_replace(&idr->idr_rt, node, slot, ptr);
+      
+      	entry = idr->idr_rt[id];
+      	idr->idr_rt[id] = ptr;
+      
+  - id: PID11-A70b
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_replace"
+    observed_lines: [323, 323]
+    quote: |
+      	return entry;
+  - id: PID11-A71
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_remove"
+    observed_lines: [164, 168]
+    quote: |
+      void *idr_remove(idr_s *idr, ulong id)
+      {
+      	// return radix_tree_delete_item(&idr->idr_rt, id - idr->idr_base, NULL);
+      	void *ptr = idr->idr_rt[id];
+      	idr->idr_rt[id] = NULL;
+  - id: PID11-A71b
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_remove"
+    observed_lines: [169, 169]
+    quote: |
+      	return ptr;
+  - id: PID11-A72
+    path: "mykernel/lib/idr/idr.c"
+    symbol: "idr_find"
+    observed_lines: [187, 191]
+    quote: |
+      void *idr_find(const idr_s *idr, ulong id)
+      {
+      	// return radix_tree_lookup(&idr->idr_rt, id - idr->idr_base);
+      	return idr->idr_rt[id];
+      }
+  - id: PID11-A73
+    path: "mykernel/lib/idr/idr.h"
+    symbol: "idr_init_base"
+    observed_lines: [48, 52]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		void
+      		idr_init_base(idr_s *idr, int base) {
+      			// INIT_RADIX_TREE(&idr->idr_rt, IDR_RT_MARKER);
+      			idr->idr_rt = kzalloc(sizeof(void *) * MYOS_IDR_BUF_SIZE, GFP_KERNEL);
+  - id: PID11-A73b
+    path: "mykernel/lib/idr/idr.h"
+    symbol: "idr_init_base"
+    observed_lines: [53, 56]
+    quote: |
+      			idr->idr_base = base;
+      			idr->idr_next = 0;
+      
+      			idr->initiated = true;
+  - id: PID11-A74
+    path: "mykernel/lib/idr/idr_const.h"
+    symbol: "MYOS_IDR_BUF_SIZE"
+    observed_lines: [6, 6]
+    quote: |
+          #define MYOS_IDR_BUF_SIZE		32768
+  - id: PID11-A75
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "exit_notify"
+    observed_lines: [15, 19]
+    quote: |
+      static void exit_notify(task_s *tsk, int group_dead)
+      {
+      	while (tsk->children.count != 0)
+      	{
+      		List_s * child_lp = list_header_remove_head(&tsk->children);
+  - id: PID11-A75b
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "exit_notify"
+    observed_lines: [20, 20]
+    quote: |
+      		while (child_lp == 0);
+  - id: PID11-A76
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "exit_notify"
+    observed_lines: [19, 23]
+    quote: |
+      		List_s * child_lp = list_header_remove_head(&tsk->children);
+      		while (child_lp == 0);
+      
+      		task_s *task_initd = find_task_by_pid_ns(1, PIDTYPE_PID);
+      		list_header_add_to_tail(&task_initd->children, child_lp);
+  - id: PID11-A76b
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "exit_notify"
+    observed_lines: [24, 24]
+    quote: |
+      	}
+  - id: PID11-A77
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "exit_notify"
+    observed_lines: [31, 35]
+    quote: |
+      	// write_lock_irq(&tasklist_lock);
+      	// forget_original_parent(tsk, &dead);
+      
+      	// if (group_dead)
+      	// 	kill_orphaned_pgrp(tsk->group_leader, NULL);
+  - id: PID11-A77b
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "exit_notify"
+    observed_lines: [36, 38]
+    quote: |
+      
+      	// tsk->exit_state = EXIT_ZOMBIE;
+      	// if (unlikely(tsk->ptrace)) {
+  - id: PID11-A78
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "exit_notify"
+    observed_lines: [61, 64]
+    quote: |
+      	// list_for_each_entry_safe(p, n, &dead, ptrace_entry) {
+      	// 	list_del_init(&p->ptrace_entry);
+      	// 	release_task(p);
+      	// }
+  - id: PID11-A79
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [68, 72]
+    quote: |
+      void __noreturn do_exit(long code)
+      {
+      	task_s *tsk = current;
+      	int group_dead;
+      
+  - id: PID11-A80
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [89, 93]
+    quote: |
+      	// exit_signals(tsk);  /* sets PF_EXITING */
+      
+      	// /* sync mm's RSS info before statistics gathering */
+      	// if (tsk->mm)
+      	// 	sync_mm_rss(tsk->mm);
+  - id: PID11-A80b
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [94, 95]
+    quote: |
+      	// acct_update_integrals(tsk);
+      	// group_dead = atomic_dec_and_test(&tsk->signal->live);
+  - id: PID11-A81
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [117, 120]
+    quote: |
+      	tsk->exit_code = code;
+      	// taskstats_exit(tsk, group_dead);
+      
+      	// exit_mm();
+  - id: PID11-A82
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [128, 132]
+    quote: |
+      	exit_files(tsk);
+      	exit_fs(tsk);
+      	// if (group_dead)
+      	// 	disassociate_ctty(1);
+      	// exit_task_namespaces(tsk);
+  - id: PID11-A82b
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [133, 134]
+    quote: |
+      	// exit_task_work(tsk);
+      	exit_thread(tsk);
+  - id: PID11-A83
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [152, 154]
+    quote: |
+      	// exit_tasks_rcu_start();
+      	exit_notify(tsk, group_dead);
+      	// proc_exit_connector(tsk);
+  - id: PID11-A84
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [177, 181]
+    quote: |
+      	// check_stack_usage();
+      	preempt_disable();
+      	// if (tsk->nr_dirtied)
+      	// 	__this_cpu_add(dirty_throttle_leaks, tsk->nr_dirtied);
+      	// exit_rcu();
+  - id: PID11-A84b
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [182, 185]
+    quote: |
+      	// exit_tasks_rcu_finish();
+      
+      	// lockdep_free_task(tsk);
+      	do_task_dead();
+  - id: PID11-A85
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_group_exit"
+    observed_lines: [216, 219]
+    quote: |
+      	// 	spin_unlock_irq(&sighand->siglock);
+      	// }
+      
+      	do_exit(exit_code);
+  - id: PID11-A86
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "do_task_dead"
+    observed_lines: [1172, 1176]
+    quote: |
+      void __noreturn do_task_dead(void)
+      {
+      	/* Causes final put_task_struct in finish_task_switch(): */
+      	set_special_state(TASK_DEAD);
+      
+  - id: PID11-A86b
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "do_task_dead"
+    observed_lines: [1177, 1177]
+    quote: |
+      	/* Tell freezer to ignore us: */
+  - id: PID11-A87
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "do_task_dead"
+    observed_lines: [1180, 1184]
+    quote: |
+      	__schedule(SM_NONE);
+      	BUG();
+      
+      	/* Avoid "noreturn function does return" - but don't continue if BUG() is a NOP: */
+      	for (;;)
+  - id: PID11-A87b
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "do_task_dead"
+    observed_lines: [1185, 1185]
+    quote: |
+      		cpu_relax();
+  - id: PID11-A88
+    path: "mykernel/sched/misc/sched_misc_api.h"
+    symbol: "release_task"
+    observed_lines: [10, 13]
+    quote: |
+      	void __noreturn do_task_dead(void);
+      
+      	extern void fork_init(void);
+      	extern void release_task(task_s * p);
+  - id: PID11-A89
+    path: "mykernel/init/init_task.c"
+    symbol: "init_signals"
+    observed_lines: [47, 51]
+    quote: |
+      	.pids				= {
+      		[PIDTYPE_PID]		= &init_struct_pid,
+      		[PIDTYPE_TGID]		= &init_struct_pid,
+      		[PIDTYPE_PGID]		= &init_struct_pid,
+      		[PIDTYPE_SID]		= &init_struct_pid,
+  - id: PID11-A89b
+    path: "mykernel/init/init_task.c"
+    symbol: "init_signals"
+    observed_lines: [52, 52]
+    quote: |
+      	},
+  - id: PID11-A90
+    path: "mykernel/init/init_task.c"
+    symbol: "init_task"
+    observed_lines: [123, 125]
+    quote: |
+      	.signal				= &init_signals,
+      	.sighand			= &init_sighand,
+      	.nsproxy			= &init_nsproxy,
+  - id: PID11-A91
+    path: "mykernel/init/init_task.c"
+    symbol: "init_task"
+    observed_lines: [135, 137]
+    quote: |
+      	// .timer_slack_ns		= 50000, /* 50 usec default slack */
+      	.thread_pid			= &init_struct_pid,
+      	// .thread_node		= LIST_HEAD_INIT(init_signals.thread_head),
+  - id: PID11-A92
+    path: "mykernel/init/main.c"
+    symbol: "start_kernel"
+    observed_lines: [179, 181]
+    quote: |
+      	arch_cpu_finalize_init();
+      
+      	pid_idr_init();
+  - id: PID11-A93
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "kill_proc_info"
+    observed_lines: [725, 729]
+    quote: |
+      	enum pid_type type = PIDTYPE_TGID;
+      	int error = -ESRCH;
+      	task_s *p;
+      
+      	for (;;) {
+  - id: PID11-A93b
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "kill_proc_info"
+    observed_lines: [730, 731]
+    quote: |
+      		// rcu_read_lock();
+      		p = pid_task(find_vpid(pid), PIDTYPE_PID);
+  - id: PID11-A94
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "kill_proc_info"
+    observed_lines: [731, 735]
+    quote: |
+      		p = pid_task(find_vpid(pid), PIDTYPE_PID);
+      		if (p)
+      			error = group_send_sig_info(sig, info, p, type);
+      		// rcu_read_unlock();
+      		if (likely(!p || error != -ESRCH))
+  - id: PID11-A95
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1369, 1372]
+    quote: |
+      
+      	// copy_oom_score_adj(clone_flags, p);
+      
+      	return p;
+  - id: PID11-A96
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1260, 1264]
+    quote: |
+      	// /*
+      	//  * Make it visible to the rest of the system, but dont wake it up yet.
+      	//  * Need tasklist lock for parent etc handling!
+      	//  */
+      	// write_lock_irq(&tasklist_lock);
+self_check:
+  anchor_count: 123
+  source_file_count: 17
+  graph_node_count: 47
+  graph_edge_count: 54
+  state_rows: 16
+  ownership_rows: 11
+  effect_rows: 7
+  source_quotes_extracted_from_pinned_objects: true
+  underlying_kernel_executed: false
+  graphviz_or_repository_script_run: false
