@@ -729,7 +729,7 @@ fail_nomem:
 
 ## 五、连接已present写保护缺页（不重审COW后端）
 
-针对本次复制后已有present但RW被清的PTE，后续写缺页的既有`handle_pte_fault`在`FAULT_FLAG_WRITE`且`!pte_write`时进入`do_wp_page`；不同于第13批文件**缺PTE**的`do_cow_fault`。在本树`do_wp_page`里，VM_SHARED/VM_MAYSHARE分支原地循环，非共享才有条件沿`wp_page_copy`继续；本批仅标明入口及断点，不重新审计其folio、T LB、数据复制、源缓存put或故障返回。
+针对本次复制后已有present但RW被清的PTE，后续写缺页的既有`handle_pte_fault`在`FAULT_FLAG_WRITE`且`!pte_write`时进入`do_wp_page`；不同于第13批文件**缺PTE**的`do_cow_fault`。在本树`do_wp_page`里，VM_SHARED/VM_MAYSHARE分支原地循环，非共享才有条件沿`wp_page_copy`继续；本批仅标明入口及断点，不重新审计其folio、TLB、数据复制、源缓存put或故障返回。
 
 **[VERIFIED mykernel/mm/fault/fault.c::handle_pte_fault · PC16-A080，1255–1257行]**
 
