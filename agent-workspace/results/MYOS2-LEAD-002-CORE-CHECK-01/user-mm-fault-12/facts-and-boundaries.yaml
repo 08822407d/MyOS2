@@ -68,9 +68,9 @@ nodes:
   - {id: MF12-N41, label: "alloc_anon_folio (intermediate)"}
 edges:
   - {id: MF12-E01, from: MF12-N01, to: MF12-N02, kind: call, status: active, condition: "passes CR2 and err_code", anchors: [MF12-A21]}
-  - {id: MF12-E02, from: MF12-N02, to: MF12-N03, kind: call, status: active, condition: "test address vs TASK_SIZE_MAX only", anchors: [MF12-A18a]}
-  - {id: MF12-E03, from: MF12-N02, to: MF12-N04, kind: call, status: conditional, condition: "address>=TASK_SIZE_MAX", anchors: [MF12-A18a, MF12-A18b]}
-  - {id: MF12-E04, from: MF12-N02, to: MF12-N05, kind: call, status: conditional, condition: "address<TASK_SIZE_MAX, kernel or user mode", anchors: [MF12-A18b]}
+  - {id: MF12-E02, from: MF12-N02, to: MF12-N03, kind: call, status: active, condition: "test address vs TASK_SIZE_MAX only", anchors: [MF12-A18b]}
+  - {id: MF12-E03, from: MF12-N02, to: MF12-N04, kind: call, status: conditional, condition: "address>=TASK_SIZE_MAX", anchors: [MF12-A18b, MF12-A18c]}
+  - {id: MF12-E04, from: MF12-N02, to: MF12-N05, kind: call, status: conditional, condition: "address<TASK_SIZE_MAX, kernel or user mode", anchors: [MF12-A18c]}
   - {id: MF12-E05, from: MF12-N05, to: MF12-N06, kind: call, status: active, condition: "after source flags, assumes mm nonnull", anchors: [MF12-A10]}
   - {id: MF12-E06, from: MF12-N05, to: MF12-N07, kind: call, status: conditional, condition: "no containing VMA", anchors: [MF12-A10]}
   - {id: MF12-E07, from: MF12-N05, to: MF12-N07, kind: call, status: conditional, condition: "VMA starts above address and not grow-down (not normal stable vma)", anchors: [MF12-A11]}
@@ -79,16 +79,16 @@ edges:
   - {id: MF12-E10, from: MF12-N09, to: MF12-N10, kind: call, status: active, condition: "p4d_alloc is folded to pgd pointer", anchors: [MF12-A32, MF12-A68]}
   - {id: MF12-E11, from: MF12-N09, to: MF12-N11, kind: call, status: conditional, condition: "pud_alloc called if p4d pointer nonNULL", anchors: [MF12-A33]}
   - {id: MF12-E12, from: MF12-N09, to: MF12-N12, kind: call, status: conditional, condition: "pmd_alloc called if pud pointer nonNULL", anchors: [MF12-A33]}
-  - {id: MF12-E13, from: MF12-N09, to: MF12-N13, kind: call, status: conditional, condition: "pte_alloc after pmd allocation", anchors: [MF12-A33a]}
+  - {id: MF12-E13, from: MF12-N09, to: MF12-N13, kind: call, status: conditional, condition: "pte_alloc after pmd allocation", anchors: [MF12-A33b]}
   - {id: MF12-E14, from: MF12-N09, to: MF12-N14, kind: call, status: conditional, condition: "after pte_alloc and pmd_none spin gate", anchors: [MF12-A35]}
   - {id: MF12-E15, from: MF12-N09, to: MF12-N15, kind: call, status: conditional, condition: "non-NULL pte pointer", anchors: [MF12-A36]}
-  - {id: MF12-E16, from: MF12-N15, to: MF12-N16, kind: call, status: conditional, condition: "pte_none(orig_pte)", anchors: [MF12-A37, MF12-A37a]}
-  - {id: MF12-E17, from: MF12-N15, to: MF12-N29, kind: call, status: conditional, condition: "existing PTE + FAULT_FLAG_WRITE + !pte_write", anchors: [MF12-A39a]}
+  - {id: MF12-E16, from: MF12-N15, to: MF12-N16, kind: call, status: conditional, condition: "pte_none(orig_pte)", anchors: [MF12-A37, MF12-A37b]}
+  - {id: MF12-E17, from: MF12-N15, to: MF12-N29, kind: call, status: conditional, condition: "existing PTE + FAULT_FLAG_WRITE + !pte_write", anchors: [MF12-A39b]}
   - {id: MF12-E18, from: MF12-N16, to: MF12-N17, kind: call, status: conditional, condition: "vma_is_anonymous", anchors: [MF12-A41]}
-  - {id: MF12-E19, from: MF12-N16, to: MF12-N18, kind: call, status: conditional, condition: "vm_ops nonNULL", anchors: [MF12-A41, MF12-A41a]}
+  - {id: MF12-E19, from: MF12-N16, to: MF12-N18, kind: call, status: conditional, condition: "vm_ops nonNULL", anchors: [MF12-A41, MF12-A41b]}
   - {id: MF12-E20, from: MF12-N18, to: MF12-N19, kind: call, status: conditional, condition: "!FAULT_FLAG_WRITE and vm_ops->fault nonNULL", anchors: [MF12-A87]}
-  - {id: MF12-E21, from: MF12-N18, to: MF12-N27, kind: call, status: conditional, condition: "FAULT_FLAG_WRITE && !VM_SHARED", anchors: [MF12-A87, MF12-A87a]}
-  - {id: MF12-E22, from: MF12-N18, to: MF12-N28, kind: call, status: conditional, condition: "FAULT_FLAG_WRITE && VM_SHARED; stops at while(1)", anchors: [MF12-A87a]}
+  - {id: MF12-E21, from: MF12-N18, to: MF12-N27, kind: call, status: conditional, condition: "FAULT_FLAG_WRITE && !VM_SHARED", anchors: [MF12-A87, MF12-A87b]}
+  - {id: MF12-E22, from: MF12-N18, to: MF12-N28, kind: call, status: conditional, condition: "FAULT_FLAG_WRITE && VM_SHARED; stops at while(1)", anchors: [MF12-A87b]}
   - {id: MF12-E23, from: MF12-N19, to: MF12-N20, kind: call, status: active, condition: "read fault attempts map_single_page first", anchors: [MF12-A86]}
   - {id: MF12-E24, from: MF12-N20, to: MF12-N21, kind: call, status: conditional_dynamic, condition: "vm_ops.map_single_page function pointer invoked", anchors: [MF12-A53b]}
   - {id: MF12-E25, from: MF12-N21, to: MF12-N22, kind: data, status: binding_generic_file, condition: "generic_file_vm_ops.map_single_page -> simple_filemap_map_page", anchors: [MF12-A66]}
@@ -96,8 +96,8 @@ edges:
   - {id: MF12-E27, from: MF12-N23, to: MF12-N24, kind: call, status: conditional_dynamic, condition: "vma->vm_ops->fault(vmf)", anchors: [MF12-A54]}
   - {id: MF12-E28, from: MF12-N24, to: MF12-N25, kind: data, status: binding_generic_file, condition: "generic_file_vm_ops.fault -> simple_filemap_fault", anchors: [MF12-A66]}
   - {id: MF12-E29, from: MF12-N19, to: MF12-N26, kind: call, status: conditional, condition: "fallback fault did not short circuit before finish_fault", anchors: [MF12-A52]}
-  - {id: MF12-E30, from: MF12-N27, to: MF12-N23, kind: call, status: conditional, condition: "private write COW branch; __do_fault(vmf)", anchors: [MF12-A57b]}
-  - {id: MF12-E31, from: MF12-N27, to: MF12-N26, kind: call, status: conditional, condition: "private write after copy_user_highpage", anchors: [MF12-A57d]}
+  - {id: MF12-E30, from: MF12-N27, to: MF12-N23, kind: call, status: conditional, condition: "private write COW branch; __do_fault(vmf)", anchors: [MF12-A57c]}
+  - {id: MF12-E31, from: MF12-N27, to: MF12-N26, kind: call, status: conditional, condition: "private write after copy_user_highpage", anchors: [MF12-A57e]}
   - {id: MF12-E32, from: MF12-N29, to: MF12-N30, kind: call, status: conditional, condition: "existing PTE, not shared/mayshare", anchors: [MF12-A60]}
   - {id: MF12-E33, from: MF12-N30, to: MF12-N37, kind: call, status: conditional, condition: "alloc new folio before possible set_pte_at", anchors: [MF12-A61]}
   - {id: MF12-E34, from: MF12-N17, to: MF12-N41, kind: call, status: conditional, condition: "anon write directly calls alloc_anon_folio; helper separately calls folio_prealloc", anchors: [MF12-A45]}
@@ -105,14 +105,14 @@ edges:
   - {id: MF12-E36, from: MF12-N17, to: MF12-N36, kind: data, status: active, condition: "writes PTE in setpte if pte_ptr", anchors: [MF12-A47]}
   - {id: MF12-E37, from: MF12-N22, to: MF12-N36, kind: data, status: active, condition: "map existing page cache page into PTE", anchors: [MF12-A84]}
   - {id: MF12-E38, from: MF12-N25, to: MF12-N35, kind: data, status: active, condition: "read/cache code indexes mapping->page_array", anchors: [MF12-A85]}
-  - {id: MF12-E39, from: MF12-N25, to: MF12-N38, kind: call, status: conditional_dynamic, condition: "file->f_op->read without return-value check", anchors: [MF12-A85a]}
+  - {id: MF12-E39, from: MF12-N25, to: MF12-N38, kind: call, status: conditional_dynamic, condition: "file->f_op->read without return-value check", anchors: [MF12-A85b]}
   - {id: MF12-E40, from: MF12-N26, to: MF12-N36, kind: data, status: conditional, condition: "build/write PTE after file fallback", anchors: [MF12-A56d]}
   - {id: MF12-E41, from: MF12-N30, to: MF12-N36, kind: data, status: conditional, condition: "private WP set_pte_at if PTE remains same", anchors: [MF12-A62g]}
   - {id: MF12-E42, from: MF12-N05, to: MF12-N40, kind: data, status: active, condition: "current->mm, no active !mm early check", anchors: [MF12-A06]}
-  - {id: MF12-E43, from: MF12-N06, to: MF12-N31, kind: data, status: active, condition: "scan VMA interval for containment", anchors: [MF12-A22a]}
+  - {id: MF12-E43, from: MF12-N06, to: MF12-N31, kind: data, status: active, condition: "scan VMA interval for containment", anchors: [MF12-A22b]}
   - {id: MF12-E44, from: MF12-N09, to: MF12-N32, kind: data, status: active, condition: "uses vma->vm_mm, pgd_offset, p4d/pud/pmd/PTE", anchors: [MF12-A32]}
   - {id: MF12-E45, from: MF12-N09, to: MF12-N36, kind: data, status: conditional, condition: "PTE pointer and orig snapshot", anchors: [MF12-A35]}
-  - {id: MF12-E46, from: MF12-N34, to: MF12-N33, kind: data, status: active, condition: "bind VMA vm_ops to generic_file_vm_ops", anchors: [MF12-A67a]}
+  - {id: MF12-E46, from: MF12-N34, to: MF12-N33, kind: data, status: active, condition: "bind VMA vm_ops to generic_file_vm_ops", anchors: [MF12-A67b]}
   - {id: MF12-E47, from: MF12-N33, to: MF12-N25, kind: data, status: active, condition: "fault pointer binding", anchors: [MF12-A66]}
   - {id: MF12-E48, from: MF12-N33, to: MF12-N22, kind: data, status: active, condition: "map_single_page pointer binding", anchors: [MF12-A66]}
   - {id: MF12-E49, from: MF12-N41, to: MF12-N37, kind: call, status: conditional, condition: "alloc_anon_folio delegates to folio_prealloc", anchors: [MF12-A88]}
