@@ -1,0 +1,1244 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-VMA-LIFETIME-14
+record_type: bounded_vma_interval_reference_release_facts
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+model_per_owner: GPT-6
+effort_per_owner: Extra
+backend_identity: unknown_or_not_attestable
+date: "2026-10-31"
+read_channel: connector
+source_pin: "time @ a039d9803ade"
+result_base: "2d67bea2fe59"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+edge_direction: {call: "caller -> callee; no collapsed intermediates", data: "consumer -> provider", init_order: "later consumer -> prerequisite"}
+scope: "mmap/munmap/brk split and VMA membership; limited file, PTE and mm cleanup"
+limits: ["VMA traversal helper initial NULL and strict predecessor constrain reachability","unsupported compile/hardware/ISA and concurrency are NOT_RUN","negative release observations only in selected function bodies","R13-S01/S02/S03 and ER01/ER02 must be used for prior cache facts"]
+nodes:
+  - {id: VL14-N01, label: "sys_munmap"}
+  - {id: VL14-N02, label: "__vm_munmap"}
+  - {id: VL14-N03, label: "simple_do_vma_munmap"}
+  - {id: VL14-N04, label: "find_vma_intersection"}
+  - {id: VL14-N05, label: "find_vma_prev_to_addr"}
+  - {id: VL14-N06, label: "mm_prev_vma (iterator)"}
+  - {id: VL14-N07, label: "vma_next_vma"}
+  - {id: VL14-N08, label: "__split_vma"}
+  - {id: VL14-N09, label: "vm_area_creat_dup"}
+  - {id: VL14-N10, label: "get_file"}
+  - {id: VL14-N11, label: "vm_ops.open dynamic"}
+  - {id: VL14-N12, label: "__simple_vma_adjust"}
+  - {id: VL14-N13, label: "__vma_link_to_list"}
+  - {id: VL14-N14, label: "__vma_unlink_from_list"}
+  - {id: VL14-N15, label: "mm.mm_mt VMA list"}
+  - {id: VL14-N16, label: "mm.map_count"}
+  - {id: VL14-N17, label: "VMA vm_start/end/pgoff"}
+  - {id: VL14-N18, label: "file_s f_count"}
+  - {id: VL14-N19, label: "VMA vm_file"}
+  - {id: VL14-N20, label: "vm_area_free"}
+  - {id: VL14-N21, label: "simple_unmap_region (no-op body)"}
+  - {id: VL14-N22, label: "PTE/pgtable and TLB"}
+  - {id: VL14-N23, label: "page_s/folio"}
+  - {id: VL14-N24, label: "page_array cache"}
+  - {id: VL14-N25, label: "simple_mmap_region"}
+  - {id: VL14-N26, label: "vm_area_alloc"}
+  - {id: VL14-N27, label: "vma_init"}
+  - {id: VL14-N28, label: "call_mmap (dynamic)"}
+  - {id: VL14-N29, label: "simple_vma_merge"}
+  - {id: VL14-N30, label: "vm_mmap_pgoff"}
+  - {id: VL14-N31, label: "sys_mmap"}
+  - {id: VL14-N32, label: "sys_brk"}
+  - {id: VL14-N33, label: "do_brk_flags"}
+  - {id: VL14-N34, label: "simple_munmap_vma_range"}
+  - {id: VL14-N35, label: "do_exit"}
+  - {id: VL14-N36, label: "mmput"}
+  - {id: VL14-N37, label: "__mmput"}
+  - {id: VL14-N38, label: "exec_mmap"}
+  - {id: VL14-N39, label: "dup_mmap"}
+  - {id: VL14-N40, label: "fput"}
+  - {id: VL14-N41, label: "vm_ops.close dynamic"}
+  - {id: VL14-N42, label: "__vma_intersect_with_range"}
+  - {id: VL14-N43, label: "mm_next_vma (iterator)"}
+edges:
+  - {id: VL14-E01, from: VL14-N01, to: VL14-N02, kind: call, status: active, condition: "sys_munmap invokes __vm_munmap", anchors: [VL14-A003]}
+  - {id: VL14-E02, from: VL14-N02, to: VL14-N03, kind: call, status: active, condition: "no guard in __vm_munmap; start+len computed", anchors: [VL14-A007]}
+  - {id: VL14-E03, from: VL14-N03, to: VL14-N04, kind: call, status: active, condition: "find first intersection", anchors: [VL14-A009]}
+  - {id: VL14-E04, from: VL14-N04, to: VL14-N05, kind: call, status: active, condition: "requires a strict predecessor before testing next", anchors: [VL14-A064]}
+  - {id: VL14-E05, from: VL14-N05, to: VL14-N06, kind: call, status: conditional, condition: "top-down VMA iterator macro calls mm_prev_vma", anchors: [VL14-A061, VL14-A072]}
+  - {id: VL14-E06, from: VL14-N04, to: VL14-N07, kind: call, status: conditional, condition: "predecessor nonNULL only then vma_next_vma", anchors: [VL14-A065]}
+  - {id: VL14-E07, from: VL14-N04, to: VL14-N42, kind: call, status: conditional, condition: "only if candidate next VMA exists", anchors: [VL14-A065]}
+  - {id: VL14-E08, from: VL14-N03, to: VL14-N08, kind: call, status: conditional, condition: "split first when start > vma.vm_start", anchors: [VL14-A011]}
+  - {id: VL14-E09, from: VL14-N03, to: VL14-N08, kind: call, status: conditional, condition: "split last if end within containing last", anchors: [VL14-A015]}
+  - {id: VL14-E10, from: VL14-N08, to: VL14-N09, kind: call, status: active, condition: "duplicate VMA allocation then shallow struct copy", anchors: [VL14-A024, VL14-A021]}
+  - {id: VL14-E11, from: VL14-N08, to: VL14-N10, kind: call, status: conditional, condition: "new.vm_file nonNULL get_file", anchors: [VL14-A026]}
+  - {id: VL14-E12, from: VL14-N08, to: VL14-N11, kind: call, status: conditional_dynamic, condition: "new.vm_ops.open if function pointer nonNULL", anchors: [VL14-A027]}
+  - {id: VL14-E13, from: VL14-N08, to: VL14-N12, kind: call, status: conditional, condition: "adjust old VMA in either split branch", anchors: [VL14-A029, VL14-A032]}
+  - {id: VL14-E14, from: VL14-N08, to: VL14-N13, kind: call, status: conditional, condition: "insert copied fragment relative to old", anchors: [VL14-A030, VL14-A033]}
+  - {id: VL14-E15, from: VL14-N12, to: VL14-N14, kind: call, status: conditional, condition: "unlink wholly overlapped next VMAs", anchors: [VL14-A037]}
+  - {id: VL14-E16, from: VL14-N03, to: VL14-N07, kind: call, status: conditional, condition: "vma_next_vma(prev) in detachment loop", anchors: [VL14-A017]}
+  - {id: VL14-E17, from: VL14-N03, to: VL14-N14, kind: call, status: conditional, condition: "unlink node when end condition passes", anchors: [VL14-A018]}
+  - {id: VL14-E18, from: VL14-N14, to: VL14-N15, kind: data, status: active, condition: "unlink consumes mm.mm_mt node", anchors: [VL14-A085]}
+  - {id: VL14-E19, from: VL14-N14, to: VL14-N16, kind: data, status: active, condition: "updates map_count", anchors: [VL14-A084]}
+  - {id: VL14-E20, from: VL14-N13, to: VL14-N15, kind: data, status: active, condition: "link puts VMA list node into mm.mt", anchors: [VL14-A080, VL14-A081]}
+  - {id: VL14-E21, from: VL14-N13, to: VL14-N16, kind: data, status: active, condition: "link increments map_count", anchors: [VL14-A082]}
+  - {id: VL14-E22, from: VL14-N12, to: VL14-N17, kind: data, status: active, condition: "mutates vm_start,vm_end,vm_pgoff", anchors: [VL14-A035, VL14-A036]}
+  - {id: VL14-E23, from: VL14-N09, to: VL14-N17, kind: data, status: active, condition: "new=*orig shallow copies fields", anchors: [VL14-A021]}
+  - {id: VL14-E24, from: VL14-N09, to: VL14-N19, kind: data, status: active, condition: "shallow copy of vm_file pointer; separate ref required", anchors: [VL14-A021, VL14-A026]}
+  - {id: VL14-E25, from: VL14-N25, to: VL14-N34, kind: call, status: active, condition: "overwriting mmap routes via simple_munmap_vma_range", anchors: [VL14-A086]}
+  - {id: VL14-E26, from: VL14-N34, to: VL14-N03, kind: call, status: active, condition: "range helper delegates to simple_do_vma_munmap", anchors: [VL14-A054]}
+  - {id: VL14-E27, from: VL14-N25, to: VL14-N29, kind: call, status: conditional, condition: "try merge after removal helper", anchors: [VL14-A047]}
+  - {id: VL14-E28, from: VL14-N29, to: VL14-N04, kind: call, status: active, condition: "merger finds intersection", anchors: [VL14-A059]}
+  - {id: VL14-E29, from: VL14-N29, to: VL14-N12, kind: call, status: conditional, condition: "adjust existing merged VMA", anchors: [VL14-A060]}
+  - {id: VL14-E30, from: VL14-N25, to: VL14-N26, kind: call, status: conditional, condition: "new VMA allocation when merge fails", anchors: [VL14-A041]}
+  - {id: VL14-E31, from: VL14-N26, to: VL14-N27, kind: call, status: conditional, condition: "vm_area_alloc uses vma_init if allocated", anchors: [VL14-A039]}
+  - {id: VL14-E32, from: VL14-N25, to: VL14-N10, kind: call, status: conditional, condition: "file-backed mmap get_file", anchors: [VL14-A044]}
+  - {id: VL14-E33, from: VL14-N25, to: VL14-N28, kind: call, status: conditional_dynamic, condition: "file mapping calls call_mmap(file,vma)", anchors: [VL14-A045]}
+  - {id: VL14-E34, from: VL14-N25, to: VL14-N13, kind: call, status: conditional, condition: "new mapping path simple_vma_link then __vma_link_to_list", anchors: [VL14-A046]}
+  - {id: VL14-E35, from: VL14-N25, to: VL14-N40, kind: call, status: conditional, condition: "mmap failure/merge cleanup fput", anchors: [VL14-A050, VL14-A048]}
+  - {id: VL14-E36, from: VL14-N25, to: VL14-N20, kind: call, status: conditional, condition: "mmap error/merge frees allocated VMA", anchors: [VL14-A052, VL14-A048]}
+  - {id: VL14-E37, from: VL14-N25, to: VL14-N21, kind: call, status: conditional, condition: "mmap error path invokes no-op simple_unmap_region", anchors: [VL14-A051]}
+  - {id: VL14-E38, from: VL14-N25, to: VL14-N41, kind: call, status: conditional_dynamic, condition: "mmap error invokes VM ops close if present", anchors: [VL14-A049]}
+  - {id: VL14-E39, from: VL14-N31, to: VL14-N30, kind: call, status: active, condition: "sys_mmap calls vm_mmap_pgoff after fget", anchors: [VL14-A006]}
+  - {id: VL14-E40, from: VL14-N30, to: VL14-N25, kind: call, status: active, condition: "vm_mmap_pgoff -> do_mmap -> simple_mmap_region; intermediate do_mmap not yet node", anchors: [VL14-A088]}
+  - {id: VL14-E41, from: VL14-N32, to: VL14-N03, kind: call, status: conditional, condition: "brk shrink invokes simple_do_vma_munmap", anchors: [VL14-A057]}
+  - {id: VL14-E42, from: VL14-N33, to: VL14-N34, kind: call, status: conditional, condition: "do_brk_flags invokes simple_munmap_vma_range", anchors: [VL14-A058]}
+  - {id: VL14-E43, from: VL14-N36, to: VL14-N37, kind: call, status: conditional, condition: "mmput when mm_users decrement zero", anchors: [VL14-A101]}
+  - {id: VL14-E44, from: VL14-N38, to: VL14-N36, kind: call, status: conditional, condition: "exec_mmap old_mm path uses mmput", anchors: [VL14-A103]}
+  - {id: VL14-E45, from: VL14-N39, to: VL14-N09, kind: call, status: conditional, condition: "dup_mmap duplicates each VMA", anchors: [VL14-A097]}
+  - {id: VL14-E46, from: VL14-N39, to: VL14-N10, kind: call, status: conditional, condition: "dup_mmap gets file ref for duplicate", anchors: [VL14-A098]}
+  - {id: VL14-E47, from: VL14-N39, to: VL14-N15, kind: data, status: conditional, condition: "dup_mmap links into child's mm.mt", anchors: [VL14-A099]}
+  - {id: VL14-E48, from: VL14-N37, to: VL14-N22, kind: data, status: commented, condition: "__mmput exit_mmap() is commented, not actual unmap", anchors: [VL14-A102]}
+  - {id: VL14-E49, from: VL14-N35, to: VL14-N36, kind: data, status: commented, condition: "do_exit exit_mm commented; no actual mmput here", anchors: [VL14-A104]}
+  - {id: VL14-E50, from: VL14-N21, to: VL14-N22, kind: data, status: commented, condition: "page-table unmap/free/TLB operations are all comments", anchors: [VL14-A055, VL14-A056]}
+  - {id: VL14-E51, from: VL14-N40, to: VL14-N18, kind: data, status: active, condition: "fput decrements file count", anchors: [VL14-A094]}
+  - {id: VL14-E52, from: VL14-N10, to: VL14-N18, kind: data, status: active, condition: "get_file increments file count", anchors: [VL14-A093]}
+  - {id: VL14-E53, from: VL14-N25, to: VL14-N19, kind: data, status: active, condition: "new VMA vm_file set to held file ref", anchors: [VL14-A044]}
+  - {id: VL14-E54, from: VL14-N03, to: VL14-N17, kind: data, status: active, condition: "split/unlink decisions based on VMA intervals", anchors: [VL14-A011, VL14-A014]}
+  - {id: VL14-E55, from: VL14-N06, to: VL14-N15, kind: data, status: active, condition: "top-down iterator accesses mm.mt", anchors: [VL14-A061, VL14-A079]}
+  - {id: VL14-E56, from: VL14-N43, to: VL14-N15, kind: data, status: active, condition: "forward iterator uses list head", anchors: [VL14-A077]}
+case_matrix:
+  - id: VL14-M01
+    input: "no overlapping VMA"
+    source_result: "find_vma_intersection returns NULL under valid iterator premise; 0"
+    limits: "no VMA/PTE/file side effects in direct body"
+    anchors: [VL14-A010, VL14-A019]
+  - id: VL14-M02
+    input: "target lies in first list VMA, no strict predecessor"
+    source_result: "find_vma_prev_to_addr NULL -> intersection NULL"
+    limits: "cannot claim first VMA removed"
+    anchors: [VL14-A061, VL14-A065]
+  - id: VL14-M03
+    input: "target begins exactly where previous VMA ends"
+    source_result: "strict vm_end < start excludes adjacency predecessor; may test wrong candidate"
+    limits: "skip despite intersecting following VMA"
+    anchors: [VL14-A061, VL14-A065]
+  - id: VL14-M04
+    input: "whole VMA to remove, valid prior and forward traversal"
+    source_result: "loop __vma_unlink_from_list reduces map_count, detaches node"
+    limits: "no vm_area_free,fput,vm_ops.close/PTE invalidation in this path"
+    anchors: [VL14-A017, VL14-A018, VL14-A084]
+  - id: VL14-M05
+    input: "prefix remove of existing VMA, if intersection found"
+    source_result: "end split new_below=1 creates lower fragment then detaches it"
+    limits: "old original retained above end; pgoff adjust is nonstandard"
+    anchors: [VL14-A014, VL14-A015, VL14-A029, VL14-A018]
+  - id: VL14-M06
+    input: "suffix remove of existing VMA, if intersection found"
+    source_result: "start split new_below=1, new lower fragment retained, old upper detached"
+    limits: "old pgoff adjustment uses (start-vm_pgoff)>>PAGE_SHIFT"
+    anchors: [VL14-A011, VL14-A029, VL14-A036]
+  - id: VL14-M07
+    input: "hole in VMA, both split allocations succeed"
+    source_result: "first split copies lower part, second splits upper at end, detaches middle"
+    limits: "success conditional on valid neighbors/list and usable source offsets"
+    anchors: [VL14-A011, VL14-A015, VL14-A018]
+  - id: VL14-M08
+    input: "span several VMA, valid predecessor"
+    source_result: "start/end split conditionally, unlink fully covered nodes in loop"
+    limits: "unlinked nodes neither freed nor file/page references returned here"
+    anchors: [VL14-A017, VL14-A018]
+  - id: VL14-M09
+    input: "end equals a VMA start"
+    source_result: "simple_find_vma(mm,end) may find next VMA; end>next.start false"
+    limits: "no end split; detachment <= end condition as coded"
+    anchors: [VL14-A014, VL14-A015]
+  - id: VL14-M10
+    input: "end equals mapped VMA end"
+    source_result: "simple_find_vma(mm,end) may be NULL or next VMA; no split if next starts=end"
+    limits: "proper outcome depends on previous match and traversal"
+    anchors: [VL14-A014, VL14-A015]
+  - id: VL14-M11
+    input: "range start>end from unsigned overflow"
+    source_result: "find_vma_intersection while(start>end) before lookup"
+    limits: "not defined fixed errno, loops if it reaches that C check"
+    anchors: [VL14-A007, VL14-A063]
+  - id: VL14-M12
+    input: "zero len or unaligned start"
+    source_result: "__vm_munmap lacks local zero/alignment checks; start+len passed"
+    limits: "possible false intersection or splitting, no portable contract"
+    anchors: [VL14-A003, VL14-A007]
+  - id: VL14-M13
+    input: "first split allocation fails"
+    source_result: "__split_vma returns -ENOMEM before get_file/list changes"
+    limits: "simple_do_vma_munmap returns error when reached"
+    anchors: [VL14-A025, VL14-A012]
+  - id: VL14-M14
+    input: "second split allocation fails after first succeeds"
+    source_result: "first split/possible get_file/VM open/list mutation persist"
+    limits: "no rollback on end_split_failed label"
+    anchors: [VL14-A011, VL14-A016, VL14-A020]
+  - id: VL14-M15
+    input: "split when new.vm_file nonNULL"
+    source_result: "shallow copy then get_file and vm_ops.open if bound"
+    limits: "new fragment requires eventual close/fput not present in unlink"
+    anchors: [VL14-A021, VL14-A026, VL14-A027]
+  - id: VL14-M16
+    input: "first VMA predecessor NULL used in vma_next_vma"
+    source_result: "vma_next_vma(vma) while(vma==NULL) loop"
+    limits: "if reached, no normal return; direct successful path normally requires predecessor"
+    anchors: [VL14-A075, VL14-A013]
+  - id: VL14-M17
+    input: "mmap replaces overlapping range"
+    source_result: "simple_munmap_vma_range before vma merge/new allocation"
+    limits: "new vma allocation failure doesn't restore removed intervals"
+    anchors: [VL14-A086, VL14-A041]
+  - id: VL14-M18
+    input: "brk shrink"
+    source_result: "mm->brk updated before simple_do_vma_munmap"
+    limits: "unmap error does not roll back mm->brk in this body"
+    anchors: [VL14-A057]
+  - id: VL14-M19
+    input: "exec mm release"
+    source_result: "exec_mmap -> mmput(old_mm) when valid; __mmput exit_mmap commented"
+    limits: "old VMAs not explicitly cleared by this mmput"
+    anchors: [VL14-A103, VL14-A102]
+  - id: VL14-M20
+    input: "do_exit"
+    source_result: "exit_mm commented, no direct mmput through this statement"
+    limits: "do not infer task exit fully frees VMA/page tables"
+    anchors: [VL14-A104]
+  - id: VL14-M21
+    input: "mmap file-backed new VMA success"
+    source_result: "get_file, call_mmap, insertion"
+    limits: "file ref for VMA; no automatic page ref"
+    anchors: [VL14-A044, VL14-A045, VL14-A046]
+  - id: VL14-M22
+    input: "mmap failure after earlier unmap"
+    source_result: "conditional fput/free VMA on failure; prior overlaps already unlinked"
+    limits: "failure is not transactional rollback"
+    anchors: [VL14-A086, VL14-A050, VL14-A052]
+  - id: VL14-M23
+    input: "VMA merge adjusts over neighbor"
+    source_result: "__simple_vma_adjust may unlink overlapping next without free/fput"
+    limits: "possible VMA ref/object lifetime gap even outside munmap"
+    anchors: [VL14-A037, VL14-A060]
+states:
+  - id: VL14-S01
+    stage: "VMA allocated"
+    source_fact: "kmem_cache_alloc and vma_init zero-fields, dummy_vm_ops"
+    limits: "not linked or file-ref yet"
+    anchors: [VL14-A039, VL14-A069, VL14-A070]
+  - id: VL14-S02
+    stage: "file-backed VMA"
+    source_fact: "start/end/flags/pgoff assigned, vm_file=get_file"
+    limits: "file count++ distinct from pages"
+    anchors: [VL14-A042, VL14-A043, VL14-A044]
+  - id: VL14-S03
+    stage: "VMA linked"
+    source_fact: "__vma_link_to_list adds list node and map_count++"
+    limits: "not PTE population"
+    anchors: [VL14-A080, VL14-A082]
+  - id: VL14-S04
+    stage: "candidate lookup"
+    source_fact: "find_vma_prev_to_addr uses strict earlier end and next VMA"
+    limits: "cannot guarantee first or adjacent target"
+    anchors: [VL14-A061, VL14-A065]
+  - id: VL14-S05
+    stage: "split allocation"
+    source_fact: "vm_area_creat_dup shallow copies orig; new linked separately"
+    limits: "split gets file ref only if vm_file nonNULL"
+    anchors: [VL14-A021, VL14-A026]
+  - id: VL14-S06
+    stage: "split below"
+    source_fact: "new ends at addr; old starts at addr; pgoff adjusted"
+    limits: "offset formula not byte delta from old start"
+    anchors: [VL14-A028, VL14-A036]
+  - id: VL14-S07
+    stage: "split above"
+    source_fact: "new starts at addr and offset adds page delta; old adjust modifies pgoff as well"
+    limits: "may modify old pgoff unexpectedly"
+    anchors: [VL14-A031, VL14-A036]
+  - id: VL14-S08
+    stage: "middle unlink"
+    source_fact: "__vma_unlink_from_list decrements map_count and removes list node"
+    limits: "does not free VMA, file ref, PTE or pages"
+    anchors: [VL14-A084, VL14-A085]
+  - id: VL14-S09
+    stage: "first split success, second fail"
+    source_fact: "prefix split file ref/open/list changes remain"
+    limits: "failure path no rollback"
+    anchors: [VL14-A011, VL14-A016, VL14-A020]
+  - id: VL14-S10
+    stage: "mmap collision overwrite"
+    source_fact: "unmap attempt before vma alloc/merge"
+    limits: "later allocation failure may leave previous interval unlinked"
+    anchors: [VL14-A086, VL14-A041]
+  - id: VL14-S11
+    stage: "mmap failure cleanup"
+    source_fact: "fput(vm_file), vm_area_free, call simple_unmap_region"
+    limits: "unmap body all relevant operations commented"
+    anchors: [VL14-A050, VL14-A052, VL14-A055]
+  - id: VL14-S12
+    stage: "exec old-mm put"
+    source_fact: "mmput triggers __mmput if mm_users zero"
+    limits: "exit_mmap disabled, VMAs remain unfreed by function body"
+    anchors: [VL14-A103, VL14-A101, VL14-A102]
+  - id: VL14-S13
+    stage: "exit task"
+    source_fact: "do_exit has exit_mm commented"
+    limits: "no VMA release linked here"
+    anchors: [VL14-A104]
+ownership:
+  - id: VL14-O01
+    holder: "mm.mm_mt"
+    object: "VMA list & map_count"
+    reference_effect: "link/unlink update list and count"
+    limits: "not VMA or page release"
+    anchors: [VL14-A082, VL14-A084]
+  - id: VL14-O02
+    holder: "VMA struct"
+    object: "kmem_cache_alloc / vm_area_free"
+    reference_effect: "free occurs in mmap error/merge paths"
+    limits: "not called from simple_do_vma_munmap unlink loop"
+    anchors: [VL14-A039, VL14-A040, VL14-A018]
+  - id: VL14-O03
+    holder: "VMA.vm_file"
+    object: "get_file on file-backed new mapping"
+    reference_effect: "fput in mmap error, absent unlink"
+    limits: "file ref != page ref"
+    anchors: [VL14-A044, VL14-A050, VL14-A018]
+  - id: VL14-O04
+    holder: "VMA copied by split"
+    object: "new=*orig (borrows fields), get_file when nonNULL"
+    reference_effect: "vm_ops.open conditional only"
+    limits: "does not automatically copy physical pages/refcounts"
+    anchors: [VL14-A021, VL14-A026, VL14-A027]
+  - id: VL14-O05
+    holder: "vm_ops.open/close"
+    object: "open invoked conditionally on split, close only selected mmap error"
+    reference_effect: "no close in VMA munmap unlink loop"
+    limits: "SPLIT_OPEN VMA_ERROR_CLOSE UNLINK_ACT"
+    anchors: [VL14-A027, VL14-A049, VL14-A018]
+  - id: VL14-O06
+    holder: "PTE/pgtable"
+    object: "simple_unmap_region body has only commented unmap/free/TLB"
+    reference_effect: "no active function called from munmap loop"
+    limits: "PTE presence unaffected by direct list-only code"
+    anchors: [VL14-A055, VL14-A056, VL14-A018]
+  - id: VL14-O07
+    holder: "file.f_count"
+    object: "get_file increments, fput decrements and maybe frees file"
+    reference_effect: "no change from mere VMA unlink"
+    limits: "FILE_GET FILE_FPUT UNLINK_ACT"
+    anchors: [VL14-A093, VL14-A094, VL14-A018]
+  - id: VL14-O08
+    holder: "source page/folio"
+    object: "page cache pages and PTE separate"
+    reference_effect: "no put_page/folio_put in simple_do_vma_munmap"
+    limits: "13 R13-S03 source/COW puts belong to fault paths"
+    anchors: [VL14-A018, VL14-A055]
+  - id: VL14-O09
+    holder: "mm_users mm"
+    object: "mmput triggers __mmput at zero users"
+    reference_effect: "__mmput exit_mmap commented"
+    limits: "not a VMA cleanup guarantee"
+    anchors: [VL14-A101, VL14-A102]
+  - id: VL14-O10
+    holder: "clone VMA"
+    object: "dup_mmap copies and get_file when nonNULL"
+    reference_effect: "separate from split path, vm_ops.open commented there"
+    limits: "no proof of full child VMA release"
+    anchors: [VL14-A097, VL14-A098, VL14-A100]
+effects:
+  - id: VL14-X01
+    actor: "vm_area_alloc"
+    description: "alloc and vma_init zero/dummy ops"
+    anchors: [VL14-A039, VL14-A069]
+  - id: VL14-X02
+    actor: "simple_mmap_region"
+    description: "populate bounds + file get, link VMA on success"
+    anchors: [VL14-A042, VL14-A044, VL14-A046]
+  - id: VL14-X03
+    actor: "vm_area_creat_dup"
+    description: "shallow copy VMA then reset list links"
+    anchors: [VL14-A021, VL14-A022]
+  - id: VL14-X04
+    actor: "__split_vma"
+    description: "get_file/open conditionally; insert split part and adjust old range"
+    anchors: [VL14-A026, VL14-A027, VL14-A030, VL14-A033]
+  - id: VL14-X05
+    actor: "__simple_vma_adjust"
+    description: "mutate bounds/pgoff and may unlink overlapped successor"
+    anchors: [VL14-A035, VL14-A036, VL14-A037]
+  - id: VL14-X06
+    actor: "__vma_link_to_list"
+    description: "adds list node/count and map_count++"
+    anchors: [VL14-A080, VL14-A082]
+  - id: VL14-X07
+    actor: "__vma_unlink_from_list"
+    description: "map_count-- and node deletion; no object free"
+    anchors: [VL14-A084, VL14-A085]
+  - id: VL14-X08
+    actor: "simple_do_vma_munmap"
+    description: "candidate, split, unlink or returns error"
+    anchors: [VL14-A009, VL14-A011, VL14-A015, VL14-A018, VL14-A019]
+  - id: VL14-X09
+    actor: "simple_mmap_region failure"
+    description: "fput/free VMA; simple_unmap_region body no page cleanup"
+    anchors: [VL14-A050, VL14-A052, VL14-A055]
+  - id: VL14-X10
+    actor: "brk shrink"
+    description: "mm.brk assigned before munmap call; failure not rolled back"
+    anchors: [VL14-A057]
+  - id: VL14-X11
+    actor: "mmput"
+    description: "mm_users-- then __mmput whose exit_mmap is commented"
+    anchors: [VL14-A101, VL14-A102]
+  - id: VL14-X12
+    actor: "do_exit"
+    description: "exit_mm remains commented"
+    anchors: [VL14-A104]
+anchors:
+  - id: VL14-A001
+    path: "mykernel/arch/x86_64/include/asm/unistd_64.h"
+    symbol: "syscall_numbers"
+    observed_lines: [15, 17]
+    quote: |
+      
+      	#define __NR_mprotect		10
+      	#define __NR_munmap			11
+  - id: VL14-A002
+    path: "mykernel/arch/x86_64/include/asm/syscalls_64.h"
+    symbol: "syscall_table"
+    observed_lines: [13, 15]
+    quote: |
+      __SYSCALL(__NR_mprotect, sys_mprotect)
+      __SYSCALL(__NR_munmap, sys_munmap)
+      __SYSCALL(__NR_brk, sys_brk)
+  - id: VL14-A003
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "sys_munmap"
+    observed_lines: [1344, 1346]
+    quote: |
+      	// addr = untagged_addr(addr);
+      	return __vm_munmap(addr, len);
+      }
+  - id: VL14-A004
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "sys_mmap"
+    observed_lines: [1316, 1318]
+    quote: |
+      {
+      	if (off & ~PAGE_MASK)
+      		return -EINVAL;
+  - id: VL14-A005
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "sys_mmap"
+    observed_lines: [1326, 1328]
+    quote: |
+      		// audit_mmap_fd(fd, flags);
+      		file = fget(fd);
+      		if (!file)
+  - id: VL14-A006
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "sys_mmap"
+    observed_lines: [1336, 1338]
+    quote: |
+      out_fput:
+      	if (file != NULL)
+      		fput(file);
+  - id: VL14-A007
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__vm_munmap"
+    observed_lines: [1177, 1179]
+    quote: |
+      
+      	ret = simple_do_vma_munmap(mm, start, start + len);
+      	// if (ret || !unlock)
+  - id: VL14-A008
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__vm_munmap"
+    observed_lines: [1181, 1183]
+    quote: |
+      
+      	return ret;
+      }
+  - id: VL14-A009
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1130, 1132]
+    quote: |
+      	/* Find the first overlapping VMA where start < vma->vm_end */
+      	vma = find_vma_intersection(mm, start, end);
+      	if (vma == NULL)
+  - id: VL14-A010
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1132, 1134]
+    quote: |
+      	if (vma == NULL)
+      		goto end;
+      
+  - id: VL14-A011
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1139, 1141]
+    quote: |
+      	if (start > vma->vm_start) {
+      		error = __split_vma(mm, vma, start, 1);
+      		if (error != ENOERR)
+  - id: VL14-A012
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1141, 1143]
+    quote: |
+      		if (error != ENOERR)
+      			goto start_split_failed;
+      	}
+  - id: VL14-A013
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1143, 1145]
+    quote: |
+      	}
+      	prev = vma_prev_vma(vma);
+      
+  - id: VL14-A014
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1146, 1148]
+    quote: |
+      	/* Does it split the last one? */
+      	last = simple_find_vma(mm, end);
+      	if (last != NULL && end > last->vm_start) {
+  - id: VL14-A015
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1148, 1150]
+    quote: |
+      	if (last != NULL && end > last->vm_start) {
+      		error = __split_vma(mm, last, end, 1);
+      		if (error != ENOERR)
+  - id: VL14-A016
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1150, 1152]
+    quote: |
+      		if (error != ENOERR)
+      			goto end_split_failed;
+      	}
+  - id: VL14-A017
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1155, 1157]
+    quote: |
+      	vma_s *tmp;
+      	while ((tmp = vma_next_vma(prev)) != NULL && tmp->vm_end <= end) {
+      		BUG_ON(tmp == last);
+  - id: VL14-A018
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1157, 1159]
+    quote: |
+      		BUG_ON(tmp == last);
+      		__vma_unlink_from_list(mm, tmp);
+      	}
+  - id: VL14-A019
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1160, 1162]
+    quote: |
+      end:
+      	return error;
+      
+  - id: VL14-A020
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_do_vma_munmap"
+    observed_lines: [1164, 1166]
+    quote: |
+      start_split_failed:
+      	// validate_mm(mm);
+      	goto end;
+  - id: VL14-A021
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vm_area_creat_dup"
+    observed_lines: [45, 47]
+    quote: |
+      		// *new = data_race(*orig);
+      		*new = *orig;
+      		// INIT_LIST_HEAD(&new->anon_vma_chain);
+  - id: VL14-A022
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vm_area_creat_dup"
+    observed_lines: [47, 49]
+    quote: |
+      		// INIT_LIST_HEAD(&new->anon_vma_chain);
+      		INIT_LIST_S(&new->list);
+      		// dup_anon_vma_name(orig, new);
+  - id: VL14-A023
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vm_area_creat_dup"
+    observed_lines: [41, 43]
+    quote: |
+      {
+      	vma_s *new = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
+      
+  - id: VL14-A024
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1093, 1095]
+    quote: |
+      __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below) {
+      	vma_s *new = vm_area_creat_dup(vma);
+      	if (!new)
+  - id: VL14-A025
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1095, 1097]
+    quote: |
+      	if (!new)
+      		return -ENOMEM;
+      
+  - id: VL14-A026
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1098, 1100]
+    quote: |
+      	if (new->vm_file)
+      		get_file(new->vm_file);
+      
+  - id: VL14-A027
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1101, 1103]
+    quote: |
+      	if (new->vm_ops && new->vm_ops->open)
+      		new->vm_ops->open(new);
+      
+  - id: VL14-A028
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1104, 1106]
+    quote: |
+      	if (new_below != 0) {
+      		new->vm_end = addr;
+      		__simple_vma_adjust(vma, addr, vma->vm_end);
+  - id: VL14-A029
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1105, 1107]
+    quote: |
+      		new->vm_end = addr;
+      		__simple_vma_adjust(vma, addr, vma->vm_end);
+      		__vma_link_to_list(mm, new, vma_prev_vma(vma));
+  - id: VL14-A030
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1106, 1108]
+    quote: |
+      		__simple_vma_adjust(vma, addr, vma->vm_end);
+      		__vma_link_to_list(mm, new, vma_prev_vma(vma));
+      	} else {
+  - id: VL14-A031
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1109, 1111]
+    quote: |
+      		new->vm_start = addr;
+      		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
+      		__simple_vma_adjust(vma, vma->vm_start, addr);
+  - id: VL14-A032
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1110, 1112]
+    quote: |
+      		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
+      		__simple_vma_adjust(vma, vma->vm_start, addr);
+      		__vma_link_to_list(mm, new, vma);
+  - id: VL14-A033
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1111, 1113]
+    quote: |
+      		__simple_vma_adjust(vma, vma->vm_start, addr);
+      		__vma_link_to_list(mm, new, vma);
+      	}
+  - id: VL14-A034
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__split_vma"
+    observed_lines: [1113, 1115]
+    quote: |
+      	}
+      	return -ENOERR;
+      }
+  - id: VL14-A035
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__simple_vma_adjust"
+    observed_lines: [205, 207]
+    quote: |
+      	// adjust vma's bounds
+      	vma->vm_start = start;
+      	vma->vm_pgoff += (start - vma->vm_pgoff) >> PAGE_SHIFT;
+  - id: VL14-A036
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__simple_vma_adjust"
+    observed_lines: [206, 208]
+    quote: |
+      	vma->vm_start = start;
+      	vma->vm_pgoff += (start - vma->vm_pgoff) >> PAGE_SHIFT;
+      	vma->vm_end = end;
+  - id: VL14-A037
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__simple_vma_adjust"
+    observed_lines: [211, 213]
+    quote: |
+      	while ((next = vma_next_vma(vma))!= NULL && end >= next->vm_end) {
+      		__vma_unlink_from_list(mm, next);
+      	}
+  - id: VL14-A038
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "__simple_vma_adjust"
+    observed_lines: [215, 217]
+    quote: |
+      	if (next != NULL && end > next->vm_start) {
+      		next->vm_pgoff += (end - next->vm_start) >> PAGE_SHIFT;
+      		next->vm_start = end;
+  - id: VL14-A039
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vm_area_alloc"
+    observed_lines: [32, 34]
+    quote: |
+      {
+      	vma_s *vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
+      	if (vma)
+  - id: VL14-A040
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vm_area_free"
+    observed_lines: [57, 59]
+    quote: |
+      	// free_anon_vma_name(vma);
+      	kmem_cache_free(vm_area_cachep, vma);
+      }
+  - id: VL14-A041
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [678, 680]
+    quote: |
+      	 */
+      	vma = vm_area_alloc(mm);
+      	if (vma == NULL) {
+  - id: VL14-A042
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [684, 686]
+    quote: |
+      
+      	vma->vm_start = addr;
+      	vma->vm_end = addr + len;
+  - id: VL14-A043
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [688, 690]
+    quote: |
+      	vma->vm_page_prot = vm_get_page_prot(vm_flags);
+      	vma->vm_pgoff = pgoff;
+      
+  - id: VL14-A044
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [691, 693]
+    quote: |
+      	if (file) {
+      		vma->vm_file = get_file(file);
+      		error = call_mmap(file, vma);
+  - id: VL14-A045
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [692, 694]
+    quote: |
+      		vma->vm_file = get_file(file);
+      		error = call_mmap(file, vma);
+      		if (error != -ENOERR)
+  - id: VL14-A046
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [745, 747]
+    quote: |
+      
+      	simple_vma_link(mm, vma, prev);
+      	/* Once vma denies write, undo our temporary denial count */
+  - id: VL14-A047
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [668, 670]
+    quote: |
+      	 */
+      	vma = simple_vma_merge(mm, prev, addr,
+      			addr + len, vm_flags, file, pgoff);
+  - id: VL14-A048
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [727, 729]
+    quote: |
+      				 */
+      				fput(vma->vm_file);
+      				vm_area_free(vma);
+  - id: VL14-A049
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [778, 780]
+    quote: |
+      close_and_free_vma:
+      	if (file && vma->vm_ops && vma->vm_ops->close)
+      		vma->vm_ops->close(vma);
+  - id: VL14-A050
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [782, 784]
+    quote: |
+      unmap_and_free_vma:
+      	fput(vma->vm_file);
+      	vma->vm_file = NULL;
+  - id: VL14-A051
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [786, 788]
+    quote: |
+      	/* Undo any partial mapping done by a device driver. */
+      	simple_unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
+      	if (vm_flags & VM_SHARED)
+  - id: VL14-A052
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [790, 792]
+    quote: |
+      free_vma:
+      	vm_area_free(vma);
+      unacct_error:
+  - id: VL14-A053
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_munmap_vma_range"
+    observed_lines: [147, 149]
+    quote: |
+      simple_munmap_vma_range(mm_s *mm, ulong start, ulong len, vma_s **pprev) {
+      	*pprev = find_vma_prev_to_addr(mm, start);
+      	return simple_do_vma_munmap(mm, start, start + len);
+  - id: VL14-A054
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_munmap_vma_range"
+    observed_lines: [148, 150]
+    quote: |
+      	*pprev = find_vma_prev_to_addr(mm, start);
+      	return simple_do_vma_munmap(mm, start, start + len);
+      }
+  - id: VL14-A055
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_unmap_region"
+    observed_lines: [1079, 1081]
+    quote: |
+      	// update_hiwater_rss(mm);
+      	// unmap_vmas(&tlb, mas, vma, start, end, tree_end, mm_wr_locked);
+      	// mas_set(mas, mt_start);
+  - id: VL14-A056
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_unmap_region"
+    observed_lines: [1082, 1084]
+    quote: |
+      	// free_pgtables(&tlb, mas, vma, prev ? prev->vm_end : FIRST_USER_ADDRESS,
+      	// 			 next ? next->vm_start : USER_PGTABLES_CEILING,
+      	// 			 mm_wr_locked);
+  - id: VL14-A057
+    path: "mykernel/arch/x86_64/myos/syscall.c"
+    symbol: "sys_brk"
+    observed_lines: [82, 84]
+    quote: |
+      		mm->brk = brk;
+      		if (simple_do_vma_munmap(mm, newbrk, oldbrk))
+      			goto out;
+  - id: VL14-A058
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "do_brk_flags"
+    observed_lines: [1211, 1213]
+    quote: |
+      	/* Clear old maps, set up prev, and uf */
+      	if (simple_munmap_vma_range(mm, addr, len, &prev))
+      		return -ENOMEM;
+  - id: VL14-A059
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_vma_merge"
+    observed_lines: [383, 385]
+    quote: |
+      	/* Does the input range span an existing VMA? (cases 5 - 8) */
+      	curr = find_vma_intersection(mm, prev ? prev->vm_end : 0, end);
+      	if (curr == NULL ||					/* cases 1 - 4 */
+  - id: VL14-A060
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_vma_merge"
+    observed_lines: [414, 416]
+    quote: |
+      	while (prev == NULL && curr == NULL && next == NULL);
+      	__simple_vma_adjust(adjust_target, vma_start, vma_end);
+      	return adjust_target;
+  - id: VL14-A061
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "find_vma_prev_to_addr"
+    observed_lines: [302, 304]
+    quote: |
+      			for_each_vma_topdown(mm, vma) {
+      				if (vma->vm_end < addr)
+      					return vma;
+  - id: VL14-A062
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "find_vma_prev_to_addr"
+    observed_lines: [305, 307]
+    quote: |
+      			}
+      			return NULL;
+      		}
+  - id: VL14-A063
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "find_vma_intersection"
+    observed_lines: [339, 341]
+    quote: |
+      			// BUG_ON(start> end);
+      			while (start > end);
+      
+  - id: VL14-A064
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "find_vma_intersection"
+    observed_lines: [341, 343]
+    quote: |
+      
+      			vma_s *vma = find_vma_prev_to_addr(mm, start);
+      
+  - id: VL14-A065
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "find_vma_intersection"
+    observed_lines: [343, 345]
+    quote: |
+      
+      			if (vma != NULL && (vma = vma_next_vma(vma)) != NULL &&
+      					__vma_intersect_with_range(vma, start, end))
+  - id: VL14-A066
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "find_vma_intersection"
+    observed_lines: [345, 347]
+    quote: |
+      					__vma_intersect_with_range(vma, start, end))
+      				return vma;
+      			else
+  - id: VL14-A067
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "__vma_intersect_with_range"
+    observed_lines: [324, 326]
+    quote: |
+      		__vma_intersect_with_range(vma_s *vma, ulong start, ulong end) {
+      			return !((vma->vm_end <= start) || (vma->vm_start >= end));
+      		}
+  - id: VL14-A068
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "simple_find_vma"
+    observed_lines: [257, 259]
+    quote: |
+      			for_each_vma(mm, vma) {
+      				if (addr >= vma->vm_start && addr < vma->vm_end)
+      					return vma;
+  - id: VL14-A069
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "vma_init"
+    observed_lines: [96, 98]
+    quote: |
+      			static const vm_ops_s dummy_vm_ops = {};
+      			memset(vma, 0, sizeof(*vma));
+      			INIT_LIST_S(&vma->list);
+  - id: VL14-A070
+    path: "mykernel/mm/vm_map/vm_map.h"
+    symbol: "vma_init"
+    observed_lines: [100, 102]
+    quote: |
+      			vma->vm_mm = mm;
+      			vma->vm_ops = &dummy_vm_ops;
+      		}
+  - id: VL14-A071
+    path: "mykernel/mm/vm_map/vm_map_macro.h"
+    symbol: "for_each_vma"
+    observed_lines: [29, 31]
+    quote: |
+      			while (												\
+      				((__vma) = mm_next_vma((mm), (__vma))) != NULL	\
+      			)
+  - id: VL14-A072
+    path: "mykernel/mm/vm_map/vm_map_macro.h"
+    symbol: "for_each_vma_topdown"
+    observed_lines: [34, 36]
+    quote: |
+      			while (												\
+      				((__vma) = mm_prev_vma((mm), (__vma))) != NULL	\
+      			)
+  - id: VL14-A073
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vma_prev_vma"
+    observed_lines: [73, 75]
+    quote: |
+      	// BUG_ON(vma == NULL);
+      	while (vma == NULL);
+      	
+  - id: VL14-A074
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vma_prev_vma"
+    observed_lines: [77, 79]
+    quote: |
+      	List_s *lp = vma->list.prev;
+      	return __none_header_listnode_to_vma(lp, lhdr);
+      }
+  - id: VL14-A075
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vma_next_vma"
+    observed_lines: [84, 86]
+    quote: |
+      	// BUG_ON(vma == NULL);
+      	while (vma == NULL);
+      
+  - id: VL14-A076
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "vma_next_vma"
+    observed_lines: [88, 90]
+    quote: |
+      	List_s *lp = vma->list.next;
+      	return __none_header_listnode_to_vma(lp, lhdr);
+      }
+  - id: VL14-A077
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "mm_next_vma"
+    observed_lines: [106, 108]
+    quote: |
+      	// 		list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+      	while (vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list));
+      	while (list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+  - id: VL14-A078
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "mm_next_vma"
+    observed_lines: [107, 109]
+    quote: |
+      	while (vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list));
+      	while (list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+      
+  - id: VL14-A079
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "mm_prev_vma"
+    observed_lines: [122, 124]
+    quote: |
+      	while (vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list));
+      	while (list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+      
+  - id: VL14-A080
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "__vma_link_to_list"
+    observed_lines: [18, 20]
+    quote: |
+      	if (prev == NULL) {
+      		list_header_add_to_head(&mm->mm_mt, &vma->list);
+      	} else {
+  - id: VL14-A081
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "__vma_link_to_list"
+    observed_lines: [23, 25]
+    quote: |
+      
+      		list_add_to_next(&vma->list, &prev->list);
+      		mm->mm_mt.count++;
+  - id: VL14-A082
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "__vma_link_to_list"
+    observed_lines: [26, 28]
+    quote: |
+      	}
+      	mm->map_count++;
+      }
+  - id: VL14-A083
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "__vma_unlink_from_list"
+    observed_lines: [32, 34]
+    quote: |
+      	// BUG_ON(!list_header_contains(&mm->mm_mt, &vma->list));
+      	while (vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list));
+      	mm->map_count--;
+  - id: VL14-A084
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "__vma_unlink_from_list"
+    observed_lines: [33, 35]
+    quote: |
+      	while (vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list));
+      	mm->map_count--;
+      	list_header_delete_node(&mm->mm_mt, &vma->list);
+  - id: VL14-A085
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "__vma_unlink_from_list"
+    observed_lines: [34, 36]
+    quote: |
+      	mm->map_count--;
+      	list_header_delete_node(&mm->mm_mt, &vma->list);
+      }
+  - id: VL14-A086
+    path: "mykernel/mm/vm_map/mmap.c"
+    symbol: "simple_mmap_region"
+    observed_lines: [662, 664]
+    quote: |
+      	/* Clear old maps, set up prev */
+      	if (simple_munmap_vma_range(mm, addr, len, &prev))
+      		return -ENOMEM;
+  - id: VL14-A087
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "vm_mmap_pgoff"
+    observed_lines: [93, 95]
+    quote: |
+      
+      	if (mmap_write_lock_killable(mm))
+      		return -EINTR;
+  - id: VL14-A088
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "vm_mmap_pgoff"
+    observed_lines: [95, 97]
+    quote: |
+      		return -EINTR;
+      	ret = do_mmap(file, addr, len, prot, flag, 0, pgoff);
+      	mmap_write_unlock(mm);
+  - id: VL14-A089
+    path: "mykernel/mm/vm_map/util.c"
+    symbol: "vm_mmap_pgoff"
+    observed_lines: [96, 98]
+    quote: |
+      	ret = do_mmap(file, addr, len, prot, flag, 0, pgoff);
+      	mmap_write_unlock(mm);
+      
+  - id: VL14-A090
+    path: "mykernel/mm/vm_map/vm_map_types.h"
+    symbol: "vm_area_struct"
+    observed_lines: [19, 21]
+    quote: |
+      				ulong	vm_start;
+      				ulong	vm_end;
+      			};
+  - id: VL14-A091
+    path: "mykernel/mm/vm_map/vm_map_types.h"
+    symbol: "vm_area_struct"
+    observed_lines: [66, 68]
+    quote: |
+      		ulong			vm_pgoff;			/* Offset (within vm_file) in PAGE_SIZE units */
+      		file_s			*vm_file;			/* File we map to (can be NULL). */
+      		void			*vm_private_data;	/* was vm_pte (shared mem) */
+  - id: VL14-A092
+    path: "mykernel/mm/vm_map/vm_map_types.h"
+    symbol: "vm_operations_struct"
+    observed_lines: [98, 100]
+    quote: |
+      	struct vm_operations_struct {
+      		void		(*open)(vma_s * area);
+      		/**
+  - id: VL14-A093
+    path: "mykernel/include/linux/fs/fs.h"
+    symbol: "get_file"
+    observed_lines: [905, 907]
+    quote: |
+      	static inline file_s *get_file(file_s *f) {
+      		atomic_long_inc(&f->f_count);
+      		return f;
+  - id: VL14-A094
+    path: "mykernel/fs/vfs/file_table.c"
+    symbol: "fput"
+    observed_lines: [109, 111]
+    quote: |
+      {
+      	if (atomic_long_dec_and_test(&file->f_count)) {
+      		task_s *task = current;
+  - id: VL14-A095
+    path: "mykernel/fs/vfs/file_table.c"
+    symbol: "fput"
+    observed_lines: [126, 128]
+    quote: |
+      
+      		kmem_cache_free(filp_cachep, file);
+      	}
+  - id: VL14-A096
+    path: "mykernel/lib/list/double_list.h"
+    symbol: "list_header_delete_node"
+    observed_lines: [684, 686]
+    quote: |
+      			if (list_header_contains(lhdr_p, l_p)) {
+      				list_del_init(l_p);
+      				lhdr_p->count--;
+  - id: VL14-A097
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [187, 189]
+    quote: |
+      		}
+      		if ((tmp = vm_area_creat_dup(mpnt)) == NULL)
+      			goto fail_nomem;
+  - id: VL14-A098
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [198, 200]
+    quote: |
+      
+      			get_file(file);
+      			i_mmap_lock_write(mapping);
+  - id: VL14-A099
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [213, 215]
+    quote: |
+      		 */
+      		list_header_add_to_tail(&mm->mm_mt, &tmp->list);
+      
+  - id: VL14-A100
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [220, 222]
+    quote: |
+      		// if (tmp->vm_ops && tmp->vm_ops->open)
+      		// 	tmp->vm_ops->open(tmp);
+      
+  - id: VL14-A101
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mmput"
+    observed_lines: [459, 461]
+    quote: |
+      
+      	if (atomic_dec_and_test(&mm->mm_users))
+      		__mmput(mm);
+  - id: VL14-A102
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "__mmput"
+    observed_lines: [439, 441]
+    quote: |
+      	// khugepaged_exit(mm); /* must run before exit_mmap */
+      	// exit_mmap(mm);
+      	// mm_put_huge_zero_page(mm);
+  - id: VL14-A103
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [676, 678]
+    quote: |
+      		// mm_update_next_owner(old_mm);
+      		mmput(old_mm);
+      		return 0;
+  - id: VL14-A104
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [119, 121]
+    quote: |
+      
+      	// exit_mm();
+      
+self_check: {source_files: 14, anchors: 104, nodes: 43, edges: 56, cases: 23, states: 13, ownership: 10, effects: 12, formal_parse: NOT_RUN, runtime: NOT_RUN}
