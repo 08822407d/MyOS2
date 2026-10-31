@@ -1,0 +1,67 @@
+{
+ "check": "IDENTITY2",
+ "read_time_utc": "2026-09-27T08:44:59Z",
+ "gate": {
+  "core_review_record": true,
+  "core_review_input_refs": true,
+  "contract12_binding": true,
+  "technical_inputs_unchanged": true,
+  "lead_head_descends_from_taskbook": true,
+  "on_execution_branch": true,
+  "head_descends_from_reviewed_core": true,
+  "originals_unchanged": true,
+  "remote_on_same_line": true,
+  "remote_descends_from_reviewed_core": true,
+  "worktree_clean_outside_recheck": true,
+  "ok": true
+ },
+ "notes": [],
+ "pins": {
+  "time": "a039d9803ade",
+  "master": "de3bb1df906a",
+  "taskbook": "57a7c3e0eebf",
+  "pilot_review": "f79b3a281616",
+  "lead_head": "ec62453e76d2",
+  "core_frozen": "a1e7c2277705",
+  "core_results": "7e2fa84a9823",
+  "pilot_head": "0851af4fc08b",
+  "pilot_result": "10ecb7dd0bdb"
+ },
+ "core_review_fields": {
+  "record_id": "CORE-CHECK-01-CORE-REVIEW-001",
+  "disposition": "RETURN",
+  "reviewed_pr": 17,
+  "reviewed_branch": "claude/dazzling-cori-q0dnyt",
+  "reviewed_commit_short12": "a1e7c2277705",
+  "frozen_results_commit_short12": "7e2fa84a9823",
+  "pilot_head_short12": "0851af4fc08b",
+  "followup_id": "CORE-CHECK-01-RECHECK-01",
+  "allowed_write_prefix": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/"
+ },
+ "technical_inputs_unchanged": {
+  "07-scheduler-wakeup-timer-audit.md": true,
+  "07-core-audit-map.yaml": true,
+  "MANIFEST.md": true,
+  "09-local-verification-contract.md": true,
+  "10-cloud-pilot-and-github-handoff.md": true,
+  "11-core-verification-cloud.md": true,
+  "reviews/CORE-CHECK-01-pilot-review.md": true
+ },
+ "execution": {
+  "branch": "claude/dazzling-cori-q0dnyt",
+  "head_short12": "f9ae2bce9a64",
+  "remote_relation": "equal"
+ },
+ "originals": {
+  "frozen_files": 26,
+  "changed_or_missing": [],
+  "added_outside_recheck": [],
+  "pilot_changed_since_pilot_head": []
+ },
+ "remote_refs_equal_pins": {
+  "master": true,
+  "time": true,
+  "agent/MYOS2-LEAD-002": true
+ },
+ "worktree_changes_outside_recheck": []
+}

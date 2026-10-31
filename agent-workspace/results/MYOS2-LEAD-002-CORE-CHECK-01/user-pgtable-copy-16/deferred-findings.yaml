@@ -1,0 +1,146 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-PGTABLE-COPY-16
+record_type: incremental_fork_pagetable_copy_findings
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+model_per_owner: GPT-6
+effort_per_owner: Extra
+backend_identity: unknown_or_not_attestable
+date: "2026-11-01"
+read_channel: connector
+source_pin: "time @ a039d9803ade"
+results_base: "6ea1003c2ae1"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+policy: "18号普通问题延期，仅登记本批增量；无修复或运行授权"
+counts: {new_findings: 7, evidence_appends: 4, errata_candidates: 0}
+owner_decisions_requested_now: []
+findings:
+  - qualified_id: CORE-USER-PGTABLE-COPY-16::PC16-F01
+    id: PC16-F01
+    title: "PTE值复制共享原数据PFN，但本链没有活动数据页增引用"
+    kind: [source_fact, conditional_reference_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-pgtable-copy-16/facts-and-boundaries.yaml::anchors"
+    claim: "copy_present_pte从源PTE取值、修改权限/标志后直接set_pte_at到目标，父子可继续指向相同PFN。所读copy_present_pte及调用的位变换/set_pte_at没有get_page、folio_get、数据page mapcount/rmap增量或内容复制；子页表的alloc_page是结构页而非数据页。"
+    premises: ["正常非共享fork复制有效present源PTE；分配与页表指针有效；数据页可能由父子同时引用。"]
+    counter_evidence: ["其它未展开的page引用者或后续fault操作可能改变计数；本结论不涵盖全内核页面持有。"]
+    unknown: ["真实引用数、页面释放/重用与硬件读写结果NOT_RUN"]
+    evidence: [PC16-A018, PC16-A019, PC16-A025, PC16-A145, PC16-A093]
+    related: ["CORE-USER-FILE-CACHE-13::FC13-F05"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_kernel_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并另行授权专项；先重新确认届时真实源码"
+  - qualified_id: CORE-USER-PGTABLE-COPY-16::PC16-F02
+    id: PC16-F02
+    title: "父PTE原位清RW，但fork复制链未见活动TLB失效"
+    kind: [source_fact, evidence_gap]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade; user-pgtable-copy-16/facts-and-boundaries.yaml::anchors"
+    claim: "COW且源PTE可写时arch_ptep_set_wrprotect直接clear_bit父表RW，子PTE另清RW；dup_mmap中的flush_tlb_mm(oldmm)为注释，所读复制链没有活动父TLB失效。不能由内存PTE修改直接推断运行CPU已使用只读翻译。"
+    premises: ["非共享fork命中可写私有COW源PTE；父CPU可能已经有该页TLB翻译。"]
+    counter_evidence: ["特定CPU、重新加载CR3或其它外层TLB失效机制可能影响实际状态；本批未全树排除。"]
+    unknown: ["真实CPU TLB/多核协议和父子写入隔离NOT_RUN"]
+    evidence: [PC16-A122, PC16-A019, PC16-A020, PC16-A147, PC16-A012]
+    related: ["CORE-USER-MM-CONTEXT-15::MC15-F06"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_kernel_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并另行授权专项；先重新确认届时真实源码"
+  - qualified_id: CORE-USER-PGTABLE-COPY-16::PC16-F03
+    id: PC16-F03
+    title: "目标PTE表分配失败后使用NULL指针及未赋值dst_ptl解锁"
+    kind: [source_fact, conditional_invalid_pointer]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-pgtable-copy-16/facts-and-boundaries.yaml::anchors"
+    claim: "copy_pte_range声明dst_ptl但未初始化，pte_alloc_map_lock返回NULL时直接pte_unmap_unlock(dst_pte_ptr,dst_ptl)。宏先spin_unlock(ptl)再pte_unmap(pte)，所以不能假定后面的return -ENOMEM会安全执行。"
+    premises: ["目标PTE表分配或映射锁定失败返回NULL。"]
+    counter_evidence: ["如果目标锁表操作始终成功则不走此路径；具体错误/异常表现取决于编译和锁实现。"]
+    unknown: ["硬件和C运行、错误概率NOT_RUN"]
+    evidence: [PC16-A028, PC16-A029, PC16-A030, PC16-A031, PC16-A112, PC16-A092]
+    related: ["CORE-USER-MM-CONTEXT-15::MC15-F05"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_kernel_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并另行授权专项；先重新确认届时真实源码"
+  - qualified_id: CORE-USER-PGTABLE-COPY-16::PC16-F04
+    id: PC16-F04
+    title: "PUD/PMD/PTE页分配失败可能带着上级ptl锁直接返回"
+    kind: [source_fact, conditional_lock_lifetime]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-pgtable-copy-16/facts-and-boundaries.yaml::anchors"
+    claim: "__pud_alloc、__pmd_alloc、__pgtbl_alloc各先取得ptl，分配new为NULL时return -ENOMEM早于其spin_unlock(ptl)语句；且可能已有较高层目标目录分配副作用。正常错误传播必须先满足没有留下无效锁状态的前提。"
+    premises: ["实际进入某个__*alloc的分配分支、alloc_one失败、spin_lock操作先正常完成。"]
+    counter_evidence: ["若分配成功则可到各自spin_unlock；不把所有复制/任何内存压力都说成必然死锁。"]
+    unknown: ["并发/锁保持时长和真实返回结果NOT_RUN"]
+    evidence: [PC16-A095, PC16-A097, PC16-A099, PC16-A100, PC16-A102, PC16-A104, PC16-A105, PC16-A107, PC16-A109]
+    related: ["CORE-USER-MM-CONTEXT-15::MC15-F05"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_kernel_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并另行授权专项；先重新确认届时真实源码"
+  - qualified_id: CORE-USER-PGTABLE-COPY-16::PC16-F05
+    id: PC16-F05
+    title: "非none但非present的源PTE在复制时活动忙等，源锁失败也无检查"
+    kind: [source_fact, conditional_nonreturn]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-pgtable-copy-16/facts-and-boundaries.yaml::anchors"
+    claim: "copy_pte_range对源pte_none会continue，但对非none而!pte_present的源项执行不变的while(!pte_present(*src_pte_ptr))；swap/nonpresent复制为注释。源pte_offset_map_lock可能返回NULL却未经检查就解引用src_pte_ptr。不能将这些输入解释成安全的swap复制/ENOMEM返回。"
+    premises: ["源PTE非none且稳定非present，或源映射锁函数返回NULL，分别成立。"]
+    counter_evidence: ["常规已present或pte_none且有效指针时不会命中相应异常前提；无实际硬件复现。"]
+    unknown: ["真实swap类型、并发修改、C无效指针后果与运行NOT_RUN"]
+    evidence: [PC16-A032, PC16-A035, PC16-A036, PC16-A037, PC16-A139, PC16-A141]
+    related: ["CORE-USER-MM-FAULT-12::MF12-F05"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_kernel_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并另行授权专项；先重新确认届时真实源码"
+  - qualified_id: CORE-USER-PGTABLE-COPY-16::PC16-F06
+    id: PC16-F06
+    title: "部分复制后失败，父RW修改和子页表分配无已证事务回滚"
+    kind: [source_fact, conditional_rollback_gap]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-pgtable-copy-16/facts-and-boundaries.yaml::anchors"
+    claim: "copy_present_pte可能已原位清父RW、安装子PTE，PUD/PMD/PTE目标页表也可已分配；随后错误可在上层转-ENOMEM。dup_mm free_pt只mmput，__mmput的exit_mmap/mmdrop为注释；所读路径没有恢复父RW/归还子表或撤销其页表连接的完整逆操作。"
+    premises: ["有效源PTE先成功复制，后续某页表分配或复制步骤失败，错误控制流有定义且成功返回。"]
+    counter_evidence: ["更早错误可能发生在未复制任何叶子前；不能宣称所有fork失败都留下这些副作用。"]
+    unknown: ["实际恢复者和内核运行中的资源量NOT_RUN"]
+    evidence: [PC16-A020, PC16-A025, PC16-A077, PC16-A011, PC16-A003, PC16-A015, PC16-A016]
+    related: ["CORE-USER-MM-CONTEXT-15::MC15-F05","CORE-USER-VMA-LIFETIME-14::VL14-F04"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_kernel_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并另行授权专项；先重新确认届时真实源码"
+  - qualified_id: CORE-USER-PGTABLE-COPY-16::PC16-F07
+    id: PC16-F07
+    title: "上级坏源目录被清除和空子表预分配使skip不等于零副作用"
+    kind: [source_fact, conditional_upper_table_side_effect]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade; user-pgtable-copy-16/facts-and-boundaries.yaml::anchors"
+    claim: "copy_page_range的pgd_none_or_clear_bad及各层p4d/pud/pmd_none_or_clear_bad在坏条目上可清源目录；copy_pud_range/copy_pmd_range先为目标分配下级目录后才检查源条目是否为空。空源表或跳过下级不等于父源表和子页表状态完全没有变化。"
+    premises: ["源上级目录存在坏项或目标目录在较高层有效但下层为空，并符合分配路径。"]
+    counter_evidence: ["纯源PGD none时copy_page_range可早跳过后续下层分配；无坏项不触发源清除。"]
+    unknown: ["具体页表状态、错误日志和运行NOT_RUN"]
+    evidence: [PC16-A075, PC16-A126, PC16-A128, PC16-A130, PC16-A052, PC16-A056, PC16-A044, PC16-A048]
+    related: ["CORE-USER-VMA-LIFETIME-14::VL14-F04"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_kernel_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好并另行授权专项；先重新确认届时真实源码"
+evidence_appends:
+  - target: CORE-USER-MM-CONTEXT-15::MC15-F05
+    operation: evidence_append_only
+    old_status_change: none
+    note: "本批补充dup_mmap→copy_page_range及逐层PTE的部分副作用：私有已present源PTE可被写保护、子表项/下级表页已安装，后续错误经dup_mm::mmput时__mmput清理主体注释；并区分目标PTE分配失败的无效锁实参。"
+    evidence: [PC16-A010, PC16-A020, PC16-A025, PC16-A030, PC16-A003, PC16-A015]
+  - target: CORE-USER-VMA-LIFETIME-14::VL14-F04
+    operation: evidence_append_only
+    old_status_change: none
+    note: "父源PTE在fork复制时有实际RW位原位清除，目标下级页表页可分配；dup_mmap的flush_tlb_mm(oldmm)被注释，后续mmput不执行exit_mmap/mmdrop。并非本批重新实现或验证VMA解除。"
+    evidence: [PC16-A020, PC16-A108, PC16-A012, PC16-A015, PC16-A016]
+  - target: CORE-USER-FILE-CACHE-13::FC13-F05
+    operation: evidence_append_only
+    old_status_change: none
+    note: "本批已present源PTE复制到子表时保留相同物理PFN，选定copy_present_pte及位变换/目标写入链无活动get_page/folio_get等数据页引用增量；新分配页表页不等于持有数据页。与R13-S03源缓存页put/COW预分配页释放保持区别。"
+    evidence: [PC16-A018, PC16-A025, PC16-A145, PC16-A093]
+  - target: CORE-USER-MM-FAULT-12::MF12-F05
+    operation: evidence_append_only
+    old_status_change: none
+    note: "本批仅补已有PTE写保护后进入handle_pte_fault→do_wp_page的必要门，跟缺PTE文件do_cow_fault不同；不重做原第12批dirty/young处理和真实WP复制。"
+    evidence: [PC16-A080, PC16-A081, PC16-A082, PC16-A083]
+errata_candidates: []
+not_covered: ["whole-tree COW and folio reference handling", "full nonpresent/huge/swap handling", "real PTE lock synchronization", "TLB/PCID shootdown", "C preprocessing, compilation, QEMU and hardware"]

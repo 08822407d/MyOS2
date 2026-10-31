@@ -1,0 +1,165 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-SYSCALL-STDIO-08
+record_type: deferred_findings_increment
+produced_by: Claude Code desktop app (Code tab), local session f464c1b9-9b25-4af2-8f2d-d419b3b601fd (MYOS2-A-CC02 内核分析本地执行)
+model: unknown_or_not_attestable
+model_declared_by_runtime: claude-opus-5-5
+date: '2026-10-28'
+base_snapshot: kernel=time a039d9803ade；执行分支起点 ab3b4b86662c（短 SHA）
+policy_ref: agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）
+policy_status: ACTIVE_RECORD_FIRST_OWNER_REPAIR_DEFERRED
+owner_action_now: none
+owner_decisions_requested_now: []
+kernel_change_authorized: false
+candidate_A_adopted: false
+candidate_B_adopted: false
+scope: 只登记本批新增条目（US-01…US-05），以及对 CORE-USER-BOUNDARIES-07 的 UB-01、UB-05 和 CORE-USER-VFS-BASELINE-05 的 UV-09、UV-10、UV-11 的证据追加；不复制旧问题全文，不改旧条目与原文件，不重编号，不自动升级或关闭 07 条目。
+id_convention: related、target、qualified_id 与正文中的旧条目一律写全名；US-xx 指本文件，AS*/QS*/SS*/VT-* 指本包 facts-and-boundaries.yaml，NVS-x 指其 next_validation_candidates。
+empty_set_statement: 本批发现集合非空：5 项新条目、5 项证据追加、0 项文档勘误。检查范围限于 facts-and-boundaries.yaml 中三个主题实际读到的源码；没有登记的部分不等于已确认安全。
+errata_scope_statement: 本批核对的 05、07 既有文档中没有发现需要更正的表述；05/07 中“未读/未追/未知”的说法属于覆盖状态，在 facts-and-boundaries.yaml 的 prior_unknowns 与 gap_status 中更新，不算勘误。
+kinds_allowed: [source_fact, conditional_inference, limited_host_observation, policy_proposal, evidence_gap, documentation_erratum]
+statuses_allowed: [deferred_owner_not_ready, needs_evidence, superseded_interpretation]
+resume_order: [agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）, 本轨道最新主线检查点与对应审查回执（agent/MYOS2-LEAD-002 的 checkpoints/、reviews/）, 本包 user-syscall-stdio.md 与 facts-and-boundaries.yaml, 被选条目的 qualified_id（本文件）, 原证据（anchors/queries 所指 time 源码）与当时最新的 time]
+counts:
+  findings: 5
+  evidence_appends: 5
+  errata: 0
+  findings_by_status: {deferred_owner_not_ready: 5, needs_evidence: 0, superseded_interpretation: 0}
+findings:
+- qualified_id: CORE-USER-SYSCALL-STDIO-08::US-01
+  id: US-01
+  title: fdget/fdget_pos/fdget_raw 不取引用却带 FDPUT_FPUT：write、writev 每次调用，以及除成功的 F_DUPFD 之外的每次 fcntl，都多做一次 fput
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, entry_id: US-01, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [fs.vfs.fd_lookup_ref, fs.vfs.rw_syscalls, fs.vfs.fd_dup_fcntl]
+  claim: fdget、fdget_raw、fdget_pos 都是 __to_fd：直接按下标取 fd_array，不增加 f_count，却返回 flags=3（AS3-15、AS3-16、SS-07）。fdput 在 flags 含 FDPUT_FPUT（=1）时调用 fput（AS3-13、AS3-14），fdput_pos 转调 fdput（AS3-17）。ksys_write 与 do_writev 用 fdget_pos 取 file，并在返回前无条件 fdput_pos（AS3-20 至 AS3-23、SS-03 至 SS-06）；sys_fcntl 用 fdget_raw 并在返回前 fdput（AS3-25、AS3-26、SS-09、SS-10）；其中成功的 F_DUPFD/F_DUPFD_CLOEXEC 先 get_file，与这次 fput 相抵（AS3-37），F_GETFL、失败的 F_DUPFD 与不支持的命令（default 分支，AS3-39）则只剩这次 fput。fput 把 f_count 减一，归零时调 kmem_cache_free(filp_cachep, …)（AS3-11、SS-11）。读路径用的 myos_fdget_pos 返回 flags=0，不受影响（AS3-18、SS-01、SS-02）。VT-FDLIMITS 由源码重算得 to_fd_implies_fput 为真、myos_fdget_pos_implies_fput 为假。
+  premises: ['该 fd 的 file 在调用时 f_count 为 1（open 刚建立时就是 1，AS3-09；fork 复制出的 file 按值抄父表的计数，CORE-USER-VFS-BASELINE-05::UV-09）', fcntl 的情形限于成功的 F_DUPFD/F_DUPFD_CLOEXEC 以外的命令]
+  impact: 对这样的 fd 做第一次 write(2)、writev(2)，或第一次除成功的 F_DUPFD 之外的 fcntl(2) 后，file 对象被释放，而 fd 槽仍指向它：open 建立的 file 回到 filp 缓存；fork 经 dup_fd 复制出的 file 来自 kzalloc，这次 kmem_cache_free(filp_cachep, …) 走的是 CORE-USER-VFS-BASELINE-05::UV-09 所述的跨缓存路径。之后同一 fd 上的 read、write、writev、lseek、close 都访问已释放的对象，close 还会对它再 kfree 一次。若这块内存被重新分配给另一个 file，旧 fd 上的下一次 write、writev 或 fcntl 会把新 file 的 f_count 减一，若它原为 1 就释放它。write(2) 即使在 vfs_write 返回 -EINVAL（CORE-USER-BOUNDARIES-07::UB-01）也会做这次 fput。
+  counter_evidence: [read 与 getdents64 用 myos_fdget_pos（flags=0），配对的 fdput_pos 不 fput（QS-21、QS-22）, 成功的 F_DUPFD 先 get_file 再 fdput，净值不变（AS3-37），但此后两槽共享的 file 的 f_count 仍为 1, close、lseek 直接按下标访问，不经 fdget/fdput]
+  unknown: [释放后 file 对象的哪些字段会被 slab 改写、何时被重新分配（未追）, 用户程序对标准流实际使用 write、writev 还是 fcntl（GAP-U10）]
+  applicable_source: time a039d9803ade（mykernel/include/linux/fs/file.h、fs/vfs/read_write.c、fs/syscall.c、fs/vfs/file_table.c，只读）
+  evidence: [AS3-09, AS3-11, AS3-13, AS3-14, AS3-15, AS3-16, AS3-17, AS3-18, AS3-20, AS3-21, AS3-22, AS3-23, AS3-25, AS3-26, AS3-37, AS3-39, SS-01, SS-03, SS-04, SS-05, SS-06, SS-07, SS-09, SS-10, SS-11, QS-20, QS-21, VT-FDLIMITS]
+  related: ['CORE-USER-VFS-BASELINE-05::UV-09', 'CORE-USER-VFS-BASELINE-05::UV-10', 'CORE-USER-BOUNDARIES-07::UB-01']
+  blocks: {static_work: false, future_runtime: 影响 NVS-1 中对 console 写出与 fd 状态的观察解释}
+  future_verification:
+    candidates: [NVS-1]
+    authorization_needed: [完整内核构建授权, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 file.h 与 read_write.c 是否仍如此。
+  ai_suggestion: 可对照 Linux 中 __fget_light 只在实际取得引用时才返回 FDPUT_FPUT 的约定；建议不等于决定。
+- qualified_id: CORE-USER-SYSCALL-STDIO-08::US-02
+  id: US-02
+  title: f_dupfd 以 RLIMIT_NOFILE（1024）为上界扫描只有 256 项的 fd 表
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, entry_id: US-02, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [fs.vfs.fd_dup_fcntl]
+  claim: fcntl 的 F_DUPFD 与 F_DUPFD_CLOEXEC 都调用 f_dupfd（AS3-27），它以 rlimit(RLIMIT_NOFILE) 为上界、只检查起点不小于该上界，然后 alloc_fd(from, nofile)（AS3-28）。RLIMIT_NOFILE 的初值是 INR_OPEN_CUR=1024（AS3-06、AS3-07、QS-24），fork 时按值复制（AS3-08）；fd_array 只有 NR_OPEN_DEFAULT=256 项（AS3-04、AS3-05）。f_dupfd 中没有按表长度收紧上界的代码（SS-21）。找到槽位后 get_file 并 fd_install（AS3-37）。VT-FDLIMITS 由源码重算得 nofile_exceeds_table 为真。
+  premises: [F_DUPFD 的起点在 256 到 1023 之间，或从起点到 255 的槽都非空]
+  impact: alloc_fd 读 fd_array 之外的内存并把它当作槽位判断；若读到的值为 0，fd_install 会把 file 指针写到数组之外（BUG_ON 只在该处非 0 时触发）。返回给用户的 fd 不小于 256：close、lseek 检查 fd < fd_count（256）而返回 -EBADF，所以它无法被关闭，退出时 put_files_struct 也只扫描前 256 个槽（QS-38）；read、getdents64（myos_fdget_pos）与 write、writev、fcntl（__to_fd）按下标访问时越界（CORE-USER-VFS-BASELINE-05::UV-11）。
+  counter_evidence: ['dup、dup2 是空壳，不经过 f_dupfd（CORE-USER-BOUNDARIES-07::UB-10）', 起点小于 256 且其后有空槽时扫描在表内结束]
+  unknown: [files_struct 之后的内存布局（kmem_cache 对象大小与相邻对象，未追）, 用户程序是否用 F_DUPFD（GAP-U10）]
+  applicable_source: time a039d9803ade（mykernel/fs/vfs/file.c、fcntl.c、include/linux/kernel/fdtable.h，只读）
+  evidence: [AS3-04, AS3-05, AS3-06, AS3-07, AS3-08, AS3-38, AS3-27, AS3-28, AS3-37, SS-18, SS-21, QS-23, QS-24, QS-38, VT-FDLIMITS]
+  related: ['CORE-USER-VFS-BASELINE-05::UV-11', 'CORE-USER-VFS-BASELINE-05::UV-10']
+  blocks: {static_work: false, future_runtime: 影响 NVS-1}
+  future_verification:
+    candidates: [NVS-1]
+    authorization_needed: [完整内核构建授权, QEMU 运行授权, 可修改的测试镜像]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可；开工前重核 f_dupfd 与 fd 表定义。
+  ai_suggestion: 上界可取 min(rlimit, 表长度)，或像 Linux 那样按需扩表；建议不等于决定。
+- qualified_id: CORE-USER-SYSCALL-STDIO-08::US-03
+  id: US-03
+  title: close-on-exec 没有实现：exec 不关闭任何 fd，标记也无处设置或保存
+  kind: [source_fact]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, entry_id: US-03, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [sched.forkexec.fd_inherit_exec, fs.vfs.fd_dup_fcntl]
+  claim: begin_new_exec 只调用 unshare_files（AS3-35），do_close_on_exec 的调用被注释（QS-25、SS-16，与 CORE-USER-VFS-BASELINE-05::Q14 一致）；alloc_fd 的函数体不使用 flags（SS-22），所以 open 与 F_DUPFD_CLOEXEC 传入的 O_CLOEXEC 不被保存；do_fcntl 的 F_GETFD、F_SETFD、F_SETFL 分支被注释，落到 err 的初值 -EINVAL（SS-17、QS-26、QS-31）；set_close_on_exec 与 get_close_on_exec 只有声明（QS-27）。
+  premises: [无额外前提：依据是所读快照中的源码文本]
+  impact: 所有 fd 都跨 exec 保留，包括本意要在 exec 时关闭的；fcntl(F_SETFD, FD_CLOEXEC) 与 F_GETFD 返回 -EINVAL。对标准流来说，0、1、2 跨 exec 保留正是需要的行为。
+  counter_evidence: [check_fcntl_cmd 的白名单列出了 F_GETFD、F_SETFD（QS-26），但只用于 FMODE_PATH 文件的命令过滤，do_fcntl 本身没有对应分支]
+  unknown: [libc 是否依赖 O_CLOEXEC、FD_CLOEXEC 或 F_SETFL（GAP-U10）]
+  applicable_source: time a039d9803ade（mykernel/sched/forkexec/exec.c、fs/vfs/fcntl.c、fs/vfs/file.c，只读）
+  evidence: [AS3-35, QS-25, QS-26, QS-27, QS-31, SS-16, SS-17, SS-22, 'CORE-USER-VFS-BASELINE-05::Q14']
+  related: ['CORE-USER-VFS-BASELINE-05::fs.vfs.fd_table']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: [NVS-2]
+    authorization_needed: [读取仓库外目录的许可]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-SYSCALL-STDIO-08::US-04
+  id: US-04
+  title: ioctl 是空实现：不取 fd、不看命令，总返回 0
+  kind: [source_fact]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, entry_id: US-04, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [entry.myos_special_syscalls]
+  claim: 16 号 ioctl 的处理函数只有提示开关为 0 的 ALERT_DUMMY_SYSCALL，其余正文被注释，最后 return 0（AS2-15、AS2-16、AS2-17、AS2-18）；函数体中没有活动的 fdget、f_op 或 cmd 使用（SS-12、SS-13）。
+  premises: [无额外前提：依据是所读快照中的源码文本]
+  impact: 对任何 fd（包括无效 fd）与任何命令，ioctl 都报告成功，调用者的输出参数不被填写，保留调用前的内容。依赖 ioctl 判断终端属性的用户代码会得到“成功”而读到未填写的数据。
+  counter_evidence: []
+  unknown: [libc 是否对标准流调用 ioctl（GAP-U10）]
+  applicable_source: time a039d9803ade（mykernel/arch/x86_64/myos/syscall.c，只读）
+  evidence: [AS2-15, AS2-16, AS2-17, AS2-18, SS-12, SS-13, VT-SYSTAB]
+  related: ['CORE-USER-VFS-BASELINE-05::GAP-U10']
+  blocks: {static_work: false, future_runtime: 影响 NVS-2 结果的解释}
+  future_verification:
+    candidates: [NVS-2]
+    authorization_needed: [读取仓库外目录的许可]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 无
+- qualified_id: CORE-USER-SYSCALL-STDIO-08::US-05
+  id: US-05
+  title: 451 号 putstring 把用户指针直接作为内核格式串打印
+  kind: [source_fact, conditional_inference]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref: {branch: claude/dazzling-cori-q0dnyt, path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml, entry_id: US-05, results_commit: 见 MANIFEST.md 的 results_commit_short12}
+  capabilities: [entry.myos_special_syscalls]
+  claim: sys_myos_putstring 以 color_printk(WHITE, BLACK, string) 打印用户传入的指针（AS2-14）；color_printk 是变参函数，把 fmt 原样交给 vsnprintf（AS2-21）；函数体中没有 copy_from_user、strncpy_from_user、strndup_user 或 access_ok（SS-14）。它在分派表中（451 号，VT-SYSTAB），任何用户程序都能经 syscall 指令调用；仓库内只有不在构建中的旧 libc 提供用户态包装（QS-17）。
+  premises: [某个用户程序以 451 号发出系统调用]
+  impact: 用户控制内核格式串：串中的 % 指令会让 vsnprintf 按指令读取调用者并未提供的可变参数（寄存器与内核栈内容）并输出；指针本身在内核态直接解引用，地址无效时的结果取决于缺页处理（未追）。
+  counter_evidence: [init 与 sh 的源码中没有 putstring（QS-17、QS-04）]
+  unknown: [vsnprintf 支持哪些格式指令（klib 内部未追）]
+  applicable_source: time a039d9803ade（mykernel/arch/x86_64/myos/syscall.c，只读）
+  evidence: [AS2-14, AS2-21, SS-14, QS-17, QS-04, VT-SYSTAB]
+  related: ['CORE-USER-BOUNDARIES-07::UB-07']
+  blocks: {static_work: false, future_runtime: 无}
+  future_verification:
+    candidates: [NVS-1]
+    authorization_needed: [完整内核构建授权, QEMU 运行授权]
+  reopen_conditions: Owner 明确表示准备好并给出专项范围许可。
+  ai_suggestion: 以 "%s" 作格式串并先复制用户字符串；建议不等于决定。
+evidence_appends:
+- target: CORE-USER-BOUNDARIES-07::UB-01
+  status_change: none
+  note: 只追加相交证据，原条目与状态不改，不构成修复授权。
+  added_facts: [write(2) 在 vfs_write 返回 -EINVAL 之后仍经 fdput_pos 对该 file 做一次不配对的 fput（见 US-01）；writev(2) 同样如此。, vfs_writev 把每段 ->write 的返回值直接相加（SS-23），错误码与成功字节数混在一起返回。, '仓库内 /boot/sh 的 read_line 以 write(console_fd, …) 回显（AS1-11）；它是否发出 write(2) 取决于仓库外 libc（CORE-USER-VFS-BASELINE-05::GAP-U10）。']
+  evidence: [AS3-21, AS3-23, SS-23, AS1-11, 'CORE-USER-SYSCALL-STDIO-08::US-01']
+- target: CORE-USER-BOUNDARIES-07::UB-05
+  status_change: none
+  note: 只追加相交证据，原条目与状态不改，不构成修复授权。
+  added_facts: [/boot/sh 自己以 O_RDWR 打开 /dev/console（AS1-09），与 init 经 libc 的打开走同一条 do_sys_openat2 → do_filp_open → chrdev_open 路径。, 'do_filp_open 返回错误指针时 do_sys_openat2 不安装 fd（AS3-33；getname 失败或取到负 fd 时也不安装），返回的是否错误指针又取决于 CORE-USER-VFS-BASELINE-05::UV-04 中缺 return 的返回值，所以两处打开的结果都受它影响。']
+  evidence: [AS1-09, AS3-32, AS3-33]
+- target: CORE-USER-VFS-BASELINE-05::UV-09
+  status_change: none
+  note: 只追加证据，原条目与状态不改。
+  added_facts: ['pid 1 自己的文件表也来自 dup_fd：kernel_init 以 kernel_thread(…, CLONE_FS) 建立，不带 CLONE_FILES（AS3-01、AS3-03）；init_files 的槽全空、fd_count 为 0（AS3-02），所以 pid 1 新表的 256 个槽都没有被写入。', console_on_rootfs 只在注释中出现（QS-19），内核不为 pid 1 打开任何 fd；init 进入 main 时 fd 0、1、2 的内容就是这些未写入的槽。]
+  evidence: [AS3-01, AS3-02, AS3-03, QS-19, VT-FDLIMITS]
+- target: CORE-USER-VFS-BASELINE-05::UV-10
+  status_change: none
+  note: 只追加证据，原条目与状态不改。原条目的未知项“f_dupfd 与 fget 的实际调用者”已在本批定位。
+  added_facts: [f_dupfd 只被 do_fcntl 的 F_DUPFD 与 F_DUPFD_CLOEXEC 调用（QS-23），入口是 72 号 fcntl；它 get_file 后让两个槽指向同一个 file（AS3-37），这正是原条目前提中的“第二个持有者”，此后表内（fd < 256）任一槽 close 都直接 kfree。, fget 的活动调用者只有 mmap（QS-34）。]
+  evidence: [AS3-27, AS3-37, QS-23, QS-34]
+- target: CORE-USER-VFS-BASELINE-05::UV-11
+  status_change: none
+  note: 只追加证据，原条目与状态不改。原条目的未知项“fd_count 在各路径上的实际值”已在本批静态闭合。
+  added_facts: [write、writev、fcntl 用的 fdget_pos/fdget_raw（__to_fd）同样直接按下标取 fd_array，不检查上界（AS3-15、QS-20）。, lseek 检查了 fd < fd_count，但不检查空槽，对上界以内的空槽读 NULL->f_op（AS3-29、SS-19）。, fd_count 只有 init_task 的 init_files 为 0；经 dup_fd 建立的表都是 NR_OPEN_DEFAULT（256），与 fd_array 等长（VT-FDLIMITS）。]
+  evidence: [AS3-15, AS3-29, SS-19, QS-20, VT-FDLIMITS]
+errata: []

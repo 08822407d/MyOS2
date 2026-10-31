@@ -1,0 +1,3465 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-BOUNDARIES-07
+record_type: user_entry_mount_console_facts
+produced_by: Claude Code desktop app (Code tab), local session f464c1b9-9b25-4af2-8f2d-d419b3b601fd (MYOS2-A-CC02 内核分析本地执行)
+model: unknown_or_not_attestable
+model_declared_by_runtime: claude-opus-5-5
+date: '2026-10-28'
+base_snapshot: kernel=time a039d9803ade；执行分支起点 b12572f14eae；主线 agent/MYOS2-LEAD-002 f5d0423da491；master e8e60cd19540（均为短 SHA）
+inputs_read: 见 evidence.md §2（任务书、06 审查、18 号、05 基线 C1/C2/C4 与 §8、相关 facts/deferred 条目，以及本批实际读取的源码范围）
+status: final_for_user_boundaries_07
+pin_time: a039d9803ade
+config_note: mykernel/scripts/options_flags.cmake 文本：-DROOTBLK_NVME 一行被注释（QB-45），ROOTBLK_TRANSFER 取 ATA 分支（QB-46）；CONFIG_DEVMEM、CONFIG_DEVPORT 未出现（QB-44）；DEBUG/RELEASE 取决于构建类型。只核了文本，没有构建产物。
+edge_direction:
+  call: 调用方 → 被调用方
+  data: 读取/消费方 → 产生/提供方
+  init_order: 后执行或后可用者 → 必须先完成者
+  config: 受影响的代码 → 提供开关的配置
+  build: 被编译的代码 → 构建脚本
+edge_direction_note: 与 CORE-USER-VFS-BASELINE-05 的 edge_direction 相同；间接调用给出调用点、绑定、接收方三项证据。
+id_convention: 结构化字段（qualified_id、related、边的 from/to、evidence 中的外部条目）一律写全名。说明文字中不带前缀的 UV-xx、GAP-Uxx、DRU-xx、A-Cx-xx、Qxx 指 CORE-USER-VFS-BASELINE-05 的同名条目（GAP-Uxx 的全名另见 gap_status），SF-C5-xx
+  指 CORE-SCHED-INTEGRATION-03，UB-xx、ER-xx 指本批 deferred-findings.yaml。
+runtime_evidence: NOT_RUN
+kernel_change_made: false
+owner_decisions_requested_now: []
+open_questions:
+- 镜像根中是否有名为 dev 的项（扩展 GAP-U02 的镜像内容范围）是 /dev 挂载与 /dev/console 能否解析的条件之一；本批只读了宿主脚本文本（QB-10 未见建立语句）。
+- init 实际链接的 libc 不在仓库内（QB-30），freopen 与 printf 使用哪些系统调用仍属 GAP-U10。
+- TASK_threadsp、X86_top_of_stack、TSS_sp2 的数值来自提交的生成件，与当前结构体布局是否一致需要编译生成才能核（VT-KFRAME）。
+- sysretq、swapgs、sti 的硬件语义与中断窗口没有用一手资料核对，按外部语义待核保留。
+counts:
+  capabilities: 14
+  edges: 37
+  edges_indirect: 8
+  anchors: 70
+  anchors_by_kind:
+    asm_range: 3
+    build: 0
+    in_body: 62
+    initializer: 4
+    macro: 1
+    type_member: 0
+  anchors_by_theme:
+    B01: 29
+    B02: 16
+    B03: 25
+  queries: 70
+  structure_checks: 20
+  value_tables: 3
+  gap_status: 6
+  next_validation_candidates: 4
+  frame_paths: 3
+  chain_links: 6
+capabilities:
+- id: fs.vfs.init_root_assign
+  id_status: proposed_id
+  theme: B01
+  refines: CORE-USER-VFS-BASELINE-05::fs.vfs.root_switch
+  purpose: 根盘选定之后，把 myos_root_sb 装进静态挂载 myos_root_mnt，并把当前任务 fs 的 root/pwd 指到 FAT32 根。
+  entries:
+  - mykernel/fs/vfs/myos_vfs.c::set_init_mount
+  - mykernel/fs/vfs/myos_vfs.c::set_init_taskfs
+  normal_path: myos_root_sb 只在文件作用域初始化为 NULL、只在 myos_switch_to_root_disk 第 126 行被赋值（QB-01）；下标 BOOT_FS_IDX（=0，QB-03）的 EFI 启动分区项经 mount_fs("FAT32") → ->read_super 得到超级块（AB1-04、AB1-06）。set_init_mount
+    把它写入 myos_root_mnt 的 mnt_sb、mnt_root 与 mnt_mountpoint（AB1-01）；myos_root_mnt 只在本文件出现（QB-02），其 mnt_parent 指向自身。set_init_taskfs 把 curr->fs 的 root/pwd 的 dentry 设为 FAT32 根 dentry、mnt
+    设为 &myos_root_mnt.mnt（AB1-02）。
+  failure_path: 没有选中根分区（第 0 项不是 EFI 启动分区，或表项全为 0）时 myos_root_sb 保持 NULL；文件系统类型找不到时 mount_fs 返回 0（AB1-06）；read_fat32_superblock 在 alloc_super 失败时返回 ERR_PTR(-ENOMEM)（AB1-07）。三种情况都直接进入
+    set_init_mount，它在没有任何判断的情况下读取 myos_root_sb->s_root（AB1-01、SB-13），静态推导到此停止。myos_switch_to_root_disk 声明返回 ulong 却没有 return（SB-12），调用者也不用返回值。
+  unknown:
+  - 读取空指针或错误指针成员时机器实际表现（NOT_RUN）
+  - 镜像分区布局（GAP-U02）
+  not_covered:
+  - read_fat32_superblock 的超级块解析与 ATA 读盘内部（不重析 FAT32/ATA）
+  evidence:
+  - AB1-01
+  - AB1-02
+  - AB1-04
+  - AB1-06
+  - AB1-07
+  - QB-01
+  - QB-02
+  - QB-03
+  - SB-12
+  - SB-13
+  edges:
+  - EB-01
+  - EB-03
+  findings:
+  - UB-12
+  implementation_evidence:
+    value: connected_body
+    reason: 两函数正文完整读到，赋值来源与消费者都已定位
+  correctness_evidence:
+    value: static_concern
+    reason: 根未选中或读超级块失败时没有检查（追加到 UV-01）
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 启动期单线程路径
+- id: fs.vfs.init_mount_path
+  id_status: proposed_id
+  theme: B01
+  refines: CORE-USER-VFS-BASELINE-05::fs.vfs.root_switch
+  purpose: init_mount 把一个文件系统类型挂到给定路径：路径解析、类型查找、fs_context（legacy）取根、把新挂载接到父挂载。
+  entries:
+  - mykernel/fs/vfs/init.c::init_mount
+  - mykernel/fs/vfs/namespace.c::path_mount
+  - mykernel/fs/vfs/namespace.c::do_new_mount
+  normal_path: kern_path 从当前任务 fs 的 root（绝对路径）或 pwd（相对路径）开始解析（QB-47），失败即返回（AB1-08）。path_mount → do_new_mount：get_fs_type 按名字取类型，找不到返回 -ENODEV（AB1-24）；devtmpfs 对外类型没有 init_fs_context，alloc_fs_context
+    改用 legacy（AB1-11），vfs_get_tree 经 fc->ops->get_tree 调到 legacy_get_tree（AB1-28、QB-58），后者经 fc->fs_type->mount 取根、遇错误指针原样上交（AB1-12、AB1-25）→ public_dev_mount（AB1-13、AB1-14）。随后 do_new_mount_fc
+    建 mount、lock_mount 取挂载点，do_add_mount 拒绝同一文件系统叠在其根所在的挂载点（-EBUSY，AB1-26），再经 graft_tree → mnt_set_mountpoint 把子挂载接到父挂载的 mnt_mounts（AB1-27）。之后的路径解析在每一步都直接调用 lookup_mnt（AB1-20），所以能跨入新挂载；位于挂载根且没有上层时
+    ".." 停在原 dentry 并经 step_into 跨入覆盖其上的挂载（AB1-18、AB1-19）。
+  failure_path: 挂载点在 FAT32 中不存在时，FAT32_lookup 返回 NULL（AB1-10），__lookup_slow 转成 -ENOENT（AB1-09），path_lookupat 的循环再经 link_path_walk 把错误指针变成错误码（AB1-22、AB1-23），init_mount 原样返回；myos_switch_to_root_disk
+    把它存进 err 后不再使用（AB1-05）。类型未注册时 do_new_mount 返回 -ENODEV。挂载点是否为目录不被检查：kern_path 只带 LOOKUP_FOLLOW，graft_tree 中的 d_is_dir 判断被注释（QB-53）。没有找到宿主脚本在镜像内建立 dev 的语句（QB-10）。
+  unknown:
+  - 镜像根目录是否有 dev（GAP-U02）
+  - 实际运行时挂载是否成功（NOT_RUN）
+  not_covered:
+  - path_mount 中未初始化的 sb_flags 只传给 fc->sb_flags，其后 mnt_flags 被 do_add_mount 覆盖；本批不另立条目，只在说明中记录
+  - 命名空间、传播类型、引用计数（被注释）
+  evidence:
+  - AB1-05
+  - AB1-08
+  - AB1-09
+  - AB1-10
+  - AB1-11
+  - AB1-12
+  - AB1-18
+  - AB1-19
+  - AB1-20
+  - AB1-22
+  - AB1-23
+  - AB1-24
+  - AB1-25
+  - AB1-26
+  - AB1-27
+  - AB1-28
+  - QB-09
+  - QB-10
+  - QB-47
+  - QB-53
+  - QB-58
+  edges:
+  - EB-02
+  - EB-04
+  - EB-05
+  - EB-06
+  - EB-37
+  - EB-38
+  findings:
+  - UB-03
+  - UB-11
+  implementation_evidence:
+    value: connected_body
+    reason: 从 init_mount 到接入父挂载的调用链都有活动正文
+  correctness_evidence:
+    value: static_concern
+    reason: 返回值在根切换处被丢弃；挂载依赖镜像目录
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 挂载锁与命名空间锁被注释，未分析
+- id: sched.misc.init_fs_sharing
+  id_status: proposed_id
+  theme: B01
+  refines: null
+  purpose: 说明任务 root/pwd 存在哪里、谁在何时改写、谁读取：init_task、kernel_init、kthreadd 与 kthread 共用同一个 init_fs。
+  entries:
+  - mykernel/sched/misc/fs_struct.c::init_fs
+  - mykernel/sched/forkexec/fork.c::copy_fs
+  normal_path: init_task.fs = &init_fs（QB-06）。rest_init 以 CLONE_FS 创建 kernel_init，kthreadd 以 CLONE_FS|CLONE_FILES 创建，create_kthread 以 CLONE_FS|CLONE_FILES|SIGCHLD 创建所有 kthread（QB-05）；copy_fs
+    带 CLONE_FS 时沿用同一结构（AB1-21）。改写顺序：mnt_init → init_mount_tree 设为 rootfs 根（QB-07）；kdevtmpfs 在 devtmpfsd 中 chdir("/..")、chroot(".") 改写（AB1-16，init_chroot 内调 set_fs_root，QB-07）；根盘切换时 set_init_taskfs
+    直接赋值为 FAT32 根（AB1-02）。读取者是 path_init（QB-47）。kernel_thread 把调用方 flags 与 CLONE_VM|CLONE_UNTRACED 合并（QB-64），copy_process 把 clone_flags 交给 copy_fs（QB-63）；exec 只清 fs->in_exec、不拆分 fs（QB-57、QB-67），所以
+    kernel_init 经 exec 成为 pid 1 后，仍在用户态与 kthreadd 及全部 kthread 共享 init_fs。
+  failure_path: set_init_taskfs 绕过 set_fs_root/set_fs_pwd，没有取得新路径引用也没有释放旧路径；切换后 kdevtmpfs 的 cwd 也变成 FAT32 根；用户态 sys_chdir 直接写 curr->fs->pwd（QB-68），pid 1 若 chdir 会同时改变这些内核线程的 cwd（UB-03）。
+  unknown:
+  - 根切换之后是否还有设备注册经 kdevtmpfs 建节点（本批未找到）
+  not_covered:
+  - 用户进程 fork 后各自复制 fs（copy_fs_struct），本批只引用不展开
+  evidence:
+  - AB1-02
+  - AB1-16
+  - AB1-21
+  - QB-05
+  - QB-06
+  - QB-07
+  - QB-47
+  - QB-57
+  - QB-63
+  - QB-64
+  - QB-67
+  - QB-68
+  edges:
+  - EB-03
+  - EB-04
+  - EB-07
+  findings:
+  - UB-03
+  implementation_evidence:
+    value: connected_body
+    reason: 共享来源、改写点和读取点都已定位
+  correctness_evidence:
+    value: static_concern
+    reason: 共享结构被内核线程改写，根切换时绕过引用计数
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 只看源码中的共享关系，未分析并发
+- id: drivers.base.devtmpfs_setup
+  id_status: proposed_id
+  theme: B01
+  refines: CORE-USER-VFS-BASELINE-05::fs.vfs.root_switch
+  purpose: devtmpfs 的两个类型与一个内部实例：内部 shmem 实例保存设备节点；对外类型每次挂载都返回该实例的根。
+  entries:
+  - mykernel/drivers/base/devtmpfs.c::devtmpfs_init
+  - mykernel/drivers/base/devtmpfs.c::devtmpfsd
+  normal_path: driver_init 调 devtmpfs_init（QB-11）。它先 vfs_kern_mount(&internal_fs_type) 建内部实例，再 register_filesystem(&dev_fs_type)（QB-08）；内部类型用 shmem_init_fs_context（AB1-15），对外类型只有 .mount
+    = public_dev_mount（AB1-13），后者返回内部实例根 dentry 的新引用（AB1-14）。随后 kthread_run 建 kdevtmpfs 并等待 setup_done（AB1-17）；kdevtmpfs 在共享的 init_fs 中把 devtmpfs 挂到 "/"，chdir("/..") 越过 rootfs 根进入覆盖其上的
+    devtmpfs 根，再 chroot(".")（AB1-16、AB1-18、AB1-19、AB1-20）。
+  failure_path: 内部实例建立失败或类型注册失败则直接返回，driver_init 不看返回值，静态变量 thread 保持 NULL；之后建节点时 devtmpfs_submit_req 以 NULL 调 wake_up_process（QB-54，未追）。kthread 创建失败时 err 非零，devtmpfs_init 进入 while (err);
+    原地循环（QB-49）。devtmpfsd 中 init_mount 失败跳到 out，不再 complete(setup_done)，此时 devtmpfs_init 一直等待（AB1-16、AB1-17）。
+  unknown:
+  - 运行时是否走到这些失败分支（NOT_RUN）
+  not_covered:
+  - shmem 超级块的建立细节
+  evidence:
+  - AB1-13
+  - AB1-14
+  - AB1-15
+  - AB1-16
+  - AB1-17
+  - QB-08
+  - QB-11
+  - QB-49
+  - QB-54
+  edges:
+  - EB-05
+  - EB-06
+  - EB-07
+  - EB-09
+  - EB-11
+  findings:
+  - UB-03
+  implementation_evidence:
+    value: connected_body
+    reason: 建立、注册、线程与挂载都有活动正文
+  correctness_evidence:
+    value: static_concern
+    reason: 失败分支为原地循环或永久等待
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 只读了等待/完成配对
+- id: drivers.base.devtmpfs_node_create
+  id_status: proposed_id
+  theme: B03
+  refines: null
+  purpose: 设备注册时在 devtmpfs 中建设备节点：请求交给 kdevtmpfs，按相对路径建 dentry，经 shmem 的 mknod 建字符设备 inode。
+  entries:
+  - mykernel/drivers/base/devtmpfs.c::devtmpfs_create_node
+  - mykernel/drivers/base/devtmpfs.c::handle_create
+  normal_path: device_add 在设备号主号非 0 时调 devtmpfs_create_node（QB-14）。节点名取 dev_name（即 kobj.name），模式固定为 0600|S_IFCHR（非块设备，QB-15）。请求挂到全局链表，唤醒 kdevtmpfs 并等待（AB3-07）；工作线程调 handle → handle_create（AB3-08），以
+    AT_FDCWD 相对路径 kern_path_create，再 vfs_mknod(..., dev->devt)（QB-16）。父目录 inode 的 i_op 是 shmem_dir_inode_operations（QB-59），其 ->mknod 是 shmem_mknod（QB-17、AB3-09），它经 shmem_get_inode →
+    init_special_inode 建节点（QB-18、AB3-10、AB3-11）。因为此时共享 init_fs 的 pwd 是 devtmpfs 根，节点建在内部实例的根目录下。
+  failure_path: 工作线程完成通知后立即 kfree(req)；提交方随后在 wait_for_completion 中加锁、摘等待项、递减计数，再读 req->err，这些都可能作用在已释放的对象上（AB3-07、AB3-08、QB-55、QB-56，UB-02）。根切换后 kdevtmpfs 的 cwd 变成 FAT32 根，FAT32 目录没有
+    mknod（QB-48），vfs_mknod 会返回 -EPERM（UB-03，条件推导）。
+  unknown:
+  - 请求释放与读取的先后在运行时如何交错（NOT_RUN）
+  not_covered:
+  - create_path（父目录创建）函数体整体被注释，只记录不展开
+  evidence:
+  - AB3-07
+  - AB3-08
+  - AB3-09
+  - AB3-10
+  - AB3-11
+  - QB-14
+  - QB-15
+  - QB-16
+  - QB-17
+  - QB-18
+  - QB-48
+  - QB-55
+  - QB-56
+  - QB-59
+  edges:
+  - EB-10
+  - EB-11
+  - EB-12
+  - EB-37
+  - EB-39
+  findings:
+  - UB-02
+  - UB-03
+  implementation_evidence:
+    value: connected_body
+    reason: 从 device_add 到 init_special_inode 都有活动正文与绑定
+  correctness_evidence:
+    value: static_concern
+    reason: 请求对象的生命周期与共享 cwd
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 只读了提交/处理/完成的源码顺序
+- id: sched.forkexec.first_user_entry_frame
+  id_status: proposed_id
+  theme: B02
+  refines: CORE-USER-VFS-BASELINE-05::sched.forkexec.first_user_launch
+  purpose: 首个用户程序进入用户态时所用寄存器帧的来源：kernel_init 线程栈顶的 pt_regs，由 copy_thread 清零、由 exec 末段写入入口与栈。
+  entries:
+  - mykernel/arch/x86_64/myos/arch_task.c::kjmp_to_doexecve
+  normal_path: kernel_init 由 kernel_thread 创建（kthread=1，QB-36），copy_process 置 PF_KTHREAD，copy_thread 把栈顶 pt_regs 清零并把 kernel_init 写入 frame->bx（AB2-05、AB2-07）。kjmp_to_doexecve 在 exec
+    之前取 task_pt_regs(curr)（AB2-01、AB2-02），清 PF_KTHREAD（kernel_execve 拒绝带此标志的任务，QB-36），exec 末段 load_elf_binary 取 current_pt_regs() 并 START_THREAD（QB-37），start_thread_common 写 ip、sp、cs、ss（AB2-15）与
+    flags（QB-38）。随后内联汇编把 rsp 设为该地址并 jmp syscall_return_via_sysret（CORE-USER-VFS-BASELINE-05::A-C1-11、QB-33）。
+  failure_path: kernel_execve 的返回值被丢弃（CORE-USER-VFS-BASELINE-05::A-C1-10）。exec 没走到 START_THREAD 时，帧中仍是 copy_thread 清零的值：ip、sp、flags 都为 0（追加到 UV-01）。越过不可返回点后的失败见 CORE-USER-VFS-BASELINE-05::UV-02。
+  unknown:
+  - 以全零帧执行 sysretq 时的机器行为（外部语义，NOT_RUN）
+  not_covered:
+  - begin_new_exec 与地址空间切换（引用 05 C3）
+  evidence:
+  - AB2-01
+  - AB2-02
+  - AB2-05
+  - AB2-07
+  - AB2-15
+  - QB-33
+  - QB-36
+  - QB-37
+  - QB-38
+  - CORE-USER-VFS-BASELINE-05::A-C1-10
+  - CORE-USER-VFS-BASELINE-05::A-C1-11
+  edges:
+  - EB-14
+  - EB-15
+  - EB-16
+  - EB-17
+  findings: []
+  implementation_evidence:
+    value: connected_body
+    reason: 写帧、取栈指针、跳转三处都有活动文本
+  correctness_evidence:
+    value: static_concern
+    reason: exec 失败时以清零帧返回（UV-01）
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 启动期单线程
+- id: sched.forkexec.fork_child_return
+  id_status: proposed_id
+  theme: B02
+  refines: CORE-USER-VFS-BASELINE-05::sched.forkexec.fork_entry
+  purpose: fork 子任务第一次被调度时怎样回到用户态：copy_thread 建帧，切换汇编按 thread.sp 恢复，ret_from_fork_asm 分流。
+  entries:
+  - mykernel/arch/x86_64/sched/context/process_arch.c::copy_thread
+  - mykernel/arch/x86_64/entry/entry_64.S::ret_from_fork_asm
+  - mykernel/arch/x86_64/sched/context/process_arch.c::ret_from_fork
+  normal_path: copy_process 调 copy_thread（QB-35）。子任务的 pt_regs 在其内核栈顶，下面紧接 inactive_task_frame（AB2-03，VT-KFRAME），返回地址设为 ret_from_fork_asm、thread.sp 指向 fork_frame（AB2-04）。用户 fork：复制父任务当前帧（即其
+    entry_SYSCALL_64 建的帧），ax 置 0，sp 只在给定新栈时改写（AB2-06）。首次切入时 __switch_to_asm 从 TASK_threadsp 取栈并弹出六个寄存器，jmp __switch_to（SB-04），__switch_to 更新 current_task 与 top_of_stack（AB2-08）后返回到 ret_addr；此时
+    rsp 恰在 pt_regs 起点（VT-KFRAME）。ret_from_fork_asm 以 rsp 作 regs 调 ret_from_fork（AB2-09），后者 schedule_tail 后调用 syscall_exit_to_user_mode（AB2-10、AB2-11）；rbx 为 0 时 jmp syscall_return_via_sysret（SB-03）。新任务首次切入经此处、不回
+    __schedule 尾部，见 CORE-SCHED-INTEGRATION-03::SF-C5-26。
+  failure_path: 内核线程（rbx≠0）：C 层先调 fn(fn_arg)，fn 返回后汇编又 callq *%rbx 一次，然后 jmp .（AB2-10、SB-03、SB-20，UB-06）。create_kthread 建的线程 fn 都是 kthread()，其末尾调用 kthread_exit（QB-62），后者是否返回未读。
+  unknown:
+  - schedule_tail 的开中断与计数恢复（INTEGRATION-03 已登记未追）
+  - TASK_threadsp 数值与 task_struct 布局的一致性（VT-KFRAME）
+  not_covered:
+  - pid 分配与 wake_up_new_task 的入队位置（GAP-U09 其余部分）
+  evidence:
+  - AB2-03
+  - AB2-04
+  - AB2-06
+  - AB2-08
+  - AB2-09
+  - AB2-10
+  - AB2-11
+  - QB-34
+  - QB-35
+  - QB-62
+  - QB-65
+  - QB-66
+  - SB-03
+  - SB-04
+  - SB-20
+  - VT-KFRAME
+  - CORE-SCHED-INTEGRATION-03::SF-C5-26
+  edges:
+  - EB-15
+  - EB-18
+  - EB-19
+  - EB-20
+  - EB-21
+  - EB-24
+  findings:
+  - UB-06
+  implementation_evidence:
+    value: connected_body
+    reason: 建帧、切换、分流和返回都有活动文本
+  correctness_evidence:
+    value: static_concern
+    reason: 内核线程函数返回时会被再调用一次
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: SMP 与中断窗口不在范围
+- id: entry.syscall_frame_return
+  id_status: proposed_id
+  theme: B02
+  refines: null
+  purpose: 普通系统调用的建帧与返回，以及三条路径共用的 syscall_return_via_sysret。
+  entries:
+  - mykernel/arch/x86_64/entry/entry_64.S::entry_SYSCALL_64
+  - mykernel/arch/x86_64/entry/common.c::do_syscall_64
+  - mykernel/arch/x86_64/entry/entry_64.S::syscall_return_via_sysret
+  normal_path: entry_SYSCALL_64：swapgs，把用户 rsp 暂存到 TSS sp2，从 pcpu_hot.top_of_stack 取内核栈（AB2-13），依次压入 ss、sp、flags(r11)、cs、ip(rcx)、orig_ax(rax)、irq_nr($0x80) 和 PUSH_REGS 的 15 个寄存器，共 22
+    格，正好是 pt_regs 的大小与顺序（SB-01、VT-PTREGS）；top_of_stack 由 __switch_to 设为当前任务的 task_top_of_stack（AB2-08），所以这个帧就是 task_pt_regs(current)。do_syscall_64 在号小于 __NR_syscalls 时把返回值写入 regs->ax（AB2-14），再
+    syscall_exit_to_user_mode（QB-43、SB-15）。call do_syscall_64 之后没有 ret 或 jmp，紧随其后的就是 syscall_return_via_sysret（SYM_CODE_START 只展开为对齐与标签），所以返回后落入它（SB-01）：xchg 把帧中的 flags/ip 换到 r11/rcx
+    槽（AB2-16），POP_REGS 装入 15 个寄存器（其中 r11、rcx 已是 flags、ip），addq $0x28 跳过 irq_nr、orig_ax、ip、cs、flags 五格，popq %rsp 取用户栈，swapgs、sti、sysretq（SB-02、VT-PTREGS）。
+  failure_path: do_syscall_64 计算的 SYSRET 适用性结果（SB-16）没有被汇编使用，返回一律走 sysretq（SB-01）。号不小于 __NR_syscalls 时 ax 保持原值（即系统调用号）；表内缺项落到 __x64_sys_ni_syscall 打印后 while (1)（AB3-24、QB-29，UB-09）。
+  unknown:
+  - sysretq/swapgs/sti 的硬件语义与中断窗口（外部语义待核）
+  - X86_top_of_stack、TSS_sp2 数值与结构布局（VT-KFRAME）
+  not_covered:
+  - arch_do_signal_or_restart 内部（信号子系统端点）
+  - 中断/异常入口 sa_entintr_retp
+  evidence:
+  - AB2-08
+  - AB2-13
+  - AB2-14
+  - AB2-16
+  - AB3-24
+  - QB-29
+  - QB-33
+  - QB-39
+  - QB-43
+  - QB-65
+  - SB-01
+  - SB-02
+  - SB-15
+  - SB-16
+  - VT-PTREGS
+  edges:
+  - EB-17
+  - EB-20
+  - EB-22
+  - EB-23
+  findings:
+  - UB-09
+  implementation_evidence:
+    value: connected_body
+    reason: 建帧、分派、返回的指令序列逐条可读
+  correctness_evidence:
+    value: static_concern
+    reason: SYSRET 适用性判断未被使用；缺项系统调用原地循环
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析 IRQ 窗口与 SMP
+- id: drivers.char.console_cdev_registration
+  id_status: proposed_id
+  theme: B03
+  refines: null
+  purpose: console 设备号 (5,1) 与 console_fops 的登记，以及登记相对 devtmpfs 与根切换的时序。
+  entries:
+  - mykernel/drivers/char/tty_io.c::tty_init
+  - mykernel/drivers/char/mem.c::chr_dev_init
+  normal_path: vfs_caches_init 调 chrdev_init 建 cdev_map（QB-21）。kernel_init → do_basic_setup：先 driver_init（devtmpfs_init），后 do_initcalls（AB3-02）；do_initcalls 是手写序列，在 fs 级调 chr_dev_init（AB3-03），后者末尾
+    return tty_init()（QB-12）。tty_init 用 cdev_init 把 console_cdev.ops 设为 console_fops（QB-20），按 MKDEV(5,1) cdev_add 进 cdev_map（AB3-05），再 myos_device_create(tty_class, (5,1), "console")（QB-13），后者经
+    device_add 请求建节点（AB3-06、QB-14）。全部发生在 myos_switch_to_root_disk 之前（CORE-USER-VFS-BASELINE-05::A-C1-02）。
+  failure_path: cdev_add 失败只打印；myos_device_create 的返回值不检查，而 device_add 本身不会返回 0（SB-10、SB-11，UB-04）。mem 设备循环把局部副本的 cdev 地址登记进 cdev_map，kobj_map 保存的就是这个地址（AB3-25、QB-42、QB-60，UB-13）。
+  unknown:
+  - postcore_initcall/fs_initcall 宏放入的段是否另有遍历者（本批只确认 do_initcalls 为手写调用）
+  not_covered:
+  - tty_class 与 class_create 内部
+  evidence:
+  - AB3-02
+  - AB3-03
+  - AB3-05
+  - AB3-06
+  - AB3-25
+  - QB-12
+  - QB-13
+  - QB-14
+  - QB-20
+  - QB-21
+  - QB-42
+  - QB-60
+  - SB-10
+  - SB-11
+  - CORE-USER-VFS-BASELINE-05::A-C1-02
+  edges:
+  - EB-09
+  - EB-10
+  - EB-28
+  findings:
+  - UB-04
+  - UB-13
+  implementation_evidence:
+    value: connected_body
+    reason: 登记、建节点请求与时序都有活动正文
+  correctness_evidence:
+    value: static_concern
+    reason: 返回值不可用；mem 设备登记栈上副本
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 启动期顺序调用
+- id: drivers.char.chrdev_open_dispatch
+  id_status: proposed_id
+  theme: B03
+  refines: null
+  purpose: 打开字符设备节点时把文件的 f_op 从 def_chr_fops 换成设备自己的表。
+  entries:
+  - mykernel/drivers/char/char_dev.c::chrdev_open
+  normal_path: 节点 inode 的初始 i_fop 是 def_chr_fops，i_rdev 是设备号（AB3-11、QB-19）。myos_do_dentry_open 取 f_op = inode->i_fop 并调 ->open（CORE-USER-VFS-BASELINE-05::A-C4-10），即 chrdev_open（QB-19）。它按
+    i_rdev 在 cdev_map 中 kobj_lookup，container_of 得到 console_cdev（AB3-12），首次打开时把它缓存到 inode->i_cdev 并插入链表（QB-61），把 filp->f_op 换成 console_fops 后再调其 open（AB3-13）。换表之前的表：def_chr_fops（只有 open、llseek）；换表之后的表：console_fops（read、write、open，AB3-04）。
+  failure_path: 查不到设备号返回 -ENXIO（AB3-12）。console 的 open 返回 1，chrdev_open 按非零走错误出口并返回 1，但 f_op 已经换好（AB3-13、AB3-14、SB-17，UB-05）；上一层的 do_open 与 myos_do_dentry_open 都没有 return（CORE-USER-VFS-BASELINE-05::UV-04）。
+  unknown:
+  - 打开在运行时被调用者视为成功还是失败（UV-04，NOT_RUN）
+  not_covered:
+  - kobj_map/kobj_lookup 的内部
+  evidence:
+  - AB3-04
+  - AB3-11
+  - AB3-12
+  - AB3-13
+  - QB-19
+  - QB-21
+  - QB-61
+  - SB-17
+  - CORE-USER-VFS-BASELINE-05::A-C4-10
+  edges:
+  - EB-12
+  - EB-27
+  - EB-28
+  - EB-29
+  findings:
+  - UB-05
+  implementation_evidence:
+    value: connected_body
+    reason: 换表前后两张表与查找都已取证
+  correctness_evidence:
+    value: static_concern
+    reason: open 返回值语义不一致
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: cdev_lock 被注释，未分析
+- id: drivers.char.console_read
+  id_status: proposed_id
+  theme: B03
+  refines: null
+  purpose: console 的 open 与 read 实际落到键盘输入缓冲。
+  entries:
+  - mykernel/drivers/char/myos_tty.c::myos_tty_open
+  - mykernel/drivers/char/myos_tty.c::myos_tty_read
+  normal_path: p_kb 在 start_kernel → myos_devices_init → init_keyboard 中分配（QB-22），远早于任何打开。myos_tty_open 把 private_data 设为 p_kb，重置全局键盘缓冲并返回 1（AB3-14）。vfs_read 在没有 read_iter 时调 ->read（AB3-18），即
+    myos_tty_read：kzalloc 临时缓冲，循环调用 kbd_parse_scancode，直到攒满 count 个非零键值，再 copy_to_user（AB3-15）。kbd_parse_scancode 经 kbd_get_scancode 在 getcode_done 上等待，直到环形缓冲计数大于 0（AB3-16）；键盘中断处理把扫描码放入
+    p_kb 并 complete(getcode_done)（AB3-17）。
+  failure_path: 读不按行或 EOF 结束，只在攒满 count 个非零键时返回（SB-19，UB-08）；临时缓冲分配与 copy_to_user 的结果都不检查。每次打开都会清空共享的键盘缓冲。
+  unknown:
+  - 键盘中断是否已经开启并送达（运行时）
+  not_covered:
+  - 扫描码翻译表、USB 键盘与 TTY 行规程
+  evidence:
+  - AB3-14
+  - AB3-15
+  - AB3-16
+  - AB3-17
+  - AB3-18
+  - QB-22
+  - SB-17
+  - SB-19
+  edges:
+  - EB-29
+  - EB-30
+  - EB-31
+  findings:
+  - UB-05
+  - UB-08
+  implementation_evidence:
+    value: connected_body
+    reason: 从 vfs_read 到等待点与生产者都有活动正文
+  correctness_evidence:
+    value: static_concern
+    reason: 读语义与 TTY 不同，资源检查缺失
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: 只读了完成量等待与中断侧 complete
+- id: drivers.char.console_write
+  id_status: proposed_id
+  theme: B03
+  refines: null
+  purpose: console 的 write 回调最终写帧缓冲像素。
+  entries:
+  - mykernel/drivers/char/myos_tty.c::myos_tty_write
+  normal_path: myos_tty_write 只调 myos_tty_write_color(buf, length, GREEN, BLACK) 并返回 length（AB3-21）；后者逐字符直接读 buf 并调 kputchar（AB3-23），kputchar 按字模写 Pos.FB_addr 起的像素（AB3-22）；Pos.FB_addr
+    在 myos_init_video 中取 framebuffer.FB_virbase（QB-25）。
+  failure_path: 全程直接解引用调用方给的用户指针，没有 copy_from_user（SB-18，UB-07）。
+  unknown:
+  - 帧缓冲映射与显示是否可用（运行时）
+  not_covered:
+  - 字体表与 VBE 映射细节
+  evidence:
+  - AB3-21
+  - AB3-22
+  - AB3-23
+  - QB-25
+  - SB-18
+  edges:
+  - EB-32
+  - EB-33
+  - EB-34
+  findings:
+  - UB-07
+  implementation_evidence:
+    value: connected_body
+    reason: 回调到帧缓冲写入都有活动正文
+  correctness_evidence:
+    value: static_concern
+    reason: 直接读用户指针
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: Pos.lock 自旋锁只读了源码
+- id: fs.vfs.write_dispatch
+  id_status: proposed_id
+  theme: B03
+  refines: null
+  purpose: write 与 writev 两条系统调用路径在到达文件 ->write 之前的差别。
+  entries:
+  - mykernel/fs/syscall.c::sys_write
+  - mykernel/fs/vfs/read_write.c::vfs_write
+  - mykernel/fs/vfs/read_write.c::vfs_writev
+  normal_path: sys_writev → do_writev → vfs_writev：只检查 FMODE_WRITE，随后逐段直接调用 file->f_op->write（AB3-20、SB-07、SB-08）。对 console 文件即 myos_tty_write。
+  failure_path: sys_write → ksys_write → vfs_write：在调用 ->write 之前要求 FMODE_CAN_WRITE（AB3-19、SB-09），但这个位只有定义和检查，没有活动的设置者（QB-23）；f_mode 的赋值只有 OPEN_FMODE(flags) 与块设备 open 中的几处 |=，都不含该位（QB-24），OPEN_FMODE
+    只产生访问位与 __FMODE_NONOTIFY（VT-FLAGS）。所以对以写方式打开的文件，write(2) 都在此返回 -EINVAL（fd 无效或没有写权限时更早返回 -EBADF），到不了 console 的 write（UB-01）。
+  unknown:
+  - libc 输出用 write 还是 writev（GAP-U10）
+  not_covered:
+  - 其他文件系统的 write_iter
+  evidence:
+  - AB3-19
+  - AB3-20
+  - QB-23
+  - QB-24
+  - SB-07
+  - SB-08
+  - SB-09
+  - VT-FLAGS
+  edges:
+  - EB-32
+  - EB-33
+  - EB-35
+  findings:
+  - UB-01
+  - UB-07
+  implementation_evidence:
+    value: partial_body
+    reason: writev 有活动路径；write 在检查处截断
+  correctness_evidence:
+    value: static_concern
+    reason: write(2) 静态上不可达 ->write
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析
+- id: user.initramfs.init_console_reopen
+  id_status: proposed_id
+  theme: B03
+  refines: null
+  purpose: init 把标准输入、输出、错误重新指向 /dev/console；只登记用户源码、构建文本与内核已有入口。
+  entries:
+  - myinitramfs/myinit/initd.c::main
+  normal_path: initd.c 依次 freopen("/dev/console", "r", stdin)、("w", stdout)、("w", stderr)（AB3-01）。构建文本把 C 编译器设为仓库外的 musl-gcc，只加入 myinit 与 myshell 两个子目录（QB-30）；仓库内的 mylib/myglibc 不在这次构建中，其中与
+    freopen 有关的几行都被注释、没有活动定义，不能用来推断 freopen 的实现（QB-31）。内核侧已有的相关入口：open、close、read、write、writev、ioctl、fcntl，以及空实现的 dup/dup2（QB-26、QB-40、SB-05、SB-06）；表中没有 openat 与 dup3（QB-27），而它们的编号小于
+    __NR_syscalls（QB-28），若被使用会落到 __x64_sys_ni_syscall（AB3-24）。
+  failure_path: libc 若用 dup2 把新 fd 移到 0/1/2，内核侧没有实际动作且返回值未定义（UB-10）；若用 openat 或 dup3，会进入原地循环（UB-09）。若以含 O_CREAT 的标志打开（"w" 模式通常如此），打开最后一段的 O_CREAT 判断检查的是查找标志、总走只查找分支，/dev/console 已存在所以仍能找到；不存在的文件则不会被创建（UB-14）。哪一种成立取决于不在仓库中的
+    libc（GAP-U10）。
+  unknown:
+  - freopen 实际发出的系统调用序列（GAP-U10）
+  - 初始 fd 0/1/2 的状态
+  not_covered:
+  - musl 源码（仓库外，未读）
+  evidence:
+  - AB3-01
+  - AB3-24
+  - QB-26
+  - QB-27
+  - QB-28
+  - QB-30
+  - QB-31
+  - QB-40
+  - SB-05
+  - SB-06
+  edges:
+  - EB-25
+  - EB-26
+  - EB-35
+  - EB-36
+  findings:
+  - UB-09
+  - UB-10
+  - UB-14
+  implementation_evidence:
+    value: partial_body
+    reason: 用户调用与内核入口已定位，中间 libc 缺失
+  correctness_evidence:
+    value: not_assessed
+    reason: 依赖 libc 的部分无法判断
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 不适用
+edges:
+- id: EB-01
+  from: CORE-USER-VFS-BASELINE-05::fs.vfs.root_switch
+  to: fs.vfs.init_root_assign
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AB1-05
+  note: 根盘选择结果不经检查即调用
+- id: EB-02
+  from: CORE-USER-VFS-BASELINE-05::fs.vfs.root_switch
+  to: fs.vfs.init_mount_path
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AB1-05
+  - QB-09
+  note: 返回值存入 err 后不用
+- id: EB-03
+  from: sched.misc.init_fs_sharing
+  to: fs.vfs.init_root_assign
+  kind: data
+  status: connected_with_concern
+  evidence:
+  - AB1-02
+  - QB-06
+  note: 共享 init_fs 的 root/pwd 由 set_init_taskfs 直接写入
+- id: EB-04
+  from: fs.vfs.init_mount_path
+  to: sched.misc.init_fs_sharing
+  kind: data
+  status: connected
+  evidence:
+  - QB-47
+  - query: QB-47
+    path: mykernel/fs/vfs/namei.c
+    line: 553
+  note: path_init 从当前任务 fs 取起点
+- id: EB-05
+  from: fs.vfs.init_mount_path
+  to: drivers.base.devtmpfs_setup
+  kind: call
+  status: connected
+  indirect:
+    call_site:
+    - AB1-28
+    - AB1-12
+    binding:
+    - AB1-11
+    - query: QB-58
+      path: mykernel/fs/vfs/fs_context.c
+      line: 162
+    - query: QB-58
+      path: mykernel/fs/vfs/fs_context.c
+      line: 174
+    - AB1-13
+    receiver:
+    - AB1-14
+  note: 两跳间接：vfs_get_tree 经 fc->ops->get_tree 到 legacy_get_tree，再经 ->mount 到 public_dev_mount
+- id: EB-06
+  from: drivers.base.devtmpfs_setup
+  to: fs.vfs.init_mount_path
+  kind: call
+  status: connected
+  evidence:
+  - AB1-16
+  - query: QB-09
+    path: mykernel/drivers/base/devtmpfs.c
+    line: 390
+  note: kdevtmpfs 把 devtmpfs 挂到 "/"
+- id: EB-07
+  from: sched.misc.init_fs_sharing
+  to: drivers.base.devtmpfs_setup
+  kind: data
+  status: connected_with_concern
+  evidence:
+  - AB1-16
+  - AB1-17
+  - query: QB-05
+    path: mykernel/sched/forkexec/kthread.c
+    line: 223
+  - AB1-21
+  - query: QB-07
+    path: mykernel/fs/vfs/init.c
+    line: 76
+  note: kdevtmpfs 以 CLONE_FS 共享 init_fs，其 chdir/chroot 改写共享结构
+- id: EB-09
+  from: drivers.char.console_cdev_registration
+  to: drivers.base.devtmpfs_setup
+  kind: init_order
+  status: connected
+  evidence:
+  - AB3-02
+  - AB3-03
+  - query: QB-11
+    path: mykernel/drivers/base/base_init.c
+    line: 25
+  - query: QB-12
+    path: mykernel/drivers/char/mem.c
+    line: 206
+  note: console 登记在 devtmpfs 建立之后（do_basic_setup 先 driver_init 后 do_initcalls）
+- id: EB-10
+  from: drivers.char.console_cdev_registration
+  to: drivers.base.devtmpfs_node_create
+  kind: call
+  status: connected_with_concern
+  evidence:
+  - AB3-06
+  - query: QB-13
+    path: mykernel/drivers/char/tty_io.c
+    line: 170
+  - query: QB-14
+    path: mykernel/drivers/base/core.c
+    line: 108
+  note: device_add 请求建节点，返回值不可用
+- id: EB-11
+  from: drivers.base.devtmpfs_node_create
+  to: drivers.base.devtmpfs_setup
+  kind: data
+  status: connected_with_concern
+  evidence:
+  - AB3-07
+  - AB3-08
+  - query: QB-16
+    path: mykernel/drivers/base/devtmpfs.c
+    line: 200
+  note: 请求交 kdevtmpfs，相对路径按其 cwd（devtmpfs 根）解析
+- id: EB-12
+  from: drivers.char.chrdev_open_dispatch
+  to: drivers.base.devtmpfs_node_create
+  kind: data
+  status: connected
+  evidence:
+  - AB3-10
+  - AB3-11
+  - query: QB-19
+    path: mykernel/fs/vfs/inode.c
+    line: 382
+  note: 打开时用到的 i_fop、i_rdev 由建节点时的 init_special_inode 写入
+- id: EB-14
+  from: CORE-USER-VFS-BASELINE-05::sched.forkexec.first_user_launch
+  to: sched.forkexec.first_user_entry_frame
+  kind: data
+  status: connected_with_concern
+  evidence:
+  - AB2-01
+  - CORE-USER-VFS-BASELINE-05::A-C1-10
+  - CORE-USER-VFS-BASELINE-05::A-C1-11
+  note: exec 前取帧地址，exec 返回值被丢弃
+- id: EB-15
+  from: sched.forkexec.first_user_entry_frame
+  to: sched.forkexec.fork_child_return
+  kind: data
+  status: connected
+  evidence:
+  - AB2-05
+  - query: QB-36
+    path: mykernel/sched/forkexec/fork.c
+    line: 964
+  - query: QB-36
+    path: mykernel/sched/forkexec/fork.c
+    line: 1545
+  - query: QB-05
+    path: mykernel/init/main.c
+    line: 93
+  note: 首个程序的帧由创建 kernel_init 时的 copy_thread 清零
+- id: EB-16
+  from: sched.forkexec.first_user_entry_frame
+  to: CORE-USER-VFS-BASELINE-05::fs.vfs.elf_loader
+  kind: data
+  status: connected
+  evidence:
+  - query: QB-37
+    path: mykernel/fs/vfs/binfmt_elf.c
+    line: 1115
+  - query: QB-37
+    path: mykernel/fs/vfs/binfmt_elf.c
+    line: 1131
+  - AB2-15
+  - query: QB-38
+    path: mykernel/arch/x86_64/sched/context/process64_arch.c
+    line: 298
+  note: 入口、用户栈、段与 flags 由 exec 末段写入
+- id: EB-17
+  from: sched.forkexec.first_user_entry_frame
+  to: entry.syscall_frame_return
+  kind: call
+  status: connected
+  evidence:
+  - CORE-USER-VFS-BASELINE-05::A-C1-11
+  - query: QB-33
+    path: mykernel/arch/x86_64/myos/arch_task.c
+    line: 39
+  note: rsp 设为帧地址后 jmp
+- id: EB-18
+  from: CORE-USER-VFS-BASELINE-05::sched.forkexec.fork_entry
+  to: sched.forkexec.fork_child_return
+  kind: call
+  status: connected
+  evidence:
+  - query: QB-35
+    path: mykernel/sched/forkexec/fork.c
+    line: 1143
+  - AB2-03
+  note: copy_process 调 copy_thread
+- id: EB-19
+  from: external:mykernel/arch/x86_64/entry/entry_64.S::__switch_to_asm
+  to: sched.forkexec.fork_child_return
+  kind: call
+  status: connected
+  indirect:
+    call_site:
+    - SB-04
+    - query: QB-66
+      path: mykernel/arch/x86_64/sched/context/process64_arch.c
+      line: 421
+    binding:
+    - AB2-04
+    receiver:
+    - AB2-09
+  note: __switch_to_asm jmp __switch_to，__switch_to 返回时弹出 frame->ret_addr = ret_from_fork_asm
+- id: EB-20
+  from: sched.forkexec.fork_child_return
+  to: entry.syscall_frame_return
+  kind: call
+  status: connected
+  evidence:
+  - SB-03
+  - query: QB-33
+    path: mykernel/arch/x86_64/entry/entry_64.S
+    line: 282
+  note: rbx 为 0 时 jmp
+- id: EB-21
+  from: sched.forkexec.fork_child_return
+  to: external:mykernel/arch/x86_64/lock_IPC/signal/signal.c::arch_do_signal_or_restart
+  kind: call
+  status: endpoint
+  evidence:
+  - AB2-11
+  - AB2-12
+  - query: QB-65
+    path: mykernel/entry/common.c
+    line: 66
+  - query: QB-65
+    path: mykernel/entry/common.c
+    line: 72
+  - SB-14
+  - SB-15
+  note: syscall_exit_to_user_mode → exit_to_user_mode_loop(regs, 0) → 无条件进入信号处理；信号内部未追
+- id: EB-22
+  from: entry.syscall_frame_return
+  to: external:mykernel/arch/x86_64/lock_IPC/signal/signal.c::arch_do_signal_or_restart
+  kind: call
+  status: endpoint
+  evidence:
+  - query: QB-43
+    path: mykernel/arch/x86_64/entry/common.c
+    line: 49
+  - query: QB-65
+    path: mykernel/entry/common.c
+    line: 66
+  - query: QB-65
+    path: mykernel/entry/common.c
+    line: 72
+  - AB2-12
+  - SB-15
+  note: 同上
+- id: EB-23
+  from: entry.syscall_frame_return
+  to: external:mykernel/arch/x86_64/sched/context/process64_arch.c::__switch_to
+  kind: data
+  status: connected
+  evidence:
+  - AB2-08
+  - AB2-13
+  - QB-39
+  note: 入口读取的 top_of_stack 由 __switch_to 写入
+- id: EB-24
+  from: sched.forkexec.fork_child_return
+  to: CORE-USER-VFS-BASELINE-05::sched.forkexec.first_user_launch
+  kind: call
+  status: connected
+  indirect:
+    call_site:
+    - AB2-10
+    binding:
+    - AB2-05
+    - AB2-07
+    - query: QB-05
+      path: mykernel/init/main.c
+      line: 93
+    receiver:
+    - CORE-USER-VFS-BASELINE-05::A-C1-02
+    - CORE-USER-VFS-BASELINE-05::A-C1-03
+  note: kernel_init 线程本身经 ret_from_fork 的 fn(fn_arg) 开始执行
+- id: EB-25
+  from: user.initramfs.init_console_reopen
+  to: external:libc(musl, outside repo)::freopen
+  kind: call
+  status: unknown
+  evidence:
+  - AB3-01
+  - query: QB-30
+    path: myinitramfs/CMakeLists.txt
+    line: 41
+  note: libc 不在仓库（GAP-U10）
+- id: EB-26
+  from: user.initramfs.init_console_reopen
+  to: CORE-USER-VFS-BASELINE-05::fs.vfs.path_open
+  kind: call
+  status: unknown
+  evidence:
+  - QB-26
+  - QB-27
+  - QB-28
+  note: 内核有 open 入口；是否经 open 打开 /dev/console 取决于 libc
+- id: EB-27
+  from: CORE-USER-VFS-BASELINE-05::fs.vfs.path_open
+  to: drivers.char.chrdev_open_dispatch
+  kind: call
+  status: connected_with_concern
+  indirect:
+    call_site:
+    - CORE-USER-VFS-BASELINE-05::A-C4-10
+    binding:
+    - AB3-11
+    - query: QB-19
+      path: mykernel/drivers/char/char_dev.c
+      line: 96
+    receiver:
+    - AB3-12
+  note: f_op = i_fop = def_chr_fops，->open = chrdev_open；打开结果受 UV-04 影响
+- id: EB-28
+  from: drivers.char.chrdev_open_dispatch
+  to: drivers.char.console_cdev_registration
+  kind: data
+  status: connected
+  evidence:
+  - AB3-12
+  - AB3-05
+  - query: QB-21
+    path: mykernel/drivers/char/char_dev.c
+    line: 188
+  note: kobj_lookup 取回 cdev_add 登记的 console_cdev
+- id: EB-29
+  from: drivers.char.chrdev_open_dispatch
+  to: drivers.char.console_read
+  kind: call
+  status: connected_with_concern
+  indirect:
+    call_site:
+    - AB3-13
+    binding:
+    - AB3-04
+    - query: QB-20
+      path: mykernel/drivers/char/tty_io.c
+      line: 165
+    receiver:
+    - AB3-14
+  note: 换表后调 console_fops.open = myos_tty_open，返回 1
+- id: EB-30
+  from: CORE-USER-VFS-BASELINE-05::fs.vfs.read_syscall
+  to: drivers.char.console_read
+  kind: call
+  status: connected
+  indirect:
+    call_site:
+    - AB3-18
+    binding:
+    - AB3-04
+    - AB3-13
+    receiver:
+    - AB3-15
+  note: console 没有 read_iter，vfs_read 调 ->read
+- id: EB-31
+  from: drivers.char.console_read
+  to: external:mykernel/arch/x86_64/myos/keyboard.c::kbd_get_scancode
+  kind: call
+  status: endpoint
+  evidence:
+  - AB3-15
+  - AB3-16
+  - AB3-17
+  - QB-22
+  note: 等待完成量，中断处理放入扫描码
+- id: EB-32
+  from: fs.vfs.write_dispatch
+  to: drivers.char.console_write
+  kind: call
+  status: connected_with_concern
+  indirect:
+    call_site:
+    - AB3-20
+    binding:
+    - AB3-04
+    - AB3-13
+    receiver:
+    - AB3-21
+  note: writev 路径可达；直接使用用户指针
+- id: EB-33
+  from: fs.vfs.write_dispatch
+  to: drivers.char.console_write
+  kind: call
+  status: blocked
+  evidence:
+  - AB3-19
+  - QB-23
+  - QB-24
+  - SB-09
+  - VT-FLAGS
+  note: write 路径在 FMODE_CAN_WRITE 检查处返回 -EINVAL
+- id: EB-34
+  from: drivers.char.console_write
+  to: external:framebuffer(Pos.FB_addr)
+  kind: data
+  status: endpoint
+  evidence:
+  - AB3-22
+  - AB3-23
+  - QB-25
+  note: 按字模写像素；Pos.FB_addr 由 myos_init_video 提供
+- id: EB-35
+  from: user.initramfs.init_console_reopen
+  to: fs.vfs.write_dispatch
+  kind: call
+  status: unknown
+  evidence:
+  - query: QB-26
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 5
+  - query: QB-26
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 22
+  note: printf 用 write 还是 writev 取决于 libc
+- id: EB-36
+  from: user.initramfs.init_console_reopen
+  to: external:myinitramfs/CMakeLists.txt::CMAKE_C_COMPILER(musl-gcc)
+  kind: build
+  status: endpoint
+  evidence:
+  - query: QB-30
+    path: myinitramfs/CMakeLists.txt
+    line: 40
+  - query: QB-30
+    path: myinitramfs/CMakeLists.txt
+    line: 41
+  - query: QB-30
+    path: myinitramfs/CMakeLists.txt
+    line: 47
+  - query: QB-30
+    path: myinitramfs/CMakeLists.txt
+    line: 48
+  note: initd.c 由仓库外 musl-gcc 编译；mylib 不在构建中
+- id: EB-37
+  from: fs.vfs.init_mount_path
+  to: drivers.base.devtmpfs_node_create
+  kind: data
+  status: conditional
+  evidence:
+  - AB1-14
+  - AB1-16
+  - AB1-19
+  - AB1-20
+  note: /dev 挂载的根与节点所在目录是同一个内部 devtmpfs 根 dentry；前提是挂载成功
+- id: EB-38
+  from: CORE-USER-VFS-BASELINE-05::fs.vfs.path_open
+  to: fs.vfs.init_mount_path
+  kind: data
+  status: conditional
+  evidence:
+  - AB1-20
+  - query: QB-41
+    path: mykernel/fs/vfs/dcache.c
+    line: 144
+  note: 解析 /dev/console 时在 dev 处经 lookup_mnt 跨入 devtmpfs，再按名字比较找到 console
+- id: EB-39
+  from: drivers.base.devtmpfs_node_create
+  to: external:mykernel/fs/vfs/shmem.c::shmem_mknod
+  kind: call
+  status: connected
+  indirect:
+    call_site:
+    - query: QB-17
+      path: mykernel/fs/vfs/namei.c
+      line: 890
+    binding:
+    - query: QB-59
+      path: mykernel/fs/vfs/shmem.c
+      line: 150
+    - AB3-09
+    receiver:
+    - query: QB-18
+      path: mykernel/fs/vfs/shmem.c
+      line: 187
+  note: vfs_mknod 经父目录 i_op->mknod 调 shmem_mknod
+frame_paths:
+- id: FP-1
+  path: 首个程序：kernel_init → kjmp_to_doexecve → kernel_execve → syscall_return_via_sysret
+  frame_writer: copy_thread（内核线程分支清零整帧）；load_elf_binary 末段 START_THREAD → start_thread_common 写 ip/sp/cs/ss/flags
+  built_when: kernel_thread 创建 kernel_init 时清零；exec 成功走到 START_THREAD 时写入
+  sp_taker: kjmp_to_doexecve 在 exec 前保存 task_pt_regs(curr)，exec 后以内联汇编 movq 到 rsp
+  consumer: syscall_return_via_sysret：flags→r11、ip→rcx、POP_REGS 恢复 15 个寄存器、跳过 5 格、popq 取 sp
+  fields_consumed:
+  - 13 个通用寄存器字段（POP_REGS）
+  - ip（装入 rcx）
+  - flags（装入 r11）
+  - sp
+  fields_not_consumed:
+  - 原 r11、cx 两个字段（xchg 后落在 flags、ip 槽，随五格被跳过）
+  - irq_nr
+  - orig_ax
+  - cs
+  - ss
+  differs: 不经过 do_syscall_64 与 syscall_exit_to_user_mode（没有信号检查）；返回时该 CPU 的 GS 状态取决于先前的进入路径或启动设置（未核）；exec 不清通用寄存器（ELF_PLAT_INIT 被注释）：进入用户态时 rcx=入口、r11=flags、rsp=用户栈，其余 13 个通用寄存器（含 rax）是清零后的
+    0；exec 失败时整帧仍是 0
+  evidence:
+  - AB2-01
+  - AB2-02
+  - AB2-05
+  - AB2-15
+  - QB-37
+  - QB-38
+  - QB-50
+  - SB-02
+  - CORE-USER-VFS-BASELINE-05::A-C1-11
+- id: FP-2
+  path: 用户 fork 子任务：copy_thread → __switch_to_asm → __switch_to → ret_from_fork_asm → ret_from_fork → syscall_return_via_sysret
+  frame_writer: copy_thread：*childregs = *current_pt_regs()（父任务的系统调用帧），ax = 0，给定栈时改 sp；切换帧写 ret_addr 与 bx=0
+  built_when: fork 系统调用中 copy_process 调 copy_thread 时
+  sp_taker: __switch_to_asm 从 TASK_threadsp 取 thread.sp（fork_frame），弹 6 个寄存器后 __switch_to 的返回把 rsp 留在 pt_regs 起点
+  consumer: ret_from_fork 先经 syscall_exit_to_user_mode（可能改帧），再由 syscall_return_via_sysret 消费
+  fields_consumed:
+  - 13 个通用寄存器字段（POP_REGS）
+  - ip（装入 rcx）
+  - flags（装入 r11）
+  - sp
+  fields_not_consumed:
+  - 原 r11、cx 两个字段（xchg 后落在 flags、ip 槽，随五格被跳过）
+  - irq_nr
+  - orig_ax
+  - cs
+  - ss
+  differs: 帧内容来自父任务入口时压入的值；有 schedule_tail 与信号检查；返回时该 CPU 的 GS 状态取决于先前的进入路径（未核）
+  evidence:
+  - AB2-03
+  - AB2-04
+  - AB2-06
+  - AB2-08
+  - AB2-09
+  - AB2-10
+  - AB2-11
+  - SB-03
+  - SB-04
+  - VT-KFRAME
+- id: FP-3
+  path: 普通系统调用：entry_SYSCALL_64 → do_syscall_64 → （落入）syscall_return_via_sysret
+  frame_writer: entry_SYSCALL_64 依次压入 22 格；系统调用本体也可能写帧（如 execve 末段 START_THREAD）；do_syscall_64 在号小于 453 时写 ax；syscall_exit_to_user_mode 可能改帧
+  built_when: 每次 syscall 指令进入内核时
+  sp_taker: 入口从 pcpu_hot.top_of_stack 取内核栈；call 返回后 rsp 仍指向帧
+  consumer: syscall_return_via_sysret（入口没有 SYM_CODE_END，直接落入）
+  fields_consumed:
+  - 13 个通用寄存器字段（POP_REGS）
+  - ip（装入 rcx）
+  - flags（装入 r11）
+  - sp
+  fields_not_consumed:
+  - 原 r11、cx 两个字段（xchg 后落在 flags、ip 槽，随五格被跳过）
+  - irq_nr
+  - orig_ax
+  - cs
+  - ss
+  differs: 唯一由同一任务先后执行入口与返回 swapgs 的路径（swapgs 作用于每 CPU 状态，是否成对待 NVB-4）；do_syscall_64 计算的 SYSRET 适用性不被使用；用户 execve 成功返回时，rcx、r11 被换成新的 ip、flags，ax 为返回值，其余寄存器沿用调用 execve 时压入的值（ELF_PLAT_INIT
+    被注释）
+  evidence:
+  - AB2-13
+  - AB2-14
+  - AB2-16
+  - QB-50
+  - SB-01
+  - SB-02
+  - SB-16
+  - VT-PTREGS
+chain_links:
+- id: CL-C1
+  chain: CORE-USER-VFS-BASELINE-05::C1
+  link: 为 C1 补四项：根切换后的根对象与任务 root/pwd（B01）、/dev 的挂载来源（B01）、首个程序所用寄存器帧（B02 FP-1，GAP-U04 只收窄，生成偏移仍未核）、init 打开 /dev/console 后落到的实现（B03）。
+  evidence:
+  - AB1-01
+  - AB1-05
+  - AB2-01
+  - AB3-01
+- id: CL-C2
+  chain: CORE-USER-VFS-BASELINE-05::C2
+  link: fork 子任务从 copy_thread 到返回用户态的帧路径（FP-2）；kernel_thread 的 flags 只核到 kernel_init、kthreadd 与 kthread 的 CLONE_FS。05 DRU-06 中“共享文件表与 fs 不会经用户态出现”的 fs 一半按 ER-01 收窄：pid 1 继承了与内核线程共享的
+    init_fs。
+  evidence:
+  - AB2-03
+  - AB2-06
+  - QB-05
+  - QB-57
+  - QB-63
+- id: CL-C3
+  chain: CORE-USER-VFS-BASELINE-05::C3
+  link: exec 末段 START_THREAD 写当前帧，首个程序与用户 execve 都由 syscall_return_via_sysret 消费；START_THREAD 之前的部分（含 begin_new_exec）沿用 05。
+  evidence:
+  - AB2-15
+  - QB-37
+- id: CL-C4
+  chain: CORE-USER-VFS-BASELINE-05::C4
+  link: 同一条打开路径对字符设备在 ->open 处换表：console 读写走 myos_tty_read/myos_tty_write，不走 FAT32 的 simple_filemap_read，所以 05 的普通文件读缺陷（UV-05）不适用于 console；write(2) 在 vfs_write 被拦截，writev 可达。
+  evidence:
+  - AB3-13
+  - AB3-18
+  - AB3-19
+  - AB3-20
+- id: CL-C5
+  chain: CORE-USER-VFS-BASELINE-05::C5
+  link: 本批不涉及 C5（文件映射到读完成边界）；只说明 console 没有 mmap 回调（AB3-04 只有 read/write/open）。
+  evidence:
+  - AB3-04
+- id: CL-C6
+  chain: CORE-USER-VFS-BASELINE-05::C6
+  link: 本批不涉及退出回收；只提示 kernel_init 与内核线程共享 init_fs，退出路径上的 exit_fs 计数语义未在本批核对。
+  evidence:
+  - AB1-21
+  - QB-05
+gap_status:
+- id: GAP-U03
+  qualified_id: CORE-USER-VFS-BASELINE-05::GAP-U03
+  original: set_init_mount、set_init_taskfs、init_mount(devtmpfs) 的正文未逐行读；找不到根分区时的行为未知
+  coverage: 三个函数正文逐行读完；init_mount 追到 kern_path、path_mount、do_new_mount、legacy fs_context 与 public_dev_mount、do_add_mount；devtmpfs 的建立线程与共享 init_fs 一并读。
+  evidence:
+  - AB1-01
+  - AB1-02
+  - AB1-05
+  - AB1-06
+  - AB1-07
+  - AB1-08
+  - AB1-09
+  - AB1-10
+  - AB1-12
+  - AB1-13
+  - AB1-14
+  - AB1-16
+  - AB1-22
+  - AB1-23
+  - AB1-24
+  - AB1-25
+  - AB1-26
+  - AB1-27
+  - AB1-28
+  - QB-01
+  - QB-10
+  - QB-58
+  - SB-13
+  closed_static_parts:
+  - 正文与对象来源：myos_root_sb、myos_root_mnt、任务 root/pwd 何时赋值、由谁消费
+  - 找不到根分区：myos_root_sb 为 NULL，set_init_mount 无判断地读取其 s_root（alloc_super 失败时为错误指针）
+  - /dev 查找失败：-ENOENT 经 path_lookupat 循环与 link_path_walk 变成错误码返回，被调用者丢弃
+  - 挂载失败：-ENODEV、legacy 取根错误或 -EBUSY 同样被丢弃；成功时经 mnt_set_mountpoint 接到父挂载
+  remaining_unknown:
+  - 镜像根中是否有名为 dev 的项（扩展 GAP-U02 的镜像内容范围）
+  - 上述空指针/错误指针读取在机器上的表现（NOT_RUN）
+  status_from: open
+  status_to: closed_static
+  runtime: NOT_RUN
+  related:
+  - CORE-USER-VFS-BASELINE-05::UV-01
+  - CORE-USER-VFS-BASELINE-05::GAP-U02
+- id: GAP-U04
+  qualified_id: CORE-USER-VFS-BASELINE-05::GAP-U04
+  original: syscall_return_via_sysret、ret_from_fork 与 pt_regs 内容（首个程序进入用户态与子任务返回时的寄存器来源）未追
+  coverage: 三条路径（首个程序、fork 子任务、普通系统调用）分别列出谁写帧、何时建立、谁取栈指针、谁消费字段；返回段指令逐条核对；pt_regs 布局与提交的生成偏移逐项对照。
+  evidence:
+  - AB2-01
+  - AB2-02
+  - AB2-03
+  - AB2-04
+  - AB2-05
+  - AB2-06
+  - AB2-09
+  - AB2-13
+  - AB2-15
+  - AB2-16
+  - SB-01
+  - SB-02
+  - SB-03
+  - SB-04
+  - VT-PTREGS
+  - VT-KFRAME
+  closed_static_parts:
+  - pt_regs 字段与 PUSH_REGS/POP_REGS 顺序、入口 22 格、返回段跳过 5 格一致（按提交文本）
+  - 三条路径的写帧者、建立时机、取栈指针者与消费者
+  - fork 子任务首次切入时 rsp 落在 pt_regs 起点（inactive_task_frame 7 格）
+  remaining_unknown:
+  - TASK_threadsp、X86_top_of_stack、TSS_sp2 的数值是否与当前结构体布局一致（需编译生成，未做）
+  - sysretq、swapgs、sti 的硬件语义与中断窗口（外部语义待核）
+  - 运行时寄存器实际值（NOT_RUN）
+  status_from: open
+  status_to: narrowed
+  runtime: NOT_RUN
+  related:
+  - CORE-USER-VFS-BASELINE-05::UV-01
+  - CORE-USER-VFS-BASELINE-05::GAP-U09
+- id: GAP-U05
+  qualified_id: CORE-USER-VFS-BASELINE-05::GAP-U05
+  original: devtmpfs 与 /dev/console 的 f_op 未追；init 用 freopen 打开 /dev/console，本批读路径只覆盖 FAT32 普通文件
+  coverage: console 节点从设备登记、devtmpfs 建节点、inode 初始 f_op、打开时换表，到 read/write 的第一个实际后端（键盘环形缓冲与完成量、帧缓冲像素）都已取证；普通 FAT32 文件与 console 的分叉点单列。
+  evidence:
+  - AB3-04
+  - AB3-05
+  - AB3-06
+  - AB3-11
+  - AB3-12
+  - AB3-13
+  - AB3-15
+  - AB3-16
+  - AB3-18
+  - AB3-19
+  - AB3-20
+  - AB3-21
+  - AB3-22
+  - QB-14
+  - QB-19
+  closed_static_parts:
+  - 节点来源与设备号：console 为 (5,1)，经 tty_init → myos_device_create → device_add → devtmpfs_create_node
+  - 初始 f_op：def_chr_fops；open 时换成 console_fops（前后两张表）
+  - read 落到 myos_tty_read → 键盘缓冲；write 落到 myos_tty_write → 帧缓冲；write(2) 在 vfs_write 被拦截而 writev 可达
+  remaining_unknown:
+  - libc 发出的系统调用（GAP-U10）
+  - 镜像根中是否有名为 dev 的项（扩展 GAP-U02）
+  - 打开结果取决于缺 return 的代码生成（CORE-USER-VFS-BASELINE-05::UV-04、CORE-USER-VFS-BASELINE-05::GAP-U01）
+  - 实际读写行为（NOT_RUN）
+  status_from: open
+  status_to: closed_static
+  runtime: NOT_RUN
+  related:
+  - CORE-USER-VFS-BASELINE-05::GAP-U10
+  - CORE-USER-VFS-BASELINE-05::GAP-U02
+  - CORE-USER-VFS-BASELINE-05::UV-04
+- id: GAP-U06
+  qualified_id: CORE-USER-VFS-BASELINE-05::GAP-U06
+  original: 写路径（generic_file_write_iter、FAT32_write）、目录读取、dcache 回收、O_CREAT、namespace/mount 细节未覆盖
+  coverage: 只更新相交子范围：write 与 writev 两条系统调用路径到达 ->write 之前的分派与 FMODE_CAN_WRITE 拦截；打开最后一段对 O_CREAT 的判断；init_mount 的挂载接入与跨挂载查找。
+  evidence:
+  - AB3-19
+  - AB3-20
+  - QB-23
+  - QB-24
+  - QB-32
+  - QB-51
+  - QB-52
+  - AB1-08
+  - AB1-12
+  - AB1-20
+  - VT-FLAGS
+  closed_static_parts:
+  - write/writev 的分派差异与拦截点
+  - open_last_lookups 收到的是查找标志，O_CREAT 判断等价于 LOOKUP_RCU 判断
+  - init_mount 的挂载接入与 lookup_mnt 跨挂载
+  remaining_unknown:
+  - generic_file_write_iter 与 FAT32_write
+  - 目录读取
+  - dcache 回收
+  - 命名空间与传播
+  status_from: open
+  status_to: narrowed
+  runtime: NOT_RUN
+  related:
+  - CORE-USER-VFS-BASELINE-05::GAP-U06
+- id: GAP-U09
+  qualified_id: CORE-USER-VFS-BASELINE-05::GAP-U09
+  original: copy_thread、kernel_thread 的 flags、pid 分配、wake_up_new_task 的入队位置未追（后者属 INTEGRATION-03）
+  coverage: 只更新相交子范围：copy_thread 的帧建立（内核线程与用户 fork 两支）；kernel_init、kthreadd 与 kthread 的 CLONE_FS 等 flags。
+  evidence:
+  - AB2-03
+  - AB2-04
+  - AB2-05
+  - AB2-06
+  - QB-05
+  - QB-36
+  - QB-63
+  - QB-64
+  closed_static_parts:
+  - copy_thread 的帧与切换帧建立
+  - kernel_thread 对 kernel_init/kthreadd 与 create_kthread 的 flags
+  remaining_unknown:
+  - pid 分配
+  - wake_up_new_task 的入队位置（INTEGRATION-03）
+  status_from: open
+  status_to: narrowed
+  runtime: NOT_RUN
+  related:
+  - CORE-USER-VFS-BASELINE-05::GAP-U04
+- id: GAP-U10
+  qualified_id: CORE-USER-VFS-BASELINE-05::GAP-U10
+  original: 用户程序所用 musl 的系统调用选择（fork、exit_group、open 等）只按常识推断，未读 musl 源码
+  coverage: 只追加证据：构建文本把编译器指向仓库外的 musl-gcc，仓库内 mylib/myglibc 不在构建中；内核侧 open/write/writev/dup/dup2 等入口的实际行为已登记。
+  evidence:
+  - QB-26
+  - QB-27
+  - QB-28
+  - QB-30
+  - QB-31
+  - QB-40
+  - SB-05
+  - SB-06
+  - AB3-24
+  closed_static_parts: []
+  remaining_unknown:
+  - freopen/printf 实际发出的系统调用
+  - musl 版本与构建方式（仓库外）
+  status_from: open
+  status_to: open
+  runtime: NOT_RUN
+  related:
+  - CORE-USER-VFS-BASELINE-05::GAP-U05
+next_validation_candidates:
+- id: NVB-1
+  purpose: 在构建并运行的内核中观察 /dev 挂载是否成功、/dev/console 能否打开、read/write/writev 的实际返回值，以及对不存在文件的 open(O_CREAT)（需镜像根中有 dev 项）
+  covers:
+  - GAP-U02（扩展：镜像根中的 dev 项）
+  - GAP-U03
+  - GAP-U05
+  - UB-01
+  - UB-05
+  - UB-08
+  - UB-14
+  status: NOT_RUN
+  authorization_needed:
+  - 完整内核构建授权（full_kernel_build_authorized）
+  - QEMU 运行授权
+  - 可修改的测试镜像
+- id: NVB-2
+  purpose: 静态读取 init 实际链接的 musl（仓库外 /home/cheyh/projs/musl）对应版本的 freopen、stdio 写出与 dup 系列实现，确定发出的系统调用
+  covers:
+  - GAP-U10
+  - UB-09
+  - UB-10
+  status: NOT_RUN
+  authorization_needed:
+  - 读取仓库外目录的许可，并固定其版本标识
+- id: NVB-3
+  purpose: 按项目自身流程生成 asm-offsets，与提交的生成件比对 TASK_threadsp、X86_top_of_stack、TSS_sp2
+  covers:
+  - GAP-U04
+  status: NOT_RUN
+  authorization_needed:
+  - 编译（生成 asm-offsets 需要编译 asm-offsets.c）授权
+- id: NVB-4
+  purpose: 以 Intel/AMD 一手手册核对 sysretq、swapgs 与 sti 之后的中断窗口语义，以及 SYSRET 不适用条件成立时的行为
+  covers:
+  - GAP-U04
+  - UB-09
+  status: NOT_RUN
+  authorization_needed:
+  - 外部资料研究授权（本任务未展开）
+anchors:
+- id: AB1-01
+  theme: B01
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: set_init_mount
+  kind: in_body
+  lines:
+  - 44
+  - 46
+  quote: "\tmyos_root_mnt.mnt.mnt_sb = myos_root_sb;\n\tmyos_root_mnt.mnt_mountpoint =\n\tmyos_root_mnt.mnt.mnt_root = myos_root_sb->s_root;"
+  cpp_conditions: []
+  role: 直接从 myos_root_sb 取 s_root 写入静态 myos_root_mnt，前面没有空值或错误指针检查
+- id: AB1-02
+  theme: B01
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: set_init_taskfs
+  kind: in_body
+  lines:
+  - 53
+  - 57
+  quote: "\ttaskfs_s *taskfs_p = curr->fs;\n\ttaskfs_p->pwd.dentry = \n\ttaskfs_p->root.dentry = myos_root_sb->s_root;\n\ttaskfs_p->pwd.mnt = \n\ttaskfs_p->root.mnt = &myos_root_mnt.mnt;"
+  cpp_conditions: []
+  role: 把当前任务 fs 的 root/pwd 直接改成 FAT32 根 dentry 与 myos_root_mnt；curr->fs 是共享的 init_fs
+- id: AB1-03
+  theme: B01
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: myos_switch_to_root_disk
+  kind: in_body
+  lines:
+  - 104
+  - 106
+  quote: "\tu32 gptent_nr = gpt_hdr->NumberOfPartitionEntries;\n\tgpt_pes = (GPT_PE_s *)kzalloc(gptent_nr * sizeof(GPT_PE_s), GFP_KERNEL);\n\tvoid *gpt_pes_buf = kzalloc(5 * PAGE_SIZE,\
+    \ GFP_KERNEL);"
+  cpp_conditions: []
+  role: 表项数取自盘上 GPT 头；按它分配表项数组，读缓冲固定为 5 页
+- id: AB1-29
+  theme: B01
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: myos_switch_to_root_disk
+  kind: in_body
+  lines:
+  - 108
+  - 109
+  quote: "\tROOTBLK_TRANSFER(CMD_READ, 0, 5 * SECT_PER_PG, gpt_pes_buf);\n\tmemcpy(gpt_pes, gpt_pes_buf + 2 * SECTOR_SIZE, gptent_nr * sizeof(GPT_PE_s));"
+  cpp_conditions: []
+  role: 读 5 页后按表项数 memcpy，复制长度不与读缓冲比较
+- id: AB1-04
+  theme: B01
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: myos_switch_to_root_disk
+  kind: in_body
+  lines:
+  - 125
+  - 126
+  quote: "\t\t\t\tif (i == BOOT_FS_IDX)\n\t\t\t\t\tmyos_root_sb = mount_fs(\"FAT32\", gpt_pe, fat32_sb);"
+  cpp_conditions: []
+  role: 只有下标 BOOT_FS_IDX 的 EFI 启动分区项被 mount_fs("FAT32") 挂为根
+- id: AB1-05
+  theme: B01
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: myos_switch_to_root_disk
+  kind: in_body
+  lines:
+  - 142
+  - 145
+  quote: "\tset_init_mount();\n\tset_init_taskfs();\n\n\tint err = init_mount(\"devtmpfs\", \"/dev\", \"devtmpfs\", MS_SILENT);"
+  cpp_conditions: []
+  role: 根盘选择之后无条件 set_init_mount、set_init_taskfs，再把 devtmpfs 挂到 /dev，err 不再使用
+- id: AB1-06
+  theme: B01
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: mount_fs
+  kind: in_body
+  lines:
+  - 156
+  - 160
+  quote: "\t\tif(!strcmp(p->name, name))\n\t\t{\n\t\t\treturn p->read_super(DPTE, buf);\n\t\t}\n\treturn 0;"
+  cpp_conditions: []
+  role: 按名字找到文件系统类型后经 ->read_super 读超级块；找不到类型时返回 0
+- id: AB1-07
+  theme: B01
+  path: mykernel/fs/fat/myos_fat32.c
+  symbol: read_fat32_superblock
+  kind: in_body
+  lines:
+  - 429
+  - 431
+  quote: "\tsbp = alloc_super(&FAT32_fs_type, 0);\r\n\tif (sbp == NULL)\r\n\t\treturn ERR_PTR(-ENOMEM);\r"
+  cpp_conditions: []
+  role: alloc_super 失败时返回 ERR_PTR(-ENOMEM)，不是 NULL
+- id: AB1-08
+  theme: B01
+  path: mykernel/fs/vfs/init.c
+  symbol: init_mount
+  kind: in_body
+  lines:
+  - 22
+  - 25
+  quote: "\tret = kern_path(dir_name, LOOKUP_FOLLOW, &path);\n\tif (ret)\n\t\treturn ret;\n\tret = path_mount(dev_name, &path, type_page, flags);"
+  cpp_conditions: []
+  role: 先 kern_path 解析挂载点，失败即返回错误码；成功再 path_mount
+- id: AB1-09
+  theme: B01
+  path: mykernel/fs/vfs/namei.c
+  symbol: __lookup_slow
+  kind: in_body
+  lines:
+  - 326
+  - 330
+  quote: "\tif (dir->d_inode->i_op->lookup(dir->d_inode, dentry, flags) == NULL)\n\t{\n\t\t// color_printk(RED, WHITE, \"can not find file or dir:%s\\n\", dentry->d_name);\n\t\tkfree(dentry);\n\
+    \t\treturn ERR_PTR(-ENOENT);"
+  cpp_conditions: []
+  role: 文件系统 ->lookup 返回 NULL 时释放新 dentry 并返回 -ENOENT
+- id: AB1-10
+  theme: B01
+  path: mykernel/fs/fat/myos_fat32_namei.c
+  symbol: FAT32_lookup
+  kind: in_body
+  lines:
+  - 60
+  - 61
+  quote: "\t\tdest_dentry = NULL;\n\t\tgoto ent_not_found;"
+  cpp_conditions: []
+  role: FAT32 目录中找不到名字时 dest_dentry 置 NULL 后返回
+- id: AB1-11
+  theme: B01
+  path: mykernel/fs/vfs/fs_context.c
+  symbol: alloc_fs_context
+  kind: in_body
+  lines:
+  - 92
+  - 94
+  quote: "\tinit_fs_context = fc->fs_type->init_fs_context;\n\tif (init_fs_context == NULL)\n\t\tinit_fs_context = legacy_init_fs_context;"
+  cpp_conditions: []
+  role: 类型没有 init_fs_context 时改用 legacy_init_fs_context
+- id: AB1-12
+  theme: B01
+  path: mykernel/fs/vfs/fs_context.c
+  symbol: legacy_get_tree
+  kind: in_body
+  lines:
+  - 145
+  - 146
+  quote: "\troot = fc->fs_type->mount(fc->fs_type, fc->sb_flags,\n\t\t\t\t      fc->source, ctx->legacy_data);"
+  cpp_conditions: []
+  role: legacy 上下文经 fc->fs_type->mount 取根 dentry（间接调用点）
+- id: AB1-13
+  theme: B01
+  path: mykernel/drivers/base/devtmpfs.c
+  symbol: dev_fs_type
+  kind: initializer
+  lines:
+  - 84
+  - 85
+  quote: "\t.name\t= \"devtmpfs\",\n\t.mount\t= public_dev_mount,"
+  cpp_conditions: []
+  role: 注册用的 devtmpfs 类型只绑定 .mount = public_dev_mount（间接调用绑定）
+- id: AB1-14
+  theme: B01
+  path: mykernel/drivers/base/devtmpfs.c
+  symbol: public_dev_mount
+  kind: in_body
+  lines:
+  - 65
+  - 68
+  quote: "\tsuper_block_s *s = mnt->mnt_sb;\n\tint err;\n\n\treturn dget(s->s_root);"
+  cpp_conditions: []
+  role: 每次挂载都返回内部 devtmpfs 超级块根 dentry 的新引用（间接调用接收方）
+- id: AB1-15
+  theme: B01
+  path: mykernel/drivers/base/devtmpfs.c
+  symbol: internal_fs_type
+  kind: initializer
+  lines:
+  - 72
+  - 74
+  quote: "\t.name\t\t\t\t= \"devtmpfs\",\n// #ifdef CONFIG_TMPFS\n\t.init_fs_context\t= shmem_init_fs_context,"
+  cpp_conditions: []
+  role: 内部实例类型同名 devtmpfs，以 shmem_init_fs_context 建立
+- id: AB1-16
+  theme: B01
+  path: mykernel/drivers/base/devtmpfs.c
+  symbol: devtmpfsd
+  kind: in_body
+  lines:
+  - 390
+  - 394
+  quote: "\t\terr = init_mount(\"devtmpfs\", \"/\", \"devtmpfs\", DEVTMPFS_MFLAGS);\n\t\tif (err)\n\t\t\tgoto out;\n\t\tinit_chdir(\"/..\"); /* will traverse into overmounted root */\n\
+    \t\tinit_chroot(\".\");"
+  cpp_conditions: []
+  role: kdevtmpfs 线程把 devtmpfs 挂到 "/"，再 chdir 到 "/.."、chroot 到 "."
+- id: AB1-17
+  theme: B01
+  path: mykernel/drivers/base/devtmpfs.c
+  symbol: devtmpfs_init
+  kind: in_body
+  lines:
+  - 427
+  - 429
+  quote: "\tthread = kthread_run(devtmpfsd, &err, \"kdevtmpfs\");\n\tif (!IS_ERR(thread)) {\n\t\twait_for_completion(&setup_done);"
+  cpp_conditions: []
+  role: 以 kthread_run 创建 kdevtmpfs 并等待 setup_done
+- id: AB1-18
+  theme: B01
+  path: mykernel/fs/vfs/namei.c
+  symbol: follow_dotdot
+  kind: in_body
+  lines:
+  - 390
+  - 392
+  quote: "\t\tif (!choose_mountpoint(\n\t\t\t\treal_mount(nd->path.mnt), &nd->root, &path))\n\t\t\tgoto in_root;"
+  cpp_conditions: []
+  role: 位于挂载根且 choose_mountpoint 找不到上层时转到 in_root（返回 NULL）
+- id: AB1-19
+  theme: B01
+  path: mykernel/fs/vfs/namei.c
+  symbol: handle_dots
+  kind: in_body
+  lines:
+  - 417
+  - 418
+  quote: "\t\tif (parent == NULL)\n\t\t\terror = step_into(nd, nd->path.dentry);"
+  cpp_conditions: []
+  role: follow_dotdot 返回 NULL 时对当前 dentry 调 step_into，从而经 handle_mounts 跨入覆盖其上的挂载
+- id: AB1-20
+  theme: B01
+  path: mykernel/fs/vfs/namei.c
+  symbol: traverse_mounts
+  kind: in_body
+  lines:
+  - 231
+  - 235
+  quote: "\t\tvfsmount_s *mounted = lookup_mnt(path);\n\t\tif (mounted) // ... in our namespace\n\t\t{\n\t\t\tpath->mnt = mounted;\n\t\t\tpath->dentry = mounted->mnt_root;"
+  cpp_conditions: []
+  role: 每一步都直接调用 lookup_mnt，命中即换到子挂载的根
+- id: AB1-21
+  theme: B01
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_fs
+  kind: in_body
+  lines:
+  - 705
+  - 706
+  quote: "\tif (clone_flags & CLONE_FS) {\n\t\t/* tsk->fs is already what we want */"
+  cpp_conditions: []
+  role: 带 CLONE_FS 时子任务沿用同一个 fs 结构
+- id: AB2-01
+  theme: B02
+  path: mykernel/arch/x86_64/myos/arch_task.c
+  symbol: kjmp_to_doexecve
+  kind: in_body
+  lines:
+  - 15
+  - 17
+  quote: "\ttask_s * curr = current;\n\tpt_regs_s *curr_ptregs = task_pt_regs(curr);\n\tcurr->flags &= ~PF_KTHREAD;"
+  cpp_conditions: []
+  role: exec 之前先取当前任务 pt_regs 地址，并清除 PF_KTHREAD
+- id: AB2-02
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/switch_to_macro_arch.h
+  symbol: task_pt_regs
+  kind: macro
+  lines:
+  - 17
+  - 21
+  quote: "\t#define task_pt_regs(task)\t({\t\t\t\t\t\t\t\t\t\\\n\t\t\t\tloff_t __ptr = (loff_t)task_stack_page(task);\t\t\\\n\t\t\t\t__ptr += THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;\t\
+    \\\n\t\t\t\t((pt_regs_s *)__ptr) - 1;\t\t\t\t\t\t\t\\\n\t\t\t})"
+  cpp_conditions: []
+  role: pt_regs 位于任务内核栈顶（THREAD_SIZE 减去填充后再减一个 pt_regs）
+- id: AB2-03
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/process_arch.c
+  symbol: copy_thread
+  kind: in_body
+  lines:
+  - 92
+  - 94
+  quote: "\tchildregs = task_pt_regs(p);\n\tfork_frame = container_of(childregs, fork_frame_s, regs);\n\tframe = &fork_frame->frame;"
+  cpp_conditions: []
+  role: 子任务帧位置：栈顶 pt_regs，其下紧接 inactive_task_frame（fork_frame）
+- id: AB2-04
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/process_arch.c
+  symbol: copy_thread
+  kind: in_body
+  lines:
+  - 97
+  - 99
+  quote: "\tframe->bp = (reg_t)childregs + 1;\n\tframe->ret_addr = (reg_t)ret_from_fork_asm;\n\tp->thread.sp = (reg_t)fork_frame;"
+  cpp_conditions: []
+  role: 切换帧的返回地址设为 ret_from_fork_asm，thread.sp 指向 fork_frame
+- id: AB2-05
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/process_arch.c
+  symbol: copy_thread
+  kind: in_body
+  lines:
+  - 120
+  - 124
+  quote: "\tif (unlikely(p->flags & PF_KTHREAD)) {\n\t\t// p->thread.pkru = pkru_get_init_value();\n\t\tmemset(childregs, 0, sizeof(pt_regs_s));\n\t\tkthread_frame_init(frame, args->fn,\
+    \ args->fn_arg);\n\t\treturn 0;"
+  cpp_conditions: []
+  role: 内核线程：pt_regs 清零，bx/r12 存入线程函数与参数
+- id: AB2-06
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/process_arch.c
+  symbol: copy_thread
+  kind: in_body
+  lines:
+  - 133
+  - 137
+  quote: "\tframe->bx = 0;\n\t*childregs = *current_pt_regs();\n\tchildregs->ax = 0;\n\tif (sp)\n\t\tchildregs->sp = (reg_t)sp;"
+  cpp_conditions: []
+  role: 用户 fork：复制父任务当前 pt_regs，ax 置 0，给定栈时改写 sp
+- id: AB2-07
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/switch_to_arch.h
+  symbol: kthread_frame_init
+  kind: in_body
+  lines:
+  - 39
+  - 40
+  quote: "\t\t\tframe->bx = (reg_t)fun;\n\t\t\tframe->r12 = (reg_t)arg;"
+  cpp_conditions:
+  - '#if defined(ARCH_SWITCH_TO_DEFINATION) || !(DEBUG)'
+  role: kthread_frame_init 把函数写入 frame->bx、参数写入 frame->r12
+- id: AB2-08
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/process64_arch.c
+  symbol: __switch_to
+  kind: in_body
+  lines:
+  - 380
+  - 381
+  quote: "\t*this_cpu_ptr(&pcpu_hot.current_task) = next_p;\n\t*this_cpu_ptr(&pcpu_hot.top_of_stack) = task_top_of_stack(next_p);"
+  cpp_conditions: []
+  role: 切换时更新每 CPU 的 current_task 与 top_of_stack（供 entry_SYSCALL_64 取内核栈）
+- id: AB2-09
+  theme: B02
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: ret_from_fork_asm
+  kind: asm_range
+  lines:
+  - 268
+  - 272
+  quote: "\tmovq\t\t%rax,\t\t%rdi\t\t/* prev */\n\tmovq\t\t%rsp,\t\t%rsi\t\t/* regs */\n\tmovq\t\t%rbx,\t\t%rdx\t\t/* fn */\n\tmovq\t\t%r12,\t\t%rcx\t\t/* fn_arg */\n\tcall\t\tret_from_fork\t\
+    \t\t/* rdi: 'prev' task parameter */"
+  cpp_conditions: []
+  role: 新任务首次切入：以 rax/rsp/rbx/r12 作参数调用 ret_from_fork
+- id: AB2-10
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/process_arch.c
+  symbol: ret_from_fork
+  kind: in_body
+  lines:
+  - 66
+  - 70
+  quote: "\tschedule_tail(prev);\n\n\t/* Is this a kernel thread? */\n\tif (unlikely(fn)) {\n\t\tfn(fn_arg);"
+  cpp_conditions: []
+  role: C 层先 schedule_tail，再对内核线程直接调用 fn(fn_arg)
+- id: AB2-11
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/process_arch.c
+  symbol: ret_from_fork
+  kind: in_body
+  lines:
+  - 76
+  - 79
+  quote: "\t\tregs->ax = 0;\n\t}\n\n\tsyscall_exit_to_user_mode(regs);"
+  cpp_conditions: []
+  role: 内核线程函数返回后置 ax=0；随后对所有子任务调用 syscall_exit_to_user_mode
+- id: AB2-12
+  theme: B02
+  path: mykernel/entry/common.c
+  symbol: exit_to_user_mode_loop
+  kind: in_body
+  lines:
+  - 33
+  - 34
+  quote: "\t// \tif (ti_work & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))\n\t\t\tarch_do_signal_or_restart(regs);"
+  cpp_conditions: []
+  role: 条件判断被注释，arch_do_signal_or_restart(regs) 成为无条件调用
+- id: AB2-13
+  theme: B02
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: entry_SYSCALL_64
+  kind: asm_range
+  lines:
+  - 150
+  - 152
+  quote: "\tmovq\t\t%rsp,\t\tPER_CPU_VAR(cpu_tss_rw + TSS_sp2)\n\t// SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp\n\tmovq\t\tPER_CPU_VAR(pcpu_hot + X86_top_of_stack),\t%rsp"
+  cpp_conditions: []
+  role: 进入时把用户 rsp 暂存到 TSS sp2，再从 pcpu_hot.top_of_stack 取内核栈
+- id: AB2-14
+  theme: B02
+  path: mykernel/arch/x86_64/entry/common.c
+  symbol: do_syscall_64
+  kind: in_body
+  lines:
+  - 41
+  - 44
+  quote: "\tuint unr = nr;\n\tif (unr < __NR_syscalls) {\n\t\t// unr = array_index_nospec(unr, NR_syscalls);\n\t\tregs->ax = x64_sys_call(regs, unr);"
+  cpp_conditions: []
+  role: 系统调用号小于 __NR_syscalls 时才写 regs->ax
+- id: AB2-15
+  theme: B02
+  path: mykernel/arch/x86_64/sched/context/process64_arch.c
+  symbol: start_thread_common
+  kind: in_body
+  lines:
+  - 269
+  - 272
+  quote: "\tregs->ip\t\t= new_ip;\n\tregs->sp\t\t= new_sp;\n\tregs->cs\t\t= _cs;\n\tregs->ss\t\t= _ss;"
+  cpp_conditions: []
+  role: exec 末段把入口、用户栈和段选择子写入 regs
+- id: AB2-16
+  theme: B02
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: syscall_return_via_sysret
+  kind: asm_range
+  lines:
+  - 187
+  - 191
+  quote: "\txchgq\t\t%r11,\t\tEFLAGS(%rsp)\n\txchgq\t\t%rcx,\t\tRIP(%rsp)\n\txchgq\t\t%r11,\t\tR11(%rsp)\n\txchgq\t\t%rcx,\t\tRCX(%rsp)\n\txchgq\t\t%r11,\t\tEFLAGS(%rsp)"
+  cpp_conditions: []
+  role: 用六次 xchg 把帧中的 flags/ip 换到 r11/rcx 槽位，供随后的 POP_REGS 装入
+- id: AB3-01
+  theme: B03
+  path: myinitramfs/myinit/initd.c
+  symbol: main
+  kind: in_body
+  lines:
+  - 11
+  - 13
+  quote: "\tfreopen(\"/dev/console\", \"r\", stdin);\n\tfreopen(\"/dev/console\", \"w\", stdout);\n\tfreopen(\"/dev/console\", \"w\", stderr);"
+  cpp_conditions: []
+  role: init 以 /dev/console 重新打开 stdin、stdout、stderr
+- id: AB3-02
+  theme: B03
+  path: mykernel/init/main.c
+  symbol: do_basic_setup
+  kind: in_body
+  lines:
+  - 246
+  - 249
+  quote: "\tdriver_init();\n\t// init_irq_proc();\n\t// do_ctors();\n\tdo_initcalls();"
+  cpp_conditions: []
+  role: driver_init（含 devtmpfs_init）先于 do_initcalls
+- id: AB3-03
+  theme: B03
+  path: mykernel/init/main.c
+  symbol: do_initcalls
+  kind: in_body
+  lines:
+  - 223
+  - 227
+  quote: "\ttty_class_init();\n\n\t/* fs_initcall (fn, 5) */\n\tclocksource_done_booting();\n\tchr_dev_init();"
+  cpp_conditions: []
+  role: 手写的初始化序列：tty_class_init 之后在 fs 级调用 chr_dev_init
+- id: AB3-04
+  theme: B03
+  path: mykernel/drivers/char/tty_io.c
+  symbol: console_fops
+  kind: initializer
+  lines:
+  - 112
+  - 114
+  quote: "\t.read\t\t\t\t= myos_tty_read,\n\t.write\t\t\t\t= myos_tty_write,\n\t.open\t\t\t\t= myos_tty_open,"
+  cpp_conditions: []
+  role: console 的文件操作表只有 read/write/open 三项
+- id: AB3-05
+  theme: B03
+  path: mykernel/drivers/char/tty_io.c
+  symbol: tty_init
+  kind: in_body
+  lines:
+  - 165
+  - 169
+  quote: "\tcdev_init(&console_cdev, &console_fops);\n\tconsole_cdev.kobj.name = \"console\";\n\tif (cdev_add(&console_cdev, MKDEV(TTYAUX_MAJOR, 1), 1))\n\t\tcolor_printk(RED, BLACK,\
+    \ \"Couldn't register /dev/console driver\\n\");\n\telse"
+  cpp_conditions: []
+  role: console_cdev 绑定 console_fops，按 (5,1) 加入 cdev_map；失败只打印
+- id: AB3-06
+  theme: B03
+  path: mykernel/drivers/base/core.c
+  symbol: myos_device_create
+  kind: in_body
+  lines:
+  - 247
+  - 251
+  quote: "\tdev->devt = devt;\n\tdev->class = class;\n\tdev->kobj.name = devname;\n\n\tretval = device_add(dev);"
+  cpp_conditions: []
+  role: 记录设备号、类和名字后调用 device_add
+- id: AB3-07
+  theme: B03
+  path: mykernel/drivers/base/devtmpfs.c
+  symbol: devtmpfs_submit_req
+  kind: in_body
+  lines:
+  - 102
+  - 106
+  quote: "\twait_for_completion(&req->done);\n\n\tkfree((void *)tmp);\n\n\treturn req->err;"
+  cpp_conditions: []
+  role: 提交方等待完成通知，之后读取 req->err
+- id: AB3-08
+  theme: B03
+  path: mykernel/drivers/base/devtmpfs.c
+  symbol: devtmpfs_work_loop
+  kind: in_body
+  lines:
+  - 365
+  - 368
+  quote: "\t\t\t\treq->err = handle(req->name, req->mode,\n\t\t\t\t\t\treq->uid, req->gid, req->dev);\n\t\t\t\tcomplete(&req->done);\n\t\t\t\tkfree(req);"
+  cpp_conditions: []
+  role: 工作线程处理请求、发出完成通知后立即释放 req
+- id: AB3-09
+  theme: B03
+  path: mykernel/fs/vfs/shmem.c
+  symbol: shmem_dir_inode_operations
+  kind: initializer
+  lines:
+  - 388
+  - 391
+  quote: "\t.lookup\t\t= simple_lookup,\n\t.mkdir\t\t= shmem_mkdir,\n\t.rmdir\t\t= shmem_rmdir,\n\t.mknod\t\t= shmem_mknod,"
+  cpp_conditions: []
+  role: shmem 目录操作：lookup 用 simple_lookup，mknod 用 shmem_mknod
+- id: AB3-10
+  theme: B03
+  path: mykernel/fs/vfs/shmem.c
+  symbol: shmem_get_inode
+  kind: in_body
+  lines:
+  - 139
+  - 141
+  quote: "\t\tdefault:\n\t\t\tinode->i_op = &shmem_special_inode_operations;\n\t\t\tinit_special_inode(inode, mode, dev);"
+  cpp_conditions: []
+  role: 非普通文件、非目录的节点走 init_special_inode
+- id: AB3-11
+  theme: B03
+  path: mykernel/fs/vfs/inode.c
+  symbol: init_special_inode
+  kind: in_body
+  lines:
+  - 381
+  - 383
+  quote: "\tif (S_ISCHR(mode)) {\n\t\tinode->i_fop = &def_chr_fops;\n\t\tinode->i_rdev = rdev;"
+  cpp_conditions: []
+  role: 字符设备节点的初始 i_fop 为 def_chr_fops，并记录 i_rdev
+- id: AB3-12
+  theme: B03
+  path: mykernel/drivers/char/char_dev.c
+  symbol: chrdev_open
+  kind: in_body
+  lines:
+  - 48
+  - 51
+  quote: "\t\tkobj = kobj_lookup(cdev_map, inode->i_rdev, &idx);\n\t\tif (!kobj)\n\t\t\treturn -ENXIO;\n\t\tnew = container_of(kobj, cdev_s, kobj);"
+  cpp_conditions: []
+  role: 按 i_rdev 在 cdev_map 中查找 cdev，查不到返回 -ENXIO
+- id: AB3-13
+  theme: B03
+  path: mykernel/drivers/char/char_dev.c
+  symbol: chrdev_open
+  kind: in_body
+  lines:
+  - 76
+  - 80
+  quote: "\tfilp->f_op = fops;\n\tif (filp->f_op->open) {\n\t\tret = filp->f_op->open(inode, filp);\n\t\tif (ret)\n\t\t\tgoto out_cdev_put;"
+  cpp_conditions: []
+  role: 先把 filp->f_op 换成 cdev 的 ops，再调用其 open；非零返回走错误出口
+- id: AB3-14
+  theme: B03
+  path: mykernel/drivers/char/myos_tty.c
+  symbol: myos_tty_open
+  kind: in_body
+  lines:
+  - 26
+  - 30
+  quote: "\tp_kb->p_tail = p_kb->buf;\n\tp_kb->count  = 0;\n\tmemset(p_kb->buf, 0, KB_BUF_SIZE);\n\n\treturn 1;"
+  cpp_conditions: []
+  role: 重置全局键盘缓冲后固定返回 1
+- id: AB3-15
+  theme: B03
+  path: mykernel/drivers/char/myos_tty.c
+  symbol: myos_tty_read
+  kind: in_body
+  lines:
+  - 71
+  - 75
+  quote: "\twhile (counter < count)\n\t{\n\t\tchar key = kbd_parse_scancode();\n\t\tif (key != 0)\n\t\t{"
+  cpp_conditions: []
+  role: 循环取键，直到攒满 count 个非零键值
+- id: AB3-16
+  theme: B03
+  path: mykernel/arch/x86_64/myos/keyboard.c
+  symbol: kbd_get_scancode
+  kind: in_body
+  lines:
+  - 150
+  - 153
+  quote: "\tdo {\n\t\twait_for_completion(&getcode_done);\n\t}\n\twhile (p_kb->count <= 0);"
+  cpp_conditions: []
+  role: 在 getcode_done 上等待，直到环形缓冲计数大于 0
+- id: AB3-17
+  theme: B03
+  path: mykernel/arch/x86_64/myos/keyboard.c
+  symbol: keyboard_handler
+  kind: in_body
+  lines:
+  - 126
+  - 130
+  quote: "\tp_kb->p_head ++;\t\n\tp_kb->count++;\n\tspin_unlock(&kbdbuf_lock);\n\n\tcomplete(&getcode_done);"
+  cpp_conditions: []
+  role: 键盘中断把扫描码放入 p_kb 环形缓冲并 complete(getcode_done)
+- id: AB3-18
+  theme: B03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_read
+  kind: in_body
+  lines:
+  - 160
+  - 163
+  quote: "\tif (file->f_op->read_iter)\n\t\tret = new_sync_read(file, buf, count, pos);\n\telse if (file->f_op->read)\n\t\tret = file->f_op->read(file, buf, count, pos);"
+  cpp_conditions: []
+  role: 有 read_iter 走 new_sync_read，否则调用 ->read（间接调用点）
+- id: AB3-19
+  theme: B03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_write
+  kind: in_body
+  lines:
+  - 291
+  - 294
+  quote: "\tif (!(file->f_mode & FMODE_WRITE))\n\t\treturn -EBADF;\n\tif (!(file->f_mode & FMODE_CAN_WRITE))\n\t\treturn -EINVAL;"
+  cpp_conditions: []
+  role: 写之前要求 FMODE_WRITE 与 FMODE_CAN_WRITE，后者不满足即返回 -EINVAL
+- id: AB3-20
+  theme: B03
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_writev
+  kind: in_body
+  lines:
+  - 380
+  - 381
+  quote: "\tfor (int i = 0; i < vlen; i++)\n\t\tret += file->f_op->write(file, vec[i].iov_base, vec[i].iov_len, pos);"
+  cpp_conditions: []
+  role: writev 不检查 FMODE_CAN_WRITE，逐段直接调用 ->write（间接调用点）
+- id: AB3-21
+  theme: B03
+  path: mykernel/drivers/char/myos_tty.c
+  symbol: myos_tty_write
+  kind: in_body
+  lines:
+  - 238
+  - 239
+  quote: "\tmyos_tty_write_color(buf, length, GREEN, BLACK);\n\treturn length;"
+  cpp_conditions: []
+  role: console 写只转交 myos_tty_write_color，并返回请求长度
+- id: AB3-22
+  theme: B03
+  path: mykernel/drivers/char/myos_tty.c
+  symbol: kputchar
+  kind: in_body
+  lines:
+  - 101
+  - 105
+  quote: "\t\t\ttestval = testval >> 1;\n\t\t\tif (*fontp & testval)\n\t\t\t\t*addr = FRcolor;\n\t\t\telse\n\t\t\t\t*addr = BKcolor;"
+  cpp_conditions: []
+  role: 按字模逐像素写帧缓冲地址
+- id: AB3-23
+  theme: B03
+  path: mykernel/drivers/char/myos_tty.c
+  symbol: myos_tty_write_color
+  kind: in_body
+  lines:
+  - 156
+  - 157
+  quote: "\t\t\tkputchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize,\n\t\t\t\t\tPos.YPosition * Pos.YCharSize, FRcolor, BKcolor, (unsigned char)*(buf + count));"
+  cpp_conditions: []
+  role: 逐字符以 buf 中的字节调用 kputchar（直接读调用方给的指针）
+- id: AB3-24
+  theme: B03
+  path: mykernel/arch/x86_64/entry/common.c
+  symbol: __x64_sys_ni_syscall
+  kind: in_body
+  lines:
+  - 20
+  - 21
+  quote: "\tcolor_printk(RED, BLACK, \"Syscall not implemented: %d\\n\", regs->orig_ax);\n\twhile (1);"
+  cpp_conditions: []
+  role: 未实现的系统调用打印后进入 while (1)
+- id: AB3-25
+  theme: B03
+  path: mykernel/drivers/char/mem.c
+  symbol: chr_dev_init
+  kind: in_body
+  lines:
+  - 197
+  - 200
+  quote: "\t\tmemdev.cdev.kobj.name = memdev.name;\n\t\tdev_t devt = MKDEV(MEM_MAJOR, minor);\n\t\tcdev_init(&memdev.cdev, memdev.fops);\n\t\tif (cdev_add(&memdev.cdev, devt, 1))"
+  cpp_conditions: []
+  role: 对循环内局部副本 memdev 的 cdev 调用 cdev_init/cdev_add
+- id: AB1-22
+  theme: B01
+  path: mykernel/fs/vfs/namei.c
+  symbol: path_lookupat
+  kind: in_body
+  lines:
+  - 577
+  - 579
+  quote: "\twhile (!(err = link_path_walk(s, nd)) &&\n\t\t   (s = lookup_last(nd)) != NULL)\n\t\t;"
+  cpp_conditions: []
+  role: 最后一段查找返回错误指针时，循环再次进入 link_path_walk 并把它转成错误码
+- id: AB1-23
+  theme: B01
+  path: mykernel/fs/vfs/namei.c
+  symbol: link_path_walk
+  kind: in_body
+  lines:
+  - 483
+  - 484
+  quote: "\tif (IS_ERR(name))\n\t\treturn PTR_ERR(name);"
+  cpp_conditions: []
+  role: link_path_walk 收到错误指针即返回其错误码
+- id: AB1-24
+  theme: B01
+  path: mykernel/fs/vfs/namespace.c
+  symbol: do_new_mount
+  kind: in_body
+  lines:
+  - 556
+  - 558
+  quote: "\ttype = get_fs_type(fstype);\n\tif (!type)\n\t\treturn -ENODEV;"
+  cpp_conditions: []
+  role: 按名字取文件系统类型，找不到返回 -ENODEV
+- id: AB1-25
+  theme: B01
+  path: mykernel/fs/vfs/fs_context.c
+  symbol: legacy_get_tree
+  kind: in_body
+  lines:
+  - 147
+  - 148
+  quote: "\tif (IS_ERR(root))\n\t\treturn PTR_ERR(root);"
+  cpp_conditions: []
+  role: ->mount 返回错误指针时原样上交
+- id: AB1-26
+  theme: B01
+  path: mykernel/fs/vfs/namespace.c
+  symbol: do_add_mount
+  kind: in_body
+  lines:
+  - 486
+  - 488
+  quote: "\tif (path->mnt->mnt_sb == newmnt->mnt.mnt_sb &&\n\t    path->mnt->mnt_root == path->dentry)\n\t\treturn -EBUSY;"
+  cpp_conditions: []
+  role: 拒绝把同一文件系统叠在其根所在的挂载点上（-EBUSY）
+- id: AB1-27
+  theme: B01
+  path: mykernel/fs/vfs/namespace.c
+  symbol: mnt_set_mountpoint
+  kind: in_body
+  lines:
+  - 151
+  - 154
+  quote: "\tchild_mnt->mnt_mountpoint = mp->m_dentry;\n\tchild_mnt->mnt_parent = parent_mnt;\n\tchild_mnt->mnt_mp = mp;\n\tlist_header_add_to_tail(&parent_mnt->mnt_mounts, &child_mnt->mnt_child);"
+  cpp_conditions: []
+  role: 子挂载记下挂载点与父挂载，并接到父挂载的 mnt_mounts 链表
+- id: AB1-28
+  theme: B01
+  path: mykernel/fs/vfs/super.c
+  symbol: vfs_get_tree
+  kind: in_body
+  lines:
+  - 434
+  - 434
+  quote: "\terror = fc->ops->get_tree(fc);"
+  cpp_conditions: []
+  role: 经 fc->ops->get_tree 间接取根（legacy 上下文时为 legacy_get_tree）
+queries:
+- id: QB-01
+  purpose: myos_root_sb 的定义与全部引用
+  args:
+  - -n
+  - -w
+  - -F
+  - myos_root_sb
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 5
+- id: QB-02
+  purpose: myos_root_mnt 的定义与全部引用
+  args:
+  - -n
+  - -w
+  - -F
+  - myos_root_mnt
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 8
+- id: QB-03
+  purpose: BOOT_FS_IDX 的取值与使用
+  args:
+  - -n
+  - -w
+  - -F
+  - BOOT_FS_IDX
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-04
+  purpose: GPT 表项遍历的结束条件
+  args:
+  - -n
+  - -F
+  - PartitionTypeGUID[0] != 0
+  paths:
+  - mykernel/fs/vfs/myos_vfs.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-05
+  purpose: 以 CLONE_FS 创建内核线程的位置
+  args:
+  - -n
+  - -E
+  - kernel_thread\(.*CLONE_FS|CLONE_FS [|] CLONE_FILES [|] SIGCHLD
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QB-06
+  purpose: init_fs 的绑定位置
+  args:
+  - -n
+  - -F
+  - '&init_fs'
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 1
+- id: QB-07
+  purpose: set_fs_root / set_fs_pwd 的定义与调用
+  args:
+  - -n
+  - -E
+  - set_fs_(root|pwd)\(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 8
+- id: QB-08
+  purpose: devtmpfs 内部挂载与对外类型注册
+  args:
+  - -n
+  - -E
+  - vfs_kern_mount\(&internal_fs_type|register_filesystem\(&dev_fs_type\)
+  paths:
+  - mykernel/drivers/base/devtmpfs.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QB-09
+  purpose: init_mount 的定义与调用点
+  args:
+  - -n
+  - -F
+  - init_mount(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 6
+  expected_hits_active: 6
+- id: QB-10
+  purpose: 宿主脚本与构建文本中在镜像内建立 dev 目录的语句
+  args:
+  - -n
+  - -I
+  - -E
+  - mkdir.*dev
+  paths:
+  - make_install.sh
+  - scripts/
+  - myinitramfs/CMakeLists.txt
+  - mykernel/CMakeLists.txt
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QB-11
+  purpose: devtmpfs_init 的调用点
+  args:
+  - -n
+  - -w
+  - -F
+  - devtmpfs_init
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 3
+- id: QB-12
+  purpose: tty_init 的调用点
+  args:
+  - -n
+  - -w
+  - -F
+  - tty_init
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 3
+- id: QB-13
+  purpose: myos_device_create 的定义与调用点
+  args:
+  - -n
+  - -F
+  - myos_device_create(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 5
+- id: QB-14
+  purpose: devtmpfs_create_node / devtmpfs_delete_node 的调用点
+  args:
+  - -n
+  - -E
+  - devtmpfs_(create|delete)_node\(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 5
+- id: QB-15
+  purpose: devtmpfs 节点模式的来源
+  args:
+  - -n
+  - -E
+  - 'req->mode (=|[|]=) '
+  paths:
+  - mykernel/drivers/base/devtmpfs.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: QB-16
+  purpose: kdevtmpfs 建节点：相对路径创建与 mknod
+  args:
+  - -n
+  - -E
+  - kern_path_create\(AT_FDCWD, nodename|vfs_mknod\(path\.dentry->d_inode, dentry, mode, dev->devt\)
+  paths:
+  - mykernel/drivers/base/devtmpfs.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QB-17
+  purpose: ->mknod 的间接调用点
+  args:
+  - -n
+  - -F
+  - i_op->mknod(
+  paths:
+  - mykernel/fs/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-18
+  purpose: shmem_mknod 取得新 inode
+  args:
+  - -n
+  - -F
+  - inode = shmem_get_inode(dir->i_sb, dir, mode, dev, VM_NORESERVE);
+  paths:
+  - mykernel/fs/vfs/shmem.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-19
+  purpose: 字符设备默认 f_op 与 chrdev_open 绑定
+  args:
+  - -n
+  - -E
+  - \.open = chrdev_open|i_fop = &def_chr_fops
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-20
+  purpose: cdev 的 ops 来源（console_cdev）
+  args:
+  - -n
+  - -E
+  - cdev->ops = fops|cdev_init\(&console_cdev, &console_fops\)
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-21
+  purpose: cdev_map 的建立及其调用时机
+  args:
+  - -n
+  - -E
+  - cdev_map = kobj_map_init|chrdev_init\(\);
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-22
+  purpose: 键盘缓冲 p_kb 的分配与初始化顺序
+  args:
+  - -n
+  - -E
+  - p_kb = \(kbd_inbuf_s \*\)kzalloc|init_keyboard\(\);|myos_devices_init\(\);
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QB-23
+  purpose: FMODE_CAN_WRITE 的全部出现
+  args:
+  - -n
+  - -w
+  - -F
+  - FMODE_CAN_WRITE
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 3
+- id: QB-24
+  purpose: 对 f_mode 的赋值或按位或
+  args:
+  - -n
+  - -E
+  - f_mode[[:space:]]*([|]=|=[^=])
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 5
+- id: QB-25
+  purpose: console 输出所用帧缓冲地址的来源
+  args:
+  - -n
+  - -F
+  - Pos.FB_addr =
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-26
+  purpose: 系统调用表中的文件类入口
+  args:
+  - -n
+  - -E
+  - '__SYSCALL\(__NR_(read|write|open|close|ioctl|writev|dup|dup2|fcntl), '
+  paths:
+  - mykernel/arch/x86_64/include/asm/syscalls_64.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 9
+  expected_hits_active: 9
+- id: QB-27
+  purpose: 系统调用表中的 openat / dup3
+  args:
+  - -n
+  - -E
+  - __NR_(openat|dup3)
+  paths:
+  - mykernel/arch/x86_64/include/asm/syscalls_64.h
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QB-28
+  purpose: __NR_syscalls 与 openat / dup3 的编号
+  args:
+  - -n
+  - -E
+  - define[[:space:]]+__NR_(syscalls|openat|dup3)[[:space:]]
+  paths:
+  - mykernel/arch/x86_64/include/asm/unistd_64.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QB-29
+  purpose: 未实现系统调用的落点
+  args:
+  - -n
+  - -F
+  - __x64_sys_ni_syscall
+  paths:
+  - mykernel/arch/x86_64/entry/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 2
+- id: QB-30
+  purpose: initramfs 的编译器与子目录
+  args:
+  - -n
+  - -E
+  - CMAKE_C_COMPILER|MUSL_PATH|add_subdirectory
+  paths:
+  - myinitramfs/CMakeLists.txt
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 6
+  expected_hits_active: 6
+- id: QB-31
+  purpose: 用户树中出现 freopen 一词的全部位置
+  args:
+  - -n
+  - -w
+  - -F
+  - freopen
+  paths:
+  - myinitramfs/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 6
+  expected_hits_active: 3
+- id: QB-32
+  purpose: 打开路径最后一段的查找条件与传参
+  args:
+  - -n
+  - -E
+  - open_last_lookups\(nd, flags\)|if \(!\(open_flag & O_CREAT\)\)
+  paths:
+  - mykernel/fs/vfs/namei.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-33
+  purpose: syscall_return_via_sysret 的全部引用
+  args:
+  - -n
+  - -w
+  - -F
+  - syscall_return_via_sysret
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QB-34
+  purpose: ret_from_fork_asm 的全部引用
+  args:
+  - -n
+  - -w
+  - -F
+  - ret_from_fork_asm
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: QB-35
+  purpose: copy_process 调用 copy_thread
+  args:
+  - -n
+  - -F
+  - copy_thread(p, args)
+  paths:
+  - mykernel/sched/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-36
+  purpose: PF_KTHREAD 的设置、清除与检查
+  args:
+  - -n
+  - -E
+  - p->flags [|]= PF_KTHREAD|\.kthread[[:space:]]*= 1|flags &= ~PF_KTHREAD|current->flags & PF_KTHREAD
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 5
+- id: QB-37
+  purpose: ELF 装载末段取帧与 START_THREAD
+  args:
+  - -n
+  - -E
+  - regs = current_pt_regs\(\);|START_THREAD\(elf_ex, regs, elf_entry, bprm->p\);
+  paths:
+  - mykernel/fs/vfs/binfmt_elf.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-38
+  purpose: start_thread_common 写入 flags
+  args:
+  - -n
+  - -E
+  - regs->flags[[:space:]]*= X86_EFLAGS_IF
+  paths:
+  - mykernel/arch/x86_64/sched/context/process64_arch.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-39
+  purpose: top_of_stack 的全部出现
+  args:
+  - -n
+  - -w
+  - -F
+  - top_of_stack
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: QB-40
+  purpose: dup / dup2 为空实现
+  args:
+  - -n
+  - -E
+  - ALERT_DUMMY_SYSCALL\((dup|dup2),
+  paths:
+  - mykernel/fs/syscall.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-41
+  purpose: __d_lookup 的名字比较
+  args:
+  - -n
+  - -F
+  - strncmp(name->name, dir_p->d_name.name, name->len)
+  paths:
+  - mykernel/fs/vfs/dcache.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-42
+  purpose: chr_dev_init 循环内的局部副本
+  args:
+  - -n
+  - -F
+  - memdev_s memdev = devlist[minor];
+  paths:
+  - mykernel/drivers/char/mem.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-43
+  purpose: 返回用户态前的 syscall_exit_to_user_mode 调用
+  args:
+  - -n
+  - -F
+  - syscall_exit_to_user_mode(regs);
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-44
+  purpose: 构建选项中的 CONFIG_DEVMEM / CONFIG_DEVPORT
+  args:
+  - -n
+  - -E
+  - CONFIG_DEVMEM|CONFIG_DEVPORT
+  paths:
+  - mykernel/scripts/options_flags.cmake
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QB-45
+  purpose: 构建选项中的 ROOTBLK_NVME
+  args:
+  - -n
+  - -F
+  - ROOTBLK_NVME
+  paths:
+  - mykernel/scripts/options_flags.cmake
+  expect: comment_only
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 0
+- id: QB-46
+  purpose: ROOTBLK_TRANSFER 的两个配置分支
+  args:
+  - -n
+  - -E
+  - define[[:space:]]+ROOTBLK_TRANSFER
+  paths:
+  - mykernel/arch/x86_64/include/obsolete/device.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-47
+  purpose: 路径解析起点取自当前任务 fs
+  args:
+  - -n
+  - -E
+  - nd->root = current->fs->root;|nd->path = current->fs->pwd;
+  paths:
+  - mykernel/fs/vfs/namei.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-48
+  purpose: FAT32 目录操作中的 mknod
+  args:
+  - -n
+  - -E
+  - \.mknod
+  paths:
+  - mykernel/fs/fat/
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QB-49
+  purpose: devtmpfs 初始化失败时的原地循环
+  args:
+  - -n
+  - -F
+  - while (err);
+  paths:
+  - mykernel/drivers/base/devtmpfs.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-50
+  purpose: exec 时清通用寄存器的 ELF_PLAT_INIT
+  args:
+  - -n
+  - -w
+  - -F
+  - ELF_PLAT_INIT
+  paths:
+  - mykernel/
+  expect: comment_only
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 0
+- id: QB-51
+  purpose: build_open_flags 设置的查找标志
+  args:
+  - -n
+  - -E
+  - lookup_flags [|]= LOOKUP_
+  paths:
+  - mykernel/fs/vfs/open.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 9
+  expected_hits_active: 8
+- id: QB-52
+  purpose: do_filp_open 把查找标志原样传给 path_openat
+  args:
+  - -n
+  - -E
+  - int flags = op->lookup_flags;|filp = path_openat\(&nd, op, flags\);
+  paths:
+  - mykernel/fs/vfs/namei.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 2
+- id: QB-53
+  purpose: graft_tree 中的目录类型检查
+  args:
+  - -n
+  - -F
+  - d_is_dir(mp->m_dentry)
+  paths:
+  - mykernel/fs/vfs/namespace.c
+  expect: comment_only
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 0
+- id: QB-54
+  purpose: devtmpfs 工作线程指针及其唤醒
+  args:
+  - -n
+  - -E
+  - static task_s \*thread;|wake_up_process\(thread\);
+  paths:
+  - mykernel/drivers/base/devtmpfs.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-55
+  purpose: devtmpfs 请求对象的两种来源（kzalloc 与栈上）
+  args:
+  - -n
+  - -E
+  - req_s \*req = kzalloc|struct req req;
+  paths:
+  - mykernel/drivers/base/devtmpfs.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-56
+  purpose: wait_for_completion 唤醒后对完成量的加锁、摘等待项与计数递减
+  args:
+  - -n
+  - -E
+  - x->done--;|spin_lock_irq\(&x->wait\.lock\);|__finish_swait\(&x->wait, &wait\);
+  paths:
+  - mykernel/kactive/completion/completion.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: QB-57
+  purpose: exec 中对当前 fs 的处理
+  args:
+  - -n
+  - -F
+  - fs->in_exec
+  paths:
+  - mykernel/sched/forkexec/exec.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-58
+  purpose: legacy fs_context 的 get_tree 绑定
+  args:
+  - -n
+  - -E
+  - fc->ops = &legacy_fs_context_ops;|\.get_tree[[:space:]]+= legacy_get_tree,
+  paths:
+  - mykernel/fs/vfs/fs_context.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-59
+  purpose: shmem 目录 inode 的 i_op 赋值
+  args:
+  - -n
+  - -F
+  - inode->i_op = &shmem_dir_inode_operations;
+  paths:
+  - mykernel/fs/vfs/shmem.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-60
+  purpose: kobj_map 保存调用方给的 data 指针
+  args:
+  - -n
+  - -F
+  - p->data = data;
+  paths:
+  - mykernel/drivers/base/map.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-61
+  purpose: chrdev_open 首次打开时缓存 cdev 并做链表插入
+  args:
+  - -n
+  - -E
+  - inode->i_cdev = p = new;|list_header_add_to_head\(&inode->i_devices, &p->list\);
+  paths:
+  - mykernel/drivers/char/char_dev.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-62
+  purpose: kthread 线程函数及其结尾
+  args:
+  - -n
+  - -E
+  - kernel_thread\(kthread, create|kthread_exit\(ret\);
+  paths:
+  - mykernel/sched/forkexec/kthread.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-63
+  purpose: copy_process 把 clone_flags 交给 copy_fs；CLONE_FS 时只增计数
+  args:
+  - -n
+  - -E
+  - copy_fs\(clone_flags, p\)|fs->users\+\+;
+  paths:
+  - mykernel/sched/forkexec/fork.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-64
+  purpose: kernel_thread 对调用方 flags 的变换
+  args:
+  - -n
+  - -F
+  - lower_32_bits(flags) | CLONE_VM
+  paths:
+  - mykernel/sched/forkexec/fork.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-65
+  purpose: 返回用户态前的调用链
+  args:
+  - -n
+  - -E
+  - exit_to_user_mode_loop\(regs, 0\);|__syscall_exit_to_user_mode_work\(regs\);
+  paths:
+  - mykernel/entry/common.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: QB-66
+  purpose: __switch_to 的返回
+  args:
+  - -n
+  - -F
+  - return prev_p;
+  paths:
+  - mykernel/arch/x86_64/sched/context/process64_arch.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-67
+  purpose: exec 中拆分 fs 的调用
+  args:
+  - -n
+  - -E
+  - unshare_fs|copy_fs_struct
+  paths:
+  - mykernel/sched/forkexec/exec.c
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: QB-68
+  purpose: chdir 直接改写当前任务 fs 的 pwd
+  args:
+  - -n
+  - -F
+  - curr->fs->pwd = path;
+  paths:
+  - mykernel/fs/vfs/open.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: QB-69
+  purpose: creat 系统调用入口 do_creatat 及其对父目录 ->create 的调用
+  args:
+  - -n
+  - -E
+  - ^long do_creatat\(|return do_creatat\(AT_FDCWD|error = dir->i_op->create\(dir, dentry, mode\);
+  paths:
+  - mykernel/fs/vfs/namei.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: QB-70
+  purpose: init 程序源码中的 chdir/chroot 调用
+  args:
+  - -n
+  - -w
+  - -E
+  - chdir|chroot
+  paths:
+  - myinitramfs/myinit/
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+structure_checks:
+- id: SB-01
+  kind: asm_sequence
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: entry_SYSCALL_64
+  expected_bound: next_symbol
+  expected:
+  - cli
+  - endbr64
+  - swapgs
+  - movq %rsp,PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+  - movq PER_CPU_VAR(pcpu_hot + X86_top_of_stack),%rsp
+  - pushq $__USER_DS
+  - pushq PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+  - pushq %r11
+  - pushq $__USER_CS
+  - pushq %rcx
+  - pushq %rax
+  - pushq $0x80
+  - PUSH_REGS
+  - sti
+  - movq %rsp,%rdi
+  - movslq %eax,%rsi
+  - call do_syscall_64
+  purpose: 系统调用入口建帧顺序；call do_syscall_64 之后没有 ret/jmp，下一个符号紧随其后
+- id: SB-02
+  kind: asm_sequence
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: syscall_return_via_sysret
+  expected_bound: next_symbol
+  expected:
+  - cli
+  - xchgq %r11,EFLAGS(%rsp)
+  - xchgq %rcx,RIP(%rsp)
+  - xchgq %r11,R11(%rsp)
+  - xchgq %rcx,RCX(%rsp)
+  - xchgq %r11,EFLAGS(%rsp)
+  - xchgq %rcx,RIP(%rsp)
+  - POP_REGS
+  - addq $0x28,%rsp
+  - popq %rsp
+  - swapgs
+  - sti
+  - sysretq
+  purpose: 三条路径共用的返回段：xchg、POP_REGS、跳过五格、取用户栈、swapgs、sti、sysretq
+- id: SB-03
+  kind: asm_sequence
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: ret_from_fork_asm
+  expected_bound: explicit_end
+  expected:
+  - movq %rax,%rdi
+  - movq %rsp,%rsi
+  - movq %rbx,%rdx
+  - movq %r12,%rcx
+  - call ret_from_fork
+  - testq %rbx,%rbx
+  - jnz 1f
+  - '2:'
+  - 'swapgs_restore_regs_and_return_to_usermode:'
+  - jmp syscall_return_via_sysret
+  - '1:'
+  - movq %r12,%rdi
+  - callq *%rbx
+  - jmp .
+  purpose: 新任务首次切入：先调 C 层 ret_from_fork，再按 rbx 分流到内核线程或用户返回
+- id: SB-04
+  kind: asm_sequence
+  path: mykernel/arch/x86_64/entry/entry_64.S
+  symbol: __switch_to_asm
+  expected_bound: explicit_end
+  expected:
+  - pushq %rbp
+  - pushq %rbx
+  - pushq %r12
+  - pushq %r13
+  - pushq %r14
+  - pushq %r15
+  - movq %rsp,TASK_threadsp(%rdi)
+  - movq TASK_threadsp(%rsi),%rsp
+  - popq %r15
+  - popq %r14
+  - popq %r13
+  - popq %r12
+  - popq %rbx
+  - popq %rbp
+  - jmp __switch_to
+  purpose: 切换时压/弹 callee-saved 寄存器并经 TASK_threadsp 换栈，然后 jmp __switch_to
+- id: SB-05
+  kind: body_regex
+  path: mykernel/fs/syscall.c
+  symbol: sys_dup2
+  regex: \breturn\b
+  expected_count: 0
+  purpose: dup2 的函数体没有活动 return
+- id: SB-06
+  kind: body_regex
+  path: mykernel/fs/syscall.c
+  symbol: sys_dup
+  regex: \breturn\b
+  expected_count: 0
+  purpose: dup 的函数体没有活动 return
+- id: SB-07
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_writev
+  regex: FMODE_CAN_WRITE
+  expected_count: 0
+  purpose: writev 路径没有活动的 FMODE_CAN_WRITE 检查
+- id: SB-08
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_writev
+  regex: (?:copy_from_user|import_iovec)\s*\(
+  expected_count: 0
+  purpose: writev 不复制用户 iovec，直接读 vec[i]
+- id: SB-09
+  kind: body_regex
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_write
+  regex: FMODE_CAN_WRITE
+  expected_count: 1
+  purpose: write 路径有一处活动的 FMODE_CAN_WRITE 检查
+- id: SB-10
+  kind: body_regex
+  path: mykernel/drivers/base/core.c
+  symbol: device_add
+  regex: \berror\s*=\s*0\b
+  expected_count: 0
+  purpose: device_add 没有把 error 置 0 的活动语句
+- id: SB-11
+  kind: body_regex
+  path: mykernel/drivers/base/core.c
+  symbol: device_add
+  regex: \breturn\b
+  expected_count: 1
+  purpose: device_add 只有一个 return error
+- id: SB-12
+  kind: body_regex
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: myos_switch_to_root_disk
+  regex: \breturn\b
+  expected_count: 0
+  purpose: 声明返回 ulong 的根盘切换函数没有 return
+- id: SB-13
+  kind: body_regex
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: set_init_mount
+  regex: \bif\b|IS_ERR|==\s*NULL|!=\s*NULL
+  expected_count: 0
+  purpose: set_init_mount 解引用 myos_root_sb 之前没有任何判断
+- id: SB-14
+  kind: body_regex
+  path: mykernel/entry/common.c
+  symbol: exit_to_user_mode_loop
+  regex: \b(?:if|while)\b
+  expected_count: 0
+  purpose: 返回用户态前的工作循环中没有活动的 if/while
+- id: SB-15
+  kind: body_regex
+  path: mykernel/entry/common.c
+  symbol: exit_to_user_mode_loop
+  regex: arch_do_signal_or_restart\s*\(\s*regs\s*\)
+  expected_count: 1
+  purpose: arch_do_signal_or_restart(regs) 为活动调用
+- id: SB-16
+  kind: body_regex
+  path: mykernel/arch/x86_64/entry/common.c
+  symbol: do_syscall_64
+  regex: \breturn\s+false\b
+  expected_count: 4
+  purpose: do_syscall_64 计算四个 SYSRET 不适用条件并返回 bool
+- id: SB-17
+  kind: body_regex
+  path: mykernel/drivers/char/myos_tty.c
+  symbol: myos_tty_open
+  regex: \breturn\s+1\s*;
+  expected_count: 1
+  purpose: console 的 open 固定返回 1
+- id: SB-18
+  kind: body_regex
+  path: mykernel/drivers/char/myos_tty.c
+  symbol: myos_tty_write_color
+  regex: (?:copy_from_user|get_user)\s*\(
+  expected_count: 0
+  purpose: console 写不复制用户缓冲
+- id: SB-19
+  kind: body_regex
+  path: mykernel/drivers/char/myos_tty.c
+  symbol: myos_tty_read
+  regex: \bbreak\b|'\\n'|\breturn\b
+  expected_count: 1
+  purpose: console 读循环没有提前结束；函数只有末尾一个 return
+- id: SB-20
+  kind: body_regex
+  path: mykernel/arch/x86_64/sched/context/process_arch.c
+  symbol: ret_from_fork
+  regex: \bfn\s*\(\s*fn_arg\s*\)
+  expected_count: 1
+  purpose: C 层 ret_from_fork 自己调用一次内核线程函数
+value_tables:
+- id: VT-PTREGS
+  type: ptregs_layout
+  purpose: pt_regs 字段顺序、提交的生成偏移、PUSH/POP 顺序与入口压栈槽位数逐项对照
+  struct_path: mykernel/arch/x86_64/include/asm/ptrace.h
+  offsets_path: mykernel/include/generated/asm-offsets.h
+  entry_path: mykernel/arch/x86_64/entry/entry_64.S
+  asm_macros:
+    R15: r15
+    R14: r14
+    R13: r13
+    R12: r12
+    RBP: bp
+    RBX: bx
+    R11: r11
+    R10: r10
+    R9: r9
+    R8: r8
+    RAX: ax
+    RCX: cx
+    RDX: dx
+    RSI: si
+    RDI: di
+    IRQ_NR: irq_nr
+    ORIG_RAX: orig_ax
+    RIP: ip
+    CS: cs
+    EFLAGS: flags
+    RSP: sp
+    SS: ss
+  assumptions:
+  - reg_t 为 __UINT64_TYPE__（mykernel/include/linux/kernel/types.h），按类型名推断每格 8 字节，未编译核对
+  - include/generated/asm-offsets.h 是提交入库的生成件，构建时由 scripts/target_kbuild.cmake 重新生成；本表只比较提交文本
+- id: VT-KFRAME
+  type: kframe_layout
+  purpose: inactive_task_frame 与 __switch_to_asm 压弹顺序、fork_frame 中 regs 的位置；TASK_threadsp 等只核符号映射
+  types_path: mykernel/arch/x86_64/sched/context/switch_to_types_arch.h
+  entry_path: mykernel/arch/x86_64/entry/entry_64.S
+  offsets_src_path: mykernel/arch/x86_64/kbuild/asm-offsets.c
+  offsets_path: mykernel/include/generated/asm-offsets.h
+  symbols:
+  - TASK_threadsp
+  - X86_top_of_stack
+  - TSS_sp2
+  assumptions:
+  - TASK_threadsp=552、X86_top_of_stack=24、TSS_sp2=20 是提交生成件中的数值；与当前 task_struct/pcpu_hot/tss 布局是否一致需编译生成才能核，记 unknown
+- id: VT-FLAGS
+  type: flag_values
+  purpose: O_CREAT 与 LOOKUP_RCU 数值相同；OPEN_FMODE 只产生访问位与 __FMODE_NONOTIFY，产生不了 FMODE_CAN_WRITE
+  constants:
+    O_CREAT: mykernel/include/uapi/asm-generic/fcntl.h
+    LOOKUP_RCU: mykernel/include/linux/fs/namei.h
+    FMODE_CAN_WRITE: mykernel/include/linux/fs/fs.h
+    FMODE_NONOTIFY: mykernel/include/linux/fs/fs.h
+  open_fmode_path: mykernel/include/linux/fs/fs.h
+  open_fmode_parts:
+  - ((flag + 1) & O_ACCMODE)
+  - (flag & __FMODE_NONOTIFY)
+  expect_alias: true
+  expect_can_write_reachable: false

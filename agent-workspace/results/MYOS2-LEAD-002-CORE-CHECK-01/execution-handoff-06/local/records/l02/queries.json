@@ -1,0 +1,1489 @@
+{
+ "pin_time": "a039d9803ade",
+ "queries": [
+  {
+   "id": "Q01",
+   "command": "git grep -n -w register_binfmt <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 1218,
+     "text": "register_binfmt(&elf_format);",
+     "active": true,
+     "enclosing": "init_elf_binfmt"
+    },
+    {
+     "path": "mykernel/include/linux/fs/binfmts.h",
+     "line": 106,
+     "text": "// static inline void register_binfmt(linux_bfmt_s *fmt) {",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/fs/binfmts.h",
+     "line": 109,
+     "text": "void register_binfmt(linux_bfmt_s *fmt);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 44,
+     "text": "void register_binfmt(linux_bfmt_s * fmt)",
+     "active": true,
+     "enclosing": "register_binfmt"
+    }
+   ]
+  },
+  {
+   "id": "Q02",
+   "command": "git grep -n -e core_initcall(init_elf_binfmt) -e do_initcalls(); -e kernel_init_freeable(); <time> -- mykernel/fs/vfs/binfmt_elf.c mykernel/init/main.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 1221,
+     "text": "core_initcall(init_elf_binfmt);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/init/main.c",
+     "line": 249,
+     "text": "do_initcalls();",
+     "active": true,
+     "enclosing": "do_basic_setup"
+    },
+    {
+     "path": "mykernel/init/main.c",
+     "line": 281,
+     "text": "kernel_init_freeable();",
+     "active": true,
+     "enclosing": "kernel_init"
+    }
+   ]
+  },
+  {
+   "id": "Q03",
+   "command": "git grep -n -F kernel_clone( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1444,
+     "text": "pid_t kernel_clone(kclone_args_s *args)",
+     "active": true,
+     "enclosing": "kernel_clone"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1550,
+     "text": "return kernel_clone(&args);",
+     "active": true,
+     "enclosing": "kernel_thread"
+    },
+    {
+     "path": "mykernel/sched/misc/sched_misc_api.h",
+     "line": 21,
+     "text": "extern pid_t kernel_clone(kclone_args_s *kargs);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/syscall.c",
+     "line": 64,
+     "text": "return kernel_clone(&args);",
+     "active": true,
+     "enclosing": "sys_fork"
+    }
+   ]
+  },
+  {
+   "id": "Q04",
+   "command": "git grep -n -E __NR_(fork|vfork|clone|clone3|execve|exit|wait4|exit_group|open|read|close|mmap)\\b <time> -- mykernel/arch/x86_64/include/asm/syscalls_64.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 10,
+   "hits_active": 9,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 4,
+     "text": "__SYSCALL(__NR_read, sys_read)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 6,
+     "text": "__SYSCALL(__NR_open, sys_open)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 7,
+     "text": "__SYSCALL(__NR_close, sys_close)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 12,
+     "text": "__SYSCALL(__NR_mmap, sys_mmap)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 31,
+     "text": "__SYSCALL(__NR_fork, sys_fork)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 32,
+     "text": "// __SYSCALL(__NR_vfork, sys_vfork)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 33,
+     "text": "__SYSCALL(__NR_execve, sys_execve)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 34,
+     "text": "__SYSCALL(__NR_exit, sys_exit)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 35,
+     "text": "__SYSCALL(__NR_wait4, sys_wait4)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 73,
+     "text": "__SYSCALL(__NR_exit_group, sys_exit_group)",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q05",
+   "command": "git grep -n -E wait_for_vfork_done|complete_vfork_done <time> -- mykernel/sched/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 552,
+     "text": "// static void complete_vfork_done(task_s *tsk)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 565,
+     "text": "// static int wait_for_vfork_done(task_s *child,",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 629,
+     "text": "// \tcomplete_vfork_done(tsk);",
+     "active": false,
+     "enclosing": "mm_release"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1523,
+     "text": "// \tif (!wait_for_vfork_done(p, &vfork))",
+     "active": false,
+     "enclosing": "kernel_clone"
+    }
+   ]
+  },
+  {
+   "id": "Q06",
+   "command": "git grep -n -E i_fop\\s*=\\s*&FAT32_file_ops <time> -- mykernel/fs/fat/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/fat/inode.c",
+     "line": 157,
+     "text": "inode->i_fop\t= &FAT32_file_ops;",
+     "active": true,
+     "enclosing": "fat_fill_inode"
+    },
+    {
+     "path": "mykernel/fs/fat/inode.c",
+     "line": 179,
+     "text": "inode->i_fop\t= &FAT32_file_ops;",
+     "active": true,
+     "enclosing": "fat_fill_inode"
+    },
+    {
+     "path": "mykernel/fs/fat/myos_fat32.c",
+     "line": 477,
+     "text": "sbp->s_root->d_inode->i_fop = &FAT32_file_ops;",
+     "active": true,
+     "enclosing": "read_fat32_superblock"
+    }
+   ]
+  },
+  {
+   "id": "Q07",
+   "command": "git grep -n -E ^\\s*\\.(open|read|read_iter|mmap|fault|transfer|load_binary|read_super)\\s*=\\s*\\w+ <time> -- mykernel/fs/fat/myos_fat32.c mykernel/mm/vm_map/filemap.c mykernel/arch/x86_64/myos/ide.c mykernel/fs/vfs/binfmt_elf.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/ide.c",
+     "line": 303,
+     "text": ".transfer\t= ATA_disk_transfer,",
+     "active": true,
+     "enclosing": "ATA_master_ops"
+    },
+    {
+     "path": "mykernel/fs/fat/myos_fat32.c",
+     "line": 356,
+     "text": ".open\t\t\t= FAT32_open,",
+     "active": true,
+     "enclosing": "FAT32_file_ops"
+    },
+    {
+     "path": "mykernel/fs/fat/myos_fat32.c",
+     "line": 357,
+     "text": ".read\t\t\t= FAT32_read,",
+     "active": true,
+     "enclosing": "FAT32_file_ops"
+    },
+    {
+     "path": "mykernel/fs/fat/myos_fat32.c",
+     "line": 360,
+     "text": ".read_iter\t\t= generic_file_read_iter,",
+     "active": true,
+     "enclosing": "FAT32_file_ops"
+    },
+    {
+     "path": "mykernel/fs/fat/myos_fat32.c",
+     "line": 362,
+     "text": ".mmap\t\t\t= generic_file_mmap,",
+     "active": true,
+     "enclosing": "FAT32_file_ops"
+    },
+    {
+     "path": "mykernel/fs/fat/myos_fat32.c",
+     "line": 503,
+     "text": ".read_super = read_fat32_superblock,",
+     "active": true,
+     "enclosing": "FAT32_fs_type"
+    },
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 85,
+     "text": ".load_binary\t= load_elf_binary,",
+     "active": true,
+     "enclosing": "elf_format"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 185,
+     "text": ".fault\t\t\t\t= simple_filemap_fault,",
+     "active": true,
+     "enclosing": "generic_file_vm_ops"
+    }
+   ]
+  },
+  {
+   "id": "Q08",
+   "command": "git grep -n ROOTBLK_NVME <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/obsolete/device.h",
+     "line": 47,
+     "text": "#ifdef ROOTBLK_NVME",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/scripts/options_flags.cmake",
+     "line": 71,
+     "text": "# \t-DROOTBLK_NVME \\",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q09",
+   "command": "git grep -n -E register_irq\\(SATA_|init_IDE_disk\\(\\) <time> -- mykernel/arch/x86_64/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/device.c",
+     "line": 30,
+     "text": "init_IDE_disk();",
+     "active": true,
+     "enclosing": "init_bdev_intr"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/ide.c",
+     "line": 327,
+     "text": "void init_IDE_disk()",
+     "active": true,
+     "enclosing": "init_IDE_disk"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/ide.c",
+     "line": 340,
+     "text": "register_irq(SATA_MAST_IRQ, &entry, \"ATA-master\", 0,",
+     "active": true,
+     "enclosing": "init_IDE_disk"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/ide.c",
+     "line": 344,
+     "text": "register_irq(SATA_SLAV_IRQ, &entry, \"ATA-slave\", 0,",
+     "active": true,
+     "enclosing": "init_IDE_disk"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/ide.c",
+     "line": 352,
+     "text": "unregister_irq(SATA_MAST_IRQ);",
+     "active": true,
+     "enclosing": "disk_exit"
+    }
+   ]
+  },
+  {
+   "id": "Q10",
+   "command": "git grep -n -E (end_request|IDE_cmd_out)\\(node\\) <time> -- mykernel/arch/x86_64/myos/ide.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/ide.c",
+     "line": 324,
+     "text": "end_request(node);",
+     "active": true,
+     "enclosing": "ATA_disk_handler"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/ide.c",
+     "line": 375,
+     "text": "IDE_cmd_out(node);",
+     "active": true,
+     "enclosing": "ATArq_deamon"
+    }
+   ]
+  },
+  {
+   "id": "Q11",
+   "command": "git grep -n -w release_task <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 788,
+     "text": "// \t * We are going to release_task()->ptrace_unlink() silently,",
+     "active": false,
+     "enclosing": "de_thread"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 797,
+     "text": "// \trelease_task(leader);",
+     "active": false,
+     "enclosing": "de_thread"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exit.c",
+     "line": 63,
+     "text": "// \trelease_task(p);",
+     "active": false,
+     "enclosing": "exit_notify"
+    },
+    {
+     "path": "mykernel/sched/misc/sched_misc_api.h",
+     "line": 13,
+     "text": "extern void release_task(task_s * p);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q12",
+   "command": "git grep -n put_task_struct <time> -- mykernel/sched/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 582,
+     "text": "// \tput_task_struct(child);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/scheduler/scheduler_core.c",
+     "line": 863,
+     "text": "// \tput_task_struct_rcu_user(prev);",
+     "active": false,
+     "enclosing": "finish_task_switch"
+    },
+    {
+     "path": "mykernel/sched/scheduler/scheduler_core.c",
+     "line": 1174,
+     "text": "/* Causes final put_task_struct in finish_task_switch(): */",
+     "active": false,
+     "enclosing": "do_task_dead"
+    }
+   ]
+  },
+  {
+   "id": "Q13",
+   "command": "git grep -n force_fatal_sig <time> -- mykernel/sched/forkexec/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 1281,
+     "text": "// \tforce_fatal_sig(SIGSEGV);",
+     "active": false,
+     "enclosing": "bprm_execve"
+    }
+   ]
+  },
+  {
+   "id": "Q14",
+   "command": "git grep -n do_close_on_exec <time> -- mykernel/sched/forkexec/exec.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 947,
+     "text": "// do_close_on_exec(me->files);",
+     "active": false,
+     "enclosing": "begin_new_exec"
+    }
+   ]
+  },
+  {
+   "id": "Q15",
+   "command": "git grep -n -E \\\"/boot/(init|sh)\\\" <time> -- mykernel/ myinitramfs/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 24,
+     "text": "char prog_name[] = \"/boot/sh\";",
+     "active": true,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/arch_task.c",
+     "line": 19,
+     "text": "const char *initd_name = \"/boot/init\";",
+     "active": true,
+     "enclosing": "kjmp_to_doexecve"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/arch_task.c",
+     "line": 20,
+     "text": "// const char *initd_name = \"/boot/sh\";",
+     "active": false,
+     "enclosing": "kjmp_to_doexecve"
+    }
+   ]
+  },
+  {
+   "id": "Q16",
+   "command": "git grep -n -E \\b(fork|execve|sched_yield)\\( <time> -- myinitramfs/myinit/initd.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 30,
+     "text": "int rv = fork();",
+     "active": true,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 35,
+     "text": "execve(prog_name, args, envs);",
+     "active": true,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 41,
+     "text": "sched_yield();",
+     "active": true,
+     "enclosing": "normal_boot"
+    }
+   ]
+  },
+  {
+   "id": "Q17",
+   "command": "git grep -n LINK_TYPE <time> -- make_install.sh scripts/make_install_initranfs.sh",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "make_install.sh",
+     "line": 6,
+     "text": "LINK_TYPE=static",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "make_install.sh",
+     "line": 7,
+     "text": "# LINK_TYPE=dynamic",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "make_install.sh",
+     "line": 25,
+     "text": "make_install_initranfs $PROJ_ROOT $DEBUG_FLAG $LINK_TYPE",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 29,
+     "text": "cmake $1/myinitramfs $2 -DLINK_TYPE=$3 -DCMAKE_INSTALL_PREFIX=/mnt && make",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 31,
+     "text": "if [[ \"$LINK_TYPE\" == \"dynamic\" ]]; then",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q18",
+   "command": "git grep -n -F -e ->read_super( <time> -- mykernel/fs/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 158,
+     "text": "return p->read_super(DPTE, buf);",
+     "active": true,
+     "enclosing": "mount_fs"
+    }
+   ]
+  },
+  {
+   "id": "Q19",
+   "command": "git grep -n -E call_mmap\\(|f_op->mmap\\(file, vma\\) <time> -- mykernel/mm/vm_map/mmap.c mykernel/include/linux/fs/fs.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/include/linux/fs/fs.h",
+     "line": 1954,
+     "text": "static inline int call_mmap(file_s *file, vma_s *vma) {",
+     "active": true,
+     "enclosing": "call_mmap"
+    },
+    {
+     "path": "mykernel/include/linux/fs/fs.h",
+     "line": 1955,
+     "text": "return file->f_op->mmap(file, vma);",
+     "active": true,
+     "enclosing": "call_mmap"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 693,
+     "text": "error = call_mmap(file, vma);",
+     "active": true,
+     "enclosing": "simple_mmap_region"
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 714,
+     "text": "* If vm_flags changed after call_mmap(), we should try merge",
+     "active": false,
+     "enclosing": "simple_mmap_region"
+    }
+   ]
+  },
+  {
+   "id": "Q20",
+   "command": "git grep -n -F x64_sys_call( <time> -- mykernel/arch/x86_64/entry/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/common.c",
+     "line": 44,
+     "text": "regs->ax = x64_sys_call(regs, unr);",
+     "active": true,
+     "enclosing": "do_syscall_64"
+    },
+    {
+     "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+     "line": 27,
+     "text": "long x64_sys_call(const pt_regs_s *regs, unsigned int nr)",
+     "active": true,
+     "enclosing": "x64_sys_call"
+    }
+   ]
+  },
+  {
+   "id": "Q21",
+   "command": "git grep -n -F kernel_execve( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/entry_64.S",
+     "line": 292,
+     "text": "//  * calling kernel_execve().  Exit to userspace to complete the execve()",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/arch_task.c",
+     "line": 33,
+     "text": "kernel_execve(initd_name, argv, envp);",
+     "active": true,
+     "enclosing": "kjmp_to_doexecve"
+    },
+    {
+     "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+     "line": 73,
+     "text": "* calling kernel_execve().  Exit to userspace to complete the",
+     "active": false,
+     "enclosing": "ret_from_fork"
+    },
+    {
+     "path": "mykernel/include/linux/fs/binfmts.h",
+     "line": 141,
+     "text": "int kernel_execve(const char *filename,",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 1375,
+     "text": "int kernel_execve(const char *kernel_filename,",
+     "active": true,
+     "enclosing": "kernel_execve"
+    }
+   ]
+  },
+  {
+   "id": "Q22",
+   "command": "git grep -n -F wake_up_new_task(p); <time> -- mykernel/sched/forkexec/fork.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1516,
+     "text": "wake_up_new_task(p);",
+     "active": true,
+     "enclosing": "kernel_clone"
+    }
+   ]
+  },
+  {
+   "id": "Q23",
+   "command": "git grep -n -E exit_notify\\(tsk|do_task_dead\\(\\); <time> -- mykernel/sched/forkexec/exit.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/exit.c",
+     "line": 153,
+     "text": "exit_notify(tsk, group_dead);",
+     "active": true,
+     "enclosing": "do_exit"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exit.c",
+     "line": 185,
+     "text": "do_task_dead();",
+     "active": true,
+     "enclosing": "do_exit"
+    }
+   ]
+  },
+  {
+   "id": "Q24",
+   "command": "git grep -n -E 0x1000|do_exit\\(|do_group_exit\\( <time> -- mykernel/sched/syscall.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/sched/syscall.c",
+     "line": 55,
+     "text": "for (long i = 0; i < 0x1000; i++)",
+     "active": true,
+     "enclosing": "sys_fork"
+    },
+    {
+     "path": "mykernel/sched/syscall.c",
+     "line": 56,
+     "text": "for (long j = 0; j < 0x1000; j++)",
+     "active": true,
+     "enclosing": "sys_fork"
+    },
+    {
+     "path": "mykernel/sched/syscall.c",
+     "line": 72,
+     "text": "do_exit(error_code);",
+     "active": true,
+     "enclosing": "sys_exit"
+    },
+    {
+     "path": "mykernel/sched/syscall.c",
+     "line": 137,
+     "text": "do_group_exit((error_code & 0xff) << 8);",
+     "active": true,
+     "enclosing": "sys_exit_group"
+    }
+   ]
+  },
+  {
+   "id": "Q25",
+   "command": "git grep -n -E f_op->read\\( <time> -- mykernel/mm/vm_map/filemap.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 132,
+     "text": "file->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);",
+     "active": true,
+     "enclosing": "simple_filemap_fault"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 222,
+     "text": "filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &temp_pos);",
+     "active": true,
+     "enclosing": "simple_filemap_read"
+    },
+    {
+     "path": "mykernel/mm/vm_map/filemap.c",
+     "line": 328,
+     "text": "filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &temp_pos);",
+     "active": true,
+     "enclosing": "generic_perform_write"
+    }
+   ]
+  },
+  {
+   "id": "Q26",
+   "command": "git grep -n -E retval = copy_mm\\(|dup_fd\\(oldf <time> -- mykernel/sched/forkexec/fork.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 739,
+     "text": "newf = dup_fd(oldf, NR_OPEN_MAX, &error);",
+     "active": true,
+     "enclosing": "copy_files"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1134,
+     "text": "retval = copy_mm(clone_flags, p);",
+     "active": true,
+     "enclosing": "copy_process"
+    }
+   ]
+  },
+  {
+   "id": "Q27",
+   "command": "git grep -n START_THREAD <time> -- mykernel/fs/vfs/binfmt_elf.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/binfmt_elf.c",
+     "line": 1131,
+     "text": "START_THREAD(elf_ex, regs, elf_entry, bprm->p);",
+     "active": true,
+     "enclosing": "load_elf_binary"
+    }
+   ]
+  },
+  {
+   "id": "Q28",
+   "command": "git grep -n alloc_empty_file <time> -- mykernel/fs/vfs/namei.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 719,
+     "text": "file = alloc_empty_file(op->open_flag);",
+     "active": true,
+     "enclosing": "path_openat"
+    }
+   ]
+  },
+  {
+   "id": "Q29",
+   "command": "git grep -n list_header_remove_tail(&IDEreq_lhdr) <time> -- mykernel/arch/x86_64/myos/ide.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/ide.c",
+     "line": 370,
+     "text": "List_s *wq_lp = list_header_remove_tail(&IDEreq_lhdr);",
+     "active": true,
+     "enclosing": "ATArq_deamon"
+    }
+   ]
+  },
+  {
+   "id": "Q30",
+   "command": "git grep -n -E -e ->release\\( <time> -- mykernel/fs/vfs/ mykernel/fs/syscall.c",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "Q31",
+   "command": "git grep -n -E REFCOUNT_INIT\\(1\\)|&init_sighand <time> -- mykernel/init/init_task.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/init/init_task.c",
+     "line": 57,
+     "text": ".count\t\t\t= REFCOUNT_INIT(1),",
+     "active": true,
+     "enclosing": "init_sighand"
+    },
+    {
+     "path": "mykernel/init/init_task.c",
+     "line": 75,
+     "text": "// .stack_refcount\t\t= REFCOUNT_INIT(1),",
+     "active": false,
+     "enclosing": "init_task"
+    },
+    {
+     "path": "mykernel/init/init_task.c",
+     "line": 124,
+     "text": ".sighand\t\t\t= &init_sighand,",
+     "active": true,
+     "enclosing": "init_task"
+    }
+   ]
+  },
+  {
+   "id": "Q32",
+   "command": "git grep -n CLONE_SIGHAND <time> -- mykernel/sched/ mykernel/kactive/ mykernel/init/ mykernel/drivers/ mykernel/arch/x86_64/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 754,
+     "text": "if (clone_flags & CLONE_SIGHAND) {",
+     "active": true,
+     "enclosing": "copy_sighand"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 890,
+     "text": "if ((clone_flags & CLONE_THREAD) && !(clone_flags & CLONE_SIGHAND))",
+     "active": true,
+     "enclosing": "copy_process"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 898,
+     "text": "if ((clone_flags & CLONE_SIGHAND) && !(clone_flags & CLONE_VM))",
+     "active": true,
+     "enclosing": "copy_process"
+    }
+   ]
+  },
+  {
+   "id": "Q33",
+   "command": "git grep -n -E myos_do_dentry_open\\(file|vfs_open\\(&nd <time> -- mykernel/fs/vfs/open.c mykernel/fs/vfs/namei.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 706,
+     "text": "vfs_open(&nd->path, file);",
+     "active": true,
+     "enclosing": "do_open"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 46,
+     "text": "static int myos_do_dentry_open(file_s * f, inode_s * inode)",
+     "active": true,
+     "enclosing": "myos_do_dentry_open"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 304,
+     "text": "return myos_do_dentry_open(file, path->dentry->d_inode);",
+     "active": true,
+     "enclosing": "vfs_open"
+    }
+   ]
+  },
+  {
+   "id": "Q34",
+   "command": "git grep -n -E fd_install\\(|get_unused_fd_flags\\( <time> -- mykernel/fs/ mykernel/drivers/ mykernel/sched/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 11,
+   "hits_active": 7,
+   "hits": [
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 111,
+     "text": "// \tret = get_unused_fd_flags(0);",
+     "active": false,
+     "enclosing": "sys_dup"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 113,
+     "text": "// \t\tfd_install(ret, file);",
+     "active": false,
+     "enclosing": "sys_dup"
+    },
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 147,
+     "text": "int get_unused_fd_flags(uint flags)",
+     "active": true,
+     "enclosing": "get_unused_fd_flags"
+    },
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 184,
+     "text": "void fd_install(uint fd, file_s *file)",
+     "active": true,
+     "enclosing": "fd_install"
+    },
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 238,
+     "text": "fd_install(err, file);",
+     "active": true,
+     "enclosing": "f_dupfd"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 251,
+     "text": "fd = get_unused_fd_flags(how->flags);",
+     "active": true,
+     "enclosing": "do_sys_openat2"
+    },
+    {
+     "path": "mykernel/fs/vfs/open.c",
+     "line": 258,
+     "text": "fd_install(fd, f);",
+     "active": true,
+     "enclosing": "do_sys_openat2"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 1015,
+     "text": "retval = get_unused_fd_flags(0);",
+     "active": true,
+     "enclosing": "begin_new_exec"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 1018,
+     "text": "fd_install(retval, bprm->executable);",
+     "active": true,
+     "enclosing": "begin_new_exec"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1163,
+     "text": "// \tretval = get_unused_fd_flags(O_RDWR | O_CLOEXEC);",
+     "active": false,
+     "enclosing": "copy_process"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 1360,
+     "text": "// \tfd_install(pidfd, pidfile);",
+     "active": false,
+     "enclosing": "copy_process"
+    }
+   ]
+  },
+  {
+   "id": "Q35",
+   "command": "git grep -n GLOB_RECURSE KERNEL_C_SRCS <time> -- mykernel/CMakeLists.txt",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/CMakeLists.txt",
+     "line": 30,
+     "text": "file(GLOB_RECURSE KERNEL_C_SRCS ${PROJECT_SOURCE_DIR}/*.c)",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "Q36",
+   "type": "size",
+   "returncode": 0,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/CMakeLists.txt",
+     "bytes": 0
+    },
+    {
+     "path": "mykernel/fs/vfs/CMakeLists.txt",
+     "bytes": 0
+    },
+    {
+     "path": "mykernel/fs/fat/CMakeLists.txt",
+     "bytes": 0
+    }
+   ]
+  },
+  {
+   "id": "Q37",
+   "command": "git grep -n -F ROOTBLK_TRANSFER( <time> -- mykernel/fs/vfs/myos_vfs.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 83,
+     "text": "// \tROOTBLK_TRANSFER(CMD_READ, 0, SECT_PER_PG, (unchar *)boot_sec);",
+     "active": false,
+     "enclosing": "myos_switch_to_root_disk"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 93,
+     "text": "ROOTBLK_TRANSFER(CMD_READ, 0, SECT_PER_PG, (unchar *)boot_sec);",
+     "active": true,
+     "enclosing": "myos_switch_to_root_disk"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 108,
+     "text": "ROOTBLK_TRANSFER(CMD_READ, 0, 5 * SECT_PER_PG, gpt_pes_buf);",
+     "active": true,
+     "enclosing": "myos_switch_to_root_disk"
+    },
+    {
+     "path": "mykernel/fs/vfs/myos_vfs.c",
+     "line": 124,
+     "text": "ROOTBLK_TRANSFER(CMD_READ, gpt_pes[i].StartingLBA, SECT_PER_PG, (unchar *)fat32_sb);",
+     "active": true,
+     "enclosing": "myos_switch_to_root_disk"
+    }
+   ]
+  },
+  {
+   "id": "Q38",
+   "command": "git grep -n -F myos_fdget_pos( <time> -- mykernel/fs/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 197,
+     "text": "fd_s myos_fdget_pos(int fd)",
+     "active": true,
+     "enclosing": "myos_fdget_pos"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 182,
+     "text": "fd_s f = myos_fdget_pos(fd);",
+     "active": true,
+     "enclosing": "ksys_read"
+    },
+    {
+     "path": "mykernel/fs/vfs/readdir.c",
+     "line": 143,
+     "text": "f = myos_fdget_pos(fd);",
+     "active": true,
+     "enclosing": "sys_getdents64"
+    }
+   ]
+  },
+  {
+   "id": "Q39",
+   "command": "git grep -n -F -e vm_ops->fault(vmf) <time> -- mykernel/mm/fault/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/mm/fault/fault.c",
+     "line": 901,
+     "text": "ret = vma->vm_ops->fault(vmf);",
+     "active": true,
+     "enclosing": "__do_fault"
+    }
+   ]
+  },
+  {
+   "id": "Q40",
+   "command": "git grep -n -E path_put|dput|iput <time> -- mykernel/fs/vfs/file_table.c",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "Q41",
+   "command": "git grep -n -E void \\*memcpy\\(void \\*dest|while \\(count--\\) <time> -- mykernel/lib/string/string.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 9,
+   "hits_active": 5,
+   "hits": [
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 462,
+     "text": "// \twhile (count--) {",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 616,
+     "text": "while (count--)",
+     "active": true,
+     "enclosing": "memset"
+    },
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 638,
+     "text": "// \twhile (count--)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 660,
+     "text": "// \twhile (count--)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 682,
+     "text": "// \twhile (count--)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 699,
+     "text": "void *memcpy(void *dest, const void *src, size_t count)",
+     "active": true,
+     "enclosing": "memcpy"
+    },
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 703,
+     "text": "while (count--)",
+     "active": true,
+     "enclosing": "memcpy"
+    },
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 726,
+     "text": "while (count--)",
+     "active": true,
+     "enclosing": "memmove"
+    },
+    {
+     "path": "mykernel/lib/string/string.c",
+     "line": 733,
+     "text": "while (count--)",
+     "active": true,
+     "enclosing": "memmove"
+    }
+   ]
+  },
+  {
+   "id": "Q42",
+   "command": "git grep -n -E kmem_cache_node_s \\*n = &s->node;|free_to_partial_list\\(s, n, slab, object\\);|if \\(slab->inuse == slab->objects\\)|free_slab\\(s, slab\\); <time> -- mykernel/mm/kmalloc/slub.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 7,
+   "hits_active": 7,
+   "hits": [
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 191,
+     "text": "if (slab->inuse == slab->objects) {",
+     "active": true,
+     "enclosing": "get_from_partial_list"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 208,
+     "text": "kmem_cache_node_s *n = &s->node;",
+     "active": true,
+     "enclosing": "slab_alloc"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 284,
+     "text": "if (slab->inuse == slab->objects) {",
+     "active": true,
+     "enclosing": "free_to_partial_list"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 294,
+     "text": "kmem_cache_node_s *n = &s->node;",
+     "active": true,
+     "enclosing": "slab_free"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 295,
+     "text": "free_to_partial_list(s, n, slab, object);",
+     "active": true,
+     "enclosing": "slab_free"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 306,
+     "text": "free_slab(s, slab);",
+     "active": true,
+     "enclosing": "slab_free"
+    },
+    {
+     "path": "mykernel/mm/kmalloc/slub.c",
+     "line": 475,
+     "text": "kmem_cache_node_s *n = &s->node;",
+     "active": true,
+     "enclosing": "bootstrap"
+    }
+   ]
+  },
+  {
+   "id": "Q43",
+   "command": "git grep -n -F if (!folio_test_slab(folio)) <time> -- mykernel/mm/kmalloc/slub.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/mm/kmalloc/slub.h",
+     "line": 47,
+     "text": "if (!folio_test_slab(folio))",
+     "active": true,
+     "enclosing": "virt_to_slab"
+    }
+   ]
+  },
+  {
+   "id": "Q44",
+   "command": "git grep -n -E if \\(node == NUMA_NO_NODE\\)|node = tsk_fork_get_node\\(orig\\);|tsk = alloc_task_struct_node\\(node\\);|dup_task_struct\\(current, node\\) <time> -- mykernel/sched/forkexec/fork.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 278,
+     "text": "if (node == NUMA_NO_NODE)",
+     "active": true,
+     "enclosing": "dup_task_struct"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 279,
+     "text": "// node = tsk_fork_get_node(orig);",
+     "active": false,
+     "enclosing": "dup_task_struct"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 280,
+     "text": "tsk = alloc_task_struct_node(node);",
+     "active": true,
+     "enclosing": "dup_task_struct"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 959,
+     "text": "p = dup_task_struct(current, node);",
+     "active": true,
+     "enclosing": "copy_process"
+    }
+   ]
+  }
+ ]
+}

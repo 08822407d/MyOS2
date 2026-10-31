@@ -1,0 +1,146 @@
+{
+ "check": "MM_BASELINE_04_FACTS",
+ "pin_time": "a039d9803ade",
+ "anchors": {
+  "total": 80,
+  "ok": 80,
+  "by_kind": {
+   "build": 1,
+   "in_body": 71,
+   "in_body_comment": 6,
+   "macro": 1,
+   "type_member": 1
+  },
+  "failures": []
+ },
+ "markdown_tags": {
+  "integration-03-disposition.md": {
+   "total": 4,
+   "ok": 4,
+   "failures": []
+  },
+  "memory-baseline.md": {
+   "total": 8,
+   "ok": 8,
+   "failures": []
+  }
+ },
+ "structure": {
+  "errors": [],
+  "limits": {
+   "capabilities": [
+    21,
+    24
+   ],
+   "edges": [
+    39,
+    40
+   ],
+   "anchors": [
+    80,
+    80
+   ],
+   "candidates": [
+    6,
+    6
+   ],
+   "per_subsystem": {
+    "mm.page_alloc": 5,
+    "mm.kmalloc": 5,
+    "mm.vm_map": 6,
+    "mm.fault": 5
+   }
+  },
+  "recount": {
+   "subsystems": 4,
+   "capabilities": 21,
+   "anchors": 80,
+   "edges": 39,
+   "link_breaks": 9,
+   "concerns": 20,
+   "dependency_risks": 6,
+   "queries": 43,
+   "next_validation_candidates": 6,
+   "gaps": 10,
+   "refuted_claims": 5,
+   "gaps_open": 9,
+   "capabilities_per_subsystem": {
+    "mm.page_alloc": 5,
+    "mm.kmalloc": 5,
+    "mm.vm_map": 6,
+    "mm.fault": 5
+   },
+   "implementation_evidence": {
+    "connected_body": 16,
+    "declaration_only": 0,
+    "not_assessed": 0,
+    "not_located_in_scope": 0,
+    "partial_body": 5
+   }
+  },
+  "ok": true
+ },
+ "queries": {
+  "total": 43,
+  "tool_failures": 0,
+  "errors": [],
+  "ok": true
+ },
+ "m00": {
+  "variants": [
+   {
+    "variant": "original_idle_key_zero",
+    "computed": {
+     "N2": 50,
+     "N1": 40,
+     "idle_interval": 10
+    },
+    "expected": {
+     "N2": 50,
+     "N1": 40,
+     "idle_interval": 10
+    },
+    "match": true,
+    "conserved": true,
+    "errors": [],
+    "ok": true
+   },
+   {
+    "variant": "original_idle_key_max",
+    "computed": {
+     "N2": 60,
+     "N1": 40,
+     "idle_interval": 0
+    },
+    "expected": {
+     "N2": 60,
+     "N1": 40,
+     "idle_interval": 0
+    },
+    "match": true,
+    "conserved": true,
+    "errors": [],
+    "ok": true
+   },
+   {
+    "variant": "candidate_A_or_B_spec_both_idle_keys",
+    "computed": {
+     "N2": 60,
+     "N1": 40,
+     "idle_interval": 0
+    },
+    "expected": {
+     "N2": 60,
+     "N1": 40,
+     "idle_interval": 0
+    },
+    "match": true,
+    "conserved": true,
+    "errors": [],
+    "ok": true
+   }
+  ],
+  "ok": true
+ },
+ "all_ok": true
+}

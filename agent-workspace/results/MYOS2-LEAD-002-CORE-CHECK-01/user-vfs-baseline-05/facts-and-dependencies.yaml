@@ -1,0 +1,4592 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-VFS-BASELINE-05
+record_type: user_process_and_vfs_static_baseline_facts
+produced_by: Claude Code cloud session (claude.ai/code)
+executor: Claude Code cloud session (claude.ai/code)
+model: unknown_or_not_attestable
+date: '2026-10-02'
+base_snapshot: kernel=time a039d9803ade；workspace=master de3bb1df906a（开工时事实，未固定）；主线 agent/MYOS2-LEAD-002 0d066801371d（开工时）；被审执行头
+  de7c96ede546；MM 结果冻结 eb75b3100601。均为短 SHA
+pins:
+  kernel_time: a039d9803ade
+  workspace_master_at_start: de3bb1df906a
+  lead_object_at_start: 0d066801371d
+  execution_reviewed: de7c96ede546
+  mm_results_frozen: eb75b3100601
+status: final_for_user_vfs_baseline_05
+evidence_class: 静态源码盘点（git 对象只读查询 + 逐字引文 + 定点检索 + 词法结构检查 + 规则算术）；没有编译，没有运行 C/ASM、内核、QEMU 或仓库脚本。
+inputs_read: 见 evidence.md §2；源码文件清单为各 anchors/queries 的 path 并集
+open_questions: 见 gaps（全部 open）与 deferred-findings.yaml 中 status 为 needs_evidence 的条目
+axes:
+  implementation_evidence: declaration_only / partial_body / connected_body / not_located_in_scope / not_assessed；本批局部证据状态，不是成熟度分数，不折算旧
+    002 的 0–4
+  correctness_evidence: not_assessed / static_concern / bounded_prior_observation；static_concern 必须指向 deferred-findings.yaml
+    中的条目
+  runtime_evidence: 本批统一 NOT_RUN
+  concurrency_evidence: not_assessed / source_only（没有 SMP 实测）
+  source_condition.resolution: not_conditional / resolved / partially_resolved / unknown
+edge_direction:
+  call: 调用方 → 被调用方
+  data: 读取/消费方 → 产生/提供方
+  init_order: 后执行或后可用者 → 必须先完成者（后依赖先）
+  config: 受影响的代码 → 提供开关的配置
+  build: 被编译的代码 → 构建脚本
+edge_rules:
+- include 不是 call；GLOB 不是运行可达；词法 active 不是预处理或链接确认
+- 间接调用必须给出调用点、对象或回调绑定、接收方三项证据（indirect 字段），缺一项就登记为断开
+- 宏展开（ROOTBLK_TRANSFER）按宏定义加配置前提记为调用，并另记 config 边
+negative_assertion_rule: 所有否定断言都带查询范围、返回码与活动命中数（queries），或词法结构检查（structure_checks）；只说明所查范围内没有，不推广为全树结论。
+anchor_id_note: 锚点编号按链分组（A-C1…A-C6），裁剪到上限时删去的编号不复用，编号间断无含义。
+inputs_old:
+  sources:
+  - path: agent-workspace/results/MYOS2-DR-002/completeness.yaml
+    object: master de3bb1df906a
+    read: sched.forkexec 与 fs.vfs 两个条目的 id 与 node 名；status/maturity/risk/evidence/notes 未导入
+  - path: agent-workspace/results/MYOS2-DR-003/deps.yaml
+    object: master de3bb1df906a
+    read: edges 中与两个对象相交的端点名；evidence、行号、hardness/confidence 未导入
+  rule: 旧 ID 原样保留；本批新增的细粒度能力一律标 proposed_id，不改公共词汇表；旧断言不继承。
+counts:
+  objects: 3
+  capabilities: 20
+  capabilities_per_object:
+    sched.forkexec: 9
+    fs.vfs: 9
+    boundary: 2
+  anchors: 90
+  anchors_by_kind:
+    build: 2
+    in_body: 80
+    in_body_comment: 6
+    macro: 1
+    type_member: 1
+  edges: 43
+  edges_by_kind:
+    build: 1
+    call: 34
+    config: 1
+    data: 3
+    init_order: 4
+  queries: 44
+  structure_checks: 7
+  value_tables: 2
+  chains: 6
+  link_breaks: 10
+  dependency_risks: 6
+  next_validation_candidates: 6
+  gaps: 10
+  gaps_open: 10
+  old_inputs_index: 19
+  implementation_evidence:
+    connected_body: 15
+    declaration_only: 1
+    not_assessed: 0
+    not_located_in_scope: 0
+    partial_body: 4
+objects:
+- id: sched.forkexec
+  kind: main_object
+  old_id: sched.forkexec
+  scope: 进程创建、程序装载、退出与回收；本批 9 个代表能力
+- id: fs.vfs
+  kind: main_object
+  old_id: fs.vfs
+  scope: 根切换、路径打开、文件表、file 生命周期、读与文件映射读、ELF 装载；本批 9 个代表能力
+- id: boundary
+  kind: endpoint_only
+  old_id: null
+  scope: 文件后端交界端点（FAT32 ->read、ATA 请求），只为闭合第 5 条链而建，最多追两层，不是 fs.fat 或 block 的全量盘点
+capabilities:
+- id: sched.forkexec.first_user_launch
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.exec_boot_init
+  chains:
+  - C1
+  purpose: kernel_init 在根盘切换之后，以硬编码路径 /boot/init 和固定参数调用 kernel_execve，然后经 syscall_return_via_sysret 进入用户态。
+  entries:
+  - mykernel/init/main.c::kernel_init（调用点 A-C1-03）
+  - mykernel/arch/x86_64/myos/arch_task.c::kjmp_to_doexecve
+  key_helpers:
+  - kernel_execve
+  - syscall_return_via_sysret（entry 端点，未读）
+  normal_path: kernel_init 依次调 init_ATArqd（A-C1-01）、myos_switch_to_root_disk（A-C1-02）、kjmp_to_doexecve（A-C1-03）；kernel_init_freeable
+    先于它们运行，其中 do_initcalls 完成 ELF 格式登记（Q02）。kjmp_to_doexecve 清 PF_KTHREAD，程序名取常量 "/boot/init"（A-C1-09、Q15），argv 为 {"/boot/init",
+    "kernarg_test_1", "kernarg_test_2"}，envp 为三个测试串（阅读记录）；令 mm = active_mm 后调 kernel_execve（A-C1-10），再把 rsp 设为当前 pt_regs 并
+    jmp syscall_return_via_sysret（A-C1-11）。/boot/init 的来源是 myinitramfs 的 init 目标，由 CMake install 放到安装前缀下的 boot 目录（A-C1-14）；该程序
+    fork 后，子进程 execve "/boot/sh"，父进程循环 sched_yield（Q16）。
+  failure_path: kernel_execve 的返回值被丢弃（A-C1-10），之后无条件跳到 sysret（A-C1-11）：exec 失败时进入用户态所用的 pt_regs 内容未追踪，越过不可返回点后失败的情形见 sched.forkexec.exec_entry。kjmp_to_doexecve
+    之后只有 while (true)（A-C1-03），按 asm jmp 推断不会执行到。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 程序名与参数是编译期常量。用户程序静态或动态链接由宿主脚本参数决定：make_install.sh 文本写 LINK_TYPE=static，dynamic 一行被注释（Q17）。这只是构建文本，没有运行脚本，也没有检查镜像。
+  anchors:
+  - A-C1-01
+  - A-C1-02
+  - A-C1-03
+  - A-C1-09
+  - A-C1-10
+  - A-C1-11
+  - A-C1-14
+  queries:
+  - Q02
+  - Q15
+  - Q16
+  - Q17
+  - Q21
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E02
+  - E03
+  - E05
+  - E06
+  - E07
+  findings:
+  - UV-01
+  implementation_evidence:
+    value: connected_body
+    reason: 从 kernel_init 到 kernel_execve 和用户态跳转，调用链都有活动正文。
+  correctness_evidence:
+    value: static_concern
+    reason: 失败处理只有静态推导（UV-01），没有运行。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 启动期单线程路径，未分析。
+  not_covered:
+  - syscall_return_via_sysret 的汇编与 pt_regs 来源（GAP-U04）
+  - kernel_init 线程的创建
+  - 镜像中 /boot/init、/boot/sh 是否存在，以及它们的格式（GAP-U02）
+- id: sched.forkexec.fork_entry
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.fork_clone_exec_exit
+  chains:
+  - C2
+  purpose: 用户态 fork 系统调用经 kernel_clone 创建子任务，并交给调度器。
+  entries:
+  - mykernel/arch/x86_64/entry/common.c::do_syscall_64 → x64_sys_call（Q20）
+  - mykernel/sched/syscall.c::sys_fork（系统调用表项，Q04）
+  - mykernel/sched/forkexec/fork.c::kernel_clone
+  key_helpers:
+  - copy_process
+  - wake_up_new_task（调度端点）
+  normal_path: 系统调用表中有 fork、execve、exit、wait4、exit_group，vfork 一项被注释，没有 clone/clone3 条目（Q04）。sys_fork 先执行 0x1000×0x1000 次空计数（Q24），再以
+    exit_signal = SIGCHLD、其余 flags 为 0 调 kernel_clone（Q03）。kernel_clone 调 copy_process（A-C2-03），成功后取 pid、调 wake_up_new_task（Q22），返回
+    pid。kernel_thread 也调 kernel_clone（Q03）。
+  failure_path: copy_process 返回 ERR_PTR 时，kernel_clone 直接返回错误码。CLONE_VFORK 时只设置 vfork_done 并 init_completion，等待语句被注释（Q05）。本
+    pin 的用户态没有 vfork/clone 入口（Q04），这一分支只可能经内核内部调用到达；本批未检查 kernel_thread 的 flags。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C2-03
+  queries:
+  - Q03
+  - Q04
+  - Q05
+  - Q20
+  - Q22
+  - Q24
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E10
+  - E11
+  - E12
+  findings: []
+  implementation_evidence:
+    value: connected_body
+    reason: 从系统调用表到 copy_process 和 wake_up_new_task 都有活动正文。
+  correctness_evidence:
+    value: not_assessed
+    reason: 本能力内没有发现独立的静态疑点；子任务首次运行的位置属于调度，见 INTEGRATION-03（DRU-03）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析。
+  not_covered:
+  - copy_thread / ret_from_fork 中子任务的返回值（GAP-U04）
+  - wake_up_new_task 的入队位置（INTEGRATION-03 已登记，未重查）
+  - pid 分配（GAP-U09）
+- id: sched.forkexec.copy_process_resources
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.fork_clone_exec_exit
+  chains:
+  - C2
+  purpose: copy_process 按 clone_flags 复制或共享文件表、fs、sighand、signal 与 mm；中途失败时按标签链回退。
+  entries:
+  - mykernel/sched/forkexec/fork.c::copy_process
+  key_helpers:
+  - copy_files
+  - copy_fs
+  - copy_sighand
+  - copy_signal
+  - copy_mm
+  - dup_mm
+  - dup_fd（fs.vfs.fd_table）
+  - copy_fs_struct
+  normal_path: dup_task_struct 复制父任务（包括 sighand 指针）。copy_files 调 dup_fd（A-C2-05、A-C2-10）；非 CLONE_FS 时 copy_fs 调 copy_fs_struct，对
+    root/pwd 取引用（阅读记录）。copy_sighand 分配新对象，但安装语句被注释（A-C2-11），子任务继续指向父任务的 sighand，即静态的 init_sighand（Q31；与 CORE-MM-BASELINE-04::RF-02、::DR-04
+    一致）。copy_mm 在 CLONE_VM 时 mmget 并共享，否则 dup_mm（A-C2-09、Q26），页表复制与 COW 见 CORE-MM-BASELINE-04 的 mm.vm_map.mm_lifecycle、MC-25、LB-09。sys_fork
+    的 flags 为 0，所以文件表、fs、mm 三项都走复制分支。
+  failure_path: 失败标签链：mm 存在时 mmput（A-C2-07；__mmput 为空，CORE-MM-BASELINE-04::LB-03）；接着对 p->sighand 调 __cleanup_sighand（A-C2-08）。p->sighand
+    是共享的 init_sighand，初值计数为 1，而且 fork 没有为它加引用（Q31、Q32），计数归零时会把这个静态对象交给 kmem_cache_free（A-C2-12、A-C2-13）；virt_to_slab 对非 slab
+    页返回 NULL（Q43），随后的 slab_free 很可能在持锁时出错（UV-14）。随后 exit_fs、exit_files（阅读记录）。dup_fd 失败时 goto out，返回 dup_fd 写入的 error（A-C2-10）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C2-05
+  - A-C2-07
+  - A-C2-08
+  - A-C2-09
+  - A-C2-10
+  - A-C2-11
+  - A-C2-12
+  - A-C2-13
+  queries:
+  - Q26
+  - Q31
+  - Q32
+  - Q43
+  - Q44
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E11
+  - E13
+  - E14
+  - E15
+  - E16
+  findings:
+  - UV-14
+  - UV-16
+  implementation_evidence:
+    value: connected_body
+    reason: 复制步骤与失败标签链都有活动正文；sighand 安装一步被注释。
+  correctness_evidence:
+    value: static_concern
+    reason: 失败清理与共享 sighand 的组合（UV-14）；dup_task_struct 中被注释行吞掉的 if 体（UV-16，潜伏）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: copy_fs 中的 fs->users++ 不加锁（阅读记录）。用户态 fork 不带 CLONE_FS/CLONE_FILES，共享分支不会经用户态到达（DRU-06）。
+  not_covered:
+  - copy_signal、copy_namespaces、copy_thread 的内部
+  - dup_task_struct 的栈分配
+  - dup_mmap 的逐页语义（属 MM-04）
+- id: sched.forkexec.exec_entry
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.fork_clone_exec_exit
+  - sched.forkexec.user_process
+  chains:
+  - C3
+  purpose: execve 系统调用与 kernel_execve：建立 bprm、打开可执行文件、复制参数，再分派给格式处理器。
+  entries:
+  - mykernel/sched/forkexec/exec.c::sys_execve（Q04）
+  - mykernel/sched/forkexec/exec.c::kernel_execve（Q21）
+  - do_execve / do_execveat_common / bprm_execve
+  key_helpers:
+  - alloc_bprm
+  - do_open_execat
+  - __bprm_mm_init
+  - copy_strings_kernel
+  - search_binary_handler
+  normal_path: sys_execve 调 do_execve(getname(...))（阅读记录）；kernel_execve 只有 kjmp_to_doexecve 一个活动调用者（Q21）。alloc_bprm 中 do_open_execat
+    用 O_RDONLY|__FMODE_EXEC 经 do_filp_open 打开文件（A-C3-03，进入 fs.vfs.path_open）；__bprm_mm_init 建新 mm 与栈 VMA，参数串复制到其参数页（阅读记录）；随后
+    bprm_execve（A-C3-01）→ search_binary_handler（A-C3-04）。
+  failure_path: bprm_execve 出错时只清 in_exec/in_execve 并返回错误。越过不可返回点后应发的致命信号被注释（A-C3-05、Q13），见 UV-02。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C3-01
+  - A-C3-03
+  - A-C3-04
+  - A-C3-05
+  queries:
+  - Q04
+  - Q13
+  - Q21
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E06
+  - E10
+  - E17
+  - E18
+  findings:
+  - UV-02
+  implementation_evidence:
+    value: connected_body
+    reason: 从入口到格式分派都有活动正文；凭据与安全检查被注释（阅读记录）。
+  correctness_evidence:
+    value: static_concern
+    reason: 越过不可返回点后的失败处理（UV-02）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析。
+  not_covered:
+  - 参数页复制的逐字节语义与大小上限
+  - copy_strings 的用户指针检查
+  - de_thread 多线程分支
+- id: sched.forkexec.binfmt_dispatch
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.elf_binfmt_init
+  chains:
+  - C3
+  purpose: 可执行格式的注册与分派。
+  entries:
+  - mykernel/sched/forkexec/exec.c::register_binfmt
+  - mykernel/sched/forkexec/exec.c::search_binary_handler
+  - mykernel/fs/vfs/binfmt_elf.c::init_elf_binfmt（core_initcall）
+  key_helpers:
+  - prepare_binprm
+  - formats 链表
+  normal_path: init_elf_binfmt 以 core_initcall 登记（Q02），把 elf_format 交给 register_binfmt（A-C3-09），后者尾插 formats 链表。本 pin 中 register_binfmt
+    的活动调用者只有这一处（Q01）。search_binary_handler 先 prepare_binprm（kernel_read 读 BINPRM_BUF_SIZE 字节，阅读记录），再对每个已注册格式间接调用 ->load_binary（A-C3-06）；elf_format
+    的 load_binary 绑定为 load_elf_binary（Q07）。
+  failure_path: 遇到非 -ENOEXEC 结果即返回的语句被注释（A-C3-07）：每个格式都会被调用，最后一个返回值生效（UV-03）。本 pin 只注册一个格式（Q01），所以目前等价于直接调用 load_elf_binary。formats
+    链表不加锁，注册只发生在 initcall 阶段。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: core_initcall 的段与链接保留情况未核（继承 CORE-MM-BASELINE-04::GAP-M02 的类型）。
+  anchors:
+  - A-C3-06
+  - A-C3-07
+  - A-C3-09
+  queries:
+  - Q01
+  - Q02
+  - Q07
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E05
+  - E18
+  - E19
+  findings:
+  - UV-03
+  implementation_evidence:
+    value: connected_body
+    reason: 注册与分派都有活动正文，间接调用的调用点、绑定和接收方都已取证。
+  correctness_evidence:
+    value: static_concern
+    reason: 潜伏的分派语义（UV-03）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 只在 initcall 阶段注册，未分析。
+  not_covered:
+  - do_initcalls 的段遍历与 core_initcall 的实际链接
+  - 模块式注册（被注释）
+- id: sched.forkexec.exec_mm_switch
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.fork_clone_exec_exit
+  chains:
+  - C3
+  purpose: begin_new_exec 越过不可返回点并换入新 mm；setup_new_exec 与 setup_arg_pages 布置新地址空间。
+  entries:
+  - mykernel/sched/forkexec/exec.c::begin_new_exec
+  - exec_mmap
+  - setup_new_exec
+  - setup_arg_pages
+  key_helpers:
+  - exec_mm_release
+  - activate_mm
+  - mmput / mmdrop
+  normal_path: begin_new_exec 置 point_of_no_return（A-C3-10），经 de_thread、unshare_files、set_mm_exe_file 后调 exec_mmap（A-C3-11）。exec_mmap
+    在关中断区内切换 active_mm/mm 并 activate_mm，对旧 mm 只调 mmput（A-C3-12）或 mmdrop（阅读记录）。close-on-exec 处理被注释（Q14），信号处理器重置与凭据安装也被注释（阅读记录）。setup_arg_pages
+    把栈 VMA 预扩 32 页，shift_arg_pages 被注释（阅读记录）。
+  failure_path: 越过不可返回点之后的失败交回 load_elf_binary，再一路作为返回值上交（UV-02）。旧 mm 的 VMA、页表与页不回收：mmput 归零后 __mmput 为空（CORE-MM-BASELINE-04::LB-03、::MC-16）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C3-10
+  - A-C3-11
+  - A-C3-12
+  queries:
+  - Q14
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E20
+  - E24
+  findings:
+  - UV-02
+  implementation_evidence:
+    value: partial_body
+    reason: 换 mm 有活动正文；关闭 fd、重置信号、安装凭据都只在注释中。
+  correctness_evidence:
+    value: static_concern
+    reason: 不可返回点之后的失败处理（UV-02）；旧 mm 不回收沿用 MM-04 记录。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 关中断区只覆盖 mm 切换，未分析。
+  not_covered:
+  - mmap_read_lock_killable 的返回值被忽略（MM-04 MC-18 一类，未重查）
+  - de_thread 的线程组分支
+- id: sched.forkexec.exit_path
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.fork_clone_exec_exit
+  - sched.forkexec.obvious_missing
+  chains:
+  - C6
+  purpose: exit 与 exit_group 进入 do_exit：放掉文件表与 fs，改挂子任务，最后进入 do_task_dead。
+  entries:
+  - mykernel/sched/syscall.c::sys_exit / sys_exit_group（Q04、Q24）
+  - mykernel/sched/forkexec/exit.c::do_group_exit
+  - mykernel/sched/forkexec/exit.c::do_exit
+  key_helpers:
+  - exit_files（fs.vfs.fd_table）
+  - exit_fs
+  - exit_thread
+  - exit_notify
+  - do_task_dead（调度端点）
+  normal_path: do_exit 记 exit_code；exit_mm 被注释（A-C6-03）；exit_files 与 exit_fs（A-C6-04）：前者调 put_files_struct（A-C6-12，进入 fs.vfs.fd_table），后者在
+    fs 引用归零时 free_fs_struct，对 root/pwd 做 path_put（阅读记录）；exit_thread；exit_notify（Q23）把子任务逐个挂到 1 号任务名下（A-C6-07、A-C6-08）；preempt_disable
+    后 do_task_dead（Q23），写 TASK_DEAD 并 __schedule（CORE-SCHED-INTEGRATION-03::SF-C3-37）。
+  failure_path: exit_notify 从子链表摘到空节点时原地自旋（A-C6-07）；find_task_by_pid_ns(1) 的结果不检查（A-C6-08）。group_dead 未赋值就作为参数传入（阅读记录），exit_notify
+    不使用它。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C6-03
+  - A-C6-04
+  - A-C6-07
+  - A-C6-08
+  - A-C6-12
+  queries:
+  - Q23
+  - Q24
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E10
+  - E39
+  - E41
+  findings:
+  - UV-15
+  implementation_evidence:
+    value: partial_body
+    reason: 文件表、fs、改挂子任务与 do_task_dead 有活动正文；mm、信号通知、ZOMBIE 只在注释中。
+  correctness_evidence:
+    value: static_concern
+    reason: 退出与回收的缺口（UV-15）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: tasklist 锁被注释，未分析。
+  not_covered:
+  - exit_thread 的 arch 正文
+  - do_group_exit 的线程组分支
+  - de_thread 与 exit 的交互
+- id: sched.forkexec.wait_reap
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.obvious_missing
+  chains:
+  - C6
+  purpose: 父任务等待子任务结束，以及死亡任务的最终回收。
+  entries:
+  - mykernel/sched/syscall.c::sys_wait4（Q04）
+  - exit_notify 的 ZOMBIE/通知段
+  - mykernel/sched/scheduler/scheduler_core.c::finish_task_switch 的 TASK_DEAD 段
+  - release_task
+  key_helpers: []
+  normal_path: 没有活动的正常路径。wait4 的函数体为空（SC-03）；exit_notify 的 ZOMBIE 与通知段被注释（A-C6-09）；finish_task_switch 的 TASK_DEAD 段被注释（A-C6-10、A-C6-11，Q12）；release_task
+    只有 extern 声明（Q11）。
+  failure_path: wait4 是非 void 函数却没有返回语句，返回值未定义。死亡任务的 task_struct 与内核栈没有释放路径（Q12）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C6-09
+  - A-C6-10
+  - A-C6-11
+  queries:
+  - Q04
+  - Q11
+  - Q12
+  structure_checks:
+  - SC-03
+  value_tables: []
+  edges:
+  - E10
+  findings:
+  - UV-15
+  implementation_evidence:
+    value: declaration_only
+    reason: wait4 入口存在但函数体为空；回收段只在注释中，release_task 只有声明。
+  correctness_evidence:
+    value: static_concern
+    reason: 等待与回收缺失（UV-15）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 无活动正文。
+  not_covered:
+  - 信号投递（SIGCHLD）路径
+  - pid 释放
+- id: sched.forkexec.mm_refcount_release
+  id_status: proposed_id
+  object: sched.forkexec
+  old_refs:
+  - sched.forkexec.obvious_missing
+  chains:
+  - C2
+  - C3
+  - C6
+  purpose: 进程侧对 mm 引用的放弃：mmput、mmdrop，以及 exit/exec/fork 失败时对 mm 的处理。
+  entries:
+  - mykernel/sched/forkexec/fork.c::mmput
+  - mmdrop
+  - mm_release / exec_mm_release
+  key_helpers:
+  - __mmput
+  normal_path: mmput 在 mm_users 归零时调 __mmput（A-C6-14），__mmput 的函数体全是注释（SC-07；CORE-MM-BASELINE-04 的 A-VM16、LB-03）。调用者：exec_mmap
+    处理旧 mm（A-C3-12）；copy_process 失败清理（A-C2-07）。do_exit 不处理 mm（A-C6-03）。
+  failure_path: 只减引用，不归还：旧地址空间的 VMA、页表与页都留存（CORE-MM-BASELINE-04::MC-16）。mmdrop 的正文本批未读。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C6-14
+  queries: []
+  structure_checks:
+  - SC-07
+  value_tables: []
+  edges:
+  - E15
+  - E24
+  - E43
+  findings:
+  - UV-15
+  implementation_evidence:
+    value: partial_body
+    reason: 引用计数有活动正文，释放正文为空。
+  correctness_evidence:
+    value: static_concern
+    reason: 引用归零后不回收（沿用 MM-04 记录；本批补连接证据）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析。
+  not_covered:
+  - mmdrop 与 mm_count 的语义
+  - 内核线程借用 active_mm 的计数
+- id: fs.vfs.root_switch
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.root_switch
+  - fs.vfs.root_mount
+  - fs.vfs.devtmpfs_mount
+  chains:
+  - C1
+  purpose: 从根盘读 MBR/GPT，把类型为 EFI 启动分区且下标为 BOOT_FS_IDX 的分区以 FAT32 挂为根，设置初始挂载与任务的 root/pwd，并把 devtmpfs 挂到 /dev。
+  entries:
+  - mykernel/fs/vfs/myos_vfs.c::myos_switch_to_root_disk
+  - mykernel/fs/vfs/myos_vfs.c::mount_fs
+  key_helpers:
+  - ROOTBLK_TRANSFER（boundary.block.ata_request）
+  - read_fat32_superblock（经 ->read_super）
+  - set_init_mount
+  - set_init_taskfs
+  - init_mount
+  normal_path: 经 ROOTBLK_TRANSFER 读 MBR（Q37），要求 DPTE[0] 的类型为 0xee 或 0xef（A-C1-05）；读前 5 页取 GPT 表项；遍历类型 GUID 非 0 的表项，类型为 EFI
+    启动分区且 i == BOOT_FS_IDX 时调 mount_fs("FAT32")（A-C1-06）。mount_fs 按名字找到文件系统类型后经 ->read_super 间接调用（Q18），FAT32_fs_type 的 read_super
+    绑定为 read_fat32_superblock（Q07）；EXT4 类型分支为空。随后 set_init_mount、set_init_taskfs，并 init_mount 挂 devtmpfs（A-C1-07）。
+  failure_path: ROOTBLK_TRANSFER 的返回值不检查（Q37 中的调用行）；类型不是 GPT 保护类型时打印后原地 while (1)（A-C1-05）。找不到可挂分区时 myos_root_sb 保持原值，随后 set_init_mount
+    的行为本批未读（GAP-U03）。init_mount 的返回值存进 err 后不检查（A-C1-07）。函数声明返回 ulong，但没有 return 语句（阅读记录；调用者不用返回值）。
+  source_condition:
+    macros:
+    - ROOTBLK_NVME
+    resolution: partially_resolved
+    note: ROOTBLK_TRANSFER 的展开取决于 ROOTBLK_NVME；构建选项文本中它被注释（见 boundary.fs_fat.fat32_read）。这里只核了文本，没有构建产物。
+  anchors:
+  - A-C1-02
+  - A-C1-05
+  - A-C1-06
+  - A-C1-07
+  queries:
+  - Q07
+  - Q18
+  - Q37
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E03
+  - E04
+  - E08
+  - E09
+  findings:
+  - UV-01
+  implementation_evidence:
+    value: connected_body
+    reason: 读盘、分区遍历、挂载、devtmpfs 都有活动正文，->read_super 的间接调用已取证。
+  correctness_evidence:
+    value: static_concern
+    reason: 错误处理只有死循环或不检查（UV-01）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 启动期单线程，未分析。
+  not_covered:
+  - set_init_mount、set_init_taskfs、init_mount 的正文（GAP-U03）
+  - read_fat32_superblock 的超级块解析
+  - GPT 表项数与循环上界的关系
+- id: fs.vfs.path_open
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.open_io_path_mount
+  chains:
+  - C3
+  - C4
+  purpose: 路径解析与打开：do_filp_open → path_openat → do_open → vfs_open → myos_do_dentry_open，在这里绑定 f_op。
+  entries:
+  - mykernel/fs/syscall.c::sys_open
+  - mykernel/fs/vfs/open.c::do_sys_open / do_sys_openat2 / filp_open
+  - mykernel/fs/vfs/namei.c::do_filp_open（exec 也经此打开，A-C3-03）
+  key_helpers:
+  - path_init
+  - link_path_walk
+  - open_last_lookups
+  - __lookup_slow
+  - alloc_empty_file（fs.vfs.file_lifecycle）
+  - get_unused_fd_flags / fd_install（fs.vfs.fd_table）
+  normal_path: sys_open 以 dfd = 0 调 do_sys_open（A-C4-01）；path_init 只看路径首字符是否为 '/'，不使用 dfd（阅读记录）。do_sys_openat2 先取空闲 fd，再 do_filp_open（A-C4-02），成功时
+    fd_install（A-C4-03）。path_openat 先 alloc_empty_file（Q28），逐级查找路径；__lookup_slow 首次查到 inode 时按 i_size 定 page_array 的长度（A-C4-05）；查找成功（error
+    == 0）后 error = do_open(...)（A-C4-07）。do_open 只调 vfs_open（A-C4-08），vfs_open 返回 myos_do_dentry_open 的结果（Q33）；后者 path_get（A-C4-09），令
+    f_op = inode->i_fop，并调 ->open（A-C4-10）。FAT32 inode 的 i_fop 绑定为 FAT32_file_ops（A-C4-11、Q06），其 open 为 FAT32_open（Q07），该函数置
+    f_pos = 0 并返回 1（阅读记录）。
+  failure_path: do_open 与 myos_do_dentry_open 都没有 return 语句（SC-01、SC-02）。path_openat 据以判断成败的 error 值在 C 语义下未定义（UV-04）。失败时
+    fput(file) 并返回 ERR_PTR(error)。build_open_flags 的返回值被 do_sys_openat2 随后的赋值覆盖（阅读记录）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C4-01
+  - A-C4-02
+  - A-C4-03
+  - A-C4-05
+  - A-C4-07
+  - A-C4-08
+  - A-C4-09
+  - A-C4-10
+  - A-C4-11
+  queries:
+  - Q06
+  - Q07
+  - Q28
+  - Q33
+  structure_checks:
+  - SC-01
+  - SC-02
+  value_tables: []
+  edges:
+  - E10
+  - E17
+  - E25
+  - E26
+  - E27
+  findings:
+  - UV-04
+  - UV-07
+  implementation_evidence:
+    value: connected_body
+    reason: 调用链从系统调用连到 f_op 绑定与 ->open，正文都在；返回值在两层函数中缺失。
+  correctness_evidence:
+    value: static_concern
+    reason: 返回值未定义（UV-04）；page_array 长度在这里确定（UV-07）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: dcache 未加锁，未分析。
+  not_covered:
+  - O_CREAT 分支（open_last_lookups 中被注释）
+  - link_path_walk、step_into 与挂载点穿越
+  - dentry/inode 的引用计数全貌
+- id: fs.vfs.fd_table
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.open_io_path_mount
+  chains:
+  - C2
+  - C4
+  - C6
+  purpose: 进程文件表：fd 的分配、安装与查找，fork 时复制，退出时释放。
+  entries:
+  - mykernel/fs/vfs/file.c::alloc_fd / get_unused_fd_flags
+  - fd_install
+  - myos_fdget_pos
+  - dup_fd
+  - put_files_struct
+  - exit_files
+  key_helpers:
+  - filp_close（fs.vfs.file_lifecycle）
+  normal_path: get_unused_fd_flags 在 [0, fd_count) 中线性找空槽（A-C4-12）；fd_install 在 BUG_ON 槽位非空之后写入（阅读记录）；read 路径由 myos_fdget_pos
+    直接取槽位（A-C4-13、Q38）。fork 时 dup_fd 分配新 files_struct（A-C2-14），对父表的每个非空槽位 kzalloc 一个新 file 并按值复制（A-C2-15）；files_cache 创建时没有构造函数（A-C2-16）。退出时
+    exit_files 调 put_files_struct（A-C6-12），最后一个引用释放时对每个非空槽位 filp_close（A-C4-31）。
+  failure_path: alloc_fd 中 fd 只在循环找到空槽时赋值，表满时返回未赋值的 fd（A-C4-12、SC-05）。myos_fdget_pos 不做边界检查（A-C4-13）；sys_close 与 lseek 只检查
+    fd < fd_count（阅读记录）。dup_fd 的 kzalloc 结果不检查，父表空槽对应的新槽位不写入（A-C2-15），而 files_struct 分配时不带 __GFP_ZERO（A-C2-14）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C2-14
+  - A-C2-15
+  - A-C2-16
+  - A-C4-12
+  - A-C4-13
+  - A-C4-31
+  - A-C6-12
+  queries:
+  - Q34
+  - Q38
+  structure_checks:
+  - SC-05
+  value_tables: []
+  edges:
+  - E13
+  - E26
+  - E28
+  - E39
+  - E40
+  findings:
+  - UV-09
+  - UV-11
+  implementation_evidence:
+    value: connected_body
+    reason: 分配、安装、查找、复制、释放都有活动正文。
+  correctness_evidence:
+    value: static_concern
+    reason: 复制与边界处理（UV-09、UV-11）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: alloc_fd 在锁内找槽，fd_install 在锁外写槽（阅读记录）；共享文件表需要 CLONE_FILES，用户态到不了（DRU-06）。
+  not_covered:
+  - fcntl/dup 路径（sys_dup 是空壳，f_dupfd 的调用者未追）
+  - close_on_exec 位图（被注释）
+- id: fs.vfs.file_lifecycle
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.obvious_missing
+  - fs.vfs.open_io_path_mount
+  chains:
+  - C4
+  - C6
+  purpose: file 对象的分配、引用与释放：alloc_empty_file、fput、filp_close、sys_close。
+  entries:
+  - mykernel/fs/vfs/file_table.c::alloc_empty_file / __alloc_file
+  - mykernel/fs/vfs/file_table.c::fput
+  - mykernel/fs/vfs/open.c::filp_close
+  - mykernel/fs/syscall.c::sys_close
+  key_helpers:
+  - kmem_cache_free（mm 端点）
+  - kfree（mm 端点）
+  normal_path: 打开路径的 file 来自 filp_cachep（A-C4-26），f_count 初值为 1；filp_close 只调 fput（A-C4-30）；fput 在计数归零时 kmem_cache_free(filp_cachep,
+    file)（A-C4-28）。
+  failure_path: sys_close 直接 kfree 并清空槽位（A-C4-25），不经过 fput，不看 f_count，也不调用 ->release；fs/vfs 中没有活动的 ->release 调用（Q30）。打开时 path_get
+    取得的引用（A-C4-09）在 fput 与 close 中都不归还（Q40）。dup_fd 产生的副本来自 kzalloc（kmalloc cache），经 put_files_struct → filp_close → fput 以
+    kmem_cache_free(filp_cachep, …) 释放。kmem_cache_free 不核对对象属于哪个 cache（A-C4-29）：对象本身经 virt_to_slab 回到它所在的 kmalloc slab，但链表记账（节点、min_partial、free_slab）用的是
+    filp_cachep（Q42），见 UV-09、UV-10。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C4-25
+  - A-C4-26
+  - A-C4-28
+  - A-C4-29
+  - A-C4-30
+  queries:
+  - Q30
+  - Q40
+  - Q42
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E10
+  - E25
+  - E40
+  - E42
+  findings:
+  - UV-09
+  - UV-10
+  implementation_evidence:
+    value: partial_body
+    reason: 分配与计数有活动正文；release 和路径引用的归还缺失。
+  correctness_evidence:
+    value: static_concern
+    reason: close 与 fput 的引用语义（UV-10）、以错误 cache 记账的释放（UV-09）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析。
+  not_covered:
+  - fget/__simple_fget 的调用者
+  - 延迟 fput（被注释）
+- id: fs.vfs.read_syscall
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.open_io_path_mount
+  chains:
+  - C4
+  purpose: read 系统调用：ksys_read → vfs_read → new_sync_read，或直接调 ->read。
+  entries:
+  - mykernel/fs/syscall.c::sys_read
+  - mykernel/fs/vfs/read_write.c::ksys_read / vfs_read / new_sync_read / rw_verify_area
+  key_helpers:
+  - myos_fdget_pos（fs.vfs.fd_table）
+  - iov_iter_ubuf
+  normal_path: ksys_read 取 file（Q38），把 f_pos 复制到局部 pos；vfs_read 检查 FMODE_READ 与 access_ok，调 rw_verify_area（该函数第一句就返回 0，A-C4-17），把
+    count 截到 MAX_RW_COUNT；有 read_iter 时走 new_sync_read，否则调 ->read（A-C4-15）。new_sync_read 用用户缓冲区建 ITER_UBUF 迭代器后调 ->read_iter（A-C4-16），返回后把
+    kiocb.ki_pos 写回 *ppos；ksys_read 在 ret >= 0 时把 pos 写回 f_pos（A-C4-14）。FAT32 文件的 read_iter 是 generic_file_read_iter（Q07），所以普通文件的读走
+    fs.vfs.pagecache_read，不直接调 FAT32_read。
+  failure_path: rw_verify_area 的检查全是死代码（A-C4-17）；fd 越界不检查（fs.vfs.fd_table）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C4-14
+  - A-C4-15
+  - A-C4-16
+  - A-C4-17
+  queries:
+  - Q07
+  - Q38
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E10
+  - E28
+  - E29
+  - E30
+  findings:
+  - UV-05
+  - UV-06
+  - UV-11
+  implementation_evidence:
+    value: connected_body
+    reason: 从系统调用到 ->read_iter 都有活动正文，间接调用已取证。
+  correctness_evidence:
+    value: static_concern
+    reason: 与 pagecache_read 组合后的读目标与位置语义（UV-05、UV-06）；入口检查（UV-11）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: f_pos 不加锁，未分析。
+  not_covered:
+  - devtmpfs 字符设备（/dev/console）的读路径（GAP-U05）
+  - readv/pread
+- id: fs.vfs.kernel_read
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.open_io_path_mount
+  chains:
+  - C3
+  purpose: 内核态读文件，主要供 exec 读取 ELF 头与段表。
+  entries:
+  - mykernel/fs/vfs/read_write.c::kernel_read / __kernel_read
+  - mykernel/fs/vfs/binfmt_elf.c::elf_read
+  - exec.c::prepare_binprm（阅读记录）
+  key_helpers:
+  - iov_iter_kvec
+  normal_path: kernel_read 先调 rw_verify_area（恒返回 0），再调 __kernel_read：要求 FMODE_READ，建 kvec 迭代器后调 ->read_iter（A-C4-18），即 generic_file_read_iter
+    → simple_filemap_read。kvec 迭代器中 iter->kvec 指向真实的 kvec，所以 pagecache_read 取到的读目标是正确的。elf_read 要求读满，短读记为 -EIO（A-C3-18）。
+  failure_path: read_iter 分支中 __kernel_read 不回写 *pos（回写语句被注释，阅读记录）；短读由 elf_read 判为 -EIO（A-C3-18）。长度公式的边界见 VT-FR01：最后一页从页首开始且
+    end 页对齐时该页长度为 0（例如从 0 起读 4096 字节得 0，elf_read 判 -EIO）；起点落在最后一页页内且 end 页对齐时长度为负，memcpy 以 size_t 计数越界拷贝（Q41），函数不会正常返回。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C3-18
+  - A-C4-18
+  queries:
+  - Q41
+  structure_checks: []
+  value_tables:
+  - VT-FR01
+  edges:
+  - E23
+  - E31
+  findings:
+  - UV-06
+  implementation_evidence:
+    value: connected_body
+    reason: kvec 路径有活动正文，并已连到 read_iter。
+  correctness_evidence:
+    value: static_concern
+    reason: 末页长度公式（UV-06）在 end 页对齐时影响 kernel_read。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析。
+  not_covered:
+  - prepare_binprm 以外的 kernel_read 调用者
+- id: fs.vfs.pagecache_read
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.cache_dir_elf
+  chains:
+  - C4
+  purpose: FAT32 文件的 ->read_iter：generic_file_read_iter → simple_filemap_read，按页把文件读进 mapping->page_array 后再拷出。
+  entries:
+  - mykernel/mm/vm_map/filemap.c::generic_file_read_iter
+  - mykernel/mm/vm_map/filemap.c::simple_filemap_read
+  key_helpers:
+  - alloc_page
+  - f_op->read（boundary.fs_fat.fat32_read）
+  normal_path: generic_file_read_iter 在 count 非 0 时调 simple_filemap_read（A-C4-24）。后者从 iter->kvec 取 bufp 与区间 [start, end)（A-C4-21）；对每一页，槽位为空时
+    alloc_page(__GFP_ZERO) 并间接调 f_op->read 读满一页（Q25；绑定为 FAT32_read，Q07），然后按公式拷贝（A-C4-22），最后返回各页 len 之和（A-C4-23）。
+  failure_path: 不按 i_size 截短，也不更新 ki_pos（SC-04）。在 ITER_UBUF 情况下，读目标取自用户缓冲区的内容（A-C4-19、A-C4-20、A-C4-16，UV-05）。page_array 下标不与
+    nrpages 比较（A-C4-05，UV-07）。alloc_page 与 ->read 的结果都不检查（Q25 所在行，阅读记录）。end 页对齐时最后一页的长度为 0 或负数（VT-FR01，UV-06）；负数作为 size_t
+    交给 memcpy，拷贝越过页面（Q41）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C4-19
+  - A-C4-20
+  - A-C4-21
+  - A-C4-22
+  - A-C4-23
+  - A-C4-24
+  queries:
+  - Q25
+  - Q41
+  structure_checks:
+  - SC-04
+  value_tables:
+  - VT-FR01
+  edges:
+  - E29
+  - E30
+  - E31
+  - E32
+  findings:
+  - UV-05
+  - UV-06
+  - UV-07
+  implementation_evidence:
+    value: connected_body
+    reason: 从 read_iter 到 ->read 有活动正文，间接调用已取证。
+  correctness_evidence:
+    value: static_concern
+    reason: 读目标、长度、位置与下标（UV-05、UV-06、UV-07）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: page_array 槽位的填充不加锁，未分析。
+  not_covered:
+  - 写路径 generic_perform_write（Q25 中的第三个 ->read 调用点）
+  - 页缓存的回收（无）
+- id: fs.vfs.file_mmap_fault_read
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.cache_dir_elf
+  chains:
+  - C5
+  purpose: 文件映射的回调绑定与缺页读：f_op->mmap = generic_file_mmap 安装 generic_file_vm_ops；缺页时 simple_filemap_fault 同步调 f_op->read。
+  entries:
+  - mykernel/mm/vm_map/filemap.c::generic_file_mmap
+  - mykernel/mm/vm_map/filemap.c::simple_filemap_fault
+  key_helpers:
+  - call_mmap（mm 端点）
+  - __do_fault（mm 端点）
+  normal_path: 建立映射区域时 simple_mmap_region 调 call_mmap，后者调 file->f_op->mmap（Q19）；FAT32 的 mmap 绑定为 generic_file_mmap（Q07），它设置
+    vma->vm_ops（A-C5-01）。缺页时 __do_fault 间接调用 vm_ops->fault（Q39），绑定为 simple_filemap_fault（Q07）：在 page_array[pgoff] 放一页清零的新页（A-C5-02），同步调
+    f_op->read 读一页（A-C5-03；绑定为 FAT32_read），再由 MM 的 finish_fault 写 PTE（CORE-MM-BASELINE-04 mm.fault.file_backed）。
+  failure_path: ->read 的返回值被丢弃；vm_file 与 f_mapping 有效时函数返回 0（A-C5-03；二者为空或错误指针时返回 VM_FAULT_ERROR，槽位已有页时 BUG_ON，阅读记录）：读失败时会映射一页全零或只有部分数据的页，不发信号。alloc_page
+    的失败不检查（A-C5-02）。page_array 下标不与 nrpages 比较（MM-04 的 mm.fault.file_backed failure_path 已作阅读推断，本批由 A-C4-05 补上长度来源）。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: 无条件编译分支。
+  anchors:
+  - A-C5-01
+  - A-C5-02
+  - A-C5-03
+  queries:
+  - Q07
+  - Q19
+  - Q25
+  - Q39
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E22
+  - E33
+  - E34
+  findings:
+  - UV-07
+  - UV-08
+  implementation_evidence:
+    value: connected_body
+    reason: 从 mmap 到 vm_ops，再从缺页到 ->read，两段间接调用都已取证。
+  correctness_evidence:
+    value: static_concern
+    reason: 失败不可见与下标无界（UV-08、UV-07）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 缺页中的同步等待依赖调度与 in_atomic（DRU-02）。
+  not_covered:
+  - 私有可写映射的 COW（属 MM-04）
+  - map_single_page 的预映射（属 MM-04）
+- id: fs.vfs.elf_loader
+  id_status: proposed_id
+  object: fs.vfs
+  old_refs:
+  - fs.vfs.cache_dir_elf
+  chains:
+  - C3
+  purpose: load_elf_binary：校验 ELF 头，读段表，begin_new_exec，映射各 PT_LOAD 段，建参数表并设置入口。
+  entries:
+  - mykernel/fs/vfs/binfmt_elf.c::load_elf_binary
+  - elf_map
+  - elf_load
+  - elf_read
+  - create_elf_tables
+  - load_elf_interp
+  key_helpers:
+  - begin_new_exec / setup_new_exec / setup_arg_pages（sched.forkexec.exec_mm_switch）
+  - vm_mmap / vm_brk_flags（mm 端点）
+  normal_path: 校验魔数、类型、架构，并要求 f_op->mmap 非空（A-C3-13）；load_elf_phdrs 经 elf_read 读段表（A-C3-18）；有 PT_INTERP 时 open_exec 打开解释器（阅读记录；构建文本选的是静态链接，Q17）。之后
+    begin_new_exec（A-C3-14）、setup_new_exec、setup_arg_pages；对每个 PT_LOAD 段调 elf_load（A-C3-15）→ elf_map → vm_mmap 建文件私有映射（A-C3-16），bss
+    部分用 padzero 与 vm_brk_flags；最后 create_elf_tables 并 START_THREAD（Q27）。
+  failure_path: begin_new_exec 之前的失败返回 -ENOEXEC、-ENOMEM 等；之后的失败（elf_load、create_elf_tables 等）同样只作为返回值上交（A-C3-14），与 exec_entry
+    的 UV-02 叠加。段内容在首次访问时经 fs.vfs.file_mmap_fault_read 读入，load_elf_binary 本身不读段数据。
+  source_condition:
+    macros: []
+    resolution: not_conditional
+    note: ELF_PLAT_INIT、ARCH_SETUP_ADDITIONAL_PAGES、地址随机化都被注释（阅读记录）。
+  anchors:
+  - A-C3-13
+  - A-C3-14
+  - A-C3-15
+  - A-C3-16
+  - A-C3-18
+  queries:
+  - Q17
+  - Q27
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E19
+  - E20
+  - E21
+  - E23
+  findings:
+  - UV-02
+  implementation_evidence:
+    value: connected_body
+    reason: 从头部校验到段映射与入口设置都有活动正文。
+  correctness_evidence:
+    value: static_concern
+    reason: 不可返回点之后的失败处理（UV-02）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析。
+  not_covered:
+  - create_elf_tables 的栈布局
+  - load_elf_interp（动态链接路径）
+  - ET_DYN 时的 load_bias 计算
+- id: boundary.fs_fat.fat32_read
+  id_status: proposed_id
+  object: boundary
+  old_refs:
+  - fs.fat.fat32_root（DR-003 端点名）
+  chains:
+  - C4
+  - C5
+  purpose: FAT32 的 ->read：沿簇链读盘并拷贝。第 5 条链追出的第 1 层后端。
+  entries:
+  - mykernel/fs/fat/myos_fat32.c::FAT32_read
+  key_helpers:
+  - FAT32_read_FAT_Entry
+  - ROOTBLK_TRANSFER
+  normal_path: 取首簇并沿 FAT 链前进 index 次；按 i_size 截短 count（A-C5-05）；每簇先 memset，再经 ROOTBLK_TRANSFER 读 sector_per_cluster 个扇区（A-C5-06），拷到用户缓冲（copy_to_user）或内核缓冲（memcpy），并推进
+    *position；读满时返回 count（A-C5-07）。
+  failure_path: kmalloc 的结果不检查；首簇为 0 时返回 -EFAULT，缓冲泄漏（A-C5-04）。ROOTBLK_TRANSFER 返回非 0 时记 -EIO，但在 ATA 分支下后端总是返回 -ENOERR（A-C5-12），所以这一分支不会进入。*position
+    等于 i_size 时 count 变为 0，但循环体仍执行一次读盘（A-C5-05）。见 UV-12。
+  source_condition:
+    macros:
+    - ROOTBLK_NVME
+    resolution: partially_resolved
+    note: 构建选项文本中 -DROOTBLK_NVME 被注释（A-C5-09、Q08），因此宏取 ATA 分支（A-C5-08）。这只是配置文本，没有构建产物，不能升级为全系统唯一后端。
+  anchors:
+  - A-C5-04
+  - A-C5-05
+  - A-C5-06
+  - A-C5-07
+  - A-C5-08
+  - A-C5-09
+  queries:
+  - Q07
+  - Q08
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E32
+  - E34
+  - E35
+  - E36
+  findings:
+  - UV-12
+  implementation_evidence:
+    value: connected_body
+    reason: 簇链遍历、读盘与拷贝都有活动正文。
+  correctness_evidence:
+    value: static_concern
+    reason: 局部错误处理（UV-12）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: not_assessed
+    reason: 未分析。
+  not_covered:
+  - FAT32_read_FAT_Entry 的 FAT 缓存
+  - 链尾（EOC）值的判断
+  - NVMe 分支（GAP-U07）
+- id: boundary.block.ata_request
+  id_status: proposed_id
+  object: boundary
+  old_refs:
+  - block.root_transfer（DR-003 端点名）
+  chains:
+  - C1
+  - C5
+  purpose: ATA 主盘的读写请求：提交、等待与完成。第 5 条链追出的第 2 层后端。
+  entries:
+  - mykernel/arch/x86_64/myos/ide.c::ATA_disk_transfer
+  - ATArq_deamon
+  - ATA_disk_handler
+  - end_request
+  key_helpers:
+  - IDE_make_request
+  - IDE_cmd_out
+  - IDE_read_handler
+  - wait_for_completion / complete（kactive 端点）
+  normal_path: ATA_disk_transfer 建立请求，挂到 IDEreq_lhdr 尾部并 wake_up_process 唤醒 ATArqd（A-C5-10，提交点），然后在栈上的 completion 上等待（A-C5-11，等待点）。ATArqd
+    由 init_ATArqd 在根切换前启动（A-C1-01），它从链表尾部取请求（Q29），调 IDE_cmd_out 向控制器发出 PIO 命令（A-C5-14）。中断处理 ATA_disk_handler 由 init_IDE_disk
+    注册（Q09）：回调 end_handler 读 256 个字（A-C5-17），计数归零时 end_request → complete（A-C5-15、A-C5-16，完成点）。最后返回 -ENOERR（A-C5-12）。
+  failure_path: 设备错误只打印，不回传；无论成败都递减 count（A-C5-17）。ATA_disk_handler 不检查 req_in_using 是否为空（A-C5-15）。从链表尾部取请求，多个等待者时后到的先服务（Q29）。IDE_make_request
+    的 kzalloc 结果不检查（阅读记录）。见 UV-13。
+  source_condition:
+    macros:
+    - ROOTBLK_NVME
+    resolution: partially_resolved
+    note: 是否走这一后端取决于 ROOTBLK_NVME（见 boundary.fs_fat.fat32_read）。
+  anchors:
+  - A-C5-10
+  - A-C5-11
+  - A-C5-12
+  - A-C5-14
+  - A-C5-15
+  - A-C5-16
+  - A-C5-17
+  queries:
+  - Q09
+  - Q10
+  - Q29
+  structure_checks: []
+  value_tables: []
+  edges:
+  - E04
+  - E09
+  - E35
+  - E37
+  - E38
+  findings:
+  - UV-12
+  - UV-13
+  implementation_evidence:
+    value: connected_body
+    reason: 提交、守护线程、中断与完成都有活动正文，回调已取证。
+  correctness_evidence:
+    value: static_concern
+    reason: 错误不回传、中断入口不检查空指针（UV-12、UV-13）。
+  runtime_evidence: NOT_RUN
+  concurrency_evidence:
+    value: source_only
+    reason: completion 与 swait 的行为证据见 CORE-CHECK-01 的 V02/V03/V10/V11（有限宿主观察，消费时须一起读 recheck-02 审查），见 DRU-01。
+  not_covered:
+  - IDE_cmd_out 的 PIO 细节与 LBA28 范围（GAP-U08）
+  - 中断分发 register_irq → do_IRQ（GAP-U07）
+  - init_bdev_intr 的调用时机
+chains:
+- id: C1
+  title: 启动到首个用户程序
+  entry: mykernel/init/main.c::kernel_init → myos_switch_to_root_disk（A-C1-02）与 kjmp_to_doexecve（A-C1-03）
+  capabilities:
+  - fs.vfs.root_switch
+  - sched.forkexec.first_user_launch
+  - boundary.block.ata_request
+  normal_path:
+  - kernel_init：kernel_init_freeable（含 do_initcalls，ELF 格式登记，Q02）→ init_ATArqd（A-C1-01）→ 探测与 NVMe 队列初始化 → myos_switch_to_root_disk（A-C1-02）→
+    kjmp_to_doexecve（A-C1-03）。
+  - myos_switch_to_root_disk：读 MBR 并要求 GPT 保护类型（A-C1-05）→ 读 GPT 表项 → 下标为 BOOT_FS_IDX 的 EFI 启动分区经 mount_fs("FAT32") 与 ->read_super
+    挂为根（A-C1-06、Q18、Q07）→ set_init_mount、set_init_taskfs → devtmpfs 挂到 /dev（A-C1-07）。读盘经 ROOTBLK_TRANSFER，即 ATA 请求（E09）。
+  - kjmp_to_doexecve：程序名为常量 "/boot/init"（A-C1-09），参数为固定测试串；mm = active_mm 后调 kernel_execve（A-C1-10），进入 C3；然后跳到 syscall_return_via_sysret（A-C1-11）。
+  - 用户态：/boot/init 由 myinitramfs 的 init 目标安装到 boot 目录（A-C1-14）。它 freopen /dev/console 三次，打印欢迎串，fork（Q16）；子进程 execve "/boot/sh"（Q15、Q16），父进程无限循环
+    sched_yield（Q16）。
+  failure_cleanup: MBR 类型不符时 while (1)（A-C1-05）；读盘结果、init_mount 结果不检查；找不到根分区时的后续行为未读（GAP-U03）；kernel_execve 失败时仍跳 sysret（A-C1-10、A-C1-11，LBU-09）。父进程从不
+    wait。
+  evidence:
+    anchors:
+    - A-C1-01
+    - A-C1-02
+    - A-C1-03
+    - A-C1-05
+    - A-C1-06
+    - A-C1-07
+    - A-C1-09
+    - A-C1-10
+    - A-C1-11
+    - A-C1-14
+    queries:
+    - Q02
+    - Q07
+    - Q15
+    - Q16
+    - Q17
+    - Q18
+    - Q21
+    - Q37
+  coverage_limits:
+  - 程序名、参数、装载入口都由源码常量决定，没有采用 Linux 的 init 搜索顺序
+  - 镜像中是否真有 /boot/init、/boot/sh 未核，宿主安装脚本只读文本、未运行（Q17，GAP-U02）
+  - syscall_return_via_sysret 与 pt_regs 内容未追（GAP-U04）
+  - set_init_mount 等未逐行读（GAP-U03）
+  segments:
+  - segment: kernel_init → myos_switch_to_root_disk
+    status: connected
+    evidence:
+    - A-C1-02
+    note: ''
+  - segment: 根切换 → FAT32 ->read_super
+    status: connected
+    evidence:
+    - A-C1-06
+    - Q18
+    - Q07
+    note: 间接调用三项证据齐全；登记过程未逐行读
+  - segment: 根切换 → 读盘后端
+    status: connected_under_config_text
+    evidence:
+    - Q37
+    - A-C5-08
+    - A-C5-09
+    note: ATA 分支以构建选项文本为前提
+  - segment: kernel_init → kjmp_to_doexecve → kernel_execve
+    status: connected
+    evidence:
+    - A-C1-03
+    - A-C1-10
+    note: ''
+  - segment: kernel_execve 失败 → 错误处理
+    status: broken
+    evidence:
+    - A-C1-10
+    - A-C1-11
+    note: LBU-09
+  - segment: kjmp → 用户态（sysret）
+    status: endpoint
+    evidence:
+    - A-C1-11
+    note: 汇编未读
+  - segment: /boot/init 文件来源
+    status: build_text_only
+    evidence:
+    - A-C1-14
+    - Q17
+    note: 镜像未核
+- id: C2
+  title: 创建 / fork
+  entry: mykernel/sched/syscall.c::sys_fork（系统调用表 Q04；分派 Q20）
+  capabilities:
+  - sched.forkexec.fork_entry
+  - sched.forkexec.copy_process_resources
+  - fs.vfs.fd_table
+  - sched.forkexec.mm_refcount_release
+  normal_path:
+  - sys_fork：0x1000×0x1000 次空计数（Q24）→ kernel_clone(exit_signal = SIGCHLD，flags 为 0)（Q03）。
+  - kernel_clone → copy_process（A-C2-03）→ dup_task_struct → copy_files → dup_fd（A-C2-05、A-C2-10）→ copy_fs（复制 fs 并取 root/pwd
+    引用）→ copy_sighand（分配但不安装，A-C2-11）→ copy_signal → copy_mm → dup_mm → dup_mmap（A-C2-09）→ copy_thread → alloc_pid → 链入父任务子链表与全局任务链表。
+  - kernel_clone 取 pid → wake_up_new_task（Q22）→ 返回 pid。
+  - 复制还是共享：sys_fork 的 flags 为 0，所以任务、mm、文件表、fs 都是复制；sighand 实际共享静态 init_sighand（Q31、A-C2-11）。文件表复制时，每个打开的 file 被按值复制成新对象（A-C2-15），不是共享同一个
+    file。
+  failure_cleanup: 失败标签链：mmput（A-C2-07，只减引用）→ __cleanup_sighand(p->sighand)（A-C2-08，作用在共享的 init_sighand 上，UV-14；第一次 1 → 0
+    很可能就在 slab_free 中出错）→ exit_fs → exit_files → TASK_DEAD、put_task_stack、delayed_free_task（阅读记录）。kernel_clone 返回错误码。
+  evidence:
+    anchors:
+    - A-C2-03
+    - A-C2-05
+    - A-C2-07
+    - A-C2-08
+    - A-C2-09
+    - A-C2-10
+    - A-C2-11
+    - A-C2-14
+    - A-C2-15
+    - A-C2-16
+    queries:
+    - Q03
+    - Q04
+    - Q05
+    - Q20
+    - Q22
+    - Q24
+    - Q26
+    - Q31
+    - Q32
+  coverage_limits:
+  - SMP 与并发可达性不自动成立（DRU-06）
+  - 调度算法不复扫：子任务首次运行顺序见 INTEGRATION-03（DRU-03）
+  - copy_thread、ret_from_fork 未追（GAP-U04、GAP-U09）
+  - 页表复制与 COW 只引用 MM-04
+  segments:
+  - segment: 系统调用表 → sys_fork
+    status: connected
+    evidence:
+    - Q04
+    - Q20
+    note: ''
+  - segment: sys_fork → kernel_clone → copy_process
+    status: connected
+    evidence:
+    - Q03
+    - A-C2-03
+    note: ''
+  - segment: copy_process → dup_fd（文件表复制）
+    status: connected
+    evidence:
+    - A-C2-10
+    - A-C2-15
+    note: ''
+  - segment: copy_process → dup_mm → dup_mmap
+    status: connected
+    evidence:
+    - A-C2-09
+    note: 内部属 MM-04
+  - segment: copy_sighand → 子任务 sighand
+    status: broken
+    evidence:
+    - A-C2-11
+    note: 安装语句被注释，任务共用 init_sighand
+  - segment: kernel_clone → wake_up_new_task
+    status: connected
+    evidence:
+    - Q22
+    note: 入队位置属调度
+  - segment: vfork → 父任务等待
+    status: broken
+    evidence:
+    - Q04
+    - Q05
+    note: LBU-10；用户态无 vfork 入口
+  - segment: 失败清理
+    status: connected_with_concern
+    evidence:
+    - A-C2-07
+    - A-C2-08
+    note: UV-14
+- id: C3
+  title: exec / ELF 装载
+  entry: mykernel/sched/forkexec/exec.c::sys_execve 与 kernel_execve（Q04、Q21）
+  capabilities:
+  - sched.forkexec.exec_entry
+  - sched.forkexec.binfmt_dispatch
+  - fs.vfs.elf_loader
+  - sched.forkexec.exec_mm_switch
+  - fs.vfs.path_open
+  - fs.vfs.kernel_read
+  - sched.forkexec.mm_refcount_release
+  normal_path:
+  - 注册：init_elf_binfmt（core_initcall）→ register_binfmt(&elf_format)（Q02、A-C3-09）；活动注册只有这一处（Q01）。
+  - 分派：kernel_execve / do_execve → alloc_bprm → do_open_execat → do_filp_open（A-C3-03，进入 C4 的打开路径）→ __bprm_mm_init（新 mm 与栈
+    VMA）→ 复制参数 → bprm_execve（A-C3-01）→ search_binary_handler（A-C3-04）→ prepare_binprm（kernel_read 256 字节）→ fmt->load_binary（A-C3-06）=
+    load_elf_binary（Q07）。
+  - 装载：校验 ELF 头，要求 f_op->mmap（A-C3-13）→ elf_read 读段表（A-C3-18，经 C4 的 kernel_read）→ begin_new_exec（A-C3-14）：置不可返回点（A-C3-10）→
+    exec_mmap 换 mm（A-C3-11），旧 mm 只 mmput（A-C3-12）→ setup_new_exec、setup_arg_pages → 各 PT_LOAD 段 elf_load → elf_map → vm_mmap（A-C3-15、A-C3-16）→
+    create_elf_tables → START_THREAD（Q27）。
+  - 文件读取：ELF 头与段表经 kernel_read → read_iter → simple_filemap_read → FAT32_read（E31、E32）；段内容不在 exec 时读，而是在首次访问时经 C5 的缺页读入。
+  failure_cleanup: 不可返回点之前：返回 -ENOEXEC/-ENOMEM 等，释放 bprm。之后：失败也只作为返回值上交，致命信号被注释（A-C3-05、A-C3-14，LBU-05，UV-02）；旧 mm 已换掉且不拆除（LBU-08）。分派不提前返回（A-C3-07，UV-03，潜伏）。
+  evidence:
+    anchors:
+    - A-C3-01
+    - A-C3-03
+    - A-C3-04
+    - A-C3-05
+    - A-C3-06
+    - A-C3-07
+    - A-C3-09
+    - A-C3-10
+    - A-C3-11
+    - A-C3-12
+    - A-C3-13
+    - A-C3-14
+    - A-C3-15
+    - A-C3-16
+    - A-C3-18
+    queries:
+    - Q01
+    - Q02
+    - Q04
+    - Q07
+    - Q13
+    - Q14
+    - Q21
+    - Q27
+  coverage_limits:
+  - 映射内部（vm_mmap、VMA 合并、选址）只引用 CORE-MM-BASELINE-04，未重查
+  - 动态链接路径（load_elf_interp）未追；构建文本选静态链接（Q17）
+  - create_elf_tables 的栈布局未核
+  - do_open 的返回值未定义（UV-04），exec 打开文件同样受影响
+  segments:
+  - segment: execve/kernel_execve → bprm_execve
+    status: connected
+    evidence:
+    - A-C3-01
+    - Q21
+    note: ''
+  - segment: do_open_execat → do_filp_open
+    status: connected_with_concern
+    evidence:
+    - A-C3-03
+    note: UV-04：打开成败的返回值未定义
+  - segment: search_binary_handler → load_elf_binary
+    status: connected
+    evidence:
+    - A-C3-06
+    - Q07
+    - A-C3-09
+    note: ''
+  - segment: load_elf_binary → begin_new_exec → exec_mmap
+    status: connected
+    evidence:
+    - A-C3-14
+    - A-C3-11
+    note: ''
+  - segment: load_elf_binary → elf_map → vm_mmap
+    status: connected
+    evidence:
+    - A-C3-15
+    - A-C3-16
+    note: 映射内部属 MM-04
+  - segment: elf_read → kernel_read → read_iter
+    status: connected
+    evidence:
+    - A-C3-18
+    - A-C4-18
+    note: ''
+  - segment: 不可返回点后的失败 → 终止进程
+    status: broken
+    evidence:
+    - A-C3-05
+    note: LBU-05
+  - segment: 旧 mm → 拆除
+    status: broken
+    evidence:
+    - A-C3-12
+    note: LBU-08，同 MM-04 LB-03
+- id: C4
+  title: 文件打开 / 读取 / 关闭
+  entry: mykernel/fs/syscall.c::sys_open / sys_read / sys_close（系统调用表 Q04）
+  capabilities:
+  - fs.vfs.path_open
+  - fs.vfs.fd_table
+  - fs.vfs.file_lifecycle
+  - fs.vfs.read_syscall
+  - fs.vfs.pagecache_read
+  - boundary.fs_fat.fat32_read
+  normal_path:
+  - 打开：sys_open（dfd = 0，A-C4-01）→ do_sys_openat2 → get_unused_fd_flags（A-C4-02）→ do_filp_open → path_openat → alloc_empty_file（Q28，file
+    来自 filp_cachep，A-C4-26）→ 路径查找（首次查找时按 i_size 定 page_array，A-C4-05）→ do_open → vfs_open → myos_do_dentry_open：path_get（A-C4-09）、f_op
+    = inode->i_fop（A-C4-10；FAT32 为 FAT32_file_ops，A-C4-11）、->open = FAT32_open（f_pos = 0）→ fd_install（A-C4-03）。
+  - 对象与引用：fd 是 files->fd_array 的下标；file 持有 f_path（dentry 与 mnt）和 f_inode/f_mapping；打开时取路径引用，f_count 为 1。
+  - 读取：sys_read → ksys_read → myos_fdget_pos（A-C4-13）→ vfs_read → 有 read_iter 时 new_sync_read（A-C4-15、A-C4-16）→ generic_file_read_iter
+    → simple_filemap_read（A-C4-24）→ 页槽位空时 f_op->read = FAT32_read 读满一页（Q25、Q07）→ 拷贝（A-C4-22）→ 返回 len 之和（A-C4-23）→ ksys_read
+    把 pos 写回 f_pos（A-C4-14）。
+  - 关闭：sys_close 检查 fd < fd_count 后直接 kfree 并清槽（A-C4-25）。退出时则走 put_files_struct → filp_close → fput（A-C4-31、A-C4-30、A-C4-28）。
+  failure_cleanup: 打开失败：path_openat fput(file) 并返回 ERR_PTR(error)，但 error 来自没有 return 语句的函数（UV-04）；do_sys_openat2 返回负值，fd
+    槽位保持为空。短读与 EOF：simple_filemap_read 不按 i_size 截短，也不更新 ki_pos，所以 f_pos 不前进，读到文件尾之后也不会返回 0（LBU-06，UV-06）；在 ITER_UBUF 下读目标来自用户缓冲区内容（UV-05）。关闭：不看
+    f_count、不调 ->release、不放路径引用（LBU-03、LBU-04，UV-10）。
+  evidence:
+    anchors:
+    - A-C4-01
+    - A-C4-02
+    - A-C4-03
+    - A-C4-05
+    - A-C4-07
+    - A-C4-08
+    - A-C4-09
+    - A-C4-10
+    - A-C4-11
+    - A-C4-12
+    - A-C4-13
+    - A-C4-14
+    - A-C4-15
+    - A-C4-16
+    - A-C4-17
+    - A-C4-19
+    - A-C4-20
+    - A-C4-21
+    - A-C4-22
+    - A-C4-23
+    - A-C4-24
+    - A-C4-25
+    - A-C4-26
+    - A-C4-28
+    - A-C4-29
+    - A-C4-30
+    - A-C4-31
+    queries:
+    - Q06
+    - Q07
+    - Q25
+    - Q28
+    - Q30
+    - Q33
+    - Q34
+    - Q38
+    - Q40
+    structure_checks:
+    - SC-01
+    - SC-02
+    - SC-04
+    - SC-05
+    value_tables:
+    - VT-FR01
+  coverage_limits:
+  - 只覆盖 FAT32 普通文件；/dev/console 等 devtmpfs 字符设备的 f_op 未追（GAP-U05）
+  - 写路径、目录读取、O_CREAT 未覆盖（GAP-U06）
+  - UV-05 是类型布局推导，没有运行
+  - 不因 Linux 同名函数存在就补齐职责：例如 fput 不调 ->release、不放路径引用，按源码记录
+  segments:
+  - segment: sys_open → do_filp_open → f_op 绑定
+    status: connected_with_concern
+    evidence:
+    - A-C4-01
+    - A-C4-02
+    - A-C4-10
+    - A-C4-11
+    note: UV-04
+  - segment: open → fd_install
+    status: connected
+    evidence:
+    - A-C4-03
+    note: ''
+  - segment: sys_read → vfs_read → read_iter
+    status: connected
+    evidence:
+    - A-C4-15
+    - A-C4-16
+    - Q07
+    note: ''
+  - segment: read_iter → simple_filemap_read → FAT32_read
+    status: connected
+    evidence:
+    - A-C4-24
+    - Q25
+    - Q07
+    note: ''
+  - segment: 读目标与长度
+    status: connected_with_concern
+    evidence:
+    - A-C4-19
+    - A-C4-21
+    - A-C4-22
+    note: UV-05、UV-06
+  - segment: 读 → f_pos 前进 / EOF
+    status: broken
+    evidence:
+    - A-C4-14
+    - A-C4-23
+    note: LBU-06
+  - segment: close → 释放 file
+    status: connected_with_concern
+    evidence:
+    - A-C4-25
+    note: 直接 kfree
+  - segment: close / fput → ->release 与路径引用归还
+    status: broken
+    evidence:
+    - A-C4-28
+    note: LBU-03、LBU-04
+- id: C5
+  title: 文件映射到读完成边界
+  entry: mykernel/mm/vm_map/filemap.c::generic_file_mmap 与 simple_filemap_fault
+  capabilities:
+  - fs.vfs.file_mmap_fault_read
+  - boundary.fs_fat.fat32_read
+  - boundary.block.ata_request
+  normal_path:
+  - 绑定：simple_mmap_region → call_mmap → f_op->mmap（Q19）= generic_file_mmap（Q07）→ vma->vm_ops = &generic_file_vm_ops（A-C5-01）；vm_ops.fault
+    = simple_filemap_fault（Q07）。
+  - 缺页：__do_fault → vm_ops->fault（Q39）→ simple_filemap_fault：page_array[pgoff] 放一页清零的新页（A-C5-02）→ f_op->read(file, vaddr,
+    PAGE_SIZE, &pos)（A-C5-03）。FAT32 inode 的 ->read 绑定为 FAT32_read（A-C4-11、Q07）。
+  - 后端第 1 层：FAT32_read 沿簇链逐簇调 ROOTBLK_TRANSFER（A-C5-06）；在 ROOTBLK_NVME 未定义的构建文本下，宏展开为 ATA_master_ops.transfer（A-C5-08、A-C5-09），绑定为
+    ATA_disk_transfer（Q07）。
+  - 后端第 2 层：ATA_disk_transfer 挂请求并唤醒 ATArqd（A-C5-10，提交点）→ wait_for_completion（A-C5-11，等待点）；ATArqd 取请求后 IDE_cmd_out（A-C5-14）；中断
+    ATA_disk_handler 读数据，计数归零时 end_request → complete（A-C5-15、A-C5-16，完成点）。到此为本链终点。
+  failure_cleanup: 设备错误只打印（A-C5-17），ATA_disk_transfer 恒返回 -ENOERR（A-C5-12），FAT32_read 的 -EIO 分支在 ATA 配置下不会进入，simple_filemap_fault
+    也不看 ->read 的结果，vm_file 与 f_mapping 有效时返回 0（A-C5-03）：读失败对缺页者完全不可见（LBU-07，UV-08）。alloc_page 失败不检查（A-C5-02）。
+  evidence:
+    anchors:
+    - A-C5-01
+    - A-C5-02
+    - A-C5-03
+    - A-C5-04
+    - A-C5-05
+    - A-C5-06
+    - A-C5-07
+    - A-C5-08
+    - A-C5-09
+    - A-C5-10
+    - A-C5-11
+    - A-C5-12
+    - A-C5-14
+    - A-C5-15
+    - A-C5-16
+    - A-C5-17
+    queries:
+    - Q07
+    - Q08
+    - Q09
+    - Q10
+    - Q19
+    - Q25
+    - Q29
+    - Q39
+  coverage_limits:
+  - 后端只追到两层（FAT32_read、ATA 请求），终点为提交、等待、完成三点
+  - 后端选择以构建选项文本为前提，不升级为全系统唯一后端；NVMe 分支未追（GAP-U07）
+  - 中断分发与 PIO 细节未追（GAP-U07、GAP-U08）
+  - 缺页上下文能否睡眠见 DRU-02
+  segments:
+  - segment: mmap → f_op->mmap → vm_ops 安装
+    status: connected
+    evidence:
+    - Q19
+    - Q07
+    - A-C5-01
+    note: ''
+  - segment: 缺页 → vm_ops->fault → simple_filemap_fault
+    status: connected
+    evidence:
+    - Q39
+    - Q07
+    note: ''
+  - segment: simple_filemap_fault → f_op->read → FAT32_read
+    status: connected
+    evidence:
+    - A-C5-03
+    - A-C4-11
+    - Q07
+    note: ''
+  - segment: FAT32_read → ROOTBLK_TRANSFER → ATA_disk_transfer
+    status: connected_under_config_text
+    evidence:
+    - A-C5-06
+    - A-C5-08
+    - A-C5-09
+    - Q07
+    note: ''
+  - segment: ATA 提交 → 等待
+    status: connected
+    evidence:
+    - A-C5-10
+    - A-C5-11
+    note: ''
+  - segment: 守护线程 → 控制器命令
+    status: connected
+    evidence:
+    - Q29
+    - A-C5-14
+    note: ''
+  - segment: 中断 → complete
+    status: connected
+    evidence:
+    - Q09
+    - A-C5-15
+    - A-C5-16
+    note: 中断分发未追
+  - segment: 设备错误 → 缺页者
+    status: broken
+    evidence:
+    - A-C5-12
+    - A-C5-17
+    - A-C5-03
+    note: LBU-07
+- id: C6
+  title: 退出 / 回收
+  entry: mykernel/sched/syscall.c::sys_exit / sys_exit_group（Q04、Q24）
+  capabilities:
+  - sched.forkexec.exit_path
+  - sched.forkexec.wait_reap
+  - sched.forkexec.mm_refcount_release
+  - fs.vfs.fd_table
+  - fs.vfs.file_lifecycle
+  normal_path:
+  - sys_exit → do_exit；sys_exit_group → do_group_exit → do_exit（Q24）。
+  - do_exit：exit_mm 被注释（A-C6-03）→ exit_files → put_files_struct → 对每个 file filp_close → fput（A-C6-04、A-C6-12、A-C4-31、A-C4-30）→
+    exit_fs → 引用归零时 path_put root/pwd → exit_thread → exit_notify：把子任务挂到 1 号任务（A-C6-07、A-C6-08）→ do_task_dead（Q23）。
+  - 分类：函数空壳——wait4（SC-03）、__mmput（SC-07）；仅减引用——mmput（A-C6-14）；活动释放——put_files_struct 释放 files_struct 与各 file 对象、free_fs_struct；真正归还资源——只有上述
+    slab 对象，地址空间与 task_struct 都不归还。
+  failure_cleanup: 没有 ZOMBIE 状态，也不通知父任务（A-C6-09，LBU-01）；wait4 返回值未定义；死亡任务的 task_struct 与栈不释放（A-C6-10、A-C6-11，LBU-02）；mm 不拆除（LBU-08，与
+    CORE-MM-BASELINE-04::LB-03 同一断点）。exit_notify 遇空节点自旋（A-C6-07）。复制出的 file 对象（若 fork 时父进程该 file 的 f_count 为 1）经 fput 以 filp_cachep
+    的名义释放，对象回到自己的 kmalloc slab，链表记账却用 filp_cachep（UV-09）。
+  evidence:
+    anchors:
+    - A-C6-03
+    - A-C6-04
+    - A-C6-07
+    - A-C6-08
+    - A-C6-09
+    - A-C6-10
+    - A-C6-11
+    - A-C6-12
+    - A-C6-14
+    - A-C4-28
+    - A-C4-30
+    - A-C4-31
+    queries:
+    - Q04
+    - Q11
+    - Q12
+    - Q23
+    - Q24
+    structure_checks:
+    - SC-03
+    - SC-07
+  coverage_limits:
+  - MM 已知断点引用原 ID（CORE-MM-BASELINE-04::LB-03、::MC-16），本批只补进程侧连接证据，不改号
+  - do_task_dead 的调度行为见 CORE-SCHED-INTEGRATION-03::SF-C3-37
+  - 信号与 SIGCHLD 投递未覆盖
+  segments:
+  - segment: exit/exit_group → do_exit
+    status: connected
+    evidence:
+    - Q24
+    note: ''
+  - segment: do_exit → exit_files → put_files_struct → fput
+    status: connected_with_concern
+    evidence:
+    - A-C6-04
+    - A-C6-12
+    - A-C4-31
+    note: UV-09
+  - segment: do_exit → mm 释放
+    status: broken
+    evidence:
+    - A-C6-03
+    - A-C6-14
+    note: LBU-08
+  - segment: exit_notify → 改挂子任务
+    status: connected_with_concern
+    evidence:
+    - A-C6-07
+    - A-C6-08
+    note: ''
+  - segment: exit → 父任务通知 / wait4
+    status: broken
+    evidence:
+    - A-C6-09
+    note: LBU-01
+  - segment: do_task_dead → 回收 task_struct
+    status: broken
+    evidence:
+    - A-C6-10
+    - A-C6-11
+    note: LBU-02
+edges:
+- id: E01
+  from: sched.forkexec
+  also_applies_to:
+  - fs.vfs
+  - boundary
+  to: external:mykernel/CMakeLists.txt::KERNEL_C_SRCS
+  kind: build
+  anchors: []
+  hits:
+  - query: Q35
+    path: mykernel/CMakeLists.txt
+    line: 30
+    enclosing: null
+  note: sched/forkexec、fs/vfs、fs/fat 的子目录 CMakeLists 为 0 字节（Q36），源文件由顶层 GLOB_RECURSE 列入内核目标。列入构建不等于链接保留，更不等于运行可达。
+- id: E02
+  from: sched.forkexec.first_user_launch
+  to: external:myinitramfs/CMakeLists.txt::init
+  kind: data
+  anchors:
+  - A-C1-09
+  - A-C1-14
+  hits:
+  - query: Q15
+    path: mykernel/arch/x86_64/myos/arch_task.c
+    line: 19
+    enclosing: kjmp_to_doexecve
+  note: 内核按字符串 /boot/init 取文件；该文件由 initramfs 构建的 install 目标提供。镜像内容未核（GAP-U02）。
+- id: E03
+  from: sched.forkexec.first_user_launch
+  to: fs.vfs.root_switch
+  kind: init_order
+  anchors:
+  - A-C1-02
+  - A-C1-03
+  hits: []
+  note: kernel_init 先切根盘再跳 exec；/boot/init 的路径解析依赖 set_init_taskfs 设置的 root。
+- id: E04
+  from: fs.vfs.root_switch
+  to: boundary.block.ata_request
+  kind: init_order
+  anchors:
+  - A-C1-01
+  - A-C1-02
+  hits:
+  - query: Q09
+    path: mykernel/arch/x86_64/myos/device.c
+    line: 30
+    enclosing: init_bdev_intr
+  note: ATArqd 在根切换前启动；中断处理由 init_IDE_disk 注册，init_bdev_intr 的调用时机未追（GAP-U07）。
+- id: E05
+  from: sched.forkexec.first_user_launch
+  to: sched.forkexec.binfmt_dispatch
+  kind: init_order
+  anchors:
+  - A-C3-09
+  hits:
+  - query: Q02
+    path: mykernel/init/main.c
+    line: 281
+    enclosing: kernel_init
+  - query: Q02
+    path: mykernel/fs/vfs/binfmt_elf.c
+    line: 1221
+    enclosing: null
+  note: 首个 exec 之前，kernel_init_freeable（其中 do_initcalls）已经运行，ELF 格式经 core_initcall 登记。段遍历本身未读。
+- id: E06
+  from: sched.forkexec.first_user_launch
+  to: sched.forkexec.exec_entry
+  kind: call
+  anchors:
+  - A-C1-10
+  hits:
+  - query: Q21
+    path: mykernel/arch/x86_64/myos/arch_task.c
+    line: 33
+    enclosing: kjmp_to_doexecve
+  note: kjmp_to_doexecve 是 kernel_execve 唯一的活动调用者。
+- id: E07
+  from: sched.forkexec.first_user_launch
+  to: external:mykernel/arch/x86_64/entry/entry_64.S::syscall_return_via_sysret
+  kind: call
+  anchors:
+  - A-C1-11
+  hits: []
+  note: asm jmp，目标汇编未读（GAP-U04）。
+- id: E08
+  from: fs.vfs.root_switch
+  to: external:mykernel/fs/fat/myos_fat32.c::read_fat32_superblock
+  kind: call
+  indirect:
+    call_site:
+      query: Q18
+      path: mykernel/fs/vfs/myos_vfs.c
+      line: 158
+      enclosing: mount_fs
+    binding:
+      query: Q07
+      path: mykernel/fs/fat/myos_fat32.c
+      line: 503
+      enclosing: FAT32_fs_type
+    receiver:
+      query: Q06
+      path: mykernel/fs/fat/myos_fat32.c
+      line: 477
+      enclosing: read_fat32_superblock
+  anchors:
+  - A-C1-06
+  hits:
+  - query: Q18
+    path: mykernel/fs/vfs/myos_vfs.c
+    line: 158
+    enclosing: mount_fs
+  - query: Q07
+    path: mykernel/fs/fat/myos_fat32.c
+    line: 503
+    enclosing: FAT32_fs_type
+  note: mount_fs 按名字找 fs 类型后调 ->read_super；FAT32_fs_type 的登记（register_diskfs → init_fat32_fs）未逐行读。
+- id: E09
+  from: fs.vfs.root_switch
+  to: boundary.block.ata_request
+  kind: call
+  anchors:
+  - A-C5-08
+  hits:
+  - query: Q37
+    path: mykernel/fs/vfs/myos_vfs.c
+    line: 93
+    enclosing: myos_switch_to_root_disk
+  - query: Q07
+    path: mykernel/arch/x86_64/myos/ide.c
+    line: 303
+    enclosing: ATA_master_ops
+  note: ROOTBLK_TRANSFER 是宏，在 ATA 分支下展开为 ATA_master_ops.transfer（配置前提见 E42）。
+- id: E10
+  from: external:mykernel/arch/x86_64/entry/syscall_64.c::x64_sys_call
+  to: sched.forkexec.fork_entry
+  also_applies_to:
+  - sched.forkexec.exec_entry
+  - sched.forkexec.exit_path
+  - sched.forkexec.wait_reap
+  - fs.vfs.path_open
+  - fs.vfs.read_syscall
+  - fs.vfs.file_lifecycle
+  kind: call
+  indirect:
+    call_site:
+      query: Q20
+      path: mykernel/arch/x86_64/entry/common.c
+      line: 44
+      enclosing: do_syscall_64
+    binding:
+      query: Q04
+      path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+      line: 31
+      enclosing: null
+    receiver:
+      query: Q24
+      path: mykernel/sched/syscall.c
+      line: 55
+      enclosing: sys_fork
+  anchors: []
+  hits:
+  - query: Q20
+    path: mykernel/arch/x86_64/entry/common.c
+    line: 44
+    enclosing: do_syscall_64
+  - query: Q04
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 31
+    enclosing: null
+  - query: Q04
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 33
+    enclosing: null
+  - query: Q04
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 34
+    enclosing: null
+  - query: Q04
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 35
+    enclosing: null
+  - query: Q04
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 73
+    enclosing: null
+  - query: Q04
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 6
+    enclosing: null
+  - query: Q04
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 4
+    enclosing: null
+  - query: Q04
+    path: mykernel/arch/x86_64/include/asm/syscalls_64.h
+    line: 7
+    enclosing: null
+  note: x64_sys_call 以 switch 展开系统调用表（__SYSCALL 宏）。表项依次绑定 fork、execve、exit、wait4、exit_group、open、read、close；vfork 被注释，没有 clone。MYOS_SYSCALL_DEFINEn
+    到 __x64_sys_<name> 的包装宏未逐行展开。
+- id: E11
+  from: sched.forkexec.fork_entry
+  to: sched.forkexec.copy_process_resources
+  kind: call
+  anchors:
+  - A-C2-03
+  hits: []
+  note: ''
+- id: E12
+  from: sched.forkexec.fork_entry
+  to: external:mykernel/sched/scheduler/scheduler_core.c::wake_up_new_task
+  kind: call
+  anchors: []
+  hits:
+  - query: Q22
+    path: mykernel/sched/forkexec/fork.c
+    line: 1516
+    enclosing: kernel_clone
+  note: 入队位置属于调度，见 CORE-SCHED-INTEGRATION-03，未重查。
+- id: E13
+  from: sched.forkexec.copy_process_resources
+  to: fs.vfs.fd_table
+  kind: call
+  anchors:
+  - A-C2-10
+  hits:
+  - query: Q26
+    path: mykernel/sched/forkexec/fork.c
+    line: 739
+    enclosing: copy_files
+  note: copy_files → dup_fd。
+- id: E14
+  from: sched.forkexec.copy_process_resources
+  to: external:mykernel/sched/forkexec/fork.c::dup_mmap
+  kind: call
+  anchors:
+  - A-C2-09
+  hits:
+  - query: Q26
+    path: mykernel/sched/forkexec/fork.c
+    line: 1134
+    enclosing: copy_process
+  note: dup_mm → dup_mmap；页表复制与 COW 属于 CORE-MM-BASELINE-04 的 mm.vm_map.mm_lifecycle（MC-25、LB-09）。
+- id: E15
+  from: sched.forkexec.copy_process_resources
+  to: sched.forkexec.mm_refcount_release
+  kind: call
+  anchors:
+  - A-C2-07
+  hits: []
+  note: 失败清理中的 mmput。
+- id: E16
+  from: sched.forkexec.copy_process_resources
+  to: external:mykernel/init/init_task.c::init_sighand
+  kind: data
+  anchors:
+  - A-C2-08
+  - A-C2-11
+  hits:
+  - query: Q31
+    path: mykernel/init/init_task.c
+    line: 57
+    enclosing: init_sighand
+  - query: Q31
+    path: mykernel/init/init_task.c
+    line: 124
+    enclosing: init_task
+  note: 子任务沿用父任务的 sighand 指针；所有任务共用静态 init_sighand（CORE-MM-BASELINE-04::RF-02）。
+- id: E17
+  from: sched.forkexec.exec_entry
+  to: fs.vfs.path_open
+  kind: call
+  anchors:
+  - A-C3-03
+  hits: []
+  note: do_open_execat → do_filp_open。
+- id: E18
+  from: sched.forkexec.exec_entry
+  to: sched.forkexec.binfmt_dispatch
+  kind: call
+  anchors:
+  - A-C3-04
+  hits: []
+  note: ''
+- id: E19
+  from: sched.forkexec.binfmt_dispatch
+  to: fs.vfs.elf_loader
+  kind: call
+  indirect:
+    call_site: A-C3-06
+    binding:
+      query: Q07
+      path: mykernel/fs/vfs/binfmt_elf.c
+      line: 85
+      enclosing: elf_format
+    receiver: A-C3-13
+  anchors:
+  - A-C3-06
+  - A-C3-09
+  - A-C3-13
+  hits:
+  - query: Q07
+    path: mykernel/fs/vfs/binfmt_elf.c
+    line: 85
+    enclosing: elf_format
+  note: 调用点 fmt->load_binary；elf_format.load_binary = load_elf_binary，由 init_elf_binfmt 注册。
+- id: E20
+  from: fs.vfs.elf_loader
+  to: sched.forkexec.exec_mm_switch
+  kind: call
+  anchors:
+  - A-C3-14
+  hits: []
+  note: begin_new_exec；setup_new_exec 与 setup_arg_pages 是阅读记录。
+- id: E21
+  from: fs.vfs.elf_loader
+  to: external:mykernel/mm/vm_map/util.c::vm_mmap
+  kind: call
+  anchors:
+  - A-C3-16
+  hits: []
+  note: PT_LOAD 段作为文件私有映射；mmap 内部属于 CORE-MM-BASELINE-04 mm.vm_map.mmap_create（MC-11/MC-13 等）。
+- id: E22
+  from: external:mykernel/mm/vm_map/mmap.c::simple_mmap_region
+  to: fs.vfs.file_mmap_fault_read
+  kind: call
+  indirect:
+    call_site:
+      query: Q19
+      path: mykernel/mm/vm_map/mmap.c
+      line: 693
+      enclosing: simple_mmap_region
+    binding:
+      query: Q07
+      path: mykernel/fs/fat/myos_fat32.c
+      line: 362
+      enclosing: FAT32_file_ops
+    receiver: A-C5-01
+  anchors:
+  - A-C5-01
+  hits:
+  - query: Q19
+    path: mykernel/mm/vm_map/mmap.c
+    line: 693
+    enclosing: simple_mmap_region
+  - query: Q19
+    path: mykernel/include/linux/fs/fs.h
+    line: 1955
+    enclosing: call_mmap
+  - query: Q07
+    path: mykernel/fs/fat/myos_fat32.c
+    line: 362
+    enclosing: FAT32_file_ops
+  note: call_mmap → file->f_op->mmap，FAT32 绑定 generic_file_mmap。
+- id: E23
+  from: fs.vfs.elf_loader
+  to: fs.vfs.kernel_read
+  kind: call
+  anchors:
+  - A-C3-18
+  hits: []
+  note: elf_read → kernel_read。
+- id: E24
+  from: sched.forkexec.exec_mm_switch
+  to: sched.forkexec.mm_refcount_release
+  kind: call
+  anchors:
+  - A-C3-12
+  hits: []
+  note: exec_mmap 对旧 mm 调 mmput。
+- id: E25
+  from: fs.vfs.path_open
+  to: fs.vfs.file_lifecycle
+  kind: call
+  anchors: []
+  hits:
+  - query: Q28
+    path: mykernel/fs/vfs/namei.c
+    line: 719
+    enclosing: path_openat
+  note: path_openat → alloc_empty_file。
+- id: E26
+  from: fs.vfs.path_open
+  to: fs.vfs.fd_table
+  kind: call
+  anchors:
+  - A-C4-02
+  - A-C4-03
+  hits:
+  - query: Q34
+    path: mykernel/fs/vfs/open.c
+    line: 251
+    enclosing: do_sys_openat2
+  - query: Q34
+    path: mykernel/fs/vfs/open.c
+    line: 258
+    enclosing: do_sys_openat2
+  note: do_sys_openat2 → get_unused_fd_flags / fd_install。
+- id: E27
+  from: fs.vfs.path_open
+  to: external:mykernel/fs/fat/myos_fat32.c::FAT32_open
+  kind: call
+  indirect:
+    call_site: A-C4-10
+    binding: A-C4-11
+    receiver:
+      query: Q07
+      path: mykernel/fs/fat/myos_fat32.c
+      line: 356
+      enclosing: FAT32_file_ops
+  anchors:
+  - A-C4-10
+  - A-C4-11
+  hits:
+  - query: Q07
+    path: mykernel/fs/fat/myos_fat32.c
+    line: 356
+    enclosing: FAT32_file_ops
+  - query: Q06
+    path: mykernel/fs/fat/inode.c
+    line: 157
+    enclosing: fat_fill_inode
+  note: f_op = inode->i_fop（FAT32_file_ops），->open = FAT32_open。
+- id: E28
+  from: fs.vfs.read_syscall
+  to: fs.vfs.fd_table
+  kind: call
+  anchors:
+  - A-C4-13
+  hits:
+  - query: Q38
+    path: mykernel/fs/vfs/read_write.c
+    line: 182
+    enclosing: ksys_read
+  note: ksys_read → myos_fdget_pos。
+- id: E29
+  from: fs.vfs.read_syscall
+  to: fs.vfs.pagecache_read
+  kind: call
+  indirect:
+    call_site: A-C4-16
+    binding:
+      query: Q07
+      path: mykernel/fs/fat/myos_fat32.c
+      line: 360
+      enclosing: FAT32_file_ops
+    receiver: A-C4-24
+  anchors:
+  - A-C4-15
+  - A-C4-16
+  - A-C4-24
+  hits:
+  - query: Q07
+    path: mykernel/fs/fat/myos_fat32.c
+    line: 360
+    enclosing: FAT32_file_ops
+  note: new_sync_read → f_op->read_iter，FAT32 绑定 generic_file_read_iter。
+- id: E30
+  from: fs.vfs.pagecache_read
+  to: fs.vfs.read_syscall
+  kind: data
+  anchors:
+  - A-C4-16
+  - A-C4-19
+  - A-C4-20
+  - A-C4-21
+  hits: []
+  note: 数据边：simple_filemap_read 读 iter->kvec，而 new_sync_read 用 iov_iter_ubuf 只写 ubuf；两者在同一个联合体中（UV-05）。
+- id: E31
+  from: fs.vfs.kernel_read
+  to: fs.vfs.pagecache_read
+  kind: call
+  indirect:
+    call_site: A-C4-18
+    binding:
+      query: Q07
+      path: mykernel/fs/fat/myos_fat32.c
+      line: 360
+      enclosing: FAT32_file_ops
+    receiver: A-C4-24
+  anchors:
+  - A-C4-18
+  - A-C4-24
+  hits:
+  - query: Q07
+    path: mykernel/fs/fat/myos_fat32.c
+    line: 360
+    enclosing: FAT32_file_ops
+  note: __kernel_read 用 kvec 迭代器调 ->read_iter。
+- id: E32
+  from: fs.vfs.pagecache_read
+  to: boundary.fs_fat.fat32_read
+  kind: call
+  indirect:
+    call_site:
+      query: Q25
+      path: mykernel/mm/vm_map/filemap.c
+      line: 222
+      enclosing: simple_filemap_read
+    binding:
+      query: Q07
+      path: mykernel/fs/fat/myos_fat32.c
+      line: 357
+      enclosing: FAT32_file_ops
+    receiver: A-C5-05
+  anchors: []
+  hits:
+  - query: Q25
+    path: mykernel/mm/vm_map/filemap.c
+    line: 222
+    enclosing: simple_filemap_read
+  - query: Q07
+    path: mykernel/fs/fat/myos_fat32.c
+    line: 357
+    enclosing: FAT32_file_ops
+  note: simple_filemap_read 在页槽位为空时调 filp->f_op->read。
+- id: E33
+  from: external:mykernel/mm/fault/fault.c::__do_fault
+  to: fs.vfs.file_mmap_fault_read
+  kind: call
+  indirect:
+    call_site:
+      query: Q39
+      path: mykernel/mm/fault/fault.c
+      line: 901
+      enclosing: __do_fault
+    binding:
+      query: Q07
+      path: mykernel/mm/vm_map/filemap.c
+      line: 185
+      enclosing: generic_file_vm_ops
+    receiver: A-C5-02
+  anchors:
+  - A-C5-01
+  hits:
+  - query: Q39
+    path: mykernel/mm/fault/fault.c
+    line: 901
+    enclosing: __do_fault
+  - query: Q07
+    path: mykernel/mm/vm_map/filemap.c
+    line: 185
+    enclosing: generic_file_vm_ops
+  note: vm_ops 由 generic_file_mmap 安装；fault = simple_filemap_fault。缺页入口到 __do_fault 的路径属于 MM-04。
+- id: E34
+  from: fs.vfs.file_mmap_fault_read
+  to: boundary.fs_fat.fat32_read
+  kind: call
+  indirect:
+    call_site: A-C5-03
+    binding:
+      query: Q07
+      path: mykernel/fs/fat/myos_fat32.c
+      line: 357
+      enclosing: FAT32_file_ops
+    receiver: A-C5-05
+  anchors:
+  - A-C5-03
+  - A-C4-11
+  hits:
+  - query: Q25
+    path: mykernel/mm/vm_map/filemap.c
+    line: 132
+    enclosing: simple_filemap_fault
+  - query: Q07
+    path: mykernel/fs/fat/myos_fat32.c
+    line: 357
+    enclosing: FAT32_file_ops
+  note: 缺页读的唯一后端绑定在本批读到的对象中是 FAT32_read；其他文件系统的 i_fop 未盘点。
+- id: E35
+  from: boundary.fs_fat.fat32_read
+  to: boundary.block.ata_request
+  kind: call
+  indirect:
+    call_site: A-C5-06
+    binding: A-C5-08
+    receiver: A-C5-10
+  anchors:
+  - A-C5-06
+  - A-C5-08
+  - A-C5-10
+  hits:
+  - query: Q07
+    path: mykernel/arch/x86_64/myos/ide.c
+    line: 303
+    enclosing: ATA_master_ops
+  note: 宏展开为 ATA_master_ops.transfer，ATA_master_ops.transfer = ATA_disk_transfer。
+- id: E36
+  from: boundary.fs_fat.fat32_read
+  to: external:mykernel/scripts/options_flags.cmake::ROOTBLK_NVME
+  kind: config
+  anchors:
+  - A-C5-08
+  - A-C5-09
+  hits:
+  - query: Q08
+    path: mykernel/arch/x86_64/include/obsolete/device.h
+    line: 47
+    enclosing: null
+  note: '构建选项文本中 -DROOTBLK_NVME 被注释，宏取 #else 分支；仅为配置文本前提。'
+- id: E37
+  from: boundary.block.ata_request
+  to: external:mykernel/kactive/completion/completion.c::wait_for_completion
+  kind: call
+  anchors:
+  - A-C5-11
+  - A-C5-16
+  hits: []
+  note: 等待与完成原语见 CORE-CHECK-01::V02/V03/V10/V11（有限宿主观察，消费时须一起读 recheck-02 审查），本批不重查（DRU-01）。
+- id: E38
+  from: boundary.block.ata_request
+  to: external:mykernel/arch/x86_64/myos/ide.c::init_IDE_disk
+  kind: init_order
+  anchors: []
+  hits:
+  - query: Q09
+    path: mykernel/arch/x86_64/myos/ide.c
+    line: 340
+    enclosing: init_IDE_disk
+  note: 完成依赖中断处理先注册；init_bdev_intr 的调用时机未追（GAP-U07）。
+- id: E39
+  from: sched.forkexec.exit_path
+  to: fs.vfs.fd_table
+  kind: call
+  anchors:
+  - A-C6-04
+  - A-C6-12
+  hits: []
+  note: exit_files → put_files_struct。
+- id: E40
+  from: fs.vfs.fd_table
+  to: fs.vfs.file_lifecycle
+  kind: call
+  anchors:
+  - A-C4-31
+  - A-C4-30
+  hits: []
+  note: put_files_struct → filp_close → fput。
+- id: E41
+  from: sched.forkexec.exit_path
+  to: external:mykernel/sched/scheduler/scheduler_core.c::do_task_dead
+  kind: call
+  anchors: []
+  hits:
+  - query: Q23
+    path: mykernel/sched/forkexec/exit.c
+    line: 185
+    enclosing: do_exit
+  note: do_task_dead 的调度行为见 CORE-SCHED-INTEGRATION-03::SF-C3-37。
+- id: E42
+  from: fs.vfs.file_lifecycle
+  to: external:mykernel/mm/kmalloc/slub.c::kmem_cache_free
+  kind: call
+  anchors:
+  - A-C4-28
+  - A-C4-29
+  - A-C4-25
+  hits: []
+  note: fput 按 filp_cachep 释放；sys_close 用 kfree，kfree 按对象所在 slab 取 cache（阅读记录）。
+- id: E43
+  from: sched.forkexec.mm_refcount_release
+  to: external:mykernel/sched/forkexec/fork.c::__mmput
+  kind: call
+  anchors:
+  - A-C6-14
+  hits: []
+  note: __mmput 的函数体全为注释（SC-07）。
+link_breaks:
+- id: LBU-01
+  where: sched.forkexec.exit_path → sched.forkexec.wait_reap（父任务通知与 wait4）
+  anchors:
+  - A-C6-09
+  queries:
+  - Q04
+  structure_checks:
+  - SC-03
+  what: exit_notify 不设 ZOMBIE、不通知父任务；wait4 的函数体为空。父任务没有获取子任务退出状态的活动路径。
+- id: LBU-02
+  where: TASK_DEAD → task_struct 与内核栈的释放
+  anchors:
+  - A-C6-10
+  - A-C6-11
+  queries:
+  - Q11
+  - Q12
+  what: finish_task_switch 的 TASK_DEAD 段被注释，release_task 只有声明；sched/ 中没有活动的 put_task_struct。
+- id: LBU-03
+  where: close → fput / ->release
+  anchors:
+  - A-C4-25
+  queries:
+  - Q30
+  what: sys_close 直接 kfree，不经 fput，不看引用计数；fs/vfs 中没有活动的 ->release 调用。
+- id: LBU-04
+  where: fput → path_put / dput / iput
+  anchors:
+  - A-C4-09
+  - A-C4-28
+  queries:
+  - Q40
+  what: myos_do_dentry_open 取路径引用；file_table.c 中没有 path_put、dput、iput，fput 归零只释放 file 对象。
+- id: LBU-05
+  where: exec 越过不可返回点后的失败 → 致命信号
+  anchors:
+  - A-C3-05
+  - A-C3-10
+  queries:
+  - Q13
+  what: force_fatal_sig 被注释；失败只作为返回值上交。
+- id: LBU-06
+  where: read(FAT32 普通文件) → f_pos 前进与 EOF
+  anchors:
+  - A-C4-14
+  - A-C4-23
+  queries: []
+  structure_checks:
+  - SC-04
+  what: simple_filemap_read 不更新 ki_pos，new_sync_read 把未变的 ki_pos 写回，f_pos 不前进；也不按 i_size 截短，因而没有 EOF。
+- id: LBU-07
+  where: 块设备错误 → 调用者
+  anchors:
+  - A-C5-06
+  - A-C5-12
+  - A-C5-17
+  queries: []
+  what: IDE_read_handler 只打印错误；ATA_disk_transfer 总是返回 -ENOERR；FAT32_read 的 -EIO 分支在 ATA 配置下不进入；simple_filemap_fault 也丢弃 ->read
+    的结果。
+- id: LBU-08
+  where: 进程退出 / exec 换 mm → 地址空间拆除
+  anchors:
+  - A-C6-03
+  - A-C6-14
+  queries: []
+  structure_checks:
+  - SC-07
+  what: exit_mm 被注释；mmput 归零后 __mmput 为空。与 CORE-MM-BASELINE-04::LB-03 同一断点，本批补上进程侧的连接证据。
+- id: LBU-09
+  where: kernel_execve 失败 → 首个程序启动的错误处理
+  anchors:
+  - A-C1-10
+  - A-C1-11
+  queries:
+  - Q21
+  what: kjmp_to_doexecve 丢弃返回值并无条件跳到 sysret。
+- id: LBU-10
+  where: vfork → 父任务等待
+  anchors: []
+  queries:
+  - Q04
+  - Q05
+  what: 系统调用表中 vfork 被注释；wait_for_vfork_done/complete_vfork_done 只在注释中。
+dependency_risks:
+- id: DRU-01
+  depends_on:
+  - CORE-CHECK-01::V02、::V03、::V10、::V11（completion/swait 的有限宿主观察；消费时须一起读 reviews/CORE-CHECK-01-recheck-02-review.md）
+  - CORE-SCHED-INTEGRATION-03::DV-19（有限超时分支；ATA 用无限等待，是否涉及未核）
+  affects:
+  - boundary.block.ata_request
+  - fs.vfs.pagecache_read
+  - fs.vfs.file_mmap_fault_read
+  - fs.vfs.root_switch
+  - fs.vfs.elf_loader
+  what: 每次读盘都在 wait_for_completion 上同步等待，完成由中断处理中的 complete 发出。读文件、文件缺页、根切换、exec 读 ELF 头的可靠性都依赖这对原语。
+  evidence_class: source_only
+  unknown:
+  - 本批没有重查 completion 的实现，也没有运行
+- id: DRU-02
+  depends_on:
+  - CORE-MM-BASELINE-04::DR-01
+  - CORE-MM-BASELINE-04::GAP-M05
+  - CORE-SCHED-INTEGRATION-03::GAP-02
+  affects:
+  - fs.vfs.file_mmap_fault_read
+  what: 文件缺页在缺页处理中同步等待块 I/O。能否在此睡眠并被唤醒，取决于缺页上下文的 in_atomic/preempt_count 与调度行为。
+  evidence_class: source_only
+  unknown:
+  - 缺页时的 preempt_count
+  - 睡眠中再次缺页或中断的交互
+- id: DRU-03
+  depends_on:
+  - CORE-SCHED-INTEGRATION-03::SF-C3-37
+  - CORE-SCHED-INTEGRATION-03 的 W01/W02/DV-06（新任务入队位置）
+  affects:
+  - sched.forkexec.fork_entry
+  - sched.forkexec.exit_path
+  what: 子任务首次运行的顺序和死亡任务的切出，都由调度决定，本批不复扫调度算法。
+  evidence_class: source_only
+  unknown:
+  - fork 后父子的运行顺序
+  - do_task_dead 在队列只剩自身时的行为（INTEGRATION-03 已登记）
+- id: DRU-04
+  depends_on:
+  - CORE-MM-BASELINE-04::LB-03
+  - CORE-MM-BASELINE-04::MC-16
+  - CORE-MM-BASELINE-04::MC-05
+  - CORE-MM-BASELINE-04::LB-01
+  affects:
+  - sched.forkexec.exec_mm_switch
+  - sched.forkexec.exit_path
+  - sched.forkexec.mm_refcount_release
+  what: exec 换下的 mm 与退出进程的 mm 都不拆除；已读的用户页释放路径不把页归还 buddy。进程反复创建与退出时的内存行为由 MM 的这些断点决定。
+  evidence_class: source_only
+  unknown:
+  - 实际负载下的增长速度（未测量）
+- id: DRU-05
+  depends_on:
+  - CORE-MM-BASELINE-04::MC-25
+  - CORE-MM-BASELINE-04::LB-09
+  - CORE-MM-BASELINE-04::DR-06
+  affects:
+  - sched.forkexec.copy_process_resources
+  what: fork 复制地址空间时清父 PTE 写位而不刷 TLB；COW 能否生效取决于切换时机。
+  evidence_class: source_only
+  unknown:
+  - 用户 PTE 是否带全局位（CORE-MM-BASELINE-04::GAP-M07）
+- id: DRU-06
+  depends_on:
+  - 并发前提本身（共享文件表 / 多 CPU）
+  - CORE-MM-BASELINE-04::DR-05（同类：不能凭 NR_CPUS 认定支持 SMP）
+  affects:
+  - fs.vfs.fd_table
+  - sched.forkexec.copy_process_resources
+  - sched.forkexec.binfmt_dispatch
+  - boundary.block.ata_request
+  what: alloc_fd 与 fd_install 之间释放锁；copy_fs 中 fs->users++ 不加锁；formats 链表不加锁；IDE 请求链表在锁内增删但 count 的读取不加锁。用户态没有 clone 入口（Q04），共享文件表与
+    fs 不会经用户态出现。
+  evidence_class: source_only
+  unknown:
+  - AP 是否运行任务
+  - 中断处理与守护线程对 req_in_using 的竞争
+u04_usability:
+  layer1: 见各 chains[].segments：connected / connected_with_concern / connected_under_config_text / build_text_only / endpoint
+    / broken
+  layer2:
+  - chain: C1
+    source_explanation_ready: 能讲清：首个程序名与参数的来源、根分区的选择规则（GPT、EFI 启动分区、BOOT_FS_IDX）、root/pwd 与 /dev 的建立顺序，以及 exec 失败时为什么仍会跳到用户态。
+    runtime_prerequisites: 需要授权的完整内核构建与 QEMU，以及包含 /boot/init、/boot/sh 的根盘镜像；进入用户态还依赖调度前置条件（INTEGRATION-03）。
+  - chain: C2
+    source_explanation_ready: 能讲清：fork 入口、各资源是复制还是共享、失败标签链的顺序，以及 sighand 实际共享这一现状。
+    runtime_prerequisites: 观察父子返回值、文件表副本与失败路径，需要宿主夹具或 QEMU 授权；失败路径需要注入分配失败。
+  - chain: C3
+    source_explanation_ready: 能讲清：格式注册与分派、ELF 校验与段映射、换 mm 的时点与不可返回点，以及读 ELF 头经过的 VFS 路径。
+    runtime_prerequisites: open 返回值的实际取值要看构建产物（NVU-2）；装载成功与否需要 QEMU 与真实镜像。
+  - chain: C4
+    source_explanation_ready: 能讲清：fd、file、dentry/inode、f_op 的关系与绑定位置，打开时的引用获取，以及 close/fput 不归还的部分；读路径中 read_iter 与 ->read
+      的分工。
+    runtime_prerequisites: read 的实际行为（UV-05、UV-06）可先在宿主夹具中验证（NVU-1），无需 QEMU；涉及 /dev/console 的读写需要先追 devtmpfs。
+  - chain: C5
+    source_explanation_ready: 能讲清：文件映射如何装上 vm_ops，缺页如何同步读一页，以及到 ATA 请求提交、等待、完成的两层后端。
+    runtime_prerequisites: 需要构建产物确认 ROOTBLK_NVME 与链接保留；完成通知的可靠性依赖 completion 记录（DRU-01）；运行观察需要 QEMU。
+  - chain: C6
+    source_explanation_ready: 能讲清：退出时实际释放的对象、只减引用的对象、完全缺失的回收（wait4、task_struct、mm）。
+    runtime_prerequisites: 观察 wait4 返回值与资源占用需要 QEMU 与用户程序配合（修改用户程序需另行授权）。
+next_validation_candidates:
+- id: NVU-1
+  kind: host
+  status: NOT_RUN
+  purpose: 验证 simple_filemap_read 的读目标（ITER_UBUF 与 kvec 联合体）、长度公式（VT-FR01）与 f_pos 不前进（UV-05、UV-06）
+  minimal_observation: 用 ubuf 与 kvec 两种迭代器调用原函数片段时，写入的地址、各页 len、返回值、ki_pos
+  preconditions:
+  - 宿主夹具执行授权（当前 host_fixture_execution_authorized=false）
+  - filemap.c、read_write.c 片段与 FAT32_read 的宿主桩
+  touches_pending_items: 否（纯 VFS 层，块设备打桩）
+- id: NVU-2
+  kind: build_artifact
+  status: NOT_RUN
+  purpose: 确认 do_open/myos_do_dentry_open 缺少 return 时 path_openat 实际读到的 error 值（UV-04）
+  minimal_observation: 授权构建后反汇编这三个函数，看返回寄存器在各路径上的来源
+  preconditions:
+  - 完整内核构建授权（当前 full_kernel_build_authorized=false）
+  - 不需要运行
+  touches_pending_items: 否
+- id: NVU-3
+  kind: host
+  status: NOT_RUN
+  purpose: 观察 dup_fd 副本的来源 cache、空槽位初值，以及 fput 释放时 kmem_cache_free 收到的 cache（UV-09）
+  minimal_observation: dup_fd → put_files_struct → fput 的宿主片段，记录每个对象的分配与释放所用 cache
+  preconditions:
+  - 宿主夹具执行授权
+  - slub 分配释放的宿主桩
+  touches_pending_items: 否
+- id: NVU-4
+  kind: qemu
+  status: NOT_RUN
+  purpose: 最小启动观察：是否进入 /boot/init，fork 与 execve /boot/sh 是否完成（C1、C2、C3）
+  minimal_observation: 串口输出中的欢迎串与 shell 提示符
+  preconditions:
+  - 完整内核构建与 QEMU 授权
+  - 带 /boot/init、/boot/sh 的根盘镜像
+  - 调度前置条件（INTEGRATION-03）
+  touches_pending_items: 是：调度与 completion（DRU-01、DRU-03）
+- id: NVU-5
+  kind: qemu
+  status: NOT_RUN
+  purpose: 首个程序缺失或损坏时 kjmp_to_doexecve 的行为（UV-01、UV-02）
+  minimal_observation: 去掉或截断 /boot/init 后的启动输出与异常
+  preconditions:
+  - 完整内核构建与 QEMU 授权
+  - 可修改的测试镜像
+  touches_pending_items: 是：同 NVU-4
+- id: NVU-6
+  kind: qemu
+  status: NOT_RUN
+  purpose: 子进程退出后 wait4 的返回值与 task_struct、mm 的占用（UV-15）
+  minimal_observation: 用户程序循环 fork/exit/wait4 时的返回值与空闲内存
+  preconditions:
+  - 完整内核构建与 QEMU 授权
+  - 修改用户程序需另行授权
+  touches_pending_items: 是：调度、MM 回收断点（DRU-03、DRU-04）
+old_inputs_index:
+- id: OLD-U01
+  old_id: sched.forkexec
+  source: DR-002 + DR-003
+  disposition: object_row
+  mapped_to:
+  - sched.forkexec
+- id: OLD-U02
+  old_id: sched.forkexec.fork_clone_exec_exit
+  source: DR-002
+  disposition: refined
+  mapped_to:
+  - sched.forkexec.fork_entry
+  - sched.forkexec.copy_process_resources
+  - sched.forkexec.exec_entry
+  - sched.forkexec.exec_mm_switch
+  - sched.forkexec.exit_path
+- id: OLD-U03
+  old_id: sched.forkexec.obvious_missing
+  source: DR-002
+  disposition: refined_names_only
+  mapped_to:
+  - sched.forkexec.wait_reap
+  - sched.forkexec.mm_refcount_release
+  - sched.forkexec.exit_path
+  note: 只取名字；旧条目的断言不继承，本批按源码重新取证。
+- id: OLD-U04
+  old_id: sched.forkexec.elf_binfmt_init
+  source: DR-003
+  disposition: mapped
+  mapped_to:
+  - sched.forkexec.binfmt_dispatch
+- id: OLD-U05
+  old_id: sched.forkexec.exec_boot_init
+  source: DR-003
+  disposition: mapped
+  mapped_to:
+  - sched.forkexec.first_user_launch
+- id: OLD-U06
+  old_id: sched.forkexec.user_process
+  source: DR-003
+  disposition: not_built_as_node
+  mapped_to:
+  - sched.forkexec.first_user_launch
+  - sched.forkexec.fork_entry
+  - sched.forkexec.exec_entry
+  - fs.vfs.elf_loader
+  note: “用户进程”是多条链的组合，不单独建节点。
+- id: OLD-U07
+  old_id: fs.vfs
+  source: DR-002 + DR-003
+  disposition: object_row
+  mapped_to:
+  - fs.vfs
+- id: OLD-U08
+  old_id: fs.vfs.open_io_path_mount
+  source: DR-002
+  disposition: refined
+  mapped_to:
+  - fs.vfs.path_open
+  - fs.vfs.fd_table
+  - fs.vfs.file_lifecycle
+  - fs.vfs.read_syscall
+  - fs.vfs.kernel_read
+  note: mount 部分只覆盖根切换中的调用（fs.vfs.root_switch）。
+- id: OLD-U09
+  old_id: fs.vfs.cache_dir_elf
+  source: DR-002
+  disposition: refined_partial
+  mapped_to:
+  - fs.vfs.pagecache_read
+  - fs.vfs.file_mmap_fault_read
+  - fs.vfs.elf_loader
+  note: dcache 与目录读取部分未覆盖。
+- id: OLD-U10
+  old_id: fs.vfs.obvious_missing
+  source: DR-002
+  disposition: refined_names_only
+  mapped_to:
+  - fs.vfs.file_lifecycle
+  note: 只取名字；旧条目的断言不继承。
+- id: OLD-U11
+  old_id: fs.vfs.root_switch
+  source: DR-003
+  disposition: mapped
+  mapped_to:
+  - fs.vfs.root_switch
+- id: OLD-U12
+  old_id: fs.vfs.root_mount
+  source: DR-003
+  disposition: mapped
+  mapped_to:
+  - fs.vfs.root_switch
+- id: OLD-U13
+  old_id: fs.vfs.devtmpfs_mount
+  source: DR-003
+  disposition: call_site_only
+  mapped_to:
+  - fs.vfs.root_switch
+  note: 只有 init_mount 调用点；devtmpfs 内部未覆盖（GAP-U05）。
+- id: OLD-U14
+  old_id: fs.vfs.caches_init
+  source: DR-003
+  disposition: uncovered
+  mapped_to: []
+- id: OLD-U15
+  old_id: fs.vfs.bootstrap_directories
+  source: DR-003
+  disposition: uncovered
+  mapped_to: []
+- id: OLD-U16
+  old_id: fs.fat.fat32_root
+  source: DR-003 端点
+  disposition: endpoint
+  mapped_to:
+  - boundary.fs_fat.fat32_read
+- id: OLD-U17
+  old_id: block.root_transfer
+  source: DR-003 端点
+  disposition: endpoint
+  mapped_to:
+  - boundary.block.ata_request
+- id: OLD-U18
+  old_id: user.initramfs.early_userspace
+  source: DR-003 端点
+  disposition: endpoint
+  mapped_to:
+  - sched.forkexec.first_user_launch
+  note: 只读源码与构建文本，不运行其中程序或脚本。
+- id: OLD-U19
+  old_id: entry.syscall_64
+  source: DR-003 端点
+  disposition: endpoint
+  mapped_to: []
+structure_checks:
+- id: SC-01
+  path: mykernel/fs/vfs/namei.c
+  symbol: do_open
+  check: no_active_match
+  regex: \breturn\b
+  claim: do_open 的函数体中没有活动的 return 语句
+- id: SC-02
+  path: mykernel/fs/vfs/open.c
+  symbol: myos_do_dentry_open
+  check: no_active_match
+  regex: \breturn\b
+  claim: myos_do_dentry_open 的函数体中没有活动的 return 语句
+- id: SC-03
+  path: mykernel/sched/syscall.c
+  symbol: sys_wait4
+  check: empty_body
+  regex: null
+  claim: wait4 的函数体没有任何活动代码
+- id: SC-04
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: simple_filemap_read
+  check: no_active_match
+  regex: ki_pos\s*([+\-])?=(?!=)
+  claim: simple_filemap_read 不写 ki_pos
+- id: SC-05
+  path: mykernel/fs/vfs/file.c
+  symbol: alloc_fd
+  check: active_match_count
+  regex: \bfd\s*=(?!=)
+  expected: 1
+  claim: alloc_fd 中对 fd 的赋值只有一处（循环内）
+- id: SC-06
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: generic_file_read_iter
+  check: no_active_match
+  regex: ki_pos\s*([+\-])?=(?!=)
+  claim: generic_file_read_iter 的活动代码不写 ki_pos
+- id: SC-07
+  path: mykernel/sched/forkexec/fork.c
+  symbol: __mmput
+  check: empty_body
+  regex: null
+  claim: __mmput 的函数体没有任何活动代码
+value_tables:
+- id: VT-MR01
+  rule: 有非 idle 队首时，入队键 = max(自身键, 队首非 idle 键)；没有时保持自身键。按 A-R6 插在第一个键不小于它的非 idle 节点之前；没有这样的节点时插在 idle 之前。idle 按身份留在尾部。队列不含
+    current（B-K1）。
+  status: 规则算术，NOT_RUN；A、B、OD-2 都未采用
+  rows:
+  - id: T1
+    case: 自身键大于队首（35 对 10）
+    queue_before:
+    - - N
+      - 10
+    steps:
+    - task: W
+      own_key: 35
+      expect_key: 35
+    expect_queue_after:
+    - N
+    - W
+    - IDLE
+    expect_head: N
+  - id: T2
+    case: 自身键小于队首（5 对 10）
+    queue_before:
+    - - N
+      - 10
+    steps:
+    - task: W
+      own_key: 5
+      expect_key: 10
+    expect_queue_after:
+    - W
+    - N
+    - IDLE
+    expect_head: W
+  - id: T3
+    case: 自身键等于队首（10 对 10）
+    queue_before:
+    - - N
+      - 10
+    steps:
+    - task: W
+      own_key: 10
+      expect_key: 10
+    expect_queue_after:
+    - W
+    - N
+    - IDLE
+    expect_head: W
+  - id: T4
+    case: 新任务原键 0，有非 idle 队首 10
+    queue_before:
+    - - N
+      - 10
+    steps:
+    - task: W
+      own_key: 0
+      expect_key: 10
+    expect_queue_after:
+    - W
+    - N
+    - IDLE
+    expect_head: W
+  - id: T5
+    case: 没有非 idle 队首（只有 idle），自身键 35
+    queue_before: []
+    steps:
+    - task: W
+      own_key: 35
+      expect_key: 35
+    expect_queue_after:
+    - W
+    - IDLE
+    expect_head: W
+  - id: T6
+    case: 下次选取前又有插入：W1 原键 5、W2 原键 7，队首 10
+    queue_before:
+    - - N
+      - 10
+    steps:
+    - task: W1
+      own_key: 5
+      expect_key: 10
+    - task: W2
+      own_key: 7
+      expect_key: 10
+    expect_queue_after:
+    - W2
+    - W1
+    - N
+    - IDLE
+    expect_head: W2
+  - id: T7
+    case: 自身键介于队中两键之间（15，队列 10、20）
+    queue_before:
+    - - N
+      - 10
+    - - M
+      - 20
+    steps:
+    - task: W
+      own_key: 15
+      expect_key: 15
+    expect_queue_after:
+    - N
+    - W
+    - M
+    - IDLE
+    expect_head: N
+- id: VT-FR01
+  page_size: 4096
+  formula: 对每个 pgcache_pos = PAGE_ALIGN_DOWN(start), +PAGE_SIZE, … < end：inpage_start = max(pgcache_pos, start) % PAGE_SIZE；若
+    pgcache_pos + PAGE_SIZE < end，len = PAGE_SIZE - inpage_start；否则 len = end % PAGE_SIZE - inpage_start。返回值 = Σlen。
+  status: 源码公式转写的算术，NOT_RUN；假设 iter 为 kvec（kernel_read），文件足够长。expect_sum_len 是公式给出的 Σlen，不表示函数一定以该值返回：len 为负时 memcpy 以 size_t
+    计数越界拷贝（Q41），函数不会正常返回
+  rows:
+  - id: R1
+    start: 0
+    count: 256
+    expect_lens:
+    - 256
+    expect_sum_len: 256
+    intended_total: 256
+  - id: R2
+    start: 0
+    count: 4096
+    expect_lens:
+    - 0
+    expect_sum_len: 0
+    intended_total: 4096
+  - id: R3
+    start: 100
+    count: 3996
+    expect_lens:
+    - -100
+    expect_sum_len: -100
+    intended_total: 3996
+    note: len = -100 作为 size_t 交给 memcpy，越过页面拷贝，函数不会返回 -100
+  - id: R4
+    start: 4000
+    count: 200
+    expect_lens:
+    - 96
+    - 104
+    expect_sum_len: 200
+    intended_total: 200
+  - id: R5
+    start: 0
+    count: 8192
+    expect_lens:
+    - 4096
+    - 0
+    expect_sum_len: 4096
+    intended_total: 8192
+anchors:
+- id: A-C1-01
+  path: mykernel/init/main.c
+  symbol: kernel_init
+  kind: in_body
+  lines:
+  - 285
+  - 285
+  quote: "\tinit_ATArqd();"
+  cpp_conditions: []
+  role: ATA 请求守护线程在根盘切换之前启动
+- id: A-C1-02
+  path: mykernel/init/main.c
+  symbol: kernel_init
+  kind: in_body
+  lines:
+  - 298
+  - 298
+  quote: "\tmyos_switch_to_root_disk();"
+  cpp_conditions: []
+  role: kernel_init 调根盘切换
+- id: A-C1-03
+  path: mykernel/init/main.c
+  symbol: kernel_init
+  kind: in_body
+  lines:
+  - 304
+  - 306
+  quote: "\tkjmp_to_doexecve();\n\n\twhile (true);"
+  cpp_conditions: []
+  role: 根盘切换之后跳到首个用户程序；其后只有 while (true)
+- id: A-C1-05
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: myos_switch_to_root_disk
+  kind: in_body
+  lines:
+  - 94
+  - 98
+  quote: "\tif (boot_sec->DPTE[0].type != 0xee &&\n\t\tboot_sec->DPTE[0].type != 0xef)\n\t{\n\t\tcolor_printk(RED, BLACK,\
+    \ \"Read MBR failed!\\n\");\n\t\twhile (1);"
+  cpp_conditions: []
+  role: 非 GPT 保护分区类型时打印后原地 while (1)
+- id: A-C1-06
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: myos_switch_to_root_disk
+  kind: in_body
+  lines:
+  - 125
+  - 126
+  quote: "\t\t\t\tif (i == BOOT_FS_IDX)\n\t\t\t\t\tmyos_root_sb = mount_fs(\"FAT32\", gpt_pe, fat32_sb);"
+  cpp_conditions: []
+  role: 只有 BOOT_FS_IDX 号且类型为 EFI 启动分区的项被 mount_fs("FAT32") 挂为根
+- id: A-C1-07
+  path: mykernel/fs/vfs/myos_vfs.c
+  symbol: myos_switch_to_root_disk
+  kind: in_body
+  lines:
+  - 142
+  - 145
+  quote: "\tset_init_mount();\n\tset_init_taskfs();\n\n\tint err = init_mount(\"devtmpfs\", \"/dev\", \"devtmpfs\", MS_SILENT);"
+  cpp_conditions: []
+  role: 设置初始挂载与任务 fs（root/pwd），再把 devtmpfs 挂到 /dev
+- id: A-C1-09
+  path: mykernel/arch/x86_64/myos/arch_task.c
+  symbol: kjmp_to_doexecve
+  kind: in_body
+  lines:
+  - 19
+  - 19
+  quote: "\tconst char *initd_name = \"/boot/init\";"
+  cpp_conditions: []
+  role: 首个用户程序路径是硬编码字符串
+- id: A-C1-10
+  path: mykernel/arch/x86_64/myos/arch_task.c
+  symbol: kjmp_to_doexecve
+  kind: in_body
+  lines:
+  - 32
+  - 33
+  quote: "\tcurr->mm = curr->active_mm;\n\tkernel_execve(initd_name, argv, envp);"
+  cpp_conditions: []
+  role: 借用 active_mm 作为 mm 后调用 kernel_execve，返回值被丢弃
+- id: A-C1-11
+  path: mykernel/arch/x86_64/myos/arch_task.c
+  symbol: kjmp_to_doexecve
+  kind: in_body
+  lines:
+  - 37
+  - 39
+  quote: "\tasm volatile(\t\"movq\t%0,\t\t%%rsp\t\t\\n\\t\"\n\t\t\t\t\t// \"jmp\tsysexit_entp\t\t\\n\\t\"\n\t\t\t\t\t\"jmp\t\
+    syscall_return_via_sysret\t\\n\\t\""
+  cpp_conditions: []
+  role: 无论 kernel_execve 成败，都把栈切到当前 pt_regs 并跳到 syscall_return_via_sysret
+- id: A-C1-14
+  path: myinitramfs/CMakeLists.txt
+  symbol: init
+  kind: build
+  lines:
+  - 50
+  - 51
+  quote: 'install(TARGETS init DESTINATION boot)
+
+    install(TARGETS sh DESTINATION boot)'
+  cpp_conditions: []
+  role: initramfs 构建把 init 与 sh 安装到前缀下的 boot 目录
+- id: A-C2-03
+  path: mykernel/sched/forkexec/fork.c
+  symbol: kernel_clone
+  kind: in_body
+  lines:
+  - 1485
+  - 1485
+  quote: "\tp = copy_process(NULL, trace, NUMA_NO_NODE, args);"
+  cpp_conditions: []
+  role: kernel_clone 调 copy_process
+- id: A-C2-05
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_process
+  kind: in_body
+  lines:
+  - 1122
+  - 1126
+  quote: "\tretval = copy_files(clone_flags, p);\n\tif (retval)\n\t\tgoto bad_fork_cleanup_semundo;\n\tretval = copy_fs(clone_flags,\
+    \ p);\n\tif (retval)"
+  cpp_conditions: []
+  role: copy_files、copy_fs 及其失败跳转
+- id: A-C2-07
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_process
+  kind: in_body
+  lines:
+  - 1395
+  - 1398
+  quote: "bad_fork_cleanup_mm:\n\tif (p->mm) {\n\t\t// mm_clear_owner(p->mm, p);\n\t\tmmput(p->mm);"
+  cpp_conditions: []
+  role: 失败清理：有 mm 时 mmput
+- id: A-C2-08
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_process
+  kind: in_body
+  lines:
+  - 1403
+  - 1404
+  quote: "bad_fork_cleanup_sighand:\n\t__cleanup_sighand(p->sighand);"
+  cpp_conditions: []
+  role: 失败清理：对 p->sighand 调 __cleanup_sighand
+- id: A-C2-09
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_mm
+  kind: in_body
+  lines:
+  - 690
+  - 694
+  quote: "\tif (clone_flags & CLONE_VM) {\n\t\tmmget(oldmm);\n\t\tmm = oldmm;\n\t} else if ((mm = dup_mm(tsk, oldmm)) == NULL)\
+    \ {\n\t\t\treturn -ENOMEM;"
+  cpp_conditions: []
+  role: CLONE_VM 共享 mm，否则 dup_mm 复制
+- id: A-C2-10
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_files
+  kind: in_body
+  lines:
+  - 739
+  - 741
+  quote: "\tnewf = dup_fd(oldf, NR_OPEN_MAX, &error);\n\tif (!newf)\n\t\tgoto out;"
+  cpp_conditions: []
+  role: 非 CLONE_FILES 时 dup_fd
+- id: A-C2-11
+  path: mykernel/sched/forkexec/fork.c
+  symbol: copy_sighand
+  kind: in_body
+  lines:
+  - 758
+  - 759
+  quote: "\tsig = kmem_cache_alloc(sighand_cachep, GFP_KERNEL);\n\t// RCU_INIT_POINTER(tsk->sighand, sig);"
+  cpp_conditions: []
+  role: 分配新 sighand，但安装语句被注释
+- id: A-C2-12
+  path: mykernel/sched/forkexec/fork.c
+  symbol: __cleanup_sighand
+  kind: in_body
+  lines:
+  - 777
+  - 777
+  quote: "\tif (refcount_dec_and_test(&sighand->count)) {"
+  cpp_conditions: []
+  role: 引用减到 0 时释放
+- id: A-C2-13
+  path: mykernel/sched/forkexec/fork.c
+  symbol: __cleanup_sighand
+  kind: in_body
+  lines:
+  - 783
+  - 783
+  quote: "\t\tkmem_cache_free(sighand_cachep, sighand);"
+  cpp_conditions: []
+  role: 释放进 sighand_cachep
+- id: A-C2-14
+  path: mykernel/fs/vfs/file.c
+  symbol: dup_fd
+  kind: in_body
+  lines:
+  - 36
+  - 36
+  quote: "\tnewf = kmem_cache_alloc(files_cachep, GFP_KERNEL);"
+  cpp_conditions: []
+  role: 新 files_struct 不带 __GFP_ZERO
+- id: A-C2-15
+  path: mykernel/fs/vfs/file.c
+  symbol: dup_fd
+  kind: in_body
+  lines:
+  - 54
+  - 58
+  quote: "\t\tif (old_fp != NULL)\n\t\t{\n\t\t\tfile_s *new_fp = kzalloc(sizeof(file_s), GFP_KERNEL);\n\t\t\t*new_fp = *old_fp;\n\
+    \t\t\tnew_fds[i] = new_fp;"
+  cpp_conditions: []
+  role: 只给父表非空槽位分配新 file 并按值复制；空槽位不写
+- id: A-C2-16
+  path: mykernel/sched/forkexec/fork.c
+  symbol: proc_caches_init
+  kind: in_body
+  lines:
+  - 1660
+  - 1664
+  quote: "\tfiles_cachep =\n\t\t\tkmem_cache_create(\"files_cache\",\n\t\t\t\tsizeof(files_struct_s), 0,\n\t\t\t\tSLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,\n\
+    \t\t\t\tNULL);"
+  cpp_conditions: []
+  role: files_cache 创建时没有构造函数，标志中也没有清零
+- id: A-C3-01
+  path: mykernel/sched/forkexec/exec.c
+  symbol: kernel_execve
+  kind: in_body
+  lines:
+  - 1428
+  - 1428
+  quote: "\tretval = bprm_execve(bprm, fd, filename, 0);"
+  cpp_conditions: []
+  role: kernel_execve 进入 bprm_execve
+- id: A-C3-03
+  path: mykernel/sched/forkexec/exec.c
+  symbol: do_open_execat
+  kind: in_body
+  lines:
+  - 572
+  - 572
+  quote: "\tfile = do_filp_open(fd, name, &open_exec_flags);"
+  cpp_conditions: []
+  role: 可执行文件经 do_filp_open 打开
+- id: A-C3-04
+  path: mykernel/sched/forkexec/exec.c
+  symbol: bprm_execve
+  kind: in_body
+  lines:
+  - 1258
+  - 1258
+  quote: "\t\tretval = search_binary_handler(bprm);"
+  cpp_conditions: []
+  role: bprm_execve 分派到格式处理器
+- id: A-C3-05
+  path: mykernel/sched/forkexec/exec.c
+  symbol: bprm_execve
+  kind: in_body_comment
+  lines:
+  - 1280
+  - 1281
+  quote: "\t// if (bprm->point_of_no_return && !fatal_signal_pending(current))\n\t// \tforce_fatal_sig(SIGSEGV);"
+  cpp_conditions: []
+  role: 越过不可返回点后的致命信号被注释
+- id: A-C3-06
+  path: mykernel/sched/forkexec/exec.c
+  symbol: search_binary_handler
+  kind: in_body
+  lines:
+  - 1200
+  - 1200
+  quote: "\t\tretval = fmt->load_binary(bprm);"
+  cpp_conditions: []
+  role: 间接调用每个已注册格式的 load_binary
+- id: A-C3-07
+  path: mykernel/sched/forkexec/exec.c
+  symbol: search_binary_handler
+  kind: in_body_comment
+  lines:
+  - 1204
+  - 1207
+  quote: "\t\t// if (bprm->point_of_no_return || (retval != -ENOEXEC)) {\n\t\t// \tread_unlock(&binfmt_lock);\n\t\t// \treturn\
+    \ retval;\n\t\t// }"
+  cpp_conditions: []
+  role: 提前返回被注释：遍历全部格式，最后一个返回值生效
+- id: A-C3-09
+  path: mykernel/fs/vfs/binfmt_elf.c
+  symbol: init_elf_binfmt
+  kind: in_body
+  lines:
+  - 1218
+  - 1218
+  quote: "\tregister_binfmt(&elf_format);"
+  cpp_conditions: []
+  role: ELF 格式注册
+- id: A-C3-10
+  path: mykernel/sched/forkexec/exec.c
+  symbol: begin_new_exec
+  kind: in_body
+  lines:
+  - 872
+  - 872
+  quote: "\tbprm->point_of_no_return = true;"
+  cpp_conditions: []
+  role: begin_new_exec 设不可返回点
+- id: A-C3-11
+  path: mykernel/sched/forkexec/exec.c
+  symbol: begin_new_exec
+  kind: in_body
+  lines:
+  - 909
+  - 909
+  quote: "\tretval = exec_mmap(bprm->mm);"
+  cpp_conditions: []
+  role: 换入新 mm
+- id: A-C3-12
+  path: mykernel/sched/forkexec/exec.c
+  symbol: exec_mmap
+  kind: in_body
+  lines:
+  - 677
+  - 677
+  quote: "\t\tmmput(old_mm);"
+  cpp_conditions: []
+  role: 旧 mm 只做 mmput（__mmput 为空，见 MM-04 A-VM16）
+- id: A-C3-13
+  path: mykernel/fs/vfs/binfmt_elf.c
+  symbol: load_elf_binary
+  kind: in_body
+  lines:
+  - 653
+  - 654
+  quote: "\tif (!bprm->file->f_op->mmap)\n\t\tgoto out;"
+  cpp_conditions: []
+  role: 文件必须有 f_op->mmap，否则 ENOEXEC
+- id: A-C3-14
+  path: mykernel/fs/vfs/binfmt_elf.c
+  symbol: load_elf_binary
+  kind: in_body
+  lines:
+  - 799
+  - 801
+  quote: "\tretval = begin_new_exec(bprm);\n\tif (retval)\n\t\tgoto out_free_dentry;"
+  cpp_conditions: []
+  role: begin_new_exec 失败跳到清理并返回错误
+- id: A-C3-15
+  path: mykernel/fs/vfs/binfmt_elf.c
+  symbol: load_elf_binary
+  kind: in_body
+  lines:
+  - 969
+  - 970
+  quote: "\t\terror = elf_load(bprm->file, load_bias + vaddr,\n\t\t\t\t\telf_ppnt, elf_prot, elf_flags, total_size);"
+  cpp_conditions: []
+  role: 逐个 PT_LOAD 段映射
+- id: A-C3-16
+  path: mykernel/fs/vfs/binfmt_elf.c
+  symbol: elf_map
+  kind: in_body
+  lines:
+  - 347
+  - 347
+  quote: "\t\tmap_addr = vm_mmap(filep, addr, size, prot, type, off);"
+  cpp_conditions: []
+  role: 段映射走文件 vm_mmap
+- id: A-C3-18
+  path: mykernel/fs/vfs/binfmt_elf.c
+  symbol: elf_read
+  kind: in_body
+  lines:
+  - 430
+  - 433
+  quote: "\trv = kernel_read(file, buf, len, &pos);\n\tif (unlikely(rv != len)) {\n\t\treturn (rv < 0) ? rv : -EIO;\n\t}"
+  cpp_conditions: []
+  role: ELF 头/段表经 kernel_read 读取；短读记 -EIO
+- id: A-C4-01
+  path: mykernel/fs/syscall.c
+  symbol: sys_open
+  kind: in_body
+  lines:
+  - 41
+  - 41
+  quote: "\treturn do_sys_open(0, filename, flags, mode);"
+  cpp_conditions: []
+  role: open 以 dfd=0 调 do_sys_open
+- id: A-C4-02
+  path: mykernel/fs/vfs/open.c
+  symbol: do_sys_openat2
+  kind: in_body
+  lines:
+  - 251
+  - 255
+  quote: "\tfd = get_unused_fd_flags(how->flags);\n\tif (fd >=0)\n\t{\n\t\tfile_s * f = do_filp_open(dfd, tmp, &op);\n\t\t\
+    if (IS_ERR(f))"
+  cpp_conditions: []
+  role: 先取空闲 fd，再 do_filp_open
+- id: A-C4-03
+  path: mykernel/fs/vfs/open.c
+  symbol: do_sys_openat2
+  kind: in_body
+  lines:
+  - 258
+  - 258
+  quote: "\t\t\tfd_install(fd, f);"
+  cpp_conditions: []
+  role: 成功后装入 fd 表
+- id: A-C4-05
+  path: mykernel/fs/vfs/namei.c
+  symbol: __lookup_slow
+  kind: in_body
+  lines:
+  - 334
+  - 337
+  quote: "\tinode->i_mapping->nrpages = ALIGN(inode->i_size, PAGE_SIZE) >> PAGE_SHIFT;\n\tif (inode->i_mapping->nrpages >\
+    \ 0)\n\t\tinode->i_mapping->page_array =\n\t\t\tkzalloc(inode->i_mapping->nrpages * sizeof(page_s *), GFP_KERNEL);"
+  cpp_conditions: []
+  role: 首次查找时按 i_size 定 page_array 长度；页数为 0 时不分配
+- id: A-C4-07
+  path: mykernel/fs/vfs/namei.c
+  symbol: path_openat
+  kind: in_body
+  lines:
+  - 727
+  - 728
+  quote: "\tif (error == 0)\n\t\terror = do_open(nd, file, flags);"
+  cpp_conditions: []
+  role: 路径走完后 error 取 do_open 的返回值
+- id: A-C4-08
+  path: mykernel/fs/vfs/namei.c
+  symbol: do_open
+  kind: in_body
+  lines:
+  - 703
+  - 706
+  quote: "\t// if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))\n\t// \treturn -ENOTDIR;\n\n\tvfs_open(&nd->path,\
+    \ file);"
+  cpp_conditions: []
+  role: do_open 的完整函数体：两行注释加 vfs_open 调用，无 return
+- id: A-C4-09
+  path: mykernel/fs/vfs/open.c
+  symbol: myos_do_dentry_open
+  kind: in_body
+  lines:
+  - 49
+  - 49
+  quote: "\tpath_get(&f->f_path);"
+  cpp_conditions: []
+  role: 打开时取路径引用
+- id: A-C4-10
+  path: mykernel/fs/vfs/open.c
+  symbol: myos_do_dentry_open
+  kind: in_body
+  lines:
+  - 53
+  - 55
+  quote: "\tf->f_op = inode->i_fop;\n\tif(f->f_op && f->f_op->open)\n\t\terror = f->f_op->open(f->f_path.dentry->d_inode,\
+    \ f);"
+  cpp_conditions: []
+  role: f_op 取自 inode->i_fop；->open 的返回值存入局部 error
+- id: A-C4-11
+  path: mykernel/fs/fat/inode.c
+  symbol: fat_fill_inode
+  kind: in_body
+  lines:
+  - 157
+  - 157
+  quote: "\t\tinode->i_fop\t= &FAT32_file_ops;"
+  cpp_conditions: []
+  role: FAT32 inode 的 i_fop 绑定 FAT32_file_ops
+- id: A-C4-12
+  path: mykernel/fs/vfs/file.c
+  symbol: alloc_fd
+  kind: in_body
+  lines:
+  - 143
+  - 144
+  quote: "\tspin_unlock(&files->file_lock);\n\treturn fd;"
+  cpp_conditions: []
+  role: fd 只在找到空槽时赋值，随后无条件返回
+- id: A-C4-13
+  path: mykernel/fs/vfs/file.c
+  symbol: myos_fdget_pos
+  kind: in_body
+  lines:
+  - 200
+  - 200
+  quote: "\tfile_s *fp = curr->files->fd_array[fd];"
+  cpp_conditions: []
+  role: read 路径按用户 fd 直接下标，无边界检查
+- id: A-C4-14
+  path: mykernel/fs/vfs/read_write.c
+  symbol: ksys_read
+  kind: in_body
+  lines:
+  - 191
+  - 193
+  quote: "\t\tret = vfs_read(f.file, buf, count, ppos);\n\t\tif (ret >= 0 && ppos)\n\t\t\tf.file->f_pos = pos;"
+  cpp_conditions: []
+  role: 成功（含 0）后把局部 pos 写回 f_pos
+- id: A-C4-15
+  path: mykernel/fs/vfs/read_write.c
+  symbol: vfs_read
+  kind: in_body
+  lines:
+  - 160
+  - 163
+  quote: "\tif (file->f_op->read_iter)\n\t\tret = new_sync_read(file, buf, count, pos);\n\telse if (file->f_op->read)\n\t\t\
+    ret = file->f_op->read(file, buf, count, pos);"
+  cpp_conditions: []
+  role: 有 read_iter 时优先走 new_sync_read，否则 ->read
+- id: A-C4-16
+  path: mykernel/fs/vfs/read_write.c
+  symbol: new_sync_read
+  kind: in_body
+  lines:
+  - 85
+  - 88
+  quote: "\tiov_iter_ubuf(&iter, ITER_DEST, buf, len);\n\n\t// ret = call_read_iter(filp, &kiocb, &iter);\n\tret = filp->f_op->read_iter(&kiocb,\
+    \ &iter);"
+  cpp_conditions: []
+  role: 用户缓冲区建成 ITER_UBUF 后调 ->read_iter
+- id: A-C4-17
+  path: mykernel/fs/vfs/read_write.c
+  symbol: rw_verify_area
+  kind: in_body
+  lines:
+  - 51
+  - 51
+  quote: "\treturn 0;"
+  cpp_conditions: []
+  role: rw_verify_area 第一句即返回 0，其后检查都是死代码
+- id: A-C4-18
+  path: mykernel/fs/vfs/read_write.c
+  symbol: __kernel_read
+  kind: in_body
+  lines:
+  - 114
+  - 116
+  quote: "\tiov_iter_kvec(&iter, READ, &iov, 1, iov.iov_len);\n\tif (file->f_op->read_iter)\n\t\tret = file->f_op->read_iter(&kiocb,\
+    \ &iter);"
+  cpp_conditions: []
+  role: 内核读建成 kvec 迭代器后调 ->read_iter
+- id: A-C4-19
+  path: mykernel/include/linux/kernel/uio.h
+  symbol: struct iov_iter
+  kind: type_member
+  lines:
+  - 70
+  - 74
+  quote: "\t\t\t\t\tconst kvec_s\t*kvec;\n\t\t\t\t\t// const struct bio_vec\t*bvec;\n\t\t\t\t\t// const struct folio_queue\
+    \ *folioq;\n\t\t\t\t\t// struct xarray\t*xarray;\n\t\t\t\t\tvoid __user\t\t*ubuf;"
+  cpp_conditions: []
+  role: kvec 与 ubuf 是同一个联合体成员
+- id: A-C4-20
+  path: mykernel/include/linux/kernel/uio.h
+  symbol: iov_iter_ubuf
+  kind: in_body
+  lines:
+  - 102
+  - 102
+  quote: "\t\t\t.ubuf\t\t\t= buf,"
+  cpp_conditions: []
+  role: ITER_UBUF 只写 ubuf
+- id: A-C4-21
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: simple_filemap_read
+  kind: in_body
+  lines:
+  - 210
+  - 213
+  quote: "\tvoid *bufp = iter->kvec->iov_base;\n\tloff_t\n\t\tstart = iocb->ki_pos,\n\t\tend = start + iter->kvec->iov_len;"
+  cpp_conditions: []
+  role: 读目标与长度一律取自 iter->kvec
+- id: A-C4-22
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: simple_filemap_read
+  kind: in_body
+  lines:
+  - 229
+  - 232
+  quote: "\t\tif (pgcache_pos + PAGE_SIZE < end)\n\t\t\tlen = PAGE_SIZE - inpage_start;\n\t\telse\n\t\t\tlen = end % PAGE_SIZE\
+    \ - inpage_start;"
+  cpp_conditions: []
+  role: 每页拷贝长度公式
+- id: A-C4-23
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: simple_filemap_read
+  kind: in_body
+  lines:
+  - 237
+  - 237
+  quote: "\treturn bufp - iter->kvec->iov_base;"
+  cpp_conditions: []
+  role: 返回值等于各页 len 之和
+- id: A-C4-24
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: generic_file_read_iter
+  kind: in_body
+  lines:
+  - 305
+  - 305
+  quote: "\treturn simple_filemap_read(iocb, iter);"
+  cpp_conditions: []
+  role: read_iter 落到 simple_filemap_read
+- id: A-C4-25
+  path: mykernel/fs/syscall.c
+  symbol: sys_close
+  kind: in_body
+  lines:
+  - 58
+  - 59
+  quote: "\tkfree(fp);\n\tcurr->files->fd_array[fd] = NULL;"
+  cpp_conditions: []
+  role: close 直接 kfree file 并清槽位
+- id: A-C4-26
+  path: mykernel/fs/vfs/file_table.c
+  symbol: __alloc_file
+  kind: in_body
+  lines:
+  - 44
+  - 44
+  quote: "\tf = kmem_cache_zalloc(filp_cachep, GFP_KERNEL);"
+  cpp_conditions: []
+  role: 打开路径的 file 来自 filp_cachep
+- id: A-C4-28
+  path: mykernel/fs/vfs/file_table.c
+  symbol: fput
+  kind: in_body
+  lines:
+  - 127
+  - 127
+  quote: "\t\tkmem_cache_free(filp_cachep, file);"
+  cpp_conditions: []
+  role: 无论对象来源，都按 filp_cachep 释放
+- id: A-C4-29
+  path: mykernel/mm/kmalloc/slub.c
+  symbol: kmem_cache_free
+  kind: in_body
+  lines:
+  - 311
+  - 314
+  quote: "\t// s = cache_from_obj(s, x);\n\t// if (!s)\n\t// \treturn;\n\tslab_free(s, virt_to_slab(x), x);"
+  cpp_conditions: []
+  role: kmem_cache_free 信任传入的 cache（cache_from_obj 被注释）
+- id: A-C4-30
+  path: mykernel/fs/vfs/open.c
+  symbol: filp_close
+  kind: in_body
+  lines:
+  - 330
+  - 330
+  quote: "\tfput(filp);"
+  cpp_conditions: []
+  role: filp_close 只做 fput
+- id: A-C4-31
+  path: mykernel/fs/vfs/file.c
+  symbol: put_files_struct
+  kind: in_body
+  lines:
+  - 86
+  - 87
+  quote: "\t\t\tif(file != NULL)\n\t\t\t\tfilp_close(file);"
+  cpp_conditions: []
+  role: files_struct 最后一个引用释放时逐个 filp_close
+- id: A-C5-01
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: generic_file_mmap
+  kind: in_body
+  lines:
+  - 418
+  - 418
+  quote: "\tvma->vm_ops = &generic_file_vm_ops;"
+  cpp_conditions: []
+  role: 文件 mmap 安装 generic_file_vm_ops
+- id: A-C5-02
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: simple_filemap_fault
+  kind: in_body
+  lines:
+  - 127
+  - 129
+  quote: "\tpage_s **pgcache_ptr = &mapping->page_array[index];\n\tBUG_ON(*pgcache_ptr != NULL);\n\t*pgcache_ptr = alloc_page(GFP_USER\
+    \ | __GFP_ZERO);"
+  cpp_conditions: []
+  role: 按 pgoff 下标 page_array，未与 nrpages 比较；alloc_page 结果未检查
+- id: A-C5-03
+  path: mykernel/mm/vm_map/filemap.c
+  symbol: simple_filemap_fault
+  kind: in_body
+  lines:
+  - 132
+  - 135
+  quote: "\tfile->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);\n\tvmf->page = *pgcache_ptr;\n\n\treturn 0;"
+  cpp_conditions: []
+  role: 同步调 ->read，返回值丢弃，随后返回 0
+- id: A-C5-04
+  path: mykernel/fs/fat/myos_fat32.c
+  symbol: FAT32_read
+  kind: in_body
+  lines:
+  - 126
+  - 129
+  quote: "\tchar * buffer = (char *)kmalloc(fsbi->bytes_per_cluster, GFP_KERNEL);\r\n\r\n\tif(!cluster)\r\n\t\treturn -EFAULT;\r"
+  cpp_conditions: []
+  role: 簇缓冲 kmalloc 未检查；首簇为 0 时直接返回、缓冲泄漏
+- id: A-C5-05
+  path: mykernel/fs/fat/myos_fat32.c
+  symbol: FAT32_read
+  kind: in_body
+  lines:
+  - 133
+  - 136
+  quote: "\tif(*position + count > filp->f_path.dentry->d_inode->i_size)\r\n\t\tindex = count = filp->f_path.dentry->d_inode->i_size\
+    \ - *position;\r\n\telse\r\n\t\tindex = count;\r"
+  cpp_conditions: []
+  role: 按 i_size 截短
+- id: A-C5-06
+  path: mykernel/fs/fat/myos_fat32.c
+  symbol: FAT32_read
+  kind: in_body
+  lines:
+  - 142
+  - 146
+  quote: "\t\tif(ROOTBLK_TRANSFER(CMD_READ, sector,\r\n\t\t\t\tfsbi->sector_per_cluster, (unchar *)buffer))\r\n\t\t{\r\n\t\
+    \t\tcolor_printk(RED, BLACK, \"FAT32 FS(read) read disk ERROR!!!!!!!!!!\\n\");\r\n\t\t\tret_val = -EIO;\r"
+  cpp_conditions: []
+  role: 逐簇经 ROOTBLK_TRANSFER 读；非 0 返回才记 -EIO
+- id: A-C5-07
+  path: mykernel/fs/fat/myos_fat32.c
+  symbol: FAT32_read
+  kind: in_body
+  lines:
+  - 164
+  - 166
+  quote: "\tif(!index)\r\n\t\tret_val = count;\r\n\treturn ret_val;\r"
+  cpp_conditions: []
+  role: 读满才返回 count，否则返回 ret_val
+- id: A-C5-08
+  path: mykernel/arch/x86_64/include/obsolete/device.h
+  symbol: ROOTBLK_TRANSFER
+  kind: macro
+  lines:
+  - 55
+  - 56
+  quote: "\t#define ROOTBLK_TRANSFER(cmd, blk_idx, count, buffer)\t\\\n\t\t\t\tATA_master_ops.transfer(MASTER, SLAVE, cmd,\
+    \ blk_idx, count, buffer)"
+  cpp_conditions:
+  - '#else  (after #ifdef ROOTBLK_NVME)'
+  role: 非 ROOTBLK_NVME 分支：ROOTBLK_TRANSFER 展开为 ATA_master_ops.transfer
+- id: A-C5-09
+  path: mykernel/scripts/options_flags.cmake
+  symbol: -DROOTBLK_NVME
+  kind: build
+  lines:
+  - 71
+  - 71
+  quote: "# \t-DROOTBLK_NVME \\"
+  cpp_conditions: []
+  role: 构建选项文本中 -DROOTBLK_NVME 被注释
+- id: A-C5-10
+  path: mykernel/arch/x86_64/myos/ide.c
+  symbol: ATA_disk_transfer
+  kind: in_body
+  lines:
+  - 281
+  - 285
+  quote: "\t\tspin_lock(&req_lock);\n\t\tlist_header_add_to_tail(&IDEreq_lhdr, &node->req_list);\n\t\tspin_unlock(&req_lock);\n\
+    \n\t\twake_up_process(thread);"
+  cpp_conditions: []
+  role: 请求挂到 IDEreq_lhdr 尾部并唤醒 ATArqd 线程（提交点）
+- id: A-C5-11
+  path: mykernel/arch/x86_64/myos/ide.c
+  symbol: ATA_disk_transfer
+  kind: in_body
+  lines:
+  - 286
+  - 286
+  quote: "\t\twait_for_completion(&done);"
+  cpp_conditions: []
+  role: 调用者在栈上 completion 上等待（等待点）
+- id: A-C5-12
+  path: mykernel/arch/x86_64/myos/ide.c
+  symbol: ATA_disk_transfer
+  kind: in_body
+  lines:
+  - 292
+  - 292
+  quote: "\t\treturn -ENOERR;"
+  cpp_conditions: []
+  role: 读写命令一律返回 -ENOERR
+- id: A-C5-14
+  path: mykernel/arch/x86_64/myos/ide.c
+  symbol: ATArq_deamon
+  kind: in_body
+  lines:
+  - 375
+  - 375
+  quote: "\t\t\t\tIDE_cmd_out(node);"
+  cpp_conditions: []
+  role: 向控制器发出 PIO 命令
+- id: A-C5-15
+  path: mykernel/arch/x86_64/myos/ide.c
+  symbol: ATA_disk_handler
+  kind: in_body
+  lines:
+  - 320
+  - 324
+  quote: "\tblkbuf_node_s *node = req_in_using;\n\tnode->end_handler((unsigned long)node);\n\t\n\tif (node->count == 0)\n\t\
+    \tend_request(node);"
+  cpp_conditions: []
+  role: 中断处理按 req_in_using 回调 end_handler，计数归零时 end_request
+- id: A-C5-16
+  path: mykernel/arch/x86_64/myos/ide.c
+  symbol: end_request
+  kind: in_body
+  lines:
+  - 155
+  - 155
+  quote: "\tcomplete(node->done);"
+  cpp_conditions: []
+  role: 完成点
+- id: A-C5-17
+  path: mykernel/arch/x86_64/myos/ide.c
+  symbol: IDE_read_handler
+  kind: in_body
+  lines:
+  - 168
+  - 172
+  quote: "\tif (inb(IDE_PIO_CMD_STAT(IdeParam->ATA_controller)) & DISK_STATUS_ERROR)\n\t\tcolor_printk(RED, BLACK, \"IDE_read_handler:%#010x\\\
+    n\",\n\t\t\t\t\t inb(IDE_PIO_ERR_STAT(IdeParam->ATA_controller)));\n\telse\n\t\tinsw(IDE_PIO_DATA(IdeParam->ATA_controller),\
+    \ (uint16_t *)node->buffer, 256);"
+  cpp_conditions: []
+  role: 错误状态只打印，不回传；无论成败都递减 count
+- id: A-C6-03
+  path: mykernel/sched/forkexec/exit.c
+  symbol: do_exit
+  kind: in_body_comment
+  lines:
+  - 120
+  - 120
+  quote: "\t// exit_mm();"
+  cpp_conditions: []
+  role: exit_mm 被注释：退出不处理 mm
+- id: A-C6-04
+  path: mykernel/sched/forkexec/exit.c
+  symbol: do_exit
+  kind: in_body
+  lines:
+  - 128
+  - 129
+  quote: "\texit_files(tsk);\n\texit_fs(tsk);"
+  cpp_conditions: []
+  role: 活动的退出步骤：文件表与 fs
+- id: A-C6-07
+  path: mykernel/sched/forkexec/exit.c
+  symbol: exit_notify
+  kind: in_body
+  lines:
+  - 17
+  - 20
+  quote: "\twhile (tsk->children.count != 0)\n\t{\n\t\tList_s * child_lp = list_header_remove_head(&tsk->children);\n\t\t\
+    while (child_lp == 0);"
+  cpp_conditions: []
+  role: 子任务逐个摘下；摘到空指针时原地自旋
+- id: A-C6-08
+  path: mykernel/sched/forkexec/exit.c
+  symbol: exit_notify
+  kind: in_body
+  lines:
+  - 22
+  - 23
+  quote: "\t\ttask_s *task_initd = find_task_by_pid_ns(1, PIDTYPE_PID);\n\t\tlist_header_add_to_tail(&task_initd->children,\
+    \ child_lp);"
+  cpp_conditions: []
+  role: 挂到 1 号任务名下，返回值未检查
+- id: A-C6-09
+  path: mykernel/sched/forkexec/exit.c
+  symbol: exit_notify
+  kind: in_body_comment
+  lines:
+  - 37
+  - 37
+  quote: "\t// tsk->exit_state = EXIT_ZOMBIE;"
+  cpp_conditions: []
+  role: 不进入 ZOMBIE，也不通知父任务
+- id: A-C6-10
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: finish_task_switch
+  kind: in_body_comment
+  lines:
+  - 856
+  - 856
+  quote: "\t// if (unlikely(prev_state == TASK_DEAD)) {"
+  cpp_conditions: []
+  role: 切换后的 TASK_DEAD 处理整体被注释
+- id: A-C6-11
+  path: mykernel/sched/scheduler/scheduler_core.c
+  symbol: finish_task_switch
+  kind: in_body_comment
+  lines:
+  - 861
+  - 863
+  quote: "\t// \tput_task_stack(prev);\n\n\t// \tput_task_struct_rcu_user(prev);"
+  cpp_conditions: []
+  role: 因此不释放栈和 task_struct
+- id: A-C6-12
+  path: mykernel/fs/vfs/file.c
+  symbol: exit_files
+  kind: in_body
+  lines:
+  - 106
+  - 106
+  quote: "\t\tput_files_struct(files);"
+  cpp_conditions: []
+  role: 退出时放掉 files_struct 引用
+- id: A-C6-14
+  path: mykernel/sched/forkexec/fork.c
+  symbol: mmput
+  kind: in_body
+  lines:
+  - 460
+  - 461
+  quote: "\tif (atomic_dec_and_test(&mm->mm_users))\n\t\t__mmput(mm);"
+  cpp_conditions: []
+  role: mmput 归零时调 __mmput（其体全为注释，MM-04 A-VM16）
+queries:
+- id: Q01
+  purpose: binfmt 注册：register_binfmt 的定义、声明与调用点（本 pin 的活动调用者数）
+  args:
+  - -n
+  - -w
+  - register_binfmt
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 3
+- id: Q02
+  purpose: 初始化顺序：init_elf_binfmt 以 core_initcall 登记；kernel_init 先 kernel_init_freeable（其中 do_initcalls）
+  args:
+  - -n
+  - -e
+  - core_initcall(init_elf_binfmt)
+  - -e
+  - do_initcalls();
+  - -e
+  - kernel_init_freeable();
+  paths:
+  - mykernel/fs/vfs/binfmt_elf.c
+  - mykernel/init/main.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q03
+  purpose: kernel_clone 的定义与调用点
+  args:
+  - -n
+  - -F
+  - kernel_clone(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: Q04
+  purpose: 系统调用表中与进程/文件主链相关的条目（vfork 注释、无 clone/clone3 条目）
+  args:
+  - -n
+  - -E
+  - __NR_(fork|vfork|clone|clone3|execve|exit|wait4|exit_group|open|read|close|mmap)\b
+  paths:
+  - mykernel/arch/x86_64/include/asm/syscalls_64.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 10
+  expected_hits_active: 9
+- id: Q05
+  purpose: vfork 等待/完成函数在 sched/ 中没有活动文本
+  args:
+  - -n
+  - -E
+  - wait_for_vfork_done|complete_vfork_done
+  paths:
+  - mykernel/sched/
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 0
+- id: Q06
+  purpose: FAT32 inode 的 i_fop 绑定点
+  args:
+  - -n
+  - -E
+  - i_fop\s*=\s*&FAT32_file_ops
+  paths:
+  - mykernel/fs/fat/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q07
+  purpose: 回调对象绑定：FAT32_file_ops、generic_file_vm_ops、ATA_master_ops、elf_format、FAT32 fs_type 的成员初始化
+  args:
+  - -n
+  - -E
+  - ^\s*\.(open|read|read_iter|mmap|fault|transfer|load_binary|read_super)\s*=\s*\w+
+  paths:
+  - mykernel/fs/fat/myos_fat32.c
+  - mykernel/mm/vm_map/filemap.c
+  - mykernel/arch/x86_64/myos/ide.c
+  - mykernel/fs/vfs/binfmt_elf.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 8
+  expected_hits_active: 8
+- id: Q08
+  purpose: 'ROOTBLK_NVME 的出现位置：#ifdef 与构建选项文本中的注释行；没有活动的 #define 或 -D'
+  args:
+  - -n
+  - ROOTBLK_NVME
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q09
+  purpose: ATA 中断处理的注册与 init_IDE_disk 调用点
+  args:
+  - -n
+  - -E
+  - register_irq\(SATA_|init_IDE_disk\(\)
+  paths:
+  - mykernel/arch/x86_64/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 5
+- id: Q10
+  purpose: end_request / IDE_cmd_out 的调用点（ide.c）
+  args:
+  - -n
+  - -E
+  - (end_request|IDE_cmd_out)\(node\)
+  paths:
+  - mykernel/arch/x86_64/myos/ide.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q11
+  purpose: release_task：活动文本只有 extern 声明，没有定义
+  args:
+  - -n
+  - -w
+  - release_task
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 1
+- id: Q12
+  purpose: put_task_struct 在 sched/ 中没有活动调用
+  args:
+  - -n
+  - put_task_struct
+  paths:
+  - mykernel/sched/
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 0
+- id: Q13
+  purpose: force_fatal_sig 在 sched/forkexec 中没有活动调用
+  args:
+  - -n
+  - force_fatal_sig
+  paths:
+  - mykernel/sched/forkexec/
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 0
+- id: Q14
+  purpose: do_close_on_exec 在 exec.c 中没有活动调用
+  args:
+  - -n
+  - do_close_on_exec
+  paths:
+  - mykernel/sched/forkexec/exec.c
+  expect: negative_active
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 0
+- id: Q15
+  purpose: 首个程序路径字符串：内核侧 /boot/init、用户侧 /boot/sh
+  args:
+  - -n
+  - -E
+  - \"/boot/(init|sh)\"
+  paths:
+  - mykernel/
+  - myinitramfs/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 2
+- id: Q16
+  purpose: 用户态 init 的 fork/execve/sched_yield 调用
+  args:
+  - -n
+  - -E
+  - \b(fork|execve|sched_yield)\(
+  paths:
+  - myinitramfs/myinit/initd.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q17
+  purpose: 构建脚本文本中的 LINK_TYPE（只读文本，未运行）
+  args:
+  - -n
+  - LINK_TYPE
+  paths:
+  - make_install.sh
+  - scripts/make_install_initranfs.sh
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 5
+- id: Q18
+  purpose: mount_fs 经 ->read_super 的间接调用点
+  args:
+  - -n
+  - -F
+  - -e
+  - ->read_super(
+  paths:
+  - mykernel/fs/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q19
+  purpose: mmap 区域建立经 call_mmap 调 f_op->mmap
+  args:
+  - -n
+  - -E
+  - call_mmap\(|f_op->mmap\(file, vma\)
+  paths:
+  - mykernel/mm/vm_map/mmap.c
+  - mykernel/include/linux/fs/fs.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 3
+- id: Q20
+  purpose: 系统调用分派：x64_sys_call 的定义与调用点
+  args:
+  - -n
+  - -F
+  - x64_sys_call(
+  paths:
+  - mykernel/arch/x86_64/entry/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q21
+  purpose: kernel_execve 的定义与调用点
+  args:
+  - -n
+  - -F
+  - kernel_execve(
+  paths:
+  - mykernel/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 5
+  expected_hits_active: 3
+- id: Q22
+  purpose: kernel_clone 中把新任务交给调度器
+  args:
+  - -n
+  - -F
+  - wake_up_new_task(p);
+  paths:
+  - mykernel/sched/forkexec/fork.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q23
+  purpose: do_exit 中 exit_notify 与 do_task_dead 的调用
+  args:
+  - -n
+  - -E
+  - exit_notify\(tsk|do_task_dead\(\);
+  paths:
+  - mykernel/sched/forkexec/exit.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q24
+  purpose: sys_fork 中的空计数循环与 sys_exit/exit_group 的调用
+  args:
+  - -n
+  - -E
+  - 0x1000|do_exit\(|do_group_exit\(
+  paths:
+  - mykernel/sched/syscall.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 4
+- id: Q25
+  purpose: filemap.c 中对 f_op->read 的两个间接调用点（缺页与页缓存读）
+  args:
+  - -n
+  - -E
+  - f_op->read\(
+  paths:
+  - mykernel/mm/vm_map/filemap.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q26
+  purpose: copy_process 对 copy_mm 的调用与 copy_files 对 dup_fd 的调用
+  args:
+  - -n
+  - -E
+  - retval = copy_mm\(|dup_fd\(oldf
+  paths:
+  - mykernel/sched/forkexec/fork.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 2
+  expected_hits_active: 2
+- id: Q27
+  purpose: load_elf_binary 中的 START_THREAD
+  args:
+  - -n
+  - START_THREAD
+  paths:
+  - mykernel/fs/vfs/binfmt_elf.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q28
+  purpose: path_openat 中的 alloc_empty_file
+  args:
+  - -n
+  - alloc_empty_file
+  paths:
+  - mykernel/fs/vfs/namei.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q29
+  purpose: ATA 守护线程从队尾取请求
+  args:
+  - -n
+  - list_header_remove_tail(&IDEreq_lhdr)
+  paths:
+  - mykernel/arch/x86_64/myos/ide.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q30
+  purpose: fs/vfs 与 file_table 中没有活动的 f_op->release 调用
+  args:
+  - -n
+  - -E
+  - -e
+  - ->release\(
+  paths:
+  - mykernel/fs/vfs/
+  - mykernel/fs/syscall.c
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: Q31
+  purpose: init_sighand 的静态初值（引用计数 1）与 init_task 对它的引用
+  args:
+  - -n
+  - -E
+  - REFCOUNT_INIT\(1\)|&init_sighand
+  paths:
+  - mykernel/init/init_task.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 2
+- id: Q32
+  purpose: 带 CLONE_SIGHAND 的活动调用者（决定 init_sighand 计数是否被增加）
+  args:
+  - -n
+  - CLONE_SIGHAND
+  paths:
+  - mykernel/sched/
+  - mykernel/kactive/
+  - mykernel/init/
+  - mykernel/drivers/
+  - mykernel/arch/x86_64/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q33
+  purpose: vfs_open 调 myos_do_dentry_open；do_open 调 vfs_open
+  args:
+  - -n
+  - -E
+  - myos_do_dentry_open\(file|vfs_open\(&nd
+  paths:
+  - mykernel/fs/vfs/open.c
+  - mykernel/fs/vfs/namei.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q34
+  purpose: do_sys_openat2 之外 fd_install 与 get_unused_fd_flags 的调用者
+  args:
+  - -n
+  - -E
+  - fd_install\(|get_unused_fd_flags\(
+  paths:
+  - mykernel/fs/
+  - mykernel/drivers/
+  - mykernel/sched/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 11
+  expected_hits_active: 7
+- id: Q35
+  purpose: 构建：顶层 CMakeLists 用 GLOB_RECURSE 把 mykernel 下全部 .c 列入内核目标
+  args:
+  - -n
+  - GLOB_RECURSE KERNEL_C_SRCS
+  paths:
+  - mykernel/CMakeLists.txt
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q36
+  purpose: 构建：sched/forkexec、fs/vfs、fs/fat 的子目录 CMakeLists 为 0 字节
+  type: size
+  paths:
+  - mykernel/sched/forkexec/CMakeLists.txt
+  - mykernel/fs/vfs/CMakeLists.txt
+  - mykernel/fs/fat/CMakeLists.txt
+  expect: size
+  expected_bytes:
+  - 0
+  - 0
+  - 0
+- id: Q37
+  purpose: 根盘切换中的 ROOTBLK_TRANSFER 调用点
+  args:
+  - -n
+  - -F
+  - ROOTBLK_TRANSFER(
+  paths:
+  - mykernel/fs/vfs/myos_vfs.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 3
+- id: Q38
+  purpose: myos_fdget_pos 的调用点
+  args:
+  - -n
+  - -F
+  - myos_fdget_pos(
+  paths:
+  - mykernel/fs/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 3
+  expected_hits_active: 3
+- id: Q39
+  purpose: 缺页路径对 vm_ops->fault 的间接调用点
+  args:
+  - -n
+  - -F
+  - -e
+  - vm_ops->fault(vmf)
+  paths:
+  - mykernel/mm/fault/
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q40
+  purpose: file_table.c 中没有 path_put/dput/iput
+  args:
+  - -n
+  - -E
+  - path_put|dput|iput
+  paths:
+  - mykernel/fs/vfs/file_table.c
+  expect: negative_active
+  expected_rc: 1
+  expected_hits_total: 0
+  expected_hits_active: 0
+- id: Q41
+  purpose: memcpy 的实现按 size_t 计数逐字节拷贝（负长度转为极大值）
+  args:
+  - -n
+  - -E
+  - void \*memcpy\(void \*dest|while \(count--\)
+  paths:
+  - mykernel/lib/string/string.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 9
+  expected_hits_active: 5
+- id: Q42
+  purpose: slab_free 的记账：节点取自传入的 cache，对象所在 slab 由 virt_to_slab 求得
+  args:
+  - -n
+  - -E
+  - kmem_cache_node_s \*n = &s->node;|free_to_partial_list\(s, n, slab, object\);|if \(slab->inuse == slab->objects\)|free_slab\(s,
+    slab\);
+  paths:
+  - mykernel/mm/kmalloc/slub.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 7
+  expected_hits_active: 7
+- id: Q43
+  purpose: virt_to_slab 对非 slab 页返回 NULL
+  args:
+  - -n
+  - -F
+  - if (!folio_test_slab(folio))
+  paths:
+  - mykernel/mm/kmalloc/slub.h
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 1
+  expected_hits_active: 1
+- id: Q44
+  purpose: dup_task_struct 中被注释行吞掉的 if 体，以及唯一调用点传入的 node
+  args:
+  - -n
+  - -E
+  - if \(node == NUMA_NO_NODE\)|node = tsk_fork_get_node\(orig\);|tsk = alloc_task_struct_node\(node\);|dup_task_struct\(current,
+    node\)
+  paths:
+  - mykernel/sched/forkexec/fork.c
+  expect: positive
+  expected_rc: 0
+  expected_hits_total: 4
+  expected_hits_active: 3
+gaps:
+- id: GAP-U01
+  what: 构建产物未知：do_open、myos_do_dentry_open 返回值的实际取值依赖编译产物（UV-04）；Debug/Release 与 --gc-sections 的影响继承 CORE-MM-BASELINE-04::GAP-M01/GAP-M02
+  status: open
+- id: GAP-U02
+  what: 镜像内容未核：/boot/init、/boot/sh 是否存在，是静态还是动态链接（Q17 文本为 static），ET_EXEC 还是 ET_DYN；与 CORE-MM-BASELINE-04::GAP-M06 同类
+  status: open
+- id: GAP-U03
+  what: set_init_mount、set_init_taskfs、init_mount(devtmpfs) 的正文未逐行读；找不到根分区时的行为未知
+  status: open
+- id: GAP-U04
+  what: syscall_return_via_sysret、ret_from_fork 与 pt_regs 内容（首个程序进入用户态与子任务返回时的寄存器来源）未追
+  status: open
+- id: GAP-U05
+  what: devtmpfs 与 /dev/console 的 f_op 未追；init 用 freopen 打开 /dev/console，本批读路径只覆盖 FAT32 普通文件
+  status: open
+- id: GAP-U06
+  what: 写路径（generic_file_write_iter、FAT32_write）、目录读取、dcache 回收、O_CREAT、namespace/mount 细节未覆盖
+  status: open
+- id: GAP-U07
+  what: NVMe 后端（ROOTBLK_NVME 分支）与中断分发（register_irq → do_IRQ）、init_bdev_intr 调用时机未追
+  status: open
+- id: GAP-U08
+  what: IDE_cmd_out 的 PIO 细节、LBA28 范围、单请求扇区数上限未核
+  status: open
+- id: GAP-U09
+  what: copy_thread、kernel_thread 的 flags、pid 分配、wake_up_new_task 的入队位置未追（后者属 INTEGRATION-03）
+  status: open
+- id: GAP-U10
+  what: 用户程序所用 musl 的系统调用选择（fork、exit_group、open 等）只按常识推断，未读 musl 源码
+  status: open
