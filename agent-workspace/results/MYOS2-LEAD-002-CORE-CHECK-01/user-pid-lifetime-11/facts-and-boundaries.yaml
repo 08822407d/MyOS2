@@ -81,7 +81,7 @@ edges:
   - {id: PID11-E06, from: PID11-N06, to: PID11-N07, kind: call, status: active, condition: "delegated scan, wrap conditional", anchors: [PID11-A68]}
   - {id: PID11-E07, from: PID11-N05, to: PID11-N07, kind: call, status: active, condition: "delegated idr_alloc_u32", anchors: [PID11-A69]}
   - {id: PID11-E08, from: PID11-N04, to: PID11-N08, kind: call, status: conditional, condition: "after all reservations and adding flag", anchors: [PID11-A17]}
-  - {id: PID11-E09, from: PID11-N07, to: PID11-N09, kind: data, status: active, condition: "examines and stores a slot; NULL reservation nonexclusive", anchors: [PID11-A66]}
+  - {id: PID11-E09, from: PID11-N07, to: PID11-N09, kind: data, status: active, condition: "examines and stores a slot; NULL reservation nonexclusive", anchors: [PID11-A66, PID11-A67]}
   - {id: PID11-E10, from: PID11-N08, to: PID11-N09, kind: data, status: active, condition: "mutates IDR slot to pid_s; see effects", anchors: [PID11-A70]}
   - {id: PID11-E11, from: PID11-N03, to: PID11-N11, kind: call, status: conditional, condition: "p->pid != 0 and leader/child branches", anchors: [PID11-A56]}
   - {id: PID11-E12, from: PID11-N03, to: PID11-N12, kind: call, status: conditional, condition: "PID, and leader TGID/PGID/SID", anchors: [PID11-A58]}
@@ -89,7 +89,7 @@ edges:
   - {id: PID11-E14, from: PID11-N02, to: PID11-N18, kind: call, status: active, condition: "get_task_pid after copy_process success", anchors: [PID11-A63]}
   - {id: PID11-E15, from: PID11-N18, to: PID11-N19, kind: call, status: active, condition: "get_pid increments pid ref if non-NULL", anchors: [PID11-A35]}
   - {id: PID11-E16, from: PID11-N02, to: PID11-N20, kind: call, status: active, condition: "pid_vnr for return number", anchors: [PID11-A63]}
-  - {id: PID11-E17, from: PID11-N20, to: PID11-N21, kind: call, status: active, condition: "namespace-qualified numeric view", anchors: [PID11-A38]}
+  - {id: PID11-E17, from: PID11-N20, to: PID11-N21, kind: call, status: active, condition: "namespace-qualified numeric view", anchors: [PID11-A98]}
   - {id: PID11-E18, from: PID11-N02, to: PID11-N22, kind: call, status: active, condition: "put temporary pid ref after wake", anchors: [PID11-A65]}
   - {id: PID11-E19, from: PID11-N02, to: PID11-N23, kind: call, status: active, condition: "wake_up_new_task after list attach", anchors: [PID11-A64]}
   - {id: PID11-E20, from: PID11-N24, to: PID11-N25, kind: call, status: active, condition: "pid_idr_init called in start_kernel", anchors: [PID11-A92]}
@@ -103,7 +103,7 @@ edges:
   - {id: PID11-E28, from: PID11-N27, to: PID11-N14, kind: call, status: active, condition: "find_get_pid source", anchors: [PID11-A37]}
   - {id: PID11-E29, from: PID11-N27, to: PID11-N19, kind: call, status: active, condition: "get_pid increments count; RCU commented", anchors: [PID11-A37]}
   - {id: PID11-E30, from: PID11-N28, to: PID11-N29, kind: call, status: active, condition: "find_get_task_by_vpid delegates without task ref", anchors: [PID11-A34]}
-  - {id: PID11-E31, from: PID11-N29, to: PID11-N30, kind: call, status: active, condition: "find_task_by_vpid body inspected", anchors: [PID11-A33]}
+  - {id: PID11-E31, from: PID11-N29, to: PID11-N30, kind: call, status: active, condition: "find_task_by_vpid body inspected", anchors: [PID11-A97]}
   - {id: PID11-E32, from: PID11-N30, to: PID11-N15, kind: call, status: active, condition: "find_pid_ns with supplied ns", anchors: [PID11-A33]}
   - {id: PID11-E33, from: PID11-N30, to: PID11-N17, kind: call, status: active, condition: "pid_task(PIDTYPE_PID)", anchors: [PID11-A33]}
   - {id: PID11-E34, from: PID11-N31, to: PID11-N21, kind: call, status: active, condition: "pid_nr_ns(r... pointer and caller ns)", anchors: [PID11-A40]}
@@ -115,9 +115,9 @@ edges:
   - {id: PID11-E40, from: PID11-N35, to: PID11-N38, kind: call, status: active, condition: "sys_exit invokes do_exit", anchors: [PID11-A03]}
   - {id: PID11-E41, from: PID11-N36, to: PID11-N37, kind: call, status: active, condition: "exit_group invokes do_group_exit", anchors: [PID11-A04]}
   - {id: PID11-E42, from: PID11-N37, to: PID11-N38, kind: call, status: active, condition: "do_group_exit invokes do_exit", anchors: [PID11-A85]}
-  - {id: PID11-E43, from: PID11-N38, to: PID11-N39, kind: call, status: conditional_undefined, condition: "group_dead uninitialized as argument", anchors: [PID11-A83]}
-  - {id: PID11-E44, from: PID11-N39, to: PID11-N30, kind: call, status: conditional_invalid_argument, condition: "if children nonempty: PIDTYPE_PID passed instead of pid_ns_s*", anchors: [PID11-A76]}
-  - {id: PID11-E45, from: PID11-N38, to: PID11-N40, kind: call, status: conditional_undefined, condition: "only if exit_notify and prior actions return", anchors: [PID11-A84]}
+  - {id: PID11-E43, from: PID11-N38, to: PID11-N39, kind: call, status: conditional_undefined, condition: "group_dead uninitialized as argument", anchors: [PID11-A79, PID11-A83]}
+  - {id: PID11-E44, from: PID11-N39, to: PID11-N30, kind: call, status: conditional_invalid_argument, condition: "if children nonempty: PIDTYPE_PID passed instead of pid_ns_s*", anchors: [PID11-A76, PID11-A33, PID11-A49]}
+  - {id: PID11-E45, from: PID11-N38, to: PID11-N40, kind: call, status: conditional_undefined, condition: "only if exit_notify and prior actions return", anchors: [PID11-A84b]}
   - {id: PID11-E46, from: PID11-N41, to: PID11-N42, kind: call, status: latent_unlinked_exit, condition: "detach_pid defined, no exit call in examined sources", anchors: [PID11-A30]}
   - {id: PID11-E47, from: PID11-N42, to: PID11-N43, kind: call, status: latent_conditional, condition: "all pid task lists empty", anchors: [PID11-A29]}
   - {id: PID11-E48, from: PID11-N43, to: PID11-N44, kind: call, status: latent_outside_exit, condition: "free_pid removes IDR slots, but not reached by current exit", anchors: [PID11-A22]}
@@ -1414,8 +1414,26 @@ anchors:
       	//  * Need tasklist lock for parent etc handling!
       	//  */
       	// write_lock_irq(&tasklist_lock);
+  - id: PID11-A97
+    path: "mykernel/sched/task/pid.c"
+    symbol: "find_task_by_vpid"
+    observed_lines: [389, 392]
+    quote: |
+      task_s *find_task_by_vpid(pid_t vnr)
+      {
+      	return find_task_by_pid_ns(vnr, task_active_pid_ns(current));
+      }
+  - id: PID11-A98
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_vnr"
+    observed_lines: [461, 464]
+    quote: |
+      pid_t pid_vnr(pid_s *pid)
+      {
+      	return pid_nr_ns(pid, task_active_pid_ns(current));
+      }
 self_check:
-  anchor_count: 123
+  anchor_count: 125
   source_file_count: 17
   graph_node_count: 47
   graph_edge_count: 54
