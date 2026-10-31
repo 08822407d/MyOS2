@@ -103,6 +103,7 @@ edges:
   - {id: FC13-E43, from: FC13-N16, to: FC13-N06, kind: data, status: conditional, condition: "vmf.page stored cache slot pointer", anchors: [FC13-A47]}
   - {id: FC13-E44, from: FC13-N31, to: FC13-N39, kind: call, status: conditional, condition: "do_cow_fault error cleanup invokes folio_put on its own preallocated folio; not cache slot release", anchors: [FC13-A87]}
   - {id: FC13-E45, from: FC13-N15, to: FC13-N38, kind: data, status: conditional, condition: "write path copies user data to page", anchors: [FC13-A67]}
+  - {id: FC13-E46, from: FC13-N31, to: FC13-N32, kind: call, status: conditional, condition: "private file write, __do_fault successful and not VM_FAULT_DONE_COW, then finish_fault", anchors: [FC13-A88]}
 effects:
   - id: FC13-X01
     actor: "slow lookup"
@@ -1063,4 +1064,12 @@ anchors:
       uncharge_out:
       	folio_put(folio);
       	// put_page(vmf->cow_page);
-self_check: {source_files: 12, anchors: 87, nodes: 42, edges: 45, states: 17, ownership: 10, cases: 16, effects: 11, full_parser: NOT_RUN, runtime: NOT_RUN}
+  - id: FC13-A88
+    path: "mykernel/mm/fault/fault.c"
+    symbol: "do_cow_fault"
+    observed_lines: [1124, 1126]
+    quote: |
+      
+      	ret |= finish_fault(vmf);
+      	// unlock_page(vmf->page);
+self_check: {source_files: 12, anchors: 88, nodes: 42, edges: 46, states: 17, ownership: 10, cases: 16, effects: 11, full_parser: NOT_RUN, runtime: NOT_RUN}
