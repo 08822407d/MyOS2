@@ -148,8 +148,8 @@ A72只有asm开头、A73只有条件码/返回，单独合用仍漏掉decl。补
 [VERIFIED mykernel/arch/x86_64/lock_IPC/atomic/atomic_arch.h::arch_atomic_dec_test_zero]
 ```c
 			asm volatile(LOCK_PREFIX
-							"decl\t%0\t\t\t\t\n\t"
-						:\t"+m"(v->counter) ,
+							"decl	%0				\n\t"
+						:	"+m"(v->counter) ,
 							"=@cc" "e"(c)
 ```
 
