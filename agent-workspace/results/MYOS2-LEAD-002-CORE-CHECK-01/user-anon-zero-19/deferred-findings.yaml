@@ -1,0 +1,200 @@
+{
+  "task_id": "CORE-USER-ANON-ZERO-19",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "conditional_deferred_static_findings",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "date": "2026-11-01",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "15a162f13089",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings_count": 4,
+  "evidence_appends_count": 4,
+  "new_findings": [
+    {
+      "id": "AZ19-F01",
+      "class": "new_anonymous_missing_PTE_path_with_preexisting_root_cause",
+      "status": "deferred_owner_not_ready",
+      "topic": "匿名写缺页申请need_zero=true但活动分配器忽略清零",
+      "claim": "如果获得未被其他机制清零的普通order0新页且PTE正常安装，可将旧数据字节作为匿名页内容公开",
+      "conditions": [
+        "vma_is_anonymous and !VM_SHARED and FAULT_FLAG_WRITE",
+        "valid newly allocated folio and PTE pointer; set_pte_at reached",
+        "new page not separately initialized in an unreviewed caller/allocator"
+      ],
+      "counter_evidence": [
+        "not a physically observed disclosure",
+        "post_alloc_hook can clear if GFP includes __GFP_ZERO, but selected constant lacks it"
+      ],
+      "related": [
+        "CORE-USER-WP-COW-17::W17-F01",
+        "CORE-USER-PAGE-REF-LIFETIME-18-REVIEW-001::R18-S02"
+      ],
+      "anchors": [
+        "AZ19-A023",
+        "AZ19-A024",
+        "AZ19-A025",
+        "AZ19-A080",
+        "AZ19-A084",
+        "AZ19-A085",
+        "AZ19-A016",
+        "AZ19-A020"
+      ],
+      "action": "evidence_only_no_patch"
+    },
+    {
+      "id": "AZ19-F02",
+      "class": "new_path_conditional_concurrency_gap",
+      "status": "needs_evidence",
+      "topic": "初次匿名PTE写入没有活动的快照二次核对",
+      "claim": "在首次orig_pte为none后若同址PTE被其他写者更改，本分支可能覆盖变化的PTE",
+      "conditions": [
+        "PTE指针仍有效并指向同一可写槽",
+        "确有并发/异步更新，且路径在竞争后抵达set_pte_at",
+        "无其它外层锁阻止这种改变"
+      ],
+      "counter_evidence": [
+        "selected task has no concurrent execution trace",
+        "global serialization and other PTE writers not exhaustively read"
+      ],
+      "related": [
+        "CORE-USER-MM-FAULT-12-REVIEW-001",
+        "CORE-USER-WP-COW-17::W17-F04"
+      ],
+      "anchors": [
+        "AZ19-A004",
+        "AZ19-A012",
+        "AZ19-A018",
+        "AZ19-A020",
+        "AZ19-A063",
+        "AZ19-A064"
+      ],
+      "action": "evidence_only_no_patch"
+    },
+    {
+      "id": "AZ19-F03",
+      "class": "conditional_permission_input_gap",
+      "status": "needs_evidence",
+      "topic": "共享零页的SPECIAL标志不强制只读",
+      "claim": "若某匿名读缺页实际传入含RW的vm_page_prot，pte_mkspecial仍会保留RW位",
+      "conditions": [
+        "anonymous nonshared read fault reaches zero-PTE branch",
+        "vma.vm_page_prot has RW bit before construction",
+        "PTE installation succeeds"
+      ],
+      "counter_evidence": [
+        "normal private VM_READ or VM_WRITE producer uses PAGE_READONLY/PAGE_COPY without RW",
+        "no producer for an abnormal RW private pgprot established in this task"
+      ],
+      "related": [
+        "CORE-USER-WP-COW-17-REVIEW-001::R17-S01"
+      ],
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A048",
+        "AZ19-A051",
+        "AZ19-A053",
+        "AZ19-A057",
+        "AZ19-A058",
+        "AZ19-A059"
+      ],
+      "action": "evidence_only_no_patch"
+    },
+    {
+      "id": "AZ19-F04",
+      "class": "bounded_mapping_ownership_gap",
+      "status": "needs_evidence",
+      "topic": "匿名新页成功安装PTE未在本函数完成显式rmap/LRU更新",
+      "claim": "successful PTE write does not by itself establish mapping-reference and lifetime accounting",
+      "conditions": [
+        "valid newly allocated order0 folio",
+        "write branch reaches set_pte_at",
+        "no unreviewed caller/helper supplies missing account"
+      ],
+      "counter_evidence": [
+        "allocator already holds a page reference from its own allocation path",
+        "this is an accounting proof gap, not proof of leak, UAF or double free"
+      ],
+      "related": [
+        "CORE-USER-PAGE-REF-LIFETIME-18-REVIEW-001",
+        "CORE-USER-WP-COW-17::W17-F03"
+      ],
+      "anchors": [
+        "AZ19-A019",
+        "AZ19-A020",
+        "AZ19-A086",
+        "AZ19-A087",
+        "AZ19-A088",
+        "AZ19-A089"
+      ],
+      "action": "evidence_only_no_patch"
+    }
+  ],
+  "evidence_appends": [
+    {
+      "qualified_id": "CORE-USER-WP-COW-17::W17-F05",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "匿名写缺页的IS_ERR和NULL判断不能证明folio_alloc_noprof的NULL经page_folio后仍可正常传递",
+      "anchors": [
+        "AZ19-A014",
+        "AZ19-A080",
+        "AZ19-A081",
+        "AZ19-A082",
+        "AZ19-A083",
+        "AZ19-A090"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-WP-COW-17::W17-F09",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "匿名写PTE指针NULL后的release会folio_put，而其零计数末端__folio_put目前未执行物理归还",
+      "anchors": [
+        "AZ19-A017",
+        "AZ19-A022",
+        "AZ19-A087",
+        "AZ19-A088",
+        "AZ19-A089"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-WP-COW-17::W17-F08",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "读指针NULL、写指针NULL或IS_ERR返回0不能证明PTE安装；上层非零fault while不重试",
+      "anchors": [
+        "AZ19-A011",
+        "AZ19-A014",
+        "AZ19-A017",
+        "AZ19-A021",
+        "AZ19-A022",
+        "AZ19-A043"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-WP-COW-17::W17-F01",
+      "kind": "shared_root_evidence_append",
+      "preserve_historical_status": true,
+      "claim": "与19匿名写新页同源的folio_prealloc need_zero未消费问题，producer path与17的零PFN写保护复制应分开",
+      "anchors": [
+        "AZ19-A023",
+        "AZ19-A024",
+        "AZ19-A025",
+        "AZ19-A084",
+        "AZ19-A085"
+      ]
+    }
+  ],
+  "old_results_frozen": true,
+  "owner_fix_decisions_requested_now": [],
+  "cautions": [
+    "conditional static risks are not runtime bugs",
+    "append an old issue without changing its state or counting it as a new root cause",
+    "source predicates and valid objects require actual reachability; no exclusive claims about all kernel paths"
+  ]
+}
