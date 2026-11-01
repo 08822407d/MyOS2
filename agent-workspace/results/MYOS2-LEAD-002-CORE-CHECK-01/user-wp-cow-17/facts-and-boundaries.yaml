@@ -1,0 +1,922 @@
+{
+  "task_id": "CORE-USER-WP-COW-17",
+  "track_id": "MYOS2-LEAD-002",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra（Owner报告，非后端证明）",
+  "source_pin_short12": "a039d9803ade",
+  "results_initial_head_short12": "38a23958a355",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "date": "2026-11-01",
+  "record_type": "facts_and_boundaries",
+  "node_count": 28,
+  "edge_count": 35,
+  "scenario_count": 12,
+  "effect_count": 12,
+  "nodes": [
+    {
+      "id": "W17-N01",
+      "label": "handle_pte_fault"
+    },
+    {
+      "id": "W17-N02",
+      "label": "do_wp_page"
+    },
+    {
+      "id": "W17-N03",
+      "label": "vm_normal_page"
+    },
+    {
+      "id": "W17-N04",
+      "label": "vmf.page"
+    },
+    {
+      "id": "W17-N05",
+      "label": "old_folio"
+    },
+    {
+      "id": "W17-N06",
+      "label": "folio_get"
+    },
+    {
+      "id": "W17-N07",
+      "label": "wp_page_copy"
+    },
+    {
+      "id": "W17-N08",
+      "label": "orig_pte"
+    },
+    {
+      "id": "W17-N09",
+      "label": "is_zero_pfn"
+    },
+    {
+      "id": "W17-N10",
+      "label": "folio_prealloc"
+    },
+    {
+      "id": "W17-N11",
+      "label": "folio_alloc_noprof"
+    },
+    {
+      "id": "W17-N12",
+      "label": "__myos_alloc_pages"
+    },
+    {
+      "id": "W17-N13",
+      "label": "new_folio"
+    },
+    {
+      "id": "W17-N14",
+      "label": "__wp_page_copy_user"
+    },
+    {
+      "id": "W17-N15",
+      "label": "copy_user_highpage"
+    },
+    {
+      "id": "W17-N16",
+      "label": "copy_user_page"
+    },
+    {
+      "id": "W17-N17",
+      "label": "copy_page"
+    },
+    {
+      "id": "W17-N18",
+      "label": "page_contents"
+    },
+    {
+      "id": "W17-N19",
+      "label": "pte_same"
+    },
+    {
+      "id": "W17-N20",
+      "label": "mk_pte"
+    },
+    {
+      "id": "W17-N21",
+      "label": "maybe_mkwrite"
+    },
+    {
+      "id": "W17-N22",
+      "label": "set_pte_at"
+    },
+    {
+      "id": "W17-N23",
+      "label": "set_pte"
+    },
+    {
+      "id": "W17-N24",
+      "label": "pte_ptr"
+    },
+    {
+      "id": "W17-N25",
+      "label": "folio_put"
+    },
+    {
+      "id": "W17-N26",
+      "label": "__folio_put"
+    },
+    {
+      "id": "W17-N27",
+      "label": "shared_while"
+    },
+    {
+      "id": "W17-N28",
+      "label": "return_result"
+    }
+  ],
+  "edges": [
+    {
+      "id": "W17-E01",
+      "from": "W17-N01",
+      "to": "W17-N02",
+      "kind": "call",
+      "desc": "write-protected dispatch",
+      "condition": "orig not none, first pte_same, WRITE and !pte_write",
+      "basis": [
+        "W17-A01",
+        "W17-A02",
+        "W17-A03"
+      ]
+    },
+    {
+      "id": "W17-E02",
+      "from": "W17-N02",
+      "to": "W17-N03",
+      "kind": "call",
+      "desc": "PTE to page",
+      "condition": "do_wp_page entered",
+      "basis": [
+        "W17-A04"
+      ]
+    },
+    {
+      "id": "W17-E03",
+      "from": "W17-N03",
+      "to": "W17-N04",
+      "kind": "data",
+      "desc": "page descriptor",
+      "condition": "PFN not over maximum",
+      "basis": [
+        "W17-A07",
+        "W17-A08"
+      ]
+    },
+    {
+      "id": "W17-E04",
+      "from": "W17-N04",
+      "to": "W17-N05",
+      "kind": "data",
+      "desc": "folio from source page",
+      "condition": "vmf.page nonnull",
+      "basis": [
+        "W17-A04",
+        "W17-A53"
+      ]
+    },
+    {
+      "id": "W17-E05",
+      "from": "W17-N02",
+      "to": "W17-N06",
+      "kind": "call",
+      "desc": "retain temporary old ref",
+      "condition": "old folio nonnull, private",
+      "basis": [
+        "W17-A06",
+        "W17-A35"
+      ]
+    },
+    {
+      "id": "W17-E06",
+      "from": "W17-N06",
+      "to": "W17-N05",
+      "kind": "effect",
+      "desc": "old ref +1",
+      "condition": "old folio nonnull",
+      "basis": [
+        "W17-A35"
+      ]
+    },
+    {
+      "id": "W17-E07",
+      "from": "W17-N02",
+      "to": "W17-N27",
+      "kind": "effect",
+      "desc": "loop and stop progression",
+      "condition": "VM_SHARED/MAYSHARE",
+      "basis": [
+        "W17-A05"
+      ]
+    },
+    {
+      "id": "W17-E08",
+      "from": "W17-N02",
+      "to": "W17-N07",
+      "kind": "call",
+      "desc": "private COW attempt",
+      "condition": "not VM_SHARED/MAYSHARE",
+      "basis": [
+        "W17-A06"
+      ]
+    },
+    {
+      "id": "W17-E09",
+      "from": "W17-N08",
+      "to": "W17-N09",
+      "kind": "data",
+      "desc": "orig PFN",
+      "condition": "wp_page_copy",
+      "basis": [
+        "W17-A09",
+        "W17-A51"
+      ]
+    },
+    {
+      "id": "W17-E10",
+      "from": "W17-N07",
+      "to": "W17-N09",
+      "kind": "call",
+      "desc": "zero PFN test",
+      "condition": "entered",
+      "basis": [
+        "W17-A09",
+        "W17-A51"
+      ]
+    },
+    {
+      "id": "W17-E11",
+      "from": "W17-N07",
+      "to": "W17-N10",
+      "kind": "call",
+      "desc": "new page allocation",
+      "condition": "entered",
+      "basis": [
+        "W17-A09",
+        "W17-A10"
+      ]
+    },
+    {
+      "id": "W17-E12",
+      "from": "W17-N10",
+      "to": "W17-N11",
+      "kind": "call",
+      "desc": "folio_alloc macro expansion",
+      "condition": "always",
+      "basis": [
+        "W17-A10",
+        "W17-A11"
+      ]
+    },
+    {
+      "id": "W17-E13",
+      "from": "W17-N11",
+      "to": "W17-N12",
+      "kind": "call",
+      "desc": "alloc_page/alloc_pages backend",
+      "condition": "allocator",
+      "basis": [
+        "W17-A11",
+        "W17-A52"
+      ]
+    },
+    {
+      "id": "W17-E14",
+      "from": "W17-N12",
+      "to": "W17-N13",
+      "kind": "data",
+      "desc": "alloc result",
+      "condition": "nonnull",
+      "basis": [
+        "W17-A14",
+        "W17-A52"
+      ]
+    },
+    {
+      "id": "W17-E15",
+      "from": "W17-N12",
+      "to": "W17-N13",
+      "kind": "effect",
+      "desc": "refcount +1 on dequeue",
+      "condition": "allocated",
+      "basis": [
+        "W17-A14"
+      ]
+    },
+    {
+      "id": "W17-E16",
+      "from": "W17-N07",
+      "to": "W17-N14",
+      "kind": "call",
+      "desc": "conditional copy helper",
+      "condition": "!zero PFN",
+      "basis": [
+        "W17-A17"
+      ]
+    },
+    {
+      "id": "W17-E17",
+      "from": "W17-N04",
+      "to": "W17-N14",
+      "kind": "data",
+      "desc": "src page",
+      "condition": "!zero PFN, may be NULL",
+      "basis": [
+        "W17-A18",
+        "W17-A19"
+      ]
+    },
+    {
+      "id": "W17-E18",
+      "from": "W17-N13",
+      "to": "W17-N14",
+      "kind": "data",
+      "desc": "destination page",
+      "condition": "allocated",
+      "basis": [
+        "W17-A17"
+      ]
+    },
+    {
+      "id": "W17-E19",
+      "from": "W17-N14",
+      "to": "W17-N15",
+      "kind": "call",
+      "desc": "copy nonnull src",
+      "condition": "src nonnull",
+      "basis": [
+        "W17-A18"
+      ]
+    },
+    {
+      "id": "W17-E20",
+      "from": "W17-N15",
+      "to": "W17-N16",
+      "kind": "call",
+      "desc": "direct-map helper",
+      "condition": "valid pointers",
+      "basis": [
+        "W17-A20",
+        "W17-A21"
+      ]
+    },
+    {
+      "id": "W17-E21",
+      "from": "W17-N16",
+      "to": "W17-N17",
+      "kind": "call",
+      "desc": "arch copy",
+      "condition": "valid pointers",
+      "basis": [
+        "W17-A21",
+        "W17-A22"
+      ]
+    },
+    {
+      "id": "W17-E22",
+      "from": "W17-N17",
+      "to": "W17-N18",
+      "kind": "effect",
+      "desc": "PAGE_SIZE memcpy",
+      "condition": "valid mappings",
+      "basis": [
+        "W17-A22"
+      ]
+    },
+    {
+      "id": "W17-E23",
+      "from": "W17-N07",
+      "to": "W17-N19",
+      "kind": "call",
+      "desc": "recheck PTE",
+      "condition": "copy/alloc completed",
+      "basis": [
+        "W17-A23"
+      ]
+    },
+    {
+      "id": "W17-E24",
+      "from": "W17-N08",
+      "to": "W17-N19",
+      "kind": "data",
+      "desc": "saved PTE",
+      "condition": "recheck",
+      "basis": [
+        "W17-A23",
+        "W17-A24"
+      ]
+    },
+    {
+      "id": "W17-E25",
+      "from": "W17-N24",
+      "to": "W17-N19",
+      "kind": "data",
+      "desc": "current PTE",
+      "condition": "nonnull",
+      "basis": [
+        "W17-A23",
+        "W17-A24"
+      ]
+    },
+    {
+      "id": "W17-E26",
+      "from": "W17-N07",
+      "to": "W17-N20",
+      "kind": "call",
+      "desc": "entry from new PFN and vma prot",
+      "condition": "same PTE",
+      "basis": [
+        "W17-A25"
+      ]
+    },
+    {
+      "id": "W17-E27",
+      "from": "W17-N07",
+      "to": "W17-N21",
+      "kind": "call",
+      "desc": "dirty then conditional RW",
+      "condition": "!UNSHARE",
+      "basis": [
+        "W17-A26",
+        "W17-A27"
+      ]
+    },
+    {
+      "id": "W17-E28",
+      "from": "W17-N07",
+      "to": "W17-N22",
+      "kind": "call",
+      "desc": "install entry",
+      "condition": "same and BUG_ON false",
+      "basis": [
+        "W17-A28"
+      ]
+    },
+    {
+      "id": "W17-E29",
+      "from": "W17-N22",
+      "to": "W17-N23",
+      "kind": "call",
+      "desc": "delegate setter",
+      "condition": "reached",
+      "basis": [
+        "W17-A29",
+        "W17-A30"
+      ]
+    },
+    {
+      "id": "W17-E30",
+      "from": "W17-N23",
+      "to": "W17-N24",
+      "kind": "effect",
+      "desc": "WRITE_ONCE replacement",
+      "condition": "valid same PTE",
+      "basis": [
+        "W17-A30"
+      ]
+    },
+    {
+      "id": "W17-E31",
+      "from": "W17-N07",
+      "to": "W17-N25",
+      "kind": "call",
+      "desc": "path-specific cleanup",
+      "condition": "success/mismatch/err/OOM",
+      "basis": [
+        "W17-A31",
+        "W17-A32",
+        "W17-A33",
+        "W17-A34",
+        "W17-A39"
+      ]
+    },
+    {
+      "id": "W17-E32",
+      "from": "W17-N25",
+      "to": "W17-N05",
+      "kind": "effect",
+      "desc": "two old puts on success; one on error if old exists",
+      "condition": "path-specific",
+      "basis": [
+        "W17-A31",
+        "W17-A32",
+        "W17-A33"
+      ]
+    },
+    {
+      "id": "W17-E33",
+      "from": "W17-N25",
+      "to": "W17-N13",
+      "kind": "effect",
+      "desc": "put allocation on mismatch or copy error only",
+      "condition": "no successful install",
+      "basis": [
+        "W17-A31",
+        "W17-A32",
+        "W17-A39"
+      ]
+    },
+    {
+      "id": "W17-E34",
+      "from": "W17-N25",
+      "to": "W17-N26",
+      "kind": "call",
+      "desc": "zero reference hook",
+      "condition": "count reaches zero",
+      "basis": [
+        "W17-A36",
+        "W17-A37"
+      ]
+    },
+    {
+      "id": "W17-E35",
+      "from": "W17-N07",
+      "to": "W17-N28",
+      "kind": "effect",
+      "desc": "0 or VM_FAULT_OOM error mask",
+      "condition": "defined path reaches return",
+      "basis": [
+        "W17-A33",
+        "W17-A34",
+        "W17-A49"
+      ]
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "id": "W17-S01",
+      "scenario": "normal private write-protected old page",
+      "copy": "copy PAGE_SIZE if src!=NULL",
+      "pte": "set dirty and conditional RW then PTE WRITE_ONCE",
+      "refs": "old get +1; successful alias causes two old puts",
+      "ret": "0",
+      "limits": "not hardware/TLB verified",
+      "basis": [
+        "W17-A03",
+        "W17-A06",
+        "W17-A17",
+        "W17-A18",
+        "W17-A22",
+        "W17-A28",
+        "W17-A30",
+        "W17-A31",
+        "W17-A33"
+      ]
+    },
+    {
+      "id": "W17-S02",
+      "scenario": "zero PFN",
+      "copy": "skip copy, no guaranteed clearing",
+      "pte": "new PTE may install",
+      "refs": "old_folio depends on vm_normal_page; new allocation retained",
+      "ret": "0 if end reached",
+      "limits": "possible nonzero content, unobserved",
+      "basis": [
+        "W17-A09",
+        "W17-A10",
+        "W17-A15",
+        "W17-A16",
+        "W17-A17",
+        "W17-A43"
+      ]
+    },
+    {
+      "id": "W17-S03",
+      "scenario": "nonzero PFN with vmf.page NULL",
+      "copy": "helper returns 0 without copy",
+      "pte": "PTE can install if same",
+      "refs": "old_folio absent",
+      "ret": "0 if end reached",
+      "limits": "conditional reachability/validity",
+      "basis": [
+        "W17-A07",
+        "W17-A19",
+        "W17-A50",
+        "W17-A28"
+      ]
+    },
+    {
+      "id": "W17-S04",
+      "scenario": "VM_SHARED or VM_MAYSHARE",
+      "copy": "not called",
+      "pte": "not replaced here",
+      "refs": "old get not yet called",
+      "ret": "active while(1)",
+      "limits": "not measured runtime spin",
+      "basis": [
+        "W17-A05",
+        "W17-A06"
+      ]
+    },
+    {
+      "id": "W17-S05",
+      "scenario": "orig PTE none",
+      "copy": "outside batch: do_pte_missing",
+      "pte": "outside batch",
+      "refs": "outside batch",
+      "ret": "outside batch",
+      "limits": "not file COW analysis",
+      "basis": [
+        "W17-A01"
+      ]
+    },
+    {
+      "id": "W17-S06",
+      "scenario": "initial PTE mismatch",
+      "copy": "no copy",
+      "pte": "no install",
+      "refs": "no get",
+      "ret": "0",
+      "limits": "update_mmu_tlb empty in read default",
+      "basis": [
+        "W17-A02"
+      ]
+    },
+    {
+      "id": "W17-S07",
+      "scenario": "PTE changes after page allocation",
+      "copy": "may already copy",
+      "pte": "no new install",
+      "refs": "new put once, old temp put once",
+      "ret": "0",
+      "limits": "no true retry asserted",
+      "basis": [
+        "W17-A23",
+        "W17-A31",
+        "W17-A32",
+        "W17-A33",
+        "W17-A40"
+      ]
+    },
+    {
+      "id": "W17-S08",
+      "scenario": "alloc_pages returns NULL",
+      "copy": "not safely started",
+      "pte": "none established",
+      "refs": "outer OOM cleanup may not be reachable",
+      "ret": "VM_FAULT_OOM label exists",
+      "limits": "page_folio(NULL) can dereference before check",
+      "basis": [
+        "W17-A11",
+        "W17-A12",
+        "W17-A13",
+        "W17-A52",
+        "W17-A49"
+      ]
+    },
+    {
+      "id": "W17-S09",
+      "scenario": "copy helper err!=0 hypothetical",
+      "copy": "copy helper returns error",
+      "pte": "no install",
+      "refs": "new put and old temp put",
+      "ret": "HWPOISON or 0",
+      "limits": "current helper live branches return 0",
+      "basis": [
+        "W17-A18",
+        "W17-A19",
+        "W17-A39"
+      ]
+    },
+    {
+      "id": "W17-S10",
+      "scenario": "UNSHARE flag",
+      "copy": "copy dependent on zero PFN",
+      "pte": "skip dirty/maybe_mkwrite; BUG_ON if RW",
+      "refs": "success counts only if not BUG_ON",
+      "ret": "0 conditional",
+      "limits": "call provenance unresolved",
+      "basis": [
+        "W17-A25",
+        "W17-A26",
+        "W17-A28"
+      ]
+    },
+    {
+      "id": "W17-S11",
+      "scenario": "success with old_folio nonnull",
+      "copy": "copy conditional",
+      "pte": "new entry installed",
+      "refs": "old get+1, tail old put twice; new no tail put",
+      "ret": "0",
+      "limits": "two old puts ≠ proof of double free",
+      "basis": [
+        "W17-A06",
+        "W17-A31",
+        "W17-A32",
+        "W17-A33",
+        "W17-A35",
+        "W17-A36"
+      ]
+    },
+    {
+      "id": "W17-S12",
+      "scenario": "initial pte_ptr NULL",
+      "copy": "no wp handler",
+      "pte": "no install",
+      "refs": "no wp effects",
+      "ret": "0",
+      "limits": "cannot infer fault recovery",
+      "basis": [
+        "W17-A41"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "W17-X01",
+      "target": "old_folio._refcount",
+      "operation": "folio_get +1",
+      "when": "old exists",
+      "basis": [
+        "W17-A06",
+        "W17-A35"
+      ]
+    },
+    {
+      "id": "W17-X02",
+      "target": "new physical page._refcount",
+      "operation": "__rmqueue_smallest +1 relative to old count",
+      "when": "allocator success",
+      "basis": [
+        "W17-A14"
+      ]
+    },
+    {
+      "id": "W17-X03",
+      "target": "new page contents",
+      "operation": "PAGE_SIZE memcpy",
+      "when": "!zeroPFN && vmf.page!=NULL && mappings valid",
+      "basis": [
+        "W17-A17",
+        "W17-A18",
+        "W17-A20",
+        "W17-A21",
+        "W17-A22"
+      ]
+    },
+    {
+      "id": "W17-X04",
+      "target": "new page contents",
+      "operation": "no verified zero on zeroPFN",
+      "when": "zero PFN",
+      "basis": [
+        "W17-A09",
+        "W17-A10",
+        "W17-A15",
+        "W17-A16"
+      ]
+    },
+    {
+      "id": "W17-X05",
+      "target": "new PTE flags",
+      "operation": "mk_pte; dirty; RW iff VM_WRITE",
+      "when": "same PTE and !UNSHARE",
+      "basis": [
+        "W17-A25",
+        "W17-A26",
+        "W17-A27"
+      ]
+    },
+    {
+      "id": "W17-X06",
+      "target": "*vmf.pte_ptr",
+      "operation": "WRITE_ONCE new PTE",
+      "when": "same PTE, no BUG_ON",
+      "basis": [
+        "W17-A28",
+        "W17-A29",
+        "W17-A30"
+      ]
+    },
+    {
+      "id": "W17-X07",
+      "target": "new_folio variable",
+      "operation": "new_folio=old_folio alias",
+      "when": "successful install",
+      "basis": [
+        "W17-A31"
+      ]
+    },
+    {
+      "id": "W17-X08",
+      "target": "old_folio._refcount",
+      "operation": "two folio_put -2",
+      "when": "success, old_folio nonnull",
+      "basis": [
+        "W17-A31",
+        "W17-A32",
+        "W17-A33",
+        "W17-A36"
+      ]
+    },
+    {
+      "id": "W17-X09",
+      "target": "new_folio._refcount",
+      "operation": "folio_put -1",
+      "when": "mismatch / copy err",
+      "basis": [
+        "W17-A31",
+        "W17-A32",
+        "W17-A39"
+      ]
+    },
+    {
+      "id": "W17-X10",
+      "target": "old_folio._refcount",
+      "operation": "folio_put -1",
+      "when": "mismatch / copy err / OOM if old exists",
+      "basis": [
+        "W17-A33",
+        "W17-A34",
+        "W17-A39"
+      ]
+    },
+    {
+      "id": "W17-X11",
+      "target": "physical free",
+      "operation": "not executed in __folio_put",
+      "when": "reference reaches zero",
+      "basis": [
+        "W17-A36",
+        "W17-A37"
+      ]
+    },
+    {
+      "id": "W17-X12",
+      "target": "PTL/TLB/rmap",
+      "operation": "no active lock, flush or rmap update",
+      "when": "selected wp call chain",
+      "basis": [
+        "W17-A02",
+        "W17-A28",
+        "W17-A38",
+        "W17-A46",
+        "W17-A47"
+      ]
+    }
+  ],
+  "owner_ledger": [
+    {
+      "step": "old PTE",
+      "old": "existing mapping refcount not closed by R16-S02",
+      "new": "none"
+    },
+    {
+      "step": "do_wp_page",
+      "old": "one temporary get if old_folio",
+      "new": "none"
+    },
+    {
+      "step": "allocation",
+      "old": "unchanged",
+      "new": "one dequeue atomic_inc relative unknown base"
+    },
+    {
+      "step": "successful PTE",
+      "old": "old PTE overwritten without active rmap",
+      "new": "new PTE holds new PFN"
+    },
+    {
+      "step": "success tail",
+      "old": "two puts if old_folio; net get+1 minus2",
+      "new": "no put on true new page after variable alias"
+    },
+    {
+      "step": "recheck mismatch",
+      "old": "one put if old_folio",
+      "new": "one put of new allocation"
+    },
+    {
+      "step": "copy error",
+      "old": "one put if old_folio",
+      "new": "one put of new allocation"
+    },
+    {
+      "step": "OOM if reached",
+      "old": "one put if old_folio",
+      "new": "outer NULL route itself not assured"
+    },
+    {
+      "step": "__folio_put",
+      "old": "no active physical free",
+      "new": "no active physical free"
+    }
+  ],
+  "boundary_notes": [
+    "R16-S01 PTE none/present/protnone cannot be simplified to hardware present.",
+    "R16-S02 shared physical page ownership after fork is not proved; only already reviewed PTE copies are accepted.",
+    "No automatic assumption that zeroPFN is vmf.page NULL; conditions independent.",
+    "No local PTE lock or active ptep_clear_flush/rmap in chosen COW path.",
+    "GFP_HIGHUSER_MOVABLE lacks __GFP_ZERO; source page NULL and zeroPFN cases separate.",
+    "Error returns may be 0 without replacement; no CPU instruction retry or observable correctness verified.",
+    "Do not conflate missing-PTE file do_cow_fault with current existing-PTE wp_page_copy.",
+    "__folio_put active body empty; no runtime leak, free or UAF proven."
+  ]
+}
