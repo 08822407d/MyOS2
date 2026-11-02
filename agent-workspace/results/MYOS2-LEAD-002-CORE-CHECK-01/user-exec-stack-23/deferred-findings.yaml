@@ -1,0 +1,250 @@
+{
+  "task_id": "CORE-USER-EXEC-STACK-23",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "conditional_deferred_findings",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "source_pin_short12": "a039d9803ade",
+  "contract_short12": "c9be5ac03550",
+  "result_base_short12": "b32f3ebc9095",
+  "date": "2026-11-02",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "ES23-F01",
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F01",
+      "status": "needs_evidence",
+      "kind": "exec_stack_permission_writeback_gap",
+      "title": "EXSTACK_DISABLE_X/ENABLE_X局部策略没有活动VMA写回或保护刷新",
+      "claim": "初始VM_STACK_FLAGS选择包含TASK_EXEC=VM_EXEC的栈VMA，并生成vm_page_prot。setup_arg_pages根据PT_GNU_STACK导出的EXSTACK策略修改局部vm_flags，但mprotect_fixup、TLB处理和保护刷新被注释，只有vm_flags_clear(vma,VM_STACK_INCOMPLETE_SETUP)活动。",
+      "premises": [
+        "选定exec ELF路径调用setup_arg_pages并正常越过各门",
+        "指定EXSTACK_DISABLE_X，或存在不同于初始VMA.vm_flags的期望策略",
+        "没有其他已认证的VMA权限更新者"
+      ],
+      "possible_impact": "VMA.vm_flags与最初pgprot的VM_EXEC状态不随请求策略正确变化，不能保证禁执行栈策略；非实机已证W^X问题",
+      "counterevidence": [
+        "若配置原本就符合请求，局部与VMA可能数值碰巧一致",
+        "真正PTE或CPU权限还取决于GUP或缺页构造与掩码，不能仅凭VMA证明硬件执行许可"
+      ],
+      "anchors": [
+        "ES23-A011",
+        "ES23-A025",
+        "ES23-A026",
+        "ES23-A027",
+        "ES23-A030",
+        "ES23-A070",
+        "ES23-A071",
+        "ES23-A073",
+        "ES23-A087",
+        "ES23-A089",
+        "ES23-A090",
+        "ES23-A109",
+        "ES23-A110",
+        "ES23-A111"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ES23-F02",
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F02",
+      "status": "needs_evidence",
+      "kind": "argument_page_contract_gap",
+      "title": "GUP返回值缺失与未命中VMA时页指针缺写，使get_arg_page成功判据不闭合",
+      "claim": "get_arg_page从bprm.mm调用myos_get_user_pages并以ret<=0判断；该long返回的GUP活动函数没有return，且若simple_find_vma找不到对应参数页VMA，会continue跳过pages[i]赋值。exec字符串先在单页VMA准备后copy，setup_arg_pages扩栈更晚。",
+      "premises": [
+        "参数复制实际调用get_arg_page，函数执行到返回/结果检查",
+        "参数地址缺少覆盖VMA，或GUP正常执行到了无返回值的末尾",
+        "上游复制依赖可用page指针和正值ret"
+      ],
+      "possible_impact": "参数页取得、复制或错误报告不能凭所读接口证明定义良好或成功",
+      "counterevidence": [
+        "存在被包含且已有映射的路径可以得到局部page对象",
+        "未构建或运行C，不能把缺少return推成固定失败码、页指针具体值或一定崩溃"
+      ],
+      "anchors": [
+        "ES23-A001",
+        "ES23-A002",
+        "ES23-A003",
+        "ES23-A011",
+        "ES23-A013",
+        "ES23-A017",
+        "ES23-A045",
+        "ES23-A077",
+        "ES23-A078",
+        "ES23-A079",
+        "ES23-A080",
+        "ES23-A088",
+        "ES23-A099",
+        "ES23-A100"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ES23-F03",
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F03",
+      "status": "needs_evidence",
+      "kind": "stack_argument_PTE_template_gap",
+      "title": "GUP新建参数页PTE以固定PAGE_SHARED_EXEC写入而非VMA模板",
+      "claim": "myos_get_user_pages在缺页且alloc_page成功时调用myos_creat_one_page_mapping。后者对page非NULL将*pte设为arch_make_pte(pgprot_val(PAGE_SHARED_EXEC)|_PAGE_PAT|物理页地址)；PAGE_SHARED_EXEC的选定宏含RW且不含NX，未读取栈VMA.vm_page_prot。",
+      "premises": [
+        "参数页仍属于VMA且GUP实际进入新建页分支",
+        "有效PTE指针与页对象、映射帮助函数抵达*pte写入且调用语义正常",
+        "硬件是否执行并无直接证明"
+      ],
+      "possible_impact": "参数页PTE初始权限可能与私有栈模板/后续EXSTACK禁执行意图不一致",
+      "counterevidence": [
+        "VMA模板PAGE_COPY_EXEC另有supported-mask筛选；不能用直接源值推断所有CPU最终权限",
+        "没有实际分配/装表/访问成功或信息泄露/代码执行复现"
+      ],
+      "anchors": [
+        "ES23-A011",
+        "ES23-A079",
+        "ES23-A105",
+        "ES23-A106",
+        "ES23-A107",
+        "ES23-A109",
+        "ES23-A110",
+        "ES23-A111",
+        "ES23-A112"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ES23-F04",
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F04",
+      "status": "needs_evidence",
+      "kind": "silent_growth_failure_and_accounting_gap",
+      "title": "expand_stack未满足grow<=vm_pgoff仍可返回0；成功扩大VMA却不更新stack_vm/total_vm",
+      "claim": "expand_stack初始化error=-ENOERR(0)，只有地址低于vm_start且grow<=vm_pgoff时修改start/pgoff，未满足时未把error写成非零。其选定函数体没有活动guard gap、rlimit、stack_vm/total_vm更新，且setup_arg_pages只在初始成功插入时设置这两个计数为1。",
+      "premises": [
+        "expand_stack收到有效vma和address，最低地址门已经通过",
+        "grow>vm_pgoff，或可扩张且执行到字段写入",
+        "后续消费者将返回0/计数误认为扩张已完成/大小准确"
+      ],
+      "possible_impact": "0可能表示未扩大；扩张后VMA跨度与现有mm栈页计数不一致，guard/rlim约束缺少本链保证",
+      "counterevidence": [
+        "正常x86栈默认的31页grow小于初始很大的pgoff；此特定阻断不在那个默认算例中发生",
+        "无实际越界、资源耗尽、并发或错误CPU访问复现；其它全局校验未穷尽"
+      ],
+      "anchors": [
+        "ES23-A013",
+        "ES23-A031",
+        "ES23-A032",
+        "ES23-A052",
+        "ES23-A053",
+        "ES23-A054",
+        "ES23-A055",
+        "ES23-A057",
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A060",
+        "ES23-A061",
+        "ES23-A062",
+        "ES23-A094",
+        "ES23-A113",
+        "ES23-A116"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ES23-F05",
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F05",
+      "status": "needs_evidence",
+      "kind": "conditional_stack_relocation_and_early_effects_gap",
+      "title": "非零stack_shift只修改参数指针，实际shift_arg_pages被注释；先行字段写入无局部回滚",
+      "claim": "setup_arg_pages先用vm_end-stack_top计算stack_shift并直接减bprm.p、loader、exec，写mm.arg_start；mmap锁检查及扩展在后。真正shift_arg_pages及最小栈顶检查已注释，start_stack写入又早于expand_stack返回。",
+      "premises": [
+        "某个定义良好的调用产生非零stack_shift，参数页此前已准备",
+        "此栈页与指针平移需要相应页面/VMA搬迁",
+        "后续门返回错误或进入用户上下文而未见其它恢复"
+      ],
+      "possible_impact": "指针元数据与物理页/VMA的相对位置可能不一致，或失败后保留部分字段更新",
+      "counterevidence": [
+        "本批所选ELF/x86-64直接调用的STACK_TOP==STACK_TOP_MAX且16字节对齐，stack_shift纸面值为0；没有证明在这一默认路径发生缺失搬迁",
+        "并非所有失败门有真实生产者，例如固定mmap_write_lock_killable直接返回0"
+      ],
+      "anchors": [
+        "ES23-A011",
+        "ES23-A021",
+        "ES23-A022",
+        "ES23-A023",
+        "ES23-A029",
+        "ES23-A032",
+        "ES23-A073",
+        "ES23-A075",
+        "ES23-A076",
+        "ES23-A093",
+        "ES23-A095",
+        "ES23-A101",
+        "ES23-A102",
+        "ES23-A114"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_appends": [
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F01",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "exec用户栈被设置VM_GROWSDOWN、expand_stack确有可扩字段；但所选do_user_addr_fault先simple_find_vma点包含，稳定VMA下栈起点以下地址被NULL门拒绝，扩栈分支仍缺实际可达输入。",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A061",
+        "ES23-A065",
+        "ES23-A066",
+        "ES23-A067",
+        "ES23-A088",
+        "ES23-A090"
+      ],
+      "read_with": "CORE-USER-MM-FAULT-12-REVIEW-001::R12-S01"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F02",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "exec暂栈创建与setup_arg_pages调用mmap_write_lock_killable但其选定体只return0无活动down_write，参数GUP readlock亦无活动down_read；do_user_addr_fault无活动mmap读锁/权限门，依旧不证明全局缺乏外部同步。",
+      "anchors": [
+        "ES23-A010",
+        "ES23-A023",
+        "ES23-A063",
+        "ES23-A065",
+        "ES23-A068",
+        "ES23-A095",
+        "ES23-A096",
+        "ES23-A097"
+      ],
+      "read_with": "CORE-USER-MM-FAULT-12-REVIEW-001::R12-S02"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F03",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "若运行期stack VMA内的缺页抵达myos_handle_mm_fault，do_user_addr_fault只调用一次且非零fault进入while(fault!=ENOERR)，和exec扩栈返回0/元数据写入不是同一恢复状态。",
+      "anchors": [
+        "ES23-A065",
+        "ES23-A066",
+        "ES23-A067",
+        "ES23-A069",
+        "ES23-A113"
+      ],
+      "read_with": "CORE-USER-MM-FAULT-12-REVIEW-001"
+    }
+  ],
+  "new_findings_count": 5,
+  "prior_evidence_appends_count": 3,
+  "old_findings_frozen": true,
+  "owner_decisions_requested_now": [],
+  "limits": [
+    "Five new conditional scopes, not five executed security issues or five root causes independently proved globally.",
+    "MF12-F01/F02/F03 are history evidence appends, not fresh duplicate findings.",
+    "No C compilation, runtime stack, CPU permission, page content, process entry RSP or VMA counter experiment.",
+    "Caller identity and return/postcondition gates preserve R22-S01/S02/S03 and R21-S02."
+  ]
+}
