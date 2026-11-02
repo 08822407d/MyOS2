@@ -1,0 +1,897 @@
+---
+# YAML 1.2 compatible JSON object; parsed as JSON in Code Mode, no external YAML parser
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-ELF-INTERPRETER-28",
+  "record_type": "bounded_interpreter_source_facts",
+  "phase": 2,
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task_short12": "5e5fb5e4e460",
+  "review27_short12": "d2f148ad2d74",
+  "result_base_short12": "f98ee06bbce8",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-02",
+  "read_channel": "GitHub connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "confidence": "selected static C source, conditional inputs only",
+  "source_evidence": "evidence.md EI28-A001..EI28-A088",
+  "types_and_constants": {
+    "program_head_type": "ELF64_Phdr: p_type Elf64_Word (32-bit); p_filesz Elf64_Xword (__u64 bytes); p_offset Elf64_Off (__u64 bytes); p_vaddr Elf64_Addr (__u64 byte address)",
+    "local_pointer_roles": "file_s*, char*, filename_s*, elfhdr_s*, elf_phdr_s* are separate objects",
+    "unsigned_main": "ulong is unsigned long; selected target x86-64, 64-bit nominal",
+    "path_max": 4096,
+    "path_size_min": 2,
+    "path_size_max": 4096,
+    "interp_ehdr_bytes_model": 64,
+    "phdr_bytes_model": 56,
+    "phdr_count_limit_from_27": 73,
+    "error_encoding": "MAX_ERRNO=4095; IS_ERR_VALUE((size_t)encoded) >= -4095",
+    "path_gate_evidence": [
+      "EI28-A008",
+      "EI28-A074",
+      "EI28-A077",
+      "EI28-A078"
+    ],
+    "header_evidence": [
+      "EI28-A014",
+      "EI28-A053",
+      "EI28-A054",
+      "EI28-A055"
+    ],
+    "errno_evidence": [
+      "EI28-A080",
+      "EI28-A081",
+      "EI28-A082"
+    ]
+  },
+  "objects": [
+    {
+      "id": "EI28-O01",
+      "name": "bprm->file",
+      "owner_stage": "alloc_bprm holds main executable file; not local interpreter",
+      "initial": "passed to load_elf_binary",
+      "uses": "main PT_INTERP pathname elf_read; main PT_LOAD",
+      "anchors": [
+        "EI28-A010",
+        "EI28-A024"
+      ]
+    },
+    {
+      "id": "EI28-O02",
+      "name": "elf_phdata",
+      "owner_stage": "main ELF phdr table pointer",
+      "initial": "load_elf_phdrs main result",
+      "uses": "program header scan, main segment mapping",
+      "cleanup": "out_free_ph kfree or normal after mapping",
+      "anchors": [
+        "EI28-A005",
+        "EI28-A016",
+        "EI28-A032",
+        "EI28-A036"
+      ]
+    },
+    {
+      "id": "EI28-O03",
+      "name": "elf_interpreter",
+      "owner_stage": "per-loop local temporary char * pathname",
+      "initial": "kmalloc(p_filesz)",
+      "uses": "elf_read main file then last byte NUL check and open_exec",
+      "cleanup": "kfree immediately after open_exec, or out_free_interp on pre-open error",
+      "anchors": [
+        "EI28-A009",
+        "EI28-A010",
+        "EI28-A011",
+        "EI28-A012",
+        "EI28-A015"
+      ]
+    },
+    {
+      "id": "EI28-O04",
+      "name": "interpreter (local)",
+      "owner_stage": "local file_s* separate from bprm->file",
+      "initial": "NULL",
+      "uses": "open_exec result; header read; load_elf_interp",
+      "cleanup": "fput if successful after helper, or via out_free_file on error; pointer itself not reset",
+      "anchors": [
+        "EI28-A001",
+        "EI28-A012",
+        "EI28-A026",
+        "EI28-A030",
+        "EI28-A036",
+        "EI28-A087"
+      ]
+    },
+    {
+      "id": "EI28-O05",
+      "name": "bprm->interpreter",
+      "owner_stage": "struct field, NOT local interpreter",
+      "initial": "not assigned in reviewed load_elf_binary",
+      "uses": "not used in selected handler, avoid object identity collapse",
+      "cleanup": "no assignment of local interpreter to this field in selected function",
+      "anchors": [
+        "EI28-A001",
+        "EI28-A012",
+        "EI28-A089"
+      ],
+      "proof_limit": "negative claim only the fully read load_elf_binary selected scope"
+    },
+    {
+      "id": "EI28-O06",
+      "name": "filename_s* filename",
+      "owner_stage": "open_exec local",
+      "initial": "getname_kernel",
+      "uses": "do_open_execat(AT_FDCWD,filename,0)",
+      "cleanup": "putname(filename) after attempted do_open_execat when !IS_ERR(filename)",
+      "anchors": [
+        "EI28-A063",
+        "EI28-A064",
+        "EI28-A071"
+      ]
+    },
+    {
+      "id": "EI28-O07",
+      "name": "interp_elf_ex",
+      "owner_stage": "local separately kmalloc'd ELF header",
+      "initial": "NULL",
+      "uses": "64-byte elf_read on interpreter file; magic and arch; helper metadata; final e_entry",
+      "cleanup": "kfree on selected error labels or on completed interpreter success",
+      "anchors": [
+        "EI28-A004",
+        "EI28-A013",
+        "EI28-A014",
+        "EI28-A017",
+        "EI28-A030",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-O08",
+      "name": "interp_elf_phdata",
+      "owner_stage": "separate interpreter program header array",
+      "initial": "NULL",
+      "uses": "load_elf_phdrs(interp_elf_ex,interpreter); load_elf_interp",
+      "cleanup": "kfree on selected error labels or completed interpreter success",
+      "anchors": [
+        "EI28-A002",
+        "EI28-A019",
+        "EI28-A026",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-O09",
+      "name": "main ELF elf_ex",
+      "owner_stage": "(elfhdr_s*)bprm->buf",
+      "initial": "source buffer from 27; separate from interp_elf_ex",
+      "uses": "main e_entry, main phnum, main PT_LOAD",
+      "anchors": [
+        "EI28-A004",
+        "EI28-A025"
+      ]
+    },
+    {
+      "id": "EI28-O10",
+      "name": "load_bias",
+      "owner_stage": "load_elf_binary local main-program relocation",
+      "initial": "0",
+      "uses": "main PT_LOAD mapping; no_base argument to load_elf_interp; main e_entry calculation",
+      "anchors": [
+        "EI28-A001",
+        "EI28-A023",
+        "EI28-A025",
+        "EI28-A026"
+      ]
+    },
+    {
+      "id": "EI28-O11",
+      "name": "load_addr",
+      "owner_stage": "load_elf_interp local relocation offset",
+      "initial": "0",
+      "uses": "0 or -vaddr before first ET_DYN, subsequently map_addr - floor(vaddr)",
+      "anchors": [
+        "EI28-A038",
+        "EI28-A042",
+        "EI28-A044",
+        "EI28-A046",
+        "EI28-A085"
+      ]
+    },
+    {
+      "id": "EI28-O12",
+      "name": "load_addr_set",
+      "owner_stage": "load_elf_interp local int",
+      "initial": "0",
+      "uses": "set1 only after ET_DYN first map_addr passes BAD_ADDR, controls later MAP_FIXED",
+      "anchors": [
+        "EI28-A038",
+        "EI28-A042",
+        "EI28-A044"
+      ]
+    },
+    {
+      "id": "EI28-O13",
+      "name": "error",
+      "owner_stage": "load_elf_interp local ulong address/error",
+      "initial": "~0UL",
+      "uses": "may be replaced by -EINVAL, map_addr or -ENOMEM and finally load_addr",
+      "anchors": [
+        "EI28-A038",
+        "EI28-A040",
+        "EI28-A043",
+        "EI28-A045",
+        "EI28-A046",
+        "EI28-A083",
+        "EI28-A086"
+      ]
+    },
+    {
+      "id": "EI28-O14",
+      "name": "total_size",
+      "owner_stage": "load_elf_interp local ulong byte span",
+      "initial": "total_mapping_size(interp phdrs)",
+      "uses": "passed to first selected elf_load, zeroed immediately after that call before BAD_ADDR",
+      "anchors": [
+        "EI28-A040",
+        "EI28-A043",
+        "EI28-A047",
+        "EI28-A048"
+      ]
+    },
+    {
+      "id": "EI28-O15",
+      "name": "map_addr",
+      "owner_stage": "load_elf_interp PT_LOAD loop local ulong",
+      "initial": "elf_load return",
+      "uses": "error, BAD_ADDR, ET_DYN load_addr compute",
+      "anchors": [
+        "EI28-A043",
+        "EI28-A044"
+      ]
+    },
+    {
+      "id": "EI28-O16",
+      "name": "interp_load_addr",
+      "owner_stage": "load_elf_binary local auxv AT_BASE value",
+      "initial": "0",
+      "uses": "valid returned interpreter load_addr; create_elf_tables AT_BASE",
+      "anchors": [
+        "EI28-A003",
+        "EI28-A028",
+        "EI28-A033",
+        "EI28-A037",
+        "EI28-A088"
+      ]
+    },
+    {
+      "id": "EI28-O17",
+      "name": "e_entry",
+      "owner_stage": "load_elf_binary main ELF biased e_entry",
+      "initial": "elf_ex->e_entry+load_bias",
+      "uses": "AT_ENTRY and non-interpreter START_THREAD",
+      "anchors": [
+        "EI28-A025",
+        "EI28-A031",
+        "EI28-A033",
+        "EI28-A037"
+      ]
+    },
+    {
+      "id": "EI28-O18",
+      "name": "elf_entry",
+      "owner_stage": "load_elf_binary final thread entry candidate",
+      "initial": "helper return if interpreter else main e_entry",
+      "uses": "if !IS_ERR_VALUE offset add interp_elf_ex->e_entry; BAD_ADDR gate; START_THREAD",
+      "anchors": [
+        "EI28-A026",
+        "EI28-A028",
+        "EI28-A029",
+        "EI28-A031",
+        "EI28-A034"
+      ]
+    }
+  ],
+  "ordering": [
+    {
+      "id": "I28-S01",
+      "before": "load_elf_phdrs(main)",
+      "after": "first program-header scan for PT_INTERP",
+      "anchors": [
+        "EI28-A005",
+        "EI28-A006",
+        "EI28-A007"
+      ]
+    },
+    {
+      "id": "I28-S02",
+      "before": "path p_filesz gate, kmalloc and elf_read(main)",
+      "after": "last-byte NUL and open_exec",
+      "anchors": [
+        "EI28-A008",
+        "EI28-A009",
+        "EI28-A010",
+        "EI28-A011",
+        "EI28-A012"
+      ]
+    },
+    {
+      "id": "I28-S03",
+      "before": "open_exec and path kfree",
+      "after": "interp_elf_ex allocation and elf_read(interpreter,64,0)",
+      "anchors": [
+        "EI28-A012",
+        "EI28-A013",
+        "EI28-A014"
+      ]
+    },
+    {
+      "id": "I28-S04",
+      "before": "interp header magic/arch and phdr helper",
+      "after": "begin_new_exec and setup_arg_pages",
+      "anchors": [
+        "EI28-A017",
+        "EI28-A018",
+        "EI28-A019",
+        "EI28-A021",
+        "EI28-A022"
+      ]
+    },
+    {
+      "id": "I28-S05",
+      "before": "begin_new_exec and main PT_LOAD mapping",
+      "after": "load_elf_interp type/mmap late checks, helper PT_LOAD",
+      "anchors": [
+        "EI28-A021",
+        "EI28-A024",
+        "EI28-A026",
+        "EI28-A039"
+      ]
+    },
+    {
+      "id": "I28-S06",
+      "before": "valid load_elf_interp return",
+      "after": "interp_load_addr and final entry add",
+      "anchors": [
+        "EI28-A027",
+        "EI28-A028",
+        "EI28-A029"
+      ]
+    },
+    {
+      "id": "I28-S07",
+      "before": "successful local interpreter fput/kfree",
+      "after": "create_elf_tables(AT_BASE/AT_ENTRY) and START_THREAD",
+      "anchors": [
+        "EI28-A030",
+        "EI28-A033",
+        "EI28-A034",
+        "EI28-A037",
+        "EI28-A088"
+      ]
+    }
+  ],
+  "pt_interp_scan_cases": [
+    {
+      "id": "EI28-T01",
+      "condition": "no PT_INTERP in main header array",
+      "path": "non-PT_INTERP continues until scan ends",
+      "effect": "local interpreter=NULL, no open_exec; main loads and final elf_entry=e_entry if later code valid",
+      "anchors": [
+        "EI28-A007",
+        "EI28-A031"
+      ]
+    },
+    {
+      "id": "EI28-T02",
+      "condition": "PT_INTERP with p_filesz<2 or >PATH_MAX",
+      "path": "retval=-ENOEXEC goto out_free_ph",
+      "effect": "no interpreter pathname allocation attempted; main phdr kfree at error label",
+      "anchors": [
+        "EI28-A008",
+        "EI28-A036"
+      ]
+    },
+    {
+      "id": "EI28-T03",
+      "condition": "first PT_INTERP path reading/NUL/open/header fails",
+      "path": "goto error cleanup, not continue scan",
+      "effect": "subsequent PT_INTERP entries not attempted within this loop",
+      "anchors": [
+        "EI28-A010",
+        "EI28-A011",
+        "EI28-A012",
+        "EI28-A015"
+      ]
+    },
+    {
+      "id": "EI28-T04",
+      "condition": "first selected PT_INTERP pathname and interpreter initial header complete",
+      "path": "break following header read",
+      "effect": "later PT_INTERP entries ignored; second later scan only GNU_STACK/LOPROC cases",
+      "anchors": [
+        "EI28-A015",
+        "EI28-A016"
+      ]
+    }
+  ],
+  "interp_load_cases": [
+    {
+      "id": "EI28-L01",
+      "condition": "precheck wrong e_type, arch, fdpic or missing f_op->mmap",
+      "initial_error": "~0UL (-1 encoded)",
+      "result": "helper early returns ~0UL, caller IS_ERR_VALUE/BAD_ADDR -> int -1",
+      "anchors": [
+        "EI28-A039",
+        "EI28-A084",
+        "EI28-A027",
+        "EI28-A029"
+      ]
+    },
+    {
+      "id": "EI28-L02",
+      "condition": "total_mapping_size returned zero",
+      "result": "error=-EINVAL; helper returns encoded -EINVAL",
+      "anchors": [
+        "EI28-A040",
+        "EI28-A047",
+        "EI28-A048"
+      ]
+    },
+    {
+      "id": "EI28-L03",
+      "condition": "ET_EXEC any PT_LOAD",
+      "initial_load_addr": 0,
+      "elf_type": "MAP_PRIVATE|MAP_FIXED",
+      "result": "no ET_DYN load_addr_set; returns 0 after success, final PC uses interpreter e_entry",
+      "anchors": [
+        "EI28-A041",
+        "EI28-A042",
+        "EI28-A046"
+      ]
+    },
+    {
+      "id": "EI28-L04",
+      "condition": "ET_DYN first PT_LOAD and no_base !=0",
+      "elf_type": "MAP_PRIVATE without fixed initially",
+      "result": "set load_addr=-vaddr modulo ulong, pass load_addr+vaddr (0 modulo) to elf_load",
+      "anchors": [
+        "EI28-A042",
+        "EI28-A085",
+        "EI28-A043"
+      ]
+    },
+    {
+      "id": "EI28-L05",
+      "condition": "ET_DYN first PT_LOAD and no_base ==0",
+      "elf_type": "MAP_PRIVATE without fixed initially",
+      "result": "load_addr remains0; passes vaddr hint to elf_load",
+      "anchors": [
+        "EI28-A038",
+        "EI28-A042",
+        "EI28-A043"
+      ]
+    },
+    {
+      "id": "EI28-L06",
+      "condition": "first ET_DYN elf_load succeeds with map_addr not BAD_ADDR",
+      "result": "load_addr=map_addr-ELF_PAGESTART(vaddr); load_addr_set=1; subsequent PT_LOAD uses MAP_FIXED",
+      "anchors": [
+        "EI28-A043",
+        "EI28-A044",
+        "EI28-A042"
+      ]
+    },
+    {
+      "id": "EI28-L07",
+      "condition": "elf_load returns BAD_ADDR",
+      "result": "error set to map_addr, helper exits before ET_DYN load_addr update and post-check",
+      "anchors": [
+        "EI28-A043"
+      ]
+    },
+    {
+      "id": "EI28-L08",
+      "condition": "post-map size/TASK_SIZE check fails",
+      "result": "error=-ENOMEM; earlier mapping prefix not locally reversed by helper",
+      "anchors": [
+        "EI28-A045"
+      ]
+    },
+    {
+      "id": "EI28-L09",
+      "condition": "p_filesz=0 first PT_LOAD, p_memsz>0, total span>0",
+      "result": "shared elf_load skips elf_map, may take anonymous brk path; first address return may update load_addr_set despite no file mapping",
+      "anchors": [
+        "EI28-A049",
+        "EI28-A050",
+        "EI28-A051",
+        "EI28-A044"
+      ]
+    },
+    {
+      "id": "EI28-L10",
+      "condition": "all selected load helper checks pass",
+      "result": "error=load_addr; numeric relocation result not final PC, memory/CPU NOT_RUN",
+      "anchors": [
+        "EI28-A046",
+        "EI28-A028"
+      ]
+    }
+  ],
+  "error_and_resource_matrix": [
+    {
+      "id": "EI28-M01",
+      "scenario": "no PT_INTERP",
+      "phase": "first scan",
+      "errno": "not an error here",
+      "released": "main phdr eventually normal branch; no interpreter resources acquired",
+      "prior_effects": "main prior file/arg pipeline still conditional",
+      "anchors": [
+        "EI28-A007",
+        "EI28-A031",
+        "EI28-A032"
+      ]
+    },
+    {
+      "id": "EI28-M02",
+      "scenario": "interpreter path p_filesz outside [2,4096]",
+      "phase": "before path kmalloc",
+      "errno": "-ENOEXEC",
+      "released": "out_free_ph->kfree(main phdr)",
+      "prior_effects": "no interpreter file opened",
+      "anchors": [
+        "EI28-A008",
+        "EI28-A036"
+      ]
+    },
+    {
+      "id": "EI28-M03",
+      "scenario": "path kmalloc NULL",
+      "phase": "before pathname elf_read",
+      "errno": "-ENOMEM",
+      "released": "out_free_ph main phdr",
+      "prior_effects": "no interpreter file opened",
+      "anchors": [
+        "EI28-A009",
+        "EI28-A036"
+      ]
+    },
+    {
+      "id": "EI28-M04",
+      "scenario": "path elf_read negative (short=>-EIO)",
+      "phase": "before NUL and open",
+      "errno": "elf_read negative",
+      "released": "out_free_interp kfree(path), then main phdr",
+      "prior_effects": "temporary buffer may have partial bytes, no file opened",
+      "anchors": [
+        "EI28-A010",
+        "EI28-A015",
+        "EI28-A053"
+      ]
+    },
+    {
+      "id": "EI28-M05",
+      "scenario": "last pathname byte not NUL",
+      "phase": "before open",
+      "errno": "-ENOEXEC",
+      "released": "kfree(path), then main phdr",
+      "prior_effects": "no file opened",
+      "anchors": [
+        "EI28-A011",
+        "EI28-A015"
+      ]
+    },
+    {
+      "id": "EI28-M06",
+      "scenario": "open_exec returns ERR_PTR from getname/do_filp_open",
+      "phase": "after path buffer freed",
+      "errno": "PTR_ERR(interpreter) if IS_ERR",
+      "released": "out_free_ph main phdr; no fput for error pointer",
+      "prior_effects": "getname_kernel allocation failure may prevent normal return, separate conditional",
+      "anchors": [
+        "EI28-A012",
+        "EI28-A063",
+        "EI28-A064",
+        "EI28-A067"
+      ]
+    },
+    {
+      "id": "EI28-M07",
+      "scenario": "interp_elf_ex kmalloc NULL",
+      "phase": "interpreter file acquired",
+      "errno": "-ENOMEM",
+      "released": "out_free_file fput(interpreter), out_free_ph main phdr",
+      "prior_effects": "path freed, no interp header",
+      "anchors": [
+        "EI28-A013",
+        "EI28-A036"
+      ]
+    },
+    {
+      "id": "EI28-M08",
+      "scenario": "interpreter 64-byte elf_read fails",
+      "phase": "header allocated",
+      "errno": "original negative from elf_read",
+      "released": "out_free_dentry kfree(header),kfree(NULL interp phdr),fput(interpreter),kfree(main phdr)",
+      "prior_effects": "file acquired then fput attempted",
+      "anchors": [
+        "EI28-A014",
+        "EI28-A035",
+        "EI28-A036"
+      ]
+    },
+    {
+      "id": "EI28-M09",
+      "scenario": "interpreter magic/arch/fdpic invalid",
+      "phase": "header read complete, pre-exec",
+      "errno": "-ELIBBAD",
+      "released": "out_free_dentry header/phdr, file, main phdr",
+      "prior_effects": "none of main PT_LOAD from this selected path",
+      "anchors": [
+        "EI28-A017",
+        "EI28-A018",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-M10",
+      "scenario": "interp load_elf_phdrs NULL",
+      "phase": "before begin_new_exec",
+      "errno": "-ELIBBAD (caller's retval)",
+      "released": "out_free_dentry and downstream error labels",
+      "prior_effects": "helper may have allocated+attempted kfree, no interpreter image mapping yet",
+      "anchors": [
+        "EI28-A019",
+        "EI28-A056",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-M11",
+      "scenario": "begin_new_exec or setup_arg_pages fails",
+      "phase": "pre-map or committed point depending subcall",
+      "errno": "current retval",
+      "released": "out_free_dentry header/phdr,file,main phdr",
+      "prior_effects": "point_of_no_return and mm operations may already have begun",
+      "anchors": [
+        "EI28-A021",
+        "EI28-A022",
+        "EI28-A065",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-M12",
+      "scenario": "main program segment mapping fails",
+      "phase": "after begin_new_exec",
+      "errno": "per batch26 main loop",
+      "released": "out_free_dentry header/phdr,file,main phdr",
+      "prior_effects": "main mapping/partial effects may exist",
+      "anchors": [
+        "EI28-A024",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-M13",
+      "scenario": "late load_elf_interp e_type/arch/fop mmap fails",
+      "phase": "after main mapping",
+      "errno": "~0UL -> caller -1 conditional",
+      "released": "out_free_dentry header/phdr,file,main phdr",
+      "prior_effects": "main image may have mapped; helper not yet called elf_load",
+      "anchors": [
+        "EI28-A039",
+        "EI28-A084",
+        "EI28-A029",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-M14",
+      "scenario": "interpreter total_mapping_size zero",
+      "phase": "interp helper presegment",
+      "errno": "-EINVAL",
+      "released": "out_free_dentry etc",
+      "prior_effects": "main image may exist, no interp segment mapping from helper",
+      "anchors": [
+        "EI28-A040",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-M15",
+      "scenario": "interpreter elf_load returned BAD_ADDR or post-check invalid",
+      "phase": "interp PT_LOAD",
+      "errno": "encoded map error or -ENOMEM; caller may turn non-IS_ERR bad addr to -EINVAL",
+      "released": "out_free_dentry etc",
+      "prior_effects": "main and earlier interp mapping prefix may persist until independent cleanup; none shown here",
+      "anchors": [
+        "EI28-A043",
+        "EI28-A045",
+        "EI28-A029",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-M16",
+      "scenario": "interpreter returned offset but computed elf_entry BAD_ADDR",
+      "phase": "entry handoff",
+      "errno": "IS_ERR_VALUE? (int)entry : -EINVAL",
+      "released": "out_free_dentry etc",
+      "prior_effects": "possible mappings and main brk; no local mapping rollback",
+      "anchors": [
+        "EI28-A028",
+        "EI28-A029",
+        "EI28-A035"
+      ]
+    },
+    {
+      "id": "EI28-M17",
+      "scenario": "success through interpreter entry check",
+      "phase": "before create tables",
+      "errno": "not error",
+      "released": "fput(interpreter), kfree(interp_elf_ex),kfree(interp_elf_phdata),kfree(main phdr)",
+      "prior_effects": "local interpreter pointer not cleared but no downstream dereference in selected tail",
+      "anchors": [
+        "EI28-A030",
+        "EI28-A087",
+        "EI28-A032",
+        "EI28-A033"
+      ]
+    },
+    {
+      "id": "EI28-M18",
+      "scenario": "create_elf_tables fails after interpreter resources freed",
+      "phase": "after interpreter cleanup",
+      "errno": "retval<0 from table builder",
+      "released": "already-freed local source resources not cleaned again by goto out",
+      "prior_effects": "old vma undefined/read and local mapping correctness remain from batch25",
+      "anchors": [
+        "EI28-A030",
+        "EI28-A033",
+        "EI28-A034"
+      ]
+    },
+    {
+      "id": "EI28-M19",
+      "scenario": "normal non-interpreter branch",
+      "phase": "after main mapping",
+      "errno": "if entry BAD_ADDR -EINVAL else continue",
+      "released": "main phdr; local interpreter resources remain NULL",
+      "prior_effects": "CPU entry only attempted if later guards pass",
+      "anchors": [
+        "EI28-A031",
+        "EI28-A032",
+        "EI28-A034"
+      ]
+    }
+  ],
+  "paper_models": [
+    {
+      "id": "EI28-X01",
+      "kind": "ET_DYN_interpreter_first_PT_LOAD",
+      "assumptions": [
+        "main load_bias nonzero, so no_base!=0",
+        "interp e_type=ET_DYN and first PT_LOAD p_vaddr=0x12000",
+        "elf_load requested at zero and returns page-aligned map_addr=0x7f000000",
+        "all arithmetic uses 64-bit ulong with no disqualifying error in other branches",
+        "interpreter e_entry=0x12340"
+      ],
+      "values": {
+        "first_vaddr": "0x12000",
+        "first_request_when_no_base_nonzero": "0x0",
+        "temporary_load_addr": "0xfffffffffffee000",
+        "returned_bias": "0x7efee000",
+        "mapped_start": "0x7f000000",
+        "interpreter_e_entry": "0x12340",
+        "final_thread_entry": "0x7f000340",
+        "main_bias": "0x55550000",
+        "main_entry": "0x55552340"
+      },
+      "conclusion": "returned interpreter load_addr=0x7efee000 (AT_BASE), final START_THREAD candidate=0x7f000340; main e_entry=0x55552340 (AT_ENTRY)",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "EI28-X02",
+      "kind": "ET_EXEC_interpreter",
+      "inputs": {
+        "interp_type": "ET_EXEC",
+        "p_vaddr": "0x400000",
+        "map_addr": "0x400000",
+        "interp_e_entry": "0x401000",
+        "no_base": "0"
+      },
+      "result": {
+        "elf_type": "MAP_PRIVATE|MAP_FIXED",
+        "load_addr": "0x0",
+        "AT_BASE": "0x0",
+        "START_THREAD_candidate": "0x401000"
+      },
+      "assumptions": [
+        "elf_load/map and all postchecks successfully return",
+        "total mapping span nonzero"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "EI28-X03",
+      "kind": "precheck_failure_encoding",
+      "inputs": {
+        "initial_error": "~0UL",
+        "wrong_interp_e_type": true
+      },
+      "result": {
+        "helper_return": "0xffffffffffffffff",
+        "caller_IS_ERR_VALUE": true,
+        "caller_badaddr": true,
+        "retval": "-1"
+      },
+      "limitations": "this is helper return type encoding, not necessarily -ELIBBAD; no runtime proof"
+    },
+    {
+      "id": "EI28-X04",
+      "kind": "zero_fsize_first_PT_LOAD_local_model",
+      "inputs": {
+        "interp_type": "ET_DYN",
+        "first_p_filesz": "0",
+        "first_p_memsz": "0x1000",
+        "p_vaddr": "0x12000",
+        "no_base": "1",
+        "total_size_nonzero": true
+      },
+      "result": {
+        "first_requested_addr": "0x0",
+        "elf_map_called": false,
+        "vm_brk_flags": "conditional anonymous page request",
+        "load_addr_set": "may become1 after numeric map_addr accepted",
+        "total_size_after_call": "0"
+      },
+      "limitations": "other PT_LOADs/inputs, VMA and address safety need evidence; not a proven bug"
+    },
+    {
+      "id": "EI28-X05",
+      "kind": "PT_INTERP_embedded_NUL",
+      "inputs": {
+        "p_filesz": 9,
+        "path_bytes": "/ld\\0junk\\0"
+      },
+      "result": {
+        "last_byte_NUL_check": true,
+        "open_exec_string": "/ld"
+      },
+      "limitations": "hypothetical pathname truncation; no actual file presence or security outcome proved"
+    }
+  ],
+  "history_edges": [
+    "CORE-USER-VFS-BASELINE-05::UV-02",
+    "CORE-USER-VFS-BASELINE-05::UV-04",
+    "CORE-USER-VFS-BASELINE-05::UV-06",
+    "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F01",
+    "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F02",
+    "CORE-USER-ELF-HEADER-READ-27::EH27-F02",
+    "CORE-USER-ELF-HEADER-READ-27::EH27-F03",
+    "CORE-USER-ELF-STACK-TABLES-25::ET25-F01",
+    "CORE-USER-ELF-HEADER-READ-27-REVIEW-001::R27-S01",
+    "CORE-USER-ELF-HEADER-READ-27-REVIEW-001::R27-S02",
+    "CORE-USER-ELF-HEADER-READ-27-REVIEW-001::R27-S03"
+  ],
+  "new_findings": [
+    "EI28-F01",
+    "EI28-F02",
+    "EI28-F03",
+    "EI28-F04",
+    "EI28-F05"
+  ],
+  "constraints": [
+    "NOT_RUN all paths",
+    "do not infer physical page/file validity from return counts",
+    "error gates are ordered, not preconditions for earlier side effects",
+    "no full dedup and no kernel changes",
+    "main/local/bprm interpreter are different objects",
+    "no reuse of old 25/26/27 full analysis"
+  ],
+  "owner_decisions_requested_now": []
+}
