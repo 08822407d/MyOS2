@@ -1,0 +1,1947 @@
+{
+  "task_id": "CORE-USER-ARG-PAGES-24",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "bounded_argument_pages_facts_and_boundaries",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra (Owner selected, backend not independently attested)",
+  "date": "2026-11-02",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task_contract_short12": "5b81217fc614",
+  "result_base_short12": "299a960562a9",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "phase": 2,
+  "nodes": [
+    {
+      "id": "AG24-N01",
+      "name": "do_execveat_common",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N02",
+      "name": "copy_strings",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N03",
+      "name": "copy_string_kernel",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N04",
+      "name": "copy_strings_kernel",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N05",
+      "name": "get_arg_page",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N06",
+      "name": "put_arg_page",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N07",
+      "name": "free_arg_pages",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N08",
+      "name": "free_bprm",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N09",
+      "name": "myos_get_user_pages",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N10",
+      "name": "simple_find_vma",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N11",
+      "name": "myos_get_one_page_from_mapping",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N12",
+      "name": "myos_creat_one_page_mapping",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N13",
+      "name": "alloc_page",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N14",
+      "name": "alloc_pages",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N15",
+      "name": "__myos_alloc_pages",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N16",
+      "name": "__rmqueue_smallest",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N17",
+      "name": "get_page",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N18",
+      "name": "put_page",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N19",
+      "name": "folio_get",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N20",
+      "name": "folio_put",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N21",
+      "name": "__folio_put",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N22",
+      "name": "mmap_read_lock",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N23",
+      "name": "mmap_read_unlock",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N24",
+      "name": "pte_alloc_map",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N25",
+      "name": "pgtble_alloc_map",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N26",
+      "name": "pgtble_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N27",
+      "name": "p4d_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N28",
+      "name": "pud_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N29",
+      "name": "pmd_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N30",
+      "name": "pgd_offset",
+      "kind": "function_or_macro"
+    },
+    {
+      "id": "AG24-N31",
+      "name": "pte_offset",
+      "kind": "function_or_macro"
+    },
+    {
+      "id": "AG24-N32",
+      "name": "arch_pte_addr",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N33",
+      "name": "phys_to_page",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N34",
+      "name": "page_to_phys",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N35",
+      "name": "page_to_virt",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N36",
+      "name": "memcpy_to_page",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N37",
+      "name": "memcpy",
+      "kind": "function"
+    },
+    {
+      "id": "AG24-N38",
+      "name": "min_not_zero",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N39",
+      "name": "offset_in_page",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N40",
+      "name": "PAGE_SHARED_EXEC",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N41",
+      "name": "GFP_USER",
+      "kind": "macro"
+    },
+    {
+      "id": "AG24-N42",
+      "name": "bprm.mm",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N43",
+      "name": "bprm.p",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N44",
+      "name": "bprm.argmin",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N45",
+      "name": "start_byte_addr",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N46",
+      "name": "page_byte_addr",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N47",
+      "name": "nr_pages_ulong",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N48",
+      "name": "output_pages_slot",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N49",
+      "name": "local_page",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N50",
+      "name": "long_return",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N51",
+      "name": "int_ret",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N52",
+      "name": "source_str",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N53",
+      "name": "copy_pos",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N54",
+      "name": "bytes_to_copy",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N55",
+      "name": "copy_offset",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N56",
+      "name": "page._refcount",
+      "kind": "field"
+    },
+    {
+      "id": "AG24-N57",
+      "name": "page._mapcount",
+      "kind": "field"
+    },
+    {
+      "id": "AG24-N58",
+      "name": "pte_pointer",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N59",
+      "name": "PTE_slot",
+      "kind": "field"
+    },
+    {
+      "id": "AG24-N60",
+      "name": "page_desc",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N61",
+      "name": "return_error",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N62",
+      "name": "buddy_page_owner",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N63",
+      "name": "page_from_existing_PTE",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N64",
+      "name": "page_newly_allocated",
+      "kind": "data"
+    },
+    {
+      "id": "AG24-N65",
+      "name": "copy_done",
+      "kind": "data"
+    }
+  ],
+  "edges": [
+    {
+      "id": "AG24-E01",
+      "from": "AG24-N01",
+      "to": "AG24-N03",
+      "kind": "call",
+      "claim": "copy filename string before environment and argv",
+      "when": "selected execveat common path",
+      "anchors": [
+        "AG24-A025"
+      ]
+    },
+    {
+      "id": "AG24-E02",
+      "from": "AG24-N01",
+      "to": "AG24-N02",
+      "kind": "call",
+      "claim": "copy environment then argv as separate selected calls",
+      "when": "each earlier return nonnegative",
+      "anchors": [
+        "AG24-A025",
+        "AG24-A026"
+      ]
+    },
+    {
+      "id": "AG24-E03",
+      "from": "AG24-N04",
+      "to": "AG24-N03",
+      "kind": "call",
+      "claim": "invoke per kernel source string",
+      "when": "argc>0 and prior iterations success",
+      "anchors": [
+        "AG24-A023"
+      ]
+    },
+    {
+      "id": "AG24-E04",
+      "from": "AG24-N02",
+      "to": "AG24-N43",
+      "kind": "effect",
+      "claim": "decrement total string length before page allocation",
+      "when": "valid str length, before current argmin gate",
+      "anchors": [
+        "AG24-A010"
+      ]
+    },
+    {
+      "id": "AG24-E05",
+      "from": "AG24-N03",
+      "to": "AG24-N43",
+      "kind": "effect",
+      "claim": "decrement kernel string length before argmin gate",
+      "when": "valid_arg_len and initial len>0",
+      "anchors": [
+        "AG24-A018"
+      ]
+    },
+    {
+      "id": "AG24-E06",
+      "from": "AG24-N02",
+      "to": "AG24-N05",
+      "kind": "call",
+      "claim": "obtain page for each selected bytes chunk",
+      "when": "block loop and no preceding error",
+      "anchors": [
+        "AG24-A013"
+      ]
+    },
+    {
+      "id": "AG24-E07",
+      "from": "AG24-N03",
+      "to": "AG24-N05",
+      "kind": "call",
+      "claim": "obtain page for kernel string block",
+      "when": "loop reached with positive bytes",
+      "anchors": [
+        "AG24-A021"
+      ]
+    },
+    {
+      "id": "AG24-E08",
+      "from": "AG24-N05",
+      "to": "AG24-N42",
+      "kind": "data",
+      "claim": "read new transient address space rather than assuming current.mm",
+      "when": "valid bprm pointer",
+      "anchors": [
+        "AG24-A001"
+      ]
+    },
+    {
+      "id": "AG24-E09",
+      "from": "AG24-N05",
+      "to": "AG24-N22",
+      "kind": "call",
+      "claim": "named lock wrapper, currently no active down_read",
+      "when": "mm pointer read",
+      "anchors": [
+        "AG24-A002",
+        "AG24-A041"
+      ]
+    },
+    {
+      "id": "AG24-E10",
+      "from": "AG24-N05",
+      "to": "AG24-N09",
+      "kind": "call",
+      "claim": "GUP(mm,pos,1,&page)",
+      "when": "function reaches assignment",
+      "anchors": [
+        "AG24-A003",
+        "AG24-A044"
+      ]
+    },
+    {
+      "id": "AG24-E11",
+      "from": "AG24-N05",
+      "to": "AG24-N23",
+      "kind": "call",
+      "claim": "release wrapper if GUP returns control",
+      "when": "GUP call control returns",
+      "anchors": [
+        "AG24-A003",
+        "AG24-A042"
+      ]
+    },
+    {
+      "id": "AG24-E12",
+      "from": "AG24-N05",
+      "to": "AG24-N51",
+      "kind": "effect",
+      "claim": "store conversion of long GUP result and compare <=0",
+      "when": "GUP has not provided defined returned value",
+      "anchors": [
+        "AG24-A001",
+        "AG24-A003",
+        "AG24-A028",
+        "AG24-A033",
+        "AG24-A044"
+      ]
+    },
+    {
+      "id": "AG24-E13",
+      "from": "AG24-N05",
+      "to": "AG24-N49",
+      "kind": "data",
+      "claim": "return same local page when ret>0; page may be unwritten",
+      "when": "requires defined value and page slot valid",
+      "anchors": [
+        "AG24-A001",
+        "AG24-A004",
+        "AG24-A033"
+      ]
+    },
+    {
+      "id": "AG24-E14",
+      "from": "AG24-N09",
+      "to": "AG24-N45",
+      "kind": "data",
+      "claim": "initial byte address plus i*PAGE_SIZE",
+      "when": "valid mm, nr_pages and no overflow",
+      "anchors": [
+        "AG24-A028",
+        "AG24-A029"
+      ]
+    },
+    {
+      "id": "AG24-E15",
+      "from": "AG24-N09",
+      "to": "AG24-N47",
+      "kind": "data",
+      "claim": "for int i < ulong nr_pages",
+      "when": "local loop, production call uses1",
+      "anchors": [
+        "AG24-A003",
+        "AG24-A028",
+        "AG24-A029"
+      ]
+    },
+    {
+      "id": "AG24-E16",
+      "from": "AG24-N09",
+      "to": "AG24-N10",
+      "kind": "call",
+      "claim": "test whether VMA contains each byte address",
+      "when": "loop body entered",
+      "anchors": [
+        "AG24-A029",
+        "AG24-A040"
+      ]
+    },
+    {
+      "id": "AG24-E17",
+      "from": "AG24-N09",
+      "to": "AG24-N11",
+      "kind": "call",
+      "claim": "look up page from existing PTE on VMA hit",
+      "when": "VMA found",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A054"
+      ]
+    },
+    {
+      "id": "AG24-E18",
+      "from": "AG24-N09",
+      "to": "AG24-N13",
+      "kind": "macro_use",
+      "claim": "alloc_page(GFP_USER) when mapped page pointer NULL",
+      "when": "valid VMA, existing lookup returned NULL",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A038",
+        "AG24-A077"
+      ]
+    },
+    {
+      "id": "AG24-E19",
+      "from": "AG24-N13",
+      "to": "AG24-N14",
+      "kind": "macro_binding",
+      "claim": "alloc_page(gfp_mask) macro expands alloc_pages(gfp_mask,0)",
+      "when": "preprocessing/config matching macro",
+      "anchors": [
+        "AG24-A038"
+      ]
+    },
+    {
+      "id": "AG24-E20",
+      "from": "AG24-N14",
+      "to": "AG24-N15",
+      "kind": "call",
+      "claim": "selected alloc_pages forwards to __myos_alloc_pages",
+      "when": "control reaches allocator return",
+      "anchors": [
+        "AG24-A079",
+        "AG24-A080"
+      ]
+    },
+    {
+      "id": "AG24-E21",
+      "from": "AG24-N15",
+      "to": "AG24-N16",
+      "kind": "call",
+      "claim": "selected buddy queue search obtains page and calls prep_new_page",
+      "when": "valid chosen zone, page count and allocator prerequisites",
+      "anchors": [
+        "AG24-A070",
+        "AG24-A071"
+      ]
+    },
+    {
+      "id": "AG24-E22",
+      "from": "AG24-N16",
+      "to": "AG24-N56",
+      "kind": "effect",
+      "claim": "successful order0 queue return includes atomic_inc _refcount",
+      "when": "free-list valid, page obtained and update reached",
+      "anchors": [
+        "AG24-A070"
+      ]
+    },
+    {
+      "id": "AG24-E23",
+      "from": "AG24-N09",
+      "to": "AG24-N12",
+      "kind": "call",
+      "claim": "create single PTE on allocated page; returned status discarded",
+      "when": "pg!=NULL and helper returns control",
+      "anchors": [
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A045"
+      ]
+    },
+    {
+      "id": "AG24-E24",
+      "from": "AG24-N09",
+      "to": "AG24-N17",
+      "kind": "call",
+      "claim": "get_page only in newly allocated page branch after mapping helper call",
+      "when": "pg!=NULL, mapping helper returns normally",
+      "anchors": [
+        "AG24-A031",
+        "AG24-A032"
+      ]
+    },
+    {
+      "id": "AG24-E25",
+      "from": "AG24-N17",
+      "to": "AG24-N19",
+      "kind": "call",
+      "claim": "get_page(page) directly calls folio_get(page_folio(page))",
+      "when": "page and compound conversion valid",
+      "anchors": [
+        "AG24-A067"
+      ]
+    },
+    {
+      "id": "AG24-E26",
+      "from": "AG24-N19",
+      "to": "AG24-N56",
+      "kind": "effect",
+      "claim": "folio_ref_inc increments _refcount",
+      "when": "folio valid nonzero reference as required",
+      "anchors": [
+        "AG24-A065",
+        "AG24-A069"
+      ]
+    },
+    {
+      "id": "AG24-E27",
+      "from": "AG24-N09",
+      "to": "AG24-N48",
+      "kind": "effect",
+      "claim": "assign pages[i]=pg for VMA-hit paths, including NULL alloc result",
+      "when": "GUP loop reaches assignment; no early continue",
+      "anchors": [
+        "AG24-A033",
+        "AG24-A029"
+      ]
+    },
+    {
+      "id": "AG24-E28",
+      "from": "AG24-N09",
+      "to": "AG24-N50",
+      "kind": "data",
+      "claim": "function declared long but falls through its end without return expression",
+      "when": "loop normal termination, not a defined result",
+      "anchors": [
+        "AG24-A028",
+        "AG24-A033",
+        "AG24-A044"
+      ]
+    },
+    {
+      "id": "AG24-E29",
+      "from": "AG24-N11",
+      "to": "AG24-N30",
+      "kind": "call_or_macro_use",
+      "claim": "calculate pgd pointer from mm,address",
+      "when": "valid page directory state",
+      "anchors": [
+        "AG24-A054"
+      ]
+    },
+    {
+      "id": "AG24-E30",
+      "from": "AG24-N11",
+      "to": "AG24-N31",
+      "kind": "call_or_macro_use",
+      "claim": "derive PTE after p4d/pud/pmd none gates",
+      "when": "all parent pointers and values valid",
+      "anchors": [
+        "AG24-A055",
+        "AG24-A056",
+        "AG24-A057"
+      ]
+    },
+    {
+      "id": "AG24-E31",
+      "from": "AG24-N11",
+      "to": "AG24-N32",
+      "kind": "call",
+      "claim": "extract PTE's address after pte_none gate",
+      "when": "valid PTE object",
+      "anchors": [
+        "AG24-A058",
+        "AG24-A075"
+      ]
+    },
+    {
+      "id": "AG24-E32",
+      "from": "AG24-N11",
+      "to": "AG24-N33",
+      "kind": "macro_use",
+      "claim": "convert physical page address into page descriptor; no get_page",
+      "when": "PTE valid enough for conversion",
+      "anchors": [
+        "AG24-A058",
+        "AG24-A074"
+      ]
+    },
+    {
+      "id": "AG24-E33",
+      "from": "AG24-N11",
+      "to": "AG24-N63",
+      "kind": "effect",
+      "claim": "return borrowed page descriptor, no local _refcount increment",
+      "when": "all none tests bypassed and conversion valid",
+      "anchors": [
+        "AG24-A053",
+        "AG24-A054",
+        "AG24-A055",
+        "AG24-A056",
+        "AG24-A057",
+        "AG24-A058"
+      ]
+    },
+    {
+      "id": "AG24-E34",
+      "from": "AG24-N12",
+      "to": "AG24-N27",
+      "kind": "call",
+      "claim": "allocate or fold pgd->p4d and check p4d null",
+      "when": "valid mm and pgd slot",
+      "anchors": [
+        "AG24-A046",
+        "AG24-A059"
+      ]
+    },
+    {
+      "id": "AG24-E35",
+      "from": "AG24-N12",
+      "to": "AG24-N28",
+      "kind": "call",
+      "claim": "allocate PUD level and check its pointer",
+      "when": "non-NULL p4d",
+      "anchors": [
+        "AG24-A047",
+        "AG24-A060"
+      ]
+    },
+    {
+      "id": "AG24-E36",
+      "from": "AG24-N12",
+      "to": "AG24-N29",
+      "kind": "call",
+      "claim": "allocate PMD level and check pointer",
+      "when": "non-NULL pud",
+      "anchors": [
+        "AG24-A048",
+        "AG24-A061"
+      ]
+    },
+    {
+      "id": "AG24-E37",
+      "from": "AG24-N12",
+      "to": "AG24-N24",
+      "kind": "macro_use",
+      "claim": "source calls pte_alloc_map(mm,pmd,addr)",
+      "when": "non-NULL pmd",
+      "anchors": [
+        "AG24-A049"
+      ]
+    },
+    {
+      "id": "AG24-E38",
+      "from": "AG24-N24",
+      "to": "AG24-N25",
+      "kind": "macro_binding",
+      "claim": "macro name maps to pgtble_alloc_map, not extra runtime call",
+      "when": "include/macro definition applies",
+      "anchors": [
+        "AG24-A064"
+      ]
+    },
+    {
+      "id": "AG24-E39",
+      "from": "AG24-N25",
+      "to": "AG24-N26",
+      "kind": "call",
+      "claim": "pgtble_alloc may return nonzero leading map helper to return NULL",
+      "when": "pmd pointer valid",
+      "anchors": [
+        "AG24-A062",
+        "AG24-A063"
+      ]
+    },
+    {
+      "id": "AG24-E40",
+      "from": "AG24-N12",
+      "to": "AG24-N58",
+      "kind": "effect",
+      "claim": "assign PTE pointer, mistakenly test !pmd instead of !pte",
+      "when": "pte_alloc_map returns control",
+      "anchors": [
+        "AG24-A049",
+        "AG24-A063",
+        "AG24-A064"
+      ]
+    },
+    {
+      "id": "AG24-E41",
+      "from": "AG24-N12",
+      "to": "AG24-N57",
+      "kind": "effect",
+      "claim": "increment _mapcount before PTE write if page nonNULL",
+      "when": "all parent gates passed and page valid",
+      "anchors": [
+        "AG24-A050",
+        "AG24-A073"
+      ]
+    },
+    {
+      "id": "AG24-E42",
+      "from": "AG24-N12",
+      "to": "AG24-N34",
+      "kind": "macro_use",
+      "claim": "derive physical address from page descriptor",
+      "when": "page valid and reached line",
+      "anchors": [
+        "AG24-A051"
+      ]
+    },
+    {
+      "id": "AG24-E43",
+      "from": "AG24-N12",
+      "to": "AG24-N40",
+      "kind": "data",
+      "claim": "consume fixed PAGE_SHARED_EXEC instead of VMA vm_page_prot",
+      "when": "non-NULL page and defined valid pte pointer",
+      "anchors": [
+        "AG24-A051",
+        "AG24-A076"
+      ]
+    },
+    {
+      "id": "AG24-E44",
+      "from": "AG24-N12",
+      "to": "AG24-N59",
+      "kind": "effect",
+      "claim": "write *pte using arch_make_pte fixed protection and physical address",
+      "when": "valid allocated or mapped pte pointer, page nonnull",
+      "anchors": [
+        "AG24-A050",
+        "AG24-A051",
+        "AG24-A076"
+      ]
+    },
+    {
+      "id": "AG24-E45",
+      "from": "AG24-N12",
+      "to": "AG24-N61",
+      "kind": "effect",
+      "claim": "return ERR_PTR(-ENOMEM) on p4d/pud/pmd failure labels",
+      "when": "upper-level guard taken",
+      "anchors": [
+        "AG24-A046",
+        "AG24-A047",
+        "AG24-A048",
+        "AG24-A052"
+      ]
+    },
+    {
+      "id": "AG24-E46",
+      "from": "AG24-N09",
+      "to": "AG24-N61",
+      "kind": "data",
+      "claim": "does not check mapping helper returned error pointer",
+      "when": "mapping helper returns normally including ERR_PTR; before get_page",
+      "anchors": [
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A052"
+      ]
+    },
+    {
+      "id": "AG24-E47",
+      "from": "AG24-N02",
+      "to": "AG24-N36",
+      "kind": "call",
+      "claim": "copy each user-source block to page offset",
+      "when": "get_arg_page returns valid page and branch proceeds",
+      "anchors": [
+        "AG24-A014",
+        "AG24-A036"
+      ]
+    },
+    {
+      "id": "AG24-E48",
+      "from": "AG24-N03",
+      "to": "AG24-N36",
+      "kind": "call",
+      "claim": "copy each kernel-source block to page offset",
+      "when": "get_arg_page returns valid page",
+      "anchors": [
+        "AG24-A021",
+        "AG24-A036"
+      ]
+    },
+    {
+      "id": "AG24-E49",
+      "from": "AG24-N36",
+      "to": "AG24-N35",
+      "kind": "macro_use",
+      "claim": "derive kernel virtual page address from descriptor",
+      "when": "page valid",
+      "anchors": [
+        "AG24-A036",
+        "AG24-A039"
+      ]
+    },
+    {
+      "id": "AG24-E50",
+      "from": "AG24-N36",
+      "to": "AG24-N37",
+      "kind": "call",
+      "claim": "perform direct memcpy to page kernel VA + offset",
+      "when": "valid destination/source and bytes length",
+      "anchors": [
+        "AG24-A034",
+        "AG24-A036"
+      ]
+    },
+    {
+      "id": "AG24-E51",
+      "from": "AG24-N02",
+      "to": "AG24-N06",
+      "kind": "call",
+      "claim": "release page after memcpy_to_page returns normally",
+      "when": "valid page and copy call returns",
+      "anchors": [
+        "AG24-A014"
+      ]
+    },
+    {
+      "id": "AG24-E52",
+      "from": "AG24-N03",
+      "to": "AG24-N06",
+      "kind": "call",
+      "claim": "release page after memcpy_to_page returns normally",
+      "when": "valid page and copy call returns",
+      "anchors": [
+        "AG24-A021"
+      ]
+    },
+    {
+      "id": "AG24-E53",
+      "from": "AG24-N06",
+      "to": "AG24-N18",
+      "kind": "call",
+      "claim": "direct wrapper call to put_page",
+      "when": "valid page pointer",
+      "anchors": [
+        "AG24-A005"
+      ]
+    },
+    {
+      "id": "AG24-E54",
+      "from": "AG24-N18",
+      "to": "AG24-N20",
+      "kind": "call",
+      "claim": "folio_put(page_folio(page))",
+      "when": "page and folio valid",
+      "anchors": [
+        "AG24-A068"
+      ]
+    },
+    {
+      "id": "AG24-E55",
+      "from": "AG24-N20",
+      "to": "AG24-N56",
+      "kind": "effect",
+      "claim": "decrement _refcount atomically and test zero",
+      "when": "valid folio ref",
+      "anchors": [
+        "AG24-A066",
+        "AG24-A073"
+      ]
+    },
+    {
+      "id": "AG24-E56",
+      "from": "AG24-N20",
+      "to": "AG24-N21",
+      "kind": "call",
+      "claim": "only when atomic_dec_and_test gives true",
+      "when": "decremented refcount reached zero",
+      "anchors": [
+        "AG24-A066",
+        "AG24-A072",
+        "AG24-A078"
+      ]
+    },
+    {
+      "id": "AG24-E57",
+      "from": "AG24-N02",
+      "to": "AG24-N53",
+      "kind": "effect",
+      "claim": "save old bprm.p then decrement block start pos",
+      "when": "valid string and while iterations",
+      "anchors": [
+        "AG24-A010",
+        "AG24-A012"
+      ]
+    },
+    {
+      "id": "AG24-E58",
+      "from": "AG24-N02",
+      "to": "AG24-N54",
+      "kind": "effect",
+      "claim": "limit chunk by PAGE_SIZE boundary and remaining length",
+      "when": "positive length and valid pos arithmetic",
+      "anchors": [
+        "AG24-A011",
+        "AG24-A012"
+      ]
+    },
+    {
+      "id": "AG24-E59",
+      "from": "AG24-N02",
+      "to": "AG24-N39",
+      "kind": "macro_use",
+      "claim": "destination page-offset read from block pos",
+      "when": "valid page and copy",
+      "anchors": [
+        "AG24-A014",
+        "AG24-A037"
+      ]
+    },
+    {
+      "id": "AG24-E60",
+      "from": "AG24-N03",
+      "to": "AG24-N38",
+      "kind": "macro_use",
+      "claim": "bounded min(nonzero offset_in_page(pos),PAGE_SIZE)",
+      "when": "positive length and no wrapping from pos",
+      "anchors": [
+        "AG24-A019",
+        "AG24-A043"
+      ]
+    },
+    {
+      "id": "AG24-E61",
+      "from": "AG24-N03",
+      "to": "AG24-N53",
+      "kind": "effect",
+      "claim": "decrement kernel copy pos, pointer and remaining length each block",
+      "when": "kernel source and positive length",
+      "anchors": [
+        "AG24-A020"
+      ]
+    },
+    {
+      "id": "AG24-E62",
+      "from": "AG24-N08",
+      "to": "AG24-N07",
+      "kind": "call",
+      "claim": "call empty argument page free helper",
+      "when": "free_bprm called",
+      "anchors": [
+        "AG24-A024",
+        "AG24-A006"
+      ]
+    },
+    {
+      "id": "AG24-E63",
+      "from": "AG24-N08",
+      "to": "AG24-N42",
+      "kind": "data",
+      "claim": "if bprm.mm still nonnull, calls mmput; not audited as automatic per-page undo",
+      "when": "bprm mm ownership still present",
+      "anchors": [
+        "AG24-A024"
+      ]
+    },
+    {
+      "id": "AG24-E64",
+      "from": "AG24-N02",
+      "to": "AG24-N61",
+      "kind": "effect",
+      "claim": "error can follow prior bprm.p advancement and completed blocks",
+      "when": "get_arg_page returns NULL or argmin crossed",
+      "anchors": [
+        "AG24-A010",
+        "AG24-A013",
+        "AG24-A014",
+        "AG24-A016"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "AG24-X01",
+      "target": "bprm.p",
+      "act": "subtract entire user string length before block accesses",
+      "when": "valid len and valid_arg_len",
+      "anchors": [
+        "AG24-A010"
+      ],
+      "limits": "failure later does not restore within copy_strings"
+    },
+    {
+      "id": "AG24-X02",
+      "target": "bprm.p",
+      "act": "subtract kernel string len before limit and page checks",
+      "when": "kernel source and guard passed",
+      "anchors": [
+        "AG24-A018"
+      ],
+      "limits": "failure later does not restore locally"
+    },
+    {
+      "id": "AG24-X03",
+      "target": "copy pos/src/len",
+      "act": "decrease pos, src and remaining len before get_arg_page",
+      "when": "positive block loop",
+      "anchors": [
+        "AG24-A012"
+      ],
+      "limits": "not same snapshot as bprm.p"
+    },
+    {
+      "id": "AG24-X04",
+      "target": "get_arg_page local int ret",
+      "act": "assign result of nonvoid long GUP with no return",
+      "when": "GUP returns control",
+      "anchors": [
+        "AG24-A001",
+        "AG24-A003",
+        "AG24-A028",
+        "AG24-A033",
+        "AG24-A044"
+      ],
+      "limits": "not a defined result or numeric error model"
+    },
+    {
+      "id": "AG24-X05",
+      "target": "pages[i] unmodified",
+      "act": "continue before pages[i]=pg",
+      "when": "VMA pointer NULL",
+      "anchors": [
+        "AG24-A029"
+      ],
+      "limits": "caller local page was uninitialized; do not fabricate NULL"
+    },
+    {
+      "id": "AG24-X06",
+      "target": "pages[i] set NULL",
+      "act": "pg stays NULL after alloc_page returned NULL",
+      "when": "VMA hit and no existing page; alloc returns NULL",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A033"
+      ],
+      "limits": "GUP still ends without defined long return"
+    },
+    {
+      "id": "AG24-X07",
+      "target": "pages[i] set borrowed page",
+      "act": "existing PTE query returns valid page",
+      "when": "VMA hit and query defined",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A033",
+        "AG24-A058"
+      ],
+      "limits": "this branch does not call get_page"
+    },
+    {
+      "id": "AG24-X08",
+      "target": "pages[i] set new page",
+      "act": "after alloc succeeds and mapping helper returns normally",
+      "when": "VMA hit, get_page and output reached",
+      "anchors": [
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A033"
+      ],
+      "limits": "mapping helper result not checked"
+    },
+    {
+      "id": "AG24-X09",
+      "target": "new page._refcount",
+      "act": "buddy allocation adds one from its current count",
+      "when": "order0 selected free-list valid and normal return",
+      "anchors": [
+        "AG24-A070",
+        "AG24-A071",
+        "AG24-A080"
+      ],
+      "limits": "assume prior free-state count=0 only in bounded example"
+    },
+    {
+      "id": "AG24-X10",
+      "target": "new page._refcount",
+      "act": "get_page increases refcount by one",
+      "when": "GUP new-page branch mapping helper normal return",
+      "anchors": [
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A065",
+        "AG24-A067"
+      ],
+      "limits": "separate from _mapcount"
+    },
+    {
+      "id": "AG24-X11",
+      "target": "page._mapcount",
+      "act": "incremented before PTE assignment",
+      "when": "creation parents valid and page nonnull",
+      "anchors": [
+        "AG24-A050",
+        "AG24-A073"
+      ],
+      "limits": "PTE write may not complete"
+    },
+    {
+      "id": "AG24-X12",
+      "target": "PTE pointer",
+      "act": "pte_alloc_map may return NULL; code tests pmd not pte",
+      "when": "PTE allocation failure assumed under valid nonnull pmd",
+      "anchors": [
+        "AG24-A049",
+        "AG24-A063",
+        "AG24-A064"
+      ],
+      "limits": "cannot infer valid following PTE write or ERR_PTR"
+    },
+    {
+      "id": "AG24-X13",
+      "target": "PTE contents",
+      "act": "writes arch_make_pte(PAGE_SHARED_EXEC|PAT|phys)",
+      "when": "page and pte valid",
+      "anchors": [
+        "AG24-A051",
+        "AG24-A076"
+      ],
+      "limits": "not the stack VMA template; runtime PTE untested"
+    },
+    {
+      "id": "AG24-X14",
+      "target": "page._refcount on existing page",
+      "act": "put_page decrements without a preceding get_page in GUP existing-page path",
+      "when": "valid page output, get_arg_page returns it, copy normally completes",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A058",
+        "AG24-A068"
+      ],
+      "limits": "requires extra proof of ownership/current refcount; no deterministic physical free"
+    },
+    {
+      "id": "AG24-X15",
+      "target": "page._refcount on new page",
+      "act": "put_page decrements the GUP-acquired temporary reference",
+      "when": "valid new page, get_page and copy completed",
+      "anchors": [
+        "AG24-A032",
+        "AG24-A066",
+        "AG24-A068"
+      ],
+      "limits": "allocation's initial ref may remain; mapcount separate"
+    },
+    {
+      "id": "AG24-X16",
+      "target": "page copy destination",
+      "act": "memcpy writes direct page_to_virt(page)+offset",
+      "when": "valid destination/src, copy call reached",
+      "anchors": [
+        "AG24-A014",
+        "AG24-A034",
+        "AG24-A035",
+        "AG24-A036",
+        "AG24-A039"
+      ],
+      "limits": "no page-content verification; page-offset bounds depend chunk arithmetic"
+    },
+    {
+      "id": "AG24-X17",
+      "target": "source pointer",
+      "act": "copy_strings reads char __user pointer via normal memcpy helper",
+      "when": "user source pointer valid and mapped",
+      "anchors": [
+        "AG24-A008",
+        "AG24-A014",
+        "AG24-A036"
+      ],
+      "limits": "direct memcpy rather than active copy_from_user; generic uaccess audit excluded"
+    },
+    {
+      "id": "AG24-X18",
+      "target": "free_arg_pages",
+      "act": "function body empty, no local free performed",
+      "when": "free_bprm calls helper",
+      "anchors": [
+        "AG24-A006",
+        "AG24-A024"
+      ],
+      "limits": "mmput via bprm.mm may be separate cleanup"
+    },
+    {
+      "id": "AG24-X19",
+      "target": "existing mapping physical conversion",
+      "act": "arch_pte_addr + phys_to_page obtains descriptor without ref",
+      "when": "non-none PTE and valid parent pointers",
+      "anchors": [
+        "AG24-A054",
+        "AG24-A055",
+        "AG24-A056",
+        "AG24-A057",
+        "AG24-A058",
+        "AG24-A074",
+        "AG24-A075"
+      ],
+      "limits": "PTE presence/hardware validity not authenticated"
+    },
+    {
+      "id": "AG24-X20",
+      "target": "GUP pfn conversion",
+      "act": "virt_addr_t is u64; start+i*PAGE_SIZE computes byte address",
+      "when": "valid bounds and no overrun",
+      "anchors": [
+        "AG24-A028",
+        "AG24-A029",
+        "AG24-A081"
+      ],
+      "limits": "only caller passes one page; multi-page is local model"
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "id": "AG24-M01",
+      "name": "nr_pages=1 actual caller",
+      "premises": "exec get_arg_page sends &page and nr_pages 1",
+      "branch": "selected GUP loop i=0",
+      "effect": "single page lookup at pos byte address",
+      "outcome": "GUP has no defined long return",
+      "boundary": "existing/new-page branches still analyzable as source prefixes",
+      "anchors": [
+        "AG24-A001",
+        "AG24-A003",
+        "AG24-A028",
+        "AG24-A029",
+        "AG24-A033",
+        "AG24-A044",
+        "AG24-A081"
+      ]
+    },
+    {
+      "id": "AG24-M02",
+      "name": "nr_pages=0 local direct-call model",
+      "premises": "hypothetical caller uses 0",
+      "branch": "GUP loop skipped",
+      "effect": "no pages slots written",
+      "outcome": "falls off nonvoid end",
+      "boundary": "no real selected exec caller with 0 established",
+      "anchors": [
+        "AG24-A028",
+        "AG24-A029",
+        "AG24-A033"
+      ]
+    },
+    {
+      "id": "AG24-M03",
+      "name": "nr_pages>1 local direct-call model",
+      "premises": "hypothetical nr_pages>1 and int i valid",
+      "branch": "GUP iteration",
+      "effect": "addr=start+i*4096, pages[i] conditional",
+      "outcome": "no defined long return",
+      "boundary": "no actual caller of this size and int vs ulong bounds not certified",
+      "anchors": [
+        "AG24-A028",
+        "AG24-A029",
+        "AG24-A033"
+      ]
+    },
+    {
+      "id": "AG24-M04",
+      "name": "VMA not found",
+      "premises": "mm/address valid, point lookup returns NULL",
+      "branch": "continue before page lookup",
+      "effect": "pages[i] unchanged",
+      "outcome": "no defined GUP return",
+      "boundary": "caller local page uninitialized and alternative VMA could exist; initial NULL iterator rule applies",
+      "anchors": [
+        "AG24-A001",
+        "AG24-A029",
+        "AG24-A040"
+      ]
+    },
+    {
+      "id": "AG24-M05",
+      "name": "VMA exists, existing mapping found",
+      "premises": "all level ptrs, none checks valid and pte maps page",
+      "branch": "existing page path",
+      "effect": "pg=phys_to_page, pages[i]=pg",
+      "outcome": "no get_page, no defined GUP return",
+      "boundary": "borrowed descriptor not newly held ref; subsequent put conditional",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A033",
+        "AG24-A054",
+        "AG24-A055",
+        "AG24-A056",
+        "AG24-A057",
+        "AG24-A058",
+        "AG24-A067"
+      ]
+    },
+    {
+      "id": "AG24-M06",
+      "name": "VMA exists, query has p4d_none",
+      "premises": "valid p4d pointer and p4d_none true",
+      "branch": "query fail",
+      "effect": "ret=NULL",
+      "outcome": "GUP proceeds alloc_page",
+      "boundary": "valid pgd/p4d objects assumed; no CPU cache claim",
+      "anchors": [
+        "AG24-A054",
+        "AG24-A030"
+      ]
+    },
+    {
+      "id": "AG24-M07",
+      "name": "VMA exists, query has pud_none",
+      "premises": "valid pud pointer and pud_none true",
+      "branch": "query fail",
+      "effect": "ret=NULL",
+      "outcome": "GUP proceeds alloc_page",
+      "boundary": "valid parent objects assumed",
+      "anchors": [
+        "AG24-A055",
+        "AG24-A030"
+      ]
+    },
+    {
+      "id": "AG24-M08",
+      "name": "VMA exists, query has pmd_none",
+      "premises": "valid pmd pointer and pmd_none true",
+      "branch": "query fail",
+      "effect": "ret=NULL",
+      "outcome": "GUP proceeds alloc_page",
+      "boundary": "valid parent objects assumed",
+      "anchors": [
+        "AG24-A056",
+        "AG24-A030"
+      ]
+    },
+    {
+      "id": "AG24-M09",
+      "name": "VMA exists, query has pte_none",
+      "premises": "valid pte pointer and pte_none true",
+      "branch": "query fail",
+      "effect": "ret=NULL",
+      "outcome": "GUP proceeds alloc_page",
+      "boundary": "does not prove absence of other software nonpresent state",
+      "anchors": [
+        "AG24-A057",
+        "AG24-A030"
+      ]
+    },
+    {
+      "id": "AG24-M10",
+      "name": "existing PTE physically resolved",
+      "premises": "valid !none levels and PTE",
+      "branch": "query success",
+      "effect": "arch_pte_addr and phys_to_page return page descriptor",
+      "outcome": "does not increment _refcount",
+      "boundary": "page identity, validity and existing mapping ownership still external",
+      "anchors": [
+        "AG24-A058",
+        "AG24-A074",
+        "AG24-A075",
+        "AG24-A073"
+      ]
+    },
+    {
+      "id": "AG24-M11",
+      "name": "alloc_page fails",
+      "premises": "VMA found, existing page NULL, alloc returns NULL",
+      "branch": "new branch",
+      "effect": "pg stays NULL; pages[i]=NULL",
+      "outcome": "GUP still lacks long return",
+      "boundary": "get_arg_page ret<=0 undefined, not fixed -ENOMEM",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A031",
+        "AG24-A033"
+      ]
+    },
+    {
+      "id": "AG24-M12",
+      "name": "new page successful queue",
+      "premises": "valid buddy zone free-list candidate, refcount n",
+      "branch": "alloc_page→alloc_pages→__myos_alloc_pages",
+      "effect": "__rmqueue_smallest increments refcount n→n+1",
+      "outcome": "valid page candidate",
+      "boundary": "n=0 is conditional and allocation may fail for other reasons",
+      "anchors": [
+        "AG24-A038",
+        "AG24-A070",
+        "AG24-A071",
+        "AG24-A079",
+        "AG24-A080"
+      ]
+    },
+    {
+      "id": "AG24-M13",
+      "name": "P4D alloc early fail",
+      "premises": "pgd and p4d_alloc returns NULL",
+      "branch": "create mapping fail",
+      "effect": "no page mapcount or PTE write",
+      "outcome": "ERR_PTR(-ENOMEM) from callee",
+      "boundary": "GUP ignores returned error then get_page if page valid and call returns",
+      "anchors": [
+        "AG24-A046",
+        "AG24-A052",
+        "AG24-A031",
+        "AG24-A032"
+      ]
+    },
+    {
+      "id": "AG24-M14",
+      "name": "PUD alloc failure",
+      "premises": "p4d valid; pud_alloc yields NULL",
+      "branch": "create mapping fail",
+      "effect": "earlier hierarchy actions may exist, no mapcount",
+      "outcome": "ERR_PTR(-ENOMEM)",
+      "boundary": "no transaction rollback shown in local helper",
+      "anchors": [
+        "AG24-A047",
+        "AG24-A052",
+        "AG24-A060"
+      ]
+    },
+    {
+      "id": "AG24-M15",
+      "name": "PMD alloc failure",
+      "premises": "pud valid; pmd_alloc yields NULL",
+      "branch": "create mapping fail",
+      "effect": "earlier level allocations may remain, no mapcount",
+      "outcome": "ERR_PTR(-ENOMEM)",
+      "boundary": "GUP may still get_page & output if helper returned normally",
+      "anchors": [
+        "AG24-A048",
+        "AG24-A052",
+        "AG24-A061",
+        "AG24-A032"
+      ]
+    },
+    {
+      "id": "AG24-M16",
+      "name": "PTE alloc failure returns NULL",
+      "premises": "pmd nonNULL, pgtble_alloc_map returns NULL",
+      "branch": "create mapping wrong check",
+      "effect": "code evaluates if(!pmd) false, then for page!=NULL increments mapcount and attempts *pte",
+      "outcome": "no defined successful return or safe PTE write",
+      "boundary": "do not infer ERR_PTR outcome, compiler/machine consequence unspecified",
+      "anchors": [
+        "AG24-A049",
+        "AG24-A050",
+        "AG24-A063",
+        "AG24-A064"
+      ]
+    },
+    {
+      "id": "AG24-M17",
+      "name": "valid PTE and page new",
+      "premises": "all allocs nonNULL and valid PTE; page nonNULL",
+      "branch": "create mapping success prefix",
+      "effect": "mapcount increment then PTE write PAGE_SHARED_EXEC|PAT+PA",
+      "outcome": "returns pte",
+      "boundary": "CPU permissions/flush/data not verified; old ES23-F03",
+      "anchors": [
+        "AG24-A050",
+        "AG24-A051",
+        "AG24-A052",
+        "AG24-A076"
+      ]
+    },
+    {
+      "id": "AG24-M18",
+      "name": "create PTE helper returns error pointer",
+      "premises": "P4D/PUD/PMD allocation fails and helper returns ERR_PTR",
+      "branch": "GUP call ignores status",
+      "effect": "get_page on allocated page and pages[i]=page may still execute",
+      "outcome": "GUP itself has no defined long return",
+      "boundary": "file/physical page retention and true successful mapping unknown",
+      "anchors": [
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A033",
+        "AG24-A052"
+      ]
+    },
+    {
+      "id": "AG24-M19",
+      "name": "page NULL direct helper model",
+      "premises": "direct caller passes page NULL but other levels available",
+      "branch": "create helper skips if(page!=NULL)",
+      "effect": "no _mapcount or PTE entry write",
+      "outcome": "returns pte or ERR_PTR from hierarchy",
+      "boundary": "GUP selected caller only invokes create when page nonNULL",
+      "anchors": [
+        "AG24-A050",
+        "AG24-A051",
+        "AG24-A052",
+        "AG24-A031"
+      ]
+    },
+    {
+      "id": "AG24-M20",
+      "name": "already mapped page put",
+      "premises": "existing page refcount k>0, output/page valid and call chain somehow passes undefined GUP contract",
+      "branch": "copy then put_arg_page",
+      "effect": "refcount k→k-1 with no matching GUP get_page",
+      "outcome": "folio_put may invoke __folio_put if zero",
+      "boundary": "not proven page freed; k producer and all holds not closed",
+      "anchors": [
+        "AG24-A058",
+        "AG24-A067",
+        "AG24-A068",
+        "AG24-A066",
+        "AG24-A072",
+        "AG24-A078"
+      ]
+    },
+    {
+      "id": "AG24-M21",
+      "name": "new page reference pair",
+      "premises": "new allocated page initial counted n+1, get_page and put success",
+      "branch": "new page copy path",
+      "effect": "refcount (n+1)→(n+2)→(n+1), mapcount separately increments if PTE write approached",
+      "outcome": "mapping and copy success unproven",
+      "boundary": "all objects, valid pointer, no overflow and defined GUP return hypothetical",
+      "anchors": [
+        "AG24-A070",
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A066",
+        "AG24-A067",
+        "AG24-A068",
+        "AG24-A050"
+      ]
+    },
+    {
+      "id": "AG24-M22",
+      "name": "two blocks same existing page",
+      "premises": "hypothetical two get_arg_page calls to same mapped physical page; each result defined and usable",
+      "branch": "copy loops",
+      "effect": "each put_page decrements, no get_page for either borrow",
+      "outcome": "potential cumulative ref loss",
+      "boundary": "requires actual same page identity, positive ref and complete copies",
+      "anchors": [
+        "AG24-A010",
+        "AG24-A011",
+        "AG24-A014",
+        "AG24-A058",
+        "AG24-A068"
+      ]
+    },
+    {
+      "id": "AG24-M23",
+      "name": "two blocks same newly allocated page",
+      "premises": "first block alloc+get then put; second block finds existing mapping",
+      "branch": "copy across blocks",
+      "effect": "new ref can be balanced first, second borrows then put decrements retained ref",
+      "outcome": "refcount changes require exact identity & no extra holders",
+      "boundary": "not all strings or offsets necessarily use same page",
+      "anchors": [
+        "AG24-A014",
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A058",
+        "AG24-A066",
+        "AG24-A068"
+      ]
+    },
+    {
+      "id": "AG24-M24",
+      "name": "copy_strings argmin crossed",
+      "premises": "valid source len; bprm.p-len < argmin",
+      "branch": "before chunk loop",
+      "effect": "bprm.p already subtracted, no page access for this string",
+      "outcome": "-E2BIG local goto out",
+      "boundary": "previous strings may already be copied; no local rollback",
+      "anchors": [
+        "AG24-A009",
+        "AG24-A010",
+        "AG24-A016"
+      ]
+    },
+    {
+      "id": "AG24-M25",
+      "name": "copy_strings get_arg_page NULL",
+      "premises": "valid bytes and source; get_arg_page yields NULL",
+      "branch": "per-block copy",
+      "effect": "pos,str,len already reduced for block; bprm.p already moved",
+      "outcome": "-E2BIG local goto out",
+      "boundary": "no put_arg_page on this block; earlier blocks may have effects",
+      "anchors": [
+        "AG24-A012",
+        "AG24-A013",
+        "AG24-A014",
+        "AG24-A016"
+      ]
+    },
+    {
+      "id": "AG24-M26",
+      "name": "copy_strings one block success model",
+      "premises": "pos page offset leaves B bytes, remaining len<=B; valid page and source",
+      "branch": "per-block copy",
+      "effect": "memcpy_to_page page+offset len; put_arg_page once",
+      "outcome": "may reach ret=0",
+      "boundary": "GUP nonreturn and page ownership prevent actual-success proof",
+      "anchors": [
+        "AG24-A011",
+        "AG24-A012",
+        "AG24-A013",
+        "AG24-A014",
+        "AG24-A034",
+        "AG24-A036"
+      ]
+    },
+    {
+      "id": "AG24-M27",
+      "name": "copy_strings straddles page example",
+      "premises": "starting pos 0x2008, len24, valid page objects at both addresses",
+      "branch": "two chunks",
+      "effect": "first pos=0x2000, copy8 at offset0; second pos=0x1ff0, copy16 at offset4080",
+      "outcome": "bprm.p preadjusted to0x1ff0",
+      "boundary": "paper arithmetic, not executed and address VMA reachability separate",
+      "anchors": [
+        "AG24-A010",
+        "AG24-A011",
+        "AG24-A012",
+        "AG24-A014",
+        "AG24-A037"
+      ]
+    },
+    {
+      "id": "AG24-M28",
+      "name": "kernel copy one block",
+      "premises": "pos=0x2008, len8, valid page/source",
+      "branch": "copy_string_kernel",
+      "effect": "min_not_zero(offset=8,PAGE_SIZE)=8, new pos=0x2000",
+      "outcome": "memcpy and put if page valid",
+      "boundary": "actual int len includes terminating NUL and may differ",
+      "anchors": [
+        "AG24-A017",
+        "AG24-A018",
+        "AG24-A019",
+        "AG24-A020",
+        "AG24-A021",
+        "AG24-A043"
+      ]
+    },
+    {
+      "id": "AG24-M29",
+      "name": "kernel copy at page boundary",
+      "premises": "pos=0x2000 and valid len>=1",
+      "branch": "copy_string_kernel",
+      "effect": "min_not_zero(0,4096)=4096, byte count min(len,4096)",
+      "outcome": "page position moves by chosen bytes",
+      "boundary": "assuming valid no-wrap signed/unsigned conversions",
+      "anchors": [
+        "AG24-A019",
+        "AG24-A020",
+        "AG24-A043"
+      ]
+    },
+    {
+      "id": "AG24-M30",
+      "name": "memcpy_to_page direct source",
+      "premises": "valid page descriptor, direct map and source pointer",
+      "branch": "copy",
+      "effect": "memcpy(page_to_virt(page)+offset,from,len); no active VM_BUG_ON",
+      "outcome": "no return status for copy itself",
+      "boundary": "does not prove user pointer safe, bytes exist or page zeroed",
+      "anchors": [
+        "AG24-A034",
+        "AG24-A035",
+        "AG24-A036",
+        "AG24-A039"
+      ]
+    },
+    {
+      "id": "AG24-M31",
+      "name": "free_bprm handoff",
+      "premises": "error/success reaches free_bprm",
+      "branch": "cleanup",
+      "effect": "free_arg_pages empty, mmput only if bprm.mm nonNULL",
+      "outcome": "no direct extra page puts from free_arg_pages",
+      "boundary": "global mm page table teardown and refcount closed separately",
+      "anchors": [
+        "AG24-A024",
+        "AG24-A006"
+      ]
+    },
+    {
+      "id": "AG24-M32",
+      "name": "GFP_USER not zero guarantee",
+      "premises": "new page allocated with GFP_USER (no __GFP_ZERO)",
+      "branch": "alloc",
+      "effect": "page content zeroing post-alloc only under __GFP_ZERO",
+      "outcome": "no source guarantee new page zeroed",
+      "boundary": "does not demonstrate an actual information leak; allocator state/clear elsewhere not audited",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A038",
+        "AG24-A077",
+        "AG24-A082"
+      ]
+    }
+  ],
+  "bounded_math": [
+    {
+      "label": "chunk across 4KiB boundary",
+      "assumptions": "64-bit unsigned pos; PAGE_SIZE 4096; original pos=0x2008, len=24; valid source/object",
+      "pointer_before": "0x2008",
+      "bprm_p_after": "0x1ff0",
+      "chunks": [
+        {
+          "new_pos": "0x2000",
+          "bytes": 8,
+          "offset_in_page": 0
+        },
+        {
+          "new_pos": "0x1ff0",
+          "bytes": 16,
+          "offset_in_page": 4080
+        }
+      ],
+      "anchors": [
+        "AG24-A010",
+        "AG24-A011",
+        "AG24-A012",
+        "AG24-A014",
+        "AG24-A037"
+      ]
+    },
+    {
+      "label": "borrowed page ref flow",
+      "assumptions": "mapped page identity stable, existing _refcount=k>0, no other add/decrements, put_arg_page reached after copy",
+      "initial": "k",
+      "GUP_get_page": false,
+      "after_put": "k-1",
+      "physical_reclaim": "not proved",
+      "anchors": [
+        "AG24-A030",
+        "AG24-A058",
+        "AG24-A067",
+        "AG24-A068",
+        "AG24-A066",
+        "AG24-A072",
+        "AG24-A078"
+      ]
+    },
+    {
+      "label": "new page ref flow",
+      "assumptions": "free-state _refcount=0, buddy order0 alloc returns valid page, GUP helper and copy calls return normally",
+      "before_alloc": 0,
+      "after_buddy_alloc": 1,
+      "after_GUP_get_page": 2,
+      "after_put_arg_page": 1,
+      "mapcount_delta": "separate +1 only if PTE creation reaches mapcount",
+      "anchors": [
+        "AG24-A070",
+        "AG24-A071",
+        "AG24-A079",
+        "AG24-A080",
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A050",
+        "AG24-A067",
+        "AG24-A068"
+      ]
+    },
+    {
+      "label": "GUP iterations",
+      "assumptions": "virt_addr_t u64; PAGE_SIZE=4096; start=0x2000; no overflow",
+      "for_nr_pages_1": [
+        "0x2000"
+      ],
+      "for_nr_pages_3": [
+        "0x2000",
+        "0x3000",
+        "0x4000"
+      ],
+      "production_scope": "get_arg_page passes 1; nr_pages=3 only local direct call model",
+      "anchors": [
+        "AG24-A003",
+        "AG24-A028",
+        "AG24-A029",
+        "AG24-A044",
+        "AG24-A081"
+      ]
+    }
+  ],
+  "counts": {
+    "source_anchors": 82,
+    "nodes": 65,
+    "edges": 64,
+    "effects": 20,
+    "scenarios": 32,
+    "math": 4
+  },
+  "scope": [
+    "Actual named exec caller get_arg_page uses nr_pages=1; multi-page is helper-only model.",
+    "R23-S02 long GUP return vs int caller ret; no return expression = no defined int value or status.",
+    "Existing mapped page is a borrowed descriptor; new allocated page has alloc-initial ref plus get_page; _mapcount separate.",
+    "PTE allocator and pointer identity subject to pgtble_alloc_map NULL result; wrong !pmd check cannot be treated as error return.",
+    "R18-S01/S02/S03 gate real owner/reachability; 23 prior ES23-F02/F03 preserved; no old source changed."
+  ],
+  "limits": [
+    "No C preprocessing/compilation/execution, no QEMU/hardware, no actual copies/CR3/TLB/RWX assertions.",
+    "Undefined nonvoid return and invalid pointer paths stop deterministic prediction.",
+    "Source quotes and mechanical edge consistency do not certify global semantics.",
+    "All newly found risks conditional; owner makes no repair decision in this phase."
+  ]
+}

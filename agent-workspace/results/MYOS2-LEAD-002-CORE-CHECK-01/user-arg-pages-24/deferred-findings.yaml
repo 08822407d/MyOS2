@@ -1,0 +1,257 @@
+{
+  "task_id": "CORE-USER-ARG-PAGES-24",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "conditional_deferred_findings",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "produced_by": "GPT-6",
+  "date": "2026-11-02",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task_contract_short12": "5b81217fc614",
+  "result_base_short12": "299a960562a9",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "AG24-F01",
+      "qualified_id": "CORE-USER-ARG-PAGES-24::AG24-F01",
+      "status": "needs_evidence",
+      "kind": "borrowed_page_release_ownership_gap",
+      "title": "已有映射page未增持引用却被复制方统一put_page",
+      "claim": "myos_get_one_page_from_mapping只从PTE取物理地址、phys_to_page并返回page描述符；GUP已有页分支直接赋pages[i]而没有get_page。两种copy路径在取得page后都调用put_arg_page→put_page→folio_put，对同一page的_refcount执行减一。",
+      "premises": [
+        "查找确实返回有效已有page，GUP返回值缺口由某定义良好的实际路径跨过并把page交给copy",
+        "复制调用完成并抵达put_arg_page",
+        "该page初始引用包含未转交给调用者的其他合法持有，且无别处补偿get"
+      ],
+      "possible_impact": "调用者可消耗不属于自己的映射/缓存持有引用；反复取同一已有页可能多次扣减",
+      "counterevidence": [
+        "实际_refcount来源及所有持有者未完全核对",
+        "folio_put减到0时__folio_put活动为空，不等于物理页已重新入伙伴池；未复现实机过度释放"
+      ],
+      "anchors": [
+        "AG24-A003",
+        "AG24-A014",
+        "AG24-A021",
+        "AG24-A030",
+        "AG24-A033",
+        "AG24-A054",
+        "AG24-A055",
+        "AG24-A056",
+        "AG24-A057",
+        "AG24-A058",
+        "AG24-A066",
+        "AG24-A067",
+        "AG24-A068",
+        "AG24-A072",
+        "AG24-A073",
+        "AG24-A074"
+      ],
+      "related": [
+        "CORE-USER-PAGE-REF-LIFETIME-18-REVIEW-001::R18-S01",
+        "CORE-USER-WP-COW-17::W17-F09"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AG24-F02",
+      "qualified_id": "CORE-USER-ARG-PAGES-24::AG24-F02",
+      "status": "needs_evidence",
+      "kind": "pte_alloc_null_wrong_guard",
+      "title": "pte_alloc_map可能返回NULL但后续错误检查仍测试pmd",
+      "claim": "myos_creat_one_page_mapping成功取得非NULL pmd后执行pte=pte_alloc_map；对应宏绑定pgtble_alloc_map，后者在PTE分配失败时可返回NULL。紧接着的if(!pmd)不是if(!pte)。当page非NULL时活动代码还会先增加_mapcount再写*pte。",
+      "premises": [
+        "对应PTE层需要分配、pgtble_alloc失败并令pte为NULL",
+        "此前pmd仍有效非NULL且page有效",
+        "控制流继续走到_mapcount写入/PTE解引用"
+      ],
+      "possible_impact": "本应拒绝的PTE分配失败缺少有效门；已写入的mapcount不代表安全PTE安装，后续空指针操作没有确定成功结果",
+      "counterevidence": [
+        "若pte_alloc_map始终返回有效指针，这一特定分支不会发生",
+        "当前未执行C编译或内核/QEMU，不能给定固定错误返回、机器崩溃或页面已被映射"
+      ],
+      "anchors": [
+        "AG24-A045",
+        "AG24-A046",
+        "AG24-A047",
+        "AG24-A048",
+        "AG24-A049",
+        "AG24-A050",
+        "AG24-A062",
+        "AG24-A063",
+        "AG24-A064"
+      ],
+      "related": [
+        "CORE-USER-EXEC-STACK-23::ES23-F03"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AG24-F03",
+      "qualified_id": "CORE-USER-ARG-PAGES-24::AG24-F03",
+      "status": "needs_evidence",
+      "kind": "map_helper_error_result_discarded",
+      "title": "上层GUP忽略单页映射ERR_PTR并继续get_page及输出赋值",
+      "claim": "创建函数P4D/PUD/PMD失败门可return ERR_PTR(-ENOMEM)；GUP只调用myos_creat_one_page_mapping(mm,addr,pg)而未将返回值保存或判错，随后仍调用get_page(pg)，继而可能写pages[i]=pg。",
+      "premises": [
+        "GUP已获得有效新分配page，P4D/PUD/PMD其中一个正常返回失败门",
+        "映射帮助函数有定义地返回ERR_PTR(-ENOMEM)，GUP继续执行",
+        "GUP本身的long返回缺口仍阻止确定后续get_arg_page结果"
+      ],
+      "possible_impact": "页描述符增持/输出槽赋值与PTE未安装可分离，无法将page非NULL直接当映射成功",
+      "counterevidence": [
+        "上述PTE NULL解引用路径不同，不能把那一条也称为正常ERR_PTR返回",
+        "无实际物理分配及缺页事件证明；局部构造流程未证明OS实际可使用该输出"
+      ],
+      "anchors": [
+        "AG24-A030",
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A033",
+        "AG24-A046",
+        "AG24-A047",
+        "AG24-A048",
+        "AG24-A052",
+        "AG24-A062",
+        "AG24-A063"
+      ],
+      "related": [
+        "CORE-USER-EXEC-STACK-23::ES23-F02",
+        "CORE-USER-EXEC-STACK-23::ES23-F03"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AG24-F04",
+      "qualified_id": "CORE-USER-ARG-PAGES-24::AG24-F04",
+      "status": "needs_evidence",
+      "kind": "copy_partial_effects_not_rolled_back",
+      "title": "copy_strings和copy_string_kernel先推进bprm->p与分块状态，后续出错未见本函数内回滚",
+      "claim": "copy_strings先减整个字符串长度并可在argmin或get_arg_page错误时goto out；copy_string_kernel同样先减bprm.p，后面返回-E2BIG。此前其他块的memcpy_to_page、put_arg_page和映射/分配副作用不受这些局部错误出口撤销。free_arg_pages选定函数体为空；free_bprm只按bprm.mm非NULL调用mmput，完整清理由历史15界定。",
+      "premises": [
+        "至少执行到bprm->p赋值，后续确实命中有效错误出口",
+        "可能已有一部分块正常复制并释放其临时持有",
+        "上游调用者未另行恢复本次输入指针和页面状态"
+      ],
+      "possible_impact": "错误后的参数指针和新mm中页面/引用状态不具局部原子回滚保证",
+      "counterevidence": [
+        "仅凭局部缺少恢复不能证明最终exec失败后mm资源永不回收",
+        "没有运行或测试上游错误处置，不能声称错误已经导致用户态参数损坏"
+      ],
+      "anchors": [
+        "AG24-A009",
+        "AG24-A010",
+        "AG24-A012",
+        "AG24-A013",
+        "AG24-A014",
+        "AG24-A016",
+        "AG24-A017",
+        "AG24-A018",
+        "AG24-A021",
+        "AG24-A024",
+        "AG24-A025",
+        "AG24-A026",
+        "AG24-A027"
+      ],
+      "related": [
+        "CORE-USER-EXEC-STACK-23::ES23-F05"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AG24-F05",
+      "qualified_id": "CORE-USER-ARG-PAGES-24::AG24-F05",
+      "status": "needs_evidence",
+      "kind": "bounded_direct_user_source_copy_dependency",
+      "title": "copy_strings将用户源指针直接交给内核memcpy_to_page而非活动copy_from_user",
+      "claim": "copy_strings取得char __user str并调用memcpy_to_page(page,offset_in_page(pos),str,bytes_to_copy)。固定memcpy_to_page实际做memcpy(page_to_virt(page)+offset,from,len)，自身没有活动VM_BUG_ON页内范围检查或用户访问错误返回。",
+      "premises": [
+        "源字符串地址仍是用户指针并且真实执行抵达copy块",
+        "存在需要用户访问保护/错误恢复的具体源地址或并发变化",
+        "未审全局uaccess与页故障机制，不能断言当前直接拷贝必然非法"
+      ],
+      "possible_impact": "本调用链不能从memcpy_to_page返回证明用户源访问和数据复制已按uaccess容错约定完成",
+      "counterevidence": [
+        "已读copy_strings对来源做过部分长度/错误检测，正常内核可有有效可读用户映射",
+        "这不是完整uaccess审计，不证明实际安全破坏或访问越界"
+      ],
+      "anchors": [
+        "AG24-A008",
+        "AG24-A009",
+        "AG24-A010",
+        "AG24-A012",
+        "AG24-A014",
+        "AG24-A034",
+        "AG24-A035",
+        "AG24-A036",
+        "AG24-A039"
+      ],
+      "related": [],
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_appends": [
+    {
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F02",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "同一固定myos_get_user_pages声明long而无return；get_arg_page以int ret读它并比较<=0，局部page未初始化。找不到VMA时continue导致pages[i]未赋值；alloc_page为NULL而继续时可赋NULL，三者分别登记，不能推断GUP固定返回数。",
+      "anchors": [
+        "AG24-A001",
+        "AG24-A003",
+        "AG24-A004",
+        "AG24-A028",
+        "AG24-A029",
+        "AG24-A030",
+        "AG24-A033",
+        "AG24-A040",
+        "AG24-A044",
+        "AG24-A081"
+      ],
+      "read_with": "CORE-USER-EXEC-STACK-23-REVIEW-001::R23-S02"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-STACK-23::ES23-F03",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "单页新建路径只有page非NULL且pte指针有效、执行到赋值时，才以固定PAGE_SHARED_EXEC|PAT及物理地址写*pte；与VMA模板无直接读依赖。PTE层错误检查目标错位、GUP忽略错误是本批分立条件问题。",
+      "anchors": [
+        "AG24-A031",
+        "AG24-A032",
+        "AG24-A049",
+        "AG24-A050",
+        "AG24-A051",
+        "AG24-A063",
+        "AG24-A064",
+        "AG24-A076"
+      ],
+      "read_with": "CORE-USER-EXEC-STACK-23-REVIEW-001::R23-S03"
+    },
+    {
+      "qualified_id": "CORE-USER-WP-COW-17::W17-F09",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "本批existing-page查询不增持引用而copy统一put，folio_put在_refcount归零时调用当前空主体__folio_put。不能据此推出物理释放或全局泄漏；沿用18对该原根因的接口限制。",
+      "anchors": [
+        "AG24-A058",
+        "AG24-A066",
+        "AG24-A068",
+        "AG24-A072",
+        "AG24-A073",
+        "AG24-A078"
+      ],
+      "read_with": "CORE-USER-PAGE-REF-LIFETIME-18-REVIEW-001::R18-S01/S02"
+    }
+  ],
+  "new_findings_count": 5,
+  "evidence_append_count": 3,
+  "history_files_frozen": true,
+  "owner_decisions_requested_now": [],
+  "limits": [
+    "No live/compiled C test; undefined GUP return stops deterministic upper caller claims.",
+    "New conditional findings are locally distinguished, not five verified vulnerabilities or globally deduplicated all issues.",
+    "ES23-F02/F03 and W17-F09 remain historical qualified IDs, never silently reclassified.",
+    "18 page counts have input/provenance and no concurrent writes prerequisites."
+  ]
+}
