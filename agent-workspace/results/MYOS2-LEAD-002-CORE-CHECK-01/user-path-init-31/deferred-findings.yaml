@@ -1,0 +1,269 @@
+---
+# YAML 1.2-compatible JSON mapping with qualified IDs, no old reports modified
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-PATH-INIT-31",
+  "record_type": "bounded_path_init_conditional_deferred_findings",
+  "date": "2026-11-03",
+  "phase": 2,
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "results_base_short12": "e33103ca7d9e",
+  "mainline": "MYOS2-A-C04",
+  "status": "deferred_owner_not_ready",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "new_findings": [
+    {
+      "id": "PI31-F01",
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F01",
+      "status": "needs_evidence",
+      "kind": "dfd_argument_saved_but_unconsumed_in_start_selection",
+      "title": "nameidata保存dfd，path_init所选绝对/相对路径起点没有读取该字段",
+      "source_fact": "set_nameidata p->dfd=dfd；path_init只按s[0]是否'/'将nd.path设为current.fs.root或current.fs.pwd，不查dfd。sys_open实际传0，open_exec经do_open_execat传AT_FDCWD(-100)。",
+      "premises": [
+        "set_nameidata正常完成且nd/name/current.fs皆有效",
+        "后续path_init被调用并可正常读取s[0]",
+        "需独立证明某个开放语义要求在此处消费dfd，才能升级为行为缺陷"
+      ],
+      "possible_impact": "在直接起点函数中任意合法dfd对起点选择没有影响；不能仅凭dfd被保存就推断后面fd查找已经发生",
+      "counterevidence": [
+        "sys_open(2)通常以cwd为起点，0只是此接口内部调用实参，不意味着一定错误",
+        "固定05代表基线已记录dfd不参与path_init；先视为同一旧来源的新证据，非独立新根因证明",
+        "后续walk或未读其它路径可能使用dfd，此次没有全仓排查"
+      ],
+      "anchors": [
+        "PI31-A011",
+        "PI31-A015",
+        "PI31-A059",
+        "PI31-A060",
+        "PI31-A061",
+        "PI31-A066"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::fs.vfs.path_open"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来授权openat/cwd与root语义专项，对真实调用者和更深使用证明后再判定"
+    },
+    {
+      "id": "PI31-F02",
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F02",
+      "status": "needs_evidence",
+      "kind": "caller_root_arg_and_path_init_overwrite",
+      "title": "filename_lookup的可选root未传入set_nameidata，且path_init无条件覆盖先前设置的nd.root",
+      "source_fact": "filename_lookup签名有path_s *root，但活动调用为set_nameidata(&nd,dfd,name,NULL)；set_nameidata支持root!=NULL时p.root=*root；随后path_init无条件nd.root=current.fs.root。",
+      "premises": [
+        "实际有非NULL root意图，或直接调用set_nameidata时root!=NULL",
+        "后续path_init在有效current.fs下正常运行",
+        "需要证明该root本应是起点而不是允许被调用者覆盖"
+      ],
+      "possible_impact": "API允许传入root不等于该实参参与本次root起点；即使先赋的另一个path_s值也被后继起点覆盖",
+      "counterevidence": [
+        "本批两个主要调用者都传root=NULL；未证明真实非NULL root producer",
+        "没有完整lookup-root/namespace/permission约定，不能称安全绕过",
+        "按值复制两个指针不代表inode引用被增加/减少"
+      ],
+      "anchors": [
+        "PI31-A012",
+        "PI31-A014",
+        "PI31-A015",
+        "PI31-A034",
+        "PI31-A035"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::fs.vfs.path_open"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "有效非NULL root调用及约定得到独立证据后再评估"
+    },
+    {
+      "id": "PI31-F03",
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F03",
+      "status": "needs_evidence",
+      "kind": "path_init_deref_precedes_later_pointer_error_guard",
+      "title": "path_init在link_path_walk的IS_ERR(s)检查之前读取nd.name.name和s[0]",
+      "source_fact": "path_init首先取s=nd->name->name，设置root后对s[0]分支；link_path_walk稍后才设置LAST_ROOT并检查IS_ERR(name)。filename_lookup只IS_ERR(name)，不排除NULL；do_filp_open本地没有name检查。",
+      "premises": [
+        "nameidata的name本体是NULL/ERR_PTR，或name->name不是可读取字符串",
+        "selected caller确实传入这种无效对象，而非先在getname/open包装外部阻断",
+        "不得继续跨过此无效访问推断特定CPU或文件系统效果"
+      ],
+      "possible_impact": "后续link_path_walk的错误指针门不能充当path_init之前的安全守卫，局部函数缺乏完整输入校验",
+      "counterevidence": [
+        "选定用户do_sys_openat2和open_exec正常返回分支通常先IS_ERR(getname)等，未证明实际把坏name传入do_filp_open",
+        "NULL不是通常ERR_PTR值且无真实NULL getname返回生产者被确证",
+        "无运行故障或底层fault恢复证据，不能推断必然panic"
+      ],
+      "anchors": [
+        "PI31-A013",
+        "PI31-A015",
+        "PI31-A035",
+        "PI31-A043",
+        "PI31-A026"
+      ],
+      "related": [
+        "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S02"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "后续具体异常输入/调用者证据或独立安全审查"
+    },
+    {
+      "id": "PI31-F04",
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F04",
+      "status": "deferred_owner_not_ready",
+      "kind": "empty_slash_prefix_vs_lookup_policy",
+      "title": "空串与全斜线经link_path_walk前缀均为LAST_ROOT且返回0，但后续完成与LOOKUP_EMPTY约束未被证明",
+      "source_fact": "path_init对空串按首字符非'/'选pwd，对'/'选root；link_path_walk设LAST_ROOT、跳过所有前导斜线、见NUL时return0。所选path_init与该前缀没有测试LOOKUP_EMPTY；path_openat或path_lookupat再调用不同末组件函数。",
+      "premises": [
+        "合法C字符串且nd/current.fs有效",
+        "path_openat必须先通过alloc_empty_file",
+        "下游last-component调用在有效前缀继续，未被真实编译/运行证实"
+      ],
+      "possible_impact": "不能由前缀返回0判断空路径已按flag接受或拒绝，也不能按字符串名义预设'/'已解析成功",
+      "counterevidence": [
+        "不同起点、不同末组件函数具有其它门，可能在更深层拒绝",
+        "LOOKUP_EMPTY也许在其它路径分支执行，未做全链审计",
+        "没有真实用户open或路径成功样本"
+      ],
+      "anchors": [
+        "PI31-A015",
+        "PI31-A020",
+        "PI31-A043",
+        "PI31-A045",
+        "PI31-A030",
+        "PI31-A039",
+        "PI31-A068"
+      ],
+      "related": [
+        "CORE-USER-OPEN-FLAGS-30::OF30-F04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来有限openat2/last-component专项，保持此处无结论"
+    },
+    {
+      "id": "PI31-F05",
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F05",
+      "status": "needs_evidence",
+      "kind": "cleanup_stub_and_path_ref_lifetime_boundary",
+      "title": "restore_nameidata只有注释、terminate_walk为空、complete_walk返回0；局部path复制没有引用增加的直接证明",
+      "source_fact": "这些函数当前活动体分别不做恢复/终止操作和恒return0；path_lookupat若err==0把nd.path按值交给*path再清局部mnt/dentry；其所选函数体不直接调用path_get/path_put。",
+      "premises": [
+        "路径查找返回到这些特定局部出口",
+        "有需要由这些函数负责的资源或锁状态且外层没有承担同一责任",
+        "引用及并发链路完整实测前不得认定泄漏或UAF"
+      ],
+      "possible_impact": "函数命名/结果0不足以证明引用恢复、RCU收尾或路径对象的全局正确性；状态需继续有界取证",
+      "counterevidence": [
+        "selected set_nameidata/path_init也没有证明曾增加任何额外路径引用，因此不能机械宣称有引用必然泄漏",
+        "current.fs的root/pwd持有者可能有独立生命周期，不在此范围",
+        "主线05报告已有打开路径状态与返回限制，不能把本批的未完成项视为完全新根因"
+      ],
+      "anchors": [
+        "PI31-A005",
+        "PI31-A040",
+        "PI31-A041",
+        "PI31-A048",
+        "PI31-A049",
+        "PI31-A050",
+        "PI31-A051"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来单独路径引用/锁/生命周期授权后再审"
+    }
+  ],
+  "historical_evidence_additions": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::fs.vfs.path_open",
+      "kind": "prior_baseline_scope_not_new_root",
+      "note": "05报告已有sys_open以dfd=0、path_init只看首字符并未使用dfd的限定记录；本批仅增加直接定义证据和root/dfd的结构化前缀。该字符串为能力条目，不是已发现UV编号。",
+      "anchors": [
+        "PI31-A060",
+        "PI31-A011",
+        "PI31-A015"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "kind": "existing_return_barrier",
+      "note": "do_open/myos_do_dentry_open缺return仍不允许path_openat的error/文件结果当成已认证",
+      "anchors": [
+        "PI31-A031",
+        "PI31-A032"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "kind": "upstream_gate_conditional",
+      "note": "op.lookup_flags对do_filp_open的读取依赖build_open_flags合法完成，原30可有部分初始化op上游错误；本31仅在有效op情形核起点",
+      "anchors": [
+        "PI31-A025",
+        "PI31-A026"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+      "kind": "lookup_policy_evidence_limit",
+      "note": "LOOKUP_*的字段保存不等于完整解析限制生效，selected path_init不以这些位做起点分支",
+      "anchors": [
+        "PI31-A014",
+        "PI31-A015",
+        "PI31-A020",
+        "PI31-A021",
+        "PI31-A022"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-03",
+      "kind": "non_overlap_navigation",
+      "note": "fd的close-on-exec历史限制不在本批；区分dfd起点参数与新fd获取",
+      "anchors": [
+        "PI31-A060",
+        "PI31-A061"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S02",
+      "kind": "caller_input_correction",
+      "note": "有效getname与异常PTR_ERR/NULL来源不得混淆，只有正常返回路径才进入后续路径起点",
+      "anchors": [
+        "PI31-A013",
+        "PI31-A035"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30-DOC-FIX-01-REVIEW-001::R30-01",
+      "kind": "closed_documentation_condition_preserved",
+      "note": "30必须合读DOC-FIX的替代证据，不将旧80标签全部当定义合格；只是本包已关闭前置文档RETURN",
+      "anchors": [
+        "PI31-A025"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30-DOC-FIX-01-REVIEW-001::R30-02",
+      "kind": "closed_documentation_condition_preserved",
+      "note": "op.lookup_flags必须由前置全部成功的open_flags生产者提供；不把函数可调用当标志有效",
+      "anchors": [
+        "PI31-A025",
+        "PI31-A026"
+      ],
+      "status_change": false
+    }
+  ],
+  "new_count": 5,
+  "prior_links_count": 8,
+  "dedup_full_repo": "NOT_PERFORMED",
+  "kernel_patch": false
+}
