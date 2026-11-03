@@ -1,0 +1,887 @@
+---
+# YAML 1.2-compatible JSON mapping (parsed as JSON; no compiled C)
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LAST-COMPONENT-32",
+  "record_type": "bounded_last_component_typed_return_and_flag_facts",
+  "date": "2026-11-03",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "contract55_short12": "bf856f2ddb2d",
+  "review31_short12": "bf856f2ddb2d",
+  "result_base_short12": "45a065270e28",
+  "mainline_owner": "MYOS2-A-C04",
+  "read_channel": "connector",
+  "phase": 2,
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_quote_register": "evidence.md :: LC32-A001..LC32-A089",
+  "types_and_values": {
+    "nameidata_last": "qstr_s {size_t len; const unsigned char* name;}; pointer into borrowed original pathname, not separately allocated or NUL terminated at component boundary",
+    "last_enum": "LAST_NORM=0,LAST_ROOT=1,LAST_DOT=2,LAST_DOTDOT=3 under ordinary C anonymous enum counting",
+    "ENOERR": "0, hence -ENOERR equals integer0",
+    "ENOENT": "2, hence -ENOENT equals integer-2",
+    "step_into_success": "ERR_PTR(-ENOERR) => ERR_PTR(0) => (void*)0 => NULL",
+    "ERR_PTR": "static inline void* ERR_PTR(long error): (void*)error",
+    "PTR_ERR": "static inline long PTR_ERR(const void* ptr): (long)ptr",
+    "IS_ERR": "high-address encoded -errno range; NULL is not ERR by IS_ERR_VALUE under selected 64-bit unsigned model, independent of NULL deref hazards",
+    "function_return_types": {
+      "link_path_walk": "int",
+      "lookup_last": "const char*",
+      "walk_component": "const char*",
+      "handle_dots": "const char*",
+      "step_into": "const char*",
+      "open_last_lookups": "const char*",
+      "path_lookupat": "int",
+      "path_openat": "file_s*",
+      "do_filp_open": "file_s*",
+      "__lookup_slow": "dentry_s*",
+      "follow_dotdot": "dentry_s*"
+    },
+    "flag_bit_values": {
+      "O_CREAT": 64,
+      "LOOKUP_RCU": 64,
+      "LOOKUP_CREATE": 512,
+      "LOOKUP_OPEN": 256,
+      "LOOKUP_EXCL": 1024,
+      "LOOKUP_FOLLOW": 1,
+      "LOOKUP_EMPTY": 16384
+    },
+    "flag_origins": "path_openat(flags) receives local flags=op->lookup_flags from do_filp_open; open_last_lookups parameter named open_flag is that lookup bitset, not op->open_flag or op->intent",
+    "source_anchors": [
+      "LC32-A003",
+      "LC32-A004",
+      "LC32-A005",
+      "LC32-A007",
+      "LC32-A009",
+      "LC32-A013",
+      "LC32-A014",
+      "LC32-A015",
+      "LC32-A016",
+      "LC32-A066",
+      "LC32-A067",
+      "LC32-A068",
+      "LC32-A069",
+      "LC32-A070",
+      "LC32-A074"
+    ]
+  },
+  "objects": [
+    {
+      "id": "LC32-O01",
+      "name": "nd.last (qstr_s)",
+      "type": "value pair",
+      "writer": "link_path_walk for nonempty component: len=i,name=borrowed pointer into original input; last_type separate",
+      "evidence": [
+        "LC32-A001",
+        "LC32-A003",
+        "LC32-A027"
+      ]
+    },
+    {
+      "id": "LC32-O02",
+      "name": "nd.last.len",
+      "type": "size_t, from local int i",
+      "writer": "loop counts bytes before next slash/NUL, no copied component buffer",
+      "evidence": [
+        "LC32-A023",
+        "LC32-A027"
+      ]
+    },
+    {
+      "id": "LC32-O03",
+      "name": "nd.last.name",
+      "type": "const unsigned char* by qstr definition",
+      "writer": "assigned local name pointer before moving it forward",
+      "evidence": [
+        "LC32-A003",
+        "LC32-A027",
+        "LC32-A028"
+      ]
+    },
+    {
+      "id": "LC32-O04",
+      "name": "nd.last_type",
+      "type": "int of anonymous LAST_* enum values",
+      "writer": "link_path_walk sets LAST_ROOT at entry, LAST_NORM then DOT/DOTDOT when component recognized",
+      "evidence": [
+        "LC32-A004",
+        "LC32-A087",
+        "LC32-A088",
+        "LC32-A089",
+        "LC32-A020",
+        "LC32-A024",
+        "LC32-A025",
+        "LC32-A026",
+        "LC32-A027"
+      ]
+    },
+    {
+      "id": "LC32-O05",
+      "name": "link_path_walk local name",
+      "type": "const char* borrowed",
+      "writer": "starts at passed input; leading/trailing slash and component cursor increments modify only local pointer",
+      "evidence": [
+        "LC32-A020",
+        "LC32-A021",
+        "LC32-A028"
+      ]
+    },
+    {
+      "id": "LC32-O06",
+      "name": "link_path_walk local link",
+      "type": "const char* result",
+      "writer": "walk_component(nd) for intermediate component only; examined with IS_ERR, otherwise ignored in current loop",
+      "evidence": [
+        "LC32-A030"
+      ]
+    },
+    {
+      "id": "LC32-O07",
+      "name": "path_lookupat local s",
+      "type": "const char*",
+      "writer": "path_init at start; only on link_path_walk returning0 overwritten by lookup_last",
+      "evidence": [
+        "LC32-A055",
+        "LC32-A056"
+      ]
+    },
+    {
+      "id": "LC32-O08",
+      "name": "path_lookupat local err",
+      "type": "int",
+      "writer": "last evaluated link_path_walk returned int; not returned by lookup_last",
+      "evidence": [
+        "LC32-A056",
+        "LC32-A057",
+        "LC32-A059"
+      ]
+    },
+    {
+      "id": "LC32-O09",
+      "name": "path_openat local s",
+      "type": "const char*",
+      "writer": "path_init after successful alloc_empty_file; only on link_path_walk returning0 overwritten by open_last_lookups",
+      "evidence": [
+        "LC32-A061",
+        "LC32-A062"
+      ]
+    },
+    {
+      "id": "LC32-O10",
+      "name": "path_openat local error",
+      "type": "int",
+      "writer": "set by link_path_walk; then may be overwritten by do_open's int result if reached",
+      "evidence": [
+        "LC32-A062",
+        "LC32-A063"
+      ]
+    },
+    {
+      "id": "LC32-O11",
+      "name": "op->lookup_flags",
+      "type": "int",
+      "writer": "build_open_flags writes local lookup bits on 0 return or do_open_execat C initializer; may be uninitialized under historical OF30-F01",
+      "evidence": [
+        "LC32-A068",
+        "LC32-A069",
+        "LC32-A074",
+        "LC32-A077",
+        "LC32-A066"
+      ]
+    },
+    {
+      "id": "LC32-O12",
+      "name": "op->open_flag",
+      "type": "int",
+      "writer": "build_open_flags assigns source O_* bitset; path_openat uses it for alloc_empty_file, not passed to open_last_lookups",
+      "evidence": [
+        "LC32-A068",
+        "LC32-A061",
+        "LC32-A070"
+      ]
+    },
+    {
+      "id": "LC32-O13",
+      "name": "op->intent",
+      "type": "int",
+      "writer": "build_open_flags sets LOOKUP_OPEN/CREATE/EXCL, independent of lookup_flags; not passed as last helper argument",
+      "evidence": [
+        "LC32-A069",
+        "LC32-A070"
+      ]
+    },
+    {
+      "id": "LC32-O14",
+      "name": "do_filp_open local flags",
+      "type": "int copied from op.lookup_flags",
+      "writer": "read before set_nameidata; passed unchanged through path_openat flags to open_last_lookups",
+      "evidence": [
+        "LC32-A066",
+        "LC32-A067",
+        "LC32-A062"
+      ]
+    },
+    {
+      "id": "LC32-O15",
+      "name": "open_last_lookups local dentry",
+      "type": "dentry_s* indeterminate at declaration",
+      "writer": "assigned only under !(open_flag&O_CREAT) in selected code; O_CREAT true branch lookup_open commented out",
+      "evidence": [
+        "LC32-A048",
+        "LC32-A050",
+        "LC32-A051",
+        "LC32-A053",
+        "LC32-A054"
+      ]
+    },
+    {
+      "id": "LC32-O16",
+      "name": "walk_component local dentry",
+      "type": "dentry_s* from __d_lookup or __lookup_slow",
+      "writer": "both dentry_s* producer bodies treated opaque; IS_ERR checks and step_into consumption are direct source facts",
+      "evidence": [
+        "LC32-A032",
+        "LC32-A034",
+        "LC32-A035",
+        "LC32-A036",
+        "LC32-A037"
+      ]
+    },
+    {
+      "id": "LC32-O17",
+      "name": "step_into local path",
+      "type": "path_s",
+      "writer": "handle_mounts writes path fields then returns int via traverse_mounts; on >=0 step_into copies path into nd.path",
+      "evidence": [
+        "LC32-A043",
+        "LC32-A044",
+        "LC32-A046"
+      ]
+    },
+    {
+      "id": "LC32-O18",
+      "name": "step_into local err",
+      "type": "int",
+      "writer": "from handle_mounts; negative becomes ERR_PTR(err), nonnegative goes to ERR_PTR(-ENOERR)=NULL",
+      "evidence": [
+        "LC32-A043",
+        "LC32-A044",
+        "LC32-A045"
+      ]
+    },
+    {
+      "id": "LC32-O19",
+      "name": "handle_dots parent/error",
+      "type": "dentry_s* and const char*",
+      "writer": "only LAST_DOTDOT invokes follow_dotdot and optionally step_into; otherwise returns NULL",
+      "evidence": [
+        "LC32-A038",
+        "LC32-A039",
+        "LC32-A040",
+        "LC32-A041"
+      ]
+    },
+    {
+      "id": "LC32-O20",
+      "name": "path_lookupat output *path",
+      "type": "path_s by value",
+      "writer": "only when err==0 and complete_walk returns0; subsequent local nd.path nulling not file ref operation",
+      "evidence": [
+        "LC32-A057",
+        "LC32-A058",
+        "LC32-A059"
+      ]
+    },
+    {
+      "id": "LC32-O21",
+      "name": "path_openat allocated file",
+      "type": "file_s* or ERR_PTR",
+      "writer": "alloc_empty_file(op.open_flag) before path_init; failure early returns without final walk",
+      "evidence": [
+        "LC32-A060",
+        "LC32-A061",
+        "LC32-A064",
+        "LC32-A065"
+      ]
+    },
+    {
+      "id": "LC32-O22",
+      "name": "external O_CREAT flag",
+      "type": "O_* bit value 0x40",
+      "writer": "input to build_open_flags may set op.intent LOOKUP_CREATE; not copied verbatim to op.lookup_flags",
+      "evidence": [
+        "LC32-A013",
+        "LC32-A070",
+        "LC32-A074"
+      ]
+    },
+    {
+      "id": "LC32-O23",
+      "name": "open_last_lookups parameter open_flag",
+      "type": "int lookup bitset despite variable name",
+      "writer": "caller path_openat(flags), which got do_filp_open local flags = op.lookup_flags",
+      "evidence": [
+        "LC32-A048",
+        "LC32-A062",
+        "LC32-A066",
+        "LC32-A067"
+      ]
+    },
+    {
+      "id": "LC32-O24",
+      "name": "selected suffix continuation s",
+      "type": "const char* or NULL/ERR_PTR",
+      "writer": "lookup_last or open_last_lookups return; only NULL ends outer while when integer err==0",
+      "evidence": [
+        "LC32-A031",
+        "LC32-A054",
+        "LC32-A056",
+        "LC32-A062"
+      ]
+    }
+  ],
+  "producer_and_consumer": [
+    {
+      "id": "LC32-P01",
+      "function": "link_path_walk",
+      "return_type": "int",
+      "producer": "empty/all-leading-slashes path returns0, final component after scan returns -ENOERR=0; intermediate error returns PTR_ERR(link); input IS_ERR returns PTR_ERR(name)",
+      "direct_evidence": [
+        "LC32-A020",
+        "LC32-A022",
+        "LC32-A029",
+        "LC32-A030",
+        "LC32-A005",
+        "LC32-A010"
+      ],
+      "limit": "does not return const char* continuation"
+    },
+    {
+      "id": "LC32-P02",
+      "function": "lookup_last",
+      "return_type": "const char*",
+      "producer": "direct return walk_component(nd)",
+      "direct_evidence": [
+        "LC32-A031"
+      ],
+      "limit": "no independent allocation or string construction"
+    },
+    {
+      "id": "LC32-P03",
+      "function": "walk_component",
+      "return_type": "const char*",
+      "producer": "non-normal handle_dots; ERR_CAST(dentry) if fast/slow ERR; otherwise step_into(nd,dentry)",
+      "direct_evidence": [
+        "LC32-A033",
+        "LC32-A034",
+        "LC32-A036",
+        "LC32-A037"
+      ],
+      "limit": "selected normal subbranches do not explicitly manufacture a positive nonnull continuation string"
+    },
+    {
+      "id": "LC32-P04",
+      "function": "handle_dots",
+      "return_type": "const char*",
+      "producer": "LAST_DOTDOT may propagate follow_dotdot ERR or step_into error; normal terminal return NULL",
+      "direct_evidence": [
+        "LC32-A038",
+        "LC32-A039",
+        "LC32-A040",
+        "LC32-A041"
+      ],
+      "limit": "follow_dotdot and mount status are opaque; no guaranteed success for .."
+    },
+    {
+      "id": "LC32-P05",
+      "function": "step_into",
+      "return_type": "const char*",
+      "producer": "if handle_mounts returns negative, ERR_PTR(err); otherwise nd.path=path and return ERR_PTR(-ENOERR)=NULL",
+      "direct_evidence": [
+        "LC32-A043",
+        "LC32-A044",
+        "LC32-A045",
+        "LC32-A005",
+        "LC32-A009"
+      ],
+      "limit": "handle_mounts/traverse_mounts normality and actual dentry validity not certified"
+    },
+    {
+      "id": "LC32-P06",
+      "function": "open_last_lookups",
+      "return_type": "const char*",
+      "producer": "special last_type -> handle_dots; normal non-O_CREAT-bit uses dentry lookup, ERR_CAST on ERR, otherwise step_into; O_CREAT-bit-true may use uninitialized dentry",
+      "direct_evidence": [
+        "LC32-A048",
+        "LC32-A049",
+        "LC32-A050",
+        "LC32-A051",
+        "LC32-A052",
+        "LC32-A053",
+        "LC32-A054"
+      ],
+      "limit": "indeterminate dentry blocks any typed return conclusion for that branch"
+    },
+    {
+      "id": "LC32-P07",
+      "function": "path_lookupat",
+      "return_type": "int",
+      "producer": "while gets err=link_path_walk(s,nd); s=lookup_last only if err zero; on normal NULL finish may complete_walk then output/return err",
+      "direct_evidence": [
+        "LC32-A056",
+        "LC32-A057",
+        "LC32-A058",
+        "LC32-A059"
+      ],
+      "limit": "ordinary positive continuation pointer not proven by selected producer bodies"
+    },
+    {
+      "id": "LC32-P08",
+      "function": "path_openat",
+      "return_type": "file_s*",
+      "producer": "early alloc_empty_file ERR_PTR; later link_path_walk int error and open_last_lookups ptr s; if error zero calls do_open; returns file or ERR_PTR(error) after fput",
+      "direct_evidence": [
+        "LC32-A061",
+        "LC32-A062",
+        "LC32-A063",
+        "LC32-A064",
+        "LC32-A065"
+      ],
+      "limit": "do_open missing return (UV-04) forbids deterministic final file outcome"
+    },
+    {
+      "id": "LC32-P09",
+      "function": "do_filp_open",
+      "return_type": "file_s*",
+      "producer": "passes op.lookup_flags to path_openat, then returns filp after restore_nameidata",
+      "direct_evidence": [
+        "LC32-A066",
+        "LC32-A067"
+      ],
+      "limit": "does not itself apply build_open_flags success validation"
+    }
+  ],
+  "control_and_flag_matrix": [
+    {
+      "id": "LC32-G01",
+      "source": "legacy sys_open with O_CREAT, no other flags",
+      "bitset": "op.intent includes LOOKUP_CREATE; op.lookup_flags normally LOOKUP_FOLLOW=0x1",
+      "test": "open_last_lookups(!(flags&0x40)) true",
+      "result": "takes dentry lookup branch",
+      "actual_or_hypothetical": "conditional actual legacy flags producer; open success NOT_RUN",
+      "anchors": [
+        "LC32-A013",
+        "LC32-A015",
+        "LC32-A070",
+        "LC32-A071",
+        "LC32-A074",
+        "LC32-A066",
+        "LC32-A050"
+      ]
+    },
+    {
+      "id": "LC32-G02",
+      "source": "legacy sys_open with O_CREAT|O_EXCL no NOFOLLOW",
+      "bitset": "op.intent includes CREATE/EXCL; local flags sets NOFOLLOW; lookup_flags may become0",
+      "test": "O_CREAT test on lookupflags still false",
+      "result": "takes dentry lookup branch, not active commented lookup_open",
+      "actual_or_hypothetical": "conditional actual normalizer, requires build_open_flags success",
+      "anchors": [
+        "LC32-A070",
+        "LC32-A071",
+        "LC32-A050",
+        "LC32-A053"
+      ]
+    },
+    {
+      "id": "LC32-G03",
+      "source": "do_open_execat with flags0 via open_exec",
+      "bitset": "open_exec_flags.lookup_flags=LOOKUP_FOLLOW=1",
+      "test": "1 & O_CREAT(0x40) ==0",
+      "result": "enters dentry assignment branch",
+      "actual_or_hypothetical": "actual caller argument binding; file validity conditional",
+      "anchors": [
+        "LC32-A077",
+        "LC32-A078",
+        "LC32-A079",
+        "LC32-A050"
+      ]
+    },
+    {
+      "id": "LC32-G04",
+      "source": "raw helper op.lookup_flags=LOOKUP_RCU",
+      "bitset": "LOOKUP_RCU=0x40, O_CREAT=0x40",
+      "test": "0x40 & O_CREAT !=0",
+      "result": "skips only active dentry assignment block and reaches step_into with indeterminate local dentry",
+      "actual_or_hypothetical": "helper-only, no selected valid build_open_flags/do_open_execat producer shown",
+      "anchors": [
+        "LC32-A013",
+        "LC32-A014",
+        "LC32-A048",
+        "LC32-A050",
+        "LC32-A053",
+        "LC32-A054"
+      ]
+    },
+    {
+      "id": "LC32-G05",
+      "source": "raw helper op.lookup_flags includes LOOKUP_CREATE but no LOOKUP_RCU",
+      "bitset": "LOOKUP_CREATE=0x200",
+      "test": "0x200&0x40==0",
+      "result": "enters normal dentry assignment branch",
+      "actual_or_hypothetical": "helper-only; op.intent in selected build uses LOOKUP_CREATE instead",
+      "anchors": [
+        "LC32-A013",
+        "LC32-A015",
+        "LC32-A050",
+        "LC32-A070"
+      ]
+    },
+    {
+      "id": "LC32-G06",
+      "source": "source op partially initialized after failed build_open_flags",
+      "bitset": "lookup_flags may be unwritten per OF30-F01",
+      "test": "reading indeterminate lookup_flags outside safe defined numeric model",
+      "result": "cannot choose branch as a known bitset",
+      "actual_or_hypothetical": "historical conditional upstream; not permission bypass claim",
+      "anchors": [
+        "LC32-A066",
+        "LC32-A075",
+        "LC32-A076"
+      ]
+    }
+  ],
+  "typed_return_consumption": [
+    {
+      "id": "LC32-T01",
+      "outer": "path_lookupat or path_openat",
+      "when": "link_path_walk returns negative int",
+      "effects": "short-circuit false on !err; does NOT invoke lookup_last/open_last_lookups",
+      "state": "err/error negative; cleanup only if actual caller tail reached",
+      "anchors": [
+        "LC32-A056",
+        "LC32-A062"
+      ]
+    },
+    {
+      "id": "LC32-T02",
+      "outer": "path_lookupat or path_openat",
+      "when": "link_path_walk returns0 and last helper returns NULL",
+      "effects": "s=NULL and loop stops with err/error still0",
+      "state": "lookup: complete_walk then conditional output; open: conditional do_open (UV-04)",
+      "anchors": [
+        "LC32-A056",
+        "LC32-A057",
+        "LC32-A062",
+        "LC32-A063"
+      ]
+    },
+    {
+      "id": "LC32-T03",
+      "outer": "path_lookupat or path_openat",
+      "when": "link_path_walk returns0 and last helper returns ERR_PTR(-errno), a nonNULL pointer",
+      "effects": "s nonNULL causes next iteration; link_path_walk resets LAST_ROOT then IS_ERR(s) returns PTR_ERR(s) as negative int",
+      "state": "negative integer error after next iteration; no assured success",
+      "anchors": [
+        "LC32-A056",
+        "LC32-A062",
+        "LC32-A020",
+        "LC32-A021",
+        "LC32-A010"
+      ]
+    },
+    {
+      "id": "LC32-T04",
+      "outer": "path_lookupat or path_openat",
+      "when": "hypothetical ordinary nonNULL continuation pointer",
+      "effects": "s updated and next link_path_walk scans that string if safe",
+      "state": "none of selected direct helper implementations found to produce normal continuation string; model only, no real producer",
+      "anchors": [
+        "LC32-A031",
+        "LC32-A037",
+        "LC32-A041",
+        "LC32-A045",
+        "LC32-A054"
+      ]
+    },
+    {
+      "id": "LC32-T05",
+      "outer": "link_path_walk intermediate component",
+      "when": "walk_component returns ERR_PTR(-errno)",
+      "effects": "IS_ERR(link) true -> returns PTR_ERR(link) negative int immediately",
+      "state": "outer while stops, no last-helper invocation",
+      "anchors": [
+        "LC32-A030",
+        "LC32-A010",
+        "LC32-A011"
+      ]
+    },
+    {
+      "id": "LC32-T06",
+      "outer": "link_path_walk intermediate component",
+      "when": "walk_component returns NULL",
+      "effects": "IS_ERR(NULL) false; link ignored; scanning next original-string component proceeds",
+      "state": "requires step_into/handle_dots valid result; no path status guarantee",
+      "anchors": [
+        "LC32-A030",
+        "LC32-A045",
+        "LC32-A041"
+      ]
+    },
+    {
+      "id": "LC32-T07",
+      "outer": "link_path_walk intermediate component",
+      "when": "hypothetical ordinary nonNULL char pointer",
+      "effects": "IS_ERR false, pointer is not assigned back into local name (unlike outer while); continues original source",
+      "state": "model-only producer not confirmed",
+      "anchors": [
+        "LC32-A030"
+      ]
+    },
+    {
+      "id": "LC32-T08",
+      "outer": "step_into",
+      "when": "handle_mounts returned nonnegative int",
+      "effects": "nd.path=path; return ERR_PTR(-ENOERR)=NULL",
+      "state": "success pointer category NULL, not a continuation string",
+      "anchors": [
+        "LC32-A043",
+        "LC32-A044",
+        "LC32-A045",
+        "LC32-A005"
+      ]
+    },
+    {
+      "id": "LC32-T09",
+      "outer": "step_into",
+      "when": "handle_mounts returned negative int",
+      "effects": "return ERR_PTR(err), nonNULL under usual error range",
+      "state": "next outer loop converts to int error; intermediate link returns int immediately",
+      "anchors": [
+        "LC32-A043",
+        "LC32-A044",
+        "LC32-A021"
+      ]
+    },
+    {
+      "id": "LC32-T10",
+      "outer": "open_last_lookups",
+      "when": "flag bit0x40 is set and LAST_NORM",
+      "effects": "dentry local may be read before definite assignment at finish_lookup",
+      "state": "no typed normal return from undefined path; no real valid lookupflags source yet",
+      "anchors": [
+        "LC32-A048",
+        "LC32-A050",
+        "LC32-A053",
+        "LC32-A054",
+        "LC32-A013",
+        "LC32-A014"
+      ]
+    },
+    {
+      "id": "LC32-T11",
+      "outer": "path_openat",
+      "when": "alloc_empty_file returns ERR_PTR",
+      "effects": "return file before path_init/outer while and before terminate_walk",
+      "state": "do_filp_open later restore_nameidata if path_openat returned normally",
+      "anchors": [
+        "LC32-A061",
+        "LC32-A067"
+      ]
+    },
+    {
+      "id": "LC32-T12",
+      "outer": "path_openat",
+      "when": "last helper NULL and error0 triggers do_open",
+      "effects": "do_open does not return a defined int in selected source, later error has no certified value",
+      "state": "no deterministic fput or file return post do_open",
+      "anchors": [
+        "LC32-A062",
+        "LC32-A063",
+        "LC32-A086"
+      ]
+    },
+    {
+      "id": "LC32-T13",
+      "outer": "path_lookupat",
+      "when": "error0 after NULL last result, complete_walk returns0",
+      "effects": "*path=nd.path by value; local nd.path pointers clear; terminate_walk called",
+      "state": "requires valid writable distinct output path; no proved reference increment",
+      "anchors": [
+        "LC32-A057",
+        "LC32-A058",
+        "LC32-A059",
+        "LC32-A083"
+      ]
+    },
+    {
+      "id": "LC32-T14",
+      "outer": "handle_dots",
+      "when": "LAST_DOT/LAST_ROOT",
+      "effects": "skips LAST_DOTDOT branch, returns NULL",
+      "state": "no proof any component lookup/permission executed",
+      "anchors": [
+        "LC32-A038",
+        "LC32-A041",
+        "LC32-A004"
+      ]
+    },
+    {
+      "id": "LC32-T15",
+      "outer": "handle_dots",
+      "when": "LAST_DOTDOT and follow_dotdot returns parent or NULL",
+      "effects": "select step_into with parent or current nd.path.dentry; propagate error pointer if nonNULL else NULL",
+      "state": "follow_dotdot/mount validity opaque; conditional",
+      "anchors": [
+        "LC32-A039",
+        "LC32-A040",
+        "LC32-A041",
+        "LC32-A042"
+      ]
+    }
+  ],
+  "paper_examples": [
+    {
+      "id": "LC32-X01",
+      "path": "''",
+      "prefix": "link_path_walk sets LAST_ROOT and returns int0",
+      "last": "lookup_last or open_last_lookups -> handle_dots(LAST_ROOT) -> NULL",
+      "outer": "while ends with err0; lookup/ open downstream not certified",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X02",
+      "path": "'/' or '///'",
+      "prefix": "strip leading slashes and return int0, LAST_ROOT",
+      "last": "non-normal -> handle_dots -> NULL",
+      "outer": "normal exit only under valid fs/name; not file success",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X03",
+      "path": "'a'",
+      "prefix": "len1, last_type LAST_NORM, return -ENOERR=0",
+      "last": "lookup fast/slow conditional -> step_into NULL or error pointer",
+      "outer": "on NULL exits, on ERR_PTR next iteration converts error",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X04",
+      "path": "'a/'",
+      "prefix": "len1, skips trailing slash, return -ENOERR=0, LAST_NORM",
+      "last": "same as a under selected prefix; directory semantics deeper opaque",
+      "outer": "no proof O_DIRECTORY enforced",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X05",
+      "path": "'.'",
+      "prefix": "len1, LAST_DOT",
+      "last": "handle_dots bypasses dotdot and returns NULL",
+      "outer": "err0 possible, later completion/UV04 constraints remain",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X06",
+      "path": "'..'",
+      "prefix": "len2, LAST_DOTDOT",
+      "last": "handle_dots -> follow_dotdot -> step_into -> NULL or ERR_PTR conditional",
+      "outer": "not guaranteed to stay within root or succeed",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X07",
+      "path": "'a/b'",
+      "prefix": "first a consumed by intermediate walk_component; only after it returns nonerror parse b as last",
+      "last": "b normal -> final walker under valid dentry",
+      "outer": "no real dcache/mount success asserted",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X08",
+      "path": "'a/..'",
+      "prefix": "first a intermediate; last '..' produces LAST_DOTDOT if reached",
+      "last": "handle_dots parent branch",
+      "outer": "no special permission/mount certification",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X09",
+      "path": "O_CREAT input to legacy open, no other flags",
+      "source": "build_open_flags success",
+      "values": {
+        "O_CREAT": 64,
+        "LOOKUP_CREATE": 512,
+        "LOOKUP_FOLLOW": 1
+      },
+      "local_test": "(op.lookup_flags & O_CREAT) == 0",
+      "outcome": "open_last_lookups enters dentry lookup block although source O_CREAT set; op.intent tracked separately",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X10",
+      "path": "helper-only LOOKUP_RCU in lookup_flags",
+      "source": "raw op argument, not validated actual producer",
+      "values": {
+        "LOOKUP_RCU": 64,
+        "O_CREAT": 64
+      },
+      "local_test": "(flags & O_CREAT) != 0",
+      "outcome": "O_CREAT-named branch skips dentry assignment, reaches use of indeterminate local pointer",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X11",
+      "path": "successful step_into and later NULL",
+      "source": "handle_mounts >=0",
+      "values": {
+        "ENOERR": 0,
+        "neg_ENOERR": 0
+      },
+      "pointer": "ERR_PTR(0) -> NULL",
+      "outer": "s=NULL so loop exits with integer err0 if prior link_walk0",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "LC32-X12",
+      "path": "dentry lookup error",
+      "source": "__d_lookup/__lookup_slow return ERR_PTR(-2) helper hypothesis",
+      "values": {
+        "ENOENT": 2,
+        "PTR_ERR_result": -2
+      },
+      "outer": "s=nonNULL ERR_PTR(-2), next link_path_walk returns int -2; no normal file output",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "historical_links": [
+    "CORE-USER-VFS-BASELINE-05::UV-04",
+    "CORE-USER-VFS-BASELINE-05::fs.vfs.path_open",
+    "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+    "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+    "CORE-USER-PATH-INIT-31::PI31-F03",
+    "CORE-USER-PATH-INIT-31::PI31-F04",
+    "CORE-USER-PATH-INIT-31-REVIEW-001::R31-S01",
+    "CORE-USER-PATH-INIT-31-REVIEW-001::R31-S02"
+  ],
+  "new_findings": [
+    "LC32-F01",
+    "LC32-F02",
+    "LC32-F03",
+    "LC32-F04"
+  ],
+  "known_limits": [
+    "no full __d_lookup or __lookup_slow implementation validation",
+    "step_into success only conditional on handle_mounts normal integer return",
+    "all outer success subject to valid objects and source string",
+    "no actual close/open or mount traversal proof",
+    "build_open_flags client has historical partial-op errors",
+    "no full duplicate-root cause review"
+  ],
+  "no_kernel_changes": true,
+  "owner_decisions_requested_now": []
+}
