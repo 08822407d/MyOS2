@@ -1,0 +1,158 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-DENTRY-LOOKUP-33",
+  "record_type": "conditional_deferred_finding_ledger",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-03",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "write_base_short12": "d6444512a213",
+  "lead_published_short12": "4b39bce5c8c6",
+  "package_id": "MYOS2-C03C-TO-C04A-20261103-01",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "not_a_confirmed_vulnerability_count": true,
+  "owner_decisions_requested_now": [],
+  "new_findings": [
+    {
+      "id": "DL33-F01",
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F01",
+      "status": "needs_evidence",
+      "kind": "query_length_only_match",
+      "fact": "__d_lookup uses query len but not candidate d_name.len in strncmp",
+      "premises": [
+        "valid parent child list",
+        "query=a len1, candidate=ab len2",
+        "selected strncmp body bound"
+      ],
+      "counterevidence": [
+        "reverse direction ab vs a differs at candidate NUL",
+        "actual user path, file result and permissions not run",
+        "candidate inode validity not proven"
+      ],
+      "anchors": [
+        "DL33-A001",
+        "DL33-A006",
+        "DL33-A008",
+        "DL33-A010"
+      ],
+      "potential_impact": "first prefix candidate chosen in bounded helper model",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DL33-F02",
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F02",
+      "status": "needs_evidence",
+      "kind": "callback_result_vs_original_inode",
+      "fact": "__lookup_slow only compares filesystem lookup callback result to NULL and then reads the original allocated dentry->d_inode",
+      "premises": [
+        "valid dir/inode/i_op/lookup function pointer",
+        "callback returns nonNULL",
+        "defined continuation needs original dentry inode/mapping valid"
+      ],
+      "counterevidence": [
+        "callback may correctly populate original before returning",
+        "no actual callback producer for alternate pointer or ERR_PTR demonstrated",
+        "no runtime fault or access bypass demonstrated"
+      ],
+      "anchors": [
+        "DL33-A021",
+        "DL33-A022",
+        "DL33-A023",
+        "DL33-A025"
+      ],
+      "potential_impact": "original-object state is not guaranteed by nonNULL pointer alone",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DL33-F03",
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F03",
+      "status": "needs_evidence",
+      "kind": "d_alloc_wrapper_ERR_PTR_check",
+      "fact": "__myos_d_alloc on allocation failure returns ERR_PTR(-ENOMEM), while d_alloc only tests pointer==NULL",
+      "premises": [
+        "wrapper invoked",
+        "allocation failure occurs",
+        "selected error-pointer model"
+      ],
+      "counterevidence": [
+        "__lookup_slow direct caller checks IS_ERR",
+        "real d_alloc callers/failures not traced"
+      ],
+      "anchors": [
+        "DL33-A011",
+        "DL33-A012",
+        "DL33-A017"
+      ],
+      "potential_impact": "conditional caller contract mismatch",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DL33-F04",
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F04",
+      "status": "needs_evidence",
+      "kind": "allocated_name_buffer_cleanup",
+      "fact": "__myos_d_alloc separately allocates d_name.name, while __lookup_slow's NULL callback branch explicitly frees only the dentry object",
+      "premises": [
+        "both allocations succeed",
+        "callback returns NULL",
+        "name buffer not reclaimed through an unobserved path"
+      ],
+      "counterevidence": [
+        "allocator/ownership lifecycle unexamined",
+        "not a measured runtime leak or independent root-cause count"
+      ],
+      "anchors": [
+        "DL33-A012",
+        "DL33-A013",
+        "DL33-A021"
+      ],
+      "potential_impact": "possible unmatched name-buffer reclamation in selected prefix",
+      "owner_action_now": "none"
+    }
+  ],
+  "historical_links": [
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+      "disposition": "bounded_narrowing",
+      "note": "no normal NULL return in selected well-defined slow lookup; old artifact unchanged"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F01",
+      "disposition": "retained",
+      "note": "LOOKUP/O flag-source mismatch not reclassified"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F02",
+      "disposition": "retained",
+      "note": "helper-only 0x40 branch still conditional"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F04",
+      "disposition": "retained",
+      "note": "outer loop pointer/int distinction persists"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "disposition": "retained",
+      "note": "do_open missing nonvoid return boundary persists"
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "disposition": "retained",
+      "note": "must consume DOC-FIX-01; no concrete flag derived from uninitialized field"
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+      "disposition": "retained",
+      "note": "not claimed as an independently established permission fault"
+    }
+  ],
+  "limitations": [
+    "no all-repo duplicate finding scan",
+    "no kernel/user program modification or patch",
+    "ordinary findings deferred under lead/18",
+    "not compiled, run or independently accepted by C04"
+  ]
+}
