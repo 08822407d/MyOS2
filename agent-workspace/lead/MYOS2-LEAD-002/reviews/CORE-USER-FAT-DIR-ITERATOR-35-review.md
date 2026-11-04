@@ -133,7 +133,7 @@ lookup的上界只在每次进入getter前检查，不是getter内部每一次ne
 3. 区分三个边界：lookup上界L、整个iobuf长度B=nr_clus*bufsize、单块buffer的字节边界。末项覆盖模型要求实际读取和所需字段有效；B与步长E的配合、每个单块是否容纳完整条目均须说明。B<=L不是无条件安全终止定理，也可能先发生分配/部分记录/无效指针问题。deferred中“often terminates”不作频率结论，只按满足条件时可能先终止消费。
 4. 补齐59号要求的getter内部跨L情形：设E=32仅作显式布局模型、B=L+128，某次调用起点L-32合法；该处为长名，内部next将cursor移至L且end仍false，getter继续读取L处普通有效条目，将cursor移至L+32并返回它。外层本次左条件不会重算，故可进入循环体消费该返回项。与“下一次左条件失败后保留旧tmpde”是不同路径，不可混为一谈。该例无真实目录、盘数据或parser行为认证。
 5. 另一模型为前次普通条目在L-32返回、cursor到L但B>L、比较未匹配。下一次左条件写de_start=L后为假，getter与循环体均不执行；tmpde仍旧值，循环后的IS_ERR与inode构造才可能消费它。off、de_start与tmpde不是同一轮成功匹配记录。B=L且最后完整读取正常时，getter自身的end覆盖可在下一次上界检查之前产生-ENOENT。
-6. 零bufsize须区分函数：iobuf_init先计算max_nr/bufsize，零除数在这里阻断；但raw readent在nr_clus*bufsize正常得到0的模型中，任何off均被off>=0或off<0拒绝，不会到后面的除法。不能泛称readent遇bufsize0必定除零。其它乘法、size_t/loff_t转换、int下标窄化和cursor加sizeof只在所述有限合法整数域推演，不认证所有机器整数输入。
+6. 零bufsize须区分函数：iobuf_init先计算max_nr=FAT32_MAX_FILE_SIZE/bufsize，零除数在这里阻断；但raw readent在nr_clus*bufsize正常得到0的模型中，任何off均被off>=0或off<0拒绝，不会到后面的除法。不能泛称readent遇bufsize0必定除零。其它乘法、size_t/loff_t转换、int下标窄化和cursor加sizeof只在所述有限合法整数域推演，不认证所有机器整数输入。
 7. IT35-T06的“到B后再次next”和T14的黏滞end状态，不因next不设入口门就证明正常lookup会继续调用；正常getter已报错时lookup会退出。需区别局部函数允许的调用和已证明的实际调用者。count0未新分配数组，数组初值若按零推理仍依赖kzalloc实际清零；count>max_nr、max_nr=0与非法列表需另外证据，不跨过更早无效写。iobuf_init本批明示分配错误出口均设-ENOMEM，不将“usually”扩成未见的新错误码。
 8. clusters[0]只指数组元素0；在未审计列表顺序和真实填充之前，不直接称为文件逻辑第一簇。bufidx>0的本地索引不一致、宏调用之后发布buffer与“设备已成功读出正确内容”继续分开。完整struct可读是足够的安全前提，不表示getter一次读取整个struct；停止点应落到实际attr/name或下游具体字段访问。
 
