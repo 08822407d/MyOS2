@@ -1,0 +1,370 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-04",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "bcb7ecb66a06",
+  "contract62_short12": "928d1d521e4e",
+  "mandatory_supplements": [
+    "R36C-S01",
+    "R37-S01",
+    "R37-S02"
+  ],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "record_type": "registration_binding_and_object_provenance_matrix",
+  "prior_verdicts": {
+    "R36_01": "CLOSED_DOCUMENTATION_ONLY_BY_C04",
+    "R36_02": "CLOSED_DOCUMENTATION_ONLY_BY_C04",
+    "batch36_combined": "PASS_PENDING_LOCAL",
+    "batch37": "PASS_PENDING_LOCAL",
+    "review_reperformed": false,
+    "old_artifacts_changed": false
+  },
+  "routes": [
+    {
+      "route": "A-registration",
+      "kind": "source_fact",
+      "producer": "register_diskfs -> init_fat32_fs -> register_filesystem(&FAT32_fs_type)",
+      "binding": "name=\"FAT32\", read_super=read_fat32_superblock; next=NULL",
+      "gate": "register_filesystem requires fs->next==NULL and no same-name entry; init_fat32_fs ignores integer status",
+      "limit": "registration attempt is not proof of successful registration or actual boot",
+      "anchors": [
+        "SB38-A002",
+        "SB38-A013",
+        "SB38-A014",
+        "SB38-A015",
+        "SB38-A011",
+        "SB38-A012"
+      ]
+    },
+    {
+      "route": "A-dispatch",
+      "kind": "conditional_inference",
+      "producer": "myos_switch_to_root_disk -> mount_fs(\"FAT32\",...)",
+      "gate": "earlier buffers/read requests valid; MBR type gate; GUID LOW/HIGH comparisons; partition i==BOOT_FS_IDX(0); registry match via strcmp",
+      "binding": "mount_fs calls matching read_super, not mount",
+      "limit": "actual disk contents and actual machine route unobserved; duplicate/existing registration may determine selected node",
+      "anchors": [
+        "SB38-A001",
+        "SB38-A003",
+        "SB38-A004",
+        "SB38-A007"
+      ]
+    },
+    {
+      "route": "A-superblock",
+      "kind": "source_fact_plus_C_initializer_model",
+      "producer": "read_fat32_superblock -> alloc_super then s_op=&FAT32_sb_ops",
+      "binding": "file-scope aggregate FAT32_sb_ops initializes write_super, put_super, write_inode; omitted alloc_inode is NULL in selected C initialization model, absent later modification",
+      "limit": "this NULL is not inferred from arbitrary heap contents; alloc_super ERR_PTR failure is not caught by sbp==NULL",
+      "anchors": [
+        "SB38-A023",
+        "SB38-A025",
+        "SB38-A033",
+        "SB38-A034",
+        "SB38-A030"
+      ]
+    },
+    {
+      "route": "A-root",
+      "kind": "source_fact",
+      "producer": "read_fat32_superblock directly kmalloc(sizeof(inode_s))",
+      "binding": "independent inode, i_sb=sbp; i_op=&vfat_dir_inode_operations; i_fop=&FAT32_file_ops; size0; mode S_IFDIR",
+      "limit": "not new_inode/fat_alloc_inode; no direct i_mapping or i_data initialization in complete selected root constructor",
+      "anchors": [
+        "SB38-A038",
+        "SB38-A039",
+        "SB38-A040"
+      ]
+    },
+    {
+      "route": "A-child",
+      "kind": "conditional_inference",
+      "producer": "root/parent i_sb -> FAT32_lookup -> fat_build_inode -> new_inode -> alloc_inode",
+      "binding": "same unchanged FAT32_sb_ops yields NULL alloc_inode slot -> inode_cachep fallback, object size inode_s; successful inode_init_always runs before new_inode returns",
+      "limit": "not outer msdos_inode_info_s; fat_fill_inode next demands MSDOS_I(inode)->i_pos, whose containing object is not established; cannot extend this prefix to a completed child",
+      "anchors": [
+        "SB38-A048",
+        "SB38-A049",
+        "SB38-A050",
+        "SB38-A051",
+        "SB38-A053",
+        "SB38-A055",
+        "SB38-A063",
+        "SB38-A062"
+      ]
+    },
+    {
+      "route": "B-vfat",
+      "kind": "alternative_static_path_not_selected_by_register_diskfs",
+      "producer": "init_vfat_fs can register vfat_fs_type; vfat_mount delegates mount_bdev(...,vfat_fill_super)",
+      "binding": "name=\"vfat\", mount=vfat_mount, read_super omitted/NULL in selected C model; vfat_fill_super -> fat_fill_super(...,setup)",
+      "gate": "separate activation and invocation of mount callback; mount_bdev implementation is opaque in this batch",
+      "limit": "not called by current register_diskfs; table existence is not registration or runtime evidence",
+      "anchors": [
+        "SB38-A002",
+        "SB38-A016",
+        "SB38-A017",
+        "SB38-A018",
+        "SB38-A019"
+      ]
+    },
+    {
+      "route": "B-superblock-and-root",
+      "kind": "source_fact_with_completion_limit",
+      "producer": "fat_fill_super allocates msdos_sb_info_s into s_fs_info, binds fat_sops then setup; root_inode=new_inode(sb)",
+      "binding": "fat_sops.alloc_inode=fat_alloc_inode -> outer msdos_inode_info_s -> &vfs_inode, then per-allocation VFS init",
+      "limit": "private_sb_info is not established by this fill body; after nonnegative fat_read_root completion active fallthrough reaches out_invalid, clears s_fs_info and returns -EINVAL; no normal successful root publication is certified",
+      "anchors": [
+        "SB38-A042",
+        "SB38-A043",
+        "SB38-A020",
+        "SB38-A024",
+        "SB38-A064",
+        "SB38-A066",
+        "SB38-A044",
+        "SB38-A045",
+        "SB38-A046",
+        "SB38-A047"
+      ]
+    }
+  ],
+  "field_sources": [
+    {
+      "field": "A.sb.s_op",
+      "writer_and_source": "alloc_super initially default_op; read_fat32_superblock overwrites &FAT32_sb_ops",
+      "state_before_consumer": "static aggregate omitted alloc_inode=NULL",
+      "consumer": "alloc_inode selects fallback",
+      "limit": "valid ordinary sb; no intervening table writer"
+    },
+    {
+      "field": "A.sb.private_sb_info",
+      "writer_and_source": "kzalloc(sizeof(FAT32_SBinfo_s)); fields copied from DPTE/FAT32_BS",
+      "state_before_consumer": "ordinary private object only if allocation/inputs valid",
+      "consumer": "FAT32_lookup reads parent->i_sb->private_sb_info",
+      "limit": "no local NULL guard before fsbi field writes"
+    },
+    {
+      "field": "A.sb.s_fs_info",
+      "writer_and_source": "no explicit write in selected read_fat32_superblock",
+      "state_before_consumer": "zero/NULL only if alloc_super kzalloc zeroing and target representation premises hold",
+      "consumer": "MSDOS_SB would read this distinct field",
+      "limit": "not interchangeable with private_sb_info"
+    },
+    {
+      "field": "B.sb.s_fs_info",
+      "writer_and_source": "fat_fill_super kzalloc(msdos_sb_info_s), NULL tested, assignment before setup",
+      "state_before_consumer": "MSDOS_SB returns this field; later out_fail clears it",
+      "consumer": "setup writes sbi->dir_ops; fat_read_root uses it",
+      "limit": "do not treat post-error state as live mounted fs"
+    },
+    {
+      "field": "B.sb.private_sb_info",
+      "writer_and_source": "no explicit writer in selected fat_fill_super",
+      "state_before_consumer": "incoming state not established here",
+      "consumer": "FAT32-specific helpers would require FAT32_SBinfo_s",
+      "limit": "cannot infer a compatible object from s_fs_info"
+    },
+    {
+      "field": "A.root.dentry",
+      "writer_and_source": "kzalloc(dentry_s); list members, d_sb, d_parent, d_op assigned; name kmalloc2",
+      "state_before_consumer": "root path bytes \"/\" and zero written, len1",
+      "consumer": "set_init_mount and set_init_taskfs",
+      "limit": "all allocations and helper calls must be valid; errors are not all guarded"
+    },
+    {
+      "field": "A.root.inode",
+      "writer_and_source": "kmalloc(sizeof(inode_s)), not outer FAT struct",
+      "state_before_consumer": "direct standalone inode allocation",
+      "consumer": "root->i_op.lookup -> FAT32_lookup",
+      "limit": "no assumption allocators synthesize a containing object"
+    },
+    {
+      "field": "A.root.i_sb/i_op/i_fop",
+      "writer_and_source": "direct sbp, vfat_dir_inode_operations, FAT32_file_ops writes",
+      "state_before_consumer": "statically named operation tables",
+      "consumer": "parent sb flows into child fat_build_inode",
+      "limit": "names shared across routes do not merge object models"
+    },
+    {
+      "field": "A.root.i_size/i_mode/i_blocks",
+      "writer_and_source": "size=0, mode=S_IFDIR, blocks=(0+bytes_per_cluster-1)/bytes_per_sector",
+      "state_before_consumer": "only defined under valid arithmetic and nonzero divisor",
+      "consumer": "later VFS consumers outside bounded chain",
+      "limit": "blocks is not automatically0; no actual disk-size result"
+    },
+    {
+      "field": "A.root.i_mapping/i_data",
+      "writer_and_source": "no direct write or call to inode_init_always/once in selected root constructor",
+      "state_before_consumer": "UNESTABLISHED, not automatically NULL",
+      "consumer": "any consumer needs separate initialization provenance",
+      "limit": "do not turn missing local writer into a proved crash"
+    },
+    {
+      "field": "A.root.private_idx_info",
+      "writer_and_source": "separate kmalloc(sizeof(FAT32_inode_info_s))",
+      "state_before_consumer": "first_cluster and selected location/date fields assigned",
+      "consumer": "FAT32 iobuf/lookup consumers",
+      "limit": "not msdos_inode_info_s and cannot validate MSDOS_I containment"
+    },
+    {
+      "field": "A.child.i_mapping/i_size",
+      "writer_and_source": "successful fallback -> inode_init_always sets &i_data and size0",
+      "state_before_consumer": "known at valid new_inode return",
+      "consumer": "fat_fill_inode follows",
+      "limit": "does not prove later outer-container write legal"
+    },
+    {
+      "field": "A.child.outer_container",
+      "writer_and_source": "fallback cache created for sizeof(inode_s)",
+      "state_before_consumer": "no established enclosing msdos_inode_info_s",
+      "consumer": "MSDOS_I(inode)->i_pos=0 after i_mode=0",
+      "limit": "stop proof here unless additional valid containment supplied; allocation rounding is not proof"
+    },
+    {
+      "field": "B.root/child.outer_container",
+      "writer_and_source": "fat_sops -> kmalloc(sizeof(msdos_inode_info_s)) -> &ei->vfs_inode",
+      "state_before_consumer": "valid enclosing object on successful callback",
+      "consumer": "MSDOS_I recovers ei under lifetime/layout premises",
+      "limit": "conditional path only; B fill does not demonstrate successful mounted root"
+    }
+  ],
+  "return_categories": [
+    {
+      "producer": "register_filesystem",
+      "normal": "integer0 after linking",
+      "failure": "-EBUSY on next/name rejection",
+      "caller": "init_fat32_fs is void and ignores status"
+    },
+    {
+      "producer": "mount_fs",
+      "normal": "same pointer returned by matching read_super",
+      "failure": "NULL on no name match",
+      "qualification": "generic callback ERR_PTR would be forwarded unchanged if actually returned; no independent error construction here"
+    },
+    {
+      "producer": "alloc_super",
+      "normal": "ordinary allocated super_block_s* after local init",
+      "failure": "ERR_PTR(-ENOMEM), NOT NULL on shown kzalloc failure",
+      "caller": "read_fat32_superblock only tests NULL then writes sbp->s_op"
+    },
+    {
+      "producer": "read_fat32_superblock",
+      "normal": "ordinary sbp on fully valid completed construction",
+      "failure": "explicit NULL-test error return has no normal NULL producer in selected alloc_super; real encoded allocator failure loses validity before return",
+      "qualification": "no automatic safe -ENOMEM propagation; other allocation failures stop at first actual invalid consumer"
+    },
+    {
+      "producer": "new_inode via fallback or fat_alloc_inode",
+      "normal": "ordinary inode* after always/list operations",
+      "failure": "NULL propagates normally on allocator NULL",
+      "caller": "fat_build_inode constructs ERR_PTR(-ENOMEM); NULL is not an executed crash"
+    },
+    {
+      "producer": "fat_fill_super",
+      "normal_completion_of_root_work": "active fallthrough to out_invalid: error=-EINVAL",
+      "early_failure": "sbi allocation NULL returns -ENOMEM; other error labels as source",
+      "qualification": "integer fill status, not a superblock pointer; mount_bdev handling and full mount lifecycle opaque"
+    }
+  ],
+  "finite_cases": [
+    {
+      "id": "SB38-C01",
+      "classification": "conditional_inference",
+      "premise": "register_diskfs runs with no conflicting registry name",
+      "bounded_result": "FAT32 node can be linked; vfat not called by this function",
+      "last_prefix_or_limit": "not actual execution proof"
+    },
+    {
+      "id": "SB38-C02",
+      "classification": "conditional_inference",
+      "premise": "matching GUID comparisons and i=0, normal buffers and list entry",
+      "bounded_result": "mount_fs calls known FAT32.read_super",
+      "last_prefix_or_limit": "partition contents and read success remain unobserved"
+    },
+    {
+      "id": "SB38-C03",
+      "classification": "conditional_inference",
+      "premise": "no matching registry name",
+      "bounded_result": "mount_fs returns NULL",
+      "last_prefix_or_limit": "set_init_mount then needs valid myos_root_sb; first unproved dereference is s_root"
+    },
+    {
+      "id": "SB38-C04",
+      "classification": "helper_only",
+      "premise": "vfat separately registered, raw mount_fs(\"vfat\") called",
+      "bounded_result": "matches vfat node but read_super is omitted/NULL, not a call to vfat_mount",
+      "last_prefix_or_limit": "not selected boot call; invalid callback invocation proof stops there"
+    },
+    {
+      "id": "SB38-C05",
+      "classification": "source_derived_failure",
+      "premise": "alloc_super kzalloc returns NULL",
+      "bounded_result": "alloc_super ERR_PTR(-ENOMEM), read_super NULL guard false",
+      "last_prefix_or_limit": "stop before interpreting invalid sbp->s_op store as completed construction"
+    },
+    {
+      "id": "SB38-C06",
+      "classification": "conditional_inference",
+      "premise": "all FAT32 root constructor allocations and arithmetic valid",
+      "bounded_result": "root standalone inode populated directly; mapping provenance still absent",
+      "last_prefix_or_limit": "not new_inode; do not assert unknown mapping value"
+    },
+    {
+      "id": "SB38-C07",
+      "classification": "conditional_inference",
+      "premise": "parent uses unchanged FAT32_sb_ops, child fallback returns NULL",
+      "bounded_result": "new_inode NULL -> fat_build_inode ERR_PTR(-ENOMEM)",
+      "last_prefix_or_limit": "normal error chain; no fat_fill_inode call"
+    },
+    {
+      "id": "SB38-C08",
+      "classification": "conditional_inference",
+      "premise": "same parent, child fallback succeeds and VFS init/list operations valid",
+      "bounded_result": "i_size0 and i_mapping=&i_data known at new_inode return",
+      "last_prefix_or_limit": "fat_fill_inode i_mode=0 then MSDOS_I->i_pos requires unsupported outer object"
+    },
+    {
+      "id": "SB38-C09",
+      "classification": "conditional_inference",
+      "premise": "another sb actually uses fat_sops and outer kmalloc succeeds",
+      "bounded_result": "inode returned is &ei->vfs_inode; containment premise can be met",
+      "last_prefix_or_limit": "does not show A route uses that allocator"
+    },
+    {
+      "id": "SB38-C10",
+      "classification": "conditional_inference",
+      "premise": "vfat fill invoked and all preceding calls including fat_read_root return normally nonnegative",
+      "bounded_result": "falls through out_invalid, clears s_fs_info, returns -EINVAL",
+      "last_prefix_or_limit": "no successful mounted B root; no full cleanup/lifetime audit"
+    },
+    {
+      "id": "SB38-C11",
+      "classification": "source_derived_failure",
+      "premise": "FAT32 private_sb_info allocation NULL after valid sb",
+      "bounded_result": "next fsbi->start_sector store needs valid object",
+      "last_prefix_or_limit": "do not skip to root inode construction"
+    },
+    {
+      "id": "SB38-C12",
+      "classification": "conditional_inference",
+      "premise": "file-scope FAT32_sb_ops initialized as shown, no later writer",
+      "bounded_result": "omitted alloc_inode is a null pointer in chosen C model",
+      "last_prefix_or_limit": "not an assumption about zeroed heap storage"
+    }
+  ],
+  "opaque_boundaries": [
+    "ROOTBLK_TRANSFER and disk/partition content",
+    "mount_bdev actual callback invocation and mount lifetime",
+    "kmalloc/kmem_cache_alloc physical layout and zeroing",
+    "list/lock/refcount operations beyond shown call order",
+    "FAT directory scanning/name decoding already bounded by prior reviews",
+    "complete page cache and permissions"
+  ],
+  "runtime_selection_attested": false,
+  "C_model_note": "Static-duration aggregate omitted pointer members are NULL under the selected C initializer model. This differs from a kmalloc object with no local field writer. No target compiler, preprocessor or binary was run."
+}
