@@ -1,0 +1,317 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FAT-NAME-PARSE-36",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-04",
+  "read_channel": "connector",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "a7cb8bf8d2e6",
+  "contract60_short12": "d5b6bf140e03",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "not_confirmed_vulnerability_count": true,
+  "record_type": "FAT_name_parser_conditional_deferred_findings",
+  "new_findings": [
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F01",
+      "owner_action_now": "none",
+      "id": "NP36-F01",
+      "kind": "long_reverse_scan_attr_before_cursor_and_error_check",
+      "fact": "FAT32_parse_long reads lde_tmp->attr first in while, then tests nonempty and cursor>=0. readent can return ERR_PTR(-ENOENT) for negative offset, without a preceding IS_ERR test.",
+      "premises": [
+        "parse_long was selected and a backward read reaches invalid negative offset or encoded error",
+        "return from readent completes with ERR_PTR",
+        "next while condition evaluated"
+      ],
+      "counterevidence": [
+        "normal caller selects long based on earlier valid tmplde and cannot assume initial offset negative",
+        "an earlier 0x40 marker or non-long slot can stop scan before invalid offset",
+        "no actual disk layout, machine fault or error propagation demonstrated"
+      ],
+      "anchors": [
+        "NP36-A009",
+        "NP36-A010",
+        "NP36-A011",
+        "NP36-A012",
+        "NP36-A048"
+      ],
+      "possible_impact": "invalid pointer consumed before local signed cursor gate, not a valid parser error return",
+      "resume_conditions": [
+        "confirm actual backing slot layout and boundary producer in separate authorized work",
+        "never infer post-invalid return"
+      ],
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F02",
+      "owner_action_now": "none",
+      "id": "NP36-F02",
+      "kind": "16bit_unit_low_byte_projection_and_embedded_zero",
+      "fact": "FAT32_parse_long uses *(u16*) to filter 0x0000/0xffff but copies only lde->nameX[y] into one output char per accepted unit; 16bit high bytes are not copied by selected body.",
+      "premises": [
+        "valid aligned readable slot and selected compiler/endian handling of u16 cast",
+        "at least one accepted u16 unit contains nontrivial higher byte or low byte zero",
+        "allocation and length valid"
+      ],
+      "counterevidence": [
+        "ASCII-like units with high byte0 can copy expected low bytes",
+        "no real non-ASCII filename/Unicode decoding or match outcome demonstrated",
+        "cannot assert full standard invalidity without Unicode/VFAT audit"
+      ],
+      "anchors": [
+        "NP36-A016",
+        "NP36-A017",
+        "NP36-A018",
+        "NP36-A038",
+        "NP36-A039",
+        "NP36-A040"
+      ],
+      "possible_impact": "conditional name-byte collisions/embedded zero and strlen/namelen disagreement; actual file misselection unproven",
+      "resume_conditions": [
+        "fixed disk byte producers and compiler aliasing/endian context",
+        "higher-scope name correctness audit if separately ordered"
+      ],
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F03",
+      "owner_action_now": "none",
+      "id": "NP36-F03",
+      "kind": "unchecked_parser_output_allocation",
+      "fact": "Short requests kzalloc(15) and long kzalloc(i*13+1) then both may write output bytes without explicit NULL test in selected functions. Some no-write branches can return NULL normally if allocation fails.",
+      "premises": [
+        "kzalloc returns NULL",
+        "selected input branch writes at least one output byte for an invalid-store prefix OR valid no-write branch returns NULL",
+        "lookup later consumes returned name"
+      ],
+      "counterevidence": [
+        "successful kzalloc avoids this premise",
+        "short directory with empty base may return NULL without a store, then caller count governs further validity",
+        "no runtime allocator failure or definite fault observed"
+      ],
+      "anchors": [
+        "NP36-A001",
+        "NP36-A003",
+        "NP36-A004",
+        "NP36-A014",
+        "NP36-A016",
+        "NP36-A027",
+        "NP36-A047"
+      ],
+      "possible_impact": "conditional unguarded output store or NULL pointer passed to size_t-count strncmp, without proven machine terminal",
+      "resume_conditions": [
+        "real allocator failure producer",
+        "verify branch + count if authorized"
+      ],
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F04",
+      "owner_action_now": "none",
+      "id": "NP36-F04",
+      "kind": "raw_add_32_on_case_flag_without_letter_test",
+      "fact": "FAT32_parse_short adds 32 to every consumed base/extension byte when corresponding lcase mask is present, with no local alphabetic check; digit '1' -> ASCII 'Q' in finite byte model.",
+      "premises": [
+        "LOWERCASE_BASE/EXT set on a source entry",
+        "a byte not in intended uppercase ASCII letter range appears in consumed part",
+        "source byte, arithmetic and char result valid"
+      ],
+      "counterevidence": [
+        "unflagged names copied unchanged",
+        "uppercase ASCII letters can map to their lowercase numeric counterparts",
+        "FAT producer/flag legality and real filesystem names not proven"
+      ],
+      "anchors": [
+        "NP36-A003",
+        "NP36-A006",
+        "NP36-A032",
+        "NP36-A037"
+      ],
+      "possible_impact": "conditional byte change not necessarily a genuine case fold; no VFAT conformance verdict",
+      "resume_conditions": [
+        "document valid source flag and byte producers in separate scoped audit"
+      ],
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F05",
+      "owner_action_now": "none",
+      "id": "NP36-F05",
+      "kind": "long_length_depends_on_caller_init",
+      "fact": "Full FAT32_parse_long selected body increments *namelen but never assigns initial zero; lookup itself declares int namelen=0 before dispatch, so nonzero starting length only has a direct-helper or other-caller premise.",
+      "premises": [
+        "a different caller or invalid input supplies nonzero writable *namelen",
+        "i accepted code units and output allocation capacity does not account for initial offset"
+      ],
+      "counterevidence": [
+        "selected FAT32_lookup initializes namelen=0, so the helper-only nonzero state is not a proved actual producer here",
+        "with valid zero input, writes bounded by i*13 if arithmetic valid"
+      ],
+      "anchors": [
+        "NP36-A009",
+        "NP36-A016",
+        "NP36-A017",
+        "NP36-A018",
+        "NP36-A024",
+        "NP36-A027"
+      ],
+      "possible_impact": "bounded helper contract ambiguity/possible capacity risk only outside verified caller0",
+      "resume_conditions": [
+        "trace any additional actual caller before raising status",
+        "confirm integer widths and counts"
+      ],
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F06",
+      "owner_action_now": "none",
+      "id": "NP36-F06",
+      "kind": "long_count_allocation_arithmetic_and_readent_extra_update",
+      "fact": "Long increments int i during backtracking and allocates i*13+1 without visible overflow test; second for update always decrements local cursor and invokes readent after each body, including last body. Last returned pointer may be unused when x<i then becomes false.",
+      "premises": [
+        "slot count and int arithmetic reach problematic range OR final-update readent has external effects",
+        "valid prior accesses and normal return until relevant operation"
+      ],
+      "counterevidence": [
+        "small valid i gives capacity for up to13*i stored bytes plus NUL under zeroing",
+        "negative final readent can return ERR_PTR(-ENOENT) that is not then dereferenced, so it is not itself a proved invalid access",
+        "actual extreme slot count and memory pressure not produced in current scoped source"
+      ],
+      "anchors": [
+        "NP36-A011",
+        "NP36-A012",
+        "NP36-A014",
+        "NP36-A015",
+        "NP36-A048",
+        "NP36-A052"
+      ],
+      "possible_impact": "capacity calculation and unnecessary extra read effects require separate proof; not a demonstrated overflow or crash",
+      "resume_conditions": [
+        "finite upper bound from validated parser input and actual allocator limits",
+        "separate evidence for side-effect significance"
+      ],
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F07",
+      "owner_action_now": "none",
+      "id": "NP36-F07",
+      "kind": "long_scan_termination_markers_and_slot_validation",
+      "fact": "First pass stops on attr/nonempty condition or id&0x40; selected body does not separately validate slot ordinal/checksum/UTF-16 sequence before counting and copying. A malformed or truncated chain can either stop early or backtrack until readent error.",
+      "premises": [
+        "in-scope caller selects parse_long",
+        "slot sequence differs from expected marker chain but access remains valid until selected stop",
+        "actual source data supplied"
+      ],
+      "counterevidence": [
+        "valid marker terminates as designed",
+        "full FAT/VFAT and Unicode standards outside this task; not all missing checks required in every call context",
+        "no real malformed disk record or wrong name outcome proven"
+      ],
+      "anchors": [
+        "NP36-A010",
+        "NP36-A011",
+        "NP36-A012",
+        "NP36-A014",
+        "NP36-A038",
+        "NP36-A039",
+        "NP36-A040"
+      ],
+      "possible_impact": "bounded name sequence validation gap; no conformance or exploit claim",
+      "resume_conditions": [
+        "later owner-authorized standards or source-producer scope"
+      ],
+      "status": "needs_evidence"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F08",
+      "owner_action_now": "none",
+      "id": "NP36-F08",
+      "kind": "caller_length_based_strncmp_with_embedded_zero",
+      "fact": "Lookup compares with count max(namelen,destlen), while selected strncmp ends on equal NUL before reaching count. Parsed long output may contain NUL copied from a u16 accepted because high byte nonzero.",
+      "premises": [
+        "valid byte-model input with an accepted 0x0100-like unit whose copied low byte is zero",
+        "both compared byte streams have NUL at the same position",
+        "all earlier pointer accesses and kfree return valid"
+      ],
+      "counterevidence": [
+        "different source/target bytes before NUL return nonzero",
+        "real FAT/lookup input producer and selected build strncmp implementation not proved",
+        "related to NP36-F02; do not double-count root cause"
+      ],
+      "anchors": [
+        "NP36-A017",
+        "NP36-A018",
+        "NP36-A027",
+        "NP36-A043",
+        "NP36-A044",
+        "NP36-A045",
+        "NP36-A046"
+      ],
+      "possible_impact": "conditional early equal comparison under byte-model, not proof of wrong file open",
+      "resume_conditions": [
+        "establish real input and build binding before impact analysis"
+      ],
+      "status": "needs_evidence"
+    }
+  ],
+  "historical_links": [
+    {
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F01",
+      "disposition": "retained",
+      "note": "readent error can be consumed in getter and independently by long parse before error check; no double-count of actual runtime faults"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F02",
+      "disposition": "retained",
+      "note": "terminal entry over-write by getter is prior to parser choice; not re-opened or closed"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F05",
+      "disposition": "limited_premise",
+      "note": "readent only start-offset validates and macro result not checked; parsing dereferences returned typed slot conditional on full byte range"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F03",
+      "disposition": "refined",
+      "note": "short/long parser output validity and max count now direct source-backed; actual length 0 supplied by lookup"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F01",
+      "disposition": "retained",
+      "note": "outer lookup upper-bound false skips parser; no erroneous graph edge to parser body"
+    },
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F02",
+      "disposition": "retained",
+      "note": "inode filling remains separate post-name-stage"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+      "disposition": "retained",
+      "note": "slow lookup has no direct normal NULL return; parser result NULL is earlier different scope"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "disposition": "retained",
+      "note": "do_open nonvoid-return issue unchanged"
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "disposition": "retained_with_DOC_FIX",
+      "note": "no flags/permissions conclusion in this task"
+    }
+  ],
+  "not_independent_confirmed_vulnerabilities": true,
+  "source_anchor_prefix": "NP36-A",
+  "notes": [
+    "8 new IDs represent conditional evidence gaps, not eight proven defects or independent root causes",
+    "NP36-F08 related to F02; do not count as separate exploit proof",
+    "no changes to old IDs, historical artifacts or mainline acceptance",
+    "no real disk data, binary, compilation, harness or driver execution"
+  ]
+}
