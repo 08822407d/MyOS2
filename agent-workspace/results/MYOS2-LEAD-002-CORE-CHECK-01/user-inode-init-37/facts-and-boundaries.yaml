@@ -1,0 +1,1554 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-INODE-INIT-37",
+  "record_type": "document_correction_ledger_and_inode_initialization_matrix",
+  "date": "2026-11-04",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "3c02d6c020e3",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_items": [
+    {
+      "id": "R36-01",
+      "origin_verdict": "RETURN",
+      "type": "DOCUMENTATION_ONLY",
+      "correction_state": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "closure": "PENDING_C04_REVIEW",
+      "legacy_total": 56,
+      "legacy_retained_scoped_unrechecked": 53,
+      "legacy_replaced": 2,
+      "legacy_compiler_context_only": 1,
+      "new_direct_evidence_count": 21,
+      "legacy_findings_affected": [
+        "NP36-F02",
+        "NP36-F03",
+        "NP36-F07",
+        "NP36-F08"
+      ],
+      "condition": "old artifacts/comments frozen"
+    },
+    {
+      "id": "R36-02",
+      "origin_verdict": "RETURN",
+      "type": "DOCUMENTATION_ONLY",
+      "correction_state": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "closure": "PENDING_C04_REVIEW",
+      "old_graph": {
+        "nodes": 45,
+        "edges": 65
+      },
+      "replacement_graph": {
+        "explicit_nodes": 53,
+        "edges": 81,
+        "undefined_endpoints": 0
+      },
+      "old_node_mapping_count": 45,
+      "old_edge_mapping_count": 65,
+      "condition": "replacement DOT only in new inode-init.md; inode-init-paths.dot only new37"
+    }
+  ],
+  "legacy_quote_disposition_index": [
+    {
+      "legacy_id": "NP36-A001",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A002",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A003",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A004",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A005",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A006",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A007",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A008",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A009",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A010",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A011",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A012",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A013",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A014",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A015",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A016",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A017",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A018",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A019",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A020",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A021",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A022",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A023",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A024",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A025",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A026",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A027",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A028",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A029",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A030",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A031",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A032",
+      "disposition": "REPLACED_BY_TWO_SINGLE_MACROS",
+      "replacement": [
+        "N36C-A001",
+        "N36C-A002"
+      ],
+      "note": "LOWERCASE_BASE and LOWERCASE_EXT are separate macros; slash combined label invalid"
+    },
+    {
+      "legacy_id": "NP36-A033",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A034",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A035",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A036",
+      "disposition": "REPLACED_BY_ONE_MACRO",
+      "replacement": [
+        "N36C-A003"
+      ],
+      "note": "MSDOS_NAME only; FAT_LFN_LEN/MSDOS_SLOTS not used as evidence without new separate definitions"
+    },
+    {
+      "legacy_id": "NP36-A037",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A038",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "LEGACY_SHORT_DIRENT_ONLY; not evidence for msdos_dirslot_s names/id/attrs; use N36C-A004..A007 for long slot field proofs"
+    },
+    {
+      "legacy_id": "NP36-A039",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "LEGACY_SHORT_DIRENT_ONLY; not evidence for msdos_dirslot_s names/id/attrs; use N36C-A004..A007 for long slot field proofs"
+    },
+    {
+      "legacy_id": "NP36-A040",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A041",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A042",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A043",
+      "disposition": "COMPILER_CONDITION_CONTEXT_ONLY_NOT_VERIFIED",
+      "replacement": null,
+      "note": "#ifndef __HAVE_ARCH_STRNCMP is context, not a function or macro definition; selected strncmp body supported by legacy A044-A046 only under this condition"
+    },
+    {
+      "legacy_id": "NP36-A044",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A045",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A046",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A047",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A048",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A049",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A050",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A051",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A052",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A053",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A054",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A055",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    },
+    {
+      "legacy_id": "NP36-A056",
+      "disposition": "HISTORICAL_RETAIN_SCOPED_NOT_RECHECKED",
+      "replacement": null,
+      "note": "only preserve prior path/byte identity and its bounded earlier meaning; not newly re-VERIFIED"
+    }
+  ],
+  "prior_legacy_quote_total": 56,
+  "original_a043_context": "#ifndef __HAVE_ARCH_STRNCMP; no new VERIFIED tag for this context",
+  "corrected_long_slot_support": {
+    "for_F02": [
+      "N36C-A004",
+      "N36C-A006",
+      "N36C-A007",
+      "N36C-A009",
+      "N36C-A010",
+      "N36C-A011"
+    ],
+    "for_F07": [
+      "N36C-A004",
+      "N36C-A005",
+      "N36C-A007",
+      "N36C-A008"
+    ],
+    "exclude_legacy_short_struct": [
+      "NP36-A038",
+      "NP36-A039"
+    ],
+    "retain_old_short_definitions": true
+  },
+  "replacement_diagram": {
+    "new_graph": {
+      "explicit_nodes": 53,
+      "edges": 81,
+      "undefined_endpoints": 0
+    },
+    "old_node_mapping": [
+      {
+        "old": "lookup",
+        "now": "entry"
+      },
+      {
+        "old": "outer",
+        "now": "left+get+err"
+      },
+      {
+        "old": "getter",
+        "now": "get"
+      },
+      {
+        "old": "tmpde",
+        "now": "normal"
+      },
+      {
+        "old": "aux",
+        "now": "aux"
+      },
+      {
+        "old": "empty",
+        "now": "empty"
+      },
+      {
+        "old": "select",
+        "now": "iserr+attr+notempty"
+      },
+      {
+        "old": "short",
+        "now": "short"
+      },
+      {
+        "old": "short_init",
+        "now": "salloc"
+      },
+      {
+        "old": "short_base",
+        "now": "sbase+swrite"
+      },
+      {
+        "old": "short_dir",
+        "now": "sdir"
+      },
+      {
+        "old": "short_dot",
+        "now": "sdot"
+      },
+      {
+        "old": "short_ext",
+        "now": "sext+sewrite"
+      },
+      {
+        "old": "short_undo",
+        "now": "sundo"
+      },
+      {
+        "old": "short_ret",
+        "now": "sret"
+      },
+      {
+        "old": "long",
+        "now": "long"
+      },
+      {
+        "old": "long_cursor",
+        "now": "llocal"
+      },
+      {
+        "old": "long_read",
+        "now": "lfirst"
+      },
+      {
+        "old": "long_gate",
+        "now": "lattr+lempty+lcursor"
+      },
+      {
+        "old": "long_count",
+        "now": "lcount"
+      },
+      {
+        "old": "long_back",
+        "now": "lback"
+      },
+      {
+        "old": "long_alloc",
+        "now": "lalloc"
+      },
+      {
+        "old": "long_reset",
+        "now": "lreset"
+      },
+      {
+        "old": "long_for",
+        "now": "lfor"
+      },
+      {
+        "old": "long_units",
+        "now": "lunit+lfilter+lmore"
+      },
+      {
+        "old": "long_write",
+        "now": "lstore"
+      },
+      {
+        "old": "long_update",
+        "now": "lupdate"
+      },
+      {
+        "old": "long_ret",
+        "now": "lret"
+      },
+      {
+        "old": "readent",
+        "now": "readent calls incorporated into lfirst/lback/lreset/lupdate/aux"
+      },
+      {
+        "old": "shared",
+        "now": "shared"
+      },
+      {
+        "old": "cache",
+        "now": "cache"
+      },
+      {
+        "old": "namelen0",
+        "now": "init (per loop, after aux/off)"
+      },
+      {
+        "old": "name",
+        "now": "name"
+      },
+      {
+        "old": "max",
+        "now": "max"
+      },
+      {
+        "old": "cmp",
+        "now": "cmp"
+      },
+      {
+        "old": "free",
+        "now": "free"
+      },
+      {
+        "old": "equal",
+        "now": "equal"
+      },
+      {
+        "old": "next",
+        "now": "again"
+      },
+      {
+        "old": "break",
+        "now": "break"
+      },
+      {
+        "old": "post",
+        "now": "after"
+      },
+      {
+        "old": "end_err",
+        "now": "err true -> after"
+      },
+      {
+        "old": "premise",
+        "now": "premise"
+      },
+      {
+        "old": "stop",
+        "now": "stop"
+      },
+      {
+        "old": "no_cursor",
+        "now": "shared + cache"
+      },
+      {
+        "old": "nul",
+        "now": "premise (zero-fill only)"
+      }
+    ],
+    "old_edge_index": [
+      {
+        "id": "LEGACY36-E001",
+        "from": "lookup",
+        "to": "outer",
+        "mapping_note": "old endpoints lookup/outer map to entry/left+get+err; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E002",
+        "from": "outer",
+        "to": "getter",
+        "mapping_note": "R36-02: left true -> get once -> err",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E003",
+        "from": "outer",
+        "to": "post",
+        "mapping_note": "R36-02: left false -> after; never enter body",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E004",
+        "from": "getter",
+        "to": "end_err",
+        "mapping_note": "R36-02: get -> err true -> after",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E005",
+        "from": "end_err",
+        "to": "post",
+        "mapping_note": "old endpoints end_err/post map to err true -> after/after; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E006",
+        "from": "getter",
+        "to": "tmpde",
+        "mapping_note": "R36-02: get -> err false -> normal, valid pointer premise",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E007",
+        "from": "tmpde",
+        "to": "aux",
+        "mapping_note": "old endpoints tmpde/aux map to normal/aux; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E008",
+        "from": "aux",
+        "to": "readent",
+        "mapping_note": "R36-02: aux node embeds single actual readent call",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E009",
+        "from": "aux",
+        "to": "empty",
+        "mapping_note": "old endpoints aux/empty map to aux/empty; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E010",
+        "from": "empty",
+        "to": "next",
+        "mapping_note": "old endpoints empty/next map to empty/again; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E011",
+        "from": "empty",
+        "to": "select",
+        "mapping_note": "old endpoints empty/select map to empty/iserr+attr+notempty; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E012",
+        "from": "select",
+        "to": "short",
+        "mapping_note": "old endpoints select/short map to iserr+attr+notempty/short; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E013",
+        "from": "select",
+        "to": "long",
+        "mapping_note": "R36-02: empty false -> iserr true -> attr true -> notempty true -> long",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E014",
+        "from": "lookup",
+        "to": "namelen0",
+        "mapping_note": "R36-02: normal -> aux -> off -> init every entered iteration",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E015",
+        "from": "namelen0",
+        "to": "short",
+        "mapping_note": "old endpoints namelen0/short map to init (per loop, after aux/off)/short; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E016",
+        "from": "namelen0",
+        "to": "long",
+        "mapping_note": "old endpoints namelen0/long map to init (per loop, after aux/off)/long; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E017",
+        "from": "short",
+        "to": "short_init",
+        "mapping_note": "old endpoints short/short_init map to short/salloc; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E018",
+        "from": "short_init",
+        "to": "short_base",
+        "mapping_note": "R36-02: salloc -> sbase unconditional, output validity is an analytical premise only on store",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E019",
+        "from": "short_base",
+        "to": "short_dir",
+        "mapping_note": "old endpoints short_base/short_dir map to sbase+swrite/sdir; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E020",
+        "from": "short_dir",
+        "to": "short_ret",
+        "mapping_note": "old endpoints short_dir/short_ret map to sdir/sret; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E021",
+        "from": "short_dir",
+        "to": "short_dot",
+        "mapping_note": "old endpoints short_dir/short_dot map to sdir/sdot; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E022",
+        "from": "short_dot",
+        "to": "short_ext",
+        "mapping_note": "old endpoints short_dot/short_ext map to sdot/sext+sewrite; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E023",
+        "from": "short_ext",
+        "to": "short_undo",
+        "mapping_note": "old endpoints short_ext/short_undo map to sext+sewrite/sundo; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E024",
+        "from": "short_ext",
+        "to": "short_ret",
+        "mapping_note": "old endpoints short_ext/short_ret map to sext+sewrite/sret; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E025",
+        "from": "short_undo",
+        "to": "short_ret",
+        "mapping_note": "old endpoints short_undo/short_ret map to sundo/sret; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E026",
+        "from": "long",
+        "to": "long_cursor",
+        "mapping_note": "old endpoints long/long_cursor map to long/llocal; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E027",
+        "from": "shared",
+        "to": "long_cursor",
+        "mapping_note": "old endpoints shared/long_cursor map to shared/llocal; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E028",
+        "from": "long_cursor",
+        "to": "long_read",
+        "mapping_note": "old endpoints long_cursor/long_read map to llocal/lfirst; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E029",
+        "from": "long_read",
+        "to": "readent",
+        "mapping_note": "R36-02: lfirst node embeds single actual readent call",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E030",
+        "from": "long_read",
+        "to": "long_gate",
+        "mapping_note": "old endpoints long_read/long_gate map to lfirst/lattr+lempty+lcursor; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E031",
+        "from": "long_gate",
+        "to": "long_count",
+        "mapping_note": "old endpoints long_gate/long_count map to lattr+lempty+lcursor/lcount; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E032",
+        "from": "long_gate",
+        "to": "long_alloc",
+        "mapping_note": "old endpoints long_gate/long_alloc map to lattr+lempty+lcursor/lalloc; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E033",
+        "from": "long_count",
+        "to": "long_alloc",
+        "mapping_note": "old endpoints long_count/long_alloc map to lcount/lalloc; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E034",
+        "from": "long_count",
+        "to": "long_back",
+        "mapping_note": "old endpoints long_count/long_back map to lcount/lback; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E035",
+        "from": "long_back",
+        "to": "long_read",
+        "mapping_note": "R36-02: lcount false -> lback(single readent) -> lattr; old duplicate call removed",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E036",
+        "from": "long_alloc",
+        "to": "long_reset",
+        "mapping_note": "old endpoints long_alloc/long_reset map to lalloc/lreset; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E037",
+        "from": "long_reset",
+        "to": "readent",
+        "mapping_note": "R36-02: lreset node embeds single actual readent call",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E038",
+        "from": "long_reset",
+        "to": "long_for",
+        "mapping_note": "old endpoints long_reset/long_for map to lreset/lfor; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E039",
+        "from": "long_for",
+        "to": "long_units",
+        "mapping_note": "old endpoints long_for/long_units map to lfor/lunit+lfilter+lmore; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E040",
+        "from": "long_for",
+        "to": "long_ret",
+        "mapping_note": "old endpoints long_for/long_ret map to lfor/lret; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E041",
+        "from": "long_units",
+        "to": "long_write",
+        "mapping_note": "R36-02: lunit -> lfilter; accepted -> lstore, filtered -> lmore",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E042",
+        "from": "long_write",
+        "to": "long_update",
+        "mapping_note": "R36-02: lstore -> lmore -> lupdate only after all units, zero-write alternative",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E043",
+        "from": "long_update",
+        "to": "readent",
+        "mapping_note": "R36-02: lupdate node embeds single actual readent call",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E044",
+        "from": "long_update",
+        "to": "long_for",
+        "mapping_note": "R36-02: lupdate(one readent) -> lfor; final return pointer potentially unused",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E045",
+        "from": "readent",
+        "to": "cache",
+        "mapping_note": "old endpoints readent/cache map to readent calls incorporated into lfirst/lback/lreset/lupdate/aux/cache; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E046",
+        "from": "short_ret",
+        "to": "name",
+        "mapping_note": "old endpoints short_ret/name map to sret/name; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E047",
+        "from": "long_ret",
+        "to": "name",
+        "mapping_note": "old endpoints long_ret/name map to lret/name; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E048",
+        "from": "name",
+        "to": "max",
+        "mapping_note": "old endpoints name/max map to name/max; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E049",
+        "from": "max",
+        "to": "cmp",
+        "mapping_note": "old endpoints max/cmp map to max/cmp; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E050",
+        "from": "cmp",
+        "to": "free",
+        "mapping_note": "old endpoints cmp/free map to cmp/free; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E051",
+        "from": "free",
+        "to": "equal",
+        "mapping_note": "old endpoints free/equal map to free/equal; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E052",
+        "from": "equal",
+        "to": "break",
+        "mapping_note": "old endpoints equal/break map to equal/break; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E053",
+        "from": "equal",
+        "to": "next",
+        "mapping_note": "old endpoints equal/next map to equal/again; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E054",
+        "from": "next",
+        "to": "outer",
+        "mapping_note": "R36-02: again -> left fresh evaluation",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E055",
+        "from": "break",
+        "to": "post",
+        "mapping_note": "old endpoints break/post map to break/after; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E056",
+        "from": "long",
+        "to": "no_cursor",
+        "mapping_note": "old endpoints long/no_cursor map to long/shared + cache; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E057",
+        "from": "short",
+        "to": "no_cursor",
+        "mapping_note": "old endpoints short/no_cursor map to short/shared + cache; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E058",
+        "from": "readent",
+        "to": "no_cursor",
+        "mapping_note": "R36-02: cache/shared data notes; not a source call edge",
+        "status": "EXPLICITLY_REPLACED"
+      },
+      {
+        "id": "LEGACY36-E059",
+        "from": "short_init",
+        "to": "nul",
+        "mapping_note": "old endpoints short_init/nul map to salloc/premise (zero-fill only); NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E060",
+        "from": "long_alloc",
+        "to": "nul",
+        "mapping_note": "old endpoints long_alloc/nul map to lalloc/premise (zero-fill only); NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E061",
+        "from": "premise",
+        "to": "stop",
+        "mapping_note": "old endpoints premise/stop map to premise/stop; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E062",
+        "from": "long_read",
+        "to": "stop",
+        "mapping_note": "old endpoints long_read/stop map to lfirst/stop; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E063",
+        "from": "long_units",
+        "to": "stop",
+        "mapping_note": "old endpoints long_units/stop map to lunit+lfilter+lmore/stop; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E064",
+        "from": "long_write",
+        "to": "stop",
+        "mapping_note": "old endpoints long_write/stop map to lstore/stop; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      },
+      {
+        "id": "LEGACY36-E065",
+        "from": "cmp",
+        "to": "stop",
+        "mapping_note": "old endpoints cmp/stop map to cmp/stop; NOT a proof of a literal replacement edge; follow full replacement DOT",
+        "status": "HISTORICAL_RELATION_CONSUME_VIA_NEW_GRAPH"
+      }
+    ],
+    "critical_edge_replacements": [
+      {
+        "old": "outer -> getter and getter -> tmpde",
+        "now": "left true -> get exactly once -> err -> normal; left false -> after",
+        "reason": "separates left gate/getter/right check"
+      },
+      {
+        "old": "long_back -> long_read",
+        "now": "lcount -> lback (single cursor decrement and readent) -> lattr",
+        "reason": "no second readent"
+      },
+      {
+        "old": "long_units -> long_write -> long_update",
+        "now": "lunit -> lfilter -> (lstore or filtered lmore) -> lmore -> (lunit or lupdate)",
+        "reason": "models all units filtered/no write"
+      },
+      {
+        "old": "short_init -> short_base output writable",
+        "now": "salloc -> sbase unconditional; invalid stores lead only to analytical stop",
+        "reason": "not an actual allocator check; zero-store return possible"
+      },
+      {
+        "old": "lookup -> namelen0, select -> long",
+        "now": "aux -> off -> init -> empty -> iserr -> attr -> notempty -> long",
+        "reason": "per-loop timing and actual predicate order"
+      },
+      {
+        "old": "long_update -> long_for",
+        "now": "lupdate (one readent, even final) -> lfor -> lret if x>=i",
+        "reason": "final pointer may be unused"
+      },
+      {
+        "old": "bound-false -> body",
+        "now": "left false -> after only",
+        "reason": "do not parse on stale tmpde"
+      },
+      {
+        "old": "null output -> invalid store vs zero writes",
+        "now": "conditional stop from store; conditional sret/lret -> nullret after zero writes",
+        "reason": "mutually exclusive valid prefixes"
+      }
+    ],
+    "model_corrections": {
+      "C16": "i=1,K=0, capacity14, no output writes; if allocation NULL and all source reads/final update return normally, long may return NULL. Not guaranteed from no writes alone.",
+      "C18": {
+        "classification": "helper_only",
+        "namelen": -1,
+        "destlen": 3,
+        "final_max": 3
+      },
+      "C19": {
+        "classification": "helper_only",
+        "namelen": -1,
+        "destlen": -2,
+        "final_max": -1
+      },
+      "F03": {
+        "invalid_store": "allocation NULL and branch ATTEMPTS store => STOP at first write; no completed normal return",
+        "zero_write": "allocation NULL and branch has zero writes and all other accesses return normally => parser can return NULL; caller separately consumes pointer/count",
+        "exclusive": true
+      },
+      "NUL": "0/0xffff long UTF16 units are filtered and loop continues; A,0,B can yield AB under appropriate byte model; first NUL and reported namelen differ",
+      "nonzero_len": "for initial n and K accepted, write indices n..n+K-1; i1 n1 K13 writes fit capacity14 but no guaranteed terminal NUL, n2 K13 invalid final write. Actual lookup n0."
+    },
+    "graph_semantic_note": "The analytical zero-write note is reachable only under the conjunction that all candidate units were filtered; one filtered unit alone does not prove zero total stores."
+  },
+  "object_identities": [
+    {
+      "id": "sb",
+      "type": "super_block_s*",
+      "origin": "fat_build_inode arg, valid fat_fill_super sets sb->s_op=&fat_sops",
+      "scope": "borrowed, must be valid"
+    },
+    {
+      "id": "ops",
+      "type": "const super_ops_s*",
+      "origin": "alloc_inode reads sb->s_op",
+      "scope": "not automatically fat_sops for every caller"
+    },
+    {
+      "id": "ei",
+      "type": "msdos_inode_info_s*",
+      "origin": "fat_alloc_inode kmalloc outer object",
+      "scope": "contains vfs_inode; allocation unzeroed by explicit constructor in body"
+    },
+    {
+      "id": "inode",
+      "type": "inode_s*",
+      "origin": "&ei->vfs_inode under selected FAT callback, else cache fallback",
+      "scope": "returned as embedded pointer; may be NULL; no direct ERR_PTR producer selected"
+    },
+    {
+      "id": "i_data",
+      "type": "addr_spc_s",
+      "origin": "member of inode_s",
+      "scope": "inline object not separately allocated"
+    },
+    {
+      "id": "mapping",
+      "type": "addr_spc_s*",
+      "origin": "inode_init_always &inode->i_data",
+      "scope": "alias of embedded member"
+    },
+    {
+      "id": "private_idx_info",
+      "type": "void*",
+      "origin": "separate inode_s member",
+      "scope": "not msdos_inode_info outer object; later kzalloc pointer from FAT32_lookup"
+    },
+    {
+      "id": "inode_cachep",
+      "type": "kmem_cache_s*",
+      "origin": "inode_init kmem_cache_create with constructor NULL",
+      "scope": "fallback path only; actual allocator behavior unknown"
+    },
+    {
+      "id": "dir_de",
+      "type": "msdos_dirent_s*",
+      "origin": "fat_build_inode delegated fat_fill_inode",
+      "scope": "valid directory-entry pointer required"
+    },
+    {
+      "id": "original_dentry",
+      "type": "dentry_s*",
+      "origin": "FAT32_lookup writes d_inode on success",
+      "scope": "not identical to inode or ei"
+    }
+  ],
+  "field_sources": [
+    {
+      "field": "i_sb",
+      "alloc_source": "new_inode/alloc_inode valid path",
+      "always_initialization": "inode_init_always i_sb=sb; new_inode repeats",
+      "fat_override": "not overwritten by fat_fill_inode",
+      "consumer": "fat_build_inode calls new_inode; FAT32_lookup uses parent_sb",
+      "boundary": "valid sb and actual fat_sops binding",
+      "anchors": [
+        "NI37-A021",
+        "NI37-A031"
+      ]
+    },
+    {
+      "field": "i_size",
+      "alloc_source": "fat_alloc_inode kmalloc outer embedding; may contain arbitrary old bytes",
+      "always_initialization": "inode_init_always assigns i_size=0",
+      "fat_override": "FAT dir branch no size write; file branch i_size=de->size",
+      "consumer": "FAT32_lookup computes i_blocks; __lookup_slow computes nrpages",
+      "boundary": "on valid new_inode/init and FAT success, dir i_size remains 0; not evidence of disk dir length or file correctness",
+      "anchors": [
+        "NI37-A034",
+        "NI37-A050",
+        "NI37-A052",
+        "NI37-A051"
+      ]
+    },
+    {
+      "field": "i_mapping",
+      "alloc_source": "field of inode_s",
+      "always_initialization": "inode_init_always mapping=&inode->i_data, inode->i_mapping=mapping",
+      "fat_override": "FAT uses i_mapping->a_ops on file branch; dir does not replace pointer",
+      "consumer": "__lookup_slow reads mapping",
+      "boundary": "valid inline object/lifetime",
+      "anchors": [
+        "NI37-A004",
+        "NI37-A031",
+        "NI37-A036",
+        "NI37-A055"
+      ]
+    },
+    {
+      "field": "i_data.host",
+      "alloc_source": "embedded addr_spc_s; addr_spc_s.host member",
+      "always_initialization": "inode_init_always mapping->host=inode",
+      "fat_override": "none in selected fat_fill_inode",
+      "consumer": "may be consumed outside scoped methods",
+      "boundary": "valid inode object; no deep allocator certification",
+      "anchors": [
+        "NI37-A008",
+        "NI37-A035"
+      ]
+    },
+    {
+      "field": "i_data.a_ops",
+      "alloc_source": "embedded addr_spc_s member",
+      "always_initialization": "inode_init_always sets &empty_aops",
+      "fat_override": "file branch sets &fat_aops; directory branch retains &empty_aops",
+      "consumer": "address-space methods if used downstream (not audited)",
+      "boundary": "fat_aops static empty table; not an access-control verdict",
+      "anchors": [
+        "NI37-A009",
+        "NI37-A035",
+        "NI37-A052"
+      ]
+    },
+    {
+      "field": "i_data.nrpages",
+      "alloc_source": "address-space member, initial state unknown from FAT kmalloc",
+      "always_initialization": "NOT set in inode_init_always; inode_init_once would clear via memset but not on selected FAT chain",
+      "fat_override": "no fat_fill_inode write",
+      "consumer": "__lookup_slow sets nrpages=ALIGN(i_size,PAGE_SIZE)>>PAGE_SHIFT",
+      "boundary": "on successfully reached __lookup_slow it is written before optional array allocation; earlier value not verified",
+      "anchors": [
+        "NI37-A009",
+        "NI37-A055"
+      ]
+    },
+    {
+      "field": "i_data.page_array",
+      "alloc_source": "address-space member, initial state unknown from FAT kmalloc",
+      "always_initialization": "NOT set in inode_init_always; optional one-time memset has no selected FAT call proof",
+      "fat_override": "no fat_fill_inode write",
+      "consumer": "__lookup_slow sets page_array via kzalloc only if nrpages>0; no NULL check",
+      "boundary": "on directory i_size=0 under valid path nrpages=0, no new page_array assignment; its value remains unestablished",
+      "anchors": [
+        "NI37-A008",
+        "NI37-A055"
+      ]
+    },
+    {
+      "field": "i_op",
+      "alloc_source": "inode function table pointer",
+      "always_initialization": "inode_init_always &empty_iops",
+      "fat_override": "fat_fill_inode both branches &vfat_dir_inode_operations",
+      "consumer": "parent lookup dispatch (static only)",
+      "boundary": "valid binding requires actual FAT sb; no actual runtime audit",
+      "anchors": [
+        "NI37-A033",
+        "NI37-A051"
+      ]
+    },
+    {
+      "field": "i_fop",
+      "alloc_source": "inode file operations pointer",
+      "always_initialization": "inode_init_always &no_open_fops",
+      "fat_override": "fat_fill_inode both branches &FAT32_file_ops",
+      "consumer": "file methods after lookup (outside scope)",
+      "boundary": "real setup depends on reached fat_fill_inode",
+      "anchors": [
+        "NI37-A033",
+        "NI37-A051",
+        "NI37-A052"
+      ]
+    },
+    {
+      "field": "i_mode",
+      "alloc_source": "inode mode member",
+      "always_initialization": "NOT set in inode_init_always; constructor from kmalloc absent",
+      "fat_override": "fat_fill_inode sets i_mode=0; selected branches do not active-reset to file-type modes",
+      "consumer": "FAT32_lookup tests p->i_mode&S_IFMT conditional",
+      "boundary": "mode0 is source-backed on normal fat_fill_inode completion, permission implications out of scope",
+      "anchors": [
+        "NI37-A003",
+        "NI37-A048",
+        "NI37-A048"
+      ]
+    },
+    {
+      "field": "private_idx_info",
+      "alloc_source": "inode_s independent void* field",
+      "always_initialization": "NOT set in inode_init_always or fat_alloc_inode",
+      "fat_override": "fat_fill_inode does not initialize it; FAT32_lookup later assigns kzalloc pointer",
+      "consumer": "FAT32_lookup finode deref and future use",
+      "boundary": "valid assignment before deref conditional on allocation nonNULL; pre-use value unknown",
+      "anchors": [
+        "NI37-A003",
+        "NI37-A057"
+      ]
+    },
+    {
+      "field": "i_data.flags/private_data/writeback_index",
+      "alloc_source": "embedded fields",
+      "always_initialization": "inode_init_always sets flags0/private_dataNULL/writeback_index0",
+      "fat_override": "no selected fat_fill_inode overwrite",
+      "consumer": "downstream not examined",
+      "boundary": "does not prove all mapping members initialized",
+      "anchors": [
+        "NI37-A035",
+        "NI37-A036"
+      ]
+    },
+    {
+      "field": "i_blocks",
+      "alloc_source": "inode block count",
+      "always_initialization": "inode_init_always i_blocks=0",
+      "fat_override": "FAT32_lookup later computes from i_size/fsbi geometry",
+      "consumer": "later metadata usage (not inspected)",
+      "boundary": "requires valid divisor and calculation; not actual disk blocks",
+      "anchors": [
+        "NI37-A034",
+        "NI37-A057"
+      ]
+    },
+    {
+      "field": "i_data.i_mmap_rwsem",
+      "alloc_source": "embedded rwsem",
+      "always_initialization": "__address_space_init_once would call init_rwsem but selected FAT kmalloc path does not show this function invoked",
+      "fat_override": "inode_init_always does not directly call init_rwsem on this field",
+      "consumer": "outside selected downstream",
+      "boundary": "separate once-only definition cannot prove actual per-FAT allocation initialization",
+      "anchors": [
+        "NI37-A039",
+        "NI37-A040",
+        "NI37-A041"
+      ]
+    }
+  ],
+  "call_gate_matrix": [
+    {
+      "id": "G01",
+      "producer": "FAT::fat_fill_super",
+      "actual": "sb->s_op=(super_ops_s*)&fat_sops",
+      "next": "VFS::alloc_inode reads sb->s_op",
+      "stop": "only if actual sb takes this fat_fill_super path"
+    },
+    {
+      "id": "G02",
+      "producer": "VFS::alloc_inode",
+      "actual": "ops->alloc_inode != NULL -> callback; else kmem_cache_alloc(inode_cachep,GFP_KERNEL)",
+      "next": "FAT::fat_alloc_inode for selected fat_sops",
+      "stop": "callbacks must return valid inode pointer or NULL; unexpected ERR_PTR not checked by NULL"
+    },
+    {
+      "id": "G03",
+      "producer": "FAT::fat_alloc_inode",
+      "actual": "kmalloc(msdos_inode_info_s); set ei five fields; return &ei->vfs_inode",
+      "next": "VFS::inode_init_always",
+      "stop": "successful kmalloc; object embedded; no memset of inner inode shown"
+    },
+    {
+      "id": "G04",
+      "producer": "VFS::inode_init_always",
+      "actual": "i_sb, empty ops, size0/blocks0, mapping=&i_data, mapping host/empty_aops/flags, etc.; return0",
+      "next": "VFS::alloc_inode check if(unlikely(ret)) then normal return",
+      "stop": "selected definition normal return always0; error handling branch defensive without normal nonzero producer"
+    },
+    {
+      "id": "G05",
+      "producer": "VFS::new_inode",
+      "actual": "alloc_inode; if nonNULL sets sb and initializes i_sb_list; if nonNULL publish sb list; return",
+      "next": "FAT::fat_build_inode",
+      "stop": "list implementation, refcount, concurrency not audited"
+    },
+    {
+      "id": "G06",
+      "producer": "FAT::fat_build_inode",
+      "actual": "new_inode; if NULL return ERR_PTR(-ENOMEM); else fat_fill_inode",
+      "next": "FAT::fat_fill_inode",
+      "stop": "selected fill normal return0; defensive nonzero check no actual normal producer"
+    },
+    {
+      "id": "G07",
+      "producer": "FAT::fat_fill_inode",
+      "actual": "i_mode=0, MSDOS_I(inode)->i_pos=0, conditional table/size/a_ops writes",
+      "next": "FAT32_lookup and __lookup_slow fields",
+      "stop": "actual de validity and normal execution assumed"
+    },
+    {
+      "id": "G08",
+      "producer": "VFS::inode_init_once",
+      "actual": "memset(inode,0,sizeof(inode_s)) and __address_space_init_once",
+      "next": "none in selected FAT path",
+      "stop": "function existence not a proven invocation; FAT kmalloc no init_once call"
+    },
+    {
+      "id": "G09",
+      "producer": "VFS::address_space_init_once",
+      "actual": "memset(mapping,0,sizeof(*mapping)); __address_space_init_once",
+      "next": "none in selected FAT path",
+      "stop": "not called by inode_init_always; separate defined helper"
+    },
+    {
+      "id": "G10",
+      "producer": "VFS::inode_init",
+      "actual": "kmem_cache_create(inode_cachep,...,NULL) final constructor argument",
+      "next": "fallback kmem_cache_alloc only",
+      "stop": "not FAT external kmalloc, not evidence inode_init_once called"
+    }
+  ],
+  "finite_valid_models": [
+    {
+      "id": "I37-C01",
+      "kind": "valid_FAT_directory",
+      "source": "fat_sops + fat_alloc_inode + always + fat_fill_inode directory branch",
+      "size": 0,
+      "mapping_is_embedded": true,
+      "host_equals_inode": true,
+      "a_ops": "&empty_aops",
+      "i_op": "&vfat_dir_inode_operations",
+      "i_fop": "&FAT32_file_ops",
+      "mode": 0,
+      "page_array": "UNESTABLISHED before downstream",
+      "nrpages": "UNESTABLISHED until __lookup_slow writes"
+    },
+    {
+      "id": "I37-C02",
+      "kind": "valid_FAT_non_directory",
+      "source": "same chain with else branch",
+      "size": "de->size",
+      "mapping_is_embedded": true,
+      "host_equals_inode": true,
+      "a_ops": "&fat_aops",
+      "i_op": "&vfat_dir_inode_operations",
+      "i_fop": "&FAT32_file_ops",
+      "mode": 0,
+      "page_array": "UNESTABLISHED before downstream",
+      "nrpages": "UNESTABLISHED until __lookup_slow writes"
+    },
+    {
+      "id": "I37-C03",
+      "kind": "fat_alloc_null",
+      "source": "kmalloc outer returns NULL",
+      "next": "alloc_inode returns NULL; new_inode returns NULL; fat_build_inode creates ERR_PTR(-ENOMEM)",
+      "stop": "no fat_fill_inode call"
+    },
+    {
+      "id": "I37-C04",
+      "kind": "fat_always_returns_zero",
+      "source": "normal valid inode_init_always completes",
+      "next": "alloc_inode's if(unlikely(ret)) false, returns same inode",
+      "stop": "no actual nonzero return producer in selected definition"
+    },
+    {
+      "id": "I37-C05",
+      "kind": "FAT_outer_vs_private",
+      "source": "ei allocated and contains vfs_inode; separate private_idx_info field not set",
+      "next": "later FAT32_lookup assigns kzalloc to private_idx_info",
+      "stop": "do not confuse outer FAT object with separately allocated private buffer"
+    },
+    {
+      "id": "I37-C06",
+      "kind": "directory_slow_mapping",
+      "source": "dir i_size=0 on valid chain",
+      "next": "__lookup_slow sets nrpages=ALIGN(0,PAGE_SIZE)>>PAGE_SHIFT=0; skips page_array kzalloc",
+      "stop": "existing page_array not newly assigned here and earlier value unknown"
+    },
+    {
+      "id": "I37-C07",
+      "kind": "file_slow_mapping",
+      "source": "file size positive and valid mapping",
+      "next": "nrpages computed; if >0 kzalloc page_array; no immediate NULL branch",
+      "stop": "no runtime memory success guarantee"
+    },
+    {
+      "id": "I37-C08",
+      "kind": "one_time_helper_definition_only",
+      "source": "inode_init_once memset exists; fallback cache ctor is NULL; FAT alloc is kmalloc",
+      "next": "NOT_OBSERVED_ON_SELECTED_CHAIN",
+      "stop": "deep cache allocator and all alternative invocations outside scope"
+    },
+    {
+      "id": "I37-C09",
+      "kind": "legacy36_NUL_n1",
+      "source": "i=1 n=1 K=13, buffer capacity14",
+      "last_written_index": 13,
+      "valid_store": true,
+      "terminator_at_14_available": false,
+      "classification": "helper_only"
+    },
+    {
+      "id": "I37-C10",
+      "kind": "legacy36_NUL_n2",
+      "source": "i=1 n=2 K=13 capacity14",
+      "last_attempted_index": 14,
+      "valid_store": false,
+      "classification": "helper_only"
+    },
+    {
+      "id": "I37-C11",
+      "kind": "legacy36_C18",
+      "source": "namelen=-1,destlen=3",
+      "final_max": 3,
+      "classification": "helper_only"
+    },
+    {
+      "id": "I37-C12",
+      "kind": "legacy36_C19",
+      "source": "namelen=-1,destlen=-2",
+      "final_max": -1,
+      "classification": "helper_only"
+    }
+  ],
+  "qualifications": [
+    "R36 closure is PENDING_C04_REVIEW; this package does not claim PASS for 36",
+    "new inode facts independent from R36 historical disputed evidence and old graph",
+    "no direct constructor call from fat_alloc_inode or inode_init_always to inode_init_once",
+    "conditional FAT s_op binding; no proof all sb instances use this",
+    "private_idx_info not initialized in selected always; physical allocator state unverified",
+    "mapping.nrpages and page_array absent direct writes in always; no whole lifetime verdict",
+    "complete local P9 and kernel/build/runtime NOT_RUN"
+  ]
+}
