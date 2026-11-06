@@ -1,0 +1,181 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FS-PATH-ACCESS-46",
+  "record_type": "incremental_deferred_observations_and_unchanged_historical_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-06",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "new_finding_count": 0,
+  "new_findings": [],
+  "owner_action_now": "none",
+  "explanation": "本批四接口及直接辅助体的无计数效果已被45回执R45-S01和既有FS45-F02来源覆盖。getter输出别名、setter输入别名等只存在无已知生产者的helper条件模型，未证成与旧问题独立的新运行缺陷；不因任务编号而伪造FP46-F项。",
+  "bounded_observations": [
+    {
+      "observation_id": "FP46-O01",
+      "kind": "fixed_source_direct_effect_and_prior_evidence_append",
+      "title": "dget仅返回参数，dput无活动体，path_get/path_put不产生当前已读计数操作",
+      "source_anchors": [
+        "FP46-A004",
+        "FP46-A005",
+        "FP46-A007",
+        "FP46-A008",
+        "FP46-A011",
+        "FP46-A012",
+        "FP46-A015"
+      ],
+      "claim": "path_get/put请求最终走向实际dget return same pointer、dput void空体；dentry_s结构中d_lockref仅是注释，mntget/mntput也是注释。当前所读函数内没有dentry/mount计数增减或析构调用。",
+      "premises": [
+        "所读固定time定义体为此次调用对应实现",
+        "参数的值和path_s字段读取合法",
+        "未运行预处理和真实编译，故仍仅是源层事实"
+      ],
+      "counter_evidence": [
+        "path_get会真实调用dget，path_put会真实调用dput，并非包装函数完全没有调用",
+        "外部其它dentry持有/销毁机制未审；不能推断全仓均不工作",
+        "有效path_s.dentry=NULL在dget/dput体内未被解引用，不可概括为传入path=NULL安全"
+      ],
+      "unknown": [
+        "完整目录项/挂载对象生存期",
+        "当前构建宏与实际机器优化后的行为"
+      ],
+      "related": [
+        "CORE-USER-FS-CONTEXT-45::FS45-F02",
+        "CORE-USER-VFS-BASELINE-05::UV-10"
+      ]
+    },
+    {
+      "observation_id": "FP46-O02",
+      "kind": "bounded_helper_alias_model_no_actual_caller",
+      "title": "getter不归还原输出值并允许条件性覆盖另一个内部path_s字段",
+      "source_anchors": [
+        "FP46-A019",
+        "FP46-A021",
+        "FP46-A023",
+        "FP46-A025"
+      ],
+      "claim": "get_fs_root/get_fs_pwd先锁，覆盖输出path_s两个指针值，再path_get与解锁，完整函数体没有输出旧值path_put或输出指针校验。如果输出与另一fs字段别名，合法值复制可修改内部另一字段。",
+      "premises": [
+        "fs/输出路径存储均有效，锁操作正常，别名真实存在",
+        "如要认定资源泄漏，还须证明旧输出实际拥有必须由该函数归还的引用及调用契约"
+      ],
+      "counter_evidence": [
+        "输出同址到本身可以只是自赋值",
+        "源码没有getter主动把内部另一字段传入输出的证据，本轮默认分支搜索未找到独立调用者",
+        "旧输出归还可能由调用者承担；getter没有路径所有权的全局规范证据"
+      ],
+      "unknown": [
+        "固定time独立getter调用者的真实参数",
+        "完整引用契约及并发访问条件"
+      ],
+      "related": [
+        "CORE-USER-FS-CONTEXT-45::FS45-F02",
+        "CORE-USER-PATH-INIT-31::PI31-F05"
+      ]
+    },
+    {
+      "observation_id": "FP46-O03",
+      "kind": "fixed_source_request_publication_guard",
+      "title": "setter新路径请求在锁外，旧路径归还门只检dentry且在锁外",
+      "source_anchors": [
+        "FP46-A027",
+        "FP46-A028",
+        "FP46-A030",
+        "FP46-A034",
+        "FP46-A035",
+        "FP46-A037"
+      ],
+      "claim": "set_fs_root/set_fs_pwd均先path_get(input)，锁内保存原path_s并按值写新path_s，解锁后if(old.dentry)请求path_put。旧mnt即使非NULL、旧dentry为NULL也跳过path_put。底层dget/dput未活动地更新计数，故不能把请求算作加/减引用。",
+      "premises": [
+        "选定有效对象和source锁/callee均正常",
+        "只对本二setter的活动体建模，不穷尽其他路径持有者"
+      ],
+      "counter_evidence": [
+        "如果old.dentry非NULL，确实有path_put函数调用请求",
+        "两个新旧路径的指针值相同时，写入不一定改变路径值",
+        "没有完整锁协议，不能仅凭锁前后调用定论真实数据竞争"
+      ],
+      "unknown": [
+        "old.mnt与dentry真实需要的引用契约",
+        "实际并发和其它调用者行为"
+      ],
+      "related": [
+        "CORE-USER-FS-CONTEXT-45::FS45-F02"
+      ]
+    },
+    {
+      "observation_id": "FP46-O04",
+      "kind": "actual_callsite_provenance_limited",
+      "title": "init_mount_tree实际将同一个root path_s分别交给两个setter",
+      "source_anchors": [
+        "FP46-A044",
+        "FP46-A045",
+        "FP46-A046",
+        "FP46-A047",
+        "FP46-A048"
+      ],
+      "claim": "init_mount_tree在非IS_ERR、有效mnt前提下令root.mnt=mnt、root.dentry=mnt->mnt_root，并先set_fs_pwd(curr->fs,&root)、后set_fs_root(curr->fs,&root)。这是两个独立调用请求，但下游无真实dentry/mount计数增减。",
+      "premises": [
+        "挂载调用返回有定义的非错误有效对象",
+        "curr->fs以及mnt_root有效、setter及其锁操作正常"
+      ],
+      "counter_evidence": [
+        "IS_ERR(mnt)时进入错误分支，不走所见两个setter调用",
+        "源码的同一路径赋值不是dentry对象/挂载实体复制",
+        "未展开整个启动挂载流程和引用来源"
+      ],
+      "unknown": [
+        "实机挂载成功路径和rootfs具体存活机制"
+      ],
+      "related": [
+        "CORE-USER-FS-CONTEXT-45::FS45-F01",
+        "CORE-USER-FS-CONTEXT-45::FS45-F02"
+      ]
+    }
+  ],
+  "history_preserved": [
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F01",
+      "status": "needs_evidence",
+      "evidence_append": "静态init_fs最后用户归还候选未由getter/setter取证证明真实到达最后free，保持原状态"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F02",
+      "status": "needs_evidence",
+      "evidence_append": "新增dget/dput完整活动体及dentry结构证据：dget直接return、dput空体，既有path_get/put和mnt缺失已在45裁定中限定；现在局部ref效果可确认为没有活动计数操作，但完整挂载/dentry生存期仍未证"
+    },
+    {
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F05",
+      "status": "needs_evidence",
+      "evidence_append": "31的nameidata/path lookup局部退出与本次fs getter/setter并非同一对象/操作，不重编号、不过度声明完整路径所有权"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-10",
+      "status": "deferred_owner_not_ready",
+      "evidence_append": "原条目关于path_get已增加路径引用、dentry/mount只增不减的附带叙述在此固定pin不由活动dget/dput/mnt操作支持；按R45-S01限缩，不撤销close绕过file.f_count的独立结论或旧条目"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45-REVIEW-001::R45-S01",
+      "status": "mandatory_consumption",
+      "evidence_append": "必须区分NULL path参数与合法path对象中NULL dentry；实际dget只return、dput空体，不得画成引用增减"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45-REVIEW-001::R45-S02",
+      "status": "mandatory_consumption",
+      "evidence_append": "仅活动定义为直接引文；源码选择与分析前提、调用者匹配返回和图中STOP分开"
+    }
+  ],
+  "not_promoted_to_new_findings": [
+    "dget/dput未进行目录项计数及mntget/mntput缺席归既有FS45-F02和R45-S01",
+    "getter输出与fs内嵌其它path_s别名造成合法条件下字段覆盖未找到真实调用者",
+    "setter先请求再发布以及旧dentry门不是新物理释放漏洞证明",
+    "仅来源数据和静态负面操作不能作为实际挂载泄漏/UAF复现"
+  ],
+  "reopen_conditions": "Owner日后明确授权独立路径拥有关系、实际getter调用者或挂载/目录项完整生命周期专项，按届时source pin重核；本批不修内核、不编译运行",
+  "kernel_change_authorized": false,
+  "old_records_modified": false,
+  "full_local_P9": "NOT_RUN",
+  "runtime_evidence": "NOT_RUN",
+  "mainline_acceptance": "PENDING"
+}
