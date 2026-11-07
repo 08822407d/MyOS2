@@ -1,0 +1,102 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FAT-ALLOCATION-GEOMETRY-56",
+  "canonical_history": {
+    "R53_01": {
+      "canonical_status": "CLOSED_DOCUMENTATION_ONLY",
+      "origin": "C04 closure; false A03/B03 objections withdrawn"
+    },
+    "batch53": {
+      "canonical_status": "PASS_PENDING_LOCAL"
+    },
+    "batch54": {
+      "canonical_status": "PASS_PENDING_LOCAL",
+      "supplements": "R54-S01/S02"
+    },
+    "batch55": {
+      "canonical_status": "PASS_PENDING_LOCAL",
+      "supplements": "R55-S01/S02"
+    },
+    "CA_03": {
+      "canonical_status": "SUPPORTED_IN_SCOPE"
+    },
+    "CA_04": {
+      "canonical_status": "SUPPORTED_IN_SCOPE"
+    },
+    "UV_01": {
+      "canonical_status": "deferred_owner_not_ready"
+    },
+    "IT35": {
+      "canonical_status": "unchanged_as_prior",
+      "origin": "R35-S01/S02"
+    },
+    "SB38": {
+      "canonical_status": "unchanged_as_prior",
+      "origin": "R38-S01/S02"
+    },
+    "BI55": {
+      "canonical_status": "prior_conditional_candidates",
+      "origin": "BI55-F01..F05"
+    }
+  },
+  "new_source_candidates": [
+    {
+      "id": "AG56-F01",
+      "topic": "A",
+      "claim": "write ordinary next_cluster not assigned to current cluster",
+      "prior": "BI55-F02 flags1 sector0/stale is separate",
+      "status": "source_conditional_only"
+    },
+    {
+      "id": "AG56-F02",
+      "topic": "B",
+      "claim": "size_t nr >=0 loop plus no capacity/array check; rollback leaves buffers slots non-null",
+      "prior": "BI55-F04 NEWCLUS release and IT35 iterator are separate",
+      "status": "source_conditional_only"
+    },
+    {
+      "id": "AG56-F03",
+      "topic": "C",
+      "claim": "BPB/ROOTBLK unit relation and FAT 512byte index vs PAGE_SIZE transfer",
+      "prior": "BI55-F05 ignored I/O return, not unit problem",
+      "status": "source_conditional_only"
+    },
+    {
+      "id": "AG56-F04",
+      "topic": "C",
+      "claim": "u32 FATsz32*NumFATs product can wrap before u64 addition",
+      "prior": "R38 source provenance independent",
+      "status": "source_conditional_only"
+    }
+  ],
+  "candidate_count": 4,
+  "runtime_verified_faults": 0,
+  "not_run": [
+    "kernel C/ASM/repository scripts",
+    "preprocess/compile/link",
+    "QEMU/hardware",
+    "Graphviz/full P9",
+    "actual FAT/media/device transfer",
+    "extra paid APIs"
+  ],
+  "new_gaps": [
+    {
+      "id": "AG56-U01",
+      "status": "needs_evidence",
+      "scope": "true write ordinary chain and media allocation"
+    },
+    {
+      "id": "AG56-U02",
+      "status": "needs_evidence",
+      "scope": "expansion array lifetime, candidate reservation, caller error"
+    },
+    {
+      "id": "AG56-U03",
+      "status": "needs_evidence",
+      "scope": "actual BPB/LBA unit relation, NLB and compiled config"
+    }
+  ],
+  "start57_authorized": false,
+  "source_edit_authorized": false,
+  "mainline_acceptance": "PENDING"
+}
