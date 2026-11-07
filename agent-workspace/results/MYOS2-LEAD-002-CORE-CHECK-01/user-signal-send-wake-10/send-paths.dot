@@ -1,0 +1,58 @@
+// CORE-USER-SIGNAL-SEND-WAKE-10; time @ a039d9803ade; IDs copied from facts-and-boundaries.yaml
+// call: caller->callee; data: consumer->provider, except explicit sender writes; init_order: later user->prerequisite.
+// Commented and latent edges are NOT active kill connections.
+digraph SignalSendWake10 {
+  rankdir=LR;
+  node [shape=box,fontsize=10];
+  "SW10-N01" [label="SW10-N01\nsys_kill(62)"];
+  "SW10-N02" [label="SW10-N02\nprepare_kill_siginfo"];
+  "SW10-N03" [label="SW10-N03\nkill_something_info"];
+  "SW10-N04" [label="SW10-N04\nkill_proc_info"];
+  "SW10-N05" [label="SW10-N05\nfind_vpid"];
+  "SW10-N06" [label="SW10-N06\npid_task"];
+  "SW10-N07" [label="SW10-N07\ngroup_send_sig_info"];
+  "SW10-N08" [label="SW10-N08\nsend_signal_locked"];
+  "SW10-N09" [label="SW10-N09\n__send_signal_locked"];
+  "SW10-N10" [label="SW10-N10\n__sigqueue_alloc"];
+  "SW10-N11" [label="SW10-N11\nkmem_cache_alloc"];
+  "SW10-N12" [label="SW10-N12\nsigaddset"];
+  "SW10-N13" [label="SW10-N13\ncomplete_signal (latent)"];
+  "SW10-N14" [label="SW10-N14\nsignal_wake_up_state (latent)"];
+  "SW10-N15" [label="SW10-N15\nwake_up_state (latent)"];
+  "SW10-N16" [label="SW10-N16\nkick_process (latent)"];
+  "SW10-N17" [label="SW10-N17\ntry_to_wake_up (latent)"];
+  "SW10-N18" [label="SW10-N18\nget_signal receiver"];
+  "SW10-N19" [label="SW10-N19\ndequeue_signal"];
+  "SW10-N20" [label="SW10-N20\ncollect_signal"];
+  "SW10-N21" [label="SW10-N21\nshared_pending"];
+  "SW10-N22" [label="SW10-N22\nprivate_pending"];
+  "SW10-N23" [label="SW10-N23\nsignals_init"];
+  "SW10-N24" [label="SW10-N24\nstart_kernel"];
+  "SW10-N25" [label="SW10-N25\ncurrent pid namespace"];
+  "SW10-N01" -> "SW10-N02" [id="SW10-E01",label="SW10-E01 call [active]",style=solid];
+  "SW10-N01" -> "SW10-N03" [id="SW10-E02",label="SW10-E02 call [active]",style=solid];
+  "SW10-N03" -> "SW10-N04" [id="SW10-E03",label="SW10-E03 call [conditional]",style=dashed];
+  "SW10-N04" -> "SW10-N05" [id="SW10-E04",label="SW10-E04 call [conditional]",style=dashed];
+  "SW10-N04" -> "SW10-N06" [id="SW10-E05",label="SW10-E05 call [conditional]",style=dashed];
+  "SW10-N05" -> "SW10-N25" [id="SW10-E06",label="SW10-E06 data [active]",style=solid];
+  "SW10-N04" -> "SW10-N07" [id="SW10-E07",label="SW10-E07 call [conditional]",style=dashed];
+  "SW10-N07" -> "SW10-N08" [id="SW10-E08",label="SW10-E08 call [active]",style=solid];
+  "SW10-N08" -> "SW10-N09" [id="SW10-E09",label="SW10-E09 call [active]",style=solid];
+  "SW10-N09" -> "SW10-N21" [id="SW10-E10",label="SW10-E10 data [active_kill]",style=dashed];
+  "SW10-N09" -> "SW10-N22" [id="SW10-E11",label="SW10-E11 data [conditional_other_caller]",style=dashed];
+  "SW10-N09" -> "SW10-N10" [id="SW10-E12",label="SW10-E12 call [conditional]",style=dashed];
+  "SW10-N10" -> "SW10-N11" [id="SW10-E13",label="SW10-E13 call [conditional]",style=dashed];
+  "SW10-N09" -> "SW10-N12" [id="SW10-E14",label="SW10-E14 call [conditional]",style=dashed];
+  "SW10-N09" -> "SW10-N13" [id="SW10-E15",label="SW10-E15 call [commented]",style=dotted];
+  "SW10-N13" -> "SW10-N14" [id="SW10-E16",label="SW10-E16 call [latent]",style=dashed];
+  "SW10-N14" -> "SW10-N15" [id="SW10-E17",label="SW10-E17 call [latent]",style=dashed];
+  "SW10-N14" -> "SW10-N16" [id="SW10-E18",label="SW10-E18 call [latent_conditional]",style=dashed];
+  "SW10-N15" -> "SW10-N17" [id="SW10-E19",label="SW10-E19 call [latent]",style=dashed];
+  "SW10-N18" -> "SW10-N19" [id="SW10-E20",label="SW10-E20 call [conditional]",style=dashed];
+  "SW10-N19" -> "SW10-N20" [id="SW10-E21",label="SW10-E21 call [conditional]",style=dashed];
+  "SW10-N19" -> "SW10-N22" [id="SW10-E22",label="SW10-E22 data [active_receiver]",style=solid];
+  "SW10-N19" -> "SW10-N21" [id="SW10-E23",label="SW10-E23 data [active_receiver]",style=solid];
+  "SW10-N09" -> "SW10-N21" [id="SW10-E24",label="SW10-E24 data [conditional]",style=dashed];
+  "SW10-N10" -> "SW10-N23" [id="SW10-E25",label="SW10-E25 init_order [required]",style=dashed];
+  "SW10-N24" -> "SW10-N23" [id="SW10-E26",label="SW10-E26 call [active]",style=solid];
+}

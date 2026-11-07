@@ -1,0 +1,679 @@
+{
+ "phase": "A_old_counterexamples",
+ "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z",
+ "label": "old verifier = frozen a1e7c2277705",
+ "frozen_manifest": {
+  "commit_short12": "a1e7c2277705",
+  "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/",
+  "names_match_expected": true,
+  "files": [
+   {
+    "name": "build.py",
+    "bytes": 5927,
+    "sha256_segments": [
+     "c6871aeb7a6f794c",
+     "2848f3be4c90f81d",
+     "bdd3499b64f71925",
+     "bb89de26aec2c6e7"
+    ]
+   },
+   {
+    "name": "build_evidence.py",
+    "bytes": 20214,
+    "sha256_segments": [
+     "0c1f65359731d6f6",
+     "79048c64c18fdde6",
+     "db78e0f71630afc6",
+     "df391f5d1740212c"
+    ]
+   },
+   {
+    "name": "evaluate.py",
+    "bytes": 14653,
+    "sha256_segments": [
+     "bba70f48e40d4ef5",
+     "99d1a5ec44185996",
+     "f51bb79ddf50fef8",
+     "b2d5bb66deb4bc5c"
+    ]
+   },
+   {
+    "name": "final_check.py",
+    "bytes": 4142,
+    "sha256_segments": [
+     "c370015eecce89fc",
+     "d3fc547f759eb74f",
+     "46645dc70be95981",
+     "073358e19fd78daf"
+    ]
+   },
+   {
+    "name": "fx_common.h",
+    "bytes": 1854,
+    "sha256_segments": [
+     "5c3b5baaeb652c16",
+     "2676d7b4ad193f26",
+     "4ea329133dc4817d",
+     "2c754ed1ee0fb906"
+    ]
+   },
+   {
+    "name": "fx_jiffies.c",
+    "bytes": 2040,
+    "sha256_segments": [
+     "33bc74720fa60fe5",
+     "97ef0f1042581776",
+     "b455c4c0a8d0755b",
+     "6b4f51007c7264a4"
+    ]
+   },
+   {
+    "name": "fx_list.inc.c",
+    "bytes": 3054,
+    "sha256_segments": [
+     "146d23b7aa2d1e4b",
+     "1bed214a8b8d716e",
+     "a8eadb69f4222fb2",
+     "45ff21540f35ad3f"
+    ]
+   },
+   {
+    "name": "fx_prims.c",
+    "bytes": 3605,
+    "sha256_segments": [
+     "0181a8e6985f37d8",
+     "a0ce3f8e4cca6f83",
+     "163afad482140ae6",
+     "57c8c5962b1ac1a4"
+    ]
+   },
+   {
+    "name": "fx_sched.c",
+    "bytes": 10795,
+    "sha256_segments": [
+     "65c8f613d9854c93",
+     "d12fee7ba824eb14",
+     "1c9b2acc61b297e5",
+     "e1ccf8799b577929"
+    ]
+   },
+   {
+    "name": "fx_wait.c",
+    "bytes": 15937,
+    "sha256_segments": [
+     "87bae891c6a2e272",
+     "85b762f879839d06",
+     "e704d21097621ef7",
+     "360fe2807963a883"
+    ]
+   },
+   {
+    "name": "h00_hardening.py",
+    "bytes": 7633,
+    "sha256_segments": [
+     "4fd0cd4e28c6fb64",
+     "0e6a04892ece5118",
+     "0cbd9fb1e6d71e19",
+     "3d66390f76a24f36"
+    ]
+   },
+   {
+    "name": "harness.py",
+    "bytes": 4131,
+    "sha256_segments": [
+     "c6d71a86a3c297e3",
+     "f95b840138728f39",
+     "e352c1f4e2055247",
+     "14436f3cc6868694"
+    ]
+   },
+   {
+    "name": "locate.py",
+    "bytes": 11783,
+    "sha256_segments": [
+     "2b89aff5cc0524fa",
+     "e0ec3fb1f5806ea6",
+     "535bca63abdd7474",
+     "7ba58873e207e2a7"
+    ]
+   },
+   {
+    "name": "make_results.py",
+    "bytes": 29260,
+    "sha256_segments": [
+     "0f61e45e8889e41f",
+     "48c8ddb4e3da19de",
+     "1552de84bb4188d9",
+     "1404a842c9c49861"
+    ]
+   },
+   {
+    "name": "readback.py",
+    "bytes": 3454,
+    "sha256_segments": [
+     "e15fb7070bdcb919",
+     "e090d9a060412123",
+     "fedf9f7eade20f9b",
+     "db6b5b32a67828b5"
+    ]
+   },
+   {
+    "name": "run_all.py",
+    "bytes": 8906,
+    "sha256_segments": [
+     "0a3c7205f2d156a5",
+     "439a49bb7e667a60",
+     "d9fc3abe69de0d0a",
+     "2a81a94a31406800"
+    ]
+   },
+   {
+    "name": "static_checks.py",
+    "bytes": 6372,
+    "sha256_segments": [
+     "2a2bc27f8f973e4d",
+     "5a169ee2b534c27b",
+     "6cac69ee99518c36",
+     "21ee5d908c015577"
+    ]
+   },
+   {
+    "name": "v00_anchors.py",
+    "bytes": 10507,
+    "sha256_segments": [
+     "41e07b5bd9d970ea",
+     "ca5c806cc0471099",
+     "446bbb77dd224a0b",
+     "5c45f8b8447cf6e0"
+    ]
+   },
+   {
+    "name": "v00_semantic_review.yaml",
+    "bytes": 6910,
+    "sha256_segments": [
+     "497ae5488068d98f",
+     "9d010187c25c851c",
+     "bf0c01483064092d",
+     "cb4e8b2be5953f0c"
+    ]
+   },
+   {
+    "name": "v01_structure.py",
+    "bytes": 7249,
+    "sha256_segments": [
+     "d69d71b6eed855ce",
+     "ade8a20fa70995e3",
+     "75416dc613eec371",
+     "234c06e3903387a4"
+    ]
+   }
+  ]
+ },
+ "A1_R01_empty_observation": {
+  "returncode": 0,
+  "timed_out": false,
+  "terminal_state": "exited",
+  "reaped_confirmed": true,
+  "elapsed_s": 0.101,
+  "stdout": "{\"v05_empty_return\": {\"verdict\": \"OBSERVED_AS_PREDICTED\", \"checks\": [], \"negcontrol_wrong_prediction_detected\": true, \"negcontrol\": [{\"label\": \"empty\", \"observed\": 0, \"wrong_prediction\": 1}]}, \"dispatch_evaluate_on_empty_cases\": {\"V02\": \"COUNTEREVIDENCE\", \"V03\": \"COMPARATOR_INVALID\", \"V09\": \"COUNTEREVIDENCE\", \"V10\": \"COUNTEREVIDENCE\", \"V11\": \"COUNTEREVIDENCE\", \"V04\": \"COUNTEREVIDENCE\", \"V05\": \"OBSERVED_AS_PREDICTED\", \"V06\": \"COUNTEREVIDENCE\", \"V07\": \"COUNTEREVIDENCE\", \"V08\": {\"function_level_combinations\": \"COUNTEREVIDENCE\", \"sequence_with_idle_requeue\": \"COUNTEREVIDENCE\", \"sequence_when_idle_switched_out_blocked\": \"COUNTEREVIDENCE\", \"extra_observation_requeue_order\": null}, \"V12\": \"COUNTEREVIDENCE\", \"V13\": \"COUNTEREVIDENCE\", \"V14\": \"COUNTEREVIDENCE\"}}\n",
+  "stderr_tail": "",
+  "json": {
+   "v05_empty_return": {
+    "verdict": "OBSERVED_AS_PREDICTED",
+    "checks": [],
+    "negcontrol_wrong_prediction_detected": true,
+    "negcontrol": [
+     {
+      "label": "empty",
+      "observed": 0,
+      "wrong_prediction": 1
+     }
+    ]
+   },
+   "dispatch_evaluate_on_empty_cases": {
+    "V02": "COUNTEREVIDENCE",
+    "V03": "COMPARATOR_INVALID",
+    "V09": "COUNTEREVIDENCE",
+    "V10": "COUNTEREVIDENCE",
+    "V11": "COUNTEREVIDENCE",
+    "V04": "COUNTEREVIDENCE",
+    "V05": "OBSERVED_AS_PREDICTED",
+    "V06": "COUNTEREVIDENCE",
+    "V07": "COUNTEREVIDENCE",
+    "V08": {
+     "function_level_combinations": "COUNTEREVIDENCE",
+     "sequence_with_idle_requeue": "COUNTEREVIDENCE",
+     "sequence_when_idle_switched_out_blocked": "COUNTEREVIDENCE",
+     "extra_observation_requeue_order": null
+    },
+    "V12": "COUNTEREVIDENCE",
+    "V13": "COUNTEREVIDENCE",
+    "V14": "COUNTEREVIDENCE"
+   }
+  }
+ },
+ "A2_R02_gate_not_enforced": {
+  "gate_false": {
+   "returncode": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "reaped_confirmed": true,
+   "elapsed_s": 0.093,
+   "stdout": "{\n  \"gate\": {\n    \"ALLOW_CORE_bound_to_this_execution\": false\n  },\n  \"remote\": null,\n  \"stages\": {\n    \"h00_hardening.py\": [\n      0,\n      false\n    ],\n    \"v00_anchors.py\": [\n      0,\n      false\n    ],\n    \"v01_structure.py\": [\n      0,\n      false\n    ],\n    \"static_checks.py\": [\n      0,\n      false\n    ]\n  },\n  \"fixtures\": {},\n  \"evaluation\": {\n    \"V02\": \"BLOCKED\",\n    \"V03\": \"BLOCKED\",\n    \"V09\": \"BLOCKED\",\n    \"V10\": \"BLOCKED\",\n    \"V11\": \"BLOCKED\",\n    \"V04\": \"BLOCKED\",\n    \"V05\": \"BLOCKED\",\n    \"V06\": \"BLOCKED\",\n    \"V07\": \"BLOCKED\",\n    \"V08\": \"BLOCKED\",\n    \"V12\": \"BLOCKED\",\n    \"V13\": \"BLOCKED\",\n    \"V14\": \"BLOCKED\"\n  }\n}\n{\"mode\": \"gate_false\", \"calls\": {\"stage_script\": [\"h00_hardening.py\", \"v00_anchors.py\", \"v01_structure.py\", \"static_checks.py\"], \"fixtures\": 1, \"evaluate\": 1}, \"main_exception\": null, \"dynamic_entry_calls\": 2}\n",
+   "stderr_tail": "",
+   "json": {
+    "mode": "gate_false",
+    "calls": {
+     "stage_script": [
+      "h00_hardening.py",
+      "v00_anchors.py",
+      "v01_structure.py",
+      "static_checks.py"
+     ],
+     "fixtures": 1,
+     "evaluate": 1
+    },
+    "main_exception": null,
+    "dynamic_entry_calls": 2
+   }
+  },
+  "identity_raises": {
+   "returncode": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "reaped_confirmed": true,
+   "elapsed_s": 0.097,
+   "stdout": "{\n  \"gate\": null,\n  \"remote\": null,\n  \"stages\": {\n    \"h00_hardening.py\": [\n      0,\n      false\n    ],\n    \"v00_anchors.py\": [\n      0,\n      false\n    ],\n    \"v01_structure.py\": [\n      0,\n      false\n    ],\n    \"static_checks.py\": [\n      0,\n      false\n    ]\n  },\n  \"fixtures\": {},\n  \"evaluation\": {\n    \"V02\": \"BLOCKED\",\n    \"V03\": \"BLOCKED\",\n    \"V09\": \"BLOCKED\",\n    \"V10\": \"BLOCKED\",\n    \"V11\": \"BLOCKED\",\n    \"V04\": \"BLOCKED\",\n    \"V05\": \"BLOCKED\",\n    \"V06\": \"BLOCKED\",\n    \"V07\": \"BLOCKED\",\n    \"V08\": \"BLOCKED\",\n    \"V12\": \"BLOCKED\",\n    \"V13\": \"BLOCKED\",\n    \"V14\": \"BLOCKED\"\n  }\n}\n{\"mode\": \"identity_raises\", \"calls\": {\"stage_script\": [\"h00_hardening.py\", \"v00_anchors.py\", \"v01_structure.py\", \"static_checks.py\"], \"fixtures\": 1, \"evaluate\": 1}, \"main_exception\": null, \"dynamic_entry_calls\": 2}\n",
+   "stderr_tail": "",
+   "json": {
+    "mode": "identity_raises",
+    "calls": {
+     "stage_script": [
+      "h00_hardening.py",
+      "v00_anchors.py",
+      "v01_structure.py",
+      "static_checks.py"
+     ],
+     "fixtures": 1,
+     "evaluate": 1
+    },
+    "main_exception": null,
+    "dynamic_entry_calls": 2
+   }
+  },
+  "h00_fails": {
+   "returncode": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "reaped_confirmed": true,
+   "elapsed_s": 0.054,
+   "stdout": "{\n  \"gate\": {\n    \"ALLOW_CORE_bound_to_this_execution\": true\n  },\n  \"remote\": null,\n  \"stages\": {\n    \"h00_hardening.py\": [\n      1,\n      true\n    ],\n    \"v00_anchors.py\": [\n      0,\n      false\n    ],\n    \"v01_structure.py\": [\n      0,\n      false\n    ],\n    \"static_checks.py\": [\n      0,\n      false\n    ]\n  },\n  \"fixtures\": {},\n  \"evaluation\": {\n    \"V02\": \"BLOCKED\",\n    \"V03\": \"BLOCKED\",\n    \"V09\": \"BLOCKED\",\n    \"V10\": \"BLOCKED\",\n    \"V11\": \"BLOCKED\",\n    \"V04\": \"BLOCKED\",\n    \"V05\": \"BLOCKED\",\n    \"V06\": \"BLOCKED\",\n    \"V07\": \"BLOCKED\",\n    \"V08\": \"BLOCKED\",\n    \"V12\": \"BLOCKED\",\n    \"V13\": \"BLOCKED\",\n    \"V14\": \"BLOCKED\"\n  }\n}\n{\"mode\": \"h00_fails\", \"calls\": {\"stage_script\": [\"h00_hardening.py\", \"v00_anchors.py\", \"v01_structure.py\", \"static_checks.py\"], \"fixtures\": 1, \"evaluate\": 1}, \"main_exception\": null, \"dynamic_entry_calls\": 2}\n",
+   "stderr_tail": "",
+   "json": {
+    "mode": "h00_fails",
+    "calls": {
+     "stage_script": [
+      "h00_hardening.py",
+      "v00_anchors.py",
+      "v01_structure.py",
+      "static_checks.py"
+     ],
+     "fixtures": 1,
+     "evaluate": 1
+    },
+    "main_exception": null,
+    "dynamic_entry_calls": 2
+   }
+  }
+ },
+ "A3_R04_old_identity_and_readback_probe": {
+  "returncode": 0,
+  "timed_out": false,
+  "terminal_state": "exited",
+  "reaped_confirmed": true,
+  "elapsed_s": 2.829,
+  "stdout": "{\"old_identity_remote_heads_match\": {\"master==pin.master\": true, \"time==pin.time\": true, \"agent/MYOS2-LEAD-002==pin.review\": false, \"claude/dazzling-cori-q0dnyt==pin.pilot_head\": false}, \"old_identity_gate\": {\"disposition_is_ALLOW_CORE\": true, \"packet_matches\": true, \"pr_matches_17\": true, \"branch_matches\": true, \"reviewed_head_matches_pin\": true, \"reviewed_inputs_match_pins\": true, \"ALLOW_CORE_bound_to_this_execution\": true}, \"old_probe_readback\": {\"as_expected\": false, \"frozen_pilot_file\": {\"remote_head_equals_commit\": false, \"expected_bytes\": 6741, \"ok\": false}, \"frozen_pilot_channels\": [{\"http_code\": \"200\", \"transport_ok\": true, \"byte_identical\": true, \"field_ok\": true, \"ok\": true}, {\"http_code\": \"200\", \"transport_ok\": true, \"byte_identical\": true, \"field_ok\": true, \"ok\": true}], \"missing_path_ok\": false}}\n",
+  "stderr_tail": "",
+  "json": {
+   "old_identity_remote_heads_match": {
+    "master==pin.master": true,
+    "time==pin.time": true,
+    "agent/MYOS2-LEAD-002==pin.review": false,
+    "claude/dazzling-cori-q0dnyt==pin.pilot_head": false
+   },
+   "old_identity_gate": {
+    "disposition_is_ALLOW_CORE": true,
+    "packet_matches": true,
+    "pr_matches_17": true,
+    "branch_matches": true,
+    "reviewed_head_matches_pin": true,
+    "reviewed_inputs_match_pins": true,
+    "ALLOW_CORE_bound_to_this_execution": true
+   },
+   "old_probe_readback": {
+    "as_expected": false,
+    "frozen_pilot_file": {
+     "remote_head_equals_commit": false,
+     "expected_bytes": 6741,
+     "ok": false
+    },
+    "frozen_pilot_channels": [
+     {
+      "http_code": "200",
+      "transport_ok": true,
+      "byte_identical": true,
+      "field_ok": true,
+      "ok": true
+     },
+     {
+      "http_code": "200",
+      "transport_ok": true,
+      "byte_identical": true,
+      "field_ok": true,
+      "ok": true
+     }
+    ],
+    "missing_path_ok": false
+   }
+  }
+ },
+ "A3_R04_old_readback_cli": {
+  "no_field_with_out": {
+   "argv_tail": [
+    "--out",
+    "<file>"
+   ],
+   "returncode": 1,
+   "timed_out": false,
+   "stderr_tail": "Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/frozen_fixtures/readback.py\", line 65, in <module>\n    field, value = args[3].split(\"=\", 1)\n    ^^^^^^^^^^^^\nValueError: not enough values to unpack (expected 2, got 1)\n",
+   "out_file_written": false,
+   "out_ok": null
+  },
+  "with_field_with_out": {
+   "argv_tail": [
+    "transport_marker=MYOS2-CLOUD-PILOT-20260925-K7P4",
+    "--out",
+    "<file>"
+   ],
+   "returncode": 1,
+   "timed_out": false,
+   "stderr_tail": "",
+   "out_file_written": true,
+   "out_ok": false
+  }
+ },
+ "A4_old_replay": {
+  "returncode": 0,
+  "timed_out": false,
+  "terminal_state": "exited",
+  "elapsed_s": 48.314,
+  "stdout": "{\n  \"gate\": {\n    \"disposition_is_ALLOW_CORE\": true,\n    \"packet_matches\": true,\n    \"pr_matches_17\": true,\n    \"branch_matches\": true,\n    \"reviewed_head_matches_pin\": true,\n    \"reviewed_inputs_match_pins\": true,\n    \"ALLOW_CORE_bound_to_this_execution\": true\n  },\n  \"remote\": {\n    \"master==pin.master\": true,\n    \"time==pin.time\": true,\n    \"agent/MYOS2-LEAD-002==pin.review\": false,\n    \"claude/dazzling-cori-q0dnyt==pin.pilot_head\": false\n  },\n  \"stages\": {\n    \"h00_hardening.py\": [\n      1,\n      false\n    ],\n    \"v00_anchors.py\": [\n      0,\n      false\n    ],\n    \"v01_structure.py\": [\n      0,\n      false\n    ],\n    \"static_checks.py\": [\n      0,\n      false\n    ]\n  },\n  \"fixtures\": {\n    \"fx_wait\": \"BUILT\",\n    \"fx_sched\": \"BUILT\",\n    \"fx_prims\": \"BUILT\",\n    \"fx_jiffies\": \"BUILT\",\n    \"fx_jiffies_control\": \"BUILT\"\n  },\n  \"evaluation\": {\n    \"V02\": \"OBSERVED_AS_PREDICTED\",\n    \"V03\": \"OBSERVED_AS_PREDICTED\",\n    \"V09\": \"OBSERVED_AS_PREDICTED\",\n    \"V10\": \"OBSERVED_AS_PREDICTED\",\n    \"V11\": \"OBSERVED_AS_PREDICTED\",\n    \"V04\": \"OBSERVED_AS_PREDICTED\",\n    \"V05\": \"OBSERVED_AS_PREDICTED\",\n    \"V06\": \"NO_FAILURE_IN_SCOPE\",\n    \"V07\": \"OBSERVED_AS_PREDICTED\",\n    \"V08\": {\n      \"function_level_combinations\": \"OBSERVED_AS_PREDICTED\",\n      \"sequence_with_idle_requeue\": \"OBSERVED_AS_PREDICTED\",\n      \"sequence_when_idle_switched_out_blocked\": \"OBSERVED_AS_PREDICTED\",\n      \"extra_observation_requeue_order\": null\n    },\n    \"V12\": \"OBSERVED_AS_PREDICTED\",\n    \"V13\": \"OBSERVED_AS_PREDICTED\",\n    \"V14\": \"OBSERVED_AS_PREDICTED\"\n  }\n}\n",
+  "stderr_tail": "",
+  "outputs": [
+   "core_run.json",
+   "fx_jiffies",
+   "fx_jiffies_control",
+   "fx_prims",
+   "fx_sched",
+   "fx_wait",
+   "h00",
+   "h00.json",
+   "h00good_api.bin",
+   "h00good_raw.bin",
+   "h00miss_api.bin",
+   "h00miss_raw.bin",
+   "static.json",
+   "v00.json",
+   "v01.json"
+  ],
+  "identity_remote_heads_match": {
+   "master==pin.master": true,
+   "time==pin.time": true,
+   "agent/MYOS2-LEAD-002==pin.review": false,
+   "claude/dazzling-cori-q0dnyt==pin.pilot_head": false
+  },
+  "identity_gate": {
+   "disposition_is_ALLOW_CORE": true,
+   "packet_matches": true,
+   "pr_matches_17": true,
+   "branch_matches": true,
+   "reviewed_head_matches_pin": true,
+   "reviewed_inputs_match_pins": true,
+   "ALLOW_CORE_bound_to_this_execution": true
+  },
+  "stage_returncodes": {
+   "h00_hardening.py": 1,
+   "v00_anchors.py": 0,
+   "v01_structure.py": 0,
+   "static_checks.py": 0
+  },
+  "h00_all_as_expected": false,
+  "h00_readback_probe_as_expected": [
+   false
+  ],
+  "fixtures_called_after_failed_h00": true,
+  "evaluation": {
+   "V02": "OBSERVED_AS_PREDICTED",
+   "V03": "OBSERVED_AS_PREDICTED",
+   "V09": "OBSERVED_AS_PREDICTED",
+   "V10": "OBSERVED_AS_PREDICTED",
+   "V11": "OBSERVED_AS_PREDICTED",
+   "V04": "OBSERVED_AS_PREDICTED",
+   "V05": "OBSERVED_AS_PREDICTED",
+   "V06": "NO_FAILURE_IN_SCOPE",
+   "V07": "OBSERVED_AS_PREDICTED",
+   "V08": {
+    "function_level_combinations": "OBSERVED_AS_PREDICTED",
+    "sequence_with_idle_requeue": "OBSERVED_AS_PREDICTED",
+    "sequence_when_idle_switched_out_blocked": "OBSERVED_AS_PREDICTED",
+    "extra_observation_requeue_order": null
+   },
+   "V12": "OBSERVED_AS_PREDICTED",
+   "V13": "OBSERVED_AS_PREDICTED",
+   "V14": "OBSERVED_AS_PREDICTED"
+  }
+ },
+ "A5_R03_old_make_results": {
+  "baseline_real_replay": {
+   "returncode": 0,
+   "stdout_tail": "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/a5_baseline_real_replay/results_generated.yaml (44240 bytes, 1150 lines)\n{\"cases_total\": 15, \"executed\": 15, \"not_run\": 0, \"results\": {\"COUNTEREVIDENCE\": 2, \"NO_FAILURE_IN_SCOPE\": 2, \"OBSERVED_AS_PREDICTED\": 11}}\n",
+   "stderr_tail": "",
+   "generated": true,
+   "case_results": {
+    "V00": [
+     "COUNTEREVIDENCE",
+     "EXECUTED"
+    ],
+    "V01": [
+     "NO_FAILURE_IN_SCOPE",
+     "EXECUTED"
+    ],
+    "V02": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V03": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V04": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V05": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V06": [
+     "NO_FAILURE_IN_SCOPE",
+     "EXECUTED"
+    ],
+    "V07": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V08": [
+     "COUNTEREVIDENCE",
+     "EXECUTED"
+    ],
+    "V09": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V10": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V11": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED_LOCAL_SEQUENCE_DYNAMIC_LAYER_NOT_RUN"
+    ],
+    "V12": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V13": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V14": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED_PARTIAL"
+    ]
+   },
+   "ca_rulings": {
+    "CA-01": "SUPPORTED_IN_SCOPE",
+    "CA-02": "FUNCTION_LEVEL_SUPPORTED_REACHABILITY_COUNTEREVIDENCE",
+    "CA-03": "SUPPORTED_IN_SCOPE",
+    "CA-04": "SUPPORTED_IN_SCOPE",
+    "CA-05": "SUPPORTED_AT_SOURCE_AND_MODEL_LEVEL",
+    "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+    "CA-07": "SUPPORTED_BY_HOST_ORIGINAL_SLICE"
+   },
+   "v01_observed_referenced_paths_exist": true,
+   "counts": {
+    "cases_total": 15,
+    "executed": 15,
+    "not_run": 0,
+    "results": {
+     "COUNTEREVIDENCE": 2,
+     "NO_FAILURE_IN_SCOPE": 2,
+     "OBSERVED_AS_PREDICTED": 11
+    }
+   }
+  },
+  "v01_paths_missing_and_parse_failed": {
+   "returncode": 0,
+   "stdout_tail": "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/a5_v01_paths_missing_and_parse_failed/results_generated.yaml (44242 bytes, 1150 lines)\n{\"cases_total\": 15, \"executed\": 15, \"not_run\": 0, \"results\": {\"COUNTEREVIDENCE\": 2, \"NO_FAILURE_IN_SCOPE\": 2, \"OBSERVED_AS_PREDICTED\": 11}}\n",
+   "stderr_tail": "",
+   "generated": true,
+   "case_results": {
+    "V00": [
+     "COUNTEREVIDENCE",
+     "EXECUTED"
+    ],
+    "V01": [
+     "NO_FAILURE_IN_SCOPE",
+     "EXECUTED"
+    ],
+    "V02": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V03": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V04": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V05": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V06": [
+     "NO_FAILURE_IN_SCOPE",
+     "EXECUTED"
+    ],
+    "V07": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V08": [
+     "COUNTEREVIDENCE",
+     "EXECUTED"
+    ],
+    "V09": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V10": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V11": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED_LOCAL_SEQUENCE_DYNAMIC_LAYER_NOT_RUN"
+    ],
+    "V12": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V13": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED"
+    ],
+    "V14": [
+     "OBSERVED_AS_PREDICTED",
+     "EXECUTED_PARTIAL"
+    ]
+   },
+   "ca_rulings": {
+    "CA-01": "SUPPORTED_IN_SCOPE",
+    "CA-02": "FUNCTION_LEVEL_SUPPORTED_REACHABILITY_COUNTEREVIDENCE",
+    "CA-03": "SUPPORTED_IN_SCOPE",
+    "CA-04": "SUPPORTED_IN_SCOPE",
+    "CA-05": "SUPPORTED_AT_SOURCE_AND_MODEL_LEVEL",
+    "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+    "CA-07": "SUPPORTED_BY_HOST_ORIGINAL_SLICE"
+   },
+   "v01_observed_referenced_paths_exist": false,
+   "counts": {
+    "cases_total": 15,
+    "executed": 15,
+    "not_run": 0,
+    "results": {
+     "COUNTEREVIDENCE": 2,
+     "NO_FAILURE_IN_SCOPE": 2,
+     "OBSERVED_AS_PREDICTED": 11
+    }
+   }
+  },
+  "missing_static_stage": {
+   "returncode": 1,
+   "stdout_tail": "",
+   "stderr_tail": "Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/frozen_fixtures/make_results.py\", line 13, in <module>\n    J = {k: json.load(open(os.path.join(W, \"%s.json\" % k), encoding=\"utf-8\"))\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/frozen_fixtures/make_results.py\", line 13, in <dictcomp>\n    J = {k: json.load(open(os.path.join(W, \"%s.json\" % k), encoding=\"utf-8\"))\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/a5_missing_static_stage/static.json'\n",
+   "generated": false
+  },
+  "fixture_blocked_compile": {
+   "returncode": 1,
+   "stdout_tail": "",
+   "stderr_tail": "Traceback (most recent call last):\n  File \"/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/frozen_fixtures/make_results.py\", line 203, in <module>\n    \"all_vectors\": [{k: v for k, v in x.items() if k not in (\"case\", \"ev\")} for x in events(\"fx_prims\", \"v12_add_test_negative\")]},\n                                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/frozen_fixtures/make_results.py\", line 27, in events\n    return fx[fxname][\"cases\"][case][\"run\"][\"events\"]\n           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^\nKeyError: 'run'\n",
+   "generated": false
+  }
+ },
+ "A6_old_run_pg_group_gone": {
+  "returncode": 0,
+  "timed_out": false,
+  "terminal_state": "exited",
+  "reaped_confirmed": true,
+  "elapsed_s": 0.236,
+  "stdout": "{\"old_run_pg_returned\": false, \"exception\": \"ProcessLookupError: HARNESS_META_TEST injected: group already gone\"}\n",
+  "stderr_tail": "",
+  "json": {
+   "old_run_pg_returned": false,
+   "exception": "ProcessLookupError: HARNESS_META_TEST injected: group already gone"
+  }
+ }
+}

@@ -1,0 +1,309 @@
+{
+  "check": "V01",
+  "taskbook_short12": "57a7c3e0eebf",
+  "parse": {
+    "report": {
+      "ok": true,
+      "top_keys": 21
+    },
+    "map": {
+      "ok": true,
+      "top_keys": 23
+    },
+    "contract09": {
+      "ok": true,
+      "top_keys": 22
+    },
+    "pilot10": {
+      "ok": true,
+      "top_keys": 21
+    },
+    "core11": {
+      "ok": true,
+      "top_keys": 21
+    },
+    "manifest": {
+      "ok": true,
+      "top_keys": 30
+    }
+  },
+  "contract09_case_ids": [
+    "V00",
+    "V01",
+    "V02",
+    "V03",
+    "V04",
+    "V05",
+    "V06",
+    "V07",
+    "V08",
+    "V09",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14"
+  ],
+  "issue_ids": [
+    "CA-01",
+    "CA-02",
+    "CA-03",
+    "CA-04",
+    "CA-05",
+    "CA-06",
+    "CA-07"
+  ],
+  "issue_ids_expected_CA01_CA07": true,
+  "anchor_refs": {
+    "in_issues": 51,
+    "in_relations": 32,
+    "dangling": [],
+    "report_anchors_not_referenced_by_any_issue": [],
+    "duplicates_within_an_issue": {}
+  },
+  "case_refs": {
+    "dangling": [],
+    "cases_not_referenced_by_any_issue": []
+  },
+  "contract09_anchor_refs": [
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "A11",
+    "A12",
+    "A13",
+    "A14",
+    "A15",
+    "A16",
+    "A17",
+    "A18",
+    "A19",
+    "A20",
+    "A21",
+    "A22",
+    "A23",
+    "A24",
+    "A25",
+    "A26",
+    "A27",
+    "A28",
+    "A29",
+    "A30",
+    "A31",
+    "A32",
+    "A33",
+    "A34",
+    "A35",
+    "A36",
+    "A37",
+    "A38",
+    "A39",
+    "A40",
+    "A41",
+    "A42",
+    "A43",
+    "A44",
+    "A45",
+    "A46",
+    "A47"
+  ],
+  "contract09_anchor_refs_dangling": [],
+  "referenced_paths": {
+    "map.report": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/07-scheduler-wakeup-timer-audit.md",
+      "exists_taskbook": true
+    },
+    "map.validation_contract": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/09-local-verification-contract.md",
+      "exists_taskbook": true
+    },
+    "map.CA-01.old_claim_ref": {
+      "path": "agent-workspace/WAVE-1-REVIEW.md",
+      "exists_taskbook": true
+    }
+  },
+  "report_inputs_read": [
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "exists": true
+    },
+    {
+      "path": "mykernel/debug/panic.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/sched/scheduler/myos_rt.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler_macro.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/time/timer/timer.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/time/timer/timer.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/time/systick/systick.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/kactive/completion/completion.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/kactive/completion/completion.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/kactive/swait/swait.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/kactive/softirq/softirq.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/kactive/softirq/softirq.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "exists": true
+    },
+    {
+      "path": "mykernel/CMakeLists.txt",
+      "exists": true
+    },
+    {
+      "path": "mykernel/scripts/target_kernel.cmake",
+      "exists": true
+    },
+    {
+      "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic_arch.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "exists": true
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "exists": true
+    },
+    {
+      "path": "mykernel/printk/printk.c",
+      "exists": true
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "exists": true
+    },
+    {
+      "path": ".vscode-kdbg/run-qemu-gdb-myos2.sh",
+      "exists": true
+    },
+    {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md",
+      "exists": true
+    },
+    {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-09-24-scheduling-sync-followup.md",
+      "exists": true
+    }
+  ],
+  "manifest_self_check": {
+    "scope_files": [
+      "07-scheduler-wakeup-timer-audit.md",
+      "07-core-audit-map.yaml",
+      "08-conversation-archive-disposition.md",
+      "09-local-verification-contract.md",
+      "MANIFEST.md",
+      "checkpoints/2026-09-24-core-audit-and-archive.md"
+    ],
+    "tag_counts_per_scope_file": {
+      "07-scheduler-wakeup-timer-audit.md": 47,
+      "07-core-audit-map.yaml": 0,
+      "08-conversation-archive-disposition.md": 0,
+      "09-local-verification-contract.md": 0,
+      "MANIFEST.md": 0,
+      "checkpoints/2026-09-24-core-audit-and-archive.md": 0
+    },
+    "automated_total": 47,
+    "declared_verified_claims": 47,
+    "declared_reconfirmed_plus_downgraded": 47,
+    "map_expected_quote_count": 47,
+    "automated_equals_declared": true,
+    "arithmetic_ok": true
+  },
+  "startup_selfcheck_quote_in_master_conventions": true,
+  "completion_flags": {
+    "whole_002R_complete": false,
+    "whole_003R_complete": false,
+    "whole_007R_complete": false,
+    "whole_wave2_complete": false,
+    "acceptance_verdict": "NOT_ISSUED",
+    "kernel_modified": false,
+    "map.replacement_for_002R_003R_007R": false
+  },
+  "hex40_hits_in_scope_files": {
+    "07-scheduler-wakeup-timer-audit.md": 0,
+    "07-core-audit-map.yaml": 0,
+    "08-conversation-archive-disposition.md": 0,
+    "09-local-verification-contract.md": 0,
+    "MANIFEST.md": 0,
+    "2026-09-24-core-audit-and-archive.md": 0
+  },
+  "p9_wording_hits_in_scope_files": {}
+}

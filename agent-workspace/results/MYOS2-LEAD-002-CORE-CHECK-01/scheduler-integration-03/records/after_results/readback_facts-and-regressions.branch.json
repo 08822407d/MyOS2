@@ -1,0 +1,61 @@
+{
+ "mode": "branch",
+ "target_commit_short12": "b7fa83583e35",
+ "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/facts-and-regressions.yaml",
+ "field": "packet_id",
+ "expected_blob_available": true,
+ "expected_bytes": 130146,
+ "expected_sha256_segments": [
+  "9ea40e6a4a69c7d8",
+  "55c7ec3b47657bb1",
+  "abbf0fbff31af48c",
+  "9777c2d80f28172e"
+ ],
+ "channels": [
+  {
+   "channel": "raw.githubusercontent.com",
+   "url": "https://raw.githubusercontent.com/08822407d/MyOS2/claude/dazzling-cori-q0dnyt/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/facts-and-regressions.yaml",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 130146,
+   "sha256_segments": [
+    "9ea40e6a4a69c7d8",
+    "55c7ec3b47657bb1",
+    "abbf0fbff31af48c",
+    "9777c2d80f28172e"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_value": "MYOS2-LEAD-002-CORE-CHECK-01",
+   "field_ok": true,
+   "ok": true
+  },
+  {
+   "channel": "api.github.com_contents_raw",
+   "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/facts-and-regressions.yaml?ref=claude/dazzling-cori-q0dnyt",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 130146,
+   "sha256_segments": [
+    "9ea40e6a4a69c7d8",
+    "55c7ec3b47657bb1",
+    "abbf0fbff31af48c",
+    "9777c2d80f28172e"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_value": "MYOS2-LEAD-002-CORE-CHECK-01",
+   "field_ok": true,
+   "ok": true
+  }
+ ],
+ "branch": "claude/dazzling-cori-q0dnyt",
+ "branch_head_relation": "equal",
+ "ok": true
+}

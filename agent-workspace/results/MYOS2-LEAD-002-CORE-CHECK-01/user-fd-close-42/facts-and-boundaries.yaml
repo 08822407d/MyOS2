@@ -1,0 +1,470 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FD-CLOSE-42",
+  "record_type": "bounded_fd_close_table_teardown_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-05",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "format": "JSON text accepted as YAML 1.2 subset",
+  "source_slices_total": 40,
+  "evidence_ids": [
+    "CL42-S001",
+    "CL42-S002",
+    "CL42-S003",
+    "CL42-S004",
+    "CL42-S005",
+    "CL42-S006",
+    "CL42-S007",
+    "CL42-S008",
+    "CL42-S009",
+    "CL42-S010",
+    "CL42-S011",
+    "CL42-S012",
+    "CL42-S013",
+    "CL42-S014",
+    "CL42-S015",
+    "CL42-S016",
+    "CL42-S017",
+    "CL42-S018",
+    "CL42-S019",
+    "CL42-S020",
+    "CL42-S021",
+    "CL42-S022",
+    "CL42-S023",
+    "CL42-S024",
+    "CL42-S025",
+    "CL42-S026",
+    "CL42-S027",
+    "CL42-S028",
+    "CL42-S029",
+    "CL42-S030",
+    "CL42-S031",
+    "CL42-S032",
+    "CL42-S033",
+    "CL42-S034",
+    "CL42-S035",
+    "CL42-S036",
+    "CL42-S037",
+    "CL42-S038",
+    "CL42-S039",
+    "CL42-S040"
+  ],
+  "type_map": [
+    {
+      "symbol": "close.fd",
+      "type": "unsigned int",
+      "signed": false,
+      "evidence": "CL42-S001"
+    },
+    {
+      "symbol": "files_struct_s.refcount",
+      "type": "atomic_t",
+      "object": "files_struct",
+      "evidence": "CL42-S006"
+    },
+    {
+      "symbol": "files_struct_s.fd_count",
+      "type": "unsigned long",
+      "object": "files_struct",
+      "evidence": "CL42-S007"
+    },
+    {
+      "symbol": "files_struct_s.fd_array",
+      "type": "file_s*[NR_OPEN_DEFAULT]",
+      "physical_capacity": 256,
+      "evidence": [
+        "CL42-S005",
+        "CL42-S007"
+      ]
+    },
+    {
+      "symbol": "file_s.f_count",
+      "type": "atomic_long_t",
+      "object": "file_s",
+      "evidence": "CL42-S032"
+    },
+    {
+      "symbol": "put_files_struct.i",
+      "type": "unsigned int",
+      "role": "loop_index",
+      "evidence": "CL42-S020"
+    }
+  ],
+  "resource_origins": [
+    {
+      "name": "filp_cachep",
+      "origin": "files_init creates via kmem_cache_create",
+      "allocation": "__alloc_file -> kmem_cache_zalloc",
+      "initial_file_count": 1,
+      "evidence": [
+        "CL42-S018",
+        "CL42-S015",
+        "CL42-S017"
+      ]
+    },
+    {
+      "name": "copy of file_s",
+      "origin": "dup_fd, kzalloc(sizeof(file_s)), copy *new_fp=*old_fp",
+      "allocation": "kzalloc",
+      "initial_file_count": "copied verbatim, not new +1",
+      "evidence": [
+        "CL42-S029",
+        "CL42-S030"
+      ],
+      "history": "CORE-USER-VFS-BASELINE-05::UV-09"
+    },
+    {
+      "name": "files_cachep",
+      "origin": "fork.c proc_caches_init",
+      "allocation": "dup_fd -> kmem_cache_alloc",
+      "initial_files_refcount": 1,
+      "initial_fd_count": 256,
+      "evidence": [
+        "CL42-S034",
+        "CL42-S035",
+        "CL42-S027",
+        "CL42-S028"
+      ]
+    },
+    {
+      "name": "init_files",
+      "origin": "global defined object in file.c, static storage duration",
+      "allocation": "not shown as kmem_cache_alloc",
+      "initial_files_refcount": 1,
+      "initial_fd_count": 0,
+      "evidence": [
+        "CL42-S025",
+        "CL42-S026"
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "id": "CLOSE",
+      "symbol": "MYOS_SYSCALL_DEFINE1(close)",
+      "param": "unsigned int fd",
+      "source_gates": [
+        "fd<0 (always false for unsigned)",
+        "fd>=curr->files->fd_count -> -EBADF"
+      ],
+      "physical_bound_gate": false,
+      "slot_read": "curr->files->fd_array[fd]",
+      "slot_valid_check": false,
+      "slot_write": "curr->files->fd_array[fd]=NULL, only after kfree returns",
+      "file_count_delta": "no local operation",
+      "files_count_delta": "no local operation",
+      "callee": "kfree(fp)",
+      "normal_return": 0,
+      "comments_not_active": [
+        "file->f_op->close",
+        "close_fd"
+      ],
+      "anchors": [
+        "CL42-S001",
+        "CL42-S002",
+        "CL42-S003",
+        "CL42-S004"
+      ]
+    },
+    {
+      "id": "KFREE_SELECTED",
+      "symbol": "kfree",
+      "path": "mykernel/mm/kmalloc/slub.h",
+      "binding_condition": "#if defined(SLUB_DEFINATION) || !(DEBUG)",
+      "binding_confirmed": false,
+      "source_gates": [
+        "object==NULL then return"
+      ],
+      "null_input": "no further calls",
+      "non_null_input": "virt_to_folio then folio_test_slab and conditional free_large_kmalloc / kmem_cache_free",
+      "negative_error_pointer_gate": false,
+      "physical_reclamation": "NOT_CERTIFIED",
+      "anchors": [
+        "CL42-S008",
+        "CL42-S009",
+        "CL42-S010"
+      ]
+    },
+    {
+      "id": "FILP_CLOSE",
+      "symbol": "filp_close",
+      "parameter": "file_s* filp",
+      "return_type": "int",
+      "source_gates": [],
+      "actions": [
+        "retval=0",
+        "fput(filp)",
+        "return retval"
+      ],
+      "normal_return": 0,
+      "slot_mutation": false,
+      "comments_not_active": [
+        "file_count early guard",
+        "filp->f_op->flush",
+        "dnotify_flush",
+        "locks_remove_posix"
+      ],
+      "anchors": [
+        "CL42-S011",
+        "CL42-S012"
+      ]
+    },
+    {
+      "id": "FPUT",
+      "symbol": "fput",
+      "parameter": "file_s* file",
+      "return_type": "void",
+      "source_gates": [
+        "atomic_long_dec_and_test(&file->f_count)"
+      ],
+      "actions": [
+        "decrement f_count",
+        "on zero call kmem_cache_free(filp_cachep,file)"
+      ],
+      "file_count_delta": -1,
+      "files_count_delta": 0,
+      "actual_physical_free": "NOT_CERTIFIED",
+      "anchors": [
+        "CL42-S013",
+        "CL42-S014"
+      ]
+    },
+    {
+      "id": "EXIT_FILES",
+      "symbol": "exit_files",
+      "parameter": "task_s* tsk",
+      "return_type": "void",
+      "source_gates": [
+        "if(files)"
+      ],
+      "actions": [
+        "files=tsk->files",
+        "task_lock(tsk)",
+        "tsk->files=NULL",
+        "task_unlock(tsk)",
+        "put_files_struct(files)"
+      ],
+      "files_ref_delta": "delegates to put",
+      "file_ref_delta": "only if last table traversal",
+      "anchors": [
+        "CL42-S023",
+        "CL42-S024"
+      ]
+    },
+    {
+      "id": "PUT_FILES_STRUCT",
+      "symbol": "put_files_struct",
+      "parameter": "files_struct_s* files",
+      "return_type": "void",
+      "source_gates": [
+        "atomic_dec_and_test(&files->refcount)",
+        "i<files->fd_count",
+        "if(file!=NULL)"
+      ],
+      "actions": [
+        "decrement files.refcount",
+        "only if zero: iterate i as unsigned int",
+        "read each file pointer",
+        "if nonNULL call filp_close(file) without consuming return",
+        "after loop request kmem_cache_free(files_cachep,files)"
+      ],
+      "file_slot_clear": false,
+      "physical_bound_guard": false,
+      "files_count_delta": -1,
+      "file_count_delta": "conditional, per nonNULL slot by fput",
+      "anchors": [
+        "CL42-S019",
+        "CL42-S020",
+        "CL42-S021",
+        "CL42-S022"
+      ]
+    }
+  ],
+  "ownership_semantics": {
+    "two_counter_types": [
+      "files_struct.refcount",
+      "file_s.f_count"
+    ],
+    "source_tests_distinct": true,
+    "file_reference_per_slot_not_proven_globally": true,
+    "valid_file_premise_required": true,
+    "file_ptr_nonnull_not_validity_proof": true,
+    "cache_free_call_not_physical_reclamation": true,
+    "close_does_not_call_fput": true,
+    "exit_table_destruction_not_live_slot_close": true
+  },
+  "finite_models": [
+    {
+      "id": "M01",
+      "input": "valid files.fd_count=0; close(0)",
+      "first": "fd>=fd_count",
+      "outcome": "-EBADF; no slot read"
+    },
+    {
+      "id": "M02",
+      "input": "valid files.fd_count=1; close(1)",
+      "first": "fd>=fd_count",
+      "outcome": "-EBADF"
+    },
+    {
+      "id": "M03",
+      "input": "valid files.fd_count=1; slot0=NULL; close(0); selected kfree body",
+      "first": "valid slot NULL then kfree NULL guard",
+      "outcome": "kfree returns; slot set NULL; return0 if table stays valid"
+    },
+    {
+      "id": "M04",
+      "input": "valid files.fd_count=1; slot0 valid file count1; close(0)",
+      "first": "kfree(file)",
+      "outcome": "no file.f_count update; after normal kfree return clears slot and returns0"
+    },
+    {
+      "id": "M05",
+      "input": "valid files.fd_count=1; slot0 valid file count2; close(0)",
+      "first": "kfree(file)",
+      "outcome": "count unchanged; another holder's status and physical reclamation unproven"
+    },
+    {
+      "id": "M06",
+      "input": "valid files.fd_count=256; close(256)",
+      "first": "fd>=fd_count",
+      "outcome": "-EBADF"
+    },
+    {
+      "id": "M07",
+      "input": "files.fd_count=257; close(256)",
+      "first": "fd_array[256] OOB read",
+      "outcome": "STOP_BEFORE_KFREE"
+    },
+    {
+      "id": "M08",
+      "input": "current->files=NULL; close(0)",
+      "first": "files->fd_count expression invalid",
+      "outcome": "NOT_CERTIFIED"
+    },
+    {
+      "id": "M09",
+      "input": "valid table slot0=ERR_PTR-like non-NULL; close0",
+      "first": "kfree non-NULL path needs real object",
+      "outcome": "NOT_CERTIFIED; no guaranteed clear/errno"
+    },
+    {
+      "id": "M10",
+      "input": "kfree(file) fails to return normally",
+      "first": "callee non-return",
+      "outcome": "slot clear/return0 NOT_CERTIFIED"
+    },
+    {
+      "id": "M11",
+      "input": "filp_close valid file count1; no other writer",
+      "first": "fput 1->0",
+      "outcome": "request kmem_cache_free(filp_cachep,file); retval0 if callee normal"
+    },
+    {
+      "id": "M12",
+      "input": "filp_close valid file count2; no other writer",
+      "first": "fput 2->1",
+      "outcome": "no filp cache free in this call; retval0 if normal"
+    },
+    {
+      "id": "M13",
+      "input": "valid tsk->files=NULL; exit_files",
+      "first": "if(files) false",
+      "outcome": "no task_lock, no put"
+    },
+    {
+      "id": "M14",
+      "input": "valid tsk files.refcount=2; exit_files",
+      "first": "set tsk.files=NULL; dec 2->1",
+      "outcome": "no slot iteration; no files_cachep release"
+    },
+    {
+      "id": "M15",
+      "input": "heap-allocated valid files.refcount1; fd_count0",
+      "first": "dec1->0, loop none",
+      "outcome": "request kmem_cache_free(files_cachep,files)"
+    },
+    {
+      "id": "M16",
+      "input": "files is global init_files; refcount1; fd_count0",
+      "first": "dec1->0, loop none",
+      "outcome": "same files_cachep free request on static object; authorization/actual reachability UNKNOWN"
+    },
+    {
+      "id": "M17",
+      "input": "last-owner valid files, fd_count3, slots0..2 NULL",
+      "first": "dec1->0; three NULL tests",
+      "outcome": "no filp_close; request files cache free"
+    },
+    {
+      "id": "M18",
+      "input": "last-owner valid files, one valid file count1",
+      "first": "filp_close fput1->0",
+      "outcome": "file cache free request then files cache free request if all calls return"
+    },
+    {
+      "id": "M19",
+      "input": "last-owner table, two slots alias same valid file count2",
+      "first": "first fput2->1, second1->0",
+      "outcome": "second requests file cache free, then table cache free if normal"
+    },
+    {
+      "id": "M20",
+      "input": "last-owner table, two alias slots same file count1",
+      "first": "first fput1->0 requests free",
+      "outcome": "second slot pointer object validity unknown; STOP before claiming second decrement"
+    },
+    {
+      "id": "M21",
+      "input": "last-owner files.fd_count257; first 256 iterations all normal",
+      "first": "read fd_array[256] OOB",
+      "outcome": "STOP; no final table free certified"
+    },
+    {
+      "id": "M22",
+      "input": "last-owner table nonNULL invalid slot or filp_close does not return",
+      "first": "first invalid file access/nonreturn",
+      "outcome": "STOP; no whole-loop completion"
+    },
+    {
+      "id": "M23",
+      "input": "valid shared files object refcount2 across two tasks; one exit",
+      "first": "put dec2->1",
+      "outcome": "no physical table free claimed; other task status opaque"
+    },
+    {
+      "id": "M24",
+      "input": "valid dup_fd clone file allocated via kzalloc, f_count copied1",
+      "first": "filp_close fput1->0",
+      "outcome": "filp_cachep free call on kzalloc-origin object; old UV-09, allocator correctness UNKNOWN"
+    }
+  ],
+  "finite_model_assumptions": [
+    "explicit valid files and task when specified",
+    "if source kfree definition selected, NULL is no-op",
+    "file and files refcounts positive and atomics normal",
+    "no unmodeled writers or opaque effects on file validity",
+    "each opaque callee must return normally to assert later source events",
+    "physical fd array 256 independently of logical fd_count",
+    "no actual runtime, compiler, concurrency or allocator testing"
+  ],
+  "new_conditional_finding": "CL42-F01",
+  "prior_ids_kept": [
+    "CORE-USER-VFS-BASELINE-05::UV-09",
+    "CORE-USER-VFS-BASELINE-05::UV-10",
+    "CORE-USER-VFS-BASELINE-05::UV-11",
+    "CORE-USER-SYSCALL-STDIO-08::US-01",
+    "CORE-USER-FD-LOOKUP-REF-41::FG41-F01",
+    "CORE-USER-FD-LOOKUP-REF-41::FG41-F02",
+    "CORE-USER-FD-LOOKUP-REF-41::FG41-F03",
+    "R41-S01",
+    "R41-S02",
+    "R40-S01",
+    "R40-S02"
+  ],
+  "raw_source_execution": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "graph_semantics": "source gates vs analytic stops are distinct"
+}

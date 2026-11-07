@@ -1,0 +1,242 @@
+---
+# JSON mapping is a valid YAML 1.2 document; no unapproved old-file changes
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-ELF-SEGMENT-LOAD-26",
+  "date": "2026-11-02",
+  "record_type": "new_bounded_conditional_findings_and_prior_links",
+  "owner_action_now": "none",
+  "phase": 2,
+  "kernel_change_authorized": false,
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "parent_result_short12": "897c3a935aa8",
+  "author": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "status": "deferred_owner_not_ready",
+  "not_runtime_proven": true,
+  "old_findings_frozen": true,
+  "no_global_dedup_claim": true,
+  "mainline_review": "PENDING",
+  "findings": [
+    {
+      "id": "EL26-F01",
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F01",
+      "kind": "ignored_trim_return_and_mapping_completion_gap",
+      "status": "needs_evidence",
+      "title": "elf_map整体预留后尾部vm_munmap的返回值未消费",
+      "anchors": [
+        "EL26-A027",
+        "EL26-A028",
+        "EL26-A059",
+        "EL26-A060",
+        "EL26-A061",
+        "EL26-A062"
+      ],
+      "premises": [
+        "PT_LOAD在selected ET_DYN total_size>0分支使用整体文件vm_mmap",
+        "map_addr通过BAD_ADDR门",
+        "后置map_addr+size、total_size-size运算有效",
+        "实际控制流到达裁剪调用"
+      ],
+      "evidence": "vm_munmap(map_addr+size,total_size-size)无返回赋值/错误分支，之后返回原map_addr",
+      "possible_impact": "返回可用map_addr不能证明多余预留已成功摘链/解除，未消费失败可能留下局部VMA关系",
+      "counterevidence": [
+        "即使未核返回，解除调用在合法条件下确实发生",
+        "实际解除可能成功；当前没有失败/残留的运行证明",
+        "14号已有munmap缺口，不能将其重复计为独立内核根因"
+      ],
+      "prior_links": [
+        "CORE-USER-VMA-LIFETIME-14::VL14-F01",
+        "CORE-USER-MMAP-PLACEMENT-21::AP21-F03"
+      ],
+      "resume_condition": "以后仅在获得独立修复/运行授权后审查失败恢复与实体映射",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EL26-F02",
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F02",
+      "kind": "late_elf_header_validation_after_segment_effects",
+      "status": "needs_evidence",
+      "title": "p_filesz>p_memsz及部分越界门位于elf_load文件映射之后",
+      "anchors": [
+        "EL26-A014",
+        "EL26-A017",
+        "EL26-A018",
+        "EL26-A019"
+      ],
+      "premises": [
+        "给出能正常到达PT_LOAD调用的程序头",
+        "elf_load在该条件下执行到文件映射/可能的清尾",
+        "后置p_filesz/p_memsz等任一检查失败"
+      ],
+      "evidence": "主程序elf_load的BAD_ADDR通过后才检查p_filesz>p_memsz和TASK_SIZE范围，错误出口释放头等对象",
+      "possible_impact": "即使最终返回-EINVAL，此前文件VMA/拆除等操作仍可能发生；源码错误出口没有证明全部映射副作用回滚",
+      "counterevidence": [
+        "前置其他验证可先拒绝某些输入，未证明可实际加载恶意构造",
+        "缺少实机/内存映射跟踪，不能宣布持久泄漏或某个内核故障",
+        "上游05执行点已记录exec失败处理，不能重复宣称独立新根因"
+      ],
+      "prior_links": [
+        "CORE-USER-VFS-BASELINE-05::UV-02",
+        "CORE-USER-ELF-STACK-TABLES-25-REVIEW-001::R25-S02"
+      ],
+      "resume_condition": "主线另行界定修复时补前后核验顺序与事务式回退要求",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EL26-F03",
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F03",
+      "kind": "ignored_zero_tail_failure_nonwritable_branch",
+      "status": "deferred_owner_not_ready",
+      "title": "ELF只读段尾部仍尝试padzero，但不可写分支忽略错误",
+      "anchors": [
+        "EL26-A023",
+        "EL26-A024",
+        "EL26-A034",
+        "EL26-A071",
+        "EL26-A072",
+        "EL26-A073",
+        "EL26-A074"
+      ],
+      "premises": [
+        "filesz>0 && memsz>filesz且mapped address通过错误门",
+        "zero_start不在页边界，clear_user被尝试",
+        "padzero返回非零且prot不带PROT_WRITE"
+      ],
+      "evidence": "padzero(zero_start)是&&左操作数，失败时在prot不带WRITE情形下不return -EFAULT",
+      "possible_impact": "即使后续elf_load返回可用地址，不能由此证明部分尾页清理已成功，也不能自动推定按预期BSS全零",
+      "counterevidence": [
+        "无实际失败轨迹或页面未零值实测",
+        "访问权限/底层异常恢复/已经存在的文件页语义均未认证",
+        "可写段返回-EFAULT时已停止本段后续扩展"
+      ],
+      "prior_links": [
+        "CORE-USER-VFS-BASELINE-05::UV-08",
+        "CORE-USER-ELF-STACK-TABLES-25-REVIEW-001::R25-S01"
+      ],
+      "resume_condition": "待授权独立验证清尾与合法文件页权限/异常契约",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EL26-F04",
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F04",
+      "kind": "unsigned_total_size_minus_file_map_size_precondition",
+      "status": "needs_evidence",
+      "title": "elf_map在整体预留分支未主动检测total_size<size的下溢",
+      "anchors": [
+        "EL26-A025",
+        "EL26-A027",
+        "EL26-A039",
+        "EL26-A040",
+        "EL26-A041",
+        "EL26-A017"
+      ],
+      "premises": [
+        "total_size>0且其页向上取整后小于size",
+        "map_addr通过BAD_ADDR门并执行差值",
+        "ulong采用64位模型及算术表达式有效"
+      ],
+      "evidence": "直接计算total_size-size后作vm_munmap长度，未见本函数的比较门；纸面0x1000-0x3000模2^64=0xffffffffffffe000",
+      "possible_impact": "若异常头输入能通过先行映射并到达此处，则裁剪请求的长度可能明显超出预期；未证明下游会成功执行",
+      "counterevidence": [
+        "当所有PT_LOAD的p_filesz<=p_memsz、跨度无回绕且相关段范围有效时，整体跨度可界定不小于单段映射size",
+        "实际file映射或下层地址验证可能先失败",
+        "p_filesz>memsz虽被后置检查，不等于必然可运行到该分支"
+      ],
+      "prior_links": [
+        "CORE-USER-MMAP-PLACEMENT-21::AP21-F03"
+      ],
+      "resume_condition": "必要时先固定异常ELF样本，再用独立授权的安全验证界定真实路径",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EL26-F05",
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F05",
+      "kind": "anonymous_vma_link_result_ignored_on_bss_extension",
+      "status": "needs_evidence",
+      "title": "vm_brk_flags→do_brk_flags的新VMA路径未消费simple_vma_link返回",
+      "anchors": [
+        "EL26-A063",
+        "EL26-A064",
+        "EL26-A066",
+        "EL26-A067",
+        "EL26-A068",
+        "EL26-A069"
+      ],
+      "premises": [
+        "p_memsz>p_filesz使vm_brk_flags接收正的页对齐请求",
+        "do_brk_flags确实走新VMA而非合并/其他前期失败路径",
+        "simple_vma_link调用正常返回非零或未完成预期插入"
+      ],
+      "evidence": "新匿名VMA字段初始化后直接simple_vma_link(mm,vma,prev)，其返回未保存，之后更新mm计数字段并return0",
+      "possible_impact": "当前包装结果0不能单独证明新匿名VMA已成功加入索引，也不证明按BSS需求物理页零化",
+      "counterevidence": [
+        "合并路径不调用相同的新VMA link",
+        "成功插入情况下这项疑点并不触发；没有真实链接失败测试",
+        "与14/21的VMA链接/迭代缺口可能共享根因，未完成去重"
+      ],
+      "prior_links": [
+        "CORE-USER-VMA-LIFETIME-14::VL14-F01",
+        "CORE-USER-MMAP-PLACEMENT-21::AP21-F03",
+        "CORE-USER-ANON-ZERO-19-REVIEW-001::R19-S02"
+      ],
+      "resume_condition": "主线定点审查与必要的VMA发布/错误契约验证后再评估改动",
+      "owner_action_now": "none"
+    }
+  ],
+  "historical_evidence_only": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-02",
+      "new_finding": false,
+      "relation": "exec不可返回点后失败及VMA副作用的既有基线",
+      "no_status_change": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-07",
+      "new_finding": false,
+      "relation": "文件VMA到pagecache缺页的数据已就绪并未证",
+      "no_status_change": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-08",
+      "new_finding": false,
+      "relation": "文件缺页下层read返回未消费，不等于文件映射时字节已读",
+      "no_status_change": true
+    },
+    {
+      "qualified_id": "CORE-USER-VMA-LIFETIME-14::VL14-F01",
+      "new_finding": false,
+      "relation": "VMA交集和初始NULL候选路径需独立前提",
+      "no_status_change": true
+    },
+    {
+      "qualified_id": "CORE-USER-MMAP-PLACEMENT-21::AP21-F03",
+      "new_finding": false,
+      "relation": "地址选择和VMA迭代初始NULL/返回门继续限定",
+      "no_status_change": true
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-STACK-TABLES-25-REVIEW-001::R25-S01",
+      "new_finding": false,
+      "relation": "mmap写锁包装返回0，异常恢复没有机器证据",
+      "no_status_change": true
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-STACK-TABLES-25-REVIEW-001::R25-S02",
+      "new_finding": false,
+      "relation": "长度、页对齐、地址、溢出及配置条件",
+      "no_status_change": true
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-STACK-TABLES-25-REVIEW-001::R25-S03",
+      "new_finding": false,
+      "relation": "跨函数调用/字段写入/忽略结果图区分",
+      "no_status_change": true
+    }
+  ],
+  "new_count": 5,
+  "full_repository_dedup": "NOT_PERFORMED",
+  "no_kernel_fix": true,
+  "owner_decisions_requested_now": []
+}

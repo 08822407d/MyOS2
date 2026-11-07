@@ -1,0 +1,908 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FS-CONTEXT-45",
+  "record_type": "bounded_fs_context_facts_and_boundaries",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-06",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "encoding": "JSON syntax compatible with YAML 1.2",
+  "evidence_count": 55,
+  "evidence_ids": [
+    "FS45-A001",
+    "FS45-A002",
+    "FS45-A003",
+    "FS45-A004",
+    "FS45-A005",
+    "FS45-A006",
+    "FS45-A007",
+    "FS45-A008",
+    "FS45-A009",
+    "FS45-A010",
+    "FS45-A011",
+    "FS45-A012",
+    "FS45-A013",
+    "FS45-A014",
+    "FS45-A015",
+    "FS45-A016",
+    "FS45-A017",
+    "FS45-A018",
+    "FS45-A019",
+    "FS45-A020",
+    "FS45-A021",
+    "FS45-A022",
+    "FS45-A023",
+    "FS45-A024",
+    "FS45-A025",
+    "FS45-A026",
+    "FS45-A027",
+    "FS45-A028",
+    "FS45-A029",
+    "FS45-A030",
+    "FS45-A031",
+    "FS45-A032",
+    "FS45-A033",
+    "FS45-A034",
+    "FS45-A035",
+    "FS45-A036",
+    "FS45-A037",
+    "FS45-A038",
+    "FS45-A039",
+    "FS45-A040",
+    "FS45-A041",
+    "FS45-A042",
+    "FS45-A043",
+    "FS45-A044",
+    "FS45-A045",
+    "FS45-A046",
+    "FS45-A047",
+    "FS45-A048",
+    "FS45-A049",
+    "FS45-A050",
+    "FS45-A051",
+    "FS45-A052",
+    "FS45-A053",
+    "FS45-A054",
+    "FS45-A055"
+  ],
+  "object_types": [
+    {
+      "symbol": "taskfs_s",
+      "type_alias": "typedef struct fs_struct taskfs_s",
+      "fields": [
+        "int users",
+        "spinlock_t lock",
+        "int umask",
+        "int in_exec",
+        "path_s root",
+        "path_s pwd"
+      ],
+      "evidence": [
+        "FS45-A004",
+        "FS45-A005",
+        "FS45-A006"
+      ]
+    },
+    {
+      "symbol": "task_s.fs",
+      "type": "taskfs_s*",
+      "role": "task-level pointer value, not by itself acquired owner",
+      "evidence": "direct fixed source mykernel/sched/task/task_types.h::task_s, line339; not counted among two-pass excerpts"
+    },
+    {
+      "symbol": "files_struct_s.refcount",
+      "type": "atomic_t",
+      "role": "fd-table reference; distinct object",
+      "evidence": "direct fixed source mykernel/include/linux/kernel/fdtable.h::files_struct_s lines48–52; not counted among two-pass excerpts"
+    },
+    {
+      "symbol": "file_s.f_count",
+      "type": "atomic_long_t",
+      "role": "open file object reference; distinct object",
+      "evidence": "direct fixed source mykernel/include/linux/fs/fs.h::file_s lines869–873; not counted among two-pass excerpts"
+    },
+    {
+      "symbol": "path_s",
+      "members": [
+        {
+          "name": "mnt",
+          "type": "vfsmount_s*"
+        },
+        {
+          "name": "dentry",
+          "type": "dentry_s*"
+        }
+      ],
+      "evidence": "FS45-A037"
+    }
+  ],
+  "origins": [
+    {
+      "name": "init_fs",
+      "origin": "global static definition",
+      "users_initial": 1,
+      "umask_initial": "0022 octal",
+      "task_binding": "init_task.fs=&init_fs",
+      "dynamic_fs_cache_allocation": false,
+      "evidence": [
+        "FS45-A001",
+        "FS45-A002",
+        "FS45-A003"
+      ]
+    },
+    {
+      "name": "newfs",
+      "origin": "kmem_cache_alloc(fs_cachep,GFP_KERNEL)",
+      "users_initial_if_success": 1,
+      "in_exec_initial_if_success": 0,
+      "old_umask_copy": true,
+      "root_path_value_copy": true,
+      "pwd_path_value_copy": true,
+      "evidence": [
+        "FS45-A023",
+        "FS45-A024",
+        "FS45-A025",
+        "FS45-A026",
+        "FS45-A027"
+      ]
+    },
+    {
+      "name": "fs_cachep",
+      "origin": "fork.c proc_caches_init -> kmem_cache_create with sizeof(taskfs_s), ctor=NULL",
+      "evidence": [
+        "FS45-A042",
+        "FS45-A043"
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "id": "copy_fs",
+      "signature": "static int copy_fs(unsigned long clone_flags,task_s*tsk)",
+      "source": "mykernel/sched/forkexec/fork.c",
+      "old_fs": "current->fs",
+      "gates": [
+        "clone_flags & CLONE_FS",
+        "if(fs->in_exec) return -EAGAIN only shared",
+        "if(!tsk->fs) return -ENOMEM after nonshare assignment"
+      ],
+      "branches": [
+        {
+          "when": "shared in_exec nonzero",
+          "return": "-EAGAIN",
+          "users_delta": 0,
+          "tsk_fs_write": false
+        },
+        {
+          "when": "shared in_exec zero",
+          "return": 0,
+          "users_delta": 1,
+          "tsk_fs_write": false
+        },
+        {
+          "when": "nonshare allocation NULL",
+          "return": "-ENOMEM",
+          "users_delta": 0,
+          "tsk_fs_write": "NULL before check"
+        },
+        {
+          "when": "nonshare normal newfs",
+          "return": 0,
+          "users_delta": "new object users=1, old unchanged locally",
+          "tsk_fs_write": "newfs"
+        }
+      ],
+      "null_guard_for_old": false,
+      "evidence": [
+        "FS45-A018",
+        "FS45-A019",
+        "FS45-A020",
+        "FS45-A021",
+        "FS45-A022"
+      ]
+    },
+    {
+      "id": "copy_fs_struct",
+      "signature": "taskfs_s* copy_fs_struct(taskfs_s*old)",
+      "source": "mykernel/sched/misc/fs_struct.c",
+      "allocation": "kmem_cache_alloc(fs_cachep,GFP_KERNEL)",
+      "allocation_NULL_return": "NULL before accessing old",
+      "success_steps": [
+        "users=1",
+        "in_exec=0",
+        "spin_lock_init(new.lock)",
+        "umask=old.umask BEFORE spin_lock(old.lock)",
+        "spin_lock(old.lock)",
+        "root=old.root",
+        "path_get(&root)",
+        "pwd=old.pwd",
+        "path_get(&pwd)",
+        "spin_unlock(old.lock)",
+        "return newfs"
+      ],
+      "old_NULL_guard": false,
+      "cleanup_on_path_get_failure": "NONE_SHOWN",
+      "evidence": [
+        "FS45-A023",
+        "FS45-A024",
+        "FS45-A025",
+        "FS45-A026",
+        "FS45-A027",
+        "FS45-A028"
+      ]
+    },
+    {
+      "id": "exit_fs",
+      "signature": "void exit_fs(task_s*tsk)",
+      "source": "mykernel/sched/misc/fs_struct.c",
+      "source_check": "if(fs)",
+      "steps": [
+        "fs=tsk->fs BEFORE task_lock",
+        "task_lock(tsk)",
+        "spin_lock(&fs->lock)",
+        "tsk->fs=NULL",
+        "kill=!--fs->users",
+        "spin_unlock(&fs->lock)",
+        "task_unlock(tsk)",
+        "if(kill) free_fs_struct(fs)"
+      ],
+      "ref_counter": "ordinary int users",
+      "evidence": [
+        "FS45-A029",
+        "FS45-A030",
+        "FS45-A031",
+        "FS45-A032"
+      ]
+    },
+    {
+      "id": "free_fs_struct",
+      "signature": "void free_fs_struct(taskfs_s*fs)",
+      "source": "mykernel/sched/misc/fs_struct.c",
+      "steps": [
+        "path_put(&fs->root)",
+        "path_put(&fs->pwd)",
+        "kmem_cache_free(fs_cachep,fs)"
+      ],
+      "physical_free": "NOT_CERTIFIED",
+      "evidence": [
+        "FS45-A033",
+        "FS45-A034",
+        "FS45-A035",
+        "FS45-A036"
+      ]
+    },
+    {
+      "id": "path_get",
+      "signature": "void path_get(const path_s*path)",
+      "source": "mykernel/fs/vfs/namei.c",
+      "active_steps": [
+        "dget(path->dentry)"
+      ],
+      "commented": [
+        "mntget(path->mnt)"
+      ],
+      "dentry_delta": "UNVERIFIED_OPAQUE",
+      "mount_delta": "NO_ACTIVE_LOCAL_CALL",
+      "evidence": [
+        "FS45-A038",
+        "FS45-A040"
+      ]
+    },
+    {
+      "id": "path_put",
+      "signature": "void path_put(const path_s*path)",
+      "source": "mykernel/fs/vfs/namei.c",
+      "active_steps": [
+        "dput(path->dentry)"
+      ],
+      "commented": [
+        "mntput(path->mnt)"
+      ],
+      "dentry_delta": "UNVERIFIED_OPAQUE",
+      "mount_delta": "NO_ACTIVE_LOCAL_CALL",
+      "evidence": [
+        "FS45-A039",
+        "FS45-A041"
+      ]
+    }
+  ],
+  "fork_edges": [
+    {
+      "site": "copy_process after copy_files",
+      "action": "retval=copy_fs; if(retval) goto bad_fork_cleanup_files",
+      "fs_cleanup": false,
+      "files_cleanup": "conditional after jump",
+      "evidence": "FS45-A014"
+    },
+    {
+      "site": "copy_process after copy_fs",
+      "action": "retval=copy_sighand; if(retval) goto bad_fork_cleanup_fs",
+      "fs_cleanup": "conditional exit_fs",
+      "files_cleanup": "conditional exit_files after exit_fs return",
+      "evidence": [
+        "FS45-A015",
+        "FS45-A016",
+        "FS45-A017"
+      ]
+    },
+    {
+      "site": "copy_process after later errors",
+      "action": "via bad_fork_cleanup_sighand, fs, files in order",
+      "fs_cleanup": "requires earlier opaque cleanup normal",
+      "files_cleanup": "requires all earlier cleanup normal",
+      "history": "CORE-USER-VFS-BASELINE-05::UV-14",
+      "evidence": "FS45-A016"
+    }
+  ],
+  "finite_models": [
+    {
+      "id": "M01",
+      "domain": "source",
+      "input": "static init_task and init_fs at fixed pin",
+      "source_events": "init_task.fs=&init_fs; init_fs.users=1; umask=0022",
+      "last_certified": "initial static address/bits verified",
+      "stop_or_unknown": "run-time identity/count later UNKNOWN",
+      "evidence": [
+        "FS45-A001",
+        "FS45-A002",
+        "FS45-A003"
+      ]
+    },
+    {
+      "id": "M02",
+      "domain": "source",
+      "input": "static init_fs root/pwd omitted from explicit initializer",
+      "source_events": "global initializer shown only users/lock/umask fields",
+      "last_certified": "do not infer later runtime path values",
+      "stop_or_unknown": "startup/chdir/init effects not tracked",
+      "evidence": [
+        "FS45-A002",
+        "FS45-A003"
+      ]
+    },
+    {
+      "id": "M03",
+      "domain": "copy_fs",
+      "input": "CLONE_FS, valid current.fs, users=1, in_exec=0",
+      "source_events": "fs->users++ ; return0",
+      "last_certified": "local users 1->2; task.fs not written by helper",
+      "stop_or_unknown": "tsk.fs inherited identity requires prior *tsk=*orig",
+      "evidence": [
+        "FS45-A011",
+        "FS45-A018",
+        "FS45-A020"
+      ]
+    },
+    {
+      "id": "M04",
+      "domain": "copy_fs",
+      "input": "CLONE_FS, valid current.fs users=2, in_exec=0",
+      "source_events": "users++ ; return0",
+      "last_certified": "local users 2->3, file-table/file counters unchanged in helper",
+      "stop_or_unknown": "no other writer and no overflow",
+      "evidence": [
+        "FS45-A020"
+      ]
+    },
+    {
+      "id": "M05",
+      "domain": "copy_fs",
+      "input": "CLONE_FS, valid current.fs in_exec=1",
+      "source_events": "read fs->in_exec then return -EAGAIN",
+      "last_certified": "no local users++ and no helper assignment to tsk.fs",
+      "stop_or_unknown": "caller cleanup separately",
+      "evidence": [
+        "FS45-A019",
+        "FS45-A051"
+      ]
+    },
+    {
+      "id": "M06",
+      "domain": "copy_fs",
+      "input": "CLONE_FS, valid current.fs in_exec=-1",
+      "source_events": "nonzero test -> return -EAGAIN",
+      "last_certified": "nonzero semantics same, no users increment",
+      "stop_or_unknown": "not a validity check of in_exec owner",
+      "evidence": [
+        "FS45-A019",
+        "FS45-A051"
+      ]
+    },
+    {
+      "id": "M07",
+      "domain": "copy_fs",
+      "input": "CLONE_FS, current.fs=NULL",
+      "source_events": "if(fs->in_exec) after clone flag gate",
+      "last_certified": "no defined normal -EAGAIN/0 path certified",
+      "stop_or_unknown": "first invalid fs->in_exec access",
+      "evidence": [
+        "FS45-A018",
+        "FS45-A019"
+      ]
+    },
+    {
+      "id": "M08",
+      "domain": "copy_fs",
+      "input": "CLONE_FS, current.fs is nonNULL but invalid",
+      "source_events": "access fs->in_exec",
+      "last_certified": "no valid outcome certified",
+      "stop_or_unknown": "nonNULL does not mean valid object",
+      "evidence": [
+        "FS45-A019"
+      ]
+    },
+    {
+      "id": "M09",
+      "domain": "copy_fs",
+      "input": "!CLONE_FS, valid old; copy_fs_struct allocation returns NULL",
+      "source_events": "tsk->fs=copy_fs_struct(fs); if(!tsk->fs) return -ENOMEM",
+      "last_certified": "tsk.fs set NULL before -ENOMEM, unlike copied preseed files case",
+      "stop_or_unknown": "old refs not changed by selected copy_fs body",
+      "evidence": [
+        "FS45-A021",
+        "FS45-A054"
+      ]
+    },
+    {
+      "id": "M10",
+      "domain": "copy_fs",
+      "input": "!CLONE_FS, old==NULL; allocation returns NULL",
+      "source_events": "copy_fs_struct if(fs) false returns NULL",
+      "last_certified": "tsk.fs=NULL and caller -ENOMEM; old not dereferenced",
+      "stop_or_unknown": "requires valid tsk and normal allocator return",
+      "evidence": [
+        "FS45-A023",
+        "FS45-A028",
+        "FS45-A054"
+      ]
+    },
+    {
+      "id": "M11",
+      "domain": "copy_fs",
+      "input": "!CLONE_FS, old==NULL; allocation returns valid newfs",
+      "source_events": "newfs users/in_exec/lock init; then fs->umask=old->umask",
+      "last_certified": "cannot certify normal copy_fs_struct return",
+      "stop_or_unknown": "invalid old->umask dereference before spin_lock",
+      "evidence": [
+        "FS45-A024",
+        "FS45-A025"
+      ]
+    },
+    {
+      "id": "M12",
+      "domain": "copy_fs",
+      "input": "!CLONE_FS valid old and newfs; all path callees normal",
+      "source_events": "users=1;in_exec=0;lock init;umask copy;lock old;root/get;pwd/get;unlock;return",
+      "last_certified": "tsk.fs=newfs and copy_fs returns0; old users unchanged locally",
+      "stop_or_unknown": "does not prove mount/dentry ownership",
+      "evidence": [
+        "FS45-A023",
+        "FS45-A024",
+        "FS45-A025",
+        "FS45-A026",
+        "FS45-A027",
+        "FS45-A028"
+      ]
+    },
+    {
+      "id": "M13",
+      "domain": "copy_fs_struct",
+      "input": "allocation returns NULL and old invalid pointer",
+      "source_events": "if(fs) false, return fs NULL",
+      "last_certified": "no old member access in function body",
+      "stop_or_unknown": "caller tsk valid required to write NULL",
+      "evidence": [
+        "FS45-A023",
+        "FS45-A028"
+      ]
+    },
+    {
+      "id": "M14",
+      "domain": "copy_fs_struct",
+      "input": "allocation valid, old valid until umask, old later becomes invalid",
+      "source_events": "fs->umask=old->umask before spin_lock",
+      "last_certified": "no certifiable successful lock or root copy",
+      "stop_or_unknown": "first invalid old.lock access or earlier",
+      "evidence": [
+        "FS45-A025"
+      ]
+    },
+    {
+      "id": "M15",
+      "domain": "copy_fs_struct",
+      "input": "first path_get(root) does not return normally",
+      "source_events": "lock old;fs.root=old.root;path_get(&fs.root)",
+      "last_certified": "no certifiable pwd assignment or unlock/return",
+      "stop_or_unknown": "stops at first path_get",
+      "evidence": [
+        "FS45-A026",
+        "FS45-A027"
+      ]
+    },
+    {
+      "id": "M16",
+      "domain": "copy_fs_struct",
+      "input": "first path_get normal; second path_get(pwd) not normal",
+      "source_events": "root request then pwd assignment/get",
+      "last_certified": "no certified unlock/return newfs",
+      "stop_or_unknown": "stops at second path_get",
+      "evidence": [
+        "FS45-A026",
+        "FS45-A027"
+      ]
+    },
+    {
+      "id": "M17",
+      "domain": "copy_fs_struct",
+      "input": "old.root and old.pwd have equal mnt/dentry pointer values",
+      "source_events": "copy path_s values, root path_get and pwd path_get",
+      "last_certified": "two separate dget calls requested to same dentry if all normal",
+      "stop_or_unknown": "dget increment/physical semantics opaque",
+      "evidence": [
+        "FS45-A026",
+        "FS45-A027",
+        "FS45-A040"
+      ]
+    },
+    {
+      "id": "M18",
+      "domain": "copy_fs_struct",
+      "input": "old.root and pwd refer distinct valid pointers",
+      "source_events": "two path_get calls",
+      "last_certified": "dget requested for each distinct dentry",
+      "stop_or_unknown": "mount refs not requested in active wrapper",
+      "evidence": [
+        "FS45-A038",
+        "FS45-A040"
+      ]
+    },
+    {
+      "id": "M19",
+      "domain": "copy_fs_struct",
+      "input": "valid source umask octal 0022",
+      "source_events": "fs->umask=old->umask prior to old.lock",
+      "last_certified": "numeric umask copied before old.lock",
+      "stop_or_unknown": "concurrency/synchronization contract not audited",
+      "evidence": [
+        "FS45-A025",
+        "FS45-A047"
+      ]
+    },
+    {
+      "id": "M20",
+      "domain": "copy_fs_struct",
+      "input": "old.users=7, copy succeeds",
+      "source_events": "newfs.users=1, old.users unmodified in selected function",
+      "last_certified": "two independent fs objects, not shared users counter",
+      "stop_or_unknown": "old source may have other writers",
+      "evidence": [
+        "FS45-A024",
+        "FS45-A045"
+      ]
+    },
+    {
+      "id": "M21",
+      "domain": "exit_fs",
+      "input": "valid task with tsk.fs=NULL",
+      "source_events": "fs=tsk->fs; if(fs) false",
+      "last_certified": "no locks, users--, path_put or cache free from exit_fs",
+      "stop_or_unknown": "task validity required",
+      "evidence": [
+        "FS45-A029",
+        "FS45-A030"
+      ]
+    },
+    {
+      "id": "M22",
+      "domain": "exit_fs",
+      "input": "valid task, fs.users=2",
+      "source_events": "task_lock+fs.lock; task.fs=NULL; kill=!--fs.users; unlock",
+      "last_certified": "2->1, kill0; no free_fs_struct in this local call",
+      "stop_or_unknown": "valid positive count and normal locks",
+      "evidence": [
+        "FS45-A030",
+        "FS45-A031",
+        "FS45-A032"
+      ]
+    },
+    {
+      "id": "M23",
+      "domain": "exit_fs",
+      "input": "valid task, fs.users=1, paths valid and callees normal",
+      "source_events": "users 1->0; kill1; free_fs_struct; root put,pwd put,cache free",
+      "last_certified": "cache free request is reached after two path_put normal",
+      "stop_or_unknown": "actual physical return unverified",
+      "evidence": [
+        "FS45-A031",
+        "FS45-A032",
+        "FS45-A033"
+      ]
+    },
+    {
+      "id": "M24",
+      "domain": "exit_fs",
+      "input": "valid task, fs.users=3",
+      "source_events": "users 3->2; kill0",
+      "last_certified": "no free_fs_struct call from this exit_fs",
+      "stop_or_unknown": "does not prove other task holders valid",
+      "evidence": [
+        "FS45-A031",
+        "FS45-A032"
+      ]
+    },
+    {
+      "id": "M25",
+      "domain": "exit_fs",
+      "input": "fs.users=0, ownership-invalid model",
+      "source_events": "kill=!--fs.users attempts decrement to -1",
+      "last_certified": "no legitimate last-user model, no guaranteed resource lifecycle",
+      "stop_or_unknown": "may not extend beyond invalid ownership premise",
+      "evidence": [
+        "FS45-A050"
+      ]
+    },
+    {
+      "id": "M26",
+      "domain": "exit_fs",
+      "input": "fs.users near minimum int or invalid object",
+      "source_events": "decrement expression invokes invalid/overflow/invalid access",
+      "last_certified": "normal count and free not certified",
+      "stop_or_unknown": "first invalid event",
+      "evidence": [
+        "FS45-A050"
+      ]
+    },
+    {
+      "id": "M27",
+      "domain": "exit_fs",
+      "input": "nonNULL fs pointer but not live taskfs_s",
+      "source_events": "task_lock then spin_lock(&fs.lock) may access invalid object",
+      "last_certified": "cannot prove tsk.fs clear or kill/free",
+      "stop_or_unknown": "stop before first invalid access",
+      "evidence": [
+        "FS45-A030"
+      ]
+    },
+    {
+      "id": "M28",
+      "domain": "exit_fs",
+      "input": "valid fs and locks, first path_put(root) non-return",
+      "source_events": "free_fs_struct begins path_put(root)",
+      "last_certified": "pwd put and cache free not certified",
+      "stop_or_unknown": "first path_put stop",
+      "evidence": [
+        "FS45-A033",
+        "FS45-A034"
+      ]
+    },
+    {
+      "id": "M29",
+      "domain": "exit_fs",
+      "input": "valid fs, path_put(root) returns, path_put(pwd) non-return",
+      "source_events": "root put completed then pwd put invoked",
+      "last_certified": "cache free not certified",
+      "stop_or_unknown": "second path_put stop",
+      "evidence": [
+        "FS45-A033",
+        "FS45-A035"
+      ]
+    },
+    {
+      "id": "M30",
+      "domain": "exit_fs",
+      "input": "root/pwd same dentry; both path_put return normally",
+      "source_events": "path_put(root) then path_put(pwd)",
+      "last_certified": "two distinct dput requests even for same pointer",
+      "stop_or_unknown": "dput reference delta unverified",
+      "evidence": [
+        "FS45-A039",
+        "FS45-A041"
+      ]
+    },
+    {
+      "id": "M31",
+      "domain": "exit_fs",
+      "input": "fs is static init_fs, users positive1, both path_put normal",
+      "source_events": "exit_fs 1->0, free_fs_struct reaches kmem_cache_free(fs_cachep,&init_fs)",
+      "last_certified": "conditional static-vs-cache source mismatch reaches free-request",
+      "stop_or_unknown": "not evidence actual last user/physical reclaim",
+      "evidence": [
+        "FS45-A002",
+        "FS45-A032",
+        "FS45-A036",
+        "FS45-A043"
+      ]
+    },
+    {
+      "id": "M32",
+      "domain": "exit_fs",
+      "input": "fs is static init_fs, users1 and sharing succeeds then child exit",
+      "source_events": "copy_fs 1->2, exit_fs 2->1",
+      "last_certified": "no final free on this conditional share/exit pair",
+      "stop_or_unknown": "other runtime last exit unknown",
+      "evidence": [
+        "FS45-A002",
+        "FS45-A020",
+        "FS45-A050"
+      ]
+    },
+    {
+      "id": "M33",
+      "domain": "exit_fs",
+      "input": "fs is dynamic newfs.users1 from copy_fs_struct; later rollback",
+      "source_events": "exit_fs 1->0, two path_put, cache free call",
+      "last_certified": "normal conditional reclamation request on dynamic cache source",
+      "stop_or_unknown": "requires copied paths/callees valid",
+      "evidence": [
+        "FS45-A023",
+        "FS45-A024",
+        "FS45-A033",
+        "FS45-A043"
+      ]
+    },
+    {
+      "id": "M34",
+      "domain": "path_wrapper",
+      "input": "path_get called with valid path having both nonNULL mnt,dentry",
+      "source_events": "dget(path.dentry) active, mntget commented",
+      "last_certified": "one dget request, no wrapper mount-get call",
+      "stop_or_unknown": "actual dget behavior not inspected",
+      "evidence": [
+        "FS45-A037",
+        "FS45-A038"
+      ]
+    },
+    {
+      "id": "M35",
+      "domain": "path_wrapper",
+      "input": "path_put called with valid path having both nonNULL mnt,dentry",
+      "source_events": "dput(path.dentry) active, mntput commented",
+      "last_certified": "one dput request, no wrapper mount-put call",
+      "stop_or_unknown": "physical release and other mnt refs opaque",
+      "evidence": [
+        "FS45-A037",
+        "FS45-A039"
+      ]
+    },
+    {
+      "id": "M36",
+      "domain": "fork_rollback",
+      "input": "copy_fs CLONE_FS, in_exec1 then returns -EAGAIN",
+      "source_events": "copy_process if(retval) goto bad_fork_cleanup_files",
+      "last_certified": "exit_fs skipped; files cleanup reachable if normal",
+      "stop_or_unknown": "no fs users increment so none to put",
+      "evidence": [
+        "FS45-A014",
+        "FS45-A019",
+        "FS45-A051"
+      ]
+    },
+    {
+      "id": "M37",
+      "domain": "fork_rollback",
+      "input": "copy_fs !CLONE_FS, allocation NULL",
+      "source_events": "tsk.fs set NULL; copy_fs returns -ENOMEM; goto cleanup_files",
+      "last_certified": "no exit_fs for unowned newfs; files cleanup separate",
+      "stop_or_unknown": "only after copy_files normal success",
+      "evidence": [
+        "FS45-A014",
+        "FS45-A021",
+        "FS45-A054"
+      ]
+    },
+    {
+      "id": "M38",
+      "domain": "fork_rollback",
+      "input": "copy_fs CLONE_FS succeeds from users1, then copy_sighand returns error",
+      "source_events": "goto cleanup_fs, exit_fs 2->1 then exit_files if normal",
+      "last_certified": "local fs users restored 1->2->1",
+      "stop_or_unknown": "other cleanup may block actual reach",
+      "evidence": [
+        "FS45-A015",
+        "FS45-A016",
+        "FS45-A020",
+        "FS45-A032"
+      ]
+    },
+    {
+      "id": "M39",
+      "domain": "fork_rollback",
+      "input": "copy_fs !CLONE_FS newfs users1, later copy_sighand fails",
+      "source_events": "goto cleanup_fs, exit_fs 1->0 conditional free, then files",
+      "last_certified": "root/pwd releases and cache free requests conditional",
+      "stop_or_unknown": "no claim all resources properly freed",
+      "evidence": [
+        "FS45-A015",
+        "FS45-A016",
+        "FS45-A033"
+      ]
+    },
+    {
+      "id": "M40",
+      "domain": "fork_rollback",
+      "input": "copy_fs succeeded, copy_signal error triggers sighand cleanup first",
+      "source_events": "goto cleanup_sighand, then exit_fs/files if all earlier return",
+      "last_certified": "fs cleanup reachable only conditionally",
+      "stop_or_unknown": "historical UV-14 may stop earlier",
+      "evidence": [
+        "FS45-A016",
+        "FS45-A017"
+      ]
+    },
+    {
+      "id": "M41",
+      "domain": "fork_rollback",
+      "input": "copy_files earlier failed normally",
+      "source_events": "copy_process goto bad_fork_cleanup_semundo before copy_fs",
+      "last_certified": "no call to copy_fs or exit_fs on this local path",
+      "stop_or_unknown": "prior batch44 already owns this fact",
+      "evidence": [
+        "FS45-A013"
+      ]
+    },
+    {
+      "id": "M42",
+      "domain": "fork_rollback",
+      "input": "copy_fs nonshare allocation valid but old NULL or first path_get fails",
+      "source_events": "no normally returned copy_fs_struct before local error check",
+      "last_certified": "cannot fabricate -ENOMEM or goto cleanup_files",
+      "stop_or_unknown": "invalid old access / path request nonreturn",
+      "evidence": [
+        "FS45-A023",
+        "FS45-A025",
+        "FS45-A026"
+      ]
+    },
+    {
+      "id": "M43",
+      "domain": "source",
+      "input": "copy_fs CLONE_FS with in_exec=0 and users INT_MAX",
+      "source_events": "users++ on signed int",
+      "last_certified": "legitimate normal n+1 result cannot be inferred",
+      "stop_or_unknown": "signed overflow/model invalidity",
+      "evidence": [
+        "FS45-A020"
+      ]
+    },
+    {
+      "id": "M44",
+      "domain": "source",
+      "input": "newfs paths have value alias with old path objects",
+      "source_events": "fs.root=old.root; fs.pwd=old.pwd and separate gets",
+      "last_certified": "newfs path_s values independent, pointers shared to pointees",
+      "stop_or_unknown": "no deep-copy/lifetime guarantee",
+      "evidence": [
+        "FS45-A026",
+        "FS45-A027",
+        "FS45-A037"
+      ]
+    }
+  ],
+  "finite_model_count": 44,
+  "model_prerequisites": [
+    "all task/old/new fs and path objects valid where specified",
+    "positive representable users values",
+    "no unmodeled concurrent writer or pointer replacement",
+    "all call sites on the model path returned normally",
+    "source path_get/put dget/dput subcalls remain opaque",
+    "no physical free or mount ref changes inferred from names",
+    "node/current identity precondition inherited R44-S01",
+    "int users and other two atomic counters are not interchangeable"
+  ],
+  "new_conditional_findings": [
+    "FS45-F01",
+    "FS45-F02"
+  ],
+  "prior_preserved": [
+    "CORE-USER-PATH-INIT-31::PI31-F05",
+    "CORE-USER-FD-CLOSE-42::CL42-F01",
+    "CORE-USER-VFS-BASELINE-05::UV-10",
+    "CORE-USER-VFS-BASELINE-05::UV-14",
+    "CORE-USER-VFS-BASELINE-05::UV-15",
+    "CORE-USER-FILES-COPY-SHARE-43::FT43-F01"
+  ],
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "graphviz": "NOT_RUN"
+}

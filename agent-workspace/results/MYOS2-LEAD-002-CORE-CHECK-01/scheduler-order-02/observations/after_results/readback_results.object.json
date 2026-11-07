@@ -1,0 +1,60 @@
+{
+ "mode": "object",
+ "target_commit_short12": "5078686e8267",
+ "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/results.yaml",
+ "field": "packet_id",
+ "expected_blob_available": true,
+ "expected_bytes": 36524,
+ "expected_sha256_segments": [
+  "5ae5f362dca63a1a",
+  "37ceb6d66629c8f0",
+  "87de483c3209bed2",
+  "fdb43b92f813ce63"
+ ],
+ "channels": [
+  {
+   "channel": "raw.githubusercontent.com",
+   "url": "https://raw.githubusercontent.com/08822407d/MyOS2/<commit:5078686e8267>/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/results.yaml",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 36524,
+   "sha256_segments": [
+    "5ae5f362dca63a1a",
+    "37ceb6d66629c8f0",
+    "87de483c3209bed2",
+    "fdb43b92f813ce63"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_value": "MYOS2-LEAD-002-CORE-CHECK-01",
+   "field_ok": true,
+   "ok": true
+  },
+  {
+   "channel": "api.github.com_contents_raw",
+   "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/results.yaml?ref=<commit:5078686e8267>",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 36524,
+   "sha256_segments": [
+    "5ae5f362dca63a1a",
+    "37ceb6d66629c8f0",
+    "87de483c3209bed2",
+    "fdb43b92f813ce63"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_value": "MYOS2-LEAD-002-CORE-CHECK-01",
+   "field_ok": true,
+   "ok": true
+  }
+ ],
+ "binding": "fetched at the target commit itself",
+ "ok": true
+}

@@ -1,0 +1,770 @@
+{
+ "check": "USER_BOUNDARIES_07",
+ "pin_time": "a039d9803ade",
+ "anchors": {
+  "total": 70,
+  "ok": 70,
+  "by_kind": {
+   "asm_range": 3,
+   "build": 0,
+   "in_body": 62,
+   "initializer": 4,
+   "macro": 1,
+   "type_member": 0
+  },
+  "failures": []
+ },
+ "markdown_tags": {
+  "file": "user-entry-console.md",
+  "total": 22,
+  "ok": 22,
+  "failures": []
+ },
+ "queries": {
+  "total": 70,
+  "tool_failures": 0,
+  "hit_refs_checked": 42,
+  "errors": [],
+  "ok": true
+ },
+ "structure_checks": {
+  "total": 20,
+  "ok": 20,
+  "rows": [
+   {
+    "id": "SB-01",
+    "kind": "asm_sequence",
+    "path": "mykernel/arch/x86_64/entry/entry_64.S",
+    "symbol": "entry_SYSCALL_64",
+    "ok": true,
+    "range": [
+     144,
+     183,
+     "next_symbol"
+    ],
+    "instructions": [
+     "cli",
+     "endbr64",
+     "swapgs",
+     "movq %rsp,PER_CPU_VAR(cpu_tss_rw + TSS_sp2)",
+     "movq PER_CPU_VAR(pcpu_hot + X86_top_of_stack),%rsp",
+     "pushq $__USER_DS",
+     "pushq PER_CPU_VAR(cpu_tss_rw + TSS_sp2)",
+     "pushq %r11",
+     "pushq $__USER_CS",
+     "pushq %rcx",
+     "pushq %rax",
+     "pushq $0x80",
+     "PUSH_REGS",
+     "sti",
+     "movq %rsp,%rdi",
+     "movslq %eax,%rsi",
+     "call do_syscall_64"
+    ]
+   },
+   {
+    "id": "SB-02",
+    "kind": "asm_sequence",
+    "path": "mykernel/arch/x86_64/entry/entry_64.S",
+    "symbol": "syscall_return_via_sysret",
+    "ok": true,
+    "range": [
+     184,
+     208,
+     "next_symbol"
+    ],
+    "instructions": [
+     "cli",
+     "xchgq %r11,EFLAGS(%rsp)",
+     "xchgq %rcx,RIP(%rsp)",
+     "xchgq %r11,R11(%rsp)",
+     "xchgq %rcx,RCX(%rsp)",
+     "xchgq %r11,EFLAGS(%rsp)",
+     "xchgq %rcx,RIP(%rsp)",
+     "POP_REGS",
+     "addq $0x28,%rsp",
+     "popq %rsp",
+     "swapgs",
+     "sti",
+     "sysretq"
+    ]
+   },
+   {
+    "id": "SB-03",
+    "kind": "asm_sequence",
+    "path": "mykernel/arch/x86_64/entry/entry_64.S",
+    "symbol": "ret_from_fork_asm",
+    "ok": true,
+    "range": [
+     255,
+     298,
+     "explicit_end"
+    ],
+    "instructions": [
+     "movq %rax,%rdi",
+     "movq %rsp,%rsi",
+     "movq %rbx,%rdx",
+     "movq %r12,%rcx",
+     "call ret_from_fork",
+     "testq %rbx,%rbx",
+     "jnz 1f",
+     "2:",
+     "swapgs_restore_regs_and_return_to_usermode:",
+     "jmp syscall_return_via_sysret",
+     "1:",
+     "movq %r12,%rdi",
+     "callq *%rbx",
+     "jmp ."
+    ]
+   },
+   {
+    "id": "SB-04",
+    "kind": "asm_sequence",
+    "path": "mykernel/arch/x86_64/entry/entry_64.S",
+    "symbol": "__switch_to_asm",
+    "ok": true,
+    "range": [
+     210,
+     244,
+     "explicit_end"
+    ],
+    "instructions": [
+     "pushq %rbp",
+     "pushq %rbx",
+     "pushq %r12",
+     "pushq %r13",
+     "pushq %r14",
+     "pushq %r15",
+     "movq %rsp,TASK_threadsp(%rdi)",
+     "movq TASK_threadsp(%rsi),%rsp",
+     "popq %r15",
+     "popq %r14",
+     "popq %r13",
+     "popq %r12",
+     "popq %rbx",
+     "popq %rbp",
+     "jmp __switch_to"
+    ]
+   },
+   {
+    "id": "SB-05",
+    "kind": "body_regex",
+    "path": "mykernel/fs/syscall.c",
+    "symbol": "sys_dup2",
+    "ok": true,
+    "span": [
+     121,
+     122,
+     136
+    ],
+    "regex": "\\breturn\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-06",
+    "kind": "body_regex",
+    "path": "mykernel/fs/syscall.c",
+    "symbol": "sys_dup",
+    "ok": true,
+    "span": [
+     103,
+     104,
+     118
+    ],
+    "regex": "\\breturn\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-07",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "vfs_writev",
+    "ok": true,
+    "span": [
+     340,
+     342,
+     384
+    ],
+    "regex": "FMODE_CAN_WRITE",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-08",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "vfs_writev",
+    "ok": true,
+    "span": [
+     340,
+     342,
+     384
+    ],
+    "regex": "(?:copy_from_user|import_iovec)\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-09",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/read_write.c",
+    "symbol": "vfs_write",
+    "ok": true,
+    "span": [
+     287,
+     288,
+     317
+    ],
+    "regex": "FMODE_CAN_WRITE",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SB-10",
+    "kind": "body_regex",
+    "path": "mykernel/drivers/base/core.c",
+    "symbol": "device_add",
+    "ok": true,
+    "span": [
+     65,
+     66,
+     159
+    ],
+    "regex": "\\berror\\s*=\\s*0\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-11",
+    "kind": "body_regex",
+    "path": "mykernel/drivers/base/core.c",
+    "symbol": "device_add",
+    "ok": true,
+    "span": [
+     65,
+     66,
+     159
+    ],
+    "regex": "\\breturn\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SB-12",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/myos_vfs.c",
+    "symbol": "myos_switch_to_root_disk",
+    "ok": true,
+    "span": [
+     75,
+     76,
+     150
+    ],
+    "regex": "\\breturn\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-13",
+    "kind": "body_regex",
+    "path": "mykernel/fs/vfs/myos_vfs.c",
+    "symbol": "set_init_mount",
+    "ok": true,
+    "span": [
+     42,
+     43,
+     47
+    ],
+    "regex": "\\bif\\b|IS_ERR|==\\s*NULL|!=\\s*NULL",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-14",
+    "kind": "body_regex",
+    "path": "mykernel/entry/common.c",
+    "symbol": "exit_to_user_mode_loop",
+    "ok": true,
+    "span": [
+     14,
+     15,
+     57
+    ],
+    "regex": "\\b(?:if|while)\\b",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-15",
+    "kind": "body_regex",
+    "path": "mykernel/entry/common.c",
+    "symbol": "exit_to_user_mode_loop",
+    "ok": true,
+    "span": [
+     14,
+     15,
+     57
+    ],
+    "regex": "arch_do_signal_or_restart\\s*\\(\\s*regs\\s*\\)",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SB-16",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/entry/common.c",
+    "symbol": "do_syscall_64",
+    "ok": true,
+    "span": [
+     24,
+     25,
+     86
+    ],
+    "regex": "\\breturn\\s+false\\b",
+    "active_matches": 4,
+    "expected": 4
+   },
+   {
+    "id": "SB-17",
+    "kind": "body_regex",
+    "path": "mykernel/drivers/char/myos_tty.c",
+    "symbol": "myos_tty_open",
+    "ok": true,
+    "span": [
+     21,
+     22,
+     31
+    ],
+    "regex": "\\breturn\\s+1\\s*;",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SB-18",
+    "kind": "body_regex",
+    "path": "mykernel/drivers/char/myos_tty.c",
+    "symbol": "myos_tty_write_color",
+    "ok": true,
+    "span": [
+     112,
+     113,
+     172
+    ],
+    "regex": "(?:copy_from_user|get_user)\\s*\\(",
+    "active_matches": 0,
+    "expected": 0
+   },
+   {
+    "id": "SB-19",
+    "kind": "body_regex",
+    "path": "mykernel/drivers/char/myos_tty.c",
+    "symbol": "myos_tty_read",
+    "ok": true,
+    "span": [
+     66,
+     67,
+     84
+    ],
+    "regex": "\\bbreak\\b|'\\\\n'|\\breturn\\b",
+    "active_matches": 1,
+    "expected": 1
+   },
+   {
+    "id": "SB-20",
+    "kind": "body_regex",
+    "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+    "symbol": "ret_from_fork",
+    "ok": true,
+    "span": [
+     62,
+     65,
+     80
+    ],
+    "regex": "\\bfn\\s*\\(\\s*fn_arg\\s*\\)",
+    "active_matches": 1,
+    "expected": 1
+   }
+  ]
+ },
+ "value_tables": {
+  "VT-PTREGS": {
+   "fields": [
+    "r15",
+    "r14",
+    "r13",
+    "r12",
+    "bp",
+    "bx",
+    "r11",
+    "r10",
+    "r9",
+    "r8",
+    "ax",
+    "cx",
+    "dx",
+    "si",
+    "di",
+    "irq_nr",
+    "orig_ax",
+    "ip",
+    "cs",
+    "flags",
+    "sp",
+    "ss"
+   ],
+   "field_count": 22,
+   "rows": [
+    {
+     "macro": "R15",
+     "field": "r15",
+     "struct_offset": 0,
+     "generated": 0,
+     "ok": true
+    },
+    {
+     "macro": "R14",
+     "field": "r14",
+     "struct_offset": 8,
+     "generated": 8,
+     "ok": true
+    },
+    {
+     "macro": "R13",
+     "field": "r13",
+     "struct_offset": 16,
+     "generated": 16,
+     "ok": true
+    },
+    {
+     "macro": "R12",
+     "field": "r12",
+     "struct_offset": 24,
+     "generated": 24,
+     "ok": true
+    },
+    {
+     "macro": "RBP",
+     "field": "bp",
+     "struct_offset": 32,
+     "generated": 32,
+     "ok": true
+    },
+    {
+     "macro": "RBX",
+     "field": "bx",
+     "struct_offset": 40,
+     "generated": 40,
+     "ok": true
+    },
+    {
+     "macro": "R11",
+     "field": "r11",
+     "struct_offset": 48,
+     "generated": 48,
+     "ok": true
+    },
+    {
+     "macro": "R10",
+     "field": "r10",
+     "struct_offset": 56,
+     "generated": 56,
+     "ok": true
+    },
+    {
+     "macro": "R9",
+     "field": "r9",
+     "struct_offset": 64,
+     "generated": 64,
+     "ok": true
+    },
+    {
+     "macro": "R8",
+     "field": "r8",
+     "struct_offset": 72,
+     "generated": 72,
+     "ok": true
+    },
+    {
+     "macro": "RAX",
+     "field": "ax",
+     "struct_offset": 80,
+     "generated": 80,
+     "ok": true
+    },
+    {
+     "macro": "RCX",
+     "field": "cx",
+     "struct_offset": 88,
+     "generated": 88,
+     "ok": true
+    },
+    {
+     "macro": "RDX",
+     "field": "dx",
+     "struct_offset": 96,
+     "generated": 96,
+     "ok": true
+    },
+    {
+     "macro": "RSI",
+     "field": "si",
+     "struct_offset": 104,
+     "generated": 104,
+     "ok": true
+    },
+    {
+     "macro": "RDI",
+     "field": "di",
+     "struct_offset": 112,
+     "generated": 112,
+     "ok": true
+    },
+    {
+     "macro": "IRQ_NR",
+     "field": "irq_nr",
+     "struct_offset": 120,
+     "generated": 120,
+     "ok": true
+    },
+    {
+     "macro": "ORIG_RAX",
+     "field": "orig_ax",
+     "struct_offset": 128,
+     "generated": 128,
+     "ok": true
+    },
+    {
+     "macro": "RIP",
+     "field": "ip",
+     "struct_offset": 136,
+     "generated": 136,
+     "ok": true
+    },
+    {
+     "macro": "CS",
+     "field": "cs",
+     "struct_offset": 144,
+     "generated": 144,
+     "ok": true
+    },
+    {
+     "macro": "EFLAGS",
+     "field": "flags",
+     "struct_offset": 152,
+     "generated": 152,
+     "ok": true
+    },
+    {
+     "macro": "RSP",
+     "field": "sp",
+     "struct_offset": 160,
+     "generated": 160,
+     "ok": true
+    },
+    {
+     "macro": "SS",
+     "field": "ss",
+     "struct_offset": 168,
+     "generated": 168,
+     "ok": true
+    }
+   ],
+   "ptregs_size_generated": 176,
+   "ptregs_size_struct": 176,
+   "push_regs_order": [
+    "di",
+    "si",
+    "dx",
+    "cx",
+    "ax",
+    "r8",
+    "r9",
+    "r10",
+    "r11",
+    "bx",
+    "bp",
+    "r12",
+    "r13",
+    "r14",
+    "r15"
+   ],
+   "pop_regs_order": [
+    "r15",
+    "r14",
+    "r13",
+    "r12",
+    "bp",
+    "bx",
+    "r11",
+    "r10",
+    "r9",
+    "r8",
+    "ax",
+    "cx",
+    "dx",
+    "si",
+    "di"
+   ],
+   "push_regs_reversed_equals_first_fields": true,
+   "pop_regs_equals_first_fields": true,
+   "entry_push_sequence": [
+    "pushq $__USER_DS",
+    "pushq PER_CPU_VAR(cpu_tss_rw + TSS_sp2)",
+    "pushq %r11",
+    "pushq $__USER_CS",
+    "pushq %rcx",
+    "pushq %rax",
+    "pushq $0x80",
+    "PUSH_REGS"
+   ],
+   "entry_slots": 22,
+   "sysret_addq": 40,
+   "sysret_skip_expected": 40,
+   "ok": true
+  },
+  "VT-KFRAME": {
+   "frame_fields": [
+    "r15",
+    "r14",
+    "r13",
+    "r12",
+    "bx",
+    "bp",
+    "ret_addr"
+   ],
+   "fork_frame_members": [
+    "frame",
+    "regs"
+   ],
+   "switch_push": [
+    "bp",
+    "bx",
+    "r12",
+    "r13",
+    "r14",
+    "r15"
+   ],
+   "switch_pop": [
+    "r15",
+    "r14",
+    "r13",
+    "r12",
+    "bx",
+    "bp"
+   ],
+   "pop_equals_first_fields": true,
+   "push_reversed_equals_pop": true,
+   "ret_addr_after_popped": true,
+   "regs_offset_in_fork_frame": 56,
+   "rsp_after_pops_and_ret": 56,
+   "symbolic_offsets": {
+    "TASK_threadsp": [
+     "task_struct",
+     "thread.sp"
+    ],
+    "X86_top_of_stack": [
+     "pcpu_hot",
+     "top_of_stack"
+    ],
+    "TSS_sp2": [
+     "tss_struct",
+     "x86_tss.sp2"
+    ]
+   },
+   "generated_values_unverified": {
+    "TASK_threadsp": "552",
+    "X86_top_of_stack": "24",
+    "TSS_sp2": "20"
+   },
+   "ok": true
+  },
+  "VT-FLAGS": {
+   "values": {
+    "O_CREAT": 64,
+    "LOOKUP_RCU": 64,
+    "FMODE_CAN_WRITE": 262144,
+    "FMODE_NONOTIFY": 67108864
+   },
+   "o_creat_equals_lookup_rcu": true,
+   "open_fmode_line": 3425,
+   "open_fmode_text_found": true,
+   "open_fmode_access_values": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "can_write_reachable_by_open_fmode": false,
+   "ok": true
+  },
+  "ok": true
+ },
+ "structure": {
+  "errors": [],
+  "limits": {
+   "capabilities": [
+    14,
+    15
+   ],
+   "edges": [
+    37,
+    40
+   ],
+   "anchors": [
+    70,
+    75
+   ],
+   "candidates": [
+    4,
+    4
+   ]
+  },
+  "recount": {
+   "capabilities": 14,
+   "edges": 37,
+   "edges_indirect": 8,
+   "anchors": 70,
+   "anchors_by_kind": {
+    "asm_range": 3,
+    "build": 0,
+    "in_body": 62,
+    "initializer": 4,
+    "macro": 1,
+    "type_member": 0
+   },
+   "anchors_by_theme": {
+    "B01": 29,
+    "B02": 16,
+    "B03": 25
+   },
+   "queries": 70,
+   "structure_checks": 20,
+   "value_tables": 3,
+   "gap_status": 6,
+   "next_validation_candidates": 4,
+   "frame_paths": 3,
+   "chain_links": 6
+  },
+  "ok": true
+ },
+ "deferred_findings": {
+  "errors": [],
+  "recount": {
+   "findings": 14,
+   "evidence_appends": 2,
+   "errata": 1,
+   "findings_by_status": {
+    "deferred_owner_not_ready": 11,
+    "needs_evidence": 3,
+    "superseded_interpretation": 0
+   }
+  },
+  "errata_quotes_checked": 2,
+  "ok": true
+ },
+ "hex40_in_package": [],
+ "all_ok": true,
+ "scan_index_repo_rebound": true
+}

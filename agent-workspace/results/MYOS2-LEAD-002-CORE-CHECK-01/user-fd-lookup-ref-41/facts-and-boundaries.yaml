@@ -1,0 +1,514 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FD-LOOKUP-REF-41",
+  "record_type": "bounded_fd_lookup_reference_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "source_pin_short12": "a039d9803ade",
+  "evidence_span_count": 40,
+  "evidence_ids": [
+    "FG41-A001",
+    "FG41-A002",
+    "FG41-A003",
+    "FG41-A004",
+    "FG41-A005",
+    "FG41-A006",
+    "FG41-A007",
+    "FG41-A008",
+    "FG41-A009",
+    "FG41-A010",
+    "FG41-A011",
+    "FG41-A012",
+    "FG41-A013",
+    "FG41-A014",
+    "FG41-A015",
+    "FG41-A016",
+    "FG41-A017",
+    "FG41-A018",
+    "FG41-A019",
+    "FG41-A020",
+    "FG41-A021",
+    "FG41-A022",
+    "FG41-A023",
+    "FG41-A024",
+    "FG41-A025",
+    "FG41-A026",
+    "FG41-A027",
+    "FG41-A028",
+    "FG41-A029",
+    "FG41-A030",
+    "FG41-A031",
+    "FG41-A032",
+    "FG41-A033",
+    "FG41-A034",
+    "FG41-A035",
+    "FG41-A036",
+    "FG41-A037",
+    "FG41-A038",
+    "FG41-A039",
+    "FG41-A040"
+  ],
+  "types": [
+    {
+      "type": "uint",
+      "underlying": "unsigned int",
+      "evidence": "FG41-A025"
+    },
+    {
+      "type": "ulong",
+      "underlying": "unsigned long",
+      "evidence": "FG41-A025"
+    },
+    {
+      "type": "files_struct_s.fd_count",
+      "underlying": "unsigned long",
+      "evidence": "FG41-A007"
+    },
+    {
+      "type": "files_struct_s.fd_array",
+      "underlying": "file_s* [NR_OPEN_DEFAULT]",
+      "capacity": 256,
+      "evidence": [
+        "FG41-A006",
+        "FG41-A007"
+      ]
+    },
+    {
+      "type": "fd_s.flags",
+      "underlying": "uint",
+      "evidence": "FG41-A010"
+    },
+    {
+      "type": "fd_s.file",
+      "underlying": "file_s*",
+      "evidence": "FG41-A010"
+    }
+  ],
+  "source_functions": [
+    {
+      "name": "__simple_fget",
+      "parameter_types": [
+        "uint fd",
+        "fmode_t mask"
+      ],
+      "actual_logical_guard": "fd < files->fd_count",
+      "actual_physical_array_guard": "NONE",
+      "slot_read": "files->fd_array[fd] only after logical guard",
+      "null_check_before_inc": false,
+      "mask_consumed": false,
+      "ref_delta_for_valid_file": 1,
+      "return_type": "file_s*",
+      "normal_return_outside_count": "NULL",
+      "stop_for_in_range_null": "invalid retval->f_count member/atomic access",
+      "evidence": [
+        "FG41-A001",
+        "FG41-A002"
+      ]
+    },
+    {
+      "name": "fget",
+      "parameter_types": [
+        "uint fd"
+      ],
+      "actual_call": "__simple_fget(fd,FMODE_PATH)",
+      "return_type": "file_s*",
+      "ref_delta_for_valid_file": 1,
+      "evidence": [
+        "FG41-A003",
+        "FG41-A021"
+      ]
+    },
+    {
+      "name": "myos_fdget_pos",
+      "parameter_types": [
+        "int fd"
+      ],
+      "actual_logical_guard": "NONE",
+      "actual_physical_array_guard": "NONE",
+      "slot_read": "fd_array[fd]",
+      "ref_delta_for_valid_file": 0,
+      "return_type": "fd_s",
+      "return_flags": 0,
+      "evidence": [
+        "FG41-A004",
+        "FG41-A005"
+      ]
+    },
+    {
+      "name": "__to_fd",
+      "parameter_types": [
+        "ulong v"
+      ],
+      "actual_logical_guard": "NONE",
+      "actual_physical_array_guard": "NONE",
+      "slot_read": "fd_array[v]",
+      "ref_delta_for_valid_file": 0,
+      "return_type": "fd_s",
+      "return_flags": 3,
+      "evidence": [
+        "FG41-A013"
+      ]
+    },
+    {
+      "name": "fdget",
+      "parameter_types": [
+        "uint fd"
+      ],
+      "conversion": "uint -> ulong",
+      "call": "__to_fd(fd)",
+      "ref_delta_for_valid_file": 0,
+      "return_flags": 3,
+      "evidence": [
+        "FG41-A014"
+      ]
+    },
+    {
+      "name": "fdget_raw",
+      "parameter_types": [
+        "uint fd"
+      ],
+      "conversion": "uint -> ulong",
+      "call": "__to_fd(fd)",
+      "ref_delta_for_valid_file": 0,
+      "return_flags": 3,
+      "evidence": [
+        "FG41-A015"
+      ]
+    },
+    {
+      "name": "fdget_pos",
+      "parameter_types": [
+        "int fd"
+      ],
+      "conversion": "int -> ulong, modulo unsigned width when negative",
+      "call": "__to_fd(fd)",
+      "ref_delta_for_valid_file": 0,
+      "return_flags": 3,
+      "evidence": [
+        "FG41-A016"
+      ]
+    }
+  ],
+  "reference_pairs": [
+    {
+      "item": "fget + fput",
+      "acquire": "atomic_long_inc +1",
+      "return": "fput -1 when called",
+      "valid_model_net": 0,
+      "requires": "valid file object and normal call return",
+      "anchors": [
+        "FG41-A002",
+        "FG41-A023"
+      ]
+    },
+    {
+      "item": "myos_fdget_pos + fdput_pos",
+      "acquire": 0,
+      "return": "flags0 causes no fput",
+      "valid_model_net": 0,
+      "anchors": [
+        "FG41-A005",
+        "FG41-A017",
+        "FG41-A018"
+      ]
+    },
+    {
+      "item": "fdget* + fdput_pos",
+      "acquire": 0,
+      "return": "flags3 triggers fput",
+      "valid_model_net": -1,
+      "history": "CORE-USER-SYSCALL-STDIO-08::US-01",
+      "anchors": [
+        "FG41-A013",
+        "FG41-A017",
+        "FG41-A018"
+      ]
+    },
+    {
+      "item": "fput_light",
+      "acquire": "no acquisition",
+      "return": "fput only if fput_needed nonzero",
+      "anchors": [
+        "FG41-A019"
+      ]
+    },
+    {
+      "item": "get_file",
+      "acquire": 1,
+      "return": "same pointer",
+      "anchors": [
+        "FG41-A020"
+      ]
+    },
+    {
+      "item": "fd_install",
+      "acquire": 0,
+      "return": "caller might transfer preexisting reference, not asserted",
+      "anchors": [
+        "FG41-A039"
+      ]
+    }
+  ],
+  "consumer_sequences": [
+    {
+      "name": "mmap_nonanonymous",
+      "signature_fd": "unsigned long fd",
+      "conversions": [
+        "ulong -> uint fget parameter under LP64",
+        "uint index into fd_array"
+      ],
+      "source_gates": [
+        "off aligned",
+        "!MAP_ANONYMOUS",
+        "if(!file) after fget",
+        "if(file) before out_fput"
+      ],
+      "actions": [
+        "fget",
+        "opaque vm_mmap_pgoff on nonnull file",
+        "fput if vm_mmap_pgoff returns normally"
+      ],
+      "normal_reference_delta": "wrapper +1 then -1 =0",
+      "stops": [
+        "in-range null slot at fget atomic access",
+        "physical out of bounds at fget slot read",
+        "opaque callee no-return before fput"
+      ],
+      "evidence": [
+        "FG41-A026",
+        "FG41-A027",
+        "FG41-A028",
+        "FG41-A030"
+      ]
+    },
+    {
+      "name": "mmap_anonymous",
+      "source_gates": [
+        "off aligned",
+        "MAP_ANONYMOUS",
+        "MAP_HUGETLB"
+      ],
+      "actions": [
+        "non-HUGETLB: call vm_mmap_pgoff with NULL file",
+        "HUGETLB: while(1) no normal return"
+      ],
+      "normal_reference_delta": 0,
+      "evidence": [
+        "FG41-A029",
+        "FG41-A030"
+      ]
+    },
+    {
+      "name": "ksys_read",
+      "signature_fd": "uint fd",
+      "conversions": [
+        "uint -> int myos_fdget_pos; out-of-range signed result implementation-defined"
+      ],
+      "source_gates": [
+        "if(f.file)",
+        "ret>=0 && ppos only for f_pos update"
+      ],
+      "actions": [
+        "myos_fdget_pos flags0",
+        "file_ppos",
+        "opaque vfs_read",
+        "fdput_pos inside valid-file branch independent of ret sign"
+      ],
+      "normal_reference_delta": 0,
+      "evidence": [
+        "FG41-A032",
+        "FG41-A033",
+        "FG41-A034"
+      ]
+    },
+    {
+      "name": "ksys_write",
+      "signature_fd": "unsigned int fd",
+      "conversions": [
+        "uint -> int fdget_pos; out-of-range signed result implementation-defined",
+        "int -> ulong __to_fd"
+      ],
+      "source_gates": [
+        "if(filp!=NULL)",
+        "ret>=0 && ppos only for f_pos update"
+      ],
+      "actions": [
+        "fdget_pos flags3",
+        "file_ppos",
+        "opaque vfs_write",
+        "fdput_pos inside valid-file branch independent of ret sign"
+      ],
+      "normal_reference_delta": -1,
+      "evidence": [
+        "FG41-A035",
+        "FG41-A036",
+        "FG41-A037"
+      ]
+    }
+  ],
+  "finite_models": [
+    {
+      "id": "M01",
+      "input": "fget(fd=0,fd_count=0)",
+      "first": "logical guard false",
+      "return": "NULL",
+      "ref_change": 0
+    },
+    {
+      "id": "M02",
+      "input": "fget(0,fd_count=1,slot0=NULL)",
+      "first": "NULL f_count member operation",
+      "return": "NOT_CERTIFIED",
+      "ref_change": "undefined"
+    },
+    {
+      "id": "M03",
+      "input": "fget(0,fd_count=1,slot0=valid,count1)",
+      "first": "inc",
+      "return": "file_s* valid",
+      "ref_change": 1
+    },
+    {
+      "id": "M04",
+      "input": "mmap nonanon fd0 slot0 valid count1,opaque returns",
+      "first": "inc1->2 then fput2->1",
+      "return": "opaque result",
+      "ref_change": 0
+    },
+    {
+      "id": "M05",
+      "input": "fget(fd1,fd_count1)",
+      "first": "guard false",
+      "return": "NULL",
+      "ref_change": 0
+    },
+    {
+      "id": "M06",
+      "input": "fget(fd255,fd_count256,valid slot255)",
+      "first": "last valid physical index",
+      "return": "file_s*",
+      "ref_change": 1
+    },
+    {
+      "id": "M07",
+      "input": "fget(fd256,fd_count256)",
+      "first": "guard false",
+      "return": "NULL",
+      "ref_change": 0
+    },
+    {
+      "id": "M08",
+      "input": "fget(fd256,fd_count257)",
+      "first": "fd_array[256] out of physical bounds",
+      "return": "NOT_CERTIFIED",
+      "ref_change": "undefined"
+    },
+    {
+      "id": "M09",
+      "input": "mmap nonanon fd=4294967298,fd_count3,slot2 valid",
+      "first": "ulong->uint index2",
+      "return": "calls opaque mapping with slot2 file",
+      "ref_change": "wrapper0_if_normal"
+    },
+    {
+      "id": "M10",
+      "input": "mmap nonanon fd=4294967552,fd_count256",
+      "first": "ulong->uint index256 guard false",
+      "return": "-EBADF",
+      "ref_change": 0
+    },
+    {
+      "id": "M11",
+      "input": "mmap anonymous non-HUGETLB",
+      "first": "skip fget",
+      "return": "opaque if normal",
+      "ref_change": 0
+    },
+    {
+      "id": "M12",
+      "input": "mmap anonymous HUGETLB",
+      "first": "while(1)",
+      "return": "NO_NORMAL_RETURN_CERTIFIED",
+      "ref_change": 0
+    },
+    {
+      "id": "M13",
+      "input": "read valid physical index empty",
+      "first": "fd_s NULL flags0",
+      "return": "-EBADF",
+      "ref_change": 0
+    },
+    {
+      "id": "M14",
+      "input": "myos_fdget_pos(-1) direct",
+      "first": "negative subscript",
+      "return": "NOT_CERTIFIED",
+      "ref_change": "undefined"
+    },
+    {
+      "id": "M15",
+      "input": "write valid physical index empty",
+      "first": "fd_s NULL flags3",
+      "return": "-EBADF",
+      "ref_change": 0
+    },
+    {
+      "id": "M16",
+      "input": "write valid file count1,opaque returns -EINVAL",
+      "first": "fdput flags3 -> fput decrement to0/free call",
+      "return": "-EINVAL if all prior valid",
+      "ref_change": -1
+    },
+    {
+      "id": "M17",
+      "input": "fdget_pos(-1) direct under LP64",
+      "first": "int -1 -> ulong ULONG_MAX, array invalid",
+      "return": "NOT_CERTIFIED",
+      "ref_change": "undefined"
+    },
+    {
+      "id": "M18",
+      "input": "file count4, fget then fput",
+      "first": "4->5->4",
+      "return": "normal count model",
+      "ref_change": 0
+    },
+    {
+      "id": "M19",
+      "input": "file count4, myos_fdget_pos flags0 then fdput",
+      "first": "4->4",
+      "return": "normal count model",
+      "ref_change": 0
+    },
+    {
+      "id": "M20",
+      "input": "file count4, fdget flags3 then fdput",
+      "first": "4->3",
+      "return": "normal count model with ownership mismatch",
+      "ref_change": -1
+    }
+  ],
+  "finite_model_premises": [
+    "pure integer/counter model only",
+    "LP64 for widening/narrowing examples",
+    "valid file_s, positive original f_count when claimed",
+    "atomic operations and opaque callees normal when claimed",
+    "no interposed writer, no locking or RCU certified"
+  ],
+  "prior_observations_preserved": [
+    "CORE-USER-SYSCALL-STDIO-08::US-01",
+    "CORE-USER-SYSCALL-STDIO-08::US-02",
+    "CORE-USER-SYSCALL-STDIO-08::US-03",
+    "CORE-USER-VFS-BASELINE-05::UV-09",
+    "CORE-USER-VFS-BASELINE-05::UV-10",
+    "CORE-USER-VFS-BASELINE-05::UV-11",
+    "CORE-USER-FILE-CACHE-13",
+    "CORE-USER-VMA-LIFETIME-14",
+    "R39-S01/S02",
+    "R40-S01/S02"
+  ],
+  "graph_role": "DOT distinguishes actual code/control/calls from analytic assumptions",
+  "runtime": "NOT_RUN",
+  "complete_P9": "NOT_RUN",
+  "yaml_parser": "JSON.parse verified, JSON document compatible with YAML1.2",
+  "graphviz": "NOT_RUN"
+}

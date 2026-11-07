@@ -1,0 +1,120 @@
+{
+ "check": "COMPARE_RUNS2",
+ "old_commit_short12": "f9ae2bce9a64",
+ "new_dir": "/home/user/MyOS2/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/observations",
+ "run_summary": {
+  "status": {
+   "old": "COMPLETE",
+   "new": "COMPLETE",
+   "same": true
+  },
+  "exit_code": {
+   "old": 0,
+   "new": 0,
+   "same": true
+  },
+  "execution_complete": {
+   "old": true,
+   "new": true,
+   "same": true
+  },
+  "verification_findings": {
+   "old": [
+    "V00",
+    "V08"
+   ],
+   "new": [
+    "V00",
+    "V08"
+   ],
+   "same": true
+  },
+  "infrastructure_errors": {
+   "old": [],
+   "new": [],
+   "same": true
+  },
+  "dynamic_calls": {
+   "old": {
+    "h00": 1,
+    "fixtures": 1
+   },
+   "new": {
+    "h00": 1,
+    "fixtures": 1
+   },
+   "same": true
+  }
+ },
+ "identity_gate_ok": {
+  "old": true,
+  "new": true
+ },
+ "identity_head": {
+  "old": {
+   "branch": "claude/dazzling-cori-q0dnyt",
+   "head_short12": "a1e7c2277705",
+   "remote_relation": "equal"
+  },
+  "new": {
+   "branch": "claude/dazzling-cori-q0dnyt",
+   "head_short12": "f9ae2bce9a64",
+   "remote_relation": "equal"
+  }
+ },
+ "h00_probes_same": true,
+ "evaluation_identical": true,
+ "evaluation_diff_paths": [],
+ "fixtures": {
+  "fx_jiffies": {
+   "cases": 1,
+   "stdout_and_exit_identical": 1,
+   "expanded_source_sha256_first_segment": [
+    "5369f8fda7307d88",
+    "5369f8fda7307d88"
+   ]
+  },
+  "fx_jiffies_control": {
+   "cases": 1,
+   "stdout_and_exit_identical": 1,
+   "expanded_source_sha256_first_segment": [
+    "5369f8fda7307d88",
+    "5369f8fda7307d88"
+   ]
+  },
+  "fx_prims": {
+   "cases": 2,
+   "stdout_and_exit_identical": 2,
+   "expanded_source_sha256_first_segment": [
+    "e1788bdb3d9a2e43",
+    "e1788bdb3d9a2e43"
+   ]
+  },
+  "fx_sched": {
+   "cases": 8,
+   "stdout_and_exit_identical": 8,
+   "expanded_source_sha256_first_segment": [
+    "657e9616e16446d0",
+    "657e9616e16446d0"
+   ]
+  },
+  "fx_wait": {
+   "cases": 11,
+   "stdout_and_exit_identical": 11,
+   "expanded_source_sha256_first_segment": [
+    "036edc1945a17973",
+    "036edc1945a17973"
+   ]
+  }
+ },
+ "stage_outputs": {
+  "v00.json": [
+   "/protection/head_short12"
+  ],
+  "v01.json": [],
+  "static.json": [],
+  "a46.json": []
+ },
+ "same_source_results_reproduced": true,
+ "note_template": "differences limited to the recorded execution-branch head are expected: the head moved by the batch-1 commit"
+}

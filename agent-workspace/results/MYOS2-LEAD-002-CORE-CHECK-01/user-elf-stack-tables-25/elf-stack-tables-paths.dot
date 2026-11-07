@@ -1,0 +1,93 @@
+// CORE-USER-ELF-STACK-TABLES-25 / time a039d9803ade / PR17
+// Edge type comes before colon; causal source-code relation only.
+// The uninitialized-vma gate prevents any claim that later writes are reached.
+digraph ELF_STACK_TABLES_25 {
+  graph [rankdir=LR, label="ET25: fixed-source conditional relations / NOT_RUN", labelloc=t];
+  node [shape=box, fontsize=10];
+  invalid [color=red, style=bold];
+  exec [label="do_execveat_common"];
+  setup [label="setup_arg_pages"];
+  loader [label="load_elf_binary"];
+  tables [label="create_elf_tables"];
+  final [label="start_thread"];
+  ctx [label="start_thread_common"];
+  argbytes [label="already-copied argv/env bytes"];
+  localp [label="local p: ulong byte addr"];
+  bprmp [label="bprm.p"];
+  align [label="arch_align_stack"];
+  platform [label="platform copy_to_user"];
+  platptr [label="u_platform"];
+  saved [label="mm.saved_auxv [kernel]"];
+  auxgen [label="NEW_AUX_ENT macro"];
+  auxnull [label="memset + AT_NULL"];
+  ei [label="ei_index"];
+  sp [label="elf_addr_t* sp"];
+  put [label="put_user (direct store)"];
+  argv [label="argv pointer slots"];
+  envp [label="envp pointer slots"];
+  useraux [label="auxv user copy"];
+  len [label="strnlen_user(str,count)+1"];
+  bounds [label="mm.arg/env metadata"];
+  vma [label="uninitialized local vma"];
+  invalid [label="C undefined behavior gate"];
+  mmsp [label="mm.start_stack"];
+  elfentry [label="elf_entry"];
+  mainentry [label="e_entry"];
+  phdr [label="phdr_addr"];
+  interp [label="interp_load_addr"];
+  ret [label="retval < 0 check"];
+  copy [label="_inline_copy_to_user"];
+  regsp [label="regs.sp"];
+  err [label="error return"];
+  exec -> argbytes [label="call: copy_strings", style=solid];
+  exec -> setup [label="sequence: earlier caller", style=dashed];
+  setup -> bprmp [label="write: stack shift", style=bold];
+  setup -> bounds [label="write: arg_start", style=bold];
+  loader -> setup [label="call: setup_arg_pages", style=solid];
+  loader -> tables [label="call: bprm, elf_ex, interp_load_addr, e_entry, phdr_addr", style=solid];
+  loader -> mainentry [label="data: compute main program entry", style=solid];
+  loader -> phdr [label="data: derive from selected PT_LOAD", style=solid];
+  loader -> interp [label="data: derive interpreter base", style=solid];
+  loader -> elfentry [label="data: choose interpreter or main entry", style=solid];
+  bprmp -> localp [label="data: read entry value", style=solid];
+  localp -> align [label="call: 16-byte alignment", style=solid];
+  align -> localp [label="data: new local p", style=solid];
+  localp -> platform [label="macro: byte STACK_ALLOC then copy", style=dotted];
+  platform -> platptr [label="data: user string pointer", style=solid];
+  platptr -> auxgen [label="data: AT_PLATFORM", style=solid];
+  tables -> auxgen [label="macro: write id,value", style=dotted];
+  mainentry -> auxgen [label="data: AT_ENTRY", style=solid];
+  phdr -> auxgen [label="data: AT_PHDR", style=solid];
+  interp -> auxgen [label="data: AT_BASE", style=solid];
+  auxgen -> saved [label="write: two kernel slots per entry", style=bold];
+  saved -> auxnull [label="write: memset tail", style=bold];
+  auxnull -> ei [label="data: add AT_NULL pair", style=solid];
+  localp -> sp [label="macro: STACK_ADD and STACK_ROUND", style=dotted];
+  ei -> sp [label="data: subtract aux words", style=solid];
+  sp -> bprmp [label="write: final table bottom", style=bold];
+  tables -> vma [label="conditional: read without initialization", style=dashed];
+  vma -> invalid [label="undefined: no known deterministic successor", style=bold];
+  sp -> put [label="macro: sp++ evaluated once", style=dotted];
+  put -> argv [label="write: argc and argv pointers", style=bold];
+  put -> envp [label="write: envp pointers", style=bold];
+  put -> len [label="sequence: pointer then string length", style=dashed];
+  len -> bounds [label="data: p advancement", style=solid];
+  put -> bounds [label="sequence: update arg/env markers", style=dashed];
+  saved -> useraux [label="data: source copy size ei_index*8", style=solid];
+  tables -> copy [label="call: platform and auxv copy", style=solid];
+  copy -> useraux [label="result: uncopied byte count", style=solid];
+  useraux -> ret [label="result: nonzero causes -EFAULT", style=solid];
+  tables -> ret [label="result: 0 only conditional", style=solid];
+  ret -> err [label="control: negative returns", style=solid];
+  ret -> mmsp [label="control: if no negative result", style=solid];
+  bprmp -> mmsp [label="write: start_stack", style=bold];
+  bprmp -> final [label="data: new_sp", style=solid];
+  elfentry -> final [label="data: new_ip", style=solid];
+  mmsp -> final [label="sequence: after table return", style=dashed];
+  final -> ctx [label="call: start_thread_common", style=solid];
+  ctx -> regsp [label="write: regs->sp = new_sp", style=bold];
+}
+// 34 nodes, 47 edges; all endpoints checked.
+// ET25-A11/A13/A24/A35/A36/A42/A51/A52/A54/A56/A58 are the central anchors.
+// No assumed valid data edge from an ignored return value. The conditional path
+// after local vma read is NOT asserted as a verified runtime execution.

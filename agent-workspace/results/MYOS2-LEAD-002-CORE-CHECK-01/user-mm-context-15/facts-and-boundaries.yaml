@@ -1,0 +1,1249 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-MM-CONTEXT-15
+record_type: bounded_mm_context_static_facts
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+model_per_owner: GPT-6
+effort_per_owner: Extra
+backend_identity: unknown_or_not_attestable
+date: "2026-10-31"
+read_channel: connector
+source_pin: "time @ a039d9803ade"
+results_base: "dd8e81ba6fc7"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+edge_direction: {call: "caller -> callee or exact macro expansion", data: "consumer -> provider; mutations are effects", init_order: "later user -> prior initializer"}
+source_limits: ["CMake/DEBUG preprocessor variables not actually evaluated", "kernel/QEMU/CR3 operation not executed", "no complete VMA/PTE/COW/free graph","R14-S01 and R14-S02 must govern old report consumption"]
+nodes:
+  - {id: MC15-N01, label: "task.mm"}
+  - {id: MC15-N02, label: "task.active_mm"}
+  - {id: MC15-N03, label: "mm_s"}
+  - {id: MC15-N04, label: "mm_users"}
+  - {id: MC15-N05, label: "mm_refcount"}
+  - {id: MC15-N06, label: "mm.pgd"}
+  - {id: MC15-N07, label: "mm_alloc"}
+  - {id: MC15-N08, label: "allocate_mm"}
+  - {id: MC15-N09, label: "mm_init"}
+  - {id: MC15-N10, label: "pgd_alloc"}
+  - {id: MC15-N11, label: "mm_free_pgd"}
+  - {id: MC15-N12, label: "pgd_free"}
+  - {id: MC15-N13, label: "mmdrop"}
+  - {id: MC15-N14, label: "free_mm"}
+  - {id: MC15-N15, label: "mmget"}
+  - {id: MC15-N16, label: "mmput"}
+  - {id: MC15-N17, label: "__mmput"}
+  - {id: MC15-N18, label: "get_task_mm"}
+  - {id: MC15-N19, label: "copy_process"}
+  - {id: MC15-N20, label: "copy_mm"}
+  - {id: MC15-N21, label: "dup_mm"}
+  - {id: MC15-N22, label: "dup_mmap"}
+  - {id: MC15-N23, label: "copy_page_range"}
+  - {id: MC15-N24, label: "bprm_mm_init"}
+  - {id: MC15-N25, label: "__bprm_mm_init"}
+  - {id: MC15-N26, label: "free_bprm"}
+  - {id: MC15-N27, label: "begin_new_exec"}
+  - {id: MC15-N28, label: "exec_mmap"}
+  - {id: MC15-N29, label: "exec_mm_release"}
+  - {id: MC15-N30, label: "mm_release"}
+  - {id: MC15-N31, label: "activate_mm macro"}
+  - {id: MC15-N32, label: "switch_mm"}
+  - {id: MC15-N33, label: "switch_mm_irqs_off"}
+  - {id: MC15-N34, label: "load_new_mm_cr3"}
+  - {id: MC15-N35, label: "write_cr3"}
+  - {id: MC15-N36, label: "__schedule"}
+  - {id: MC15-N37, label: "context_switch"}
+  - {id: MC15-N38, label: "finish_task_switch"}
+  - {id: MC15-N39, label: "rq.prev_mm"}
+  - {id: MC15-N40, label: "switch_to macro"}
+  - {id: MC15-N41, label: "__switch_to_asm"}
+  - {id: MC15-N42, label: "do_exit"}
+  - {id: MC15-N43, label: "init_mm"}
+  - {id: MC15-N44, label: "cpu_init active_mm"}
+  - {id: MC15-N45, label: "exit_mmap (commented)"}
+  - {id: MC15-N46, label: "exit_mm (commented)"}
+edges:
+  - {id: MC15-E01, from: MC15-N07, to: MC15-N08, kind: call, status: active, condition: "mm_alloc invokes allocate_mm macro", anchors: [MC15-A017]}
+  - {id: MC15-E02, from: MC15-N07, to: MC15-N09, kind: call, status: conditional, condition: "successful alloc calls mm_init", anchors: [MC15-A018]}
+  - {id: MC15-E03, from: MC15-N09, to: MC15-N10, kind: call, status: active, condition: "mm_init requests pgd", anchors: [MC15-A015]}
+  - {id: MC15-E04, from: MC15-N09, to: MC15-N14, kind: call, status: conditional, condition: "pgd failure cleans mm object", anchors: [MC15-A016]}
+  - {id: MC15-E05, from: MC15-N13, to: MC15-N11, kind: call, status: active, condition: "mmdrop calls mm_free_pgd", anchors: [MC15-A010]}
+  - {id: MC15-E06, from: MC15-N11, to: MC15-N12, kind: call, status: active, condition: "mm_free_pgd calls pgd_free", anchors: [MC15-A008]}
+  - {id: MC15-E07, from: MC15-N13, to: MC15-N14, kind: call, status: active, condition: "mmdrop frees object after root cleanup", anchors: [MC15-A011]}
+  - {id: MC15-E08, from: MC15-N09, to: MC15-N04, kind: data, status: active, condition: "mm_init sets mm_users 1", anchors: [MC15-A013]}
+  - {id: MC15-E09, from: MC15-N09, to: MC15-N05, kind: data, status: active, condition: "mm_init sets mm_refcount 1", anchors: [MC15-A014]}
+  - {id: MC15-E10, from: MC15-N09, to: MC15-N06, kind: data, status: active, condition: "mm_init stores pgd", anchors: [MC15-A015, MC15-A051]}
+  - {id: MC15-E11, from: MC15-N15, to: MC15-N04, kind: data, status: active, condition: "mmget increments mm_users", anchors: [MC15-A005]}
+  - {id: MC15-E12, from: MC15-N16, to: MC15-N04, kind: data, status: active, condition: "mmput decrements mm_users", anchors: [MC15-A019]}
+  - {id: MC15-E13, from: MC15-N16, to: MC15-N17, kind: call, status: conditional, condition: "when users becomes zero", anchors: [MC15-A020]}
+  - {id: MC15-E14, from: MC15-N18, to: MC15-N01, kind: data, status: active, condition: "get_task_mm reads task.mm", anchors: [MC15-A023]}
+  - {id: MC15-E15, from: MC15-N18, to: MC15-N15, kind: call, status: conditional, condition: "PF_KTHREAD excluded; mmget on nonNULL", anchors: [MC15-A024]}
+  - {id: MC15-E16, from: MC15-N19, to: MC15-N20, kind: call, status: active, condition: "copy_process copy_mm call", anchors: [MC15-A039]}
+  - {id: MC15-E17, from: MC15-N19, to: MC15-N16, kind: call, status: conditional, condition: "later error cleanup mmput if p.mm", anchors: [MC15-A041]}
+  - {id: MC15-E18, from: MC15-N20, to: MC15-N15, kind: call, status: conditional, condition: "CLONE_VM branch with current.mm nonNULL", anchors: [MC15-A035]}
+  - {id: MC15-E19, from: MC15-N20, to: MC15-N21, kind: call, status: conditional, condition: "!CLONE_VM branch duplicates mm", anchors: [MC15-A036]}
+  - {id: MC15-E20, from: MC15-N20, to: MC15-N01, kind: data, status: active, condition: "copy_mm publishes child mm on success", anchors: [MC15-A037]}
+  - {id: MC15-E21, from: MC15-N20, to: MC15-N02, kind: data, status: active, condition: "copy_mm publishes child active_mm same object", anchors: [MC15-A038]}
+  - {id: MC15-E22, from: MC15-N21, to: MC15-N08, kind: call, status: conditional, condition: "dup_mm allocate_mm", anchors: [MC15-A026]}
+  - {id: MC15-E23, from: MC15-N21, to: MC15-N09, kind: call, status: conditional, condition: "dup_mm mm_init copied struct", anchors: [MC15-A028]}
+  - {id: MC15-E24, from: MC15-N21, to: MC15-N22, kind: call, status: conditional, condition: "dup_mm duplicates VMAs", anchors: [MC15-A029]}
+  - {id: MC15-E25, from: MC15-N21, to: MC15-N16, kind: call, status: conditional, condition: "dup_mmap failure enters mmput", anchors: [MC15-A030]}
+  - {id: MC15-E26, from: MC15-N22, to: MC15-N23, kind: call, status: conditional, condition: "copy_page_range unless VM_WIPEONFORK", anchors: [MC15-A047]}
+  - {id: MC15-E27, from: MC15-N22, to: MC15-N03, kind: data, status: conditional, condition: "VMA child vm_mm rebound to new mm", anchors: [MC15-A044]}
+  - {id: MC15-E28, from: MC15-N24, to: MC15-N07, kind: call, status: active, condition: "bprm_mm_init calls mm_alloc", anchors: [MC15-A062]}
+  - {id: MC15-E29, from: MC15-N24, to: MC15-N25, kind: call, status: conditional, condition: "stack VMA init if mm valid", anchors: [MC15-A063]}
+  - {id: MC15-E30, from: MC15-N24, to: MC15-N13, kind: call, status: conditional, condition: "on bprm stack init error mmdrop", anchors: [MC15-A064]}
+  - {id: MC15-E31, from: MC15-N26, to: MC15-N16, kind: call, status: conditional, condition: "free_bprm calls mmput if still owns mm", anchors: [MC15-A067]}
+  - {id: MC15-E32, from: MC15-N27, to: MC15-N28, kind: call, status: active, condition: "begin_new_exec calls exec_mmap", anchors: [MC15-A078]}
+  - {id: MC15-E33, from: MC15-N28, to: MC15-N29, kind: call, status: active, condition: "exec calls exec_mm_release even if old mm null", anchors: [MC15-A069]}
+  - {id: MC15-E34, from: MC15-N29, to: MC15-N30, kind: call, status: active, condition: "exec_mm_release delegates mm_release", anchors: [MC15-A082]}
+  - {id: MC15-E35, from: MC15-N30, to: MC15-N01, kind: data, status: conditional, condition: "mm_release reads task clear_child_tid; mm_users conditional", anchors: [MC15-A081]}
+  - {id: MC15-E36, from: MC15-N28, to: MC15-N31, kind: call, status: active, condition: "exec_mmap invokes activate_mm macro", anchors: [MC15-A074]}
+  - {id: MC15-E37, from: MC15-N31, to: MC15-N32, kind: call, status: active, condition: "activate_mm invokes switch_mm", anchors: [MC15-A101]}
+  - {id: MC15-E38, from: MC15-N32, to: MC15-N33, kind: call, status: active, condition: "switch_mm invokes switch_mm_irqs_off", anchors: [MC15-A103]}
+  - {id: MC15-E39, from: MC15-N33, to: MC15-N34, kind: call, status: conditional, condition: "prev!=next leads to load_new_mm_cr3", anchors: [MC15-A104, MC15-A106]}
+  - {id: MC15-E40, from: MC15-N34, to: MC15-N35, kind: call, status: active, condition: "load_new_mm_cr3 invokes write_cr3", anchors: [MC15-A108]}
+  - {id: MC15-E41, from: MC15-N28, to: MC15-N16, kind: call, status: conditional, condition: "old_mm nonnull -> mmput", anchors: [MC15-A076]}
+  - {id: MC15-E42, from: MC15-N28, to: MC15-N13, kind: call, status: conditional, condition: "old_mm null -> mmdrop active_mm", anchors: [MC15-A077]}
+  - {id: MC15-E43, from: MC15-N28, to: MC15-N01, kind: data, status: active, condition: "task.mm replaced with new mm", anchors: [MC15-A073]}
+  - {id: MC15-E44, from: MC15-N28, to: MC15-N02, kind: data, status: active, condition: "task.active_mm replaced with new mm", anchors: [MC15-A072]}
+  - {id: MC15-E45, from: MC15-N36, to: MC15-N37, kind: call, status: conditional, condition: "__schedule prev!=next", anchors: [MC15-A084, MC15-A085]}
+  - {id: MC15-E46, from: MC15-N37, to: MC15-N15, kind: call, status: conditional, condition: "to kernel from user: mmget(prev.active_mm)", anchors: [MC15-A088, MC15-A089]}
+  - {id: MC15-E47, from: MC15-N37, to: MC15-N33, kind: call, status: conditional, condition: "to user task: switch_mm_irqs_off", anchors: [MC15-A091]}
+  - {id: MC15-E48, from: MC15-N37, to: MC15-N40, kind: call, status: active, condition: "context_switch invokes switch_to macro", anchors: [MC15-A094]}
+  - {id: MC15-E49, from: MC15-N40, to: MC15-N41, kind: call, status: active, condition: "switch_to macro calls __switch_to_asm", anchors: [MC15-A100]}
+  - {id: MC15-E50, from: MC15-N37, to: MC15-N38, kind: call, status: active, condition: "context_switch returns finish_task_switch", anchors: [MC15-A095]}
+  - {id: MC15-E51, from: MC15-N37, to: MC15-N39, kind: data, status: conditional, condition: "kernel->user saves prev active_mm in rq.prev_mm", anchors: [MC15-A092]}
+  - {id: MC15-E52, from: MC15-N38, to: MC15-N39, kind: data, status: active, condition: "finish_task_switch clears rq.prev_mm without drop", anchors: [MC15-A096, MC15-A097]}
+  - {id: MC15-E53, from: MC15-N37, to: MC15-N02, kind: data, status: conditional, condition: "borrows/transfers active_mm when no next.mm", anchors: [MC15-A087, MC15-A090]}
+  - {id: MC15-E54, from: MC15-N33, to: MC15-N06, kind: data, status: conditional, condition: "switch_mm passes next.pgdir to loader", anchors: [MC15-A106]}
+  - {id: MC15-E55, from: MC15-N43, to: MC15-N04, kind: data, status: static_init, condition: "init_mm special users=2", anchors: [MC15-A058]}
+  - {id: MC15-E56, from: MC15-N43, to: MC15-N05, kind: data, status: static_init, condition: "init_mm special refcount=1", anchors: [MC15-A059]}
+  - {id: MC15-E57, from: MC15-N44, to: MC15-N43, kind: data, status: active, condition: "cpu_init uses init_mm as active_mm", anchors: [MC15-A061]}
+  - {id: MC15-E58, from: MC15-N17, to: MC15-N45, kind: data, status: commented, condition: "__mmput exit_mmap not invoked", anchors: [MC15-A021]}
+  - {id: MC15-E59, from: MC15-N17, to: MC15-N13, kind: data, status: commented, condition: "__mmput mmdrop not invoked", anchors: [MC15-A022]}
+  - {id: MC15-E60, from: MC15-N42, to: MC15-N46, kind: data, status: commented, condition: "do_exit exit_mm not invoked", anchors: [MC15-A110]}
+case_matrix:
+  - id: MC15-M01
+    input: "fork current.mm NULL"
+    source_result: "child.mm/active_mm=NULL; no mmget/dup"
+    limits: "kernel task later borrows context when scheduled"
+    anchors: [MC15-A031, MC15-A033]
+  - id: MC15-M02
+    input: "fork CLONE_VM + old mm"
+    source_result: "mmget old mm users+1; child.mm/active_mm same pointer"
+    limits: "one mm_users increment, not two"
+    anchors: [MC15-A035, MC15-A037, MC15-A038]
+  - id: MC15-M03
+    input: "fork nonshared"
+    source_result: "dup_mm allocate/copy; mm_init counters=1, pgd new, dup_mmap"
+    limits: "memcpy not independent pages, VMA copy may fail"
+    anchors: [MC15-A027, MC15-A028, MC15-A029, MC15-A014]
+  - id: MC15-M04
+    input: "mm_alloc/pgd_alloc fail"
+    source_result: "mm_init may free newly allocated mm then return NULL"
+    limits: "no task mm published yet"
+    anchors: [MC15-A017, MC15-A015, MC15-A016]
+  - id: MC15-M05
+    input: "dup_mmap fail after partial work"
+    source_result: "dup_mm mmput users1 enters __mmput, cleanup commented"
+    limits: "VMA/file/page partial side effects may remain"
+    anchors: [MC15-A045, MC15-A046, MC15-A047, MC15-A030, MC15-A021]
+  - id: MC15-M06
+    input: "copy_process later failure"
+    source_result: "bad_fork_cleanup_mm mmput(p.mm) if present"
+    limits: "for shared decrements, for fresh __mmput lacks release"
+    anchors: [MC15-A039, MC15-A041, MC15-A020]
+  - id: MC15-M07
+    input: "exec old mm nonNULL"
+    source_result: "exec_mm_release, install task mm/active_mm, activate, mmput(old)"
+    limits: "active_mm==old_mm BUG guard after pointer replacement; no full old VMA cleanup"
+    anchors: [MC15-A069, MC15-A072, MC15-A074, MC15-A075, MC15-A076]
+  - id: MC15-M08
+    input: "exec old mm NULL"
+    source_result: "exec_mm_release(NULL), install new, then mmdrop(old active_mm)"
+    limits: "clear_child_tid may deref NULL; init_mm guard may spin if old active_mm=&init_mm"
+    anchors: [MC15-A069, MC15-A081, MC15-A077, MC15-A009, MC15-A061]
+  - id: MC15-M09
+    input: "__schedule prev==next"
+    source_result: "no context_switch call"
+    limits: "no hardware switch established"
+    anchors: [MC15-A084]
+  - id: MC15-M10
+    input: "user->user, different mm"
+    source_result: "switch_mm_irqs_off prev!=next loads next.pgd into CR3"
+    limits: "does not prove cross-CPU TLB correctness"
+    anchors: [MC15-A091, MC15-A104, MC15-A106, MC15-A108]
+  - id: MC15-M11
+    input: "user->user, same mm"
+    source_result: "switch_mm_irqs_off returns before CR3 write"
+    limits: "pointer equality not CPU-CR3 validation"
+    anchors: [MC15-A091, MC15-A104]
+  - id: MC15-M12
+    input: "user->kernel task"
+    source_result: "next.active_mm=prev.active_mm; mmget users++ when prev.mm"
+    limits: "no explicit CR3 switch, borrowed count is mm_users not refcount"
+    anchors: [MC15-A087, MC15-A089]
+  - id: MC15-M13
+    input: "kernel->kernel"
+    source_result: "next.active_mm transferred; prev.active_mm=NULL"
+    limits: "no additional mmget, depends on valid borrowed pointer"
+    anchors: [MC15-A087, MC15-A090]
+  - id: MC15-M14
+    input: "kernel->user"
+    source_result: "switch_mm_irqs_off; rq.prev_mm assigned/cleared"
+    limits: "finish_task_switch mmdrop lazy path commented"
+    anchors: [MC15-A091, MC15-A092, MC15-A097, MC15-A098]
+  - id: MC15-M15
+    input: "mmput count nonzero"
+    source_result: "mm_users decremented, no __mmput"
+    limits: "not object release"
+    anchors: [MC15-A019, MC15-A020]
+  - id: MC15-M16
+    input: "mmput reaches zero"
+    source_result: "__mmput invoked with exit_mmap/mmdrop commented"
+    limits: "not pgd/mm or VMA release"
+    anchors: [MC15-A020, MC15-A021, MC15-A022]
+  - id: MC15-M17
+    input: "direct mmdrop non-init"
+    source_result: "mm_free_pgd->pgd_free, then free_mm without refcount dec"
+    limits: "no true last-reference check; lower PTE pages not proven freed"
+    anchors: [MC15-A009, MC15-A010, MC15-A011, MC15-A057]
+  - id: MC15-M18
+    input: "init_mm"
+    source_result: "static users2/refcount1, pgd swapper; cpu_init active_mm"
+    limits: "mmdrop init_mm forbidden even if reached"
+    anchors: [MC15-A058, MC15-A059, MC15-A060, MC15-A061, MC15-A009]
+  - id: MC15-M19
+    input: "get_task_mm on kernel thread"
+    source_result: "PF_KTHREAD condition suppresses mmget; returns NULL"
+    limits: "borrowed active_mm not returned"
+    anchors: [MC15-A023, MC15-A024, MC15-A025]
+states:
+  - id: MC15-S01
+    stage: "new mm"
+    source_fact: "mm_init users1/refcount1, pgd allocation"
+    limits: "not yet task pointer"
+    anchors: [MC15-A013, MC15-A014, MC15-A015]
+  - id: MC15-S02
+    stage: "CLONE_VM child"
+    source_fact: "mmget old then task.mm/active_mm alias"
+    limits: "only single users increment"
+    anchors: [MC15-A035, MC15-A037, MC15-A038]
+  - id: MC15-S03
+    stage: "new fork mm"
+    source_fact: "dup_mm reinitializes counters and pgd after memcpy"
+    limits: "dup_mmap may fail partially"
+    anchors: [MC15-A027, MC15-A028, MC15-A029]
+  - id: MC15-S04
+    stage: "exec new mm"
+    source_fact: "begin_new_exec installs bprm.mm and clears owner field after success"
+    limits: "error free_bprm mmput does not fully free"
+    anchors: [MC15-A078, MC15-A079, MC15-A067]
+  - id: MC15-S05
+    stage: "user to kernel"
+    source_fact: "active_mm borrowed, users++"
+    limits: "lazy TLB helpers commented"
+    anchors: [MC15-A087, MC15-A089]
+  - id: MC15-S06
+    stage: "kernel to user"
+    source_fact: "rq.prev_mm delayed and cleared, no active drop"
+    limits: "borrow balance unproven"
+    anchors: [MC15-A092, MC15-A098]
+  - id: MC15-S07
+    stage: "mmput zero"
+    source_fact: "__mmput called but no exit_mmap/mmdrop"
+    limits: "not mm lifetime end"
+    anchors: [MC15-A020, MC15-A021, MC15-A022]
+  - id: MC15-S08
+    stage: "mmdrop direct"
+    source_fact: "pgd and mm cache object freed"
+    limits: "mm_refcount not decremented"
+    anchors: [MC15-A010, MC15-A011]
+  - id: MC15-S09
+    stage: "exec no old.mm"
+    source_fact: "mmdrop prior active_mm, may be init_mm"
+    limits: "special guard/NULL preconditions"
+    anchors: [MC15-A077, MC15-A009, MC15-A061]
+ownership:
+  - id: MC15-O01
+    holder: "task.mm"
+    object: "pointer to owned user mm"
+    reference_effect: "copy_mm and exec assign"
+    limits: "not separate from users ref"
+    anchors: [MC15-A037, MC15-A073]
+  - id: MC15-O02
+    holder: "task.active_mm"
+    object: "pointer to active or borrowed mm"
+    reference_effect: "scheduler borrows, exec changes"
+    limits: "not itself independent count"
+    anchors: [MC15-A038, MC15-A087, MC15-A072]
+  - id: MC15-O03
+    holder: "mm_users"
+    object: "atomic user count"
+    reference_effect: "mm_init=1; mmget++; mmput--"
+    limits: "zero does not free here"
+    anchors: [MC15-A013, MC15-A005, MC15-A019, MC15-A021]
+  - id: MC15-O04
+    holder: "mm_refcount"
+    object: "atomic structure count"
+    reference_effect: "mm_init=1, init_mm=1"
+    limits: "no change in read mmget/mmput/mmdrop"
+    anchors: [MC15-A014, MC15-A059, MC15-A009]
+  - id: MC15-O05
+    holder: "pgd"
+    object: "root pointer"
+    reference_effect: "pgd_alloc then CR3 load; mmdrop frees"
+    limits: "not full PTE/VMA cleanup"
+    anchors: [MC15-A015, MC15-A051, MC15-A106, MC15-A010]
+  - id: MC15-O06
+    holder: "shared fork"
+    object: "oldmm users++"
+    reference_effect: "child pointers alias"
+    limits: "later exit cleanup not shown"
+    anchors: [MC15-A035, MC15-A037, MC15-A041]
+  - id: MC15-O07
+    holder: "duplicate fork"
+    object: "new mm counters/root, dup_mmap VMA copy"
+    reference_effect: "failure mmput inadequate"
+    limits: "DU_MEM DU_INIT DU_VMA DU_CLEAN"
+    anchors: [MC15-A027, MC15-A028, MC15-A029, MC15-A030]
+  - id: MC15-O08
+    holder: "exec mm"
+    object: "bprm.mm transferred"
+    reference_effect: "oldmm put or active_mm drop"
+    limits: "no whole-address-space freeing"
+    anchors: [MC15-A062, MC15-A078, MC15-A079, MC15-A076, MC15-A077]
+  - id: MC15-O09
+    holder: "scheduler borrow"
+    object: "prev.active_mm passed to next"
+    reference_effect: "mm_users increment to kernel; finish no put"
+    limits: "wrong vs standard mm_refcount contract"
+    anchors: [MC15-A087, MC15-A089, MC15-A092, MC15-A098]
+  - id: MC15-O10
+    holder: "init_mm"
+    object: "static users2/ref1"
+    reference_effect: "cpu_init active_mm pointer"
+    limits: "mmdrop guard forbids it"
+    anchors: [MC15-A058, MC15-A059, MC15-A061, MC15-A009]
+effects:
+  - id: MC15-X01
+    actor: "mm_init"
+    description: "initialize counters, list and pgd"
+    anchors: [MC15-A012, MC15-A013, MC15-A014, MC15-A015]
+  - id: MC15-X02
+    actor: "mmget/mmput"
+    description: "change mm_users only; zero calls __mmput"
+    anchors: [MC15-A005, MC15-A019, MC15-A020]
+  - id: MC15-X03
+    actor: "mmdrop"
+    description: "free pgd then mm object, no refcount decrement"
+    anchors: [MC15-A010, MC15-A011]
+  - id: MC15-X04
+    actor: "copy_mm"
+    description: "NULL initialize then share or dup and assign pointers"
+    anchors: [MC15-A031, MC15-A035, MC15-A036, MC15-A037, MC15-A038]
+  - id: MC15-X05
+    actor: "dup_mm"
+    description: "memcpy, reinit, dup_mmap, failed mmput"
+    anchors: [MC15-A027, MC15-A028, MC15-A029, MC15-A030]
+  - id: MC15-X06
+    actor: "exec_mmap"
+    description: "replace two task pointers, activate, conditional mmput/mmdrop"
+    anchors: [MC15-A072, MC15-A073, MC15-A074, MC15-A076, MC15-A077]
+  - id: MC15-X07
+    actor: "context_switch"
+    description: "borrow/transfer, switch mm, delayed prev_mm and switch_to"
+    anchors: [MC15-A087, MC15-A089, MC15-A091, MC15-A092, MC15-A094]
+  - id: MC15-X08
+    actor: "finish_task_switch"
+    description: "clears rq.prev_mm, delayed drop commented"
+    anchors: [MC15-A097, MC15-A098]
+  - id: MC15-X09
+    actor: "switch_mm_irqs_off"
+    description: "same-mm skip otherwise load pgd via write_cr3"
+    anchors: [MC15-A104, MC15-A106, MC15-A108]
+  - id: MC15-X10
+    actor: "__mmput/do_exit"
+    description: "exit_mmap/mmdrop/exit_mm commented"
+    anchors: [MC15-A021, MC15-A022, MC15-A110]
+anchors:
+  - id: MC15-A001
+    path: "mykernel/sched/task/task_types.h"
+    symbol: "task_struct"
+    observed_lines: [136, 138]
+    quote: |
+      
+      		mm_s			*mm;
+      		mm_s			*active_mm;
+  - id: MC15-A002
+    path: "mykernel/sched/task/task_types.h"
+    symbol: "task_struct"
+    observed_lines: [137, 139]
+    quote: |
+      		mm_s			*mm;
+      		mm_s			*active_mm;
+      
+  - id: MC15-A003
+    path: "mykernel/mm/misc/mm_misc_types.h"
+    symbol: "mm_s"
+    observed_lines: [44, 46]
+    quote: |
+      			 */
+      			atomic_t		mm_users;
+      
+  - id: MC15-A004
+    path: "mykernel/mm/misc/mm_misc_types.h"
+    symbol: "mm_s"
+    observed_lines: [53, 55]
+    quote: |
+      			 */
+      			atomic_t		mm_refcount;
+      			atomic_long_t	pgtables_bytes;		/* PTE page table pages */
+  - id: MC15-A005
+    path: "mykernel/mm/misc/mm_misc.h"
+    symbol: "mmget"
+    observed_lines: [38, 40]
+    quote: |
+      		mmget(mm_s *mm) {
+      			atomic_inc(&mm->mm_users);
+      		}
+  - id: MC15-A006
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "allocate_mm macro"
+    observed_lines: [248, 250]
+    quote: |
+      
+      #define allocate_mm()	(kmem_cache_alloc(mm_cachep, GFP_KERNEL))
+      #define free_mm(mm)		(kmem_cache_free(mm_cachep, (mm)))
+  - id: MC15-A007
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "free_mm macro"
+    observed_lines: [249, 251]
+    quote: |
+      #define allocate_mm()	(kmem_cache_alloc(mm_cachep, GFP_KERNEL))
+      #define free_mm(mm)		(kmem_cache_free(mm_cachep, (mm)))
+      
+  - id: MC15-A008
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_free_pgd"
+    observed_lines: [245, 247]
+    quote: |
+      static inline void mm_free_pgd(mm_s *mm) {
+      	pgd_free(mm, mm->pgd);
+      }
+  - id: MC15-A009
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mmdrop"
+    observed_lines: [259, 261]
+    quote: |
+      {
+      	BUG_ON(mm == &init_mm);
+      	while (mm == &init_mm);
+  - id: MC15-A010
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mmdrop"
+    observed_lines: [263, 265]
+    quote: |
+      	WARN_ON_ONCE(mm == current->active_mm);
+      	mm_free_pgd(mm);
+      	// destroy_context(mm);
+  - id: MC15-A011
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mmdrop"
+    observed_lines: [268, 270]
+    quote: |
+      	// put_user_ns(mm->user_ns);
+      	free_mm(mm);
+      }
+  - id: MC15-A012
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_init"
+    observed_lines: [365, 367]
+    quote: |
+      	// mm->mmap = NULL;
+      	INIT_LIST_HEADER_S(&mm->mm_mt);
+      	// mm->vmacache_seqnum = 0;
+  - id: MC15-A013
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_init"
+    observed_lines: [367, 369]
+    quote: |
+      	// mm->vmacache_seqnum = 0;
+      	atomic_set(&mm->mm_users, 1);
+      	atomic_set(&mm->mm_refcount, 1);
+  - id: MC15-A014
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_init"
+    observed_lines: [368, 370]
+    quote: |
+      	atomic_set(&mm->mm_users, 1);
+      	atomic_set(&mm->mm_refcount, 1);
+      	// seqcount_init(&mm->write_protect_seq);
+  - id: MC15-A015
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_init"
+    observed_lines: [401, 403]
+    quote: |
+      
+      	mm->pgd = pgd_alloc(mm);
+      	if (!mm->pgd)
+  - id: MC15-A016
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_init"
+    observed_lines: [414, 416]
+    quote: |
+      fail_nopgd:
+      	free_mm(mm);
+      	return NULL;
+  - id: MC15-A017
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_alloc"
+    observed_lines: [425, 427]
+    quote: |
+      
+      	mm = allocate_mm();
+      	if (!mm)
+  - id: MC15-A018
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_alloc"
+    observed_lines: [429, 431]
+    quote: |
+      
+      	return mm_init(mm, current);
+      }
+  - id: MC15-A019
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mmput"
+    observed_lines: [459, 461]
+    quote: |
+      
+      	if (atomic_dec_and_test(&mm->mm_users))
+      		__mmput(mm);
+  - id: MC15-A020
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mmput"
+    observed_lines: [460, 462]
+    quote: |
+      	if (atomic_dec_and_test(&mm->mm_users))
+      		__mmput(mm);
+      }
+  - id: MC15-A021
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "__mmput"
+    observed_lines: [439, 441]
+    quote: |
+      	// khugepaged_exit(mm); /* must run before exit_mmap */
+      	// exit_mmap(mm);
+      	// mm_put_huge_zero_page(mm);
+  - id: MC15-A022
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "__mmput"
+    observed_lines: [449, 451]
+    quote: |
+      	// 	module_put(mm->binfmt->module);
+      	// mmdrop(mm);
+      }
+  - id: MC15-A023
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "get_task_mm"
+    observed_lines: [519, 521]
+    quote: |
+      
+      	task_lock(task);
+      	mm = task->mm;
+  - id: MC15-A024
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "get_task_mm"
+    observed_lines: [525, 527]
+    quote: |
+      		else
+      			mmget(mm);
+      	}
+  - id: MC15-A025
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "get_task_mm"
+    observed_lines: [528, 530]
+    quote: |
+      	task_unlock(task);
+      	return mm;
+      }
+  - id: MC15-A026
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mm"
+    observed_lines: [658, 660]
+    quote: |
+      
+      	if ((mm = allocate_mm()) == NULL)
+      		goto fail_nomem;
+  - id: MC15-A027
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mm"
+    observed_lines: [661, 663]
+    quote: |
+      
+      	memcpy(mm, oldmm, sizeof(*mm));
+      	if (!mm_init(mm, tsk))
+  - id: MC15-A028
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mm"
+    observed_lines: [662, 664]
+    quote: |
+      	memcpy(mm, oldmm, sizeof(*mm));
+      	if (!mm_init(mm, tsk))
+      		goto fail_nomem;
+  - id: MC15-A029
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mm"
+    observed_lines: [665, 667]
+    quote: |
+      
+      	if ((err = dup_mmap(mm, oldmm)) != 0)
+      		goto free_pt;
+  - id: MC15-A030
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mm"
+    observed_lines: [671, 673]
+    quote: |
+      free_pt:
+      	mmput(mm);
+      fail_nomem:
+  - id: MC15-A031
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [678, 680]
+    quote: |
+      	mm_s *mm, *oldmm;
+      	tsk->mm = NULL;
+      	tsk->active_mm = NULL;
+  - id: MC15-A032
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [679, 681]
+    quote: |
+      	tsk->mm = NULL;
+      	tsk->active_mm = NULL;
+      
+  - id: MC15-A033
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [686, 688]
+    quote: |
+      	 */
+      	if ((oldmm = current->mm) == NULL)
+      		return 0;
+  - id: MC15-A034
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [689, 691]
+    quote: |
+      
+      	if (clone_flags & CLONE_VM) {
+      		mmget(oldmm);
+  - id: MC15-A035
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [690, 692]
+    quote: |
+      	if (clone_flags & CLONE_VM) {
+      		mmget(oldmm);
+      		mm = oldmm;
+  - id: MC15-A036
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [692, 694]
+    quote: |
+      		mm = oldmm;
+      	} else if ((mm = dup_mm(tsk, oldmm)) == NULL) {
+      			return -ENOMEM;
+  - id: MC15-A037
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [696, 698]
+    quote: |
+      
+      	tsk->mm = mm;
+      	tsk->active_mm = mm;
+  - id: MC15-A038
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_mm"
+    observed_lines: [697, 699]
+    quote: |
+      	tsk->mm = mm;
+      	tsk->active_mm = mm;
+      	return 0;
+  - id: MC15-A039
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1133, 1135]
+    quote: |
+      		goto bad_fork_cleanup_sighand;
+      	retval = copy_mm(clone_flags, p);
+      	if (retval)
+  - id: MC15-A040
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1138, 1140]
+    quote: |
+      	if (retval)
+      		goto bad_fork_cleanup_mm;
+      	// retval = copy_io(clone_flags, p);
+  - id: MC15-A041
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1397, 1399]
+    quote: |
+      		// mm_clear_owner(p->mm, p);
+      		mmput(p->mm);
+      	}
+  - id: MC15-A042
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_process"
+    observed_lines: [1371, 1373]
+    quote: |
+      
+      	return p;
+      
+  - id: MC15-A043
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [187, 189]
+    quote: |
+      		}
+      		if ((tmp = vm_area_creat_dup(mpnt)) == NULL)
+      			goto fail_nomem;
+  - id: MC15-A044
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [189, 191]
+    quote: |
+      			goto fail_nomem;
+      		tmp->vm_mm = mm;
+      		// retval = dup_userfaultfd(tmp, &uf);
+  - id: MC15-A045
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [198, 200]
+    quote: |
+      
+      			get_file(file);
+      			i_mmap_lock_write(mapping);
+  - id: MC15-A046
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [213, 215]
+    quote: |
+      		 */
+      		list_header_add_to_tail(&mm->mm_mt, &tmp->list);
+      
+  - id: MC15-A047
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [217, 219]
+    quote: |
+      		if (!(tmp->vm_flags & VM_WIPEONFORK))
+      			retval = copy_page_range(tmp, mpnt);
+      
+  - id: MC15-A048
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [222, 224]
+    quote: |
+      
+      		if (retval)
+      			goto out;
+  - id: MC15-A049
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "dup_mmap"
+    observed_lines: [237, 239]
+    quote: |
+      	vm_area_free(tmp);
+      fail_nomem:
+      	retval = -ENOMEM;
+  - id: MC15-A050
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.c"
+    symbol: "pgd_alloc"
+    observed_lines: [29, 31]
+    quote: |
+      
+      	pgd = (pgd_t *)get_zeroed_page(GFP_PGTABLE_USER);
+      	if (pgd == NULL)
+  - id: MC15-A051
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.c"
+    symbol: "pgd_alloc"
+    observed_lines: [33, 35]
+    quote: |
+      
+      	mm->pgd = pgd;
+      
+  - id: MC15-A052
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.c"
+    symbol: "pgd_alloc"
+    observed_lines: [47, 49]
+    quote: |
+      		   references from swapper_pg_dir. */
+      		memcpy(pgd + KERNEL_PGD_BOUNDARY,
+      			swapper_pg_dir + KERNEL_PGD_BOUNDARY,
+  - id: MC15-A053
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.c"
+    symbol: "pgd_alloc"
+    observed_lines: [53, 55]
+    quote: |
+      		// virt_to_page(pgd)->pt_mm = mm;
+      		pgd_list_add(pgd);
+      	// }
+  - id: MC15-A054
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.c"
+    symbol: "pgd_alloc"
+    observed_lines: [60, 62]
+    quote: |
+      
+      	return pgd;
+      
+  - id: MC15-A055
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.c"
+    symbol: "pgd_alloc"
+    observed_lines: [63, 65]
+    quote: |
+      out_free_pgd:
+      	_pgd_free(pgd);
+      out:
+  - id: MC15-A056
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.c"
+    symbol: "pgd_free"
+    observed_lines: [73, 75]
+    quote: |
+      	// {
+      		spin_lock(&pgd_lock);
+      		pgd_list_del(pgd);
+  - id: MC15-A057
+    path: "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.c"
+    symbol: "pgd_free"
+    observed_lines: [77, 79]
+    quote: |
+      	// }
+      	_pgd_free(pgd);
+      }
+  - id: MC15-A058
+    path: "mykernel/mm/misc/init-mm.c"
+    symbol: "init_mm"
+    observed_lines: [31, 33]
+    quote: |
+      	.pgd				= swapper_pg_dir,
+      	.mm_users			= ATOMIC_INIT(2),
+      	.mm_refcount		= ATOMIC_INIT(1),
+  - id: MC15-A059
+    path: "mykernel/mm/misc/init-mm.c"
+    symbol: "init_mm"
+    observed_lines: [32, 34]
+    quote: |
+      	.mm_users			= ATOMIC_INIT(2),
+      	.mm_refcount		= ATOMIC_INIT(1),
+      	// .write_protect_seq	= SEQCNT_ZERO(init_mm.write_protect_seq),
+  - id: MC15-A060
+    path: "mykernel/mm/misc/init-mm.c"
+    symbol: "init_mm"
+    observed_lines: [30, 32]
+    quote: |
+      	// .mm_mt				= MTREE_INIT_EXT(mm_mt, MM_MT_FLAGS, init_mm.mmap_lock),
+      	.pgd				= swapper_pg_dir,
+      	.mm_users			= ATOMIC_INIT(2),
+  - id: MC15-A061
+    path: "mykernel/arch/x86_64/kernel/cpu/common.c"
+    symbol: "cpu_init"
+    observed_lines: [616, 618]
+    quote: |
+      	// mmgrab(&init_mm);
+      	curr->active_mm = &init_mm;
+      	BUG_ON(curr->mm);
+  - id: MC15-A062
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "bprm_mm_init"
+    observed_lines: [160, 162]
+    quote: |
+      
+      	bprm->mm = mm = mm_alloc();
+      	err = -ENOMEM;
+  - id: MC15-A063
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "bprm_mm_init"
+    observed_lines: [170, 172]
+    quote: |
+      
+      	err = __bprm_mm_init(bprm);
+      	if (err)
+  - id: MC15-A064
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "bprm_mm_init"
+    observed_lines: [179, 181]
+    quote: |
+      		bprm->mm = NULL;
+      		mmdrop(mm);
+      	}
+  - id: MC15-A065
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "__bprm_mm_init"
+    observed_lines: [104, 106]
+    quote: |
+      
+      	bprm->vma = vma = vm_area_alloc(mm);
+      	if (!vma)
+  - id: MC15-A066
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "__bprm_mm_init"
+    observed_lines: [126, 128]
+    quote: |
+      
+      	err = insert_vm_struct(mm, vma);
+      	if (err)
+  - id: MC15-A067
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "free_bprm"
+    observed_lines: [1075, 1077]
+    quote: |
+      		// acct_arg_size(bprm, 0);
+      		mmput(bprm->mm);
+      	}
+  - id: MC15-A068
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [628, 630]
+    quote: |
+      	tsk = current;
+      	old_mm = current->mm;
+      	exec_mm_release(tsk, old_mm);
+  - id: MC15-A069
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [629, 631]
+    quote: |
+      	old_mm = current->mm;
+      	exec_mm_release(tsk, old_mm);
+      
+  - id: MC15-A070
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [641, 643]
+    quote: |
+      		 */
+      		ret = mmap_read_lock_killable(old_mm);
+      		// if (ret) {
+  - id: MC15-A071
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [652, 654]
+    quote: |
+      	local_irq_disable();
+      	active_mm = tsk->active_mm;
+      	tsk->active_mm = mm;
+  - id: MC15-A072
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [653, 655]
+    quote: |
+      	active_mm = tsk->active_mm;
+      	tsk->active_mm = mm;
+      	tsk->mm = mm;
+  - id: MC15-A073
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [654, 656]
+    quote: |
+      	tsk->active_mm = mm;
+      	tsk->mm = mm;
+      	// mm_init_cid(mm);
+  - id: MC15-A074
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [665, 667]
+    quote: |
+      	// 	local_irq_enable();
+      	activate_mm(active_mm, mm);
+      	// if (IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
+  - id: MC15-A075
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [673, 675]
+    quote: |
+      		mmap_read_unlock(old_mm);
+      		BUG_ON(active_mm != old_mm);
+      		// setmax_mm_hiwater_rss(&tsk->signal->maxrss, old_mm);
+  - id: MC15-A076
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [676, 678]
+    quote: |
+      		// mm_update_next_owner(old_mm);
+      		mmput(old_mm);
+      		return 0;
+  - id: MC15-A077
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "exec_mmap"
+    observed_lines: [679, 681]
+    quote: |
+      	}
+      	mmdrop(active_mm);
+      	return 0;
+  - id: MC15-A078
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "begin_new_exec"
+    observed_lines: [908, 910]
+    quote: |
+      	// acct_arg_size(bprm, 0);
+      	retval = exec_mmap(bprm->mm);
+      	if (retval)
+  - id: MC15-A079
+    path: "mykernel/sched/forkexec/exec.c"
+    symbol: "begin_new_exec"
+    observed_lines: [912, 914]
+    quote: |
+      
+      	bprm->mm = NULL;
+      
+  - id: MC15-A080
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_release"
+    observed_lines: [603, 605]
+    quote: |
+      	/* Get rid of any cached register state */
+      	deactivate_mm(tsk, mm);
+      
+  - id: MC15-A081
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "mm_release"
+    observed_lines: [611, 613]
+    quote: |
+      	if (tsk->clear_child_tid) {
+      		if (atomic_read(&mm->mm_users) > 1) {
+      			/*
+  - id: MC15-A082
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "exec_mm_release"
+    observed_lines: [640, 642]
+    quote: |
+      	// futex_exec_release(tsk);
+      	mm_release(tsk, mm);
+      }
+  - id: MC15-A083
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "SCHEDULER_DEFINATION"
+    observed_lines: [1, 2]
+    quote: |
+      #define SCHEDULER_DEFINATION
+      #include "scheduler.h"
+  - id: MC15-A084
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "__schedule"
+    observed_lines: [1123, 1125]
+    quote: |
+      
+      	if (likely(prev != next)) {
+      		rq->nr_switches++;
+  - id: MC15-A085
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "__schedule"
+    observed_lines: [1161, 1163]
+    quote: |
+      		/* Also unlocks the rq: */
+      		rq = context_switch(rq, prev, next, &rf);
+      	} else {
+  - id: MC15-A086
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [172, 174]
+    quote: |
+      			 */
+      			if (!next->mm) {								// to kernel
+      				// enter_lazy_tlb(prev->active_mm, next);
+  - id: MC15-A087
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [175, 177]
+    quote: |
+      
+      				next->active_mm = prev->active_mm;
+      				if (prev->mm)								// from user
+  - id: MC15-A088
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [176, 178]
+    quote: |
+      				next->active_mm = prev->active_mm;
+      				if (prev->mm)								// from user
+      					// mmgrab_lazy_tlb(prev->active_mm);
+  - id: MC15-A089
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [178, 180]
+    quote: |
+      					// mmgrab_lazy_tlb(prev->active_mm);
+      					mmget(prev->active_mm);
+      				else
+  - id: MC15-A090
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [180, 182]
+    quote: |
+      				else
+      					prev->active_mm = NULL;
+      			} else {										// to user
+  - id: MC15-A091
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [191, 193]
+    quote: |
+      				 */
+      				switch_mm_irqs_off(prev->active_mm, next->mm, next);
+      				// lru_gen_use_mm(next->mm);
+  - id: MC15-A092
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [196, 198]
+    quote: |
+      					/* will mmdrop_lazy_tlb() in finish_task_switch(). */
+      					rq->prev_mm = prev->active_mm;
+      					prev->active_mm = NULL;
+  - id: MC15-A093
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [197, 199]
+    quote: |
+      					rq->prev_mm = prev->active_mm;
+      					prev->active_mm = NULL;
+      				}
+  - id: MC15-A094
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [210, 212]
+    quote: |
+      			/* Here we just switch the register state and the stack. */
+      			switch_to(prev, next, prev);
+      			barrier();
+  - id: MC15-A095
+    path: "mykernel/sched/scheduler/scheduler.h"
+    symbol: "context_switch"
+    observed_lines: [213, 215]
+    quote: |
+      
+      			return finish_task_switch(prev);
+      		}
+  - id: MC15-A096
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "finish_task_switch"
+    observed_lines: [788, 790]
+    quote: |
+      	rq_s *rq = this_rq();
+      	mm_s *mm = rq->prev_mm;
+      	uint prev_state;
+  - id: MC15-A097
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "finish_task_switch"
+    observed_lines: [807, 809]
+    quote: |
+      
+      	rq->prev_mm = NULL;
+      
+  - id: MC15-A098
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "finish_task_switch"
+    observed_lines: [852, 854]
+    quote: |
+      	// 	membarrier_mm_sync_core_before_usermode(mm);
+      	// 	mmdrop_lazy_tlb_sched(mm);
+      	// }
+  - id: MC15-A099
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "schedule_tail"
+    observed_lines: [884, 886]
+    quote: |
+      
+      	// finish_task_switch(prev);
+      	preempt_enable();
+  - id: MC15-A100
+    path: "mykernel/arch/x86_64/sched/context/switch_to_macro_arch.h"
+    symbol: "switch_to macro"
+    observed_lines: [9, 11]
+    quote: |
+      			do {											\
+      				((last) = __switch_to_asm((prev), (next)));	\
+      			} while (0)
+  - id: MC15-A101
+    path: "mykernel/arch/x86_64/mm/mmu/mmu_macro_arch.h"
+    symbol: "activate_mm macro"
+    observed_lines: [10, 12]
+    quote: |
+      	#define activate_mm(prev, next) do {			\
+      				switch_mm((prev), (next), NULL);	\
+      			} while (0);
+  - id: MC15-A102
+    path: "mykernel/arch/x86_64/mm/mmu/mmu_macro_arch.h"
+    symbol: "deactivate_mm macro"
+    observed_lines: [15, 17]
+    quote: |
+      			do {							\
+      				load_gs_index(0);			\
+      				loadsegment(fs, 0);			\
+  - id: MC15-A103
+    path: "mykernel/arch/x86_64/mm/mmu/mmu_arch.c"
+    symbol: "switch_mm"
+    observed_lines: [47, 49]
+    quote: |
+      	local_irq_save(flags);
+      	switch_mm_irqs_off(prev, next, tsk);
+      	local_irq_restore(flags);
+  - id: MC15-A104
+    path: "mykernel/arch/x86_64/mm/mmu/mmu_arch.c"
+    symbol: "switch_mm_irqs_off"
+    observed_lines: [54, 56]
+    quote: |
+      {
+      	if (prev == next)
+      		return;
+  - id: MC15-A105
+    path: "mykernel/arch/x86_64/mm/mmu/mmu_arch.c"
+    symbol: "switch_mm_irqs_off"
+    observed_lines: [55, 57]
+    quote: |
+      	if (prev == next)
+      		return;
+      
+  - id: MC15-A106
+    path: "mykernel/arch/x86_64/mm/mmu/mmu_arch.c"
+    symbol: "switch_mm_irqs_off"
+    observed_lines: [212, 214]
+    quote: |
+      
+      	load_new_mm_cr3(next->pgd, new_asid, need_flush);
+      
+  - id: MC15-A107
+    path: "mykernel/arch/x86_64/mm/mmu/mmu_arch.c"
+    symbol: "load_new_mm_cr3"
+    observed_lines: [24, 26]
+    quote: |
+      	ulong new_mm_cr3;
+      	new_mm_cr3 = (ulong)virt_to_phys(pgdir);
+      
+  - id: MC15-A108
+    path: "mykernel/arch/x86_64/mm/mmu/mmu_arch.c"
+    symbol: "load_new_mm_cr3"
+    observed_lines: [38, 40]
+    quote: |
+      	 */
+      	write_cr3(new_mm_cr3);
+      }
+  - id: MC15-A109
+    path: "mykernel/arch/x86_64/insns/special_insns_arch.h"
+    symbol: "write_cr3"
+    observed_lines: [125, 127]
+    quote: |
+      		write_cr3(ulong val) {
+      			asm volatile(	"mov	%0,		%%cr3	\n\t"
+      						:
+  - id: MC15-A110
+    path: "mykernel/sched/forkexec/exit.c"
+    symbol: "do_exit"
+    observed_lines: [119, 121]
+    quote: |
+      
+      	// exit_mm();
+      
+self_check: {source_files: 15, anchors: 110, nodes: 46, edges: 60, cases: 19, states: 9, ownership: 10, effects: 10, formal_parser: NOT_RUN, kernel_runtime: NOT_RUN}

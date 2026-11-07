@@ -1,0 +1,75 @@
+{
+ "cwd": "<repo_root> (fresh clone root, see l01_identity.json repo_root)",
+ "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B -P agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/scripts/run_uv05_recheck.py \"$PWD\" agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05 agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/facts_check.json agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/mm-04-disposition.md agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/user-vfs-baseline.md",
+ "env_and_flags": {
+  "PYTHONDONTWRITEBYTECODE": "1",
+  "python_flags": [
+   "-B",
+   "-P"
+  ],
+  "note": "-P keeps the adapter directory off sys.path; the checker chain adds its own two package paths"
+ },
+ "started_utc": "2026-10-25T10:31:42Z",
+ "finished_utc": "2026-10-25T10:31:44Z",
+ "returncode": 0,
+ "stdout_file": "records/l02/stdout.txt",
+ "stdout": {
+  "anchors": [
+   90,
+   90
+  ],
+  "markdown_tags": {
+   "mm-04-disposition.md": [
+    0,
+    0
+   ],
+   "user-vfs-baseline.md": [
+    31,
+    31
+   ]
+  },
+  "structure_errors": 0,
+  "deferred_findings_errors": 0,
+  "query_errors": 0,
+  "structure_checks": [
+   7,
+   7
+  ],
+  "value_tables_ok": true,
+  "supersedes_scope": [
+   40,
+   40
+  ],
+  "hex40_in_package": 0,
+  "all_ok": true
+ },
+ "stderr_file": "records/l02/stderr.txt",
+ "stderr_adapter_binding": {
+  "adapter": "run_uv05_recheck",
+  "repo_frozen": "/home/user/MyOS2",
+  "repo_rebound": "/home/cheyh/projs/myos2-handoff06-local/MyOS2",
+  "shared_module": true,
+  "pin": "a039d9803ade",
+  "reviewed": "de7c96ede546",
+  "modules": {
+   "uv_facts_check": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_facts_check.py",
+   "mm_facts_check": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_facts_check.py",
+   "scan_index": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/scripts/scan_index.py"
+  }
+ },
+ "stderr_other_lines": [],
+ "inputs_sha256_before_run": {
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_facts_check.py": "f11a8f7ee2fb96ae b21b66ef30aab6e3 77d0ec36ece6c997 6bbd5ac75b161dc0",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_facts_check.py": "2d3f68c82b0ccddc ff9935c7a090bcd0 bd9e46412a567e8d 09a9b53c18559229",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/scripts/scan_index.py": "468fd2d538f0862c 1f00de7e8d814735 2c6fbfd7ec0e39ce 597b32df8cc60efc",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/scripts/run_uv05_recheck.py": "846b71489a2e168c 2e0266f6e1b5aa7b 0dbf22ca874bfd9e 2307f4616191a628"
+ },
+ "pycache_dirs_in_clone": {
+  "before": 0,
+  "after": 0
+ },
+ "outputs": [
+  "records/l02/facts_check.json",
+  "records/l02/queries.json (written by the checker next to out.json)"
+ ]
+}

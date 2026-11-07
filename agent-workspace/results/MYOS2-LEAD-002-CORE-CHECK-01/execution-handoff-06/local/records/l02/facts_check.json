@@ -1,0 +1,353 @@
+{
+ "check": "USER_VFS_BASELINE_05_FACTS",
+ "pin_time": "a039d9803ade",
+ "anchors": {
+  "total": 90,
+  "ok": 90,
+  "by_kind": {
+   "build": 2,
+   "in_body": 80,
+   "in_body_comment": 6,
+   "macro": 1,
+   "type_member": 1
+  },
+  "failures": []
+ },
+ "markdown_tags": {
+  "mm-04-disposition.md": {
+   "total": 0,
+   "ok": 0,
+   "failures": []
+  },
+  "user-vfs-baseline.md": {
+   "total": 31,
+   "ok": 31,
+   "failures": []
+  }
+ },
+ "structure": {
+  "errors": [],
+  "limits": {
+   "capabilities": [
+    20,
+    20
+   ],
+   "edges": [
+    43,
+    45
+   ],
+   "anchors": [
+    90,
+    90
+   ],
+   "candidates": [
+    6,
+    6
+   ],
+   "per_object": {
+    "sched.forkexec": 9,
+    "fs.vfs": 9,
+    "boundary": 2
+   }
+  },
+  "recount": {
+   "objects": 3,
+   "capabilities": 20,
+   "capabilities_per_object": {
+    "sched.forkexec": 9,
+    "fs.vfs": 9,
+    "boundary": 2
+   },
+   "anchors": 90,
+   "anchors_by_kind": {
+    "build": 2,
+    "in_body": 80,
+    "in_body_comment": 6,
+    "macro": 1,
+    "type_member": 1
+   },
+   "edges": 43,
+   "edges_by_kind": {
+    "build": 1,
+    "call": 34,
+    "config": 1,
+    "data": 3,
+    "init_order": 4
+   },
+   "queries": 44,
+   "structure_checks": 7,
+   "value_tables": 2,
+   "chains": 6,
+   "link_breaks": 10,
+   "dependency_risks": 6,
+   "next_validation_candidates": 6,
+   "gaps": 10,
+   "gaps_open": 10,
+   "old_inputs_index": 19,
+   "implementation_evidence": {
+    "connected_body": 15,
+    "declaration_only": 1,
+    "not_assessed": 0,
+    "not_located_in_scope": 0,
+    "partial_body": 4
+   }
+  },
+  "ok": true
+ },
+ "deferred_findings": {
+  "errors": [],
+  "recount": {
+   "findings": 16,
+   "errata": 2,
+   "status_changes": 10,
+   "cross_links": 13,
+   "findings_by_status": {
+    "deferred_owner_not_ready": 12,
+    "needs_evidence": 4
+   }
+  },
+  "ok": true
+ },
+ "queries": {
+  "total": 44,
+  "tool_failures": 0,
+  "errors": [],
+  "ok": true
+ },
+ "structure_checks": {
+  "total": 7,
+  "ok": 7,
+  "rows": [
+   {
+    "id": "SC-01",
+    "path": "mykernel/fs/vfs/namei.c",
+    "symbol": "do_open",
+    "check": "no_active_match",
+    "ok": true,
+    "span": [
+     701,
+     702,
+     707
+    ],
+    "active_matches": 0
+   },
+   {
+    "id": "SC-02",
+    "path": "mykernel/fs/vfs/open.c",
+    "symbol": "myos_do_dentry_open",
+    "check": "no_active_match",
+    "ok": true,
+    "span": [
+     46,
+     47,
+     65
+    ],
+    "active_matches": 0
+   },
+   {
+    "id": "SC-03",
+    "path": "mykernel/sched/syscall.c",
+    "symbol": "sys_wait4",
+    "check": "empty_body",
+    "ok": true,
+    "span": [
+     76,
+     78,
+     80
+    ],
+    "active_chars": 0
+   },
+   {
+    "id": "SC-04",
+    "path": "mykernel/mm/vm_map/filemap.c",
+    "symbol": "simple_filemap_read",
+    "check": "no_active_match",
+    "ok": true,
+    "span": [
+     204,
+     206,
+     238
+    ],
+    "active_matches": 0
+   },
+   {
+    "id": "SC-05",
+    "path": "mykernel/fs/vfs/file.c",
+    "symbol": "alloc_fd",
+    "check": "active_match_count",
+    "ok": true,
+    "span": [
+     129,
+     130,
+     145
+    ],
+    "active_matches": 1
+   },
+   {
+    "id": "SC-06",
+    "path": "mykernel/mm/vm_map/filemap.c",
+    "symbol": "generic_file_read_iter",
+    "check": "no_active_match",
+    "ok": true,
+    "span": [
+     262,
+     264,
+     306
+    ],
+    "active_matches": 0
+   },
+   {
+    "id": "SC-07",
+    "path": "mykernel/sched/forkexec/fork.c",
+    "symbol": "__mmput",
+    "check": "empty_body",
+    "ok": true,
+    "span": [
+     433,
+     433,
+     451
+    ],
+    "active_chars": 0
+   }
+  ]
+ },
+ "value_tables": {
+  "VT-MR01": [
+   {
+    "row": "T1",
+    "computed_queue": [
+     "N",
+     "W",
+     "IDLE"
+    ],
+    "errors": [],
+    "ok": true
+   },
+   {
+    "row": "T2",
+    "computed_queue": [
+     "W",
+     "N",
+     "IDLE"
+    ],
+    "errors": [],
+    "ok": true
+   },
+   {
+    "row": "T3",
+    "computed_queue": [
+     "W",
+     "N",
+     "IDLE"
+    ],
+    "errors": [],
+    "ok": true
+   },
+   {
+    "row": "T4",
+    "computed_queue": [
+     "W",
+     "N",
+     "IDLE"
+    ],
+    "errors": [],
+    "ok": true
+   },
+   {
+    "row": "T5",
+    "computed_queue": [
+     "W",
+     "IDLE"
+    ],
+    "errors": [],
+    "ok": true
+   },
+   {
+    "row": "T6",
+    "computed_queue": [
+     "W2",
+     "W1",
+     "N",
+     "IDLE"
+    ],
+    "errors": [],
+    "ok": true
+   },
+   {
+    "row": "T7",
+    "computed_queue": [
+     "N",
+     "W",
+     "M",
+     "IDLE"
+    ],
+    "errors": [],
+    "ok": true
+   }
+  ],
+  "VT-FR01": [
+   {
+    "row": "R1",
+    "lens": [
+     256
+    ],
+    "sum_len": 256,
+    "intended_total": 256,
+    "differs_from_intended": false,
+    "ok": true
+   },
+   {
+    "row": "R2",
+    "lens": [
+     0
+    ],
+    "sum_len": 0,
+    "intended_total": 4096,
+    "differs_from_intended": true,
+    "ok": true
+   },
+   {
+    "row": "R3",
+    "lens": [
+     -100
+    ],
+    "sum_len": -100,
+    "intended_total": 3996,
+    "differs_from_intended": true,
+    "ok": true
+   },
+   {
+    "row": "R4",
+    "lens": [
+     96,
+     104
+    ],
+    "sum_len": 200,
+    "intended_total": 200,
+    "differs_from_intended": false,
+    "ok": true
+   },
+   {
+    "row": "R5",
+    "lens": [
+     4096,
+     0
+    ],
+    "sum_len": 4096,
+    "intended_total": 8192,
+    "differs_from_intended": true,
+    "ok": true
+   }
+  ],
+  "ok": true
+ },
+ "supersedes_scope": {
+  "total": 40,
+  "ok": 40,
+  "failures": [],
+  "superseded": 33,
+  "has_scope": true
+ },
+ "hex40_in_package": [],
+ "all_ok": true
+}

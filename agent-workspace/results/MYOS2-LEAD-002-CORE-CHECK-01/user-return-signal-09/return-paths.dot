@@ -1,0 +1,41 @@
+// return-paths.dot — CORE-USER-RETURN-SIGNAL-09; node and edge IDs are the IDs in facts-and-boundaries.yaml
+digraph return_paths {
+  rankdir=LR;
+  node [shape=box, fontsize=10];
+  "entry.syscall_return_work" [label="entry.syscall_return_work\n(D01)"];
+  "ipc.signal.delivery_dispatch" [label="ipc.signal.delivery_dispatch\n(D02)"];
+  "ipc.signal.signal_selection" [label="ipc.signal.signal_selection\n(D02)"];
+  "ipc.signal.pending_flag" [label="ipc.signal.pending_flag\n(D02)"];
+  "ipc.signal.action_mask_syscalls" [label="ipc.signal.action_mask_syscalls\n(D02)"];
+  "ipc.signal.frame_setup" [label="ipc.signal.frame_setup\n(D02)"];
+  "ipc.signal.sigreturn_restore" [label="ipc.signal.sigreturn_restore\n(D02)"];
+  "arch.x86_64.user_access" [label="arch.x86_64.user_access\n(D02)"];
+  "sched.forkexec.signal_state_inherit" [label="sched.forkexec.signal_state_inherit\n(D02)"];
+  "ipc.signal.syscall_restart" [label="ipc.signal.syscall_restart\n(D03)"];
+  "CORE-USER-SYSCALL-STDIO-08::entry.syscall_dispatch" [shape=box, style=dashed];
+  "CORE-USER-BOUNDARIES-07::entry.syscall_frame_return" [shape=box, style=dashed];
+  "CORE-USER-SYSCALL-STDIO-08::entry.syscall_table" [shape=box, style=dashed];
+  "external:mykernel/arch/x86_64/mm/fault.c::myos_bad_area" [shape=ellipse];
+  "CORE-USER-VFS-BASELINE-05::sched.forkexec.copy_process_resources" [shape=box, style=dashed];
+  "CORE-USER-SYSCALL-STDIO-08::entry.syscall_dispatch" -> "entry.syscall_return_work" [id="ED-01", label="ED-01 call/connected", style=solid];
+  "entry.syscall_return_work" -> "ipc.signal.delivery_dispatch" [id="ED-02", label="ED-02 call/connected_with_concern", style=solid];
+  "entry.syscall_return_work" -> "CORE-USER-BOUNDARIES-07::entry.syscall_frame_return" [id="ED-03", label="ED-03 call/connected_with_concern", style=solid];
+  "ipc.signal.delivery_dispatch" -> "ipc.signal.signal_selection" [id="ED-04", label="ED-04 call/connected", style=solid];
+  "ipc.signal.delivery_dispatch" -> "ipc.signal.frame_setup" [id="ED-05", label="ED-05 call/connected_with_concern", style=solid];
+  "ipc.signal.delivery_dispatch" -> "ipc.signal.syscall_restart" [id="ED-06", label="ED-06 call/connected_with_concern", style=solid];
+  "ipc.signal.signal_selection" -> "ipc.signal.action_mask_syscalls" [id="ED-07", label="ED-07 data/connected_with_concern", style=dashed];
+  "ipc.signal.signal_selection" -> "sched.forkexec.signal_state_inherit" [id="ED-08", label="ED-08 data/connected_with_concern", style=dashed];
+  "ipc.signal.signal_selection" -> "ipc.signal.pending_flag" [id="ED-09", label="ED-09 data/blocked", style=dashed];
+  "ipc.signal.frame_setup" -> "ipc.signal.action_mask_syscalls" [id="ED-10", label="ED-10 data/connected_with_concern", style=dashed];
+  "ipc.signal.frame_setup" -> "arch.x86_64.user_access" [id="ED-11", label="ED-11 call/connected_with_concern", style=solid];
+  "ipc.signal.sigreturn_restore" -> "arch.x86_64.user_access" [id="ED-12", label="ED-12 call/connected_with_concern", style=solid];
+  "ipc.signal.action_mask_syscalls" -> "arch.x86_64.user_access" [id="ED-13", label="ED-13 call/connected_with_concern", style=solid];
+  "CORE-USER-SYSCALL-STDIO-08::entry.syscall_dispatch" -> "ipc.signal.action_mask_syscalls" [id="ED-14", label="ED-14 call/connected", style=solid];
+  "CORE-USER-SYSCALL-STDIO-08::entry.syscall_dispatch" -> "ipc.signal.sigreturn_restore" [id="ED-15", label="ED-15 call/connected", style=solid];
+  "ipc.signal.sigreturn_restore" -> "ipc.signal.action_mask_syscalls" [id="ED-16", label="ED-16 call/connected", style=solid];
+  "ipc.signal.syscall_restart" -> "CORE-USER-SYSCALL-STDIO-08::entry.syscall_table" [id="ED-17", label="ED-17 data/blocked", style=dashed];
+  "entry.syscall_return_work" -> "ipc.signal.sigreturn_restore" [id="ED-18", label="ED-18 data/connected_with_concern", style=dashed];
+  "CORE-USER-BOUNDARIES-07::entry.syscall_frame_return" -> "ipc.signal.frame_setup" [id="ED-19", label="ED-19 data/conditional", style=dashed];
+  "arch.x86_64.user_access" -> "external:mykernel/arch/x86_64/mm/fault.c::myos_bad_area" [id="ED-20", label="ED-20 call/endpoint", style=solid];
+  "sched.forkexec.signal_state_inherit" -> "CORE-USER-VFS-BASELINE-05::sched.forkexec.copy_process_resources" [id="ED-21", label="ED-21 data/connected_with_concern", style=dashed];
+}

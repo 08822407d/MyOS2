@@ -1,0 +1,532 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-EXECUTION-HANDOFF-06
+phase: LOCAL_ACCEPT
+record_type: resume_map_index
+produced_by: Claude Code desktop app (Code tab), local session
+model: unknown_or_not_attestable
+model_declared_by_runtime: claude-opus-5-5
+date: '2026-10-25'
+base_snapshot: 执行分支头 9c36fb3ba7ff；主线 ad850ce5405b；time a039d9803ade（短 SHA）
+provenance: 本会话派出的只读子代理按包定点读取各包MANIFEST、主线回执、18号导航与检查点；每组结果再由独立核查代理对抗式证伪并修正（共33处收窄/改正）；提交前另一核查代理通读地图后，又改正core/recheck-01的integration-03 §3效果表述、core接受范围，并补order-02/integration-03被审头；本会话汇总后机械抽查路径、短号与判定原值（records/l03_map_spotcheck.json，由scripts/make_local_records.py l03生成）。字段为摘录与意译，原文以ref所指文件为准；不是语义审查。
+not_completed_statement: 不把53子系统全量盘点或007R整项写成已完成；本索引只覆盖下列8个包。
+packages:
+- package: pilot
+  result_dir: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/
+  entry_files:
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/MANIFEST.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/result.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/pilot/evidence.md
+  results_frozen_short12: 10ecb7dd0bdb
+  mainline_review_path: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-pilot-review.md
+  mainline_review_record_id: CORE-CHECK-01-PILOT-REVIEW-001
+  verdict_fields_verbatim:
+  - 'status: PILOT_REVIEW_COMPLETE_CORE_LAUNCH_READY'
+  - 'disposition: ALLOW_CORE'
+  - 'reviewed_commit_short12: 0851af4fc08b'
+  - 'pilot_result_commit_short12: 10ecb7dd0bdb'
+  - 'core_execution_started_by_lead: false'
+  - 'merge_required_before_core: false'
+  - 'kernel_acceptance_verdict: NOT_ISSUED'
+  - 'acceptance_ceiling: PASS_PENDING_LOCAL'
+  accepted_scope: 只认定云端会话的环境与输入记录、两条金丝雀加负控、C程序正负控、单子进程超时和GitHub远端回读足以开始有界正式核验（ALLOW_CORE）；不是十五项核验完成，也不是MyOS2可运行或通过验收。
+  not_run_layers:
+  - 正式V00–V14在pilot阶段未执行
+  - 真实内核、Owner本机ELF、IRQ/计时/SMP均未验证
+  - P02只跑普通C，未测x86特权指令/原asm
+  - 未改内核，未运行仓库脚本、完整构建或QEMU，未安装工具
+  - 第二次推送后的三文件API回读只在PR正文报告，未附完整驱动/原始输出，主线未升格为独立机械认证（pilot MANIFEST称其为远端文件清单核对）
+  - 主线未重跑程序、未自行计算哈希
+  later_errata_or_supersession:
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-09-27-core-reviewed-recheck-ready.md::front matter supersedes
+    effect: 取代pilot检查点2026-09-27-pilot-reviewed-core-ready.md的当前状态：从等待core执行改为core已收、局部证据保留、验证器定点重核；不追改原件。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-core-review.md::§3 R04
+    effect: R04指出core驱动要求执行分支远端头等于pilot头0851af4fc08b，core发布后重跑会误报不匹配；要求改为分开校验“旧原件未改且为祖先”和本次远端回读目标对象（主线静态推导，未运行；后由recheck-01回执在其绑定与测试范围内关闭R04）。不修改pilot结论。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-ORDER-02-review.md::冻结与范围表(行82)
+    effect: 保留旧pilot/core/consumer全部原件，不把新增实验继承成旧验收；不是对pilot的勘误。
+  deferred_entry: 18-deferred-findings-and-resume.md §3导航表没有pilot行；pilot自报阻断项为无，限制登记在pilot回执§2（执行身份、输入与证据保全、有限放行）与§3三项加固（要求在core同轮处理，core MANIFEST自述已完成），pilot MANIFEST open_questions两条。
+  consumer_cautions:
+  - ALLOW_CORE只认定执行环境与回传可用，不等于V00–V14完成或内核通过
+  - 两条金丝雀命中不等于47个正式锚点全部合格
+  - run_limited超时只覆盖单个子进程，不视为完整进程树隔离
+  - evidence.md是含手工转录与去尾换行的汇编，不是逐字节会话日志
+  uncertain:
+  - '主线MANIFEST.md是07批六文件清单，没有pilot/core专属行；只有coverage.local_verification_cases: 15与09“V00-V14已准备，未执行”（历史状态）间接相关。'
+  - 18号§3导航表没有pilot行，pilot问题登记位置只能取自回执与检查点。
+  - pilot回执front matter里没有acceptance_verdict、acceptance_scope、runtime_evidence字段，判定以disposition为准。
+  - 冻结号10ecb7dd0bdb只冻结result.yaml；MANIFEST.md与evidence.md在被审头0851af4fc08b加入，两个号要分开引用。
+  - PR17正文（第二次推送后的回读）本次未读取。
+- package: core
+  result_dir: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/
+  entry_files:
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/MANIFEST.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/evidence.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/fixtures/（20个文本文件，ls-tree已确认）
+  results_frozen_short12: 7e2fa84a9823
+  mainline_review_path: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-core-review.md
+  mainline_review_record_id: CORE-CHECK-01-CORE-REVIEW-001
+  verdict_fields_verbatim:
+  - 'status: CORE_REVIEW_COMPLETE_TARGETED_RECHECK_READY'
+  - 'disposition: RETURN'
+  - 'return_scope: "验证器的准入、观测完整性、结果生成及可重复执行；不是全部内核观察作废"'
+  - 'retained_evidence: PARTIAL_SCOPED_OBSERVATIONS'
+  - 'reusable_harness_accepted: false'
+  - 'reviewed_commit_short12: a1e7c2277705'
+  - 'frozen_results_commit_short12: 7e2fa84a9823'
+  - 'followup_execution_disposition: RUN_NOW_OPTIONAL_BY_OWNER_LAUNCH'
+  - 'kernel_acceptance_verdict: NOT_ISSUED'
+  - 'acceptance_ceiling: PASS_PENDING_LOCAL'
+  accepted_scope: 作为可追溯的部分研究与执行材料接收，回执§1表所列V02–V07、V09–V14的局部观察（含原函数宿主片段）可有限消费，V08按§2 L02限定；验证器作为可复用交付退回R01–R04；不签发内核验收。
+  not_run_layers:
+  - V11真实上下文切换层NOT_RUN（只跑局部序列）
+  - V14 ELF层EXISTING_ELF_EVIDENCE NOT_RUN（只到源码与宿主别名模型）
+  - V06并发唤醒未测，只做串行
+  - 真实ELF、时基、IRQ、SMP未验证；CA-05只到源码与模型层，CA-06只到源码层
+  - rest_init中kernel_thread等路径本轮未读；kernel_thread/copy_process等idle上下文路径未完成全链证明，CA-02全局可达性未闭合
+  - semaphore down_timeout调用者未查；到期分发链未闭合
+  - 未改内核，未运行原仓库脚本、内核构建或QEMU，未安装工具
+  - 主线核查R01–R04时未运行负例（后由recheck-01另包处理）
+  later_errata_or_supersession:
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-01-review.md::撤回无依据的无调用者说法(行78)
+    effect: 撤回core所称swake_up_all_locked/finish_swait在swait.c外无调用者的影响面结论；msleep未命中只限static_checks的文本扫描范围。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-02-review.md::front matter（status/supersedes）与行84-86
+    effect: front matter：BOUNDED_RECHECK_CLOSED，关闭recheck-01的S01–S03读取层退回；行84-86：不恢复swait无调用者说法，msleep仍限原文本扫描边界；旧A46保留为失败记录，A46-C/ASM另列；V08排序候选未因读取器复判而被动态验证。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-ORDER-02-review.md::W01/W02(行88-90)
+    effect: W01（与time中tmp_list更新、tmp_rt不更新相符）与W02（先回插后计费）为两个相互独立的宿主原函数回插失序见证，按15号合同PASS_PENDING_LOCAL接收；该段未明文称其复核core V08额外观察（关联属推断）；全局队列政策尚未采用，不表示内核已修好。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-INTEGRATION-03-review.md::§3旧问题工作安排表(行93-101)
+    effect: 工作安排判断（非新测量）：旧V02–V05、V10–V14、W01/W02等所示的未修机制，不能作为后续动态验证、功能承诺或真实时基/ELF/SMP结论的可靠前提；静态盘点、调用关系、测试规格与局部模型分析可以继续；不收窄core回执§1的有限消费；不恢复“永不入队”“无调用者”说法。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-10-01-recheck01-reviewed-consumer-fix-ready.md::front matter supersedes
+    effect: 取代core检查点2026-09-27-core-reviewed-recheck-ready.md的当前状态，下一步转到consumer-fix-02；core原件冻结。
+  deferred_entry: 18-deferred-findings-and-resume.md §3导航表第78行：core/results.yaml中的V00–V14与CA记录，加core/recheck-01/consumer-fix-02/的复判，消费时须同读recheck-02回执；验证器问题R01–R04见core-review §3，A46/CA-02更正L01/L02见core-review
+    §2；core MANIFEST open_questions三条。
+  consumer_cautions:
+  - “11项OBSERVED_AS_PREDICTED”只说明所测现象符合待验证预测（其中许多预测本身是缺陷），不等于11项内核功能正确
+  - 顶层not_run=0不能掩盖V11真实切换层与V14 ELF层未执行
+  - '验证器不能当作可复用回归工具（reusable_harness_accepted: false）'
+  - 须同读recheck-02回执；已撤回的“无调用者/永不入队”不得恢复为现状
+  uncertain:
+  - 冻结号7e2fa84a9823只冻结results.yaml与fixtures首批（18个）；MANIFEST.md、evidence.md及build_evidence.py、final_check.py在被审头a1e7c2277705加入，两个号要分开引用。
+  - 'core回执front matter里没有acceptance_verdict、acceptance_scope、runtime_evidence字段，判定以disposition: RETURN为准；后继recheck-02的acceptance_verdict: PASS_PENDING_LOCAL只针对13号合同的读取层修订、N01–N06及所交冻结观测的有限范围消费，不含内核验收，不能回填给core。'
+  - “永不入队”出自更早的WAVE-1-REVIEW §4.4旧误判，07报告CA-01已将其撤回到正确范围，不是core口径；属于core本身并被撤回的是core MANIFEST影响面中“swake_up_all_locked/finish_swait在swait.c外无调用者”说法（msleep未命中限于文本扫描范围）。
+  - core/recheck-01与consumer-fix-02包本身未读，按要求不在本条范围内，对core逐项复判的细节未核。
+  - 主线MANIFEST.md里没有core专属行。
+- package: recheck-01
+  result_dir: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/
+  entry_files:
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/MANIFEST.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/evidence.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/results.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/observations/run.json
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/observations/static.json
+  results_frozen_short12: efb9846b88ec
+  mainline_review_path: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-01-review.md
+  mainline_review_record_id: CORE-CHECK-01-RECHECK-01-REVIEW-001
+  verdict_fields_verbatim:
+  - 'status: TARGETED_REVIEW_COMPLETE_CONSUMER_FIX_READY'
+  - 'disposition: RETURN'
+  - 'return_scope: "R01/R03 的证据读取与完整性传播；不是重做环境、全部研究或全部内核实验"'
+  - 'retained_evidence: SCOPED_RECORDED_OBSERVATIONS'
+  - 'reusable_verifier_accepted: false'
+  - 'reviewer_execution: false'
+  - 'mechanical_hash_check_by_reviewer: false'
+  - 'kernel_acceptance_verdict: NOT_ISSUED'
+  - 'acceptance_ceiling: PASS_PENDING_LOCAL'
+  - 'local_validation: "待执行面；本主线没有运行命令、解析器、测试或新负例。"'
+  - 'reviewed_commit_short12: b843d475367a'
+  - 'results_frozen_short12: efb9846b88ec'
+  - '（包MANIFEST）recheck_conclusion: VERIFIER_REPAIRED_M01_M12_MET_SAME_SOURCE_RERUN_COMPLETE_WITH_FINDINGS'
+  - '（包MANIFEST）status: final_for_recheck_01'
+  - '（检查点2026-10-01）status: PHASE2_RECHECK01_REVIEWED_DATA_ONLY_FOLLOWUP_READY'
+  - '（检查点2026-10-01）closed_in_reviewed_scope: [R02, R04]'
+  - '（检查点2026-10-01）reusable_verifier_disposition: RETURN'
+  accepted_scope: R02准入/安全门与R04后继版本/回读在所审范围内关闭；M01–M12具体变体成功记录和同源复跑受限观测保留；读取层因S01–S03退回，后由RECHECK-02关闭；不是内核验收。
+  not_run_layers:
+  - 11层未执行：V04.smp_or_real_scheduler、V05.irq_or_signal_context、V06.concurrent_wakeups、V07.ap_migration、V08.global_reachability、V09.real_timer_expiry、V10.real_timer_or_scheduler、V11.real_context_switch、V12.multicore_atomicity、V13.smp_stress、V14.existing_elf
+  - 未运行内核、未用QEMU、未做SMP/IRQ、未构建ELF（包MANIFEST §4、§9）
+  - CA-02全局可达性未由本检查判定
+  - V08只覆盖游标失序；正used_jiffies的计费时点未覆盖（14号§3）
+  - S01–S03新负例在回执时未由主线运行（后由consumer-fix-02执行方实跑）
+  - 主线未运行哈希、解析器或测试；无CI记录
+  later_errata_or_supersession:
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-02-review.md::front matter supersedes/§1
+    effect: 关闭本回执的S01–S03定点退回；保留全部旧原件和已关闭的R02/R04。（另据18号§3导航第1行：core记录消费时须同读consumer-fix-02复判和recheck-02回执）
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/MANIFEST.md::§3 S04
+    effect: 冻结evaluate2.judge在有效观测等于负控错误值时误报ERROR，由新包装修正；冻结预测和负控值未改。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-01-review.md::§2；agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/evidence.md::§7
+    effect: '回执§2接受撤回「swake_up_all_locked/finish_swait在swait.c外无调用者」的说法（evidence §7写明撤回对象是PR #17旧摘要）；msleep只限已交文本扫描范围。'
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/14-scheduler-ordering-followup.md::§3
+    effect: V08夹具设last_jiffies=jiffies使used_jiffies为0，复判同批日志不能算补测计费时点。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-INTEGRATION-03-review.md::§3
+    effect: 重申msleep无调用者和swait两函数文件外无调用者均不恢复；旧V02/V03/V10/V11所示的swait count问题（未修机制）不能作动态验证的可靠前提。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/MANIFEST.md::§1第4项（第121行） / evidence.md::§8；两批回读与旧原件不变见MANIFEST §8
+    effect: 包内自记的发布后修正：第一批f9ae2bce9a64在static缺失时V08仍判VALID，第二批efb9846b88ec已修正，旧批保留。
+  deferred_entry: 没有独立的deferred-findings.yaml。问题导航在主线18号§3导航表第1行（指向core/results.yaml的V00–V14/CA与consumer-fix-02复判）。包内问题在MANIFEST.md open_questions（第106–109行：CA-02全局可达性、V08回插候选、11层未执行）和results.yaml的r_items/m_items/cases。回执open_questions在第46–48行。V08候选转入14号CORE-SCHED-ORDER-02；S01–S03由RECHECK-02关闭。
+  consumer_cautions:
+  - 受限输出只供分析；不是内核正确性，也不是ELF/IRQ/SMP/上下文切换验收
+  - swait两函数无调用者已撤回，不得作现状或缩小影响面依据
+  - 'evaluate2/make_results2不是可复用验证器（reusable_verifier_accepted: false）；读取改用consumer-fix-02复判，但只限冻结格式和限定范围（FROZEN_SCHEMA_AND_SCOPED_REVIEW），不是无人值守验收'
+  - 顶层15项与宿主案例23个两个分母不混用，不沿用旧摘要的24
+  uncertain:
+  - 主线MANIFEST.md（2026-09-24版）只覆盖07–09首批六件，没有与本包相关的行。
+  - 18号§3导航第1行写的是core/results.yaml和consumer-fix-02复判，没有单列recheck-01/results.yaml。
+  - '本回执没有acceptance_verdict和runtime_evidence字段，只有acceptance_ceiling和disposition: RETURN。本回执被RECHECK-02回执supersede后，主线没有见到对reusable_verifier_accepted: false的明确改写（只用grep查了lead目录）。'
+  - 主线回执说明a46_check.py、final_check2.py、build_evidence2.py三个程序未全文审查。
+  - “旧摘要的24”出自哪份摘要未核（推测是PR17正文，未读PR）。
+  - 勘误搜索只按路径和短号关键词grep了主线lead目录与执行分支结果目录，可能漏掉未引用这些路径的口径收窄。
+  - 本次只读确认提交对象存在、b843d475367a→HEAD本包无改动；未运行任何程序，也未重算哈希。
+- package: consumer-fix-02
+  result_dir: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/
+  entry_files:
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/MANIFEST.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/evidence.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/results.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/observations/n06_revalidation.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/observations/consumer_tests.json
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/fixtures/consumer3.py
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/fixtures/make_results3.py
+  results_frozen_short12: 77faf51e9a43
+  mainline_review_path: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-02-review.md
+  mainline_review_record_id: CORE-CHECK-01-RECHECK-02-REVIEW-001
+  verdict_fields_verbatim:
+  - 'status: BOUNDED_RECHECK_CLOSED'
+  - 'acceptance_verdict: PASS_PENDING_LOCAL'
+  - 'acceptance_scope: "13号合同的读取层修订、N01-N06、所交冻结观测的有限范围消费；不含内核验收。"'
+  - 'remaining_return_items_in_contract13: []'
+  - 'consumer_use: FROZEN_SCHEMA_AND_SCOPED_REVIEW'
+  - 'unattended_kernel_acceptance_authorized: false'
+  - 'kernel_acceptance_verdict: NOT_ISSUED'
+  - 'reviewer_execution: false'
+  - 'reviewer_hash_or_parser_run: false'
+  - 'local_validation: "真实 ELF/IRQ/SMP/上下文切换仍待执行面；不要求把本次同一批 Python 检查再搬回本机重复执行。"'
+  - 'pr17_merge_recommendation: READY_AS_SCOPED_RECORDS_AT_REVIEWED_HEAD'
+  - 'branch_release: false'
+  - 'reviewed_commit_short12: 0d62c4d19711'
+  - 'results_frozen_short12: 77faf51e9a43'
+  - '（包MANIFEST）recheck_conclusion: S01_S03_REPRODUCED_ON_B843_CONSUMER_FIXED_N01_N06_MET_RECORDED_OBSERVATIONS_UNCHANGED'
+  - '（包MANIFEST）status: final_for_recheck_02'
+  - '（检查点2026-10-02）status: PHASE2_CONSUMER_CHECK_CLOSED_SCHEDULER_WITNESS_READY'
+  - '（检查点2026-10-02）acceptance_scope: bounded_contract13_consumer_recheck'
+  accepted_scope: 13号合同读取层修订：S01–S03在b843复现并修正，N01–N06和S04修正被接受；N06是已交观测复判，PASS_PENDING_LOCAL，不含内核验收。
+  not_run_layers:
+  - '未编译或运行C夹具，未重跑H00，未做全树扫描（c_fixtures_compiled_or_run/h00_rerun/full_tree_scan: false）'
+  - 未改内核，未用QEMU，未装工具
+  - 真实ELF/IRQ/SMP/上下文切换未运行；CA-02全局可达性仍开放
+  - V08回插顺序候选（CORE-SCHED-ORDER-02）不在本包执行
+  - R02/R04本轮未重跑
+  - 第二次运行的原始stdout未保存，不补造
+  - 主线未运行解析、哈希或测试；未查到combined statuses或PR触发的workflow
+  later_errata_or_supersession:
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-CHECK-01-recheck-02-review.md::§3
+    effect: 本包open_question（run.json缺失时静态项一并判为不完整）被裁定为可接受的保守选择，但只限本包格式，其他项目不自动继承。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-ORDER-02-review.md::§1/§5
+    effect: 确认两次consumer补修的收口继续有效，没有撤回；新实验不继承旧验收，也不恢复无调用者断言。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/15-scheduler-ordering-witness-contract.md::existing_files_frozen（第22行）+ §7（第132行）
+    effect: 0d62c4d19711中的文件冻结，后续实验不得改consumer-fix-02原件，guard3前缀不得放宽成白名单。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/deferred-findings.yaml::cross_links CORE-CHECK-01::V02/V03/V10/V11
+    effect: 被DRU-01触及，change为无；消费时须一起读recheck-02审查。
+  deferred_entry: 没有独立的deferred-findings.yaml。问题导航在主线18号§3导航表第1行（core/recheck-01/consumer-fix-02/复判，须同读recheck-02审查）。包内问题在MANIFEST.md open_questions（第94–96行）、results.yaml的old_side/new_tests/recorded_observation_revalidation，以及evidence.md
+    §6–§7。跨包交叉链接在user-vfs-baseline-05/deferred-findings.yaml第950–953行。
+  consumer_cautions:
+  - PASS_PENDING_LOCAL只覆盖13号读取层和N01–N06；不是内核功能通过
+  - N06是已交观测复判，不算新增一次内核或宿主实跑
+  - 只接受第一次原始输出和重复摘要；第二次stdout不补造
+  - 预期对象集合沿用producer选择范围；不证全仓覆盖，不恢复无调用者断言
+  uncertain:
+  - 主线MANIFEST.md没有与本包相关的行。
+  - 主线回执说明build_evidence3.py未全文审查；大JSON和results.yaml只按区段抽查，没有逐字节核验全部26件。
+  - 最新检查点2026-10-25没有直接提到本包；它对本包的现行状态沿用2026-10-02检查点和recheck-02回执，未见更新的收窄。
+  - 回执和包内都没有runtime_evidence字段。
+  - 勘误搜索只按路径和短号关键词grep，可能漏掉未引用这些路径的后继口径。
+  - 本次只读确认0d62c4d19711→HEAD本包无改动；未运行任何程序，也未重算哈希。
+- package: scheduler-order-02
+  result_dir: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/
+  entry_files:
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/MANIFEST.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/evidence.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/results.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/observations/runs.json
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/observations/controls.json
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/fixtures/fx_order.c
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/fixtures/evaluate_order.py
+  results_frozen_short12: 5078686e8267
+  mainline_review_path: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-ORDER-02-review.md
+  mainline_review_record_id: CORE-SCHED-ORDER-02-REVIEW-001
+  verdict_fields_verbatim:
+  - 'status: BOUNDED_WITNESS_REVIEW_COMPLETE'
+  - 'reviewed_commit_short12: f36b89b8a53a'
+  - 'acceptance_verdict: PASS_PENDING_LOCAL'
+  - 'acceptance_scope: "15号合同的W01-W08宿主原函数见证与三项结果控制；不是调度器或内核正确性验收"'
+  - 'remaining_return_items_in_contract15: []'
+  - 'kernel_acceptance_verdict: NOT_ISSUED'
+  - 'reviewer_execution: false'
+  - 'reviewer_hash_or_parser_run: false'
+  - 'pr17_merge_recommendation: READY_AS_SCOPED_RECORDS_AT_REVIEWED_HEAD'
+  - 'branch_release: false'
+  - 'phase3_entered: false'
+  - 'local_validation: "待执行面；本主线未编译、运行、解析或计算哈希。无需为本次接收重跑同一批宿主实验。"'
+  accepted_scope: 按15号合同接收W01–W08宿主原函数见证（W01游标；W02与W07第1步计费时点失序；W07第2步观察到失序影响下一次选择）与三项结果控制，作为有限实验记录；不是调度器或内核正确性验收。
+  not_run_layers:
+  - CA-02全局可达性
+  - 真实时钟、IRQ、SMP、上下文切换（W07/W08的current替换只是序列模型）
+  - 真实内核/ELF运行与QEMU
+  - 任何修改后的函数（只改游标或候选A）未执行
+  - Release/优化构建与实际内核构建（仅-O0宿主编译退出0）
+  - 主线未重跑W01–W08、未重算摘要、未逐字节审全部runs.json/results.yaml
+  - CI：执行头combined statuses与PR workflow查询为空，不作为通过
+  later_errata_or_supersession:
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/integration.md::§1 C4（第170行）与 §7（DV-11，第333行）
+    effect: integration-03更正此前的理解（ORDER-02回执第102行“只改游标可能先解引用anchor容器”与MANIFEST §3的条件推断，integration概括为“只改游标才会读anchor”）：原函数在单普通任务+idle、时间片到期时已会经anchor求伪任务指针并读取（DV-11，源码推导，未执行）；主线INTEGRATION-03回执§1/§5限定为源码表达式路径，不推出真实机器必定加载。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/integration.md::§2 W04行与§5对应表
+    effect: 收窄W04含义：原函数中W04不是并列比较见证，A下才成为首个并列输入。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/integration.md::§7“W夹具与源码的差异”
+    effect: W夹具idle键为0/7而源码为2^64-1；不改W01/W02/W07结论，但需NR-4复核（NOT_RUN）。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/integration.md::§7（DV-06/DV-07/DV-08）
+    effect: 细化“只修pick不够”（对应ORDER-02回执§3的头插推导）：零键新任务头插不制造逆序（DV-06）；入队造成的逆序只来自高键普通唤醒（DV-07），会被后续切换消费（DV-08）；pick回插仍是另一逆序来源。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-INTEGRATION-03-review.md::§1
+    effect: 主线确认W01/W02/W07见证继续有效、无新增动态证据；未撤回ORDER-02接收。
+  deferred_entry: agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md §3“调度回插见证”行（W01–W08，冻结5078686e8267）；原始条目在本包results.yaml的scenarios W01–W08与observations/runs.json，并由scheduler-integration-03/facts-and-regressions.yaml的witness_refs引用。本包无独立延期ID表。
+  consumer_cautions:
+  - all_selection_matches_oracle=true只表示符合“取队首”模型，不证明选到最小vruntime
+  - structure_ok只覆盖所列前向遍历/count/重复/idle检查，非全部链表、并发或生命周期性质
+  - 原函数返回后、模型切换前current_occurrences=1是过渡态，不是重复入队
+  - 候选P与头插判断均非已采用政策；见证不外推到真实时钟/IRQ/SMP/切换
+  uncertain:
+  - 主线MANIFEST.md（2026-09-24）只登记07批六件，没有本包相关行。
+  - 回执front matter没有runtime_evidence字段；只有local_validation与evidence_class。
+  - 本包没有独立的延期问题ID表，deferred_entry据18号§3导航与integration-03的witness_refs判断。
+  - fixtures/common4.py的REPO默认是云端/home/user/MyOS2（可用MYOS2_REPO覆盖）；本次未运行，按任务不重跑W01–W08。
+  - results.yaml只读了头部与顶层键定位，runs.json未读；未逐项复核W场景数值。
+- package: scheduler-integration-03
+  result_dir: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/
+  entry_files:
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/MANIFEST.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/integration.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/facts-and-regressions.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/evidence.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/records/d01_index.json
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/records/anchors_check.json
+  results_frozen_short12: b7fa83583e35
+  mainline_review_path: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-INTEGRATION-03-review.md
+  mainline_review_record_id: CORE-SCHED-INTEGRATION-03-REVIEW-001
+  verdict_fields_verbatim:
+  - 'status: PARTIAL_ACCEPTANCE_SPEC_ERRATA_REQUIRED'
+  - 'reviewed_commit_short12: ee9e6a738224'
+  - 'acceptance_verdict: RETURN'
+  - 'acceptance_scope: "退回范围仅限候选/未来回归规格的两处一致性问题；已读静态事实和历史见证继续按限界使用。"'
+  - 'accepted_partial_scope: "D01定点索引的可追溯形态、D02/D03局部生命周期与计费分析、已有W/V引用及开放缺口；不是151条语义逐项认证。"'
+  - 'returned_items: [IR-01, IR-02]'
+  - 'acceptance_ceiling: PASS_PENDING_LOCAL'
+  - 'kernel_acceptance_verdict: NOT_ISSUED'
+  - 'reviewer_execution: false'
+  - 'kernel_change_authorized: false'
+  - 'candidate_A_adopted: false'
+  - 'candidate_B_adopted: false'
+  - 'OD_1_status: DEFERRED_NOT_ADOPTED'
+  - 'OD_2_status: DEFERRED_NOT_ADOPTED'
+  - 'branch_release: false'
+  - 'phase3_entered: false'
+  - 'next_does_not_require_kernel_repair: true'
+  - 'local_validation: "待执行面；没有运行扫描、解析器、哈希、C/ASM、QEMU或内核。"'
+  accepted_scope: 部分接收：D01定点索引的可追溯形态、D02/D03局部生命周期与计费分析、已有W/V引用及开放缺口；IR-01/IR-02两处规格退回（后经M00处置关闭）；不是151条语义逐项认证。
+  not_run_layers:
+  - 未编译或运行任何C/ASM，未重跑W/V/M/N
+  - NR-1…NR-6全部NOT_RUN
+  - 候选A、B未实施、未采用；OD-1、OD-2为DEFERRED_NOT_ADOPTED，键下限未定
+  - DV-11实际机器读取、DV-13/DV-23运行可达性、DV-19完整时序未验证
+  - 真实ELF、IRQ、in_atomic、SMP、上下文切换、CA-02全局可达性未验证
+  - 主线未运行scan_index/verify_anchors/check_scope、解析器或哈希
+  later_errata_or_supersession:
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-INTEGRATION-03-review.md::§4 IR-01
+    effect: NR-6的expected/all对idle键0分支错误（应为N2=50、N1=40、idle区间10），属测试规格错误，不是新内核bug。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-INTEGRATION-03-review.md::§4 IR-02
+    effect: B/must_keep不能无差别继承A全部保持项（与A保留普通唤醒头插冲突）。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-SCHED-INTEGRATION-03-review.md::§5
+    effect: 收窄：MANIFEST“需定位的定义全部找到”不准确（10个未定位）；12条gap为11条open、1条narrowed_or_closed；signal_wake_up_state返回值总括；151/151非语义认证。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/integration-03-disposition.md::supersedes_scope（M00）
+    effect: 取代NR-6输入适用性与统一expected、B/must_keep两条（改列B-K1…B-K10）、integration.md C3末句（disposition原文标“§2 C3”，实际位于§1 C3第146行）、MANIFEST D01行，以及OD安全默认被读作授权的可能；原件未改。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-MM-BASELINE-04-review.md::§2 M00、§3 MR-01
+    effect: 主线关闭IR-01/IR-02指定矛盾；另指出disposition第162行键下限总括漏前提（MR-01）。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/mm-04-disposition.md::§1 MR-01
+    effect: 取代disposition第162行“仍会先运行一次”，按大于/等于/小于/无非idle队首四种情形改写；OD-2仍未选。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-VFS-BASELINE-05-review.md::§2
+    effect: 主线关闭MR-01文字项；A/B与键下限仍未采用。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/deferred-findings.yaml::cross_links（SF-C3-37、DV-19、OD-1、OD-2、候选A/B）
+    effect: 只做交叉链接，change为“无”或“仅引用”，不改原条目状态。
+  deferred_entry: agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md §3“调度生命周期、A/B、DV/GAP、NR”行；原始条目在本包facts-and-regressions.yaml：source_facts（SF-ACC/SF-C1…SF-C5/SF-LST共151条）、derivations
+    DV-01…DV-24、gaps GAP-01…GAP-11与GAP-NARROWED、owner_decisions OD-1/OD-2、future_regressions NR-1…NR-6、candidate_changes A/B；05包deferred-findings.yaml cross_links另有交叉链接。
+  consumer_cautions:
+  - 495为按查询累计命中行；151/151非语义认证；MANIFEST“定义全部找到”不准确
+  - scan_index为词法检索，visible_active_text不等于实际预处理选中、链接或运行
+  - A/B、键下限未采用，NR-1…NR-6为NOT_RUN；NR-6与B保持项按M00处置后口径读
+  - DV-11/13/19/23属源码条件推导；scan_index的REPO是云端固定路径，只可适配重绑定
+  uncertain:
+  - 主线MANIFEST.md（2026-09-24）没有本包相关行。
+  - 回执front matter没有runtime_evidence字段。
+  - 原回执的acceptance_verdict仍是RETURN，没有改写；IR-01/02的关闭只见于MM-04回执§2和MM检查点，没有为INTEGRATION-03另出新回执。
+  - facts-and-regressions.yaml（2888行）、evidence.md、d01_index.json没有通读；ID范围靠grep定位，DV按文件顺序排为DV-13、DV-15…DV-22、DV-14、DV-23，24个都在。
+  - scan_index/check_scope的REPO固定为/home/user/MyOS2；本次没有运行，本地适配入口是否已建、是否已核对，这里没有查。
+- package: mm-baseline-04
+  result_dir: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/
+  entry_files:
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/MANIFEST.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/memory-baseline.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/integration-03-disposition.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/facts-and-dependencies.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/evidence.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/records/facts_check.json
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_facts_check.py
+  results_frozen_short12: eb75b3100601
+  mainline_review_path: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-MM-BASELINE-04-review.md
+  mainline_review_record_id: CORE-MM-BASELINE-04-REVIEW-001
+  verdict_fields_verbatim:
+  - 'status: BOUNDED_BASELINE_RECEIVED_DOCUMENTATION_CORRECTIONS_QUEUED'
+  - 'acceptance_verdict: RETURN'
+  - 'returned_items: [MR-01, MR-02]'
+  - 'returned_scope: "仅两处报告总括/条件表述；由下一任务U00追加校正，不退回内核、不要求重做内存盘点。"'
+  - 'accepted_partial_scope: "四个子系统21个代表能力、39条依赖的静态资料形态和已读范围；M00原IR-01/IR-02的指定矛盾已处理；新疑点仍为静态待核。"'
+  - 'acceptance_ceiling: PASS_PENDING_LOCAL'
+  - 'kernel_acceptance_verdict: NOT_ISSUED'
+  - 'prior_IR_01_disposition: CLOSED_AS_SPEC_CORRECTION_NOT_RUNTIME'
+  - 'prior_IR_02_disposition: CLOSED_EXPLICIT_KEEPS_WITH_MR_01_NEW_QUALIFIER'
+  accepted_scope: 部分接收：四个内存子系统（page_alloc/kmalloc/vm_map/fault）21个代表能力、39条依赖的静态资料与已读范围，以及M00对IR-01/IR-02指定矛盾的规格处置；整包因MR-01/02保留RETURN，内存正确性未验收。
+  not_run_layers:
+  - '内核构建与运行、QEMU、C/ASM编译运行均未做（runtime: NOT_RUN）'
+  - NV-1…NV-3宿主夹具候选NOT_RUN（host_fixture_execution_authorized=false）
+  - NV-4…NV-6需完整内核构建与QEMU授权，NOT_RUN
+  - 候选A、B与键下限（OD-2）均未采用、未实施；未重跑W/V/M/N
+  - 内存缺失项（回收、OOM、per-CPU、大页、swap、mprotect等）未逐项检索
+  - 主线审查未运行脚本、解析器、哈希；负面探针副本未交付，主线未重跑
+  later_errata_or_supersession:
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-MM-BASELINE-04-review.md::§1
+    effect: evidence前部“9个探针”以完整记录的10个负面探针为准；80条引文不能合成“机制已证明正确”。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/mm-04-disposition.md::§1 MR-01
+    effect: 取代integration-03-disposition.md第162行“插在队首之前，因此仍会先运行一次”，改为按大于/等于/小于队首和无非idle队首分支说明。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/mm-04-disposition.md::§2 MR-02 及 front matter supersedes_scope/reviewed_retained
+    effect: 32处MR-02旧句（PageBuddy恒假、永不合并、本pin不可达、只增不减等）中，30处收窄为带前提推导，2处（“先碎片化再耗尽”“大概率只占时间片”）撤回；加MR-01的1处取代，合计33处；7处复查保留；原件不改。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/deferred-findings.yaml::status_changes
+    effect: MC-01的“不合并”降为needs_evidence（局部疑点仍为static_concern）；LB-08改needs_evidence；RF-01改superseded_interpretation；MC-05/16/23仍为static_concern，只收窄措辞；DR-02在构建文本前提下静态追到completion等待，LB-06改partially_connected，GAP-M04改narrowed；GAP-M06仍open（只补充LINK_TYPE=static文本）。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-VFS-BASELINE-05-review.md::§2
+    effect: MR-01按CLOSED_DOCUMENTATION_ONLY、MR-02按CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF关闭；旧MM回执保留历史RETURN，不等于buddy正确或GAP-M08闭合。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-10-25-user-vfs-reviewed-local-handoff-ready.md::front matter supersedes
+    effect: 在主线检查点层面取代2026-10-02 MM回收检查点（supersedes_scope：05已获限定接收、后续切本地执行、不再派云端baseline研究）；不是04包内容勘误，也不改04回执的RETURN。
+  deferred_entry: 18-deferred-findings-and-resume.md §3“四个内存子系统”行→mm-baseline-04/facts-and-dependencies.yaml：concerns MC-01…MC-25（20项，编号间断）、dependency_risks DR-01…DR-06、link_breaks LB-01…LB-09、refuted_claims
+    RF-01…RF-05、gaps GAP-M01…GAP-M10、next_validation_candidates NV-1…NV-6；跨任务引用为CORE-MM-BASELINE-04::<ID>；后续状态变更与MR-01/02勘误见user-vfs-baseline-05/deferred-findings.yaml的status_changes、cross_links、errata。
+  consumer_cautions:
+  - 落在05 mm-04-disposition supersedes_scope中的旧句，以该处置文件写法为准
+  - connected_body/partial_body只是实现证据状态，不折算成正确性或运行通过
+  - 不合并/PageBuddy判假只在已查初值与Q34范围内成立，GAP-M08仍开放
+  - 80条引文与检查器all_ok只是机械一致性；NV-1…NV-6全部NOT_RUN
+  uncertain:
+  - 主线MANIFEST.md（2026-09-24）只覆盖07–09批次，没有任何与mm-baseline-04相关的行。
+  - 04回执front matter没有acceptance_scope、runtime_evidence字段；运行层NOT_RUN取自包内memory-baseline.md的runtime字段与MANIFEST。
+  - '04包MANIFEST写status: final_for_mm_baseline_04，回执给RETURN；05回执只关闭MR-01/02文字项并保留历史RETURN，未把04整包改判为PASS_PENDING_LOCAL。'
+  - 云端HANDOFF §3：云端scratch中mm04目录只列了目录名，登记为CLOUD_SCRATCH_NOT_INVENTORIED，可能含04的生成器或探针驱动；04 YAML头注明由scratch数据生成。
+  - 04检查器import 03的scan_index.py，其REPO固定为云端路径/home/user/MyOS2（mm_scope.py的REPO同样固定）；本子任务没有运行，也没有核本地适配结果。
+  - 04主正文§0等处仍保留已被收窄的原句（原件冻结不改），只读原件的消费者需要同时读05处置文件。
+  - 04 YAML共4269行，只按定位读取了相关区段，没有通读。
+  - 确认293a9e3ef5f4到9c36fb3ba7ff之间04包文件无差异，de7c96ede546到293a9e3ef5f4之间也无差异。
+  - 04包的MANIFEST.md、evidence.md、records/after_results/和records/scope_stage.json是de7c96ede546文档提交新增的，不在结果冻结eb75b3100601中。
+- package: user-vfs-baseline-05
+  result_dir: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/
+  entry_files:
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/MANIFEST.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/user-vfs-baseline.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/mm-04-disposition.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/facts-and-dependencies.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/deferred-findings.yaml
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/evidence.md
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/records/facts_check.json
+  - agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_facts_check.py
+  results_frozen_short12: 22934124fe92
+  mainline_review_path: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-VFS-BASELINE-05-review.md
+  mainline_review_record_id: CORE-USER-VFS-BASELINE-05-REVIEW-001
+  verdict_fields_verbatim:
+  - 'status: BOUNDED_STATIC_BASELINE_ACCEPTED_EXECUTION_HANDOFF_READY'
+  - 'acceptance_verdict: PASS_PENDING_LOCAL'
+  - 'acceptance_scope: "U00处置及U01-U04代表静态资料的限定接收；不是全部源码断言、运行正确性或全量002R/003R验收。"'
+  - 'acceptance_ceiling: PASS_PENDING_LOCAL'
+  - 'MR_01: CLOSED_DOCUMENTATION_ONLY'
+  - 'MR_02: CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF'
+  - 'kernel_acceptance_verdict: NOT_ISSUED'
+  - 'runtime_evidence: NOT_RUN'
+  accepted_scope: 限定接收：U00对MM-04两项文档问题的处置，以及U01–U04中sched.forkexec、fs.vfs各9个和边界2个代表能力、六条链、43条边的静态资料；不是全部源码断言、运行正确性或全量002R/003R验收。
+  not_run_layers:
+  - '内核构建与运行、QEMU、C/ASM、cmake、宿主安装脚本均未运行；旧测试H00/V/W/M/N未重跑（runtime_evidence: NOT_RUN）'
+  - NVU-1、NVU-3宿主夹具候选NOT_RUN（host_fixture_execution_authorized=false）
+  - NVU-2完整内核构建候选NOT_RUN（full_kernel_build_authorized=false）
+  - NVU-4…NVU-6需完整构建与QEMU授权，NOT_RUN
+  - 候选A、B与键下限均未采用
+  - 主线审查未运行检查器、解析器、哈希，也未复跑12个负面探针；执行方运行过新的Python文本检查器
+  later_errata_or_supersession:
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-VFS-BASELINE-05-review.md::§3 消费限定
+    effect: 把05 MANIFEST“没有运行任何内核、程序或脚本”收窄为：只是没有运行内核、C/ASM、构建/安装和旧测试，执行方实际运行过新Python检查器。
+  - ref: agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-VFS-BASELINE-05-review.md::§3 消费限定
+    effect: “六条链可讲清”只限所读文本，endpoint/broken段不能画成运行闭环；VT-FR01只是公式结果，R3负长度不能解释为必然机器终态。
+  - ref: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/HANDOFF.md::§3–§4
+    effect: '仅补充保全状态，不是勘误：05 evidence写明生成脚本和探针驱动/副本留在scratch未交付；云端收尾保全了探针驱动（A1）和uv05/gen/ 18个文件中的3个（A2–A4）；其余生成器文件、docs模式scope_docs.json和三条文档提交回读记录未保全；scratch_preservation: PARTIAL。'
+  deferred_entry: user-vfs-baseline-05/deferred-findings.yaml：findings CORE-USER-VFS-BASELINE-05::UV-01…UV-16（UV-04、UV-09、UV-13、UV-14为needs_evidence，其余12项为deferred_owner_not_ready）、errata CORE-MM-BASELINE-04-REVIEW-001::MR-01/MR-02、status_changes
+    10项、cross_links 13项；GAP-U01…GAP-U10见facts-and-dependencies.yaml的gaps与user-vfs-baseline.md §8，NVU-1…NVU-6见§7。
+  consumer_cautions:
+  - 六条链只限所读文本，endpoint/broken段不能画成真实运行闭环
+  - VT-FR01是公式结果；负长度不能解释为某种必然的机器终态
+  - “未运行”只指内核/C/ASM/构建/旧测试，新Python检查器实际运行过
+  - 单个源码条件、词法负检索、子代理意见都不能升级为全局可达性或运行认证
+  uncertain:
+  - 18号§3导航表（2026-10-02写成）和主线MANIFEST.md都没有05的行；05入口只能靠05 MANIFEST恢复顺序、05回执和2026-10-25检查点确定。
+  - '检查点写的是MR_02: CLOSED_BY_NARROWING，回执原值是CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF，两处措辞不同，以回执为准。'
+  - 05 MANIFEST的U00写“MR-02 收窄 33 处”，但supersedes_scope实际是MR-01 1处加MR-02 32处，合计33处。
+  - 05文档提交（293a9e3ef5f4）的docs模式检查输出scope_docs.json和三条回读记录只存在于云端，未保全（HANDOFF §3）。
+  - 本子任务没有核本地L02对05的静态复核是否已运行，也没有核其结果；05检查器依赖链uv→mm→scan_index中的固定REPO为/home/user/MyOS2。
+  - facts-and-dependencies.yaml（4592行）和deferred-findings.yaml（953行）只按定位读取，没有通读。
+  - 确认293a9e3ef5f4到9c36fb3ba7ff之间05包文件无差异；该区间只新增了execution-handoff-06/cloud/下的5个文件。
+  - 05包的MANIFEST.md、evidence.md和records/readback_results.json是293a9e3ef5f4文档提交新增的，不在结果冻结22934124fe92中。
+next_safe_analysis_gaps:
+- id: GAP-U03
+  title_verbatim: set_init_mount、set_init_taskfs、init_mount(devtmpfs) 的正文未逐行读；找不到根分区时的行为未知
+  status_verbatim: open
+  endpoint_or_scope: 调用点 mykernel/fs/vfs/myos_vfs.c::myos_switch_to_root_disk 第142–145行（A-C1-07原文）；被调正文 set_init_mount、set_init_taskfs、init_mount（05未给定义路径；本次只读 git grep 在 a039d9803ade 定位为 mykernel/fs/vfs/myos_vfs.c::set_init_mount
+    第42行、::set_init_taskfs 第49行、mykernel/fs/vfs/init.c::init_mount 第16行）
+  evidence_entry: facts-and-dependencies.yaml capabilities fs.vfs.root_switch（failure_path、not_covered）；anchors A-C1-05/A-C1-06/A-C1-07；queries Q07/Q18/Q37；chains C1 failure_cleanup；deferred-findings.yaml
+    UV-01 unknown；user-vfs-baseline.md §3 C1 失败边界（第110行）
+  static_only_possible: true
+  authorization_needed: 读正文只需静态只读（git对象只读查询）；05未设针对找不到根分区的运行候选；UV-01（unknown含GAP-U03）的future_verification为NVU-5，但NVU-5目的为首个程序缺失或损坏，这里只借用其前置条件（完整内核构建与QEMU授权、可修改测试镜像），当前均未授权，由Owner另定
+  why_prioritized: 它是C1启动链和UV-01 unknown所列的直接未读端点，正文与调用点都在钉住提交 a039d9803ade 内，正文可纯静态补读；找不到根分区时的实际行为能否只靠静态确定，未核。
+- id: GAP-U04
+  title_verbatim: syscall_return_via_sysret、ret_from_fork 与 pt_regs 内容（首个程序进入用户态与子任务返回时的寄存器来源）未追
+  status_verbatim: open
+  endpoint_or_scope: mykernel/arch/x86_64/entry/entry_64.S::syscall_return_via_sysret（E07原文）；调用侧 mykernel/arch/x86_64/myos/arch_task.c::kjmp_to_doexecve 第37–39行（A-C1-11）；ret_from_fork、copy_thread（05未给路径；本次只读
+    git grep 定位：ret_from_fork 在 mykernel/arch/x86_64/sched/context/process_arch.c 第63行，汇编入口 ret_from_fork_asm 在 mykernel/arch/x86_64/entry/entry_64.S 第255行（第272行调用 ret_from_fork），copy_thread 在 process_arch.c
+    第82行；都没有读正文，也不是05的结论）
+  evidence_entry: 'facts-and-dependencies.yaml edges E07（hits: []，目标汇编未读）；capabilities sched.forkexec.first_user_launch 与 sched.forkexec.fork_entry 的 not_covered；anchors A-C1-10/A-C1-11；chains C2 coverage_limits；deferred-findings.yaml
+    UV-01 unknown；user-vfs-baseline.md §3 C1 覆盖限制（第112行）'
+  static_only_possible: true
+  authorization_needed: 追汇编与pt_regs来源只需静态只读；若要确认实际寄存器值或进入用户态的运行结果，需完整内核构建/QEMU授权（UV-01 blocks.future_runtime 指向 NVU-4/NVU-5，当前未授权），由Owner另定
+  why_prioritized: 05在C1与C2的coverage_limits都列了GAP-U04，是两条链共同的未读端点；它也是UV-01 unknown所列两项之一，关系到判断exec失败后用哪个pt_regs进入用户态。
+- id: GAP-U05
+  title_verbatim: devtmpfs 与 /dev/console 的 f_op 未追；init 用 freopen 打开 /dev/console，本批读路径只覆盖 FAT32 普通文件
+  status_verbatim: open
+  endpoint_or_scope: devtmpfs 挂载调用点 mykernel/fs/vfs/myos_vfs.c::myos_switch_to_root_disk 的 init_mount("devtmpfs", "/dev", ...)（A-C1-07原文）；用户侧 myinitramfs/myinit/initd.c 的 freopen /dev/console（只见于C1 normal_path文字；Q16只检索fork/execve/sched_yield，不命中freopen行，05未给freopen的锚点或查询）；devtmpfs
+    内部与 /dev/console f_op（05未给路径；本次只读定位存在 mykernel/drivers/base/devtmpfs.c，console f_op 所在文件未定位）
+  evidence_entry: facts-and-dependencies.yaml capabilities fs.vfs.read_syscall not_covered；chains C4 coverage_limits；old_inputs_index OLD-U13（call_site_only）；anchors A-C1-07；queries Q16（仅覆盖initd.c的fork/execve/sched_yield，不覆盖freopen）；u04_usability.layer2
+    chain C4 runtime_prerequisites（涉及 /dev/console 的读写需要先追 devtmpfs）
+  static_only_possible: true
+  authorization_needed: 追 devtmpfs 与 console f_op 绑定只需静态只读；若要观察 /dev/console 实际读写行为，需宿主夹具或构建/QEMU授权（当前 host_fixture_execution_authorized=false、full_kernel_build_authorized=false），05没有为此设运行候选，由Owner另定
+  why_prioritized: 首个用户程序 init 会 freopen /dev/console 三次（C1 normal_path），而05读路径只覆盖FAT32普通文件；05原文只说涉及 /dev/console 的读写要先追 devtmpfs，没有把它列成 link_breaks 断点，也不是C4全部运行验证的前置（read行为可以先用NVU-1宿主夹具）。
+gaps_05_all_status:
+- GAP-U01:open
+- GAP-U02:open
+- GAP-U03:open
+- GAP-U04:open
+- GAP-U05:open
+- GAP-U06:open
+- GAP-U07:open
+- GAP-U08:open
+- GAP-U09:open
+- GAP-U10:open
+gaps_uncertain:
+- 05原文没有给出 set_init_mount、set_init_taskfs、init_mount、ret_from_fork、ret_from_fork_asm、copy_thread、devtmpfs 的定义路径；这些路径是在 a039d9803ade 上只读 git grep 定位的，只证明文件和符号存在，没有读正文，也不是05的结论。
+- /dev/console 的 f_op 在哪个文件没有定位（没有检索），GAP-U05 的端点只写到 devtmpfs.c 和调用点。
+- static_only_possible=true 只表示继续追正文和汇编可以只靠静态阅读；05没有把 GAP-U03/U04/U05 本身标成需要运行。05只经UV-01间接把GAP-U03/U04连到NVU-5（future_verification）与NVU-4/NVU-5（blocks.future_runtime）；没有为/dev/console实际读写设运行候选，NVU-1只针对simple_filemap_read。所需授权（宿主夹具、完整构建、QEMU）当前都没有给。
+- GAP-U04 中的 ret_from_fork/copy_thread 和 GAP-U09 的 copy_thread 有重叠；下一次分析如果两条一起做，需要注意范围划分。
+- 下一次是否进行静态分析、交给谁做，需要另行派发；这里没有替 Owner 作决定。
+- 只读了 gaps 段、GAP-U 相关段落、C1 节和相关的 facts 节点，没有通读 user-vfs-baseline.md 和 facts YAML 全文；隔离 clone 的 HEAD 已核对为 9c36fb3ba7ff。

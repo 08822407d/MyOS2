@@ -1,0 +1,195 @@
+{
+  "task_id": "CORE-USER-VMA-MERGE-22",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "incremental_conditional_deferred_findings",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "date": "2026-11-02",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task_contract_short12": "cffb519d089b",
+  "result_base_short12": "16baace7bd3c",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "VM22-F01",
+      "kind": "new_merge_target_uninitialized_path",
+      "status": "needs_evidence",
+      "title": "只后继匹配而prev非空时adjust_target未经赋值即用于NULL判断",
+      "claim": "simple_vma_merge声明adjust_target未初始化；merge_prev门失败且next匹配时仅在!prev分支赋target=next。如果prev非NULL，后续if(adjust_target==NULL)读未确定值，不能证明实际目标、改写或返回。",
+      "premises": [
+        "调用者传入有效非NULL prev且前驱未匹配",
+        "next非NULL并通过相容与pgoff检查",
+        "控制流到达adjust_target==NULL而此前没有其它赋值"
+      ],
+      "counterevidence": [
+        "prev真的匹配时adjust_target=prev；prev NULL且next匹配时adjust_target=next",
+        "初始VMA迭代与列表有效性、编译后行为未经测试；不证明实际崩溃"
+      ],
+      "source_anchors": [
+        "VM22-A014",
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A023",
+        "VM22-A024",
+        "VM22-A025",
+        "VM22-A055",
+        "VM22-A090"
+      ],
+      "related": [
+        "CORE-USER-VMA-LIFETIME-14::VL14-F01"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "VM22-F02",
+      "kind": "new_successor_adjacency_contract_gap",
+      "status": "needs_evidence",
+      "title": "后继候选只满足点包含和页偏移而不强制next.vm_start==end",
+      "claim": "next经vma_lookup(mm,end)获得，其实际谓词可以返回包含end的VMA；before-helper只检查相容与next.vm_pgoff==pgoff+pglen，没有直接确认next恰在end起始。",
+      "premises": [
+        "真实下一VMA覆盖end或起点不严格相邻，但页偏移巧合相等",
+        "其他合并必要条件成立，目标有效且调用定义良好",
+        "上游旧VMA处理未事先排除此输入"
+      ],
+      "counterevidence": [
+        "当end恰等next.start且前提满足时正常相邻候选可被选出",
+        "没有证明有一个真实mmap路径完成不相邻合并或破坏映射"
+      ],
+      "source_anchors": [
+        "VM22-A010",
+        "VM22-A017",
+        "VM22-A018",
+        "VM22-A021",
+        "VM22-A022",
+        "VM22-A059",
+        "VM22-A060",
+        "VM22-A092"
+      ],
+      "related": [
+        "CORE-USER-MMAP-PLACEMENT-21::AP21-F04",
+        "CORE-USER-VMA-LIFETIME-14::VL14-F01"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "VM22-F03",
+      "kind": "conditional_unchecked_compatibility_dimensions",
+      "status": "needs_evidence",
+      "title": "合并相容检查没有比较候选pgprot、vm_ops身份或vm_private_data",
+      "claim": "simple_is_mergeable_vma活动检查集中于vm_flags忽略SOFTDIRTY、vm_file指针及vm_ops.close非NULL；不比较候选vm_page_prot、vm_ops身份或vm_private_data。",
+      "premises": [
+        "至少两候选VMA相同flags/file/无close且页号条件满足",
+        "二者pgprot或回调/私有数据差异会影响所需映射语义",
+        "实际代码选出并正常合并这些对象"
+      ],
+      "counterevidence": [
+        "固定代表FAT32→generic_file_mmap没有证明这类差异生产者",
+        "接口不比较某字段本身不能证明必须比较它、也不能证明CPU权限已不安全"
+      ],
+      "source_anchors": [
+        "VM22-A007",
+        "VM22-A008",
+        "VM22-A010",
+        "VM22-A012",
+        "VM22-A030",
+        "VM22-A062",
+        "VM22-A063",
+        "VM22-A064",
+        "VM22-A066",
+        "VM22-A093"
+      ],
+      "related": [
+        "CORE-USER-MMAP-PROTECTION-20-REVIEW-001::R20-S02"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_appends": [
+    {
+      "qualified_id": "CORE-USER-VMA-LIFETIME-14::VL14-F01",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "本批首次merge之前的prev源为find_vma_prev_to_addr严格vm_end<addr，而前驱merge要求addr==prev.end；有效且未改写的prev无法同时满足，初始NULL迭代问题也仍存在。",
+      "source_anchors": [
+        "VM22-A001",
+        "VM22-A019",
+        "VM22-A055",
+        "VM22-A057",
+        "VM22-A077",
+        "VM22-A078",
+        "VM22-A090"
+      ],
+      "read_with": "R21-S02/R14-S02",
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-VMA-LIFETIME-14::VL14-F02",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "__simple_vma_adjust在merge中甚至start等于原prev.vm_start时仍执行vm_pgoff += (start - vm_pgoff)>>PAGE_SHIFT；构造的64位例中prev vm_pgoff1变16，反映旧单位问题，不能推成真实文件错页已发生。",
+      "source_anchors": [
+        "VM22-A003",
+        "VM22-A019",
+        "VM22-A020",
+        "VM22-A061",
+        "VM22-A066",
+        "VM22-A081"
+      ],
+      "read_with": "R14-S01",
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-VMA-LIFETIME-14::VL14-F03",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "__simple_vma_adjust对全部覆盖的next反复调用__vma_unlink_from_list，而后者只改map_count与list_header_delete_node；该路径无直接vm_area_free、fput或close，后继对象与文件引用仍须单独核对。",
+      "source_anchors": [
+        "VM22-A004",
+        "VM22-A069",
+        "VM22-A070",
+        "VM22-A071",
+        "VM22-A072",
+        "VM22-A094"
+      ],
+      "read_with": "R14-S02",
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-VMA-LIFETIME-14::VL14-F05",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "simple_mmap_region在第一次merge前先执行旧区间处理；初次merge失败后再分配VMA及调用文件回调，其后可能失败或再合并，返回错误不保证旧VMA拆链及引用回到入口状态。严格不推断sys_brk字段未恢复。",
+      "source_anchors": [
+        "VM22-A001",
+        "VM22-A027",
+        "VM22-A028",
+        "VM22-A029",
+        "VM22-A031",
+        "VM22-A042",
+        "VM22-A043",
+        "VM22-A044",
+        "VM22-A045"
+      ],
+      "read_with": "R14-S01",
+      "owner_action_now": "none"
+    }
+  ],
+  "old_reports_frozen": true,
+  "owner_decisions_requested_now": [],
+  "limits": [
+    "3 new conditional issues + 4 existing-root evidence appends, NOT seven new bugs",
+    "Uninitialized pointer read has no deterministic post-read state or runtime consequence",
+    "Existing VL14 pgoff/unlink/rollback root causes are not recounted as fresh bugs",
+    "C03 mainline must independently accept; no kernel patch/build/runtime authorized"
+  ],
+  "new_findings_count": 3,
+  "evidence_appends_count": 4
+}

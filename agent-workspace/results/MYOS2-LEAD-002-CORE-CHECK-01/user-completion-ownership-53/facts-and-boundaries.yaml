@@ -1,0 +1,436 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-COMPLETION-OWNERSHIP-53",
+  "record_type": "bounded_ownership_source_contracts",
+  "source_pin_short12": "a039d9803ade",
+  "produced_by": "unknown",
+  "prior": {
+    "R52_01": "OPEN_RETURN",
+    "requested": "R52-01_DOCUMENTATION_CLOSURE_REQUESTED",
+    "old52_unchanged": true,
+    "old52_other65_revalidated": false
+  },
+  "prior_batch52_manifest_supplement": {
+    "target": "user-wait-wake-consistency-52/MANIFEST.md",
+    "supersedes_fields": [
+      "produced_by",
+      "branch_canary_quotes"
+    ],
+    "produced_by": "unknown",
+    "reason": "backend identity not attestable",
+    "branch_canary_quotes": [
+      "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\",
+      "\tthis_cpu = smp_processor_id();"
+    ],
+    "source_pin_short12": "a039d9803ade"
+  },
+  "R52_correction_map": [
+    {
+      "source": "52 MANIFEST.produced_by",
+      "old": "missing",
+      "replacement": "unknown",
+      "consumer": "53 MANIFEST.prior_batch52_manifest_supplement"
+    },
+    {
+      "source": "52 MANIFEST.branch_canary_quotes",
+      "old": "missing labeled field",
+      "replacement": "two literal source canary lines, tab and trailing backslash retained",
+      "consumer": "53 MANIFEST+facts"
+    },
+    {
+      "source": "52 evidence WW52-C14",
+      "old": "definition_range=164-222",
+      "replacement": "164-215, original quote203-205 still inside kthread",
+      "consumer": "53 evidence CO53-R5201..03; 52 C.kthread_producer"
+    },
+    {
+      "source": "52 evidence WW52-C16",
+      "old": "definition_range=270-365",
+      "replacement": "270-309, original quote275-277 still inside kernel_init",
+      "consumer": "53 evidence CO53-R5204..06; 52 C.init_consumer"
+    },
+    {
+      "source": "52 deferred UV-01",
+      "old": "deferred_not_ready",
+      "replacement": "deferred_owner_not_ready",
+      "consumer": "53 deferred+facts; status spelling not changed by Owner"
+    }
+  ],
+  "correction_anchor_count": 6,
+  "new_53_anchor_count": 73,
+  "new_by_topic": {
+    "A": 23,
+    "B": 24,
+    "C": 26
+  },
+  "source_ledger": [
+    {
+      "key": "dev",
+      "path": "mykernel/drivers/base/devtmpfs.c",
+      "blob_short12": "633678e473c0",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "kt",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "blob_short12": "4782afc6b3f2",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "kb",
+      "path": "mykernel/arch/x86_64/myos/keyboard.c",
+      "blob_short12": "a40b5c7e56b3",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "ide",
+      "path": "mykernel/arch/x86_64/myos/ide.c",
+      "blob_short12": "39c36c8cc4f9",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "blk",
+      "path": "mykernel/arch/x86_64/myos/myos_block.h",
+      "blob_short12": "bc99d3b01204",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "ktype",
+      "path": "mykernel/include/obsolete/ktypes.h",
+      "blob_short12": "bb240bfc1918",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "init",
+      "path": "mykernel/init/main.c",
+      "blob_short12": "06a900f8d509",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "cc",
+      "path": "mykernel/kactive/completion/completion.c",
+      "blob_short12": "422ed6eee18b",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "ct",
+      "path": "mykernel/kactive/completion/completion_types.h",
+      "blob_short12": "9512b9489959",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "cm",
+      "path": "mykernel/kactive/completion/completion_macro.h",
+      "blob_short12": "093a687a05d4",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "slub",
+      "path": "mykernel/mm/kmalloc/slub.h",
+      "blob_short12": "b07c81bfc978",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "atomic",
+      "path": "mykernel/lock_IPC/atomic/atomic_macro.h",
+      "blob_short12": "d170e8799cf9",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "cx",
+      "path": "mykernel/arch/x86_64/insns/cmpxchg_api.h",
+      "blob_short12": "6ac3b567bf6e",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "opt",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "blob_short12": "6019436417ad",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    },
+    {
+      "key": "panic",
+      "path": "mykernel/debug/panic.c",
+      "blob_short12": "2e9d5b195559",
+      "fixed_ref": "a039d9803ade",
+      "scope": "complete_file_fetched"
+    }
+  ],
+  "objects": [
+    {
+      "id": "A-heap-req",
+      "storage_origin": "kzalloc(req_s)",
+      "initialization": "mode/uid/gid/name/dev, zeroed others if allocation succeeds; submit initializes done/next",
+      "publish": "requests under req_lock",
+      "last_read": "caller req.err after wait; worker fields before handle",
+      "last_write": "worker err before complete",
+      "notify": "worker complete(req.done)",
+      "release": "worker kfree(req)",
+      "counterexample": "worker free before caller read; opposite order also allowed",
+      "unknown": "reclamation/order/ownership"
+    },
+    {
+      "id": "A-stack-req",
+      "storage_origin": "automatic struct req in delete_node",
+      "initialization": "only mode/dev; submit done/next; name/uid/gid not assigned",
+      "publish": "same requests queue as &req",
+      "last_read": "worker handle argument fields; first indeterminate field evaluation",
+      "last_write": "worker would write err only if handle defined/returns",
+      "notify": "worker complete after handle in source",
+      "release": "worker unconditional kfree(req) would receive stack address",
+      "counterexample": "earlier undefined reads and handle_remove missing int return block defined continuation",
+      "unknown": "runtime invalid free not observed"
+    },
+    {
+      "id": "A-name/tmp",
+      "storage_origin": "create name from dev_name(dev), tmp literal NULL",
+      "initialization": "create assigns pointer; delete name uninitialized",
+      "publish": "req.name to worker",
+      "last_read": "worker handle name",
+      "last_write": "req.name from create",
+      "notify": "not independent",
+      "release": "submit kfree(NULL tmp), no name free",
+      "counterexample": "dev_name returns NULL early",
+      "unknown": "device name pointer lifetime"
+    },
+    {
+      "id": "B-create",
+      "storage_origin": "kmalloc(create info)",
+      "initialization": "threadfn/data/node/done/full_name/list; result producer assigned",
+      "publish": "kthread_create_list under lock",
+      "last_read": "new kthread early fields; creator result after wait",
+      "last_write": "xchg done NULL; producer result before notify",
+      "notify": "kthread or create_kthread",
+      "release": "creator kfree after result; NULL-done producer alternative",
+      "counterexample": "failure allocation/name/kernel_thread; unknown done-null origin",
+      "unknown": "framework producer lifetime"
+    },
+    {
+      "id": "B-stack-done",
+      "storage_origin": "DECLARE_COMPLETION_ONSTACK(done)",
+      "initialization": "completion macro",
+      "publish": "create.done=&done",
+      "last_read": "producer xchg returns pointer; creator wait",
+      "last_write": "complete increments done",
+      "notify": "success/failure producers",
+      "release": "automatic scope end",
+      "counterexample": "CA-04 stale swait count after wake",
+      "unknown": "real waiter return and object life"
+    },
+    {
+      "id": "B-full_name",
+      "storage_origin": "kvasprintf allocation",
+      "initialization": "create.full_name",
+      "publish": "kernel_thread name argument and self.full_name pointer transfer",
+      "last_read": "self.full_name may be used later",
+      "last_write": "self->full_name=create->full_name",
+      "notify": "separate done, not name",
+      "release": "failure kfree(full_name) or later free_kthread_struct()",
+      "counterexample": "name allocation failure before queue",
+      "unknown": "full task lifetime"
+    },
+    {
+      "id": "C-keyboard-completion",
+      "storage_origin": "file scope DECLARE_COMPLETION(getcode_done)",
+      "initialization": "static macro; no explicit reinit in init_keyboard read path",
+      "publish": "handler and reader use same address",
+      "last_read": "kbd_get_scancode wait",
+      "last_write": "complete(done) unless saturated",
+      "notify": "handler",
+      "release": "none within selected path",
+      "counterexample": "early accumulated done fast path versus queued wake with stale swait count",
+      "unknown": "IRQ/order/reinit elsewhere"
+    },
+    {
+      "id": "C-keyboard-buffer",
+      "storage_origin": "kzalloc p_kb",
+      "initialization": "p_head/p_tail/count0",
+      "publish": "handler and parser use p_kb",
+      "last_read": "kbd_get_scancode buffer/count",
+      "last_write": "handler count++; reader count--",
+      "notify": "handler complete separate object",
+      "release": "keyboard_exit kfree(p_kb), outside focus",
+      "counterexample": "buffer count not same as completion.done",
+      "unknown": "IRQ stop and circular buffer validity"
+    },
+    {
+      "id": "C-IDE-node",
+      "storage_origin": "two kzalloc objects: node and Params",
+      "initialization": "list/LBA/count/buffer/DevSpecParams/controller/disk/end_handler",
+      "publish": "node.done=&stack done; queued list; req_in_using pointer",
+      "last_read": "end_request node.done before complete; IRQ count gate",
+      "last_write": "end_request clears global req_in_using after complete",
+      "notify": "end_request",
+      "release": "ATA_disk_transfer after wait frees Params/node",
+      "counterexample": "consumer can free before producer clears global; producer has no further node deref in its own shown body",
+      "unknown": "real hardware later users"
+    },
+    {
+      "id": "C-IDE-done",
+      "storage_origin": "automatic stack completion per ATA_disk_transfer call",
+      "initialization": "DECLARE_COMPLETION_ONSTACK",
+      "publish": "node.done=&done",
+      "last_read": "end_request complete(node.done); caller wait",
+      "last_write": "complete done count",
+      "notify": "IRQ conditional",
+      "release": "automatic scope",
+      "counterexample": "wait may not normally return; duplicate irq unknown",
+      "unknown": "hardware/swait lifetime"
+    }
+  ],
+  "topics": {
+    "A": {
+      "status": "completed_in_scope",
+      "scope": "create/delete/submit/worker/handle fields and allocator front gates",
+      "findings": [
+        "CO53-F01",
+        "CO53-F02",
+        "CO53-F03"
+      ],
+      "key": "heap request vs stack request in same queue; release request by worker; read of heap err by consumer after wait"
+    },
+    "B": {
+      "status": "completed_in_scope",
+      "scope": "create_kthread/kthread/kthreadd/creator and xchg",
+      "key": "per-object last use: create.result written before done; create object not accessed by shown kthread after complete; full_name transferred on success"
+    },
+    "C": {
+      "status": "completed_in_scope",
+      "scope": "keyboard static named completion and IDE per-call done/node",
+      "key": "keyboard three counts not conflated; IDE producer complete then global pointer clear while consumer frees node after wait"
+    }
+  },
+  "candidates": [
+    {
+      "id": "CO53-F01",
+      "topic": "A",
+      "kind": "heap_req_completion_to_result_read_lifetime",
+      "relation": "WW52-U04 focused; existing gap not closed or duplicated as proven failure",
+      "first_boundary": "worker.kfree(req) might precede creator.req->err read",
+      "preconditions": [
+        "heap req from successful kzalloc",
+        "worker and creator both reach corresponding lines",
+        "wake allows wait normal return",
+        "kfree actually ends req lifetime before read"
+      ],
+      "not_established": [
+        "real interleaving",
+        "actual UAF",
+        "allocator reclamation timing"
+      ]
+    },
+    {
+      "id": "CO53-F02",
+      "topic": "A",
+      "kind": "delete_stack_req_uninitialized_and_conditional_invalid_free",
+      "relation": "separate producer/storage origin; distinct from heap lifetime case",
+      "first_boundary": "worker reads uninitialized name/uid/gid arguments before complete/kfree; handle_remove int has no active return",
+      "preconditions": [
+        "delete submits &req",
+        "worker takes it",
+        "continued evaluation only hypothetically if earlier undefined behavior avoided"
+      ],
+      "not_established": [
+        "defined reachability of kfree(stack)",
+        "runtime invalid free",
+        "true CPU result"
+      ]
+    },
+    {
+      "id": "CO53-F03",
+      "topic": "A",
+      "kind": "create_allocation_and_early_exit",
+      "relation": "separate local first-boundary from ownership after completion",
+      "first_boundary": "kzalloc NULL is immediately dereferenced; when dev_name returns NULL, create returns with allocated req not freed locally",
+      "preconditions": [
+        "allocation can fail or name can be NULL"
+      ],
+      "not_established": [
+        "such failure occurred",
+        "actual leak after broader ownership tracking"
+      ]
+    }
+  ],
+  "finite_poset_models": [
+    {
+      "id": "A01",
+      "scenario": "devtmpfs heap result read vs worker free",
+      "total": 4,
+      "free_before_read": 3,
+      "read_before_free": 1,
+      "example_free_first": [
+        "W_write",
+        "W_complete",
+        "W_free",
+        "C_wait",
+        "C_tmpfree",
+        "C_read"
+      ],
+      "example_read_first": [
+        "W_write",
+        "W_complete",
+        "C_wait",
+        "C_tmpfree",
+        "C_read",
+        "W_free"
+      ],
+      "limit": "conditional normal return and matching completion, not true interleaving"
+    },
+    {
+      "id": "B01",
+      "scenario": "kthread creator frees create before producer schedule call",
+      "total": 4,
+      "example": [
+        "P_result",
+        "P_complete",
+        "C_wait",
+        "C_read",
+        "C_free",
+        "P_schedule"
+      ],
+      "limit": "producer has no create deref after complete in shown kthread body, not full kernel_thread lifecycle"
+    },
+    {
+      "id": "C01",
+      "scenario": "IDE caller frees node before producer clears global pointer",
+      "total": 6,
+      "example": [
+        "P_complete",
+        "P_lock",
+        "C_wait",
+        "C_free",
+        "P_clear"
+      ],
+      "limit": "producer end_request has no node deref after complete in shown body; other IRQ users unknown"
+    }
+  ],
+  "old_ids": {
+    "UV_01": "deferred_owner_not_ready",
+    "WW52_U04": "needs_evidence",
+    "CA_04": "SUPPORTED_IN_SCOPE prior bounded",
+    "CA_03": "SUPPORTED_IN_SCOPE prior bounded"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "mainline_acceptance": "PENDING",
+  "not_established": [
+    "real schedule/IRQ/allocator",
+    "full VFS/slab/fork/driver",
+    "C compilation and configuration",
+    "hardware actual faults",
+    "true interthread timing and ownership transfer"
+  ]
+}

@@ -1,0 +1,133 @@
+{
+ "check": "GUARD3",
+ "read_time_utc": "2026-10-01T15:03:03Z",
+ "pins": {
+  "time": "a039d9803ade",
+  "master": "de3bb1df906a",
+  "taskbook": "57a7c3e0eebf",
+  "lead_recheck01": "ec62453e76d2",
+  "lead_recheck02": "b0aa54db1b70",
+  "core_frozen": "a1e7c2277705",
+  "core_results": "7e2fa84a9823",
+  "batch1": "f9ae2bce9a64",
+  "frozen_results": "efb9846b88ec",
+  "reviewed_input": "b843d475367a"
+ },
+ "gate": {
+  "review_receipt_binding": true,
+  "contract13_binding": true,
+  "lead_advanced_by_additions_only": true,
+  "inputs_unchanged": true,
+  "results_chain": true,
+  "on_execution_branch": true,
+  "head_descends_from_b843": true,
+  "b843_files_unchanged_only_additions_under_prefix": true,
+  "remote_on_same_line_and_contains_b843": true,
+  "kernel_source_branch_equals_pin": true,
+  "auxiliary_identity2_open": true,
+  "ok": true
+ },
+ "review_fields": {
+  "record_id": "CORE-CHECK-01-RECHECK-01-REVIEW-001",
+  "disposition": "RETURN",
+  "reviewed_pr": 17,
+  "reviewed_branch": "claude/dazzling-cori-q0dnyt",
+  "reviewed_commit_short12": "b843d475367a",
+  "results_frozen_short12": "efb9846b88ec",
+  "first_batch_short12": "f9ae2bce9a64",
+  "previous_core_short12": "a1e7c2277705",
+  "followup_id": "CORE-CHECK-01-RECHECK-02",
+  "followup_allowed_write_prefix": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/"
+ },
+ "contract13_fields": {
+  "followup_id": "CORE-CHECK-01-RECHECK-02",
+  "required_review_record": "CORE-CHECK-01-RECHECK-01-REVIEW-001",
+  "execution_branch": "claude/dazzling-cori-q0dnyt",
+  "execution_pr": 17,
+  "reviewed_input_short12": "b843d475367a",
+  "frozen_results_short12": "efb9846b88ec",
+  "allowed_write_prefix": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/consumer-fix-02/",
+  "old_files_must_remain_unchanged": true,
+  "kernel_fixture_execution_authorized": false,
+  "full_tree_scan_authorized": false
+ },
+ "lead_changes_since_previous_pin": [
+  "A\t13-core-evidence-consumer-recheck.md",
+  "A\t14-scheduler-ordering-followup.md",
+  "A\tcheckpoints/2026-10-01-recheck01-reviewed-consumer-fix-ready.md",
+  "A\treviews/CORE-CHECK-01-recheck-01-review.md"
+ ],
+ "inputs_unchanged": {
+  "since_previous_lead_pin": {
+   "12-core-check-recheck-contract.md": true,
+   "reviews/CORE-CHECK-01-core-review.md": true,
+   "reviews/CORE-CHECK-01-pilot-review.md": true,
+   "07-scheduler-wakeup-timer-audit.md": true,
+   "07-core-audit-map.yaml": true,
+   "MANIFEST.md": true,
+   "09-local-verification-contract.md": true,
+   "10-cloud-pilot-and-github-handoff.md": true,
+   "11-core-verification-cloud.md": true
+  },
+  "technical_since_taskbook": {
+   "07-scheduler-wakeup-timer-audit.md": true,
+   "07-core-audit-map.yaml": true,
+   "MANIFEST.md": true,
+   "09-local-verification-contract.md": true,
+   "10-cloud-pilot-and-github-handoff.md": true,
+   "11-core-verification-cloud.md": true
+  }
+ },
+ "efb_to_b843": [
+  "A\tMANIFEST.md",
+  "A\tevidence.md",
+  "A\tfixtures/build_evidence2.py",
+  "A\tobservations/after_batch2/identity_after_push.json",
+  "A\tobservations/after_batch2/readback_results.branch.json",
+  "A\tobservations/after_batch2/readback_results.object.json"
+ ],
+ "execution": {
+  "branch": "claude/dazzling-cori-q0dnyt",
+  "head_short12": "b843d475367a",
+  "remote_relation": "equal"
+ },
+ "b843_files": {
+  "under_recheck01": 32,
+  "under_results_root": 58,
+  "whole_tree": 1228
+ },
+ "changes_vs_b843": {
+  "committed": [],
+  "staged_not_additions_under_prefix": [],
+  "worktree_outside_prefix": []
+ },
+ "remote_refs_equal_pins": {
+  "master": true,
+  "time": true,
+  "agent/MYOS2-LEAD-002": true
+ },
+ "auxiliary_frozen_identity2": {
+  "gate": {
+   "core_review_record": true,
+   "core_review_input_refs": true,
+   "contract12_binding": true,
+   "technical_inputs_unchanged": true,
+   "lead_head_descends_from_taskbook": true,
+   "on_execution_branch": true,
+   "head_descends_from_reviewed_core": true,
+   "originals_unchanged": true,
+   "remote_on_same_line": true,
+   "remote_descends_from_reviewed_core": true,
+   "worktree_clean_outside_recheck": true,
+   "ok": true
+  },
+  "error": null,
+  "originals": {
+   "frozen_files": 26,
+   "changed_or_missing": [],
+   "added_outside_recheck": [],
+   "pilot_changed_since_pilot_head": []
+  }
+ },
+ "auxiliary_frozen_identity2_note": "protects pilot/core originals against a1e7c2277705 only; b843 files are covered by gate b843_files_unchanged_only_additions_under_prefix"
+}

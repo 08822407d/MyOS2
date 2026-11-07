@@ -1,0 +1,139 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-MM-FAULT-12
+record_type: incremental_deferred_fault_findings
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+produced_by: "ChatGPT普通对话；Owner选用GPT-6/Extra；backend未独立认证"
+date: "2026-10-31"
+source_pin: "time @ a039d9803ade"
+read_channel: connector
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+policy: "18-deferred-findings-and-resume.md：普通问题入库，不自行实施修复或恢复被注释机制"
+scope: "本批用户地址页故障VMA/PTE/返回消费；不重签05文件读或09信号问题"
+counts: {new_findings: 7, evidence_appends: 3, historical_errata_candidates: 0}
+findings:
+  - qualified_id: CORE-USER-MM-FAULT-12::MF12-F01
+    id: MF12-F01
+    title: "simple_find_vma只返回包含地址的VMA，现有grow-down入口在稳定数据下不可达"
+    kind: [source_fact, conditional_inference]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-fault-12/facts-and-boundaries.yaml::anchors"
+    claim: "simple_find_vma只按addr>=vm_start && addr<vm_end返回VMA，找不到则NULL；do_user_addr_fault在vma非NULL后才检测vma->vm_start>address并决定VM_GROWSDOWN/expand_stack。故在稳定VMA、无并发改变的前提下，位于栈VMA起点之前的地址先走myos_bad_area而不是expand_stack。"
+    premises: ["假设simple_find_vma返回了一个不包含地址的后继VMA，或VMA被并发更改，则该调用链可能进入扩栈检查；本批未证明发生"]
+    counter_evidence: ["旧接口名称或注释不能替代实际选择条件；不推定Linux栈增长语义"]
+    unknown: ["未编译或运行此内核，具体二进制/硬件表现NOT_RUN", "其它模块的调用/并发假设未穷尽"]
+    evidence: [MF12-A22b, MF12-A10, MF12-A11, MF12-A12, MF12-A04]
+    related: ["CORE-USER-VFS-BASELINE-05::sched.forkexec.exit_path"]
+    owner_action_now: none
+    blocks: {current_static_analysis: false, future_kernel_fix: separate_authorization}
+    reopen_condition: "Owner明确准备好处理问题并授权独立专项；须先回源核当前真实源码"
+  - qualified_id: CORE-USER-MM-FAULT-12::MF12-F02
+    id: MF12-F02
+    title: "用户地址缺页源路径缺少活动mm/权限与VMA同步门"
+    kind: [source_fact, conditional_language_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-fault-12/facts-and-boundaries.yaml::anchors"
+    claim: "do_user_addr_fault设置mm=current->mm后直接simple_find_vma(mm,address)，faulthandler_disabled()||!mm与access_error(error_code,vma)、SMAP等校验为注释；本已读函数没有活动mmap_read_lock。对mm无效、权限不匹配或并发变更的情况，无法保证安全处理。"
+    premises: ["如果外层确有有效mm、合法VMA和足够稳定同步，相关缺少局部检查未必触发问题；外层保护尚未穷尽"]
+    counter_evidence: ["不能仅凭本函数负向检索宣称全仓无VMA/上下文保护"]
+    unknown: ["未编译或运行此内核，具体二进制/硬件表现NOT_RUN", "其它模块的调用/并发假设未穷尽"]
+    evidence: [MF12-A05, MF12-A06, MF12-A07, MF12-A13, MF12-A10]
+    related: ["CORE-USER-RETURN-SIGNAL-09::RS-08"]
+    owner_action_now: none
+    blocks: {current_static_analysis: false, future_kernel_fix: separate_authorization}
+    reopen_condition: "Owner明确准备好处理问题并授权独立专项；须先回源核当前真实源码"
+  - qualified_id: CORE-USER-MM-FAULT-12::MF12-F03
+    id: MF12-F03
+    title: "架构缺页返回非零后仅忙等同一fault，活动重试/信号/OOM消费缺失"
+    kind: [source_fact, return_consumption_gap]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-fault-12/facts-and-boundaries.yaml::anchors"
+    claim: "do_user_addr_fault只调用myos_handle_mm_fault一次，接着while(fault!=ENOERR);；非零vm_fault_t（OOM、SIGBUS、NOPAGE、RETRY等均为非零位）没有新的计算/重试调用，后面VM_FAULT_RETRY/OOM/SIGBUS/SIGSEGV处理均注释，形成带前提的不返回路径。"
+    premises: ["fault值为0时会跳过循环；无VMA时另有myos_bad_area自旋；不是所有缺页都走此loop"]
+    counter_evidence: ["不能把非零错误标志写成已产生用户可观测SIGSEGV、OOM恢复或实际硬件死锁"]
+    unknown: ["未编译或运行此内核，具体二进制/硬件表现NOT_RUN", "其它模块的调用/并发假设未穷尽"]
+    evidence: [MF12-A14, MF12-A15, MF12-A16, MF12-A17b, MF12-A76, MF12-A76b, MF12-A80]
+    related: ["CORE-USER-RETURN-SIGNAL-09::RS-08"]
+    owner_action_now: none
+    blocks: {current_static_analysis: false, future_kernel_fix: separate_authorization}
+    reopen_condition: "Owner明确准备好处理问题并授权独立专项；须先回源核当前真实源码"
+  - qualified_id: CORE-USER-MM-FAULT-12::MF12-F04
+    id: MF12-F04
+    title: "PTE指针NULL直接返回0，但不经handle_pte_fault"
+    kind: [source_fact, conditional_false_success]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-fault-12/facts-and-boundaries.yaml::anchors"
+    claim: "myos_handle_mm_fault在pte_offset_map_nolock返回NULL时直接return 0，未执行orig_pte获取与handle_pte_fault；架构只看fault==ENOERR即可继续返回。因此零状态不能证明建立了PTE或处理了权限。"
+    premises: ["PTE映射指针确实为NULL；若总能得到有效指针，此特定早退不会发生"]
+    counter_evidence: ["当前仅证源码可行分支，不证明运行中PTE映射指针为NULL的发生率或硬件后果"]
+    unknown: ["未编译或运行此内核，具体二进制/硬件表现NOT_RUN", "其它模块的调用/并发假设未穷尽"]
+    evidence: [MF12-A35, MF12-A36, MF12-A14, MF12-A80]
+    related: ["CORE-MM-BASELINE-04::MC-23"]
+    owner_action_now: none
+    blocks: {current_static_analysis: false, future_kernel_fix: separate_authorization}
+    reopen_condition: "Owner明确准备好处理问题并授权独立专项；须先回源核当前真实源码"
+  - qualified_id: CORE-USER-MM-FAULT-12::MF12-F05
+    id: MF12-F05
+    title: "已有PTE分支计算dirty/young entry却不写回"
+    kind: [source_fact, conditional_false_success]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-fault-12/facts-and-boundaries.yaml::anchors"
+    claim: "handle_pte_fault的已有PTE路径在写标志与可写PTE条件下计算pte_mkdirty，在所有正常后续计算pte_mkyoung，但ptep_set_access_flags/缓存更新主体均为注释，末尾返回0；不能把该0解释成PTE年轻/脏/权限实际更新。"
+    premises: ["PTE存在且未在早期pte_same不一致分支跳走；相关访问需要更新PTE"]
+    counter_evidence: ["底层硬件可能自动设置访问位，此处不推断真实CPU最终PTE或指令重试结果"]
+    unknown: ["未编译或运行此内核，具体二进制/硬件表现NOT_RUN", "其它模块的调用/并发假设未穷尽"]
+    evidence: [MF12-A39, MF12-A39b, MF12-A40, MF12-A40b, MF12-A83]
+    related: ["CORE-MM-BASELINE-04::MC-23"]
+    owner_action_now: none
+    blocks: {current_static_analysis: false, future_kernel_fix: separate_authorization}
+    reopen_condition: "Owner明确准备好处理问题并授权独立专项；须先回源核当前真实源码"
+  - qualified_id: CORE-USER-MM-FAULT-12::MF12-F06
+    id: MF12-F06
+    title: "文件共享写缺PTE及共享写保护路径存在活动无限循环"
+    kind: [source_fact, conditional_liveness_gap]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-fault-12/facts-and-boundaries.yaml::anchors"
+    claim: "文件VMA缺PTE且FAULT_FLAG_WRITE、VM_SHARED成立时do_fault调用do_shared_fault，其开头立即while(1)；已有PTE写保护且VM_SHARED或VM_MAYSHARE时do_wp_page也直接while(1)。两条实际条件路径都不能使用后续源码说明成功修复。"
+    premises: ["需实际命中共享文件写缺PTE或共享写保护的相应分支，非所有文件映射"]
+    counter_evidence: ["其它共享写用户程序是否实际产生相关故障、真实调度影响均NOT_RUN"]
+    unknown: ["未编译或运行此内核，具体二进制/硬件表现NOT_RUN", "其它模块的调用/并发假设未穷尽"]
+    evidence: [MF12-A87b, MF12-A58, MF12-A59b, MF12-A39b]
+    related: ["CORE-USER-VFS-BASELINE-05::UV-08"]
+    owner_action_now: none
+    blocks: {current_static_analysis: false, future_kernel_fix: separate_authorization}
+    reopen_condition: "Owner明确准备好处理问题并授权独立专项；须先回源核当前真实源码"
+  - qualified_id: CORE-USER-MM-FAULT-12::MF12-F07
+    id: MF12-F07
+    title: "匿名分配错误与私有WP复制失败可返回0而无已证修复"
+    kind: [source_fact, conditional_false_success]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-mm-fault-12/facts-and-boundaries.yaml::anchors"
+    claim: "do_anonymous_page调用alloc_anon_folio后若IS_ERR(folio)直接return 0，可能尚未执行set_pte_at；wp_page_copy复制错误时返回0（非EHWPOISON）且可能没有换PTE，另有PTE内容变更后不写回但return0的路径。须按各前提分辨，此零状态不是可靠的故障恢复证明。"
+    premises: ["需相关错误指针/页复制失败或旧PTE变更分支；不是正常成功路径的必然结果"]
+    counter_evidence: ["分配错误来源、文件/folio生命周期、Copy user后端和真实硬件行为未展开"]
+    unknown: ["未编译或运行此内核，具体二进制/硬件表现NOT_RUN", "其它模块的调用/并发假设未穷尽"]
+    evidence: [MF12-A45, MF12-A47, MF12-A61b, MF12-A61d, MF12-A62b, MF12-A62g, MF12-A63b]
+    related: ["CORE-MM-BASELINE-04::MC-23"]
+    owner_action_now: none
+    blocks: {current_static_analysis: false, future_kernel_fix: separate_authorization}
+    reopen_condition: "Owner明确准备好处理问题并授权独立专项；须先回源核当前真实源码"
+evidence_appends:
+  - target: CORE-USER-VFS-BASELINE-05::UV-08
+    operation: evidence_append_only
+    old_status_change: none
+    note: "generic_file_vm_ops将fault/map_single_page绑定到filemap；simple_filemap_fault继续对page_array索引并调用f_op->read却不检查返回；这一文件后端缺口已有UV-08，不再重复登记新根因。"
+    evidence: [MF12-A66, MF12-A85, MF12-A85b, MF12-A64]
+  - target: CORE-USER-VFS-BASELINE-05::UV-06
+    operation: evidence_append_only
+    old_status_change: none
+    note: "文件缺页回退只追到simple_filemap_fault调用f_op->read和返回值消费，页缓存读后端长度/位置问题沿用05 UV-06，不扩展到FAT/ATA全流程。"
+    evidence: [MF12-A85b, MF12-A52, MF12-A56d]
+  - target: CORE-USER-RETURN-SIGNAL-09::RS-08
+    operation: evidence_append_only
+    old_status_change: none
+    note: "信号帧中的用户地址写入可能由异常/缺页通道关联，但本次只证C fault处理；非零fault忙等及缺活动信号消费不能被当作已验证用户地址恢复；没有重开RS-08或09主线。"
+    evidence: [MF12-A14, MF12-A16, MF12-A17b, MF12-A10]
+errata_candidates: []
+not_covered: ["完整vm_ops注册与外部文件系统", "真实中断/异常返回", "mm/slab/folio/页表全局并发", "外部libc", "运行及硬件"]
+owner_decisions_requested_now: []

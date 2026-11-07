@@ -1,0 +1,213 @@
+{
+  "task_id": "CORE-USER-MMAP-PLACEMENT-21",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "conditional_deferred_findings",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "produced_by": "GPT-6",
+  "date": "2026-11-02",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "0e139c6ca86d",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "AP21-F01",
+      "kind": "bounded_placement_gap",
+      "status": "needs_evidence",
+      "title": "hint起点空闲并不检查整个映射区间",
+      "claim": "simple_get_unmapped_area提示快速返回只检测simple_find_vma(mm, addr)==NULL；不检验addr+len是否与后继VMA相交。后置__get只检查地址上界与对齐。",
+      "premises": [
+        "非fixed、有效地址提示、已绑定simple_get_unmapped_area且该调用正常执行",
+        "hint本身不属于任何现存VMA，但[hint,hint+len)覆盖后继VMA部分",
+        "无后续特有冲突拒绝，如NOREPLACE另门；simple_mmap_region继续执行"
+      ],
+      "possible_consequence": "候选不是真正空洞，后续可能调用解除旧VMA；不能以返回addr证明无覆盖",
+      "counterevidence": "已读后续还有simple_munmap_vma_range，故不是必然保留重叠映射；未观察真实覆盖事件",
+      "anchors": [
+        "AP21-A014",
+        "AP21-A055",
+        "AP21-A056",
+        "AP21-A024",
+        "AP21-A025",
+        "AP21-A009",
+        "AP21-A092"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "id": "AP21-F02",
+      "kind": "source_expression_clobber",
+      "status": "deferred_owner_not_ready",
+      "title": "topdown尾部if(gap = ~0)赋值使已找到的候选失效",
+      "claim": "若到达尾部代码，if表达式是赋值而非相等比较，在64位ulong下~0非零，随后gap被设为(high_limit-length)&PAGE_MASK。",
+      "premises": [
+        "default callback实际调用simple_find_vm_unmapped_area_topdown",
+        "遍历和帮助函数在定义良好前提下正常到达tail"
+      ],
+      "possible_consequence": "原扫描得出的空洞候选被覆盖，替代结果不保证有完整len空闲",
+      "counterevidence": "若扫描耗尽到tmp==NULL，当前vma_next_vma(NULL)可阻断抵达尾部；不能对所有请求说必然返回错误位置",
+      "anchors": [
+        "AP21-A017",
+        "AP21-A027",
+        "AP21-A031",
+        "AP21-A033",
+        "AP21-A035",
+        "AP21-A036"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "id": "AP21-F03",
+      "kind": "iterator_and_null_termination_gap",
+      "status": "needs_evidence",
+      "title": "topdown/bottomup遍历耗尽后以NULL调用vma_next_vma",
+      "claim": "两搜索函数在tmp==NULL时使用vma_next_vma(tmp)，其当前活动while(vma==NULL)不改变vma；另外mm_next/prev在vma NULL时仍构造&vma->list。",
+      "premises": [
+        "定义良好的列表遍历可以耗尽并把tmp赋为NULL",
+        "对应后置代码被执行且vma_next_vma未被其它机制改写"
+      ],
+      "possible_consequence": "源码层无法完成正常候选返回；可能有未定义指针表达式或不返回路径",
+      "counterevidence": "NULL成员地址求值的编译/机器后果不确定；未做C编译或QEMU复现，绝不签发确定CPU卡死",
+      "anchors": [
+        "AP21-A033",
+        "AP21-A043",
+        "AP21-A049",
+        "AP21-A050",
+        "AP21-A051",
+        "AP21-A053",
+        "AP21-A063",
+        "AP21-A064",
+        "AP21-A065"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "id": "AP21-F04",
+      "kind": "noreplace_range_query_gap",
+      "status": "needs_evidence",
+      "title": "find_vma_intersection若找不到严格前驱会漏检首个相交VMA",
+      "claim": "函数先找vm_end<start的VMA，只有前驱非NULL才调用vma_next_vma和区间相交谓词；当请求覆盖第一VMA且不存在严格前驱时返回NULL。",
+      "premises": [
+        "MAP_FIXED_NOREPLACE实际抵达相交查询",
+        "首个VMA与请求区间重叠，且没有vm_end<start的前驱",
+        "列表有序有效、迭代在定义良好条件下结束"
+      ],
+      "possible_consequence": "-EEXIST门漏掉冲突，可能进入simple_mmap_region旧映射处理",
+      "counterevidence": "后续old unmap/分割可影响控制流，不能断言覆盖已经完成；在存在可用严格前驱的场景可检出一项重叠",
+      "anchors": [
+        "AP21-A007",
+        "AP21-A057",
+        "AP21-A059",
+        "AP21-A060",
+        "AP21-A061",
+        "AP21-A062",
+        "AP21-A086",
+        "AP21-A092"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "id": "AP21-F05",
+      "kind": "fixed_address_validation_gap",
+      "status": "needs_evidence",
+      "title": "MAP_FIXED提早返回跳过上界与对齐校验",
+      "claim": "__get_unmapped_area仅先校验len>TASK_SIZE，若flags & MAP_FIXED马上return addr；不经过回调之后的addr>TASK_SIZE-len和offset_in_page(addr)校验。",
+      "premises": [
+        "flags含MAP_FIXED，len已通过do_mmap前置校验",
+        "输入地址不对齐或整个区间超过TASK_SIZE",
+        "实际后续没有其它已审查补救门且转入simple_mmap_region"
+      ],
+      "possible_consequence": "未经本接口验证的起点进入VMA操作；真实PTE/CPU后果未认证",
+      "counterevidence": "MAP_FIXED_NOREPLACE有单独冲突查询（但不等于对齐/上界）；源中其它函数可能有未审条件",
+      "anchors": [
+        "AP21-A002",
+        "AP21-A019",
+        "AP21-A020",
+        "AP21-A025",
+        "AP21-A007",
+        "AP21-A008",
+        "AP21-A009"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "id": "AP21-F06",
+      "kind": "bounded_inactive_function_defect",
+      "status": "deferred_owner_not_ready",
+      "title": "bottomup尾部if(gap = 0)赋值归零，但不是默认选址回调",
+      "claim": "若bottomup函数执行并到达尾部，表达式会先将gap赋0，然后条件为false，直接返回0，覆盖此前找到的gap。",
+      "premises": [
+        "存在真实调用者直接选择bottomup，本批仅见定义未见默认绑定",
+        "迭代正常抵达函数尾部"
+      ],
+      "possible_consequence": "候选丢失和0地址返回",
+      "counterevidence": "arch_pick绑定simple_get_unmapped_area→topdown，不得宣称当前默认mmap调用bottomup；耗尽时还可先被NULL路径阻断",
+      "anchors": [
+        "AP21-A037",
+        "AP21-A041",
+        "AP21-A043",
+        "AP21-A045",
+        "AP21-A017",
+        "AP21-A072",
+        "AP21-A073"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "id": "AP21-F07",
+      "kind": "bounded_gap_contract",
+      "status": "needs_evidence",
+      "title": "选定搜索使用原始VMA边界而未应用另有的stack guard及info对齐字段",
+      "claim": "simple_get为info赋align字段；topdown扫描只读raw vm_start/end、长度与limits，不调用vm_start_gap/vm_end_gap，也不消费info.align_mask/offset。",
+      "premises": [
+        "所选VMA带需要guard gap的GROW位或另有非零对齐约束",
+        "这些约束不是由上游其它机制满足"
+      ],
+      "possible_consequence": "找到的候选可能不满足额外的guard/alignment规范",
+      "counterevidence": "本批默认info.align_mask=0，无法仅据它证明当前默认请求违反额外对齐；未追全体调用者或配置",
+      "anchors": [
+        "AP21-A013",
+        "AP21-A016",
+        "AP21-A027",
+        "AP21-A029",
+        "AP21-A030",
+        "AP21-A031",
+        "AP21-A068",
+        "AP21-A088",
+        "AP21-A089",
+        "AP21-A090",
+        "AP21-A091"
+      ],
+      "fix_authorized": false
+    }
+  ],
+  "evidence_appends": [
+    {
+      "qualified_id": "CORE-USER-VMA-LIFETIME-14::VL14-F05",
+      "kind": "evidence_append",
+      "preserve_historical_status": true,
+      "claim": "即使do_mmap通过候选地址和NOREPLACE局部门，simple_mmap_region仍先进入simple_munmap_vma_range，而它的寻找起始VMA又依赖同一find_vma_intersection；不能以先行操作或错误返回推导完整事务回滚。",
+      "anchors": [
+        "AP21-A008",
+        "AP21-A009",
+        "AP21-A085",
+        "AP21-A086",
+        "AP21-A092",
+        "AP21-A057",
+        "AP21-A061"
+      ],
+      "review_rule": "CORE-USER-VMA-LIFETIME-14-REVIEW-001::R14-S01"
+    }
+  ],
+  "new_findings_count": 7,
+  "evidence_append_count": 1,
+  "history_files_frozen": true,
+  "owner_decisions_requested_now": [],
+  "limits": [
+    "These are static conditional gaps, not demonstrated runtime faults.",
+    "Where a named helper has NULL/undefined C precondition, do not infer deterministic return.",
+    "Historical source issue has not been fixed, closed or reclassified.",
+    "No action or patch authorization to repair kernel."
+  ]
+}

@@ -1,0 +1,674 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FAT-NAME-PARSE-36",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "mainline_owner": "MYOS2-A-C04",
+  "date": "2026-11-04",
+  "read_channel": "connector",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "a7cb8bf8d2e6",
+  "contract60_short12": "d5b6bf140e03",
+  "required_supplements": [
+    "R35-S01",
+    "R35-S02"
+  ],
+  "prior_review": "PASS_PENDING_LOCAL",
+  "returned_scope": [],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "record_type": "FAT_name_parsers_typed_local_models",
+  "object_identity": [
+    {
+      "id": "de",
+      "type": "const msdos_dirent_s*",
+      "source": "FAT32_parse_short input",
+      "status": "borrowed short directory entry",
+      "readers": [
+        "de->name[0..10]",
+        "de->attr",
+        "de->lcase"
+      ],
+      "validity": "whole field readable; no local pointer guard"
+    },
+    {
+      "id": "de.name",
+      "type": "__u8[MSDOS_NAME=11]",
+      "source": "packed msdos_dirent_s",
+      "status": "11-byte source array, not NUL-terminated string contract",
+      "validity": "bytes 0..10 exist on valid de"
+    },
+    {
+      "id": "short_lenp",
+      "type": "int*",
+      "source": "FAT32_lookup passes &namelen",
+      "status": "short parser explicitly initializes *namelen=0",
+      "validity": "pointer writable"
+    },
+    {
+      "id": "short_ret",
+      "type": "char*",
+      "source": "kzalloc(15,GFP_KERNEL)",
+      "status": "distinct 15-byte output allocation; NULL possible",
+      "validity": "allocation succeeds and __GFP_ZERO delivered before NUL inference"
+    },
+    {
+      "id": "short_x",
+      "type": "int",
+      "source": "for(x=0; x<8) then for(x=8; x<11)",
+      "status": "index for base then extension, reset by second for",
+      "validity": "bounded in each actual loop"
+    },
+    {
+      "id": "dir_flag",
+      "type": "de->attr & ATTR_DIRECTORY",
+      "source": "fat32.h macro bit4",
+      "status": "controls whether dot and extension are skipped",
+      "validity": "not a full entry-validity test"
+    },
+    {
+      "id": "lcase_base",
+      "type": "de->lcase & LOWERCASE_BASE (8)",
+      "source": "fat32.h",
+      "status": "controls raw +32 on base bytes",
+      "validity": "does not check byte is alphabetic"
+    },
+    {
+      "id": "lcase_ext",
+      "type": "de->lcase & LOWERCASE_EXT (16)",
+      "source": "fat32.h",
+      "status": "controls raw +32 on extension bytes",
+      "validity": "does not check byte is alphabetic"
+    },
+    {
+      "id": "iobuf",
+      "type": "FAT32_iobuf_s*",
+      "source": "FAT32_lookup after iobuf_init",
+      "status": "borrowed into parse_long; contains shared iter_cursor, iter_reach_end and cache arrays",
+      "validity": "valid object, buffer geometry/record boundaries"
+    },
+    {
+      "id": "entlen",
+      "type": "int",
+      "source": "sizeof(msdos_dirent_s)",
+      "status": "local constant-derived entry stride",
+      "validity": "real target layout and int range; E=32 used only conditionally"
+    },
+    {
+      "id": "long_cursor",
+      "type": "loff_t",
+      "source": "iobuf->iter_cursor - entlen * 2",
+      "status": "local backtracking offset, NOT alias of iobuf->iter_cursor",
+      "validity": "signed arithmetic valid"
+    },
+    {
+      "id": "i",
+      "type": "int",
+      "source": "FAT32_parse_long initializes zero",
+      "status": "first-pass slot count used in i*13+1 allocation and second-pass for",
+      "validity": "no overflow and slot count/termination valid"
+    },
+    {
+      "id": "lde_tmp",
+      "type": "msdos_dirslot_s*",
+      "source": "first FAT32_iobuf_readent(iobuf,long_cursor)",
+      "status": "borrowed typed cast of readent result",
+      "validity": "must be valid readable before checking attr/id and FAT32_ent_empty"
+    },
+    {
+      "id": "lde",
+      "type": "msdos_dirslot_s*",
+      "source": "second FAT32_iobuf_readent(iobuf,long_cursor) plus for update",
+      "status": "borrowed pointer to second-pass slot, may hold last unused ERR_PTR",
+      "validity": "each consumed slot must be valid before name field reads"
+    },
+    {
+      "id": "long_lenp",
+      "type": "int*",
+      "source": "long parser input; actual &namelen from lookup",
+      "status": "NO assignment to *namelen=0 within selected long parser; only increments",
+      "validity": "writable and initially bounded; lookup's namelen starts at zero"
+    },
+    {
+      "id": "long_ret",
+      "type": "char*",
+      "source": "kzalloc(i * 13 + 1,GFP_KERNEL)",
+      "status": "distinct parsed-byte allocation of capacity 13*i+1",
+      "validity": "i*13+1 positive in int domain; success/zeroing, at most13 writes per valid slot"
+    },
+    {
+      "id": "long_x",
+      "type": "int",
+      "source": "for(x=0; x<i; x++ ...)",
+      "status": "second-pass loop iteration count, update includes extra readent on final iteration",
+      "validity": "x++ and cursor arithmetic representable"
+    },
+    {
+      "id": "long_y",
+      "type": "int",
+      "source": "separate y=0; y<10/12/4; y+=2 loops",
+      "status": "offset in three UTF-16-shaped byte arrays",
+      "validity": "u16 field-access preconditions and widths"
+    },
+    {
+      "id": "slot_name",
+      "type": "__u8[10]+__u8[12]+__u8[4]",
+      "source": "packed msdos_dirslot_s",
+      "status": "26 bytes representing at most13 tested 16-bit units",
+      "validity": "readable bytes, alignment/aliasing/target endianness when cast to u16*"
+    },
+    {
+      "id": "name",
+      "type": "char*",
+      "source": "lookup receives chosen parse_long/parse_short output",
+      "status": "temporary allocation, may be NULL; compared then passed to kfree",
+      "validity": "must be valid for selected strncmp count and kfree ownership"
+    },
+    {
+      "id": "destname",
+      "type": "const char*",
+      "source": "dest_dentry->d_name.name in lookup",
+      "status": "separate target string, not parsed buffer",
+      "validity": "readable for selected count or early NUL"
+    },
+    {
+      "id": "destlen",
+      "type": "int",
+      "source": "dest_dentry->d_name.len in lookup",
+      "status": "size_t narrowed to int",
+      "validity": "representable and nonnegative in normal string model"
+    },
+    {
+      "id": "compare_len",
+      "type": "int -> size_t",
+      "source": "namelen>destlen ? namelen : destlen",
+      "status": "maximum int converted to strncmp size_t",
+      "validity": "negative final max is a distinct helper-only case; one negative input insufficient"
+    },
+    {
+      "id": "shared_cursor",
+      "type": "loff_t iobuf.iter_cursor",
+      "source": "iterator advanced by FAT32_get_full_ent before caller body",
+      "status": "read by parse_long; not assigned by selected parse_long or readent",
+      "validity": "getter returns normally, caller's aux entry and parsed slots valid"
+    },
+    {
+      "id": "buffer_cache",
+      "type": "iobuf.buffers[bufidx]",
+      "source": "FAT32_iobuf_readent",
+      "status": "may be newly allocated/populated on parser readent calls",
+      "validity": "not equivalent to iter_cursor or iter_reach_end write"
+    },
+    {
+      "id": "tmpde",
+      "type": "const msdos_dirent_s*",
+      "source": "lookup getter when outer left bound true",
+      "status": "current short entry argument to parse_short",
+      "validity": "conditional valid readent/getter path per R35"
+    },
+    {
+      "id": "tmplde",
+      "type": "const msdos_dirslot_s*",
+      "source": "lookup auxiliary readent at iobuf.iter_cursor-2*entlen",
+      "status": "selector for long parser",
+      "validity": "!IS_ERR test not a NULL or full readable-pointer guard"
+    }
+  ],
+  "parser_short": {
+    "input": "int *namelen, const msdos_dirent_s *de",
+    "start": "*namelen=0 occurs before kzalloc(15)",
+    "capacity_bytes": 15,
+    "base_scan": {
+      "range": "x=0..7",
+      "stop": "de->name[x]==' '",
+      "on_byte": "ret_val[(*namelen)++] = de->name[x] [+32 if lcase & LOWERCASE_BASE]",
+      "max_written": 8
+    },
+    "dir_branch": {
+      "when": "de->attr & ATTR_DIRECTORY != 0",
+      "writes": "no dot or extension",
+      "length": "base count, 0..8",
+      "nul": "no explicit terminator; conditional zero tail on zeroed kzalloc"
+    },
+    "file_branch": {
+      "when": "!(de->attr & ATTR_DIRECTORY)",
+      "dot": "always writes '.' and increments length before examining extension",
+      "extension_scan": "x=8..10, stop at first space",
+      "max_extension": 3,
+      "extension_case": "raw +32 if LOWERCASE_EXT",
+      "no_extension": "if x==8 then ret_val[--(*namelen)]=0, undo dot and restore base count"
+    },
+    "written_bound_normal": {
+      "max": 12,
+      "min": 0,
+      "capacity": 15,
+      "nul_after_count_if_zeroed": true,
+      "physical_nul_if_noext_explicit": true
+    },
+    "return_categories": [
+      "original normal allocated pointer",
+      "NULL if kzalloc returns NULL and path performs no later invalid write"
+    ],
+    "allocation_failure_boundary": "no NULL test: any base byte or non-directory dot write requires valid ret_val; directory with first name byte space can complete without write and return NULL",
+    "case_semantics": "add numerical value 32 unconditionally for flagged source bytes; not a tested ASCII/Unicode casefold",
+    "cursor_write": false,
+    "source_anchors": [
+      "NP36-A001",
+      "NP36-A002",
+      "NP36-A003",
+      "NP36-A004",
+      "NP36-A005",
+      "NP36-A006",
+      "NP36-A007",
+      "NP36-A008"
+    ]
+  },
+  "parser_long": {
+    "input": "int *namelen, FAT32_iobuf_s *iobuf",
+    "start": "i=0; local cursor=iobuf->iter_cursor-2*entlen; readent before while",
+    "first_scan": {
+      "while_expression": "lde_tmp->attr == ATTR_LONG_NAME && !FAT32_ent_empty((msdos_dirent_s*)lde_tmp) && cursor>=0",
+      "evaluation_order": [
+        "dereference lde_tmp->attr",
+        "if long, evaluate FAT32_ent_empty reading lde_tmp first name byte (id)",
+        "only then cursor>=0",
+        "on true increment i",
+        "if lde_tmp->id & 0x40 break",
+        "otherwise cursor-=entlen; lde_tmp=FAT32_iobuf_readent(iobuf,cursor)"
+      ],
+      "invalid_before_cursor_check": "negative cursor can cause readent ERR_PTR(-ENOENT), consumed in attr before cursor>=0",
+      "valid_first_slot": "if initial slot long, nonempty, cursor>=0, i increments to 1",
+      "no_terminal_bit": "if no 0x40, each valid long slot may be counted; absent a valid nonlong stop, readent negative may be consumed before guard",
+      "local_only_cursor": true
+    },
+    "second_pass": {
+      "allocation": "ret_val=kzalloc(i*13+1,GFP_KERNEL)",
+      "reset": "cursor=iobuf->iter_cursor-2*entlen; lde=FAT32_iobuf_readent(iobuf,cursor)",
+      "loop": "for(x=0; x<i; x++, cursor-=entlen, lde=FAT32_iobuf_readent(iobuf,cursor))",
+      "per_slot_units": [
+        {
+          "field": "name0_4",
+          "bytes": 10,
+          "units": 5
+        },
+        {
+          "field": "name5_10",
+          "bytes": 12,
+          "units": 6
+        },
+        {
+          "field": "name11_12",
+          "bytes": 4,
+          "units": 2
+        }
+      ],
+      "unit_filter": "*(u16*)&slot_bytes[y] != 0xffff && != 0x0000",
+      "copy": "ret_val[(*namelen)++]=slot_bytes[y] (one byte, lower-addressed byte of accepted u16)",
+      "max_writes_per_slot": 13,
+      "final_update": "update executes x++, local cursor subtraction, and readent even after last body; next x<i false so that last pointer need not be dereferenced",
+      "return": "ret_val directly after loop; not a direct ERR_PTR return",
+      "nul": "only relies on allocation's zero fill at output[namelen] in valid count and no embedded-zero model; no explicit terminator",
+      "zero_count": "i==0 produces attempted kzalloc(1) and first second-pass readent, but no for body or read of lde fields; requires valid readent invocation for normal return",
+      "length_init": "does not initialize *namelen; lookup's actual local int namelen=0 is the relevant producer",
+      "validity": [
+        "i*13+1 no overflow",
+        "malloc success if any writes",
+        "*namelen initial+write count within allocation",
+        "u16* cast is valid/aligned/aliasing suitable",
+        "target endian and source bytes readable",
+        "all selected readent calls return and any consumed lde valid"
+      ]
+    },
+    "shared_state": {
+      "direct_iter_cursor_assign": false,
+      "direct_iter_reach_end_assign": false,
+      "readent_assigns_iter_cursor": false,
+      "readent_assigns_iter_reach_end": false,
+      "readent_may_mutate": "iobuf.buffers[bufidx] and perform read request on a cache miss"
+    },
+    "source_anchors": [
+      "NP36-A009",
+      "NP36-A010",
+      "NP36-A011",
+      "NP36-A012",
+      "NP36-A013",
+      "NP36-A014",
+      "NP36-A015",
+      "NP36-A016",
+      "NP36-A017",
+      "NP36-A018",
+      "NP36-A019"
+    ]
+  },
+  "lookup": {
+    "actual_order": [
+      "getter returned nonerror tmpde and lookup body entered (R35 conditions)",
+      "tmplde=readent(shared_cursor-2*entlen) before empty check",
+      "name=NULL and namelen=0 initialized",
+      "if FAT32_ent_empty(tmpde), continue without parser",
+      "otherwise if !IS_ERR(tmplde) && tmplde->attr==ATTR_LONG_NAME && !FAT32_ent_empty((msdos_dirent_s*)tmplde), parse_long(&namelen,iobuf)",
+      "else parse_short(&namelen,tmpde)",
+      "len=max(namelen,destlen) in int",
+      "equal=!strncmp(name,destname,len) with implicit conversion to size_t",
+      "kfree(name)",
+      "if equal then break; else next lookup outer loop"
+    ],
+    "short_vs_long": "short parser first argument is short de (tmpde), long parser reads from shared iobuf local cursor; tmplde gates choice, not passed as parser argument",
+    "pointer_classes": "normal allocated pointer or NULL (from unchecked kzalloc paths if no earlier invalid write); no direct ERR_PTR returned by selected parsers",
+    "length_classes": "short parser always resets *namelen; long parser increments caller-initialized zero",
+    "count_conversion": "max(-1,3)=3; max(-1,0)=0; max(-1,-2)=-1, only final negative converts to huge size_t in 64-bit model",
+    "strncmp_semantics": "selected #ifndef __HAVE_ARCH_STRNCMP implementation compares count unsigned bytes, stops early when equal NUL; actual build variant unverified",
+    "cleanup_scope": "kfree(name) occurs before if(equal); must return normally before any claim about break",
+    "shared_state": "parser/selected readent do not advance shared cursor; getter before body may have advanced it, and next lookup evaluates shared_cursor; R35 internal getter crossing lookup L remains independent"
+  },
+  "finite_cases": [
+    {
+      "id": "NP36-C01",
+      "classification": "valid_byte_model",
+      "parser": "short",
+      "input": "file base A, padded spaces; extension first byte space; lcase=0",
+      "capacity": 15,
+      "bytes_written": "A then . then overwrite dot with zero",
+      "namelen": 1,
+      "nul": "explicit at index1 (also zeroing premise)",
+      "return": "allocated pointer",
+      "caller": "strncmp count max(1,destlen), then kfree, then equal",
+      "shared_cursor": "unchanged",
+      "stop": "valid de and allocation"
+    },
+    {
+      "id": "NP36-C02",
+      "classification": "valid_byte_model",
+      "parser": "short",
+      "input": "file ABCDEFGH + XYZ; both arrays full",
+      "capacity": 15,
+      "bytes_written": "ABCDEFGH.XYZ (12 bytes)",
+      "namelen": 12,
+      "nul": "index12 if kzalloc zeroed",
+      "return": "allocated pointer",
+      "caller": "max(12,destlen)",
+      "shared_cursor": "unchanged",
+      "stop": "requires zero-fill for string terminator"
+    },
+    {
+      "id": "NP36-C03",
+      "classification": "valid_byte_model",
+      "parser": "short",
+      "input": "directory ABCDEFGH; nonzero extension bytes ignored",
+      "capacity": 15,
+      "bytes_written": "ABCDEFGH (8 bytes)",
+      "namelen": 8,
+      "nul": "index8 if zeroed",
+      "return": "allocated pointer",
+      "caller": "max(8,destlen)",
+      "shared_cursor": "unchanged",
+      "stop": "valid directory bit and buffer"
+    },
+    {
+      "id": "NP36-C04",
+      "classification": "valid_byte_model",
+      "parser": "short",
+      "input": "file base A, ext TXT, LOWERCASE_BASE/EXT both set",
+      "capacity": 15,
+      "bytes_written": "a.txt",
+      "namelen": 5,
+      "nul": "index5 if zeroed",
+      "return": "allocated pointer",
+      "caller": "valid byte-model compare",
+      "shared_cursor": "unchanged",
+      "stop": "only specific source bytes demonstrated"
+    },
+    {
+      "id": "NP36-C05",
+      "classification": "valid_byte_model",
+      "parser": "short",
+      "input": "base byte digit '1' and LOWERCASE_BASE set, directory",
+      "capacity": 15,
+      "bytes_written": "ASCII 49+32=81 => 'Q'",
+      "namelen": 1,
+      "nul": "index1 if zeroed",
+      "return": "allocated pointer",
+      "caller": "may compare to Q; not true casefold",
+      "shared_cursor": "unchanged",
+      "stop": "model only, no actual source producer"
+    },
+    {
+      "id": "NP36-C06",
+      "classification": "helper_only",
+      "parser": "short",
+      "input": "directory short-name first byte space",
+      "capacity": 15,
+      "bytes_written": "none",
+      "namelen": 0,
+      "nul": "index0 if zeroed",
+      "return": "allocated pointer; if kzalloc=NULL, returns NULL without writes",
+      "caller": "lookup with destlen>0 would need valid pointer to compare; with count0 selected strncmp may not deref",
+      "shared_cursor": "unchanged",
+      "stop": "real FAT entry accepted by getter not established"
+    },
+    {
+      "id": "NP36-C07",
+      "classification": "helper_only",
+      "parser": "short",
+      "input": "non-directory base first byte space and extension first byte space",
+      "capacity": 15,
+      "bytes_written": "dot at0 then overwrite with zero",
+      "namelen": 0,
+      "nul": "explicit index0",
+      "return": "allocated pointer; if kzalloc=NULL stop at dot write",
+      "caller": "max(0,destlen)",
+      "shared_cursor": "unchanged",
+      "stop": "not legal-name certification"
+    },
+    {
+      "id": "NP36-C08",
+      "classification": "helper_only_failure",
+      "parser": "short",
+      "input": "kzalloc(15) returns NULL and first base byte is A",
+      "capacity": 15,
+      "bytes_written": "requires ret_val[0] write",
+      "namelen": "increment may be evaluated before invalid pointer store",
+      "nul": "not established",
+      "return": "UNESTABLISHED",
+      "caller": "not reached",
+      "shared_cursor": "unchanged",
+      "stop": "invalid ret_val access; no CPU result"
+    },
+    {
+      "id": "NP36-C09",
+      "classification": "valid_byte_model",
+      "parser": "long",
+      "input": "first slot id=0x41, attrs long, 1 slot code units 0x0041 0x0042 then 0x0000/0xffff (little endian)",
+      "capacity": 14,
+      "bytes_written": "AB (2 low bytes)",
+      "namelen": 2,
+      "nul": "index2 if zeroed",
+      "return": "allocated pointer",
+      "caller": "max(2,destlen)",
+      "shared_cursor": "unchanged; possible cache effects",
+      "stop": "valid u16 access, marker, buffer, endianness"
+    },
+    {
+      "id": "NP36-C10",
+      "classification": "valid_byte_model",
+      "parser": "long",
+      "input": "2 valid slots with terminal bit on second backward slot, 13 units each eligible",
+      "capacity": 27,
+      "bytes_written": "at most 26 bytes, one each unit",
+      "namelen": 26,
+      "nul": "index26 if zeroed",
+      "return": "allocated pointer",
+      "caller": "max(26,destlen)",
+      "shared_cursor": "unchanged",
+      "stop": "valid slot sequence and int range"
+    },
+    {
+      "id": "NP36-C11",
+      "classification": "helper_only",
+      "parser": "long",
+      "input": "one slot with 16-bit units 0x0041 and 0x0141, under little-endian memory",
+      "capacity": 14,
+      "bytes_written": "A then A; high byte is dropped",
+      "namelen": 2,
+      "nul": "index2 if zeroed",
+      "return": "allocated pointer",
+      "caller": "cannot assert Unicode semantic match",
+      "shared_cursor": "unchanged",
+      "stop": "actual source/provenance and alignment unknown"
+    },
+    {
+      "id": "NP36-C12",
+      "classification": "helper_only",
+      "parser": "long",
+      "input": "code units A then 0x0100 (lower-address byte 0), later units omitted",
+      "capacity": 14,
+      "bytes_written": "A then embedded zero",
+      "namelen": 2,
+      "nul": "at index1 before logical end; output byte length 2",
+      "return": "allocated pointer",
+      "caller": "strncmp could terminate early at equal zero under matching target; not proof actual misopen",
+      "shared_cursor": "unchanged",
+      "stop": "selected C implementation and byte endian premise"
+    },
+    {
+      "id": "NP36-C13",
+      "classification": "helper_only",
+      "parser": "long",
+      "input": "first readent offset negative; returns ERR_PTR(-ENOENT)",
+      "capacity": "not allocated yet",
+      "bytes_written": "none",
+      "namelen": "caller0 unchanged",
+      "nul": "none",
+      "return": "UNESTABLISHED",
+      "caller": "not reached",
+      "shared_cursor": "unchanged",
+      "stop": "first while condition reads lde_tmp->attr before cursor>=0"
+    },
+    {
+      "id": "NP36-C14",
+      "classification": "helper_only",
+      "parser": "long",
+      "input": "continuous long slots to offset0 without 0x40 marker",
+      "capacity": "not allocated unless first pass exits defined",
+      "bytes_written": "none yet",
+      "namelen": "caller0 unchanged",
+      "nul": "not established",
+      "return": "UNESTABLISHED",
+      "caller": "not reached",
+      "shared_cursor": "unchanged",
+      "stop": "after decrement below zero readent returns ERR_PTR; next while attr deref precedes cursor gate"
+    },
+    {
+      "id": "NP36-C15",
+      "classification": "helper_only",
+      "parser": "long",
+      "input": "first slot is not long or empty; i=0, second-pass readent still called",
+      "capacity": 1,
+      "bytes_written": "zero, for body skipped",
+      "namelen": "actual caller0 remains0",
+      "nul": "index0 conditional on zeroed allocation",
+      "return": "allocated pointer or NULL",
+      "caller": "nonNULL needed if max(0,destlen)>0",
+      "shared_cursor": "unchanged",
+      "stop": "actual lookup selector would need independent reason to choose long"
+    },
+    {
+      "id": "NP36-C16",
+      "classification": "valid_byte_model",
+      "parser": "long",
+      "input": "one valid long slot with 0x40 marker, all units 0xffff or 0",
+      "capacity": 14,
+      "bytes_written": "none",
+      "namelen": 0,
+      "nul": "index0 conditional on zero fill",
+      "return": "allocated pointer or NULL if allocation failed and no stores",
+      "caller": "max(0,destlen) and compare; no string success guaranteed",
+      "shared_cursor": "unchanged",
+      "stop": "valid slot/readent, helper-only zero-content semantics"
+    },
+    {
+      "id": "NP36-C17",
+      "classification": "source_derived_conditional",
+      "parser": "long",
+      "input": "one marked slot at local cursor0, i=1, second-pass valid slot, final for-update decrements to -E",
+      "capacity": 14,
+      "bytes_written": "at most13",
+      "namelen": "0..13 from caller0",
+      "nul": "after written bytes if zeroing",
+      "return": "allocated pointer after final readent(-E) yields ERR_PTR(-ENOENT) but is not dereferenced by loop",
+      "caller": "caller may compare/ free if parser returns",
+      "shared_cursor": "unchanged; readent negative early-return does not mutate cursor",
+      "stop": "does not prove every final update succeeds; if readent itself fails to return then no function return"
+    },
+    {
+      "id": "NP36-C18",
+      "classification": "source_derived_conditional",
+      "parser": "lookup",
+      "input": "one parser len -1 and other destlen3 in helper model",
+      "capacity": "parser-specific",
+      "bytes_written": "unestablished",
+      "namelen": -1,
+      "nul": "unestablished",
+      "return": "requires valid name",
+      "caller": "max(-1,3)=3, no huge unsigned count",
+      "shared_cursor": "unchanged by parser",
+      "stop": "negative producer not established"
+    },
+    {
+      "id": "NP36-C19",
+      "classification": "source_derived_conditional",
+      "parser": "lookup",
+      "input": "namelen=-1, destlen=-2 raw helper state",
+      "capacity": "not grounded",
+      "bytes_written": "unestablished",
+      "namelen": -1,
+      "nul": "unestablished",
+      "return": "not grounded",
+      "caller": "max=-1, conversion to size_t would be large in selected 64-bit model",
+      "shared_cursor": "unestablished",
+      "stop": "does not occur in verified normal lookup producer"
+    },
+    {
+      "id": "NP36-C20",
+      "classification": "helper_only_failure",
+      "parser": "long",
+      "input": "i>0, output kzalloc returns NULL, first eligible code unit seen",
+      "capacity": "requested i*13+1 but allocation NULL",
+      "bytes_written": "first attempted output store into NULL",
+      "namelen": "may be incremented before invalid store",
+      "nul": "unestablished",
+      "return": "UNESTABLISHED",
+      "caller": "not reached",
+      "shared_cursor": "not assigned by parser",
+      "stop": "first ret_val indexed store, no inferred CPU outcome"
+    }
+  ],
+  "cross_batch_corrections": {
+    "R35-S01": "getter may cross lookup L inside a single call by repeated next; parse_long backtracking does not itself advance shared iter_cursor; next outer lookup boundary is tested only at next loop iteration",
+    "R35-S02": "real calls: FAT32_lookup calls parse_short/parse_long; parse_long calls FAT32_iobuf_readent; no fictional call from data node, no bound-false edge back into lookup body",
+    "R34-S01": "selected max computed before size_t conversion; lack of a *namelen long reset is not actual nonzero caller value",
+    "IT35-F01": "readent returns ERR_PTR which may be consumed in long parse attr before parser-local cursor gate; distinct from getter attr precheck",
+    "IT35-F02": "last entry over-written by getter remains independent; not revalidated or closed",
+    "IT35-F05": "readent partial-entry/transfer validity also prerequisite for accessing long-slot fields; no driver expansion",
+    "CB34-F03": "parse allocator NULL, pointers/lengths and local cursor demonstrate bounded validity conditions; no real bad record reachability attested"
+  },
+  "statements_not_supported": [
+    "selected parsers implement Unicode or standard VFAT names correctly",
+    "long returns ERR_PTR on readent errors",
+    "long i*13+1 always fits in int",
+    "kzalloc wrapper alone certifies zeroed physical bytes",
+    "readent invalid pointer always reaches caller",
+    "parse_long updates iobuf.iter_cursor",
+    "kfree returns normally on invalid buffer",
+    "real user path misopens files"
+  ],
+  "not_executed": [
+    "C/ASM/repository scripts/preprocess/compiler/QEMU/hardware",
+    "actual FAT disk or user lookup",
+    "unicode spec conformance or locale interpretation",
+    "parser ownership allocator internals",
+    "complete permissions/locks/references or driver"
+  ]
+}

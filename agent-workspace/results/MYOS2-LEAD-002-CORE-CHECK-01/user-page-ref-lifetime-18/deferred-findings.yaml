@@ -1,0 +1,128 @@
+{
+  "task_id": "CORE-USER-PAGE-REF-LIFETIME-18",
+  "track_id": "MYOS2-LEAD-002",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "model_effort_per_owner": "Extra",
+  "date": "2026-11-01",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_initial_head_short12": "b7f89a7bc5c0",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "record_type": "deferred_findings",
+  "new_findings": [
+    {
+      "qualified_id": "CORE-USER-PAGE-REF-LIFETIME-18::PL18-F01",
+      "kind": "conditional_static_gap",
+      "status": "needs_evidence",
+      "claim": "同阶/同zone伙伴被识别时，合并体未摘除伙伴的旧链节点",
+      "premises": "PageBuddy判断真，伙伴确实在原free_area，合法指针和zone，合并分支执行",
+      "possible_impact": "新大块与旧小块可能同时仍在空闲链",
+      "counterevidence": "在已选zeroed page_type场景PageBuddy可能为假而不进入该分支；没有运行证明重叠发生",
+      "anchors": [
+        "PL18-A26",
+        "PL18-A27",
+        "PL18-A28",
+        "PL18-A32",
+        "PL18-A33",
+        "PL18-A83"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-REF-LIFETIME-18::PL18-F02",
+      "kind": "conditional_static_gap",
+      "status": "deferred_owner_not_ready",
+      "claim": "直接__free_pages不执行正引用检测或归零",
+      "premises": "调用方把仍有合法正引用的页传入直接free并正常走到入链",
+      "possible_impact": "被持有页可能成为再次分配候选",
+      "counterevidence": "未证明实际调用者违反直接free所有权前提",
+      "anchors": [
+        "PL18-A22",
+        "PL18-A24",
+        "PL18-A28",
+        "PL18-A76"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-REF-LIFETIME-18::PL18-F03",
+      "kind": "bounded_lock_gap",
+      "status": "needs_evidence",
+      "claim": "所选分配端没有与直接free相对称的zone.lock取得",
+      "premises": "可能存在共享zone.free_area的并发分配/归还",
+      "possible_impact": "链表及状态竞争保护未闭合",
+      "counterevidence": "可能存在调用者上层持锁或其它同步；未运行并发",
+      "anchors": [
+        "PL18-A23",
+        "PL18-A24",
+        "PL18-A50",
+        "PL18-A51",
+        "PL18-A56"
+      ],
+      "fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-REF-LIFETIME-18::PL18-F04",
+      "kind": "bounded_lock_init_gap",
+      "status": "needs_evidence",
+      "claim": "所选zone_init_internals中spin_lock_init为注释",
+      "premises": "此初始化路径被实际使用，其他初始化路径尚未闭合",
+      "possible_impact": "zone.lock初态需要后续核查",
+      "counterevidence": "其它初始化或锁表示可能提供合法初值；不推断真实死锁",
+      "anchors": [
+        "PL18-A23",
+        "PL18-A24",
+        "PL18-A80"
+      ],
+      "fix_authorized": false
+    }
+  ],
+  "evidence_appends": [
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MR-02",
+      "kind": "evidence_append",
+      "historical_state": "CLOSED_DOCUMENTATION_ONLY_BY_05",
+      "claim": "所读mem_map零初始化且无后续改动时，PAGE_TYPE_BASE缺失会使PageBuddy为假；不能泛化全局永不合并",
+      "anchors": [
+        "PL18-A04",
+        "PL18-A08",
+        "PL18-A11",
+        "PL18-A19",
+        "PL18-A34",
+        "PL18-A35",
+        "PL18-A36"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-WP-COW-17::W17-F09",
+      "kind": "evidence_append",
+      "historical_state": "deferred_owner_not_ready",
+      "claim": "folio_put归零到空的__folio_put；直接__free_pages存在另一路入空闲链，历史物理回收问题未闭合",
+      "anchors": [
+        "PL18-A67",
+        "PL18-A74",
+        "PL18-A75",
+        "PL18-A76"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-WP-COW-17::W17-F05",
+      "kind": "evidence_append",
+      "historical_state": "deferred_owner_not_ready",
+      "claim": "folio_alloc_noprof丢弃gfp/order且不防护alloc_page返回NULL后page_folio转换",
+      "anchors": [
+        "PL18-A59",
+        "PL18-A60",
+        "PL18-A61",
+        "PL18-A62"
+      ]
+    }
+  ],
+  "old_item_count_not_reclassified_as_new": true,
+  "owner_decisions_requested_now": []
+}
