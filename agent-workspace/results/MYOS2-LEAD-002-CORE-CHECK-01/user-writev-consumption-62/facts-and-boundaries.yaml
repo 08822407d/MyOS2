@@ -1,0 +1,1727 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-WRITEV-CONSUMPTION-62",
+  "record_type": "bounded_vector_write_source_facts_and_finite_models",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "source_pin_short12": "a039d9803ade",
+  "contract92_short12": "8647a2225055",
+  "execution_base_short12": "7f37c7b1e445",
+  "read_channel": "GitHub_connector",
+  "base_snapshot": "time",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_ledger": [
+    {
+      "path": "mykernel/fs/syscall.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "52d9349ab8e3",
+      "ranges": "94-99",
+      "role": "A actual syscall macro call"
+    },
+    {
+      "path": "mykernel/fs/vfs/read_write.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "bd608c44bae2",
+      "ranges": "49-73;175-178;202-216;287-337;340-407",
+      "role": "A/B/C selected full definitions"
+    },
+    {
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "447307aaa4b1",
+      "ranges": "169-275;354-364",
+      "role": "C direct FAT callback consumer"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/uio.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "e1480001381e",
+      "ranges": "17-20;26-27",
+      "role": "A vector type and unused limits"
+    },
+    {
+      "path": "mykernel/include/linux/fs/file.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "18d22c0c6f4d",
+      "ranges": "29-40;51-57;71-82",
+      "role": "A/C fd borrow and put"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/fdtable.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "fac0384dc371",
+      "ranges": "22;48-69",
+      "role": "A physical array"
+    },
+    {
+      "path": "mykernel/include/linux/fs/fs.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "fe527991618b",
+      "ranges": "63;108;114;869-880;1862-1864",
+      "role": "A/C file mode/method"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ef531baa8317",
+      "ranges": "62;71;76;105",
+      "role": "B/C ssize_t/size_t/loff_t"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/posix_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0246766d9a75",
+      "ranges": "15-18;67-75;88-90",
+      "role": "C signed type dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/uaccess.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ab39e43ad2f7",
+      "ranges": "150-164;185-190",
+      "role": "C copy_from_user wrapper"
+    },
+    {
+      "path": "mykernel/fs/vfs/file_table.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "8be78d1df129",
+      "ranges": "108-129",
+      "role": "C file fput condition"
+    }
+  ],
+  "prior_review_disposition": {
+    "batch61": "PASS_PENDING_LOCAL",
+    "returned_items": [],
+    "no_D00": true,
+    "R61_S01": "61 lseek fd_count logical comparison not physical fd_array bound; analogous vector get_pos has no local physical check",
+    "R61_S02": "fput decrements f_count, get_file increments; no reversed graph direction",
+    "R61_S03": "US-02/US-03/UB-10 old associations for 61 remain, do not reassign to62",
+    "R58C_S01": "58 B25 evidence correct; former mainline blank-line accusation withdrawn",
+    "R41": "R41-S01/S02 lightweight fdget vs fget counts; valid pointer needed",
+    "R55": "R55-S01/S02 FAT32_write block/copy/count/flags and index0 override boundaries",
+    "R56": "R56-S01/S02 FAT ordinary next_cluster non-advance, fresh flags1, geometry/units",
+    "R08": "SR08-01/02 bounded documentary resolution in 09 reviewer; US-01 validity and both successful duplicate exceptions",
+    "R07": "UB-01 remains old scalar/vector gate root, not renumbered",
+    "previous_batches_not_reopened": [
+      7,
+      8,
+      41,
+      55,
+      56,
+      58,
+      59,
+      60,
+      61
+    ]
+  },
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-BOUNDARIES-07::UB-01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "scalar FMODE_CAN_WRITE vs vector bypass, old root",
+      "original_record_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "fdget_pos no f_count increment + fdput_pos/fput extra, old root; 08 SR08-01 corrected conditionalities",
+      "original_record_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-11",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "physical fd index in lightweight retrieval, old source",
+      "original_record_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F01",
+      "source_field": "disposition",
+      "source_value": "source_only_conditional",
+      "consumption_notes": "FAT copy residue, tail ret_value overwrite, zero count and partial progress",
+      "original_record_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F02",
+      "source_field": "disposition",
+      "source_value": "source_only_conditional",
+      "consumption_notes": "FAT flags1 sector 0/stale prior source root",
+      "original_record_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-ALLOCATION-GEOMETRY-56::AG56-F01",
+      "source_field": "status",
+      "source_value": "source_conditional_only",
+      "consumption_notes": "ordinary write cluster not advanced; keep original prior",
+      "original_record_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-ALLOCATION-GEOMETRY-56::AG56-F02",
+      "source_field": "status",
+      "source_value": "source_conditional_only",
+      "consumption_notes": "iobuf expand helper, not this callback",
+      "original_record_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-FD-CONTROL-61::DC61-F02",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "earlier F_DUPFD fput alias consumer, count direction limited by R61-S02",
+      "original_record_unchanged": true
+    }
+  ],
+  "vector_input_gate_matrix": {
+    "entry_cases": [
+      {
+        "id": "empty_valid_slot",
+        "fd": "within256 but slotNULL",
+        "vlen": 1,
+        "vec": "valid",
+        "file_mode": "none",
+        "first_event": "__to_fd reads valid NULL slot; do_writev !f.file false",
+        "result": "-EBADF",
+        "fdput": false,
+        "underlying_callbacks": 0
+      },
+      {
+        "id": "out_of_range_fd",
+        "fd": "index256 into fd_array[256]",
+        "vlen": 0,
+        "vec": "NULL",
+        "file_mode": "not_reached",
+        "first_event": "__to_fd reads invalid physical index",
+        "result": "ANALYSIS_STOP, no safe EBADF",
+        "fdput": null,
+        "underlying_callbacks": null
+      },
+      {
+        "id": "valid_file_not_write",
+        "fd": "valid pointer",
+        "vlen": 0,
+        "vec": "NULL",
+        "file_mode": "FMODE_WRITE missing",
+        "first_event": "file_ppos f_mode read then vfs_writev mode check",
+        "result": "-EBADF; fdput_pos on normal exit",
+        "fdput": true,
+        "underlying_callbacks": 0
+      },
+      {
+        "id": "vlen0_vecNULL",
+        "fd": "valid",
+        "vlen": 0,
+        "vec": "NULL",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "file_ppos then write mode, for condition false",
+        "result": "0; no vec[0] or f_op->write access; pos copied if nonstream",
+        "fdput": true,
+        "underlying_callbacks": 0
+      },
+      {
+        "id": "vlen1_vecNULL",
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "NULL",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "unspecified evaluation order of vec[0].iov_base and vec[0].iov_len; first invalid field access",
+        "result": "ANALYSIS_STOP",
+        "fdput": null,
+        "underlying_callbacks": null
+      },
+      {
+        "id": "vlen2_only_one_iovec",
+        "fd": "valid",
+        "vlen": 2,
+        "vec": "one accessible valid element",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "if call0 returns normally, second element field access invalid",
+        "result": "no valid aggregate/second callback proof",
+        "fdput": null,
+        "underlying_callbacks": 1
+      },
+      {
+        "id": "iov_base_NULL_len_positive",
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid iovec with baseNULL len4",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "no active access_ok; direct write callback with baseNULL",
+        "result": "opaque callback validity/errno; cannot infer -EFAULT",
+        "fdput": "only if callback normal",
+        "underlying_callbacks": "attempted1"
+      },
+      {
+        "id": "iov_len0",
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid base and len0",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "still calls underlying write with count0",
+        "result": "callback result unproven; FAT may issue block/metadata requests",
+        "fdput": "after normal callback",
+        "underlying_callbacks": 1
+      },
+      {
+        "id": "FOP_NULL_vlen0",
+        "fd": "valid",
+        "vlen": 0,
+        "vec": "NULL",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "no file->f_op access inside zero-trip loop",
+        "result": "0 if valid file and setup; fdput",
+        "fdput": true,
+        "underlying_callbacks": 0
+      },
+      {
+        "id": "FOP_NULL_vlen1",
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid element",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "file->f_op->write attempts through null f_op",
+        "result": "ANALYSIS_STOP",
+        "fdput": null,
+        "underlying_callbacks": null
+      },
+      {
+        "id": "write_NULL_iter_PRESENT",
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid element",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "direct call to NULL write, no write_iter fallback",
+        "result": "ANALYSIS_STOP",
+        "fdput": null,
+        "underlying_callbacks": null
+      },
+      {
+        "id": "missing_CAN_WRITE",
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid element",
+        "file_mode": "FMODE_WRITE set, FMODE_CAN_WRITE absent",
+        "first_event": "vector checks WRITE only; scalar checks both",
+        "result": "vector may reach write if method valid, scalar -EINVAL",
+        "fdput": "after normal callback",
+        "underlying_callbacks": 1
+      },
+      {
+        "id": "vlen1025",
+        "fd": "valid",
+        "vlen": 1025,
+        "vec": "1025 valid elements hypothetical",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "no active UIO_MAXIOV gate; loops until int or callback failure",
+        "result": "helper-only, not user-program reachability",
+        "fdput": "conditional",
+        "underlying_callbacks": "up to1025 if all valid"
+      },
+      {
+        "id": "vlen_gt_intmax",
+        "fd": "valid",
+        "vlen": "2147483649",
+        "vec": "huge hypothetical array",
+        "file_mode": "FMODE_WRITE set",
+        "first_event": "int i++ reaches INT_MAX boundary before completing all if all callbacks normal",
+        "result": "signed i overflow/other earlier bounds STOP",
+        "fdput": null,
+        "underlying_callbacks": null
+      },
+      {
+        "id": "fd_sign_convert",
+        "fd": "ulong value 2147483648 as do_writev argument",
+        "vlen": 0,
+        "vec": "NULL",
+        "file_mode": "not reached",
+        "first_event": "ulong to fdget_pos(int) implementation-defined if out of int range; then signed→ulong to __to_fd",
+        "result": "cannot assume safe fd index/EBADF",
+        "fdput": null,
+        "underlying_callbacks": null
+      }
+    ],
+    "scalar_comparison": [
+      {
+        "feature": "FMODE_WRITE",
+        "scalar": "active -EBADF gate",
+        "vector": "active -EBADF gate"
+      },
+      {
+        "feature": "FMODE_CAN_WRITE",
+        "scalar": "active -EINVAL gate",
+        "vector": "commented, not executed"
+      },
+      {
+        "feature": "access_ok(buf,count)",
+        "scalar": "active -EFAULT gate",
+        "vector": "no active access_ok(vec/vectors) in selected function"
+      },
+      {
+        "feature": "rw_verify_area",
+        "scalar": "called; current callee immediately return0",
+        "vector": "call is commented"
+      },
+      {
+        "feature": "MAX_RW_COUNT",
+        "scalar": "clamps count",
+        "vector": "no active total/vector cap"
+      },
+      {
+        "feature": "write_method",
+        "scalar": "write or write_iter via new_sync_write",
+        "vector": "calls ->write exclusively inside for"
+      },
+      {
+        "feature": "iovec import",
+        "scalar": "not applicable to scalar",
+        "vector": "import_iovec/iterator setup commented"
+      },
+      {
+        "feature": "zero length/count",
+        "scalar": "if method valid invokes write (subject to checks)",
+        "vector": "vlen0 no callbacks; each iov_len0 still invokes write"
+      },
+      {
+        "feature": "f_pos commit",
+        "scalar": "ret>=0 && ppos",
+        "vector": "ret>=0 && ppos where ret is arithmetic sum"
+      }
+    ],
+    "real_vector_import": "COMMENTED_OUT",
+    "iovstack_declared": "YES; no active population or import; compiler stack behaviour not tested",
+    "UIO_FASTIOV": 8,
+    "UIO_MAXIOV": 1024,
+    "loop_index": "int i, against ulong vlen",
+    "fd_argument_chain": "MYOS_SYSCALL_DEFINE3(writev) ulong fd -> do_writev ulong fd -> fdget_pos(int fd) -> __to_fd(ulong v)",
+    "no_guaranteed_argument_eval_order": "vec[i].iov_base vs vec[i].iov_len expressions in same function call: do not assert which field is read first on invalid input"
+  },
+  "callback_result_accumulation_traces": {
+    "sequences": [
+      {
+        "id": "empty",
+        "vlen": 0,
+        "requested_lengths": [],
+        "callback_returns": [],
+        "callback_position_deltas": [],
+        "callbacks_attempted": 0,
+        "aggregated_ssize_t": 0,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 10,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "one_positive",
+        "vlen": 1,
+        "requested_lengths": [
+          5
+        ],
+        "callback_returns": [
+          3
+        ],
+        "callback_position_deltas": [
+          3
+        ],
+        "callbacks_attempted": 1,
+        "aggregated_ssize_t": 3,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 13,
+        "outer_file_pos_after": 13,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "one_zero",
+        "vlen": 1,
+        "requested_lengths": [
+          0
+        ],
+        "callback_returns": [
+          0
+        ],
+        "callback_position_deltas": [
+          0
+        ],
+        "callbacks_attempted": 1,
+        "aggregated_ssize_t": 0,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 10,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "one_negative",
+        "vlen": 1,
+        "requested_lengths": [
+          5
+        ],
+        "callback_returns": [
+          -5
+        ],
+        "callback_position_deltas": [
+          0
+        ],
+        "callbacks_attempted": 1,
+        "aggregated_ssize_t": -5,
+        "outer_nonstream_position_commit": false,
+        "initial_file_pos": 10,
+        "local_pos_end": 10,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "two_positive",
+        "vlen": 2,
+        "requested_lengths": [
+          4,
+          7
+        ],
+        "callback_returns": [
+          2,
+          4
+        ],
+        "callback_position_deltas": [
+          2,
+          4
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 6,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 16,
+        "outer_file_pos_after": 16,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "positive_zero",
+        "vlen": 2,
+        "requested_lengths": [
+          8,
+          0
+        ],
+        "callback_returns": [
+          3,
+          0
+        ],
+        "callback_position_deltas": [
+          3,
+          0
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 3,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 13,
+        "outer_file_pos_after": 13,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "zero_positive",
+        "vlen": 2,
+        "requested_lengths": [
+          0,
+          7
+        ],
+        "callback_returns": [
+          0,
+          4
+        ],
+        "callback_position_deltas": [
+          0,
+          4
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 4,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 14,
+        "outer_file_pos_after": 14,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "short_then_full",
+        "vlen": 2,
+        "requested_lengths": [
+          8,
+          5
+        ],
+        "callback_returns": [
+          3,
+          5
+        ],
+        "callback_position_deltas": [
+          3,
+          5
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 8,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 18,
+        "outer_file_pos_after": 18,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "negative_then_positive",
+        "vlen": 2,
+        "requested_lengths": [
+          6,
+          10
+        ],
+        "callback_returns": [
+          -5,
+          8
+        ],
+        "callback_position_deltas": [
+          0,
+          8
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 3,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 18,
+        "outer_file_pos_after": 18,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "positive_then_negative",
+        "vlen": 2,
+        "requested_lengths": [
+          4,
+          4
+        ],
+        "callback_returns": [
+          3,
+          -5
+        ],
+        "callback_position_deltas": [
+          3,
+          0
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": -2,
+        "outer_nonstream_position_commit": false,
+        "initial_file_pos": 10,
+        "local_pos_end": 13,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "positive_negative_netzero",
+        "vlen": 2,
+        "requested_lengths": [
+          8,
+          8
+        ],
+        "callback_returns": [
+          5,
+          -5
+        ],
+        "callback_position_deltas": [
+          5,
+          0
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 0,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 15,
+        "outer_file_pos_after": 15,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "positive_negative_positive",
+        "vlen": 3,
+        "requested_lengths": [
+          8,
+          8,
+          8
+        ],
+        "callback_returns": [
+          4,
+          -5,
+          4
+        ],
+        "callback_position_deltas": [
+          4,
+          0,
+          4
+        ],
+        "callbacks_attempted": 3,
+        "aggregated_ssize_t": 3,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 18,
+        "outer_file_pos_after": 18,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "errors_both",
+        "vlen": 2,
+        "requested_lengths": [
+          4,
+          4
+        ],
+        "callback_returns": [
+          -5,
+          -2
+        ],
+        "callback_position_deltas": [
+          0,
+          0
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": -7,
+        "outer_nonstream_position_commit": false,
+        "initial_file_pos": 10,
+        "local_pos_end": 10,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "negative_zero_positive",
+        "vlen": 3,
+        "requested_lengths": [
+          7,
+          0,
+          7
+        ],
+        "callback_returns": [
+          -3,
+          0,
+          5
+        ],
+        "callback_position_deltas": [
+          0,
+          0,
+          5
+        ],
+        "callbacks_attempted": 3,
+        "aggregated_ssize_t": 2,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 15,
+        "outer_file_pos_after": 15,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "short_zero_error",
+        "vlen": 3,
+        "requested_lengths": [
+          4,
+          2,
+          4
+        ],
+        "callback_returns": [
+          1,
+          0,
+          -2
+        ],
+        "callback_position_deltas": [
+          1,
+          0,
+          0
+        ],
+        "callbacks_attempted": 3,
+        "aggregated_ssize_t": -1,
+        "outer_nonstream_position_commit": false,
+        "initial_file_pos": 10,
+        "local_pos_end": 11,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "two_positive_aggregate_zero",
+        "vlen": 2,
+        "requested_lengths": [
+          4,
+          4
+        ],
+        "callback_returns": [
+          2,
+          -2
+        ],
+        "callback_position_deltas": [
+          2,
+          0
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 0,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 12,
+        "outer_file_pos_after": 12,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "zero_zero",
+        "vlen": 2,
+        "requested_lengths": [
+          0,
+          0
+        ],
+        "callback_returns": [
+          0,
+          0
+        ],
+        "callback_position_deltas": [
+          0,
+          0
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 0,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 10,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "positive_error_more_positive",
+        "vlen": 3,
+        "requested_lengths": [
+          4,
+          4,
+          8
+        ],
+        "callback_returns": [
+          2,
+          -5,
+          7
+        ],
+        "callback_position_deltas": [
+          2,
+          0,
+          7
+        ],
+        "callbacks_attempted": 3,
+        "aggregated_ssize_t": 4,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 19,
+        "outer_file_pos_after": 19,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "negative_with_position_delta",
+        "vlen": 2,
+        "requested_lengths": [
+          8,
+          4
+        ],
+        "callback_returns": [
+          -5,
+          2
+        ],
+        "callback_position_deltas": [
+          1,
+          2
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": -3,
+        "outer_nonstream_position_commit": false,
+        "initial_file_pos": 10,
+        "local_pos_end": 13,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "zero_net_with_position_delta",
+        "vlen": 2,
+        "requested_lengths": [
+          8,
+          8
+        ],
+        "callback_returns": [
+          5,
+          -5
+        ],
+        "callback_position_deltas": [
+          5,
+          2
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 0,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 17,
+        "outer_file_pos_after": 17,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "three_positive",
+        "vlen": 3,
+        "requested_lengths": [
+          3,
+          3,
+          3
+        ],
+        "callback_returns": [
+          1,
+          1,
+          1
+        ],
+        "callback_position_deltas": [
+          1,
+          1,
+          1
+        ],
+        "callbacks_attempted": 3,
+        "aggregated_ssize_t": 3,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 13,
+        "outer_file_pos_after": 13,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "partial_short_then_short",
+        "vlen": 2,
+        "requested_lengths": [
+          10,
+          10
+        ],
+        "callback_returns": [
+          2,
+          1
+        ],
+        "callback_position_deltas": [
+          2,
+          1
+        ],
+        "callbacks_attempted": 2,
+        "aggregated_ssize_t": 3,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 13,
+        "outer_file_pos_after": 13,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "negative_after_two_success",
+        "vlen": 3,
+        "requested_lengths": [
+          8,
+          8,
+          8
+        ],
+        "callback_returns": [
+          4,
+          2,
+          -9
+        ],
+        "callback_position_deltas": [
+          4,
+          2,
+          0
+        ],
+        "callbacks_attempted": 3,
+        "aggregated_ssize_t": -3,
+        "outer_nonstream_position_commit": false,
+        "initial_file_pos": 10,
+        "local_pos_end": 16,
+        "outer_file_pos_after": 10,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      },
+      {
+        "id": "last_success_overcomes_errors",
+        "vlen": 3,
+        "requested_lengths": [
+          5,
+          5,
+          10
+        ],
+        "callback_returns": [
+          -5,
+          -4,
+          10
+        ],
+        "callback_position_deltas": [
+          0,
+          0,
+          10
+        ],
+        "callbacks_attempted": 3,
+        "aggregated_ssize_t": 1,
+        "outer_nonstream_position_commit": true,
+        "initial_file_pos": 10,
+        "local_pos_end": 20,
+        "outer_file_pos_after": 20,
+        "side_effects_rolled_back": false,
+        "premise": "all callback calls return normally, iovec/method/file/position valid; explicit hypothetical position deltas independent of return value; no concurrent/direct f_pos writes; signed sum remains representable"
+      }
+    ],
+    "signed_limits": [
+      {
+        "id": "sum_ssize_max_plus1",
+        "previous": "9223372036854775807",
+        "next": "1",
+        "result": "signed ssize_t overflow STOP before writeback"
+      },
+      {
+        "id": "sum_ssize_min_minus1",
+        "previous": "-9223372036854775808",
+        "next": "-1",
+        "result": "signed ssize_t overflow STOP"
+      },
+      {
+        "id": "int_loop_index_max_plus1",
+        "previous": "2147483647",
+        "vlen": "2147483649",
+        "result": "int i++ overflow if all former loop steps valid; no universal iteration count"
+      },
+      {
+        "id": "int_length_conversion",
+        "previous": "count>INT_MAX",
+        "result": "FAT32_write count(size_t) into index(int) implementation-defined, no safe block model"
+      }
+    ],
+    "return_value_model": "ssize_t ret initialized 0, += callback result for each i from0 while i<vlen; no short/negative break; signed range must be valid",
+    "independent_dimensions": [
+      "return value",
+      "actually requested bytes",
+      "copy completion",
+      "local position delta",
+      "inode/FAT/ROOTBLK side effect",
+      "outer f_pos commit"
+    ]
+  },
+  "position_commit_side_effect_matrix": {
+    "cases": [
+      {
+        "id": "nonstream_positive",
+        "ret": "+3",
+        "callback_local_delta": "+3",
+        "outer_f_pos": "initial+3",
+        "side_effect": "callback may write data; true physical bytes not inferred"
+      },
+      {
+        "id": "nonstream_zero",
+        "ret": "0",
+        "callback_local_delta": "+5",
+        "outer_f_pos": "initial+5",
+        "side_effect": "net0 may include positive and negative callback results"
+      },
+      {
+        "id": "nonstream_negative",
+        "ret": "-2",
+        "callback_local_delta": "+3",
+        "outer_f_pos": "unchanged by do_writev assignment",
+        "side_effect": "earlier callback writes/inode updates not rolled back"
+      },
+      {
+        "id": "stream_vlen0",
+        "ret": "0",
+        "callback_local_delta": "no call",
+        "outer_f_pos": "no writeback (ppos NULL)",
+        "side_effect": "no vector callback; fdput still normally called"
+      },
+      {
+        "id": "stream_vlen1_with_FAT",
+        "ret": "undefined",
+        "callback_local_delta": "FAT accesses *position",
+        "outer_f_pos": "no safe completed result",
+        "side_effect": "stop at FAT32_write *position deref; earlier inode/FSBI member accesses also require validity"
+      },
+      {
+        "id": "nonstream_callback_direct_f_pos",
+        "ret": "-5",
+        "callback_local_delta": "opaque callback may directly write file.f_pos",
+        "outer_f_pos": "do_writev skips own commit",
+        "side_effect": "absence of outer store is not proof of global unchanged position"
+      },
+      {
+        "id": "FAT_zero_count_existing_cluster",
+        "ret": "0 if all callee calls normal",
+        "callback_local_delta": "0",
+        "outer_f_pos": "unchanged numeric value",
+        "side_effect": "do loop may issue ROOTBLK READ/WRITE even with len0; block errors can be masked by index0"
+      },
+      {
+        "id": "FAT_zero_count_newfile",
+        "ret": "0 if all callee calls normal",
+        "callback_local_delta": "0",
+        "outer_f_pos": "unchanged numeric value",
+        "side_effect": "first_cluster/write_inode/FAT mark and ROOTBLK WRITE sector initially0 are requested despite count0"
+      },
+      {
+        "id": "FAT_block_error_after_partial",
+        "ret": "-EIO from one callback possible",
+        "callback_local_delta": "earlier segment advances",
+        "outer_f_pos": "net negative => outer store skipped",
+        "side_effect": "inner existing inode i_size/write_inode could have been requested; earlier block writes persist as requests"
+      },
+      {
+        "id": "FAT_copy_residue",
+        "ret": "count on normal index0",
+        "callback_local_delta": "index-based length (not residue)",
+        "outer_f_pos": "potential local count amount",
+        "side_effect": "copy_from_user residual cplen stored but not checked; don't claim actual bytes"
+      },
+      {
+        "id": "FAT_no_position_pointer",
+        "ret": "no safe FAT result",
+        "callback_local_delta": "none",
+        "outer_f_pos": "not determined",
+        "side_effect": "stream missing position invalid at selected *position access"
+      }
+    ],
+    "selected_FAT_details": [
+      "position pointer is dereferenced for initial cluster offset/index before count check",
+      "int index = *position / fsbi.bytes_per_cluster; next index=count with size_t->int conversion",
+      "flags1 new file first_cluster, write_inode, FAT marker before data do-loop",
+      "do-loop executes once even if count0 if earlier legal prefix",
+      "copy residue stored in cplen unused in selected FAT32_write control flow",
+      "ROOTBLK WRITE failure sets ret_val=-EIO before index decrement and position advance for that iteration",
+      "when index already0, final if(!index) ret_val=count can mask local -EIO",
+      "when earlier iteration already advanced *position, later error can return negative without erasing that local position/metadata history",
+      "ordinary cluster next assignment/sector stale risks are old AG56-F01 and BI55-F02; not revalidated"
+    ],
+    "previous_59_iter_rules": "FAT directory iterator ctx.pos sentinel and reset is not the general file write position model"
+  },
+  "finite_model_cases": [
+    {
+      "id": "A-ENTRY-1",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "within256 but slotNULL",
+        "vlen": 1,
+        "vec": "valid",
+        "mode": "none"
+      },
+      "expected": "-EBADF",
+      "earliest": "__to_fd reads valid NULL slot; do_writev !f.file false"
+    },
+    {
+      "id": "A-ENTRY-2",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "index256 into fd_array[256]",
+        "vlen": 0,
+        "vec": "NULL",
+        "mode": "not_reached"
+      },
+      "expected": "ANALYSIS_STOP, no safe EBADF",
+      "earliest": "__to_fd reads invalid physical index"
+    },
+    {
+      "id": "A-ENTRY-3",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid pointer",
+        "vlen": 0,
+        "vec": "NULL",
+        "mode": "FMODE_WRITE missing"
+      },
+      "expected": "-EBADF; fdput_pos on normal exit",
+      "earliest": "file_ppos f_mode read then vfs_writev mode check"
+    },
+    {
+      "id": "A-ENTRY-4",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 0,
+        "vec": "NULL",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "0; no vec[0] or f_op->write access; pos copied if nonstream",
+      "earliest": "file_ppos then write mode, for condition false"
+    },
+    {
+      "id": "A-ENTRY-5",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "NULL",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "ANALYSIS_STOP",
+      "earliest": "unspecified evaluation order of vec[0].iov_base and vec[0].iov_len; first invalid field access"
+    },
+    {
+      "id": "A-ENTRY-6",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 2,
+        "vec": "one accessible valid element",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "no valid aggregate/second callback proof",
+      "earliest": "if call0 returns normally, second element field access invalid"
+    },
+    {
+      "id": "A-ENTRY-7",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid iovec with baseNULL len4",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "opaque callback validity/errno; cannot infer -EFAULT",
+      "earliest": "no active access_ok; direct write callback with baseNULL"
+    },
+    {
+      "id": "A-ENTRY-8",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid base and len0",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "callback result unproven; FAT may issue block/metadata requests",
+      "earliest": "still calls underlying write with count0"
+    },
+    {
+      "id": "A-ENTRY-9",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 0,
+        "vec": "NULL",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "0 if valid file and setup; fdput",
+      "earliest": "no file->f_op access inside zero-trip loop"
+    },
+    {
+      "id": "A-ENTRY-10",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid element",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "ANALYSIS_STOP",
+      "earliest": "file->f_op->write attempts through null f_op"
+    },
+    {
+      "id": "A-ENTRY-11",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid element",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "ANALYSIS_STOP",
+      "earliest": "direct call to NULL write, no write_iter fallback"
+    },
+    {
+      "id": "A-ENTRY-12",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 1,
+        "vec": "valid element",
+        "mode": "FMODE_WRITE set, FMODE_CAN_WRITE absent"
+      },
+      "expected": "vector may reach write if method valid, scalar -EINVAL",
+      "earliest": "vector checks WRITE only; scalar checks both"
+    },
+    {
+      "id": "A-ENTRY-13",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": 1025,
+        "vec": "1025 valid elements hypothetical",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "helper-only, not user-program reachability",
+      "earliest": "no active UIO_MAXIOV gate; loops until int or callback failure"
+    },
+    {
+      "id": "A-ENTRY-14",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "valid",
+        "vlen": "2147483649",
+        "vec": "huge hypothetical array",
+        "mode": "FMODE_WRITE set"
+      },
+      "expected": "signed i overflow/other earlier bounds STOP",
+      "earliest": "int i++ reaches INT_MAX boundary before completing all if all callbacks normal"
+    },
+    {
+      "id": "A-ENTRY-15",
+      "kind": "entry_gate",
+      "input": {
+        "fd": "ulong value 2147483648 as do_writev argument",
+        "vlen": 0,
+        "vec": "NULL",
+        "mode": "not reached"
+      },
+      "expected": "cannot assume safe fd index/EBADF",
+      "earliest": "ulong to fdget_pos(int) implementation-defined if out of int range; then signed→ulong to __to_fd"
+    },
+    {
+      "id": "A-COMP-1",
+      "kind": "scalar_vector_contrast",
+      "feature": "FMODE_WRITE",
+      "scalar": "active -EBADF gate",
+      "vector": "active -EBADF gate"
+    },
+    {
+      "id": "A-COMP-2",
+      "kind": "scalar_vector_contrast",
+      "feature": "FMODE_CAN_WRITE",
+      "scalar": "active -EINVAL gate",
+      "vector": "commented, not executed"
+    },
+    {
+      "id": "A-COMP-3",
+      "kind": "scalar_vector_contrast",
+      "feature": "access_ok(buf,count)",
+      "scalar": "active -EFAULT gate",
+      "vector": "no active access_ok(vec/vectors) in selected function"
+    },
+    {
+      "id": "A-COMP-4",
+      "kind": "scalar_vector_contrast",
+      "feature": "rw_verify_area",
+      "scalar": "called; current callee immediately return0",
+      "vector": "call is commented"
+    },
+    {
+      "id": "A-COMP-5",
+      "kind": "scalar_vector_contrast",
+      "feature": "MAX_RW_COUNT",
+      "scalar": "clamps count",
+      "vector": "no active total/vector cap"
+    },
+    {
+      "id": "A-COMP-6",
+      "kind": "scalar_vector_contrast",
+      "feature": "write_method",
+      "scalar": "write or write_iter via new_sync_write",
+      "vector": "calls ->write exclusively inside for"
+    },
+    {
+      "id": "A-COMP-7",
+      "kind": "scalar_vector_contrast",
+      "feature": "iovec import",
+      "scalar": "not applicable to scalar",
+      "vector": "import_iovec/iterator setup commented"
+    },
+    {
+      "id": "A-COMP-8",
+      "kind": "scalar_vector_contrast",
+      "feature": "zero length/count",
+      "scalar": "if method valid invokes write (subject to checks)",
+      "vector": "vlen0 no callbacks; each iov_len0 still invokes write"
+    },
+    {
+      "id": "A-COMP-9",
+      "kind": "scalar_vector_contrast",
+      "feature": "f_pos commit",
+      "scalar": "ret>=0 && ppos",
+      "vector": "ret>=0 && ppos where ret is arithmetic sum"
+    },
+    {
+      "id": "B-SEQ-1",
+      "kind": "callback_sum_and_position",
+      "input": [],
+      "total": 0,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-2",
+      "kind": "callback_sum_and_position",
+      "input": [
+        3
+      ],
+      "total": 3,
+      "file_pos": 13
+    },
+    {
+      "id": "B-SEQ-3",
+      "kind": "callback_sum_and_position",
+      "input": [
+        0
+      ],
+      "total": 0,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-4",
+      "kind": "callback_sum_and_position",
+      "input": [
+        -5
+      ],
+      "total": -5,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-5",
+      "kind": "callback_sum_and_position",
+      "input": [
+        2,
+        4
+      ],
+      "total": 6,
+      "file_pos": 16
+    },
+    {
+      "id": "B-SEQ-6",
+      "kind": "callback_sum_and_position",
+      "input": [
+        3,
+        0
+      ],
+      "total": 3,
+      "file_pos": 13
+    },
+    {
+      "id": "B-SEQ-7",
+      "kind": "callback_sum_and_position",
+      "input": [
+        0,
+        4
+      ],
+      "total": 4,
+      "file_pos": 14
+    },
+    {
+      "id": "B-SEQ-8",
+      "kind": "callback_sum_and_position",
+      "input": [
+        3,
+        5
+      ],
+      "total": 8,
+      "file_pos": 18
+    },
+    {
+      "id": "B-SEQ-9",
+      "kind": "callback_sum_and_position",
+      "input": [
+        -5,
+        8
+      ],
+      "total": 3,
+      "file_pos": 18
+    },
+    {
+      "id": "B-SEQ-10",
+      "kind": "callback_sum_and_position",
+      "input": [
+        3,
+        -5
+      ],
+      "total": -2,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-11",
+      "kind": "callback_sum_and_position",
+      "input": [
+        5,
+        -5
+      ],
+      "total": 0,
+      "file_pos": 15
+    },
+    {
+      "id": "B-SEQ-12",
+      "kind": "callback_sum_and_position",
+      "input": [
+        4,
+        -5,
+        4
+      ],
+      "total": 3,
+      "file_pos": 18
+    },
+    {
+      "id": "B-SEQ-13",
+      "kind": "callback_sum_and_position",
+      "input": [
+        -5,
+        -2
+      ],
+      "total": -7,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-14",
+      "kind": "callback_sum_and_position",
+      "input": [
+        -3,
+        0,
+        5
+      ],
+      "total": 2,
+      "file_pos": 15
+    },
+    {
+      "id": "B-SEQ-15",
+      "kind": "callback_sum_and_position",
+      "input": [
+        1,
+        0,
+        -2
+      ],
+      "total": -1,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-16",
+      "kind": "callback_sum_and_position",
+      "input": [
+        2,
+        -2
+      ],
+      "total": 0,
+      "file_pos": 12
+    },
+    {
+      "id": "B-SEQ-17",
+      "kind": "callback_sum_and_position",
+      "input": [
+        0,
+        0
+      ],
+      "total": 0,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-18",
+      "kind": "callback_sum_and_position",
+      "input": [
+        2,
+        -5,
+        7
+      ],
+      "total": 4,
+      "file_pos": 19
+    },
+    {
+      "id": "B-SEQ-19",
+      "kind": "callback_sum_and_position",
+      "input": [
+        -5,
+        2
+      ],
+      "total": -3,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-20",
+      "kind": "callback_sum_and_position",
+      "input": [
+        5,
+        -5
+      ],
+      "total": 0,
+      "file_pos": 17
+    },
+    {
+      "id": "B-SEQ-21",
+      "kind": "callback_sum_and_position",
+      "input": [
+        1,
+        1,
+        1
+      ],
+      "total": 3,
+      "file_pos": 13
+    },
+    {
+      "id": "B-SEQ-22",
+      "kind": "callback_sum_and_position",
+      "input": [
+        2,
+        1
+      ],
+      "total": 3,
+      "file_pos": 13
+    },
+    {
+      "id": "B-SEQ-23",
+      "kind": "callback_sum_and_position",
+      "input": [
+        4,
+        2,
+        -9
+      ],
+      "total": -3,
+      "file_pos": 10
+    },
+    {
+      "id": "B-SEQ-24",
+      "kind": "callback_sum_and_position",
+      "input": [
+        -5,
+        -4,
+        10
+      ],
+      "total": 1,
+      "file_pos": 20
+    },
+    {
+      "id": "B-EDGE-1",
+      "kind": "signed_range_limit",
+      "input": "9223372036854775807",
+      "result": "signed ssize_t overflow STOP before writeback"
+    },
+    {
+      "id": "B-EDGE-2",
+      "kind": "signed_range_limit",
+      "input": "-9223372036854775808",
+      "result": "signed ssize_t overflow STOP"
+    },
+    {
+      "id": "B-EDGE-3",
+      "kind": "signed_range_limit",
+      "input": "2147483647",
+      "result": "int i++ overflow if all former loop steps valid; no universal iteration count"
+    },
+    {
+      "id": "B-EDGE-4",
+      "kind": "signed_range_limit",
+      "input": "count>INT_MAX",
+      "result": "FAT32_write count(size_t) into index(int) implementation-defined, no safe block model"
+    },
+    {
+      "id": "C-CONS-1",
+      "kind": "position_side_effect",
+      "input": "+3",
+      "commit": "initial+3",
+      "side_effect": "callback may write data; true physical bytes not inferred"
+    },
+    {
+      "id": "C-CONS-2",
+      "kind": "position_side_effect",
+      "input": "0",
+      "commit": "initial+5",
+      "side_effect": "net0 may include positive and negative callback results"
+    },
+    {
+      "id": "C-CONS-3",
+      "kind": "position_side_effect",
+      "input": "-2",
+      "commit": "unchanged by do_writev assignment",
+      "side_effect": "earlier callback writes/inode updates not rolled back"
+    },
+    {
+      "id": "C-CONS-4",
+      "kind": "position_side_effect",
+      "input": "0",
+      "commit": "no writeback (ppos NULL)",
+      "side_effect": "no vector callback; fdput still normally called"
+    },
+    {
+      "id": "C-CONS-5",
+      "kind": "position_side_effect",
+      "input": "undefined",
+      "commit": "no safe completed result",
+      "side_effect": "stop at FAT32_write *position deref; earlier inode/FSBI member accesses also require validity"
+    },
+    {
+      "id": "C-CONS-6",
+      "kind": "position_side_effect",
+      "input": "-5",
+      "commit": "do_writev skips own commit",
+      "side_effect": "absence of outer store is not proof of global unchanged position"
+    },
+    {
+      "id": "C-CONS-7",
+      "kind": "position_side_effect",
+      "input": "0 if all callee calls normal",
+      "commit": "unchanged numeric value",
+      "side_effect": "do loop may issue ROOTBLK READ/WRITE even with len0; block errors can be masked by index0"
+    },
+    {
+      "id": "C-CONS-8",
+      "kind": "position_side_effect",
+      "input": "0 if all callee calls normal",
+      "commit": "unchanged numeric value",
+      "side_effect": "first_cluster/write_inode/FAT mark and ROOTBLK WRITE sector initially0 are requested despite count0"
+    },
+    {
+      "id": "C-CONS-9",
+      "kind": "position_side_effect",
+      "input": "-EIO from one callback possible",
+      "commit": "net negative => outer store skipped",
+      "side_effect": "inner existing inode i_size/write_inode could have been requested; earlier block writes persist as requests"
+    },
+    {
+      "id": "C-CONS-10",
+      "kind": "position_side_effect",
+      "input": "count on normal index0",
+      "commit": "potential local count amount",
+      "side_effect": "copy_from_user residual cplen stored but not checked; don't claim actual bytes"
+    },
+    {
+      "id": "C-CONS-11",
+      "kind": "position_side_effect",
+      "input": "no safe FAT result",
+      "commit": "not determined",
+      "side_effect": "stream missing position invalid at selected *position access"
+    }
+  ],
+  "finite_model_count": 63,
+  "model_group_counts": {
+    "A": 24,
+    "B": 28,
+    "C": 11
+  },
+  "not_proven": [
+    "actual user vector array is mapped and length within allocation",
+    "actual iov_base data valid and kernel copies all bytes",
+    "opaque callback return sequences producible by FAT or console",
+    "actual file, inode, private FAT/geometry and block buffers valid",
+    "any real disk written or user syscall executed",
+    "full POSIX short-write stop semantics",
+    "actual signed overflow C machine effects",
+    "real f_count lifetime and fdput cache free",
+    "SMP alias and file position lock protocol",
+    "full local P9, compiled ABI, build config or hardware"
+  ],
+  "historical_evidence_append_consumption": {
+    "source_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml",
+    "section": "evidence_appends",
+    "target": "CORE-USER-BOUNDARIES-07::UB-01",
+    "source_field": "status_change",
+    "source_value": "none",
+    "note": "08 explicitly records vfs_writev per-item ->write returns directly added; this is an append to real UB-01, not a new 08 qualified finding ID",
+    "old_record_modified": false
+  }
+}
