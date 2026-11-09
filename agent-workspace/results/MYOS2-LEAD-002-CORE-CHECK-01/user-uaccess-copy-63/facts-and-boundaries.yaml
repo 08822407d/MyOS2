@@ -1,0 +1,1414 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-UACCESS-COPY-63",
+  "record_type": "bounded_uaccess_source_selection_and_finite_models",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "fixed_contract93_short12": "3044d74381f0",
+  "execution_base_short12": "54101196eb11",
+  "read_channel": "GitHub_connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/include/asm/uaccess.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "27e6beb3efc2",
+      "ranges": "7-16;55-102;191-194"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/uaccess_64.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "90ca89193f9c",
+      "ranges": "50-133"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/access_ok.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "6045b6cae442",
+      "ranges": "15-42"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/uaccess.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ab39e43ad2f7",
+      "ranges": "11;149-205"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "b10e280f26f0",
+      "ranges": "9-10;83-89"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/smap.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "7ceb4a24304c",
+      "ranges": "30-40"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/alternative.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "3f6ef892e508",
+      "ranges": "9-12;180-183"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/asm.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0aa2fa9155f6",
+      "ranges": "209-216"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/errno-base.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "8705e60aee51",
+      "ranges": "5"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ef531baa8317",
+      "ranges": "69-76;105"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/posix_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0246766d9a75",
+      "ranges": "63-76"
+    },
+    {
+      "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_64.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "73d5f6fd9d4a",
+      "ranges": "48-94;244-277"
+    },
+    {
+      "path": "mykernel/arch/x86_64/lock_IPC/signal/signal_types_arch.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "49875e302eb1",
+      "ranges": "57-65"
+    },
+    {
+      "path": "mykernel/fs/vfs/readdir.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "89c17eb48a64",
+      "ranges": "92-130;155-169"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/dirent.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "9e28646016a8",
+      "ranges": "7-13"
+    }
+  ],
+  "prior_review_disposition": {
+    "batch62": "PASS_PENDING_LOCAL; R62-S01/S02 mandatory; no D00",
+    "R62_S01": "int i increment overflow at vlen INT_MAX+1 if prior giant inputs valid; get_user copying and position errors separate; count0 FAT requires nonzero selected cluster and normal callee; no implicit rollback",
+    "R62_S02": "graph CALL only when actual control, ret>=0 plus nonNULL position, error paths not all reach cleanup; old 98 quote count author only",
+    "batch61": "PASS_PENDING_LOCAL R61-S01/S02/S03; fput decrement correct; new 63 doesn't touch prior",
+    "R58C_S01": "B25 originally correct, reviewer mistaken allegation withdrawn",
+    "batch09": "PASS_PENDING_LOCAL_WITH_PRIOR_REVIEW_LIMITS; source ID RS-06/RS-07 retained",
+    "batch59": "PASS_PENDING_LOCAL R59-S01/S02; direct store and copy result prior",
+    "batch60": "PASS_PENDING_LOCAL; getcwd consumer not re-opened",
+    "batch55": "PASS_PENDING_LOCAL R55-S01/S02; copy residue and effects conditional"
+  },
+  "definition_selection_matrix": [
+    {
+      "step": 1,
+      "source": "mykernel/include/linux/kernel/uaccess.h",
+      "physical_lines": "11",
+      "source_context": "#include <asm/uaccess.h>",
+      "kind": "include"
+    },
+    {
+      "step": 2,
+      "source": "mykernel/arch/x86_64/include/asm/uaccess.h",
+      "physical_lines": "14",
+      "source_context": "#include <asm/uaccess_64.h>",
+      "kind": "include"
+    },
+    {
+      "step": 3,
+      "source": "mykernel/arch/x86_64/include/asm/uaccess_64.h",
+      "physical_lines": "83-92",
+      "source_context": "static inline bool __access_ok(ptr,size), then #define __access_ok __access_ok",
+      "kind": "function+object_macro",
+      "condition": "source text before generic include"
+    },
+    {
+      "step": 4,
+      "source": "mykernel/arch/x86_64/include/asm/uaccess.h",
+      "physical_lines": "16",
+      "source_context": "#include <uapi/asm-generic/access_ok.h>",
+      "kind": "include"
+    },
+    {
+      "step": 5,
+      "source": "mykernel/include/uapi/asm-generic/access_ok.h",
+      "physical_lines": "19;31-38",
+      "source_context": "#ifndef __access_ok guards the alternate static inline __access_ok function; x86 macro normally prevents this fallback",
+      "kind": "fallback_guard",
+      "condition": "conditional on macro state; not a second run-time predicate"
+    },
+    {
+      "step": 6,
+      "source": "mykernel/include/uapi/asm-generic/access_ok.h",
+      "physical_lines": "40-42",
+      "source_context": "#ifndef access_ok permits #define access_ok(addr,size) likely(__access_ok(addr,size))",
+      "kind": "wrapper_guard"
+    },
+    {
+      "step": 7,
+      "source": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "physical_lines": "9-10;85-89",
+      "source_context": "PAGE_SIZE=(1UL<<12)=4096, TASK_SIZE_MAX=(1UL<<47)-PAGE_SIZE under selected source macro constants",
+      "kind": "source_math",
+      "condition": "not compiler build-selection proof"
+    }
+  ],
+  "address_predicate_models": {
+    "numeric_assumptions": {
+      "ulong_bits": 64,
+      "signed_long_bits": 64,
+      "page_size": 4096,
+      "sign_half_hex": "0x8000000000000000",
+      "task_size_max_hex": "0x7ffffffff000",
+      "actual_compiler_builtin_constant_p": "NOT_RUN",
+      "actual_user_mapping_or_permissions": "NOT_PROVEN"
+    },
+    "cases": [
+      {
+        "id": "null_zero",
+        "address_hex": "0x0",
+        "size_decimal": "0",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": true,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "null_one",
+        "address_hex": "0x0",
+        "size_decimal": "1",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": true,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "zero_page",
+        "address_hex": "0x0",
+        "size_decimal": "4096",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": true,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "small_one",
+        "address_hex": "0x1",
+        "size_decimal": "1",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": true,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "limit_zero",
+        "address_hex": "0x7ffffffff000",
+        "size_decimal": "0",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": true,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "limit_one",
+        "address_hex": "0x7ffffffff000",
+        "size_decimal": "1",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "limit_minus4096_8192",
+        "address_hex": "0x7fffffffe000",
+        "size_decimal": "8192",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": null,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "limit_minus1_page",
+        "address_hex": "0x7fffffffefff",
+        "size_decimal": "4096",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "limit_plus1_zero",
+        "address_hex": "0x7ffffffff001",
+        "size_decimal": "0",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "sign_minus16_32",
+        "address_hex": "0x7ffffffffffffff0",
+        "size_decimal": "32",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "sign_minus1_1",
+        "address_hex": "0x7fffffffffffffff",
+        "size_decimal": "1",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "sign_minus1_zero",
+        "address_hex": "0x7fffffffffffffff",
+        "size_decimal": "0",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "sign_negative_zero",
+        "address_hex": "0x8000000000000000",
+        "size_decimal": "0",
+        "address_signed_nonnegative_twos_complement": false,
+        "x86_if_expression_known_const_true": false,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "high_half_one",
+        "address_hex": "0x8000000000000001",
+        "size_decimal": "1",
+        "address_signed_nonnegative_twos_complement": false,
+        "x86_if_expression_known_const_true": false,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "unsigned_max_zero",
+        "address_hex": "0xffffffffffffffff",
+        "size_decimal": "0",
+        "address_signed_nonnegative_twos_complement": false,
+        "x86_if_expression_known_const_true": false,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "unsigned_max_one",
+        "address_hex": "0xffffffffffffffff",
+        "size_decimal": "1",
+        "address_signed_nonnegative_twos_complement": false,
+        "x86_if_expression_known_const_true": false,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "user_end_wrap",
+        "address_hex": "0x7ffffffffffffffe",
+        "size_decimal": "4",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "small_huge_size",
+        "address_hex": "0xa",
+        "size_decimal": "18446744073709551615",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": null,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "zero_max_size",
+        "address_hex": "0x0",
+        "size_decimal": "18446744073709551615",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": null,
+        "x86_general_branch": false,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "zero_page_plus1",
+        "address_hex": "0x0",
+        "size_decimal": "4097",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": null,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": true,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      },
+      {
+        "id": "near_low_limit_4095",
+        "address_hex": "0x7fffffffe002",
+        "size_decimal": "4095",
+        "address_signed_nonnegative_twos_complement": true,
+        "x86_if_expression_known_const_true": true,
+        "x86_general_branch": true,
+        "generic_fallback_if_it_were_selected": false,
+        "branch_source": "x86 __builtin_constant_p(size <= PAGE_SIZE) && size <= PAGE_SIZE; this is a conditional assumption, not a compiled selection",
+        "prediction": "truth of these purely numeric predicates is not user address mapping/existence, access permission, or memory-read guarantee"
+      }
+    ],
+    "root_rules": [
+      "x86 expression chooses constant-size shortcut only if compiler judges size<=PAGE_SIZE constant and true; even if numeric size small but expression unknown, general branch used",
+      "generic fallback function only if __access_ok macro not defined in selected preprocessor; its task-size threshold is not the actual x86 function on this include chain",
+      "x86 sign/overflow predicate neither checks VMA, page permission, nor object liveness"
+    ]
+  },
+  "copy_residual_padding_traces": {
+    "valid_residual_cases": [
+      {
+        "id": "COPY-1",
+        "request_n": 0,
+        "assumed_raw_residual": 0,
+        "assumed_prefix_copied": 0,
+        "from_user_pad_zero_start": null,
+        "from_user_pad_zero_length": 0,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 0,
+        "to_user_return_if_access_ok_false": 0,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-2",
+        "request_n": 1,
+        "assumed_raw_residual": 0,
+        "assumed_prefix_copied": 1,
+        "from_user_pad_zero_start": null,
+        "from_user_pad_zero_length": 0,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 0,
+        "to_user_return_if_access_ok_false": 1,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-3",
+        "request_n": 1,
+        "assumed_raw_residual": 1,
+        "assumed_prefix_copied": 0,
+        "from_user_pad_zero_start": 0,
+        "from_user_pad_zero_length": 1,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 1,
+        "to_user_return_if_access_ok_false": 1,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-4",
+        "request_n": 4,
+        "assumed_raw_residual": 0,
+        "assumed_prefix_copied": 4,
+        "from_user_pad_zero_start": null,
+        "from_user_pad_zero_length": 0,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 0,
+        "to_user_return_if_access_ok_false": 4,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-5",
+        "request_n": 4,
+        "assumed_raw_residual": 1,
+        "assumed_prefix_copied": 3,
+        "from_user_pad_zero_start": 3,
+        "from_user_pad_zero_length": 1,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 1,
+        "to_user_return_if_access_ok_false": 4,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-6",
+        "request_n": 4,
+        "assumed_raw_residual": 2,
+        "assumed_prefix_copied": 2,
+        "from_user_pad_zero_start": 2,
+        "from_user_pad_zero_length": 2,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 2,
+        "to_user_return_if_access_ok_false": 4,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-7",
+        "request_n": 4,
+        "assumed_raw_residual": 4,
+        "assumed_prefix_copied": 0,
+        "from_user_pad_zero_start": 0,
+        "from_user_pad_zero_length": 4,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 4,
+        "to_user_return_if_access_ok_false": 4,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-8",
+        "request_n": 8,
+        "assumed_raw_residual": 0,
+        "assumed_prefix_copied": 8,
+        "from_user_pad_zero_start": null,
+        "from_user_pad_zero_length": 0,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 0,
+        "to_user_return_if_access_ok_false": 8,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-9",
+        "request_n": 8,
+        "assumed_raw_residual": 3,
+        "assumed_prefix_copied": 5,
+        "from_user_pad_zero_start": 5,
+        "from_user_pad_zero_length": 3,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 3,
+        "to_user_return_if_access_ok_false": 8,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-10",
+        "request_n": 8,
+        "assumed_raw_residual": 8,
+        "assumed_prefix_copied": 0,
+        "from_user_pad_zero_start": 0,
+        "from_user_pad_zero_length": 8,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 8,
+        "to_user_return_if_access_ok_false": 8,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-11",
+        "request_n": 16,
+        "assumed_raw_residual": 4,
+        "assumed_prefix_copied": 12,
+        "from_user_pad_zero_start": 12,
+        "from_user_pad_zero_length": 4,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 4,
+        "to_user_return_if_access_ok_false": 16,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      },
+      {
+        "id": "COPY-12",
+        "request_n": 64,
+        "assumed_raw_residual": 32,
+        "assumed_prefix_copied": 32,
+        "from_user_pad_zero_start": 32,
+        "from_user_pad_zero_length": 32,
+        "to_user_pad_zero_length": 0,
+        "to_user_return_if_access_ok_true": 32,
+        "to_user_return_if_access_ok_false": 64,
+        "premise": "0<=raw_res<=n, valid destination/source objects and raw copy normal return; no actual CPU test"
+      }
+    ],
+    "invalid_domain_cases": [
+      {
+        "id": "RES_GT_N",
+        "n": 4,
+        "r": 5,
+        "stop": "n-res unsigned underflows in from-user zero-pad offset before any safe memset prediction"
+      },
+      {
+        "id": "TO_BAD_RES",
+        "n": 4,
+        "r": 5,
+        "stop": "to-user raw residual outside contract; return may be returned but is not a meaningful number of uncopied bytes"
+      },
+      {
+        "id": "NULL_DEST",
+        "n": 4,
+        "r": 4,
+        "stop": "raw may return full residual under valid contract; then memset to NULL destination cannot be inferred safe"
+      },
+      {
+        "id": "N_ZERO_BAD_PTR",
+        "n": 0,
+        "r": 0,
+        "stop": "numeric no-copy result does not certify pointer/object evaluation, stac/asm/clac or real hardware"
+      }
+    ],
+    "source_contract": "input n, raw output r, before memset ensure 0<=r<=n and valid destination; copied prefix n-r; zero padding of last r only for from-user",
+    "to_user_guard": "access_ok(to,n) false leaves n unchanged; if true raw returns residual; no memset",
+    "from_user_guard": "source access_ok(from,n), might_fault, instrument and check_copy_size appear commented in selected inline code",
+    "asm_contract": "copy_user_generic stac; asm alternate rep movsb vs call rep_movs_alternative using +c(len)/+D(to)/+S(from); extable source annotation; clac; return residual len",
+    "rep_movs_alternative_definition": "NOT_LOCATED_IN_SELECTED_DIRECT_SOURCE; only declaration in uaccess_64.h; code search of default branch was limited and cannot prove global absence"
+  },
+  "scalar_consumer_error_matrix": {
+    "scalar_macro_cases": [
+      {
+        "id": "get_user_valid_frame64",
+        "macro": "get_user",
+        "context": "rt_sigreturn",
+        "input": "64-bit x target and 64-bit user field, valid readable",
+        "source_action": "x=*(__typeof(&(x)))(ptr)",
+        "macro_result": "-ENOERR=0 on normal evaluation",
+        "caller": "if(error) false; continue",
+        "stop": "a failed dereference has no defined successful macro return"
+      },
+      {
+        "id": "get_user_bad_frame64",
+        "macro": "get_user",
+        "context": "rt_sigreturn",
+        "input": "numeric access_ok passes but user field not mapped",
+        "source_action": "direct dereference",
+        "macro_result": "NOT_ESTABLISHED",
+        "caller": "no safe claim of goto badframe",
+        "stop": "at direct load; hardware exception handling NOT_RUN"
+      },
+      {
+        "id": "get_user_target_wider_than_ptr",
+        "macro": "get_user",
+        "context": "helper-only",
+        "input": "target u64 but conceptual pointed source u32, if macro cast succeeds",
+        "source_action": "pointer cast to typeof(&x), width chosen by x",
+        "macro_result": "0 only after defined load/assignment",
+        "caller": "no real consumer case asserted",
+        "stop": "actual object not 8 readable bytes, alignment/aliasing and memory-validity unproven"
+      },
+      {
+        "id": "put_user_valid",
+        "macro": "put_user",
+        "context": "helper-only",
+        "input": "valid destination pointer; value representable target type",
+        "source_action": "*(ptr)=(typeof(*(ptr)))(x)",
+        "macro_result": "-ENOERR=0 after normal store",
+        "caller": "if(error) false",
+        "stop": "none within bounded model"
+      },
+      {
+        "id": "put_user_narrow",
+        "macro": "put_user",
+        "context": "helper-only",
+        "input": "value 0x12345 and destination u16, explicit unsigned truncation model",
+        "source_action": "writes 0x2345 if target u16 and valid",
+        "macro_result": "0 only after normal store",
+        "caller": "not an actual observed call",
+        "stop": "bad pointer/store would be earlier"
+      },
+      {
+        "id": "put_user_badptr",
+        "macro": "put_user",
+        "context": "helper-only",
+        "input": "destination points to unmapped address",
+        "source_action": "direct store",
+        "macro_result": "NOT_ESTABLISHED",
+        "caller": "no safe -EFAULT return",
+        "stop": "at store"
+      }
+    ],
+    "rt_sigreturn_and_filldir_cases": [
+      {
+        "id": "sigreturn_invalid_high_frame",
+        "consumer": "MYOS_SYSCALL_DEFINE0(rt_sigreturn)",
+        "before": "regs->sp - sizeof(long) produces high-half frame numeric",
+        "predicate": "access_ok false in assumed x86 model",
+        "get_user_calls": 0,
+        "action": "goto badframe; returns0 in this body",
+        "limit": "return0 is local syscall source; final user-visible return is separate SR08-02"
+      },
+      {
+        "id": "sigreturn_low_unmapped_frame",
+        "consumer": "rt_sigreturn",
+        "before": "frame numeric low half, size check may pass but memory unmapped",
+        "predicate": "access_ok numeric true",
+        "get_user_calls": "first attempted",
+        "action": "first direct get_user load may lack validity; do not infer badframe or successful return",
+        "limit": "RS-06/07 prior source issues; no hardware fault outcome certified"
+      },
+      {
+        "id": "sigreturn_first_valid_second_invalid",
+        "consumer": "rt_sigreturn",
+        "before": "valid frame pointer, only sigmask field mapped/readable",
+        "predicate": "numeric true",
+        "get_user_calls": "first returns0; second direct load invalid",
+        "action": "stop at second load; no normal macro -EFAULT",
+        "limit": "actual struct mapping and page boundaries not proven"
+      },
+      {
+        "id": "sigreturn_both_valid_restore_copynonzero",
+        "consumer": "rt_sigreturn",
+        "before": "both scalar get_user normal return0",
+        "predicate": "true",
+        "get_user_calls": 2,
+        "action": "set_current_blocked then restore_sigcontext may return false when its copy_from_user returns nonzero, then goto badframe",
+        "limit": "restore delegated function; this is a separate consumer and not a get_user failure"
+      },
+      {
+        "id": "sigreturn_both_valid_restore_true",
+        "consumer": "rt_sigreturn",
+        "before": "frame fields and restore all valid",
+        "predicate": "true",
+        "get_user_calls": 2,
+        "action": "return regs->ax on selected body if restore_sigcontext true",
+        "limit": "signal/restart tail/real ABI still opaque"
+      },
+      {
+        "id": "dirent_bad_direct_store",
+        "consumer": "filldir64",
+        "before": "name valid, capacity sufficient, invalid user dirent",
+        "predicate": "copy_to_user not yet reached",
+        "get_user_calls": 0,
+        "action": "stop at first invalid prev->d_off / dirent field direct store",
+        "limit": "no safe -EFAULT despite efault label in source"
+      },
+      {
+        "id": "dirent_to_user_copy_full",
+        "consumer": "filldir64",
+        "before": "direct fields writable, source valid, copy_to_user returns0",
+        "predicate": "access_ok(to,n) true",
+        "get_user_calls": 0,
+        "action": "direct trailing NUL then update prev_reclen/current_dir/count",
+        "limit": "real user mapping & hardware exception handling unverified"
+      },
+      {
+        "id": "dirent_to_user_partial",
+        "consumer": "filldir64",
+        "before": "direct stores valid and copy_to_user normally returns positive residual",
+        "predicate": "access_ok true; raw residue positive",
+        "get_user_calls": 0,
+        "action": "cplen remains unread; direct NUL and record accounting still requested",
+        "limit": "do not equate counted record with completed name bytes"
+      },
+      {
+        "id": "getdents_put_user_inert",
+        "consumer": "MYOS_SYSCALL_DEFINE3(getdents64)",
+        "before": "prev_reclen positive",
+        "predicate": "put_user in commented code",
+        "get_user_calls": 0,
+        "action": "no active put_user from this block; actual error=count-buf.count",
+        "limit": "older directory position and f_op paths not reaudited"
+      }
+    ],
+    "notes": [
+      "get_user result -ENOERR=0 only if the direct load and assignment normally complete; no active fault-to-EFAULT path inside macro",
+      "put_user direct assignment uses destination pointer's pointed-to type; return0 only after normal store",
+      "rt_sigreturn first access_ok numeric gate; subsequent two get_user direct loads; restore_sigcontext may independently fail due copy_from_user residual; badframe return0 is source-local only",
+      "filldir64 directly stores multiple fields before copy_to_user and direct NUL afterward; ignores cplen; getdents final put_user commented"
+    ]
+  },
+  "finite_model_cases": [
+    {
+      "id": "A-1",
+      "group": "A",
+      "input": {
+        "address": "0x0",
+        "size": "0"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": true
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-2",
+      "group": "A",
+      "input": {
+        "address": "0x0",
+        "size": "1"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": true
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-3",
+      "group": "A",
+      "input": {
+        "address": "0x0",
+        "size": "4096"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": true
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-4",
+      "group": "A",
+      "input": {
+        "address": "0x1",
+        "size": "1"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": true
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-5",
+      "group": "A",
+      "input": {
+        "address": "0x7ffffffff000",
+        "size": "0"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": true
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-6",
+      "group": "A",
+      "input": {
+        "address": "0x7ffffffff000",
+        "size": "1"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-7",
+      "group": "A",
+      "input": {
+        "address": "0x7fffffffe000",
+        "size": "8192"
+      },
+      "result": {
+        "const": null,
+        "general": true,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-8",
+      "group": "A",
+      "input": {
+        "address": "0x7fffffffefff",
+        "size": "4096"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-9",
+      "group": "A",
+      "input": {
+        "address": "0x7ffffffff001",
+        "size": "0"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-10",
+      "group": "A",
+      "input": {
+        "address": "0x7ffffffffffffff0",
+        "size": "32"
+      },
+      "result": {
+        "const": true,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-11",
+      "group": "A",
+      "input": {
+        "address": "0x7fffffffffffffff",
+        "size": "1"
+      },
+      "result": {
+        "const": true,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-12",
+      "group": "A",
+      "input": {
+        "address": "0x7fffffffffffffff",
+        "size": "0"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-13",
+      "group": "A",
+      "input": {
+        "address": "0x8000000000000000",
+        "size": "0"
+      },
+      "result": {
+        "const": false,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-14",
+      "group": "A",
+      "input": {
+        "address": "0x8000000000000001",
+        "size": "1"
+      },
+      "result": {
+        "const": false,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-15",
+      "group": "A",
+      "input": {
+        "address": "0xffffffffffffffff",
+        "size": "0"
+      },
+      "result": {
+        "const": false,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-16",
+      "group": "A",
+      "input": {
+        "address": "0xffffffffffffffff",
+        "size": "1"
+      },
+      "result": {
+        "const": false,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-17",
+      "group": "A",
+      "input": {
+        "address": "0x7ffffffffffffffe",
+        "size": "4"
+      },
+      "result": {
+        "const": true,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-18",
+      "group": "A",
+      "input": {
+        "address": "0xa",
+        "size": "18446744073709551615"
+      },
+      "result": {
+        "const": null,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-19",
+      "group": "A",
+      "input": {
+        "address": "0x0",
+        "size": "18446744073709551615"
+      },
+      "result": {
+        "const": null,
+        "general": false,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-20",
+      "group": "A",
+      "input": {
+        "address": "0x0",
+        "size": "4097"
+      },
+      "result": {
+        "const": null,
+        "general": true,
+        "generic": true
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "A-21",
+      "group": "A",
+      "input": {
+        "address": "0x7fffffffe002",
+        "size": "4095"
+      },
+      "result": {
+        "const": true,
+        "general": true,
+        "generic": false
+      },
+      "premise": "pure 64-bit unsigned arithmetic and signed two's-complement address predicate; compilation not attested"
+    },
+    {
+      "id": "B-1",
+      "group": "B",
+      "input": {
+        "n": 0,
+        "res": 0
+      },
+      "result": {
+        "prefix": 0,
+        "zero_from": 0,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-2",
+      "group": "B",
+      "input": {
+        "n": 1,
+        "res": 0
+      },
+      "result": {
+        "prefix": 1,
+        "zero_from": 0,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-3",
+      "group": "B",
+      "input": {
+        "n": 1,
+        "res": 1
+      },
+      "result": {
+        "prefix": 0,
+        "zero_from": 1,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-4",
+      "group": "B",
+      "input": {
+        "n": 4,
+        "res": 0
+      },
+      "result": {
+        "prefix": 4,
+        "zero_from": 0,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-5",
+      "group": "B",
+      "input": {
+        "n": 4,
+        "res": 1
+      },
+      "result": {
+        "prefix": 3,
+        "zero_from": 1,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-6",
+      "group": "B",
+      "input": {
+        "n": 4,
+        "res": 2
+      },
+      "result": {
+        "prefix": 2,
+        "zero_from": 2,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-7",
+      "group": "B",
+      "input": {
+        "n": 4,
+        "res": 4
+      },
+      "result": {
+        "prefix": 0,
+        "zero_from": 4,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-8",
+      "group": "B",
+      "input": {
+        "n": 8,
+        "res": 0
+      },
+      "result": {
+        "prefix": 8,
+        "zero_from": 0,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-9",
+      "group": "B",
+      "input": {
+        "n": 8,
+        "res": 3
+      },
+      "result": {
+        "prefix": 5,
+        "zero_from": 3,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-10",
+      "group": "B",
+      "input": {
+        "n": 8,
+        "res": 8
+      },
+      "result": {
+        "prefix": 0,
+        "zero_from": 8,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-11",
+      "group": "B",
+      "input": {
+        "n": 16,
+        "res": 4
+      },
+      "result": {
+        "prefix": 12,
+        "zero_from": 4,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-12",
+      "group": "B",
+      "input": {
+        "n": 64,
+        "res": 32
+      },
+      "result": {
+        "prefix": 32,
+        "zero_from": 32,
+        "zero_to": 0
+      }
+    },
+    {
+      "id": "B-INVALID-1",
+      "group": "B",
+      "input": {
+        "n": 4,
+        "r": 5
+      },
+      "stop": "n-res unsigned underflows in from-user zero-pad offset before any safe memset prediction"
+    },
+    {
+      "id": "B-INVALID-2",
+      "group": "B",
+      "input": {
+        "n": 4,
+        "r": 5
+      },
+      "stop": "to-user raw residual outside contract; return may be returned but is not a meaningful number of uncopied bytes"
+    },
+    {
+      "id": "B-INVALID-3",
+      "group": "B",
+      "input": {
+        "n": 4,
+        "r": 4
+      },
+      "stop": "raw may return full residual under valid contract; then memset to NULL destination cannot be inferred safe"
+    },
+    {
+      "id": "B-INVALID-4",
+      "group": "B",
+      "input": {
+        "n": 0,
+        "r": 0
+      },
+      "stop": "numeric no-copy result does not certify pointer/object evaluation, stac/asm/clac or real hardware"
+    },
+    {
+      "id": "C-MACRO-1",
+      "group": "C",
+      "input": "64-bit x target and 64-bit user field, valid readable",
+      "output": "-ENOERR=0 on normal evaluation",
+      "precondition": "a failed dereference has no defined successful macro return"
+    },
+    {
+      "id": "C-MACRO-2",
+      "group": "C",
+      "input": "numeric access_ok passes but user field not mapped",
+      "output": "NOT_ESTABLISHED",
+      "precondition": "at direct load; hardware exception handling NOT_RUN"
+    },
+    {
+      "id": "C-MACRO-3",
+      "group": "C",
+      "input": "target u64 but conceptual pointed source u32, if macro cast succeeds",
+      "output": "0 only after defined load/assignment",
+      "precondition": "actual object not 8 readable bytes, alignment/aliasing and memory-validity unproven"
+    },
+    {
+      "id": "C-MACRO-4",
+      "group": "C",
+      "input": "valid destination pointer; value representable target type",
+      "output": "-ENOERR=0 after normal store",
+      "precondition": "none within bounded model"
+    },
+    {
+      "id": "C-MACRO-5",
+      "group": "C",
+      "input": "value 0x12345 and destination u16, explicit unsigned truncation model",
+      "output": "0 only after normal store",
+      "precondition": "bad pointer/store would be earlier"
+    },
+    {
+      "id": "C-MACRO-6",
+      "group": "C",
+      "input": "destination points to unmapped address",
+      "output": "NOT_ESTABLISHED",
+      "precondition": "at store"
+    },
+    {
+      "id": "C-CONS-1",
+      "group": "C",
+      "input": "regs->sp - sizeof(long) produces high-half frame numeric",
+      "output": "goto badframe; returns0 in this body",
+      "limit": "return0 is local syscall source; final user-visible return is separate SR08-02"
+    },
+    {
+      "id": "C-CONS-2",
+      "group": "C",
+      "input": "frame numeric low half, size check may pass but memory unmapped",
+      "output": "first direct get_user load may lack validity; do not infer badframe or successful return",
+      "limit": "RS-06/07 prior source issues; no hardware fault outcome certified"
+    },
+    {
+      "id": "C-CONS-3",
+      "group": "C",
+      "input": "valid frame pointer, only sigmask field mapped/readable",
+      "output": "stop at second load; no normal macro -EFAULT",
+      "limit": "actual struct mapping and page boundaries not proven"
+    },
+    {
+      "id": "C-CONS-4",
+      "group": "C",
+      "input": "both scalar get_user normal return0",
+      "output": "set_current_blocked then restore_sigcontext may return false when its copy_from_user returns nonzero, then goto badframe",
+      "limit": "restore delegated function; this is a separate consumer and not a get_user failure"
+    },
+    {
+      "id": "C-CONS-5",
+      "group": "C",
+      "input": "frame fields and restore all valid",
+      "output": "return regs->ax on selected body if restore_sigcontext true",
+      "limit": "signal/restart tail/real ABI still opaque"
+    },
+    {
+      "id": "C-CONS-6",
+      "group": "C",
+      "input": "name valid, capacity sufficient, invalid user dirent",
+      "output": "stop at first invalid prev->d_off / dirent field direct store",
+      "limit": "no safe -EFAULT despite efault label in source"
+    },
+    {
+      "id": "C-CONS-7",
+      "group": "C",
+      "input": "direct fields writable, source valid, copy_to_user returns0",
+      "output": "direct trailing NUL then update prev_reclen/current_dir/count",
+      "limit": "real user mapping & hardware exception handling unverified"
+    },
+    {
+      "id": "C-CONS-8",
+      "group": "C",
+      "input": "direct stores valid and copy_to_user normally returns positive residual",
+      "output": "cplen remains unread; direct NUL and record accounting still requested",
+      "limit": "do not equate counted record with completed name bytes"
+    },
+    {
+      "id": "C-CONS-9",
+      "group": "C",
+      "input": "prev_reclen positive",
+      "output": "no active put_user from this block; actual error=count-buf.count",
+      "limit": "older directory position and f_op paths not reaudited"
+    }
+  ],
+  "finite_model_count": 52,
+  "finite_groups": {
+    "A": 21,
+    "B": 16,
+    "C": 15
+  },
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-RETURN-SIGNAL-09::RS-06",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "relation": "rt_sigreturn get_user direct load and raw-copy effects; prior source root",
+      "old_status_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-RETURN-SIGNAL-09::RS-07",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "relation": "badframe source return0 and validity gates; avoid old unconditional claim about other callee",
+      "old_status_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F05",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "relation": "filldir64 direct stores vs copy residue, old consumer",
+      "old_status_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F06",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "relation": "trailing d_off assignment limitation, unrelated root",
+      "old_status_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-F03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "relation": "getcwd copy and pointer return prior, not reaudited",
+      "old_status_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F07",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "relation": "FAT ignored copy_from_user residue prior consumer",
+      "old_status_unchanged": true
+    },
+    {
+      "qualified_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F01",
+      "source_field": "disposition",
+      "source_value": "source_only_conditional",
+      "relation": "FAT copy result used as source-level contract only",
+      "old_status_unchanged": true
+    }
+  ],
+  "known_limits": [
+    "no macro preprocessor or actual compiler decisions",
+    "no real user pointers, memory mapping, fault, exception table linking or CPU feature selection",
+    "no rep_movs_alternative implementation body source established",
+    "no actual residual asm guarantee or real memcpy",
+    "no full signal handler/return ABI or user-space application",
+    "no directory device-backed output verification",
+    "no guarantee all C integer casts or pointer arithmetic safe beyond explicitly selected model"
+  ]
+}
