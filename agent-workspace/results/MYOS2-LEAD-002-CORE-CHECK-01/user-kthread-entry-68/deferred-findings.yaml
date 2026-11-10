@@ -1,0 +1,147 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-KTHREAD-ENTRY-68",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (model self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "D00": "R67-01 P6 count correction documentation_disposition_submitted; no executor self-closure",
+  "prior66": "R66-01 mainline CLOSED_DOCUMENTATION_ONLY, effective PASS_PENDING_LOCAL_WITH_R66C-S01",
+  "new_findings": [
+    {
+      "id": "KT68-F01",
+      "kind": "unchecked_direct_startup_pid_result_conditional",
+      "status": "needs_evidence",
+      "claim": "rest_init直接使用kernel_thread返回的pid进入find_task_by_pid_ns，随后对tsk->flags写入；另一次kernel_thread返回的pid也直接用于赋给kthreadd_task。在所读rest_init体内未见返回值为负或查找为空时的本地门。只有创建确实失败且任务查找无有效对象等前提下才可能产生无效访问/后续错误。",
+      "premises": [
+        "kernel_thread/kclone实际走到返回负值的失败分支",
+        "find_task_by_pid_ns对该返回值未给出可用task",
+        "rest_init继续到任务指针使用而未被其它控制中止"
+      ],
+      "counter_evidence": "被调用的查找函数、真正错误时序与启动机器没有实测；正常创建下两处可能安全；不扩为全局调用者缺乏错误处理",
+      "first_stop": "kernel_thread失败分支及find_task_by_pid_ns实际返回行为未闭合",
+      "evidence": [
+        "A11",
+        "A12",
+        "C02",
+        "C03",
+        "C04"
+      ],
+      "related": [
+        "CORE-USER-FIRST-RUN-FRAME-67::FR67-U06"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-F01"
+    },
+    {
+      "id": "KT68-F02",
+      "kind": "nonnull_first_frame_wrapper_with_potential_null_business_fn",
+      "status": "needs_evidence",
+      "claim": "通用create_kthread明确把非空包装器kthread作为首帧fn，而内部创建请求把调用者threadfn原样保存，kthread在done有效、未SHOULD_STOP且调度返回时调用局部threadfn(data)。所读内部创建与包装路径没有可见的非空threadfn分支门；如果外部调用者传NULL且该执行点真的到达，业务回调目标将无效。与FR67-F03的首帧fn为NULL假设不是同一问题。",
+      "premises": [
+        "外部kthread_create_on_node或内部创建者实际传NULL业务函数（本包未证）",
+        "分配/创建/完成和schedule_preempt_disabled正常推进",
+        "KTHREAD_SHOULD_STOP为false，代码到达threadfn(data)"
+      ],
+      "counter_evidence": "真实使用者或更外层API可能保证非空；也可能done为空或SHOULD_STOP而提前终止；没有实际NULL间接调用或CPU异常复现",
+      "first_stop": "外部业务回调生产者是否允许NULL以及任务实际唤醒时序",
+      "evidence": [
+        "B28",
+        "B34",
+        "B15",
+        "B20",
+        "B21",
+        "C25"
+      ],
+      "related": [
+        "CORE-USER-FIRST-RUN-FRAME-67::FR67-F03"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-F02"
+    }
+  ],
+  "new_findings_count": 2,
+  "evidence_gaps": [
+    {
+      "id": "KT68-U01",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U01",
+      "status": "needs_evidence",
+      "detail": "未对全仓kernel_thread/kthread_create_on_node的其它真实调用者做穷尽审查，不能认定所有入口非空或允许NULL",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "KT68-U02",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U02",
+      "status": "needs_evidence",
+      "detail": "创建信息、栈上done、xchg、completion与等待者的实际时序/生命周期和取消规则未审整套并发协议",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "KT68-U03",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U03",
+      "status": "needs_evidence",
+      "detail": "kthread业务threadfn的所有上游来源、有效性与STOP/WAKE真实生产者未穷尽",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "KT68-U04",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U04",
+      "status": "needs_evidence",
+      "detail": "rest_init的PID查找错误返回处理、实际调度分派和task指针有效性未运行或深读",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "KT68-U05",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U05",
+      "status": "needs_evidence",
+      "detail": "do_exit资源清理间接调用是否成功、task dead调度与真实终止/调用栈不返回没有运行证明",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "KT68-U06",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U06",
+      "status": "needs_evidence",
+      "detail": "ret_from_fork ABI的RBX/R12保存、首帧容量、编译目标与真实CPU返回及二次调用路径没有运行证明",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "KT68-U07",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U07",
+      "status": "needs_evidence",
+      "detail": "kernel_init中的kernel_execve、kjmp_to_doexecve及最终SYSRET/CPL3运行实际结果、GS/TSS等仍未知",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "KT68-U08",
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U08",
+      "status": "needs_evidence",
+      "detail": "其他内核入口对旧FR67-F01/F03的可能反例、完整调用图与原69批后继均未授权覆盖",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "runtime_confirmed_findings": 0,
+  "historical_ids_unchanged": true,
+  "prior_FR67_F01": "needs_evidence; selected named producer functions have no local ordinary return; not blanket closed",
+  "forbidden_actions": [
+    "edit old source or results",
+    "run build/test/hardware",
+    "edit old comments/PR metadata",
+    "self-close R67-01",
+    "self-sign 68",
+    "start 69"
+  ]
+}
