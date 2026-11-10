@@ -1,0 +1,948 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-INIT-EXEC-HANDOFF-69",
+  "record_type": "bounded_initial_exec_bridge_return_and_register_analysis",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (model self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "date": "2026-11-10",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "contract_short12": "44ba4f92b2b7",
+  "execution_parent_short12": "4d45fa939fa1",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "acceptance_ceiling": "PASS_PENDING_LOCAL",
+  "phase": 2,
+  "runtime_evidence": "NOT_RUN",
+  "upstream_disposition": {
+    "R67_01": "CLOSED_DOCUMENTATION_ONLY by C05",
+    "batch67": "PASS_PENDING_LOCAL_WITH_R67C-S01",
+    "batch68": "PASS_PENDING_LOCAL_WITH_R68-S01/S02/S03",
+    "D00_required": false,
+    "earlier_58_63": "withdrawn blank-line allegations remain closed",
+    "limits": [
+      "R68-S01 do_exit uninitialized group_dead/opaque cleanup retained",
+      "R68-S02 graph and active RBX/R12 limitations retained",
+      "R68-S03 startup error and exec pointer constraints retained"
+    ]
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/myos/arch_task.c",
+      "blob_sha_short12": "e4c5c5336a0c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A bridge task and inline ASM full definition"
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "blob_sha_short12": "06a900f8d509",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A kernel_init call and following while"
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "blob_sha_short12": "87518a05fa49",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A task mm and active_mm independent fields"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/current.h",
+      "blob_sha_short12": "159c031d46c2",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A get_current and current macro"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_macro_arch.h",
+      "blob_sha_short12": "157785cd94a5",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A task_pt_regs macro"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/ptrace.h",
+      "blob_sha_short12": "6855cfe67b19",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A/C current_pt_regs macro"
+    },
+    {
+      "path": "mykernel/sched/task/task_const.h",
+      "blob_sha_short12": "47597e0beb47",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A PF_KTHREAD macro"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c",
+      "blob_sha_short12": "0861ebae6fc2",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B kernel_execve, bprm_execve, search_binary_handler, helpers"
+    },
+    {
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "blob_sha_short12": "579fb4e9fadd",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C ELF selected loader return and START_THREAD call"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "blob_sha_short12": "dd427f17f005",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C START_THREAD fallback macro"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process64_arch.c",
+      "blob_sha_short12": "2698b03697c4",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C start_thread_common and start_thread direct body"
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "blob_sha_short12": "80fa8f8734b3",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C POP_REGS and syscall_return_via_sysret"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/ptrace.h",
+      "blob_sha_short12": "29bb6d7ba119",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C pt_regs structure actual members"
+    },
+    {
+      "path": "mykernel/include/generated/asm-offsets.h",
+      "blob_sha_short12": "a3a7b1c465e9",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C individually defined checked-in IRQ_NR/ORIG_RAX/RIP/CS/EFLAGS/RSP/SS and other offsets; not regenerated"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/processor_const_arch.h",
+      "blob_sha_short12": "bebc1070225c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C flag-bit macros"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/desc_const_arch.h",
+      "blob_sha_short12": "e5a7dcb03344",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C selector macro branch conditional"
+    },
+    {
+      "path": "mykernel/entry/common.c",
+      "blob_sha_short12": "cc3dfac33f10",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C normal exit work contrast"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "blob_sha_short12": "4431545af5fb",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C ordinary ret_from_fork exit work"
+    }
+  ],
+  "source_context": [
+    {
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "role": "directly read include from linux/kernel/elf.h; no active START_THREAD override identified in examined source; no preprocessor executed",
+      "pin": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c::free_bprm",
+      "role": "two fput-associated source sites in selected body; ownership and duplicate release consequences not adjudicated",
+      "evidence": [
+        "B34",
+        "B35"
+      ]
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c::search_binary_handler",
+      "role": "literal active for-each formats loop, direct callback, early return condition commented; no proof how many live formats registered",
+      "evidence": [
+        "B23",
+        "B24",
+        "B25",
+        "B27"
+      ]
+    }
+  ],
+  "bridge_state_matrix": [
+    {
+      "stage": "bridge_entry",
+      "evidence": [
+        "A02",
+        "A03",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17"
+      ],
+      "source": "curr=current; curr_ptregs=task_pt_regs(curr) before clearing PF_KTHREAD",
+      "before_exec": true,
+      "identity_guard": "current and stack placement remain stable across subsequent helpers; valid task/stack pointer"
+    },
+    {
+      "stage": "bridge_kernel_strings",
+      "evidence": [
+        "A04",
+        "A05"
+      ],
+      "source": "initd_name /boot/init and two pointer arrays with terminal NULL; not a tested external libc argument image",
+      "before_exec": true
+    },
+    {
+      "stage": "bridge_mm",
+      "evidence": [
+        "A06",
+        "A18",
+        "A12"
+      ],
+      "source": "curr->mm=curr->active_mm before kernel_execve",
+      "before_exec": true,
+      "guard": "non-null valid active_mm, reference counts/ownership/cross-CPU activation not established",
+      "not_proven": "MM lifetime transfer or CR3 correctness"
+    },
+    {
+      "stage": "exec_call",
+      "evidence": [
+        "A06",
+        "A18"
+      ],
+      "source": "kernel_execve(initd_name, argv, envp) called without assigning or testing the int return",
+      "after_change": "PF_KTHREAD cleared; mm assigned",
+      "guard": "all preceding operations return normally"
+    },
+    {
+      "stage": "post_exec_pointer",
+      "evidence": [
+        "A01",
+        "A07"
+      ],
+      "source": "hwtss_cpu0 = this_cpu_ptr(&(cpu_tss_rw.x86_tss))",
+      "not_proven": "TSS.sp0 store or TR reload; source is pointer assignment only",
+      "guard": "kernel_execve returns normally"
+    },
+    {
+      "stage": "inline_asm",
+      "evidence": [
+        "A08",
+        "A09"
+      ],
+      "source": "asm volatile moves memory input containing curr_ptregs to RSP and branches to syscall_return_via_sysret; no output and no named clobbers",
+      "guard": "correct operand/stack/code generation and link target, compiler aware control; NO compile or ABI validation",
+      "not_proven": "memory-safe, noreturn, or user-mode CPU entry"
+    }
+  ],
+  "exec_return_consumption_matrix": [
+    {
+      "stage": "PF_KTHREAD_guard",
+      "condition": "current->flags & PF_KTHREAD true when kernel_execve checks",
+      "evidence": [
+        "B02",
+        "A03"
+      ],
+      "return_value": "-EINVAL",
+      "bridge_behavior": "still goes to subsequent pointer assignment and asm if kernel_execve returns",
+      "requires": "flag clearance may make this guard false in stable bridge path; no spontaneous re-setting assumed"
+    },
+    {
+      "stage": "getname",
+      "condition": "IS_ERR(filename)",
+      "evidence": [
+        "B03"
+      ],
+      "return_value": "PTR_ERR(filename)",
+      "bridge_behavior": "ignored"
+    },
+    {
+      "stage": "alloc_bprm",
+      "condition": "IS_ERR(bprm)",
+      "evidence": [
+        "B04",
+        "B29",
+        "B30",
+        "B32",
+        "B33"
+      ],
+      "return_value": "PTR_ERR(bprm)",
+      "bridge_behavior": "ignored",
+      "requires": "actual file/memory error not observed"
+    },
+    {
+      "stage": "argv_count",
+      "condition": "retval == 0 or retval < 0",
+      "evidence": [
+        "B05",
+        "B06"
+      ],
+      "return_value": "-EINVAL or helper negative",
+      "bridge_behavior": "ignored"
+    },
+    {
+      "stage": "envp_count_stack_limits",
+      "condition": "count_strings_kernel(envp) or bprm_stack_limits negative",
+      "evidence": [
+        "B07",
+        "B08"
+      ],
+      "return_value": "negative retval",
+      "bridge_behavior": "ignored"
+    },
+    {
+      "stage": "copy_filename_envp_argv",
+      "condition": "any source copy helper negative",
+      "evidence": [
+        "B09",
+        "B10",
+        "B11",
+        "B37",
+        "B38"
+      ],
+      "return_value": "negative retval",
+      "bridge_behavior": "ignored"
+    },
+    {
+      "stage": "handler_preparation",
+      "condition": "prepare_binprm negative",
+      "evidence": [
+        "B21",
+        "B22",
+        "B28"
+      ],
+      "return_value": "negative",
+      "bridge_behavior": "ignored",
+      "requires": "prepare_binprm nonnegative is not a full header/content guarantee"
+    },
+    {
+      "stage": "no_handlers",
+      "condition": "formats empty",
+      "evidence": [
+        "B23",
+        "B27"
+      ],
+      "return_value": "-ENOENT",
+      "bridge_behavior": "ignored",
+      "requires": "list empty is model case, not actual registry proof"
+    },
+    {
+      "stage": "handler_loop",
+      "condition": "one or multiple handlers",
+      "evidence": [
+        "B23",
+        "B24",
+        "B25",
+        "B27",
+        "B39"
+      ],
+      "return_value": "last load_binary return value, not first success",
+      "bridge_behavior": "negative goto cleanup, nonnegative goes success branch",
+      "requires": "valid state and callback return from every handler; a prior successful loader can change bprm or mm"
+    },
+    {
+      "stage": "bprm_execve_return",
+      "condition": "search_binary_handler negative vs nonnegative",
+      "evidence": [
+        "B15",
+        "B16",
+        "B17",
+        "B18",
+        "B19",
+        "B20"
+      ],
+      "return_value": "negative or nonnegative retval as last",
+      "bridge_behavior": "kernel_execve eventually returns that retval if cleanup returns",
+      "requires": "cleanup and pointer lifetime valid"
+    },
+    {
+      "stage": "cleanup",
+      "condition": "free_bprm and putname called after bprm_execve",
+      "evidence": [
+        "B12",
+        "B13",
+        "B34",
+        "B35",
+        "B36"
+      ],
+      "return_value": "the existing retval, absent nonlocal effects",
+      "bridge_behavior": "if cleanup does not return/invalid ptr, bridge subsequent asm not reached",
+      "requires": "ownership, multiple fput use and possible mmput not audited"
+    }
+  ],
+  "register_handoff_matrix": [
+    {
+      "source": "load_elf_binary",
+      "evidence": [
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10"
+      ],
+      "fields": "elf_entry from interpreter-adjusted or e_entry, bprm->p from create_elf_tables, regs=current_pt_regs()",
+      "requires": "all earlier loader/map/arg table and finalize_exec calls valid"
+    },
+    {
+      "source": "START_THREAD macro",
+      "evidence": [
+        "C11"
+      ],
+      "fields": "start_thread(regs, elf_entry, bprm->p)",
+      "requires": "preprocessor takes observed #ifndef fallback; no override seen in directly read asm/elf.h, but not preprocessed"
+    },
+    {
+      "source": "start_thread_common",
+      "evidence": [
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C37",
+        "C38",
+        "C39",
+        "C40"
+      ],
+      "fields": {
+        "ip": "elf_entry",
+        "sp": "bprm.p",
+        "cs": "__USER_CS macro; conditional CONFIG branch",
+        "ss": "__USER_DS macro; conditional CONFIG branch",
+        "flags": "X86_EFLAGS_IF|X86_EFLAGS_FIXED",
+        "ax": "not written in this bounded definition",
+        "cx": "not written in this bounded definition",
+        "r11": "not written in this bounded definition",
+        "orig_ax": "not written in this bounded definition",
+        "irq_nr": "not written in this bounded definition"
+      },
+      "requires": "valid source regs, segment load calls return, compiler/CPU not checked"
+    },
+    {
+      "source": "pt_regs and checked-in offsets",
+      "evidence": [
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "C27",
+        "C44",
+        "C45",
+        "C46",
+        "C47",
+        "C48"
+      ],
+      "fields": {
+        "R11": 48,
+        "RCX": 88,
+        "IRQ_NR": 120,
+        "ORIG_RAX": 128,
+        "RIP": 136,
+        "CS": 144,
+        "EFLAGS": 152,
+        "RSP": 160,
+        "SS": 168,
+        "PTREGS_SIZE": 176
+      },
+      "requires": "generated header static, not re-created or binary-layout certified"
+    },
+    {
+      "source": "SYSRET xchg first pair",
+      "evidence": [
+        "C32",
+        "C33"
+      ],
+      "fields": "live r11 and rcx exchange with saved flags/ip; then with saved R11/RCX",
+      "requires": "valid kernel RSP points to frame at expected offsets"
+    },
+    {
+      "source": "SYSRET xchg second pair",
+      "evidence": [
+        "C34"
+      ],
+      "fields": "repeat xchg with saved flags/ip; after all six xchg the saved R11 slot=original flags and RCX slot=original ip",
+      "requires": "in-range distinct slots, normal xchg semantics assumed; no hardware simulation"
+    },
+    {
+      "source": "SYSRET POP_REGS",
+      "evidence": [
+        "C28",
+        "C29",
+        "C30",
+        "C31",
+        "C35"
+      ],
+      "fields": "15 pops: live r11=original flags, live rcx=original ip, rax=original saved ax; stack grows to ptregs offset120",
+      "requires": "each slot 8 bytes and header offsets accurate"
+    },
+    {
+      "source": "SYSRET tail",
+      "evidence": [
+        "C35",
+        "C36"
+      ],
+      "fields": "after POP skip 0x28 from offset120 to offset160 saved user sp, pop %rsp; swapgs, sti, sysretq",
+      "requires": "GS/CPU privilege and instruction mode not attested; saved CS/SS not explicitly read by tail code"
+    },
+    {
+      "source": "bridge vs normal return-work",
+      "evidence": [
+        "A08",
+        "A09",
+        "C42",
+        "C43"
+      ],
+      "fields": "bridge after kernel_execve directly requests asm jump; normal ret_from_fork C path explicitly invokes syscall_exit_to_user_mode before it can return",
+      "requires": "do not assert globally omitted signal behavior; narrow directly read path only"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "case_id": "SWAP-normal0",
+      "kind": "pure_symbolic_six_xchg_and_stack_offsets",
+      "initial": {
+        "flags": 514,
+        "ip": 4198400,
+        "oldSavedR11": 0,
+        "oldSavedRCX": 0,
+        "liveR11": 17,
+        "liveRCX": 34,
+        "sp": 2147418112,
+        "ax": 0
+      },
+      "after_memory": {
+        "EFLAGS": 0,
+        "RIP": 0,
+        "R11": 514,
+        "RCX": 4198400,
+        "RSP": 2147418112,
+        "RAX": 0
+      },
+      "after_POP_REGS": {
+        "r11": 514,
+        "rcx": 4198400,
+        "rax": 0
+      },
+      "offsets": {
+        "pop_REGS_15qwords": 120,
+        "skip": 40,
+        "pop_rsp_offset": 160
+      },
+      "result": "live R11=initial_flags, live RCX=initial_ip, live RAX=initial_saved_ax; user RSP from saved_sp",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "SWAP-normal1",
+      "kind": "pure_symbolic_six_xchg_and_stack_offsets",
+      "initial": {
+        "flags": 514,
+        "ip": 2130722816,
+        "oldSavedR11": 57005,
+        "oldSavedRCX": 48879,
+        "liveR11": 4660,
+        "liveRCX": 22136,
+        "sp": 2147405824,
+        "ax": 0
+      },
+      "after_memory": {
+        "EFLAGS": 57005,
+        "RIP": 48879,
+        "R11": 514,
+        "RCX": 2130722816,
+        "RSP": 2147405824,
+        "RAX": 0
+      },
+      "after_POP_REGS": {
+        "r11": 514,
+        "rcx": 2130722816,
+        "rax": 0
+      },
+      "offsets": {
+        "pop_REGS_15qwords": 120,
+        "skip": 40,
+        "pop_rsp_offset": 160
+      },
+      "result": "live R11=initial_flags, live RCX=initial_ip, live RAX=initial_saved_ax; user RSP from saved_sp",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "SWAP-flags0",
+      "kind": "pure_symbolic_six_xchg_and_stack_offsets",
+      "initial": {
+        "flags": 0,
+        "ip": 4202496,
+        "oldSavedR11": 2748,
+        "oldSavedRCX": 3567,
+        "liveR11": 1,
+        "liveRCX": 2,
+        "sp": 2147422208,
+        "ax": 0
+      },
+      "after_memory": {
+        "EFLAGS": 2748,
+        "RIP": 3567,
+        "R11": 0,
+        "RCX": 4202496,
+        "RSP": 2147422208,
+        "RAX": 0
+      },
+      "after_POP_REGS": {
+        "r11": 0,
+        "rcx": 4202496,
+        "rax": 0
+      },
+      "offsets": {
+        "pop_REGS_15qwords": 120,
+        "skip": 40,
+        "pop_rsp_offset": 160
+      },
+      "result": "live R11=initial_flags, live RCX=initial_ip, live RAX=initial_saved_ax; user RSP from saved_sp",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "SWAP-missing_frame",
+      "kind": "pure_symbolic_six_xchg_and_stack_offsets",
+      "initial": {
+        "flags": 0,
+        "ip": 0,
+        "oldSavedR11": 0,
+        "oldSavedRCX": 0,
+        "liveR11": 0,
+        "liveRCX": 0,
+        "sp": 0,
+        "ax": 0
+      },
+      "after_memory": {
+        "EFLAGS": 0,
+        "RIP": 0,
+        "R11": 0,
+        "RCX": 0,
+        "RSP": 0,
+        "RAX": 0
+      },
+      "after_POP_REGS": {
+        "r11": 0,
+        "rcx": 0,
+        "rax": 0
+      },
+      "offsets": {
+        "pop_REGS_15qwords": 120,
+        "skip": 40,
+        "pop_rsp_offset": 160
+      },
+      "result": "live R11=initial_flags, live RCX=initial_ip, live RAX=initial_saved_ax; user RSP from saved_sp",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "SWAP-alternate",
+      "kind": "pure_symbolic_six_xchg_and_stack_offsets",
+      "initial": {
+        "flags": 582,
+        "ip": 4214784,
+        "oldSavedR11": 136,
+        "oldSavedRCX": 153,
+        "liveR11": 170,
+        "liveRCX": 187,
+        "sp": 65536,
+        "ax": 0
+      },
+      "after_memory": {
+        "EFLAGS": 136,
+        "RIP": 153,
+        "R11": 582,
+        "RCX": 4214784,
+        "RSP": 65536,
+        "RAX": 0
+      },
+      "after_POP_REGS": {
+        "r11": 582,
+        "rcx": 4214784,
+        "rax": 0
+      },
+      "offsets": {
+        "pop_REGS_15qwords": 120,
+        "skip": 40,
+        "pop_rsp_offset": 160
+      },
+      "result": "live R11=initial_flags, live RCX=initial_ip, live RAX=initial_saved_ax; user RSP from saved_sp",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "FORMAT-no-fmt",
+      "kind": "pure_control_loop_with_last_return",
+      "prepare_return": 0,
+      "handler_returns": [],
+      "loader_calls_if_prepare_succeeds": 0,
+      "final_return": -2,
+      "comparison": "last retval only; no safety/lifetime claim",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "FORMAT-one-success",
+      "kind": "pure_control_loop_with_last_return",
+      "prepare_return": 0,
+      "handler_returns": [
+        0
+      ],
+      "loader_calls_if_prepare_succeeds": 1,
+      "final_return": 0,
+      "comparison": "last retval only; no safety/lifetime claim",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "FORMAT-success-then-refusal",
+      "kind": "pure_control_loop_with_last_return",
+      "prepare_return": 0,
+      "handler_returns": [
+        0,
+        -8
+      ],
+      "loader_calls_if_prepare_succeeds": 2,
+      "final_return": -8,
+      "comparison": "last retval only; no safety/lifetime claim",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "FORMAT-refusal-then-success",
+      "kind": "pure_control_loop_with_last_return",
+      "prepare_return": 0,
+      "handler_returns": [
+        -8,
+        0
+      ],
+      "loader_calls_if_prepare_succeeds": 2,
+      "final_return": 0,
+      "comparison": "last retval only; no safety/lifetime claim",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "FORMAT-two-success",
+      "kind": "pure_control_loop_with_last_return",
+      "prepare_return": 0,
+      "handler_returns": [
+        0,
+        0
+      ],
+      "loader_calls_if_prepare_succeeds": 2,
+      "final_return": 0,
+      "comparison": "last retval only; no safety/lifetime claim",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "FORMAT-two-errors",
+      "kind": "pure_control_loop_with_last_return",
+      "prepare_return": 0,
+      "handler_returns": [
+        -8,
+        -22
+      ],
+      "loader_calls_if_prepare_succeeds": 2,
+      "final_return": -22,
+      "comparison": "last retval only; no safety/lifetime claim",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "FORMAT-prepare-error",
+      "kind": "pure_control_loop_with_last_return",
+      "prepare_return": -5,
+      "handler_returns": [
+        0
+      ],
+      "loader_calls_if_prepare_succeeds": 0,
+      "final_return": -5,
+      "comparison": "last retval only; no safety/lifetime claim",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "FORMAT-positive-then-negative",
+      "kind": "pure_control_loop_with_last_return",
+      "prepare_return": 0,
+      "handler_returns": [
+        1,
+        -8
+      ],
+      "loader_calls_if_prepare_succeeds": 2,
+      "final_return": -8,
+      "comparison": "last retval only; no safety/lifetime claim",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "BRIDGE-exec-ok",
+      "kind": "source_continuation_if_kernel_execve_returns",
+      "kernel_execve_return": 0,
+      "source_has_branch_on_return": false,
+      "bridge_next": "assign hwtss_cpu0 pointer then inline assembly request, subject to normal cleanup return",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "BRIDGE-exec-bad",
+      "kind": "source_continuation_if_kernel_execve_returns",
+      "kernel_execve_return": -22,
+      "source_has_branch_on_return": false,
+      "bridge_next": "assign hwtss_cpu0 pointer then inline assembly request, subject to normal cleanup return",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "BRIDGE-exec-other",
+      "kind": "source_continuation_if_kernel_execve_returns",
+      "kernel_execve_return": 1,
+      "source_has_branch_on_return": false,
+      "bridge_next": "assign hwtss_cpu0 pointer then inline assembly request, subject to normal cleanup return",
+      "runtime_verified": false
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U07",
+      "status": "needs_evidence",
+      "consumption": "exec bridge and CPU/ABI partially traced statically, original run boundary remains"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-U06",
+      "status": "needs_evidence",
+      "consumption": "exec bridge and CPU/ABI partially traced statically, original run boundary remains"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-F01",
+      "status": "needs_evidence",
+      "consumption": "outside this bridge subject; not duplicated"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-F02",
+      "status": "needs_evidence",
+      "consumption": "outside this bridge subject; not duplicated"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-F01",
+      "status": "needs_evidence",
+      "consumption": "kernel_init normally not returning to ret_from_fork per 68, not closed"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U07",
+      "status": "needs_evidence",
+      "consumption": "first CPU CPL3 and SYSRET not attested"
+    },
+    {
+      "review_id": "CORE-USER-RETURN-SIGNAL-09-DOC-FIX-01-REVIEW-001",
+      "effective_status": "PASS_PENDING_LOCAL_WITH_PRIOR_REVIEW_LIMITS",
+      "consumption": "normal user-exit work is not assured in this direct bridge source; signal effects and RS-01/GAP-U04/GAP-U10 still limited"
+    }
+  ],
+  "uncertainty_register": [
+    {
+      "scope": "A",
+      "description": "curr/current task and stack validity across exec, mm/active_mm reference accounting and activated address space"
+    },
+    {
+      "scope": "A",
+      "description": "compiler treatment of volatile inline asm with memory operand, no explicit output/clobber and source-local control transfer"
+    },
+    {
+      "scope": "B",
+      "description": "actual filename/ELF open failures, cleanup and lifetime correctness including possible multiple fput paths"
+    },
+    {
+      "scope": "B",
+      "description": "binary format list actual membership and whether first handler success followed by another alters state/retval"
+    },
+    {
+      "scope": "C",
+      "description": "actual START_THREAD macro expansion, 176-byte pt_regs binary layout and CPU GS/STAR/SYSRET register rules"
+    },
+    {
+      "scope": "C",
+      "description": "actual TSS/TR/perCPU and first user instruction execution, no CPU or build proof"
+    },
+    {
+      "scope": "history",
+      "description": "25 ELF stack or 28 interpreter old findings not invoked; require original reviews before adopting any prior IDs"
+    }
+  ],
+  "source_budget": {
+    "direct_source_files": 18,
+    "soft_limit": 14,
+    "justification": "A original bridge/task/current/stack/PF_KTHREAD definitions + B complete exec helpers + C loader/start_thread/regs/offsets/segments and direct return contrast; independent direct anchors across these files essential, no global repository sweep",
+    "targeted_search_batches": 2,
+    "arch_dirs": 3
+  },
+  "run_context": {
+    "actor": "MYOS2-A-C05b / CHAT-EXEC-08",
+    "surface": "ChatGPT regular conversation and GitHub connector",
+    "operator_selection": "Owner GPT-6+Extra next tier",
+    "backend": "unknown_or_not_attestable",
+    "authorization": "Owner fixed100@44ba4f92b2b7",
+    "source_executed": false,
+    "external_paid_agents": false,
+    "mainline": "MYOS2-A-C05 pending independent review"
+  },
+  "P9_text_subchecks": {
+    "1": "six files no 40 hex string regex",
+    "2": "105 source anchors must be 1–5 contiguous nonempty physical lines inside one actual definition (each generated offset macro independently); full local P9 NOT_RUN",
+    "3": "paths from direct pinned source and future fixed new commit/readback",
+    "4": "line notes source direct within file",
+    "5": "all six file raw matching prefix occurrences equal manifest verified_claims = number of real source anchors; no prose false matches",
+    "6": "external CPU manuals not used; code-return statements conditional",
+    "7": "time/master fresh dual canary exact lines",
+    "8": "startup selfcheck exact conventions and read_channel",
+    "9": "N/A no code symbols_new",
+    "10": "N/A no patch",
+    "11": "NOT_RUN preprocess compiler linker assembler CPU QEMU real hardware",
+    "12": "N/A no fallback chat split files",
+    "13": "mandatory A bridge asm, B error+return+handler loop, C start_thread+register handoff covered"
+  },
+  "actual_methods": {
+    "GitHub_connector_read": "YES",
+    "pure_in_dialog_JS_arithmetic": "YES",
+    "repository_programs": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "preprocessor": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "full_local_P9": "NOT_RUN",
+    "source_anchor_count": 105,
+    "source_quotes_reconfirmed": 105
+  },
+  "new_conditional_ids": [
+    "IE69-F01",
+    "IE69-F02",
+    "IE69-F03"
+  ],
+  "new_gap_ids": [
+    "IE69-U01",
+    "IE69-U02",
+    "IE69-U03",
+    "IE69-U04",
+    "IE69-U05",
+    "IE69-U06",
+    "IE69-U07",
+    "IE69-U08"
+  ]
+}
