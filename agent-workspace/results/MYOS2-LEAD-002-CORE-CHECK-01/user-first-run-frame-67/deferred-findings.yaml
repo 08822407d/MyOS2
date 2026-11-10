@@ -1,0 +1,152 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FIRST-RUN-FRAME-67",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (model self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "R66-01 documentation_disposition_submitted; closure pending MYOS2-A-C05",
+  "batch65": "PASS_PENDING_LOCAL_WITH_R65C_S01; no reopen",
+  "new_findings": [
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-F01",
+      "id": "FR67-F01",
+      "kind": "two_conditional_fn_call_sites_after_first_run",
+      "claim": "ret_from_fork C body calls fn(fn_arg) when fn nonnull; after that C call and syscall_exit_to_user_mode both normally return, and if the original function pointer remains in RBX under the expected ABI, ret_from_fork_asm tests RBX and reaches a second indirect call of the same fn. If that second call returns the asm source enters jmp .",
+      "premises": [
+        "new child's frame.bx assigned nonnull args.fn by kthread_frame_init, and first-run frame/ret_addr valid",
+        "schedule_tail and C fn(fn_arg) return normally",
+        "syscall_exit_to_user_mode including return work and signal path returns normally",
+        "matching call ABI preserves RBX as that nonnull pointer and stack/regs remain valid"
+      ],
+      "counter_evidence": "a nonreturning first fn or exit work stops before the second call; actual compilation/ABI/kernel thread creation not tested; cannot assert that every kernel thread executes twice",
+      "first_stop": "earliest nonreturning or invalid C callee; then unproven RBX/ABI before later asm call",
+      "related": [
+        "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F04"
+      ],
+      "classification": "source_conditional_extension",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "runtime_reproduced": false
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-F02",
+      "id": "FR67-F02",
+      "kind": "frame_bp_integer_increment_not_pointer_one_past",
+      "claim": "copy_thread writes frame->bp=(reg_t)childregs+1, which in the explicit unsigned-integer source model increases the numeric representation by 1 rather than by sizeof(pt_regs_s). This differs from a typed childregs+1 pointer computation; any frame-pointer/unwind effect depends on unreviewed consumers and the actual machine/ABI",
+      "premises": [
+        "reg_t resolves to the inspected 64-bit integer alias",
+        "childregs is a valid representable pointer and the cast behaves as assumed",
+        "the stored bp is subsequently treated as a meaningful frame pointer by a consumer"
+      ],
+      "counter_evidence": "the consumer may intentionally use a sentinel/encoded value or never dereference bp in this path; no unwind/cpu result reproduced",
+      "first_stop": "pointer representation, expected frame-pointer convention or unwinder consumer not established",
+      "related": [
+        "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F04"
+      ],
+      "classification": "source_conditional_semantic_mismatch",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "runtime_reproduced": false
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-F03",
+      "id": "FR67-F03",
+      "kind": "kernel_flag_null_fn_conditional_user_exit_path",
+      "claim": "In copy_thread PF_KTHREAD causes zeroed childregs and bx taken from args.fn. If the caller ever supplies a kernel thread with fn=NULL and schedule_tail/user-exit work return normally, ret_from_fork_asm sees a null RBX and takes the jump to syscall_return_via_sysret without this path having populated ordinary user CS/IP/SP",
+      "premises": [
+        "copy_process args.kthread=true and args.fn=NULL is actually constructed (not established)",
+        "childregs remains zero or not made a valid user frame by return work",
+        "all prior callees return and normal ABI/stack assumptions hold"
+      ],
+      "counter_evidence": "task constructors may prohibit null fn; signal/return work may alter frame, or an earlier callee may not return; no actual syscall/SYSRET execution observed",
+      "first_stop": "unknown constructor policy, return-work effects and actual CPU return acceptance",
+      "related": [
+        "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U06"
+      ],
+      "classification": "source_conditional_first_user_state_gap",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "runtime_reproduced": false
+    }
+  ],
+  "new_findings_count": 3,
+  "evidence_gaps": [
+    {
+      "id": "FR67-U01",
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U01",
+      "status": "needs_evidence",
+      "detail": "sizeof/offsetof of inactive_task_frame, fork_frame and pt_regs_s not compiled; 56+176=232 is a bounded eight-byte/no-padding layout model",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "FR67-U02",
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U02",
+      "status": "needs_evidence",
+      "detail": "task kernel stack allocation backing, alignment, bounds and lifetime not independently audited; still depends on SB66 and new clone inputs",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "FR67-U03",
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U03",
+      "status": "needs_evidence",
+      "detail": "copy_thread does not explicitly fill all restored inactive frame register slots, but original kmalloc/allocator behavior and later uses not established",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "FR67-U04",
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U04",
+      "status": "needs_evidence",
+      "detail": "schedule_tail, preempt_enable and syscall_exit_to_user_mode/signal work may yield, alter registers or not return; full effects and first-run conditions opaque",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "FR67-U05",
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U05",
+      "status": "needs_evidence",
+      "detail": "C/assembly calling convention, RBX preserved across ret_from_fork, RAX return and binary ret-slot behavior not compiled or independently hardware-attested",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "FR67-U06",
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U06",
+      "status": "needs_evidence",
+      "detail": "which real callers construct args.kthread=true with NULL or nonNULL args.fn and exact first-task function behavior not fully traced",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "FR67-U07",
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U07",
+      "status": "needs_evidence",
+      "detail": "first CPL3 transition, SYSRET register validity and CPU acceptance, GS/TSS/TR startup order remain unverified and NOT_RUN",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "FR67-U08",
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67::FR67-U08",
+      "status": "needs_evidence",
+      "detail": "actual user fault/frame restore, CPU instruction reexecution and old09 signal return gaps retained; no hardware test or old finding closure",
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "actual_runtime_confirmed_findings": 0,
+  "historical_qualified_ids_unchanged": true,
+  "excluded_actions": [
+    "kernel edits or patch",
+    "build/preprocess/link/execute",
+    "self-close R66-01",
+    "self-sign 67 acceptance",
+    "start 68"
+  ]
+}

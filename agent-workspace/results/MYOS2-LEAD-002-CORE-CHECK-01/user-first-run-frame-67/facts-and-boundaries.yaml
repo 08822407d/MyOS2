@@ -1,0 +1,961 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FIRST-RUN-FRAME-67",
+  "record_type": "bounded_first_run_frame_source_ledger_and_semantic_matrices",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "contract_short12": "d1a8cee95e42",
+  "execution_base_short12": "6cffc97057c7",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "acceptance_ceiling": "PASS_PENDING_LOCAL",
+  "phase": 2,
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_disposition": {
+    "R65_01": "CLOSED_DOCUMENTATION_ONLY by MYOS2-A-C05; effective batch65 PASS_PENDING_LOCAL_WITH_R65C-S01; no new D00 vector/bits",
+    "R66_01": "RETURN_DOCUMENTATION; D00 documentation_disposition_submitted_pending_C05; no executor self-closure",
+    "original66_A10": {
+      "artifact": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-entry-stack-binding-66/evidence.md",
+      "old_qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::A10",
+      "source_field": "quote",
+      "source_value": "a one-physical-line completely blank fence; non-supporting",
+      "correct_member": "mykernel/sched/task/task_types.h::task_struct field `void *stack`",
+      "replacement_new_anchor": "D01",
+      "byte_identity": "old A10 quote remains frozen",
+      "other_100": "not independently fully rescanned or certified",
+      "old_101_claim": "101 = historical label count, not 101 independently supported definition proofs"
+    },
+    "impacted_locations": [
+      {
+        "artifact": "user-entry-stack-binding-66/evidence.md",
+        "field": "A10",
+        "correct_read": "use FR67 D01 actual member; do not treat blank fence as support"
+      },
+      {
+        "artifact": "user-entry-stack-binding-66/entry-stack-binding.md",
+        "field": "A section task_struct.stack from (A10)",
+        "correct_read": "new D01 together with old A04 task_stack_page and A11 init_task as previously limited"
+      },
+      {
+        "artifact": "user-entry-stack-binding-66/facts-and-boundaries.yaml",
+        "field": "stack_address_matrix task.stack.producer includes A10",
+        "correct_read": "replace A10 evidence role with new D01; other 66 producers retained under R66-S01"
+      },
+      {
+        "artifact": "user-entry-stack-binding-66/MANIFEST.md",
+        "field": "self_check 101/101 and full mandatory evidence",
+        "correct_read": "historical author's counts only; blank A10 fails semantic support"
+      },
+      {
+        "artifact": "user-entry-stack-binding-66/facts-and-boundaries.yaml",
+        "field": "p9_text_subset item2/item5/item13",
+        "correct_read": "text matching does not imply nonempty support/definition correctness"
+      },
+      {
+        "artifact": "https://github.com/08822407d/MyOS2/pull/17#issuecomment-6756756742",
+        "field": "old101/101 supported statement",
+        "correct_read": "old comment retained; append this limited overlay only"
+      }
+    ],
+    "historical_boundaries": [
+      "R66-S01 unsigned common type/loff_t conversion and object validity corrected in review66, no new correction",
+      "R66-S02 graph edge meanings corrected in review66, no redo",
+      "R65C-S01 gate_data vector and gate_pack bits supplements already mainline supplied",
+      "64 documentation closed, 63/58 blank-line mistakes withdrawn, not reopened"
+    ],
+    "D00_current": "documentation_disposition_submitted; old files/comments/PR metadata untouched"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "87518a05fa49",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "D01"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "4431545af5fb",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C20",
+        "C21",
+        "C22"
+      ],
+      "role": "primary C first-frame producer and fork C continuation"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_arch.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "131d92a6d7a4",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A14"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_types_arch.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "19b2de06bac2",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "B22",
+        "B23"
+      ],
+      "role": "inactive and fork frame layouts"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/sched_type_declaration_arch.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "d08abec2dbb6",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A19",
+        "A20"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_macro_arch.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "157785cd94a5",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A21",
+        "B01"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/ptrace.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "6855cfe67b19",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A22"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/stddef.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "c183d8b445e6",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A23"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "2b705f35ced8",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A24",
+        "A25",
+        "A26",
+        "A27",
+        "A28",
+        "C23"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/sched/misc/sched_misc_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "d37cc3bb7045",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A29",
+        "A30",
+        "A31"
+      ],
+      "role": "clone args origin"
+    },
+    {
+      "path": "mykernel/include/generated/asm-offsets.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "a3a7b1c465e9",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A32",
+        "B24",
+        "B25"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ef531baa8317",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "A33"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "80fa8f8734b3",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B14",
+        "B15",
+        "B16",
+        "B17",
+        "B18",
+        "B19",
+        "B20",
+        "B21",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19"
+      ],
+      "role": "ASM context switch and first-run control"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process64_arch.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "2698b03697c4",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13"
+      ],
+      "role": "direct type, macro or caller dependency"
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "a210c885bc4f",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "C05",
+        "C06"
+      ],
+      "role": "schedule_tail direct body"
+    },
+    {
+      "path": "mykernel/entry/common.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "cc3dfac33f10",
+      "read_channel": "connector",
+      "new_evidence_labels": [
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11"
+      ],
+      "role": "user return work direct bodies"
+    }
+  ],
+  "source_context": [
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "symbol": "copy_process",
+      "role": "dup_task_struct and args.kthread flag update precede copy_thread(p,args); error return branches bounded",
+      "evidence": [
+        "A24",
+        "A25",
+        "A26",
+        "A27",
+        "A28"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "symbol": "copy_thread",
+      "role": "current_save_fsgs, segment saves are real predecessor calls; no hidden success assumed",
+      "evidence": [
+        "A05",
+        "A06"
+      ]
+    },
+    {
+      "path": "mykernel/entry/common.c",
+      "symbol": "exit_to_user_mode_loop",
+      "role": "condition around signal call commented while function call active; signal implementation not expanded",
+      "evidence": [
+        "C09",
+        "C10",
+        "C11"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "symbol": "copy_thread",
+      "role": "CLONE_SETTLS set_new_tls branch commented; no complete TLS audit",
+      "evidence": [
+        "A12"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process64_arch.c",
+      "symbol": "__switch_to",
+      "role": "save_fsgs and segment calls precede normal return; updated current task/stack sources retained only within 66 limits",
+      "evidence": [
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13"
+      ]
+    }
+  ],
+  "frame_production_matrix": [
+    {
+      "stage": "caller",
+      "evidence": [
+        "A24",
+        "A25",
+        "A26",
+        "A27",
+        "A28",
+        "A29",
+        "A30",
+        "A31"
+      ],
+      "source": "copy_process first builds p, assigns PF_KTHREAD depending args.kthread, calls copy_thread, branches on return",
+      "guard": "allocation/pointers/earlier setup valid; not all fork/exec reviewed"
+    },
+    {
+      "stage": "childregs_and_frame_address",
+      "evidence": [
+        "A03",
+        "A18",
+        "A21",
+        "A23"
+      ],
+      "source": "childregs=task_pt_regs(p); container_of(childregs,fork_frame_s,regs); frame=&fork_frame->frame",
+      "guard": "valid task stack, pointer and offset model"
+    },
+    {
+      "stage": "new_saved_context",
+      "evidence": [
+        "A04"
+      ],
+      "source": "frame->bp=(reg_t)childregs + 1; ret_addr=(reg_t)ret_from_fork_asm; thread.sp=(reg_t)fork_frame",
+      "guard": "integer +1 after cast, not pt_regs_s* pointer increment; no unwind consumer tested"
+    },
+    {
+      "stage": "kernel_branch",
+      "evidence": [
+        "A07",
+        "A08",
+        "A14",
+        "C20"
+      ],
+      "source": "if PF_KTHREAD, memset(childregs,0,sizeof(pt_regs_s)); kthread_frame_init sets bx from args.fn and r12 from args.fn_arg; early return 0",
+      "guard": "does not copy parent regs; fn may be null; other inactive saved registers not explicitly filled"
+    },
+    {
+      "stage": "ordinary_branch",
+      "evidence": [
+        "A09",
+        "A22",
+        "C21"
+      ],
+      "source": "frame->bx=0; copy current_pt_regs to childregs; childregs.ax=0; if args.stack nonzero set childregs.sp",
+      "guard": "current_pt_regs valid, source copy complete; fn still optional"
+    },
+    {
+      "stage": "ordinary_fn_branch",
+      "evidence": [
+        "A10",
+        "A11",
+        "A14",
+        "C22"
+      ],
+      "source": "if args.fn nonnull, forcibly set childregs.sp=0 and ip=0 then set bx/r12 to fn/arg; early return 0",
+      "guard": "overwrites any earlier sp choice; no userframe validity inference"
+    },
+    {
+      "stage": "ordinary_null_fn",
+      "evidence": [
+        "A09",
+        "A13"
+      ],
+      "source": "no later active ret adjustment beyond initialized ret=0; CLONE_SETTLS path comments only",
+      "guard": "unwritten frame.r12/r13-r15 cannot be assumed zero or invalid without allocator proof"
+    },
+    {
+      "stage": "layout",
+      "evidence": [
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A19",
+        "A20",
+        "A32",
+        "A33",
+        "B22",
+        "B23",
+        "B25"
+      ],
+      "source": "inactive frame has 7 reg_t fields (six callee slots plus ret_addr): 56 bytes, followed by pt_regs modeled as 176; fork_frame total 232 under eight-byte/no-extra-padding assumptions",
+      "guard": "sizeof, offsetof, alignment and true ABI NOT_RUN"
+    },
+    {
+      "stage": "bp_unit",
+      "evidence": [
+        "A04",
+        "A33"
+      ],
+      "source": "integer cast to reg_t then +1 means numeric increment by 1, distinct from pointer arithmetic childregs+1 of sizeof(pt_regs_s)",
+      "guard": "actual pointer/integer representation and unwinder consumers unknown"
+    }
+  ],
+  "first_dispatch_register_matrix": [
+    {
+      "source": "__switch_to_asm six pushes",
+      "evidence": [
+        "B02",
+        "B03",
+        "B04",
+        "B05"
+      ],
+      "effect": "save prev.thread.sp then load next.thread.sp; no assertion that the two stacks belong to same task"
+    },
+    {
+      "source": "new inactive frame six pops",
+      "evidence": [
+        "B06",
+        "B07",
+        "B22",
+        "B23"
+      ],
+      "effect": "recover r15,r14,r13,r12,rbx,rbp; ret_addr is at offset 48 from fork_frame start"
+    },
+    {
+      "source": "jmp __switch_to",
+      "evidence": [
+        "B07",
+        "B08",
+        "B13"
+      ],
+      "effect": "C __switch_to normally returns prev_p; model assumes ret consumes ret_addr and reaches ret_from_fork_asm",
+      "guard": "C calling convention, valid stack, no earlier blocked callee"
+    },
+    {
+      "register": "rax",
+      "meaning": "prior task pointer from __switch_to normal C return",
+      "target": "rdi prev",
+      "evidence": [
+        "B13",
+        "B15"
+      ],
+      "guard": "C/ASM ABI assumptions"
+    },
+    {
+      "register": "rsp",
+      "meaning": "at first-asm entry points to childregs after return slot",
+      "target": "rsi regs",
+      "evidence": [
+        "B15",
+        "A18",
+        "B23"
+      ],
+      "guard": "6*8 pop +8 ret, correct 56 byte frame"
+    },
+    {
+      "register": "rbx",
+      "meaning": "kthread_frame_init(fn) or ordinary zero",
+      "target": "rdx fn",
+      "evidence": [
+        "A09",
+        "A14",
+        "B15"
+      ],
+      "guard": "callee-saved RBX survives call chain when using matching ABI"
+    },
+    {
+      "register": "r12",
+      "meaning": "kthread_frame_init(args.fn_arg) for fn branches; ordinary null-fn branch unassigned here",
+      "target": "rcx fn_arg",
+      "evidence": [
+        "A14",
+        "B15"
+      ],
+      "guard": "fn null branch ignores fn_arg; no claims about unused register contents"
+    },
+    {
+      "source": "real ret_from_fork_asm call",
+      "evidence": [
+        "B14",
+        "B15"
+      ],
+      "effect": "call ret_from_fork with prev, regs, fn, fn_arg",
+      "guard": "valid ABI and aligned stack"
+    }
+  ],
+  "entry_branch_call_matrix": [
+    {
+      "case": "fn null",
+      "entry_evidence": [
+        "C01",
+        "C02",
+        "C03",
+        "C12",
+        "C13",
+        "C14"
+      ],
+      "C_source": "schedule_tail then skip fn; unconditionally syscall_exit_to_user_mode; if it returns, assembly sees rbx=0 and jumps syscall_return_via_sysret",
+      "requires": "valid saved user frame for any actual CPU transition; kernel-flag zero frame is not automatically valid"
+    },
+    {
+      "case": "fn nonnull and C fn does not return",
+      "entry_evidence": [
+        "C02"
+      ],
+      "C_source": "first C fn(fn_arg) does not return; no later C or ASM call justified",
+      "requires": "none beyond reaching first call"
+    },
+    {
+      "case": "fn nonnull, C fn returns but user-work never returns",
+      "entry_evidence": [
+        "C02",
+        "C03",
+        "C07",
+        "C09",
+        "C10"
+      ],
+      "C_source": "regs.ax=0 followed by user return work; cannot proceed into asm if callee does not return",
+      "requires": "frame and work callee validity"
+    },
+    {
+      "case": "fn nonnull, both C fn and user-work return",
+      "entry_evidence": [
+        "C02",
+        "C03",
+        "C12",
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "C_source": "if RBX still carries nonnull fn, asm test branches to indirect call *rbx after C already called fn; if second call returns, jmp .",
+      "requires": "matching C ABI (RBX preserved), stack/frame still valid, no earlier stop; NOT_RUN"
+    },
+    {
+      "case": "user task with args.fn nonnull",
+      "entry_evidence": [
+        "A09",
+        "A10",
+        "A11",
+        "A14",
+        "C21",
+        "C22"
+      ],
+      "C_source": "copy_thread first saves user regs then overrides childregs.ip/sp=0, assigns bx=fn; reaches nonnull fn branch on first asm entry under prerequisites",
+      "requires": "flag path and fn pointer valid; not every user task has fn"
+    },
+    {
+      "case": "kernel thread with args.fn null",
+      "entry_evidence": [
+        "A07",
+        "C20",
+        "C12",
+        "C14"
+      ],
+      "C_source": "pt_regs is zeroed; if ret_from_fork and work normally return, rbx=0 selects sysret-label source, not a validated user return",
+      "requires": "caller can actually construct args.kthread=true and fn=NULL (not established)"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "id": "FADDR-100000",
+      "kind": "integer_projection_only",
+      "base_hex": "0x100000",
+      "stack_top_hex": "0x108000",
+      "childregs_hex": "0x107f50",
+      "fork_frame_hex": "0x107f18",
+      "bp_numeric_plus_one_hex": "0x107f51",
+      "ret_addr_slot_hex": "0x107f48",
+      "rsp_after_six_pop_and_C_ret_hex": "0x107f50",
+      "requires": "valid 32768-byte object, 8-byte register slots, no struct padding and normal return"
+    },
+    {
+      "id": "FADDR-200000",
+      "kind": "integer_projection_only",
+      "base_hex": "0x200000",
+      "stack_top_hex": "0x208000",
+      "childregs_hex": "0x207f50",
+      "fork_frame_hex": "0x207f18",
+      "bp_numeric_plus_one_hex": "0x207f51",
+      "ret_addr_slot_hex": "0x207f48",
+      "rsp_after_six_pop_and_C_ret_hex": "0x207f50",
+      "requires": "valid 32768-byte object, 8-byte register slots, no struct padding and normal return"
+    },
+    {
+      "id": "FADDR-10000000",
+      "kind": "integer_projection_only",
+      "base_hex": "0x10000000",
+      "stack_top_hex": "0x10008000",
+      "childregs_hex": "0x10007f50",
+      "fork_frame_hex": "0x10007f18",
+      "bp_numeric_plus_one_hex": "0x10007f51",
+      "ret_addr_slot_hex": "0x10007f48",
+      "rsp_after_six_pop_and_C_ret_hex": "0x10007f50",
+      "requires": "valid 32768-byte object, 8-byte register slots, no struct padding and normal return"
+    },
+    {
+      "id": "FADDR-7fff0000",
+      "kind": "integer_projection_only",
+      "base_hex": "0x7fff0000",
+      "stack_top_hex": "0x7fff8000",
+      "childregs_hex": "0x7fff7f50",
+      "fork_frame_hex": "0x7fff7f18",
+      "bp_numeric_plus_one_hex": "0x7fff7f51",
+      "ret_addr_slot_hex": "0x7fff7f48",
+      "rsp_after_six_pop_and_C_ret_hex": "0x7fff7f50",
+      "requires": "valid 32768-byte object, 8-byte register slots, no struct padding and normal return"
+    },
+    {
+      "id": "FRAME-K0-F0-S0",
+      "kind": "source_branch_projection",
+      "PF_KTHREAD": false,
+      "fn_nonnull": false,
+      "args_stack_nonzero": false,
+      "childregs_origin": "copy current_pt_regs",
+      "childregs_sp": "copied current sp",
+      "childregs_ip": "copied current ip",
+      "childregs_ax": "set zero",
+      "frame_bx": "zero",
+      "frame_r12": "not explicitly written",
+      "first_asm_branch": "rbx zero",
+      "valid_runtime": "unknown"
+    },
+    {
+      "id": "FRAME-K0-F0-S1",
+      "kind": "source_branch_projection",
+      "PF_KTHREAD": false,
+      "fn_nonnull": false,
+      "args_stack_nonzero": true,
+      "childregs_origin": "copy current_pt_regs",
+      "childregs_sp": "args.stack",
+      "childregs_ip": "copied current ip",
+      "childregs_ax": "set zero",
+      "frame_bx": "zero",
+      "frame_r12": "not explicitly written",
+      "first_asm_branch": "rbx zero",
+      "valid_runtime": "unknown"
+    },
+    {
+      "id": "FRAME-K0-F1-S0",
+      "kind": "source_branch_projection",
+      "PF_KTHREAD": false,
+      "fn_nonnull": true,
+      "args_stack_nonzero": false,
+      "childregs_origin": "copy current_pt_regs",
+      "childregs_sp": "forced zero",
+      "childregs_ip": "forced zero",
+      "childregs_ax": "set zero",
+      "frame_bx": "args.fn",
+      "frame_r12": "args.fn_arg",
+      "first_asm_branch": "nonzero rbx if preserved",
+      "valid_runtime": "unknown"
+    },
+    {
+      "id": "FRAME-K0-F1-S1",
+      "kind": "source_branch_projection",
+      "PF_KTHREAD": false,
+      "fn_nonnull": true,
+      "args_stack_nonzero": true,
+      "childregs_origin": "copy current_pt_regs",
+      "childregs_sp": "forced zero",
+      "childregs_ip": "forced zero",
+      "childregs_ax": "set zero",
+      "frame_bx": "args.fn",
+      "frame_r12": "args.fn_arg",
+      "first_asm_branch": "nonzero rbx if preserved",
+      "valid_runtime": "unknown"
+    },
+    {
+      "id": "FRAME-K1-F0-S0",
+      "kind": "source_branch_projection",
+      "PF_KTHREAD": true,
+      "fn_nonnull": false,
+      "args_stack_nonzero": false,
+      "childregs_origin": "memset zero",
+      "childregs_sp": "zeroed",
+      "childregs_ip": "zeroed",
+      "childregs_ax": "zeroed",
+      "frame_bx": "args.fn",
+      "frame_r12": "args.fn_arg",
+      "first_asm_branch": "rbx zero",
+      "valid_runtime": "unknown"
+    },
+    {
+      "id": "FRAME-K1-F0-S1",
+      "kind": "source_branch_projection",
+      "PF_KTHREAD": true,
+      "fn_nonnull": false,
+      "args_stack_nonzero": true,
+      "childregs_origin": "memset zero",
+      "childregs_sp": "zeroed",
+      "childregs_ip": "zeroed",
+      "childregs_ax": "zeroed",
+      "frame_bx": "args.fn",
+      "frame_r12": "args.fn_arg",
+      "first_asm_branch": "rbx zero",
+      "valid_runtime": "unknown"
+    },
+    {
+      "id": "FRAME-K1-F1-S0",
+      "kind": "source_branch_projection",
+      "PF_KTHREAD": true,
+      "fn_nonnull": true,
+      "args_stack_nonzero": false,
+      "childregs_origin": "memset zero",
+      "childregs_sp": "zeroed",
+      "childregs_ip": "zeroed",
+      "childregs_ax": "zeroed",
+      "frame_bx": "args.fn",
+      "frame_r12": "args.fn_arg",
+      "first_asm_branch": "nonzero rbx if preserved",
+      "valid_runtime": "unknown"
+    },
+    {
+      "id": "FRAME-K1-F1-S1",
+      "kind": "source_branch_projection",
+      "PF_KTHREAD": true,
+      "fn_nonnull": true,
+      "args_stack_nonzero": true,
+      "childregs_origin": "memset zero",
+      "childregs_sp": "zeroed",
+      "childregs_ip": "zeroed",
+      "childregs_ax": "zeroed",
+      "frame_bx": "args.fn",
+      "frame_r12": "args.fn_arg",
+      "first_asm_branch": "nonzero rbx if preserved",
+      "valid_runtime": "unknown"
+    },
+    {
+      "id": "FCALL-R0-W0-B0",
+      "kind": "nonnull_fn_conditional_control",
+      "C_fn_normally_returns": false,
+      "syscall_exit_to_user_mode_normally_returns": false,
+      "rbx_preserves_original_fn": false,
+      "second_asm_call": "not_reached",
+      "after_second_return": "jmp . only if second call returns",
+      "runtime_tested": false
+    },
+    {
+      "id": "FCALL-R0-W0-B1",
+      "kind": "nonnull_fn_conditional_control",
+      "C_fn_normally_returns": false,
+      "syscall_exit_to_user_mode_normally_returns": false,
+      "rbx_preserves_original_fn": true,
+      "second_asm_call": "not_reached",
+      "after_second_return": "jmp . only if second call returns",
+      "runtime_tested": false
+    },
+    {
+      "id": "FCALL-R0-W1-B0",
+      "kind": "nonnull_fn_conditional_control",
+      "C_fn_normally_returns": false,
+      "syscall_exit_to_user_mode_normally_returns": true,
+      "rbx_preserves_original_fn": false,
+      "second_asm_call": "not_reached",
+      "after_second_return": "jmp . only if second call returns",
+      "runtime_tested": false
+    },
+    {
+      "id": "FCALL-R0-W1-B1",
+      "kind": "nonnull_fn_conditional_control",
+      "C_fn_normally_returns": false,
+      "syscall_exit_to_user_mode_normally_returns": true,
+      "rbx_preserves_original_fn": true,
+      "second_asm_call": "not_reached",
+      "after_second_return": "jmp . only if second call returns",
+      "runtime_tested": false
+    },
+    {
+      "id": "FCALL-R1-W0-B0",
+      "kind": "nonnull_fn_conditional_control",
+      "C_fn_normally_returns": true,
+      "syscall_exit_to_user_mode_normally_returns": false,
+      "rbx_preserves_original_fn": false,
+      "second_asm_call": "not_reached",
+      "after_second_return": "jmp . only if second call returns",
+      "runtime_tested": false
+    },
+    {
+      "id": "FCALL-R1-W0-B1",
+      "kind": "nonnull_fn_conditional_control",
+      "C_fn_normally_returns": true,
+      "syscall_exit_to_user_mode_normally_returns": false,
+      "rbx_preserves_original_fn": true,
+      "second_asm_call": "not_reached",
+      "after_second_return": "jmp . only if second call returns",
+      "runtime_tested": false
+    },
+    {
+      "id": "FCALL-R1-W1-B0",
+      "kind": "nonnull_fn_conditional_control",
+      "C_fn_normally_returns": true,
+      "syscall_exit_to_user_mode_normally_returns": true,
+      "rbx_preserves_original_fn": false,
+      "second_asm_call": "unknown_due_to_rbx",
+      "after_second_return": "jmp . only if second call returns",
+      "runtime_tested": false
+    },
+    {
+      "id": "FCALL-R1-W1-B1",
+      "kind": "nonnull_fn_conditional_control",
+      "C_fn_normally_returns": true,
+      "syscall_exit_to_user_mode_normally_returns": true,
+      "rbx_preserves_original_fn": true,
+      "second_asm_call": "second_asm_fn_call_source_reachable",
+      "after_second_return": "jmp . only if second call returns",
+      "runtime_tested": false
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "R66-S01 corrected unsigned common type and pointer validity; not new signed overflow proof"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-F04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "first-run frame producer now bounded; actual runtime and unwinder consumers not closed"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "startup order, first CPL3 and TSS still unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U06",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "copy_thread/ret_from_fork now read; real initial entry/run still NOT_RUN"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66::SB66-U08",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "generated offsets and CPU hardware frames never compiled or verified"
+    },
+    {
+      "review_id": "CORE-USER-RETURN-SIGNAL-09-DOC-FIX-01-REVIEW-001",
+      "source_field": "effective_signal09_disposition",
+      "source_value": "PASS_PENDING_LOCAL_WITH_PRIOR_REVIEW_LIMITS",
+      "consumption": "syscall_exit_to_user_mode work may run signal/restart code, don't assume final regs unchanged; no RS re-adjudication"
+    }
+  ],
+  "bounded_assumptions": [
+    "all task pointers, stack objects, aligned slots, frame sizes and source macro expansions satisfy required validity",
+    "all relevant prior callees return normally before subsequent local source is reached",
+    "C ABI and machine stack-return conventions are hypotheses, no compiled ELF or CPU verified",
+    "fn function-pointer representation in reg_t and RBX callee-save convention not independently checked",
+    "the 56/176/232 layout is static integer model only, not compiled sizeof/offsetof",
+    "no Intel/AMD CPU hardware rule asserted from an unverified external manual"
+  ],
+  "source_budget": {
+    "core_and_direct_deps": 16,
+    "soft_limit": 12,
+    "exception_justification": "D00 direct task_struct and original evidence; copy_thread producer, exact kclone_args typedef, container_of, current_pt_regs, inactive/fork frame types, direct fork caller, schedule_tail and user return work require independent real definitions; no whole-tree audit",
+    "search_batches": 2,
+    "direct_arch_dirs": 0
+  },
+  "P9_text_subchecks": {
+    "1": "prepublish all six new documents 40hex regex zero required",
+    "2": "82 new snippets 1–5 continuous physical lines, nonempty and source/definition boundaries directly re-opened; full local P9 NOT_RUN",
+    "3": "fixed source paths all direct connector reads; new commit path existence post-publication pending",
+    "4": "evidence line ranges within actual source",
+    "5": "MANIFEST count must equal all new [VERIFIED] occurrence 82; quotes_reconfirmed=82, downgraded_to_inferred=0",
+    "6": "no external hardware conclusion without checked original manual; P5 limits",
+    "7": "time/master two canaries fresh G00",
+    "8": "exact conventions §1 item2 and read_channel in new MANIFEST",
+    "9": "symbols_referenced for new code not applicable, no code patch",
+    "10": "no diff/patch",
+    "11": "no build/run/test success claim",
+    "12": "no degraded files in chat",
+    "13": "D01, A/B/C mandatory source anchors present, mainline still independently reviews"
+  },
+  "actual_methods": {
+    "GitHub_connector": "READ",
+    "repository_source_programs": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "full_local_P9": "NOT_RUN",
+    "finite_models": "pure in-dialog JS arithmetic and boolean projections"
+  },
+  "new_finding_ids": [
+    "FR67-F01",
+    "FR67-F02",
+    "FR67-F03"
+  ],
+  "new_gap_ids": [
+    "FR67-U01",
+    "FR67-U02",
+    "FR67-U03",
+    "FR67-U04",
+    "FR67-U05",
+    "FR67-U06",
+    "FR67-U07",
+    "FR67-U08"
+  ]
+}
