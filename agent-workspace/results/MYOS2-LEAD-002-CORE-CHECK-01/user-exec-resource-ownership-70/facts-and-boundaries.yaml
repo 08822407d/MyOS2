@@ -1,0 +1,734 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "contract_short12": "8ff60d4d0ad2",
+  "execution_parent_short12": "cf06a0d7f6da",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "documentation_disposition_submitted",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_disposition": {
+    "R69_01": "documentation_disposition_submitted_pending_C05; not executor closed",
+    "original69": "RETURN_DOCUMENTATION; R69-S01/S02 maintained",
+    "old69_tag_count": 105,
+    "defective_labels": [
+      "batch69/C39",
+      "batch69/C40"
+    ],
+    "replacement": [
+      {
+        "old": "batch69/C39",
+        "new": [
+          "D01",
+          "D02"
+        ],
+        "meaning": "FIXED_BIT and FIXED independent"
+      },
+      {
+        "old": "batch69/C40",
+        "new": [
+          "D03",
+          "D04"
+        ],
+        "meaning": "IF_BIT and IF independent"
+      }
+    ],
+    "affected_consumers": [
+      "batch69 evidence old C39/C40 two-definition fences replaced for consumption by four new D01–D04",
+      "batch69 facts.register_handoff_matrix start_thread_common flag evidence should use new D01–D04 with old C16 actual flags assignment",
+      "batch69 init-exec-handoff.md C37–C40 bit1/bit9 explanation now consumes four separate macro anchors",
+      "batch69 MANIFEST self_check and P9 105/105/0 counted historical labels, not 105 P2-compliant citations",
+      "batch69 facts.P9_text_subchecks items2/5/13 require narrowed interpretation",
+      "batch69 PR17 official delivery #6764279513 historical 105-all-reconfirmed claim should be narrowed, old comment unchanged"
+    ],
+    "other_old103": "not independently rechecked; cannot assert all 103 valid",
+    "old_artifacts_and_comments_modified": false,
+    "earlier": "R67-01 closed; batch68 PASS_PENDING_LOCAL; R68-S01/S02/S03, R23-S01/S02/S03, R42-S01/S02 retained; no old reopening"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/processor/processor_const_arch.h",
+      "blob_sha_short12": "bebc1070225c",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "D01",
+        "D02",
+        "D03",
+        "D04"
+      ]
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c",
+      "blob_sha_short12": "0861ebae6fc2",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "A01",
+        "A02",
+        "A03",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A23",
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13",
+        "B14",
+        "B15",
+        "B16",
+        "B23",
+        "B24",
+        "B25",
+        "B26",
+        "B27",
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B32",
+        "B33",
+        "B34",
+        "B35",
+        "B36",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C35"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "blob_sha_short12": "002c2aec4aa8",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "A04",
+        "A22",
+        "B17",
+        "B18",
+        "B19",
+        "B20",
+        "B21",
+        "B22"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "blob_sha_short12": "579fb4e9fadd",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A24",
+        "B41",
+        "B42",
+        "C16",
+        "C17",
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "C27"
+      ]
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "blob_sha_short12": "06a900f8d509",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "A09",
+        "A10"
+      ]
+    },
+    {
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "blob_sha_short12": "985a8262e578",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A19"
+      ]
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "blob_sha_short12": "6e3e1aa8e724",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "A20",
+        "A21"
+      ]
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "blob_sha_short12": "2b705f35ced8",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "B37",
+        "B38",
+        "B39",
+        "B40",
+        "C32",
+        "C33",
+        "C34"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/file_table.c",
+      "blob_sha_short12": "8be78d1df129",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "C28",
+        "C29",
+        "C30"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/fs.h",
+      "blob_sha_short12": "fe527991618b",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "evidence_ids": [
+        "C31"
+      ]
+    }
+  ],
+  "format_registration_matrix": [
+    {
+      "step": "header",
+      "evidence": [
+        "A01",
+        "A15",
+        "A16"
+      ],
+      "observation": "static formats initialized with self-linked anchor and count 0"
+    },
+    {
+      "step": "format object",
+      "evidence": [
+        "A04",
+        "A05",
+        "A06"
+      ],
+      "observation": "elf_format.lh; load_binary=load_elf_binary, distinct from bprm"
+    },
+    {
+      "step": "boot producer",
+      "evidence": [
+        "A07",
+        "A09",
+        "A10"
+      ],
+      "observation": "do_basic_setup -> do_initcalls -> init_elf_binfmt -> register_binfmt; execution not proven"
+    },
+    {
+      "step": "registration",
+      "evidence": [
+        "A02",
+        "A20",
+        "A23"
+      ],
+      "observation": "list_header_add_to_tail(formats,fmt.lh), local lock calls commented"
+    },
+    {
+      "step": "dispatcher",
+      "evidence": [
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A17",
+        "A18",
+        "A19"
+      ],
+      "observation": "list iteration indirect fmt.load_binary calls overwrite retval; early return commented"
+    },
+    {
+      "step": "unregistration",
+      "evidence": [
+        "A03",
+        "A08",
+        "A21"
+      ],
+      "observation": "exit_elf_binfmt -> unregister_binfmt; runtime lifecycle unknown"
+    }
+  ],
+  "bprm_ownership_matrix": [
+    {
+      "resource": "filename/strings",
+      "evidence": [
+        "B09",
+        "B10",
+        "B11",
+        "B22",
+        "C06",
+        "C35"
+      ],
+      "producer": "filename.name or allocated fdpath; interp initially aliases filename",
+      "disposition": "conditional interp string free, fdpath free, caller putname",
+      "limit": "alias pointer equality != ref increment"
+    },
+    {
+      "resource": "bprm.file",
+      "evidence": [
+        "B03",
+        "B06",
+        "B08",
+        "C01",
+        "C04",
+        "C28",
+        "C29"
+      ],
+      "producer": "do_open_execat -> bprm.file",
+      "disposition": "free_bprm calls fput(file), then do_close_execat(file) calls fput",
+      "limit": "second call requires valid file after first"
+    },
+    {
+      "resource": "bprm.mm",
+      "evidence": [
+        "B14",
+        "B15",
+        "B16",
+        "B27",
+        "B28",
+        "B33",
+        "B34",
+        "B35",
+        "B36",
+        "C02",
+        "C34"
+      ],
+      "producer": "mm_alloc assigned into bprm.mm",
+      "disposition": "exec_mmap transfers to task mm/active_mm then bprm.mm=NULL; free_bprm mmput only if nonnull",
+      "limit": "object refcount/CR3 not proven"
+    },
+    {
+      "resource": "mm.exe_file",
+      "evidence": [
+        "B38",
+        "B39",
+        "B40",
+        "C31",
+        "C32",
+        "C33"
+      ],
+      "producer": "set_mm_exe_file reads old and increments new via get_file",
+      "disposition": "mm.exe_file points to new; old file fput",
+      "limit": "reference increment does not guarantee entire subsequent lifetime"
+    },
+    {
+      "resource": "bprm.executable",
+      "evidence": [
+        "B18",
+        "B20",
+        "B29",
+        "B30",
+        "C05"
+      ],
+      "producer": "separate file field",
+      "disposition": "have_execfd -> fd_install -> bprm.executable=NULL; otherwise free_bprm fput when nonnull",
+      "limit": "actual have_execfd producer not traced"
+    },
+    {
+      "resource": "ELF interpreter local",
+      "evidence": [
+        "B42",
+        "C16",
+        "C19",
+        "C20",
+        "C21",
+        "C23",
+        "C27"
+      ],
+      "producer": "PT_INTERP open_exec -> local interpreter pointer distinct from bprm.interpreter",
+      "disposition": "success local fput or prior error-label local fput",
+      "limit": "two source sites not evidence both execute on same path"
+    },
+    {
+      "resource": "bprm object",
+      "evidence": [
+        "B07",
+        "B12",
+        "B13",
+        "C06"
+      ],
+      "producer": "kzalloc after opened file",
+      "disposition": "free_bprm tail kfree",
+      "limit": "valid object and error-liveness assumed"
+    },
+    {
+      "resource": "registrar object",
+      "evidence": [
+        "A04",
+        "A05",
+        "A07",
+        "A08"
+      ],
+      "producer": "static linux_binfmt elf_format",
+      "disposition": "register/unregister list node",
+      "limit": "never conflate registrar with per-exec bprm"
+    }
+  ],
+  "cleanup_event_matrix": [
+    {
+      "event": "open fails",
+      "ids": [
+        "B03",
+        "B06"
+      ],
+      "result": "ERR_CAST(file) before bprm allocated"
+    },
+    {
+      "event": "bprm alloc fails",
+      "ids": [
+        "B07",
+        "C01"
+      ],
+      "result": "do_close_execat(file) requests fput"
+    },
+    {
+      "event": "mm init fails",
+      "ids": [
+        "B14",
+        "B16",
+        "B13"
+      ],
+      "result": "bprm.mm=NULL if allocated mm then mmdrop; error free_bprm"
+    },
+    {
+      "event": "pre-commit failure",
+      "ids": [
+        "B24",
+        "B25",
+        "B26",
+        "B27"
+      ],
+      "result": "begin_new_exec returns error; earlier side effects not certified rolled back"
+    },
+    {
+      "event": "set executable ref",
+      "ids": [
+        "B39",
+        "B40",
+        "C31",
+        "C32"
+      ],
+      "result": "get_file(new) and fput(old) guarded by nonnull values"
+    },
+    {
+      "event": "mm transfer",
+      "ids": [
+        "B28",
+        "B33",
+        "B34",
+        "C02"
+      ],
+      "result": "task mm/active_mm updated, bprm.mm=NULL on normal exec_mmap result"
+    },
+    {
+      "event": "execfd transfer",
+      "ids": [
+        "B29",
+        "B30",
+        "C05"
+      ],
+      "result": "fd_install consumes bprm.executable, field set NULL"
+    },
+    {
+      "event": "file put #1",
+      "ids": [
+        "C04",
+        "C28",
+        "C29"
+      ],
+      "result": "first fput of nonnull bprm.file; object may become invalid when count reaches 0"
+    },
+    {
+      "event": "file put #2",
+      "ids": [
+        "C01",
+        "C04"
+      ],
+      "result": "do_close_execat of same pointer; meaningful only while object still valid"
+    },
+    {
+      "event": "interpreter normal",
+      "ids": [
+        "C19",
+        "C23"
+      ],
+      "result": "selected interpreter branch fput at success position"
+    },
+    {
+      "event": "interpreter error",
+      "ids": [
+        "C20",
+        "C21",
+        "C27"
+      ],
+      "result": "error path conditionally fput local interpreter"
+    },
+    {
+      "event": "arg page helper",
+      "ids": [
+        "C03",
+        "C07"
+      ],
+      "result": "free_arg_pages is empty in selected definition; other cleanup opaque"
+    },
+    {
+      "event": "final result",
+      "ids": [
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C35"
+      ],
+      "result": "retval returned after calls; not object lifetime proof"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "case": "direct_file_two_fput_0",
+      "initial_refs": 0,
+      "first": "INVALID",
+      "second": "STOP_UNPROVEN_VALIDITY",
+      "assumes": "no concurrency, same file, no other ref changes"
+    },
+    {
+      "case": "direct_file_two_fput_1",
+      "initial_refs": 1,
+      "first": "zero_free_requested",
+      "second": "STOP_UNPROVEN_VALIDITY",
+      "assumes": "no concurrency, same file, no other ref changes"
+    },
+    {
+      "case": "direct_file_two_fput_2",
+      "initial_refs": 2,
+      "first": 1,
+      "second": "zero_free_requested",
+      "assumes": "no concurrency, same file, no other ref changes"
+    },
+    {
+      "case": "direct_file_two_fput_3",
+      "initial_refs": 3,
+      "first": 2,
+      "second": 1,
+      "assumes": "no concurrency, same file, no other ref changes"
+    },
+    {
+      "case": "direct_file_two_fput_4",
+      "initial_refs": 4,
+      "first": 3,
+      "second": 2,
+      "assumes": "no concurrency, same file, no other ref changes"
+    },
+    {
+      "case": "get_file_then_two_fput_1",
+      "start": 1,
+      "after_get": 2,
+      "after_first": 1,
+      "after_second": 0,
+      "assumes": "valid positive count; surviving mm.exe_file identity not certified"
+    },
+    {
+      "case": "get_file_then_two_fput_2",
+      "start": 2,
+      "after_get": 3,
+      "after_first": 2,
+      "after_second": 1,
+      "assumes": "valid positive count; surviving mm.exe_file identity not certified"
+    },
+    {
+      "case": "get_file_then_two_fput_3",
+      "start": 3,
+      "after_get": 4,
+      "after_first": 3,
+      "after_second": 2,
+      "assumes": "valid positive count; surviving mm.exe_file identity not certified"
+    },
+    {
+      "case": "get_file_then_two_fput_4",
+      "start": 4,
+      "after_get": 5,
+      "after_first": 4,
+      "after_second": 3,
+      "assumes": "valid positive count; surviving mm.exe_file identity not certified"
+    },
+    {
+      "case": "mm_0_0",
+      "mm_allocated": false,
+      "exec_mmap_completed": false,
+      "bprm_mm_after": null,
+      "free_bprm_mmput_source_request": false
+    },
+    {
+      "case": "mm_0_1",
+      "mm_allocated": false,
+      "exec_mmap_completed": true,
+      "bprm_mm_after": null,
+      "free_bprm_mmput_source_request": false
+    },
+    {
+      "case": "mm_1_0",
+      "mm_allocated": true,
+      "exec_mmap_completed": false,
+      "bprm_mm_after": "mm_ptr",
+      "free_bprm_mmput_source_request": true
+    },
+    {
+      "case": "mm_1_1",
+      "mm_allocated": true,
+      "exec_mmap_completed": true,
+      "bprm_mm_after": null,
+      "free_bprm_mmput_source_request": false
+    },
+    {
+      "case": "handlers_0",
+      "count_assumed": 0,
+      "return_source": "ENOENT if prepared",
+      "actual_registration": "UNKNOWN"
+    },
+    {
+      "case": "handlers_1",
+      "count_assumed": 1,
+      "return_source": "only handler result",
+      "actual_registration": "UNKNOWN"
+    },
+    {
+      "case": "handlers_2",
+      "count_assumed": 2,
+      "return_source": "last handler result",
+      "actual_registration": "UNKNOWN"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-F01",
+      "status": "needs_evidence",
+      "use": "real elf registry source discovered, multi-handler premise unproven"
+    },
+    {
+      "id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-F02",
+      "status": "needs_evidence",
+      "use": "ignored exec error bridge retained, not new finding"
+    },
+    {
+      "id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-F03",
+      "status": "needs_evidence",
+      "use": "ASM ABI remains outside scope"
+    },
+    {
+      "id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U03",
+      "status": "needs_evidence",
+      "use": "file/mm cleanup partially bounded, full lifecycle open"
+    },
+    {
+      "id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U04",
+      "status": "needs_evidence",
+      "use": "registered format count uncertain"
+    },
+    {
+      "id": "CORE-USER-EXEC-STACK-23-REVIEW-001",
+      "use": "R23-S01/S02/S03 argument and VMA restrictions"
+    },
+    {
+      "id": "CORE-USER-FD-CLOSE-42-REVIEW-001",
+      "use": "R42-S01/S02 positive, valid file refcount boundaries"
+    }
+  ],
+  "new_findings": [
+    "EO70-F01",
+    "EO70-F02"
+  ],
+  "new_gaps": [
+    "EO70-U01",
+    "EO70-U02",
+    "EO70-U03",
+    "EO70-U04",
+    "EO70-U05",
+    "EO70-U06",
+    "EO70-U07",
+    "EO70-U08"
+  ],
+  "actual_methods": {
+    "GitHub": "READ",
+    "self_created_text_arithmetic": "YES",
+    "repository_code": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "full_local_P9": "NOT_RUN"
+  },
+  "P9_text_subchecks": {
+    "1": "all six files scan forbidden full SHA",
+    "2": "105 nonempty single-definition 1–5 line source quotes second reread",
+    "3": "source fixed time, new fixed/active postpublish readback",
+    "4": "ranges directly checked",
+    "5": "six-file raw source-marker prefix count equals 105; no prose extra",
+    "6": "no unverified external claim",
+    "7": "time/master canaries in MANIFEST",
+    "8": "startup quote/read channel in MANIFEST",
+    "9": "N/A no code files",
+    "10": "N/A no patches",
+    "11": "NOT_RUN build/real hardware",
+    "12": "N/A no degraded chat output",
+    "13": "D four macros, A registry, B ownership, C fput semantics"
+  }
+}
