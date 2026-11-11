@@ -1,0 +1,178 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXEC-COMMIT-GATES-71",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "NOT_APPLICABLE",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "EC71-F01",
+      "kind": "thread_group_exclusion_not_active_at_exec_admission",
+      "status": "needs_evidence",
+      "claim": "Fixed de_thread activity returns 0 at no_thread_group while its sibling-thread kill/wait and leader/PID exchange operations are comments. Because ENOERR=0, begin_new_exec treats this value as success. If the current task actually has other live group members, this selected source does not itself demonstrate isolation before proceeding to unshare_files and exec_mmap.",
+      "premises": [
+        "a valid task with one or more other live threads reaches begin_new_exec",
+        "de_thread executes its shown normal branch and no external operation already isolated the group",
+        "the succeeding resource callees return normally"
+      ],
+      "counter_evidence": "a single-threaded bootstrap or actual outside caller discipline may make isolation unnecessary for the selected execution; no live thread-group test performed",
+      "first_stop": "real thread-group state and other synchronization producers unreviewed",
+      "evidence": [
+        "A02",
+        "A04",
+        "A05",
+        "A07",
+        "A09",
+        "A12",
+        "A14"
+      ],
+      "related": [
+        "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U04"
+      ],
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-F01",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-F02",
+      "kind": "post_commit_error_return_without_active_fatal_handler",
+      "status": "needs_evidence",
+      "claim": "begin_new_exec writes bprm.point_of_no_return=true and later mutates task MM/flags/comm. It can return an error from a late have_execfd allocation gate, and load_elf_binary has active post-begin failure branches. The examined bprm_execve failure branch has its point-of-no-return force_fatal_sig logic commented and instead clears flags and returns retval; no rollback of all earlier mutations is visible in these bounded bodies.",
+      "premises": [
+        "earlier begin_new_exec and its task/MM updates completed validly",
+        "have_execfd allocation or later ELF setup/mapping actually produces a negative result",
+        "the handler and cleanup return normally and final format handler retval remains negative"
+      ],
+      "counter_evidence": "all tested paths may be successful, later signal termination or alternate handlers can intervene outside examined direct bodies; not an observed inconsistent userspace state",
+      "first_stop": "the first failing callee, subsequent handler traversal, cleanup and actual signal/CPU return effects",
+      "evidence": [
+        "A13",
+        "A17",
+        "A19",
+        "C03",
+        "C11",
+        "C12",
+        "C13",
+        "C30",
+        "C31",
+        "C32"
+      ],
+      "related": [
+        "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U07"
+      ],
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-F02",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-F03",
+      "kind": "fs_in_exec_write_coverage_gap_for_clone_fs_admission",
+      "status": "needs_evidence",
+      "claim": "copy_fs on CLONE_FS checks fs.in_exec and returns EAGAIN when it is nonzero. In the selected bprm_execve implementation task.in_execve becomes 1 before handler dispatch but shared fs.in_exec only has reset-to-zero assignments at both exits; copy_fs_struct initializes the latter to zero. No source-local writer to one is shown for this exact exec activity. A concurrent CLONE_FS attempt on a shared fs therefore requires additional producer/synchronization evidence before claiming exec exclusion.",
+      "premises": [
+        "current fs pointer is shared/valid and another task attempts CLONE_FS concurrently",
+        "the fs.in_exec field stays zero through the relevant check",
+        "no external lock/flag writer prevents this overlap"
+      ],
+      "counter_evidence": "the process may execute single-threaded; another writer or interlock outside the bounded sources may exist; no actual concurrent clone/exec was run",
+      "first_stop": "global fs.in_exec producers and actual shared-object synchronization unknown",
+      "evidence": [
+        "B20",
+        "B21",
+        "B22",
+        "B23",
+        "B24",
+        "B25",
+        "B26"
+      ],
+      "related": [
+        "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U07"
+      ],
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-F03",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_findings_count": 3,
+  "evidence_gaps": [
+    {
+      "id": "EC71-U01",
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U01",
+      "status": "needs_evidence",
+      "detail": "Actual live thread-group count, group-leader task identities, exiting/notify protocol and scheduler signals are not audited",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-U02",
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U02",
+      "status": "needs_evidence",
+      "detail": "unshare_fd/dup_fd copy and put_files_struct ownership validity, max_fds and inner per-slot kzalloc failure remain R43 bounded",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-U03",
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U03",
+      "status": "needs_evidence",
+      "detail": "All fs.in_exec writers, shared fs task synchronization and concurrent CLONE_FS during exec not exhaustively searched or run",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-U04",
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U04",
+      "status": "needs_evidence",
+      "detail": "exec_mmap lock error, old/new MM references, activate_mm/CR3 and task.mm object lifetime remain R70/R15 bounded",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-U05",
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U05",
+      "status": "needs_evidence",
+      "detail": "bprm.point_of_no_return post-commit fatal signal producers/return work outside examined bprm_execve body remain unknown",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-U06",
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U06",
+      "status": "needs_evidence",
+      "detail": "have_execfd producer, get_unused_fd_flags source return, fd_install reference semantics and real late error reachability not proven",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-U07",
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U07",
+      "status": "needs_evidence",
+      "detail": "ordinary execve syscall dispatch/return work, user-mode frame effect and init bridge ASM still not runtime certified",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EC71-U08",
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U08",
+      "status": "needs_evidence",
+      "detail": "actual ELF handler registry/multi-handler order, preprocessor config, compiler binary, QEMU/hardware and full local P9 remain NOT_RUN",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "reproduced_kernel_bugs": 0,
+  "prior_EO70_qualified_ids_unchanged": true,
+  "excluded_actions": [
+    "edit any earlier results or comments",
+    "change kernel code",
+    "preprocess/compile/run",
+    "self-sign 71 PASS",
+    "start 72"
+  ]
+}

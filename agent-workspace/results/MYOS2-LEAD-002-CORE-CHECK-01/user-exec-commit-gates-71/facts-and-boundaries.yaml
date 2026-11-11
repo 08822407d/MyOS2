@@ -1,0 +1,1027 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXEC-COMMIT-GATES-71",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "date": "2026-11-11",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "contract_short12": "18524ef4af56",
+  "execution_parent_short12": "1058913beefe",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "NOT_APPLICABLE",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "upstream_disposition": {
+    "R69_01": "CLOSED_DOCUMENTATION_ONLY by mainline",
+    "batch69": "PASS_PENDING_LOCAL_WITH_R69C-S01",
+    "batch70": "PASS_PENDING_LOCAL_WITH_R70-S01/S02/S03",
+    "historical": [
+      "R43-S01/S02",
+      "R15-S01/S02",
+      "R45-S01/S02",
+      "09-DOC-FIX-01 and RS-01/GAP-U04/U10 limits"
+    ]
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/sched/forkexec/exec.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "0861ebae6fc2",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A06",
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A19",
+        "A20",
+        "A21",
+        "A22",
+        "B24",
+        "B25",
+        "B26",
+        "B27",
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B32",
+        "B33",
+        "B34",
+        "B35",
+        "B40",
+        "B41",
+        "B42",
+        "B43",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C36"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/errno-base.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "8705e60aee51",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "A12"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "579fb4e9fadd",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "A18",
+        "C28",
+        "C29",
+        "C30",
+        "C31",
+        "C32",
+        "C33",
+        "C34",
+        "C35"
+      ]
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "2b705f35ced8",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B20",
+        "B21",
+        "B44",
+        "B45"
+      ]
+    },
+    {
+      "path": "mykernel/fs/vfs/file.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "0dd75836ead2",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13",
+        "B14",
+        "B15",
+        "B16",
+        "B17",
+        "B18"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/kernel/fdtable.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "fac0384dc371",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "B19"
+      ]
+    },
+    {
+      "path": "mykernel/sched/misc/fs_struct.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "67e13be24066",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "B22"
+      ]
+    },
+    {
+      "path": "mykernel/sched/misc/fs_struct_types.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "96d03013fef9",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "B23"
+      ]
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "87518a05fa49",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "B36",
+        "B37",
+        "B38",
+        "B39"
+      ]
+    },
+    {
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "002c2aec4aa8",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "C01"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/arch_task.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_sha_short12": "e4c5c5336a0c",
+      "read_channel": "connector",
+      "new_evidence_ids": [
+        "C26",
+        "C27"
+      ]
+    }
+  ],
+  "admission_gate_matrix": [
+    {
+      "stage": "ELF to begin_new_exec",
+      "ids": [
+        "A18",
+        "C28"
+      ],
+      "effect": "load_elf_binary calls begin_new_exec; nonzero return jumps to ELF cleanup",
+      "condition": "ELF handler and bprm objects valid"
+    },
+    {
+      "stage": "point marker",
+      "ids": [
+        "A13",
+        "C01",
+        "C02"
+      ],
+      "effect": "bprm.point_of_no_return=true BEFORE de_thread",
+      "condition": "valid bprm; marker not fatal handler"
+    },
+    {
+      "stage": "de_thread local body",
+      "ids": [
+        "A01",
+        "A02",
+        "A04",
+        "A05",
+        "A07",
+        "A09",
+        "A10",
+        "A11"
+      ],
+      "effect": "kill/wait/leader/PID operations are comments; active normal return0; killed label return-EAGAIN has no active local goto",
+      "condition": "callee reaches normal return; no claim on global group isolation"
+    },
+    {
+      "stage": "ENOERR gate",
+      "ids": [
+        "A12",
+        "A14"
+      ],
+      "effect": "ENOERR macro0, so retval!=-ENOERR is false for de_thread normal0",
+      "condition": "no undefined predecessor; hypothetical nonzero is distinct from current local producer"
+    },
+    {
+      "stage": "unshare_files gate",
+      "ids": [
+        "A15",
+        "B01",
+        "B02",
+        "B04",
+        "B05",
+        "B06"
+      ],
+      "effect": "error returns out; zero can be no-copy or successful-copy",
+      "condition": "valid positive file table refcount and dup_fd result"
+    },
+    {
+      "stage": "set_mm_exe_file gate",
+      "ids": [
+        "A16",
+        "B44",
+        "B45"
+      ],
+      "effect": "returns0 after valid local normal steps; begin caller still has nonzero check",
+      "condition": "all get_file/fput operations valid and return; old==new accounting not certified"
+    },
+    {
+      "stage": "exec_mmap gate",
+      "ids": [
+        "A17",
+        "B40",
+        "B41",
+        "B42",
+        "B43"
+      ],
+      "effect": "direct old_mm alternatives return0 on normal completion; bprm.mm=NULL is assigned by begin_new_exec after return",
+      "condition": "mmap lock/BUG_ON and activation valid"
+    },
+    {
+      "stage": "late execfd gate",
+      "ids": [
+        "A19",
+        "A20",
+        "A21",
+        "A22",
+        "C03",
+        "C04",
+        "C05"
+      ],
+      "effect": "have_execfd true plus negative fd allocation can return error after task MM/flags/comm changes",
+      "condition": "valid earlier state and get_unused_fd_flags negative"
+    }
+  ],
+  "task_state_matrix": [
+    {
+      "field": "bprm.point_of_no_return",
+      "object": "linux_binprm",
+      "ids": [
+        "A13",
+        "C01",
+        "C02"
+      ],
+      "producer": "begin_new_exec sets true before de_thread",
+      "failure": "no rollback or fatal action in selected out"
+    },
+    {
+      "field": "task.in_execve",
+      "object": "task_struct",
+      "ids": [
+        "B24",
+        "B25",
+        "B26",
+        "B36",
+        "C07",
+        "C09",
+        "C13"
+      ],
+      "producer": "bprm_execve writes1 before handler",
+      "failure": "both negative and nonnegative exits write0"
+    },
+    {
+      "field": "fs.in_exec",
+      "object": "fs_struct (potentially shared)",
+      "ids": [
+        "B20",
+        "B21",
+        "B22",
+        "B23",
+        "B25",
+        "B26"
+      ],
+      "producer": "copy_fs_struct initializes0; copy_fs(CLONE_FS) checks nonzero",
+      "failure": "bprm_execve selected exits write0, no active local write1 seen; global producers not exhaustive"
+    },
+    {
+      "field": "task.files",
+      "object": "task_struct",
+      "ids": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B37"
+      ],
+      "producer": "unshare_files copies only if shared refcount>1",
+      "failure": "if no-copy/error, task.files unchanged; copy replaces under task_lock, put old afterward"
+    },
+    {
+      "field": "files_struct.refcount",
+      "object": "files_struct",
+      "ids": [
+        "B02",
+        "B10",
+        "B16",
+        "B19"
+      ],
+      "producer": "dup_fd new table refcount1, unshare_fd checks old >1",
+      "failure": "last put_files_struct may traverse file slots; separate from individual file refs"
+    },
+    {
+      "field": "file slots",
+      "object": "dup_fd new files",
+      "ids": [
+        "B11",
+        "B12",
+        "B13",
+        "B14"
+      ],
+      "producer": "each nonnull old slot allocates new file_s, value copies fields",
+      "failure": "inner kzalloc NULL unchecked in direct source, previous R43 limit not new"
+    },
+    {
+      "field": "task.mm/active_mm",
+      "object": "task_struct",
+      "ids": [
+        "B40",
+        "B41",
+        "B42",
+        "B43"
+      ],
+      "producer": "exec_mmap assigns new mm to task fields, calls activate_mm",
+      "failure": "CPU/lock/ref validity unknown"
+    },
+    {
+      "field": "bprm.mm",
+      "object": "linux_binprm",
+      "ids": [
+        "A17"
+      ],
+      "producer": "prior bprm_mm_init alloc under R70-S01",
+      "failure": "begin_new_exec sets NULL only after exec_mmap normally returns0; NULL not physical free"
+    },
+    {
+      "field": "task.flags",
+      "object": "task_struct",
+      "ids": [
+        "B27"
+      ],
+      "producer": "begin_new_exec masks PF_RANDOMIZE/FORKNOEXEC/NOFREEZE/NO_SETAFFINITY after MM",
+      "failure": "late error can leave changes"
+    },
+    {
+      "field": "task.PF_NPROC_EXCEEDED",
+      "object": "task.flags",
+      "ids": [
+        "C16",
+        "C17"
+      ],
+      "producer": "do_execveat_common clears before bprm alloc",
+      "failure": "subsequent ordinary error does not locally restore"
+    },
+    {
+      "field": "task.sas_ss_sp/size",
+      "object": "task_struct",
+      "ids": [
+        "B29",
+        "B38"
+      ],
+      "producer": "begin_new_exec sets both zero",
+      "failure": "late error lacks local restore"
+    },
+    {
+      "field": "task.comm",
+      "object": "task_struct",
+      "ids": [
+        "B30",
+        "B31",
+        "B39"
+      ],
+      "producer": "__set_task_comm under task_lock copies bprm.filename",
+      "failure": "late error may leave renamed task"
+    },
+    {
+      "field": "mm.task_size",
+      "object": "mm_s",
+      "ids": [
+        "B33",
+        "B34",
+        "C29"
+      ],
+      "producer": "setup_new_exec calls arch_pick_mmap_layout then writes TASK_SIZE",
+      "failure": "ELF setup_arg_pages and mapping errors can follow"
+    },
+    {
+      "field": "CLOEXEC/signal handlers",
+      "object": "task/files state",
+      "ids": [
+        "B28",
+        "B32"
+      ],
+      "producer": "selected begin_new_exec statements do_close_on_exec and flush_signal_handlers are comments",
+      "failure": "no global absence or POSIX outcome inferred"
+    },
+    {
+      "field": "finalize_exec",
+      "object": "current task",
+      "ids": [
+        "B35",
+        "C33"
+      ],
+      "producer": "selected finalize_exec body contains commented stack rlimit steps",
+      "failure": "caller source invocation alone not full user transition"
+    }
+  ],
+  "post_commit_failure_matrix": [
+    {
+      "gate": "de_thread nonzero",
+      "ids": [
+        "A13",
+        "A14",
+        "A09",
+        "A11",
+        "A12"
+      ],
+      "local_reachability": "hypothetical only: current de_thread normally returns0; killed label -EAGAIN lacks active goto",
+      "already_changed": [
+        "point_of_no_return=true",
+        "task.in_execve=1 if bprm_execve entered"
+      ],
+      "next": "begin_new_exec out then ELF cleanup then bprm_execve out if ordinary returns",
+      "stop": "before any assertion of group isolation"
+    },
+    {
+      "gate": "dup_fd error during unshare_files",
+      "ids": [
+        "A15",
+        "B02",
+        "B05",
+        "B09",
+        "B13"
+      ],
+      "local_reachability": "conditional if shared valid fd table, top-level dup_fd allocation fails and returns error",
+      "already_changed": [
+        "point flag true",
+        "in_execve=1"
+      ],
+      "next": "no task.files replacement in checked error branch; return negative through caller",
+      "stop": "inner per-file alloc may invalidate before ordinary error, per R43"
+    },
+    {
+      "gate": "set_mm_exe_file retval nonzero",
+      "ids": [
+        "A16",
+        "B44",
+        "B45"
+      ],
+      "local_reachability": "check exists; selected function direct valid normal path returns0",
+      "already_changed": [
+        "file-table unshare may have occurred"
+      ],
+      "next": "do not invent a nonzero producer",
+      "stop": "old==new refs and callee object validity"
+    },
+    {
+      "gate": "exec_mmap retval nonzero",
+      "ids": [
+        "A17",
+        "B40",
+        "B41",
+        "B42",
+        "B43"
+      ],
+      "local_reachability": "check exists; two source normal branches return0",
+      "already_changed": [
+        "exe_file refs may change"
+      ],
+      "next": "task.mm/active_mm changes if actual callee progressed",
+      "stop": "unchecked lock call, BUG_ON, MM activation"
+    },
+    {
+      "gate": "have_execfd fd allocation negative",
+      "ids": [
+        "C03",
+        "C04",
+        "C05",
+        "B27",
+        "B29",
+        "B30"
+      ],
+      "local_reachability": "live conditional after normal MM commit if have_execfd and fd allocation fails",
+      "already_changed": [
+        "task.mm/active_mm",
+        "bprm.mm=NULL",
+        "task.flags",
+        "sas_ss",
+        "comm"
+      ],
+      "next": "begin_new_exec returns error, bprm_execve resets exec flags and returns negative, normal caller cleanup",
+      "stop": "no effective fatal signal or rollback in selected body"
+    },
+    {
+      "gate": "ELF setup_arg_pages failure",
+      "ids": [
+        "C28",
+        "C29",
+        "C30",
+        "B33",
+        "B34"
+      ],
+      "local_reachability": "live negative retval check after begin_new_exec success and setup_new_exec",
+      "already_changed": [
+        "MM and task state",
+        "possibly mm.task_size"
+      ],
+      "next": "ELF out_free_dentry; if final handler result remains negative, bprm_execve returns error",
+      "stop": "actual registered format set and cleanup normality"
+    },
+    {
+      "gate": "ELF later mapping failure",
+      "ids": [
+        "C31",
+        "C32"
+      ],
+      "local_reachability": "live conditional goto on total_size0 or BAD_ADDR",
+      "already_changed": [
+        "early MM/task commit"
+      ],
+      "next": "ELF error cleanup then conditional final errno",
+      "stop": "invalid mapping or nonreturning callee"
+    },
+    {
+      "gate": "ELF handler returns0",
+      "ids": [
+        "C33",
+        "C36"
+      ],
+      "local_reachability": "conditional success tail",
+      "already_changed": [
+        "start_thread/return frame from prior69 limits"
+      ],
+      "next": "search_binary_handler may continue another fmt because early return code commented",
+      "stop": "return0 not proof of true user entry"
+    }
+  ],
+  "caller_return_matrix": [
+    {
+      "caller": "ordinary execve",
+      "ids": [
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19",
+        "C24",
+        "C25"
+      ],
+      "path": "MYOS_SYSCALL_DEFINE3(execve)->do_execve->do_execveat_common",
+      "consumer": "returns retval after free_bprm and putname if normal; later syscall exit work not re-reviewed",
+      "stop": "negative does not prove old program resumes"
+    },
+    {
+      "caller": "kernel_execve",
+      "ids": [
+        "C20",
+        "C21",
+        "C22",
+        "C23"
+      ],
+      "path": "kernel_execve->bprm_execve",
+      "consumer": "propagates error/int after cleanup, with PF_KTHREAD early gate",
+      "stop": "does not itself force fatal handling"
+    },
+    {
+      "caller": "kjmp_to_doexecve",
+      "ids": [
+        "C26",
+        "C27"
+      ],
+      "path": "bootstrap bridge calls kernel_execve",
+      "consumer": "does not check returned int and requests asm jump",
+      "stop": "IE69-F02 retained; CPU/control transfer not executed"
+    },
+    {
+      "caller": "bprm_execve",
+      "ids": [
+        "C07",
+        "C08",
+        "C09",
+        "C10",
+        "C11",
+        "C12",
+        "C13"
+      ],
+      "path": "handler last return -> conditional out",
+      "consumer": "out fatal signal branch commented, clears fs.in_exec and task.in_execve, returns retval",
+      "stop": "no rollback guarantee"
+    },
+    {
+      "caller": "load_elf_binary",
+      "ids": [
+        "C28",
+        "C29",
+        "C30",
+        "C31",
+        "C32",
+        "C33",
+        "C34",
+        "C35"
+      ],
+      "path": "begin_new_exec then ELF setup and mapping",
+      "consumer": "post-commit negative may reach ELF cleanup and caller",
+      "stop": "multi-handler order and resource validity unknown"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "case_id": "DETHREAD_0",
+      "value": 0,
+      "gate_retval_ne_minus_ENOERR": false,
+      "source_reachability": "active normal",
+      "run": false
+    },
+    {
+      "case_id": "DETHREAD_-11",
+      "value": -11,
+      "gate_retval_ne_minus_ENOERR": true,
+      "source_reachability": "hypothetical not produced by active local path",
+      "run": false
+    },
+    {
+      "case_id": "DETHREAD_1",
+      "value": 1,
+      "gate_retval_ne_minus_ENOERR": true,
+      "source_reachability": "hypothetical not produced by active local path",
+      "run": false
+    },
+    {
+      "case_id": "FILES_0_ALLOC_0",
+      "initial_files_refcount": 0,
+      "positive_valid_count": false,
+      "dup_requested": false,
+      "allocation_ok": false,
+      "task_files_replaced": false,
+      "returns": "INVALID_COUNT_SEMANTICS",
+      "notes": "no concurrency; n=0 is not a valid ownership claim",
+      "run": false
+    },
+    {
+      "case_id": "FILES_0_ALLOC_1",
+      "initial_files_refcount": 0,
+      "positive_valid_count": false,
+      "dup_requested": false,
+      "allocation_ok": true,
+      "task_files_replaced": false,
+      "returns": "INVALID_COUNT_SEMANTICS",
+      "notes": "no concurrency; n=0 is not a valid ownership claim",
+      "run": false
+    },
+    {
+      "case_id": "FILES_1_ALLOC_0",
+      "initial_files_refcount": 1,
+      "positive_valid_count": true,
+      "dup_requested": false,
+      "allocation_ok": false,
+      "task_files_replaced": false,
+      "returns": 0,
+      "notes": "no concurrency; n=0 is not a valid ownership claim",
+      "run": false
+    },
+    {
+      "case_id": "FILES_1_ALLOC_1",
+      "initial_files_refcount": 1,
+      "positive_valid_count": true,
+      "dup_requested": false,
+      "allocation_ok": true,
+      "task_files_replaced": false,
+      "returns": 0,
+      "notes": "no concurrency; n=0 is not a valid ownership claim",
+      "run": false
+    },
+    {
+      "case_id": "FILES_2_ALLOC_0",
+      "initial_files_refcount": 2,
+      "positive_valid_count": true,
+      "dup_requested": true,
+      "allocation_ok": false,
+      "task_files_replaced": false,
+      "returns": "-ENOMEM if dup_fd top allocation fails",
+      "notes": "no concurrency; n=0 is not a valid ownership claim",
+      "run": false
+    },
+    {
+      "case_id": "FILES_2_ALLOC_1",
+      "initial_files_refcount": 2,
+      "positive_valid_count": true,
+      "dup_requested": true,
+      "allocation_ok": true,
+      "task_files_replaced": true,
+      "returns": 0,
+      "notes": "no concurrency; n=0 is not a valid ownership claim",
+      "run": false
+    },
+    {
+      "case_id": "FILES_3_ALLOC_0",
+      "initial_files_refcount": 3,
+      "positive_valid_count": true,
+      "dup_requested": true,
+      "allocation_ok": false,
+      "task_files_replaced": false,
+      "returns": "-ENOMEM if dup_fd top allocation fails",
+      "notes": "no concurrency; n=0 is not a valid ownership claim",
+      "run": false
+    },
+    {
+      "case_id": "FILES_3_ALLOC_1",
+      "initial_files_refcount": 3,
+      "positive_valid_count": true,
+      "dup_requested": true,
+      "allocation_ok": true,
+      "task_files_replaced": true,
+      "returns": 0,
+      "notes": "no concurrency; n=0 is not a valid ownership claim",
+      "run": false
+    },
+    {
+      "case_id": "POST_MM_0_H_0_OK_0",
+      "mm_committed": false,
+      "have_execfd": false,
+      "fd_alloc_ok": false,
+      "source_reachable": false,
+      "begin_ret": "UNREACHABLE",
+      "task_state_already_changed": false,
+      "run": false
+    },
+    {
+      "case_id": "POST_MM_0_H_0_OK_1",
+      "mm_committed": false,
+      "have_execfd": false,
+      "fd_alloc_ok": true,
+      "source_reachable": false,
+      "begin_ret": "UNREACHABLE",
+      "task_state_already_changed": false,
+      "run": false
+    },
+    {
+      "case_id": "POST_MM_0_H_1_OK_0",
+      "mm_committed": false,
+      "have_execfd": true,
+      "fd_alloc_ok": false,
+      "source_reachable": false,
+      "begin_ret": "UNREACHABLE",
+      "task_state_already_changed": false,
+      "run": false
+    },
+    {
+      "case_id": "POST_MM_0_H_1_OK_1",
+      "mm_committed": false,
+      "have_execfd": true,
+      "fd_alloc_ok": true,
+      "source_reachable": false,
+      "begin_ret": "UNREACHABLE",
+      "task_state_already_changed": false,
+      "run": false
+    },
+    {
+      "case_id": "POST_MM_1_H_0_OK_0",
+      "mm_committed": true,
+      "have_execfd": false,
+      "fd_alloc_ok": false,
+      "source_reachable": true,
+      "begin_ret": 0,
+      "task_state_already_changed": true,
+      "run": false
+    },
+    {
+      "case_id": "POST_MM_1_H_0_OK_1",
+      "mm_committed": true,
+      "have_execfd": false,
+      "fd_alloc_ok": true,
+      "source_reachable": true,
+      "begin_ret": 0,
+      "task_state_already_changed": true,
+      "run": false
+    },
+    {
+      "case_id": "POST_MM_1_H_1_OK_0",
+      "mm_committed": true,
+      "have_execfd": true,
+      "fd_alloc_ok": false,
+      "source_reachable": true,
+      "begin_ret": "negative conditional",
+      "task_state_already_changed": true,
+      "run": false
+    },
+    {
+      "case_id": "POST_MM_1_H_1_OK_1",
+      "mm_committed": true,
+      "have_execfd": true,
+      "fd_alloc_ok": true,
+      "source_reachable": true,
+      "begin_ret": 0,
+      "task_state_already_changed": true,
+      "run": false
+    },
+    {
+      "case_id": "RETURN_ordinary_-22",
+      "callee_return": -22,
+      "consumer": "returned through common",
+      "cpu_run": false
+    },
+    {
+      "case_id": "RETURN_ordinary_0",
+      "callee_return": 0,
+      "consumer": "returned through common",
+      "cpu_run": false
+    },
+    {
+      "case_id": "RETURN_kernel_-22",
+      "callee_return": -22,
+      "consumer": "returned by kernel_execve",
+      "cpu_run": false
+    },
+    {
+      "case_id": "RETURN_kernel_0",
+      "callee_return": 0,
+      "consumer": "returned by kernel_execve",
+      "cpu_run": false
+    },
+    {
+      "case_id": "RETURN_bridge_-22",
+      "callee_return": -22,
+      "consumer": "ignored",
+      "cpu_run": false
+    },
+    {
+      "case_id": "RETURN_bridge_0",
+      "callee_return": 0,
+      "consumer": "ignored",
+      "cpu_run": false
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U03",
+      "status": "needs_evidence",
+      "consumption": "file ref and original object lifetime unclosed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U04",
+      "status": "needs_evidence",
+      "consumption": "MM validity/activation remains unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U05",
+      "status": "needs_evidence",
+      "consumption": "execfd producer and file lifetime unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U07",
+      "status": "needs_evidence",
+      "consumption": "point flag/fatal handling separate, now locally traced"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-F01",
+      "status": "needs_evidence",
+      "consumption": "double fput risk not re-numbered"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-F02",
+      "status": "needs_evidence",
+      "consumption": "format registration concurrency not re-audited"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-F02",
+      "status": "needs_evidence",
+      "consumption": "initial bridge ignores error, already known root"
+    }
+  ],
+  "historic_reviews": [
+    "CORE-USER-FILES-COPY-SHARE-43-REVIEW-001 R43-S01/S02",
+    "CORE-USER-MM-CONTEXT-15-REVIEW-001 R15-S01/S02",
+    "CORE-USER-FS-CONTEXT-45-REVIEW-001 R45-S01/S02",
+    "CORE-USER-RETURN-SIGNAL-09-DOC-FIX-01-REVIEW-001 limited"
+  ],
+  "new_finding_ids": [
+    "EC71-F01",
+    "EC71-F02",
+    "EC71-F03"
+  ],
+  "new_gap_ids": [
+    "EC71-U01",
+    "EC71-U02",
+    "EC71-U03",
+    "EC71-U04",
+    "EC71-U05",
+    "EC71-U06",
+    "EC71-U07",
+    "EC71-U08"
+  ],
+  "run_context": {
+    "read_channel": "connector",
+    "source_executed": "NOT_RUN",
+    "external_paid_agents": false,
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN"
+  },
+  "P9_text_subchecks": {
+    "1": "new six file texts regex no full 40hex",
+    "2": "103 quotes 1–5 original physical lines, nonempty, within one true definition after second source read",
+    "3": "source fixed pin and new files after publication must be read",
+    "4": "line numbers correspond to fixed source",
+    "5": "raw six-file source-mark prefix count must equal MANIFEST triple 103/103/0",
+    "6": "no unsupported CPU hardware claim",
+    "7": "fixed time/master two canaries",
+    "8": "full conventions item2 quote and read_channel",
+    "9": "no code files N/A",
+    "10": "no patch N/A",
+    "11": "preprocess/compile/QEMU/real run NOT_RUN",
+    "12": "no degraded chat delivery N/A",
+    "13": "A de_thread/ENOERR/gate, B files/state, C postcommit/callers evidence required"
+  },
+  "source_budget": {
+    "direct_files": 11,
+    "soft_file_limit": 14,
+    "code_search_batches": 3,
+    "related_directory_limit": 4,
+    "distinct_direct_source_directories": [
+      "mykernel/sched/forkexec",
+      "mykernel/include/uapi/asm-generic",
+      "mykernel/fs/vfs",
+      "mykernel/include/linux/kernel",
+      "mykernel/sched/misc",
+      "mykernel/sched/task",
+      "mykernel/include/linux/fs",
+      "mykernel/arch/x86_64/myos"
+    ],
+    "exception_justification": "8 direct source directories were touched because mandatory de_thread/exec and direct unshare_fd/dup_fd, fs_struct types, errno macro, ELF caller, task type, fdtable type and bootstrap caller span multiple subsystems; no directory-wide audit or whole-tree scan",
+    "search_scope": "bounded named symbols and reference-review sections only"
+  }
+}
