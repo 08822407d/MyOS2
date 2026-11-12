@@ -1,0 +1,1748 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-ALLOCATOR-ENTRY-75",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "produced_by": "GPT-6 self-reported",
+  "model_per_owner": "next-tier GPT-6 + Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "1ba6acf132a0",
+  "initial_execution_head_short12": "6f792023d592",
+  "read_channel": "connector",
+  "D00": "documentation_disposition_submitted",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_disposition": {
+    "prior_return_id": "R74-01",
+    "review74": "RETURN_DOCUMENTATION",
+    "D00": "documentation_disposition_submitted",
+    "closure_authority": "MYOS2-A-C05",
+    "author_did_not_close": true,
+    "old_commit_short12": "6f792023d592",
+    "old_comment_id": 6812545638,
+    "old_label_count": 74,
+    "old_P2_status": "B12 macro-definition mismatch; 73 others not completely revalidated",
+    "old_to_new": [
+      {
+        "old": "74::B12",
+        "old_label": "page_const_arch.h::THREAD_SIZE",
+        "actual_old_quote": "THREAD_SIZE_ORDER macro definition",
+        "new": "D01",
+        "correct_label": "page_const_arch.h::THREAD_SIZE_ORDER"
+      },
+      {
+        "old": "74::B12 insufficient THREAD_SIZE derivation",
+        "new": "D02",
+        "correct_label": "page_const_arch.h::THREAD_SIZE"
+      },
+      {
+        "old": "PAGE_SIZE dependency",
+        "new": "D03",
+        "correct_label": "page_const_arch.h::PAGE_SIZE"
+      },
+      {
+        "old": "PAGE_SHIFT dependency",
+        "new": "D04",
+        "correct_label": "page_const_arch.h::PAGE_SHIFT"
+      },
+      {
+        "old": "_AC C literal dependency",
+        "new": "D05",
+        "correct_label": "uapi/linux/const.h::_AC"
+      }
+    ],
+    "effective_macro_chain": {
+      "page_shift": 12,
+      "page_size_expression": "_AC(1,UL)<<PAGE_SHIFT",
+      "AC_C_branch": "(X##Y)",
+      "page_size": 4096,
+      "thread_size_order": 3,
+      "thread_size_expression": "PAGE_SIZE<<THREAD_SIZE_ORDER",
+      "thread_size": 32768,
+      "anchors": [
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "D05"
+      ],
+      "limit": "source bounded unsigned long numeric projection, NOT compiler or runtime"
+    },
+    "consumption_changes": [
+      {
+        "old": "74 task-storage-lifetime.md G02",
+        "replacement": "use independent D01-D05 for 32768 projection, not B12 alone"
+      },
+      {
+        "old": "74 facts.stack_lifetime_matrix[storage_size]",
+        "replacement": {
+          "operation": "PAGE_SHIFT=12 -> PAGE_SIZE=_AC(1,UL)<<12=4096 -> THREAD_SIZE_ORDER=3 -> THREAD_SIZE=4096<<3=32768",
+          "anchors": [
+            "D01",
+            "D02",
+            "D03",
+            "D04",
+            "D05",
+            "A27"
+          ],
+          "status": "conditional_integer_model"
+        }
+      },
+      {
+        "old": "74 facts.TSL74-M14",
+        "replacement": {
+          "input": "PAGE_SHIFT12, _AC(1,UL) C branch, THREAD_SIZE_ORDER3",
+          "expected": "(1UL<<12)<<3=32768",
+          "anchors": [
+            "D01",
+            "D02",
+            "D03",
+            "D04",
+            "D05"
+          ],
+          "limit": "no preprocessor/ABI/runtime"
+        }
+      },
+      {
+        "old": "74 DOT K48",
+        "replacement": "source-data chain D04/D05 -> D03 -> D01 -> D02 -> conditional stack_size_32768; old K48 preserved but its B12 label not sufficient"
+      },
+      {
+        "old": "74 MANIFEST/body/facts/evidence intro/PR17 comment 6812545638",
+        "replacement": "74/74 is historical self-reported label/byte count, not 74 correct definition identities; B12 invalid, other73 not mechanically reaudited; 75 counts only new tags"
+      }
+    ],
+    "historical_state": {
+      "R73_01": "CLOSED_DOCUMENTATION_ONLY_by_C05",
+      "batch73": "PASS_PENDING_LOCAL",
+      "R73C_S01": "RETAINED",
+      "R74_S01_S02_S03": "RETAINED_WITH_LIMITS"
+    },
+    "old_files_and_comments_changed": false
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "blob_short12": "b10e280f26f0",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/const.h",
+      "blob_short12": "d8bcaf7e3151",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub.h",
+      "blob_short12": "b07c81bfc978",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slab_common.c",
+      "blob_short12": "2ce4f5932db5",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub.c",
+      "blob_short12": "a2b4390f8f7b",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub_const.h",
+      "blob_short12": "282d6ffa765d",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub_types.h",
+      "blob_short12": "8203fb4e63d7",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy_const.h",
+      "blob_short12": "536bc906fc5e",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy.h",
+      "blob_short12": "b97e1e86f23a",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/page-flags.h",
+      "blob_short12": "2f2789b1eee8",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub_macro.h",
+      "blob_short12": "7b0d5fa934ae",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/getorder.h",
+      "blob_short12": "af126779d473",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/arch/x86_64/insns/bitops_arch.h",
+      "blob_short12": "87ae81db82d1",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "blob_short12": "2b705f35ced8",
+      "pin": "time@a039d9803ade",
+      "read_channel": "connector"
+    }
+  ],
+  "allocation_dispatch_matrix": [
+    {
+      "entry": "kmalloc",
+      "condition": "size<=4096",
+      "route": "__kmalloc",
+      "anchors": [
+        "A01",
+        "A15",
+        "D03",
+        "D04"
+      ],
+      "stop": "cache initialized and callee returns required"
+    },
+    {
+      "entry": "kmalloc",
+      "condition": "size>4096",
+      "route": "kmalloc_large -> alloc_pages(flags|__GFP_COMP,get_order(size))",
+      "anchors": [
+        "A01",
+        "A23",
+        "A21",
+        "B17"
+      ],
+      "stop": "callee and page address validity"
+    },
+    {
+      "entry": "__kmalloc",
+      "condition": "direct size>4096",
+      "route": "while(unlikely(size>MAX))",
+      "anchors": [
+        "A02"
+      ],
+      "stop": "no return for stable condition, historical MC-09"
+    },
+    {
+      "entry": "__kmalloc",
+      "condition": "size<=4096",
+      "route": "kmalloc_slab; if(cache!=NULL) kmem_cache_alloc; else NULL",
+      "anchors": [
+        "A03",
+        "A04",
+        "A28"
+      ],
+      "stop": "NULL cache does not mean allocation took place"
+    },
+    {
+      "entry": "kmalloc_slab",
+      "condition": "size==0",
+      "route": "return NULL",
+      "anchors": [
+        "A04"
+      ],
+      "stop": "no index lookup"
+    },
+    {
+      "entry": "kmalloc_slab",
+      "condition": "1..192",
+      "route": "size_to_index via ((bytes-1)/8) switch",
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A29"
+      ],
+      "stop": "size_to_index invalid input spin not selected by caller"
+    },
+    {
+      "entry": "kmalloc_slab",
+      "condition": "193..4096",
+      "route": "index=fls(size-1); returns kmalloc_caches[index]",
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "stop": "source index only, no actual cache pointer guarantee"
+    },
+    {
+      "entry": "create_kmalloc_caches",
+      "condition": "boot helper called and individual creation returns",
+      "route": "allocates entries 1..13 from kmalloc_info, later slab_state=UP",
+      "anchors": [
+        "A13",
+        "A14",
+        "A17",
+        "A31"
+      ],
+      "stop": "no boot execution proof"
+    },
+    {
+      "entry": "kmalloc_info",
+      "condition": "entry13 size8192 is present, max normal cache limit4096",
+      "route": "idx13 created but not selected by valid ordinary kmalloc size",
+      "anchors": [
+        "A12",
+        "A15",
+        "A16",
+        "A01"
+      ],
+      "stop": "no all-caller or linker proof"
+    },
+    {
+      "entry": "slub alloc",
+      "condition": "cache valid, partial list empty",
+      "route": "alloc_init_new_slab -> alloc_slab -> alloc_pages or NULL",
+      "anchors": [
+        "B05",
+        "B06",
+        "B21",
+        "B23"
+      ],
+      "stop": "do not re-review full partial list or buddy"
+    }
+  ],
+  "size_class_boundary_matrix": [
+    {
+      "id": "AE75-S01",
+      "request_bytes": 0,
+      "path": "__kmalloc→kmalloc_slab returns NULL",
+      "cache_index": null,
+      "class_bytes": null,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A04",
+        "A03"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S02",
+      "request_bytes": 1,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 3,
+      "class_bytes": 8,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S03",
+      "request_bytes": 8,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 3,
+      "class_bytes": 8,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S04",
+      "request_bytes": 9,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 4,
+      "class_bytes": 16,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S05",
+      "request_bytes": 16,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 4,
+      "class_bytes": 16,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S06",
+      "request_bytes": 17,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 5,
+      "class_bytes": 32,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S07",
+      "request_bytes": 32,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 5,
+      "class_bytes": 32,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S08",
+      "request_bytes": 33,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 6,
+      "class_bytes": 64,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S09",
+      "request_bytes": 64,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 6,
+      "class_bytes": 64,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S10",
+      "request_bytes": 65,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 1,
+      "class_bytes": 96,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S11",
+      "request_bytes": 96,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 1,
+      "class_bytes": 96,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S12",
+      "request_bytes": 97,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 7,
+      "class_bytes": 128,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S13",
+      "request_bytes": 128,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 7,
+      "class_bytes": 128,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S14",
+      "request_bytes": 129,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 2,
+      "class_bytes": 192,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S15",
+      "request_bytes": 192,
+      "path": "__kmalloc→size_to_index",
+      "cache_index": 2,
+      "class_bytes": 192,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A05",
+        "A08",
+        "A09",
+        "A11"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S16",
+      "request_bytes": 193,
+      "path": "__kmalloc→fls(size−1)",
+      "cache_index": 8,
+      "class_bytes": 256,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S17",
+      "request_bytes": 256,
+      "path": "__kmalloc→fls(size−1)",
+      "cache_index": 8,
+      "class_bytes": 256,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S18",
+      "request_bytes": 257,
+      "path": "__kmalloc→fls(size−1)",
+      "cache_index": 9,
+      "class_bytes": 512,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S19",
+      "request_bytes": 512,
+      "path": "__kmalloc→fls(size−1)",
+      "cache_index": 9,
+      "class_bytes": 512,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S20",
+      "request_bytes": 513,
+      "path": "__kmalloc→fls(size−1)",
+      "cache_index": 10,
+      "class_bytes": 1024,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S21",
+      "request_bytes": 1024,
+      "path": "__kmalloc→fls(size−1)",
+      "cache_index": 10,
+      "class_bytes": 1024,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S22",
+      "request_bytes": 2048,
+      "path": "__kmalloc→fls(size−1)",
+      "cache_index": 11,
+      "class_bytes": 2048,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S23",
+      "request_bytes": 4096,
+      "path": "__kmalloc→fls(size−1)",
+      "cache_index": 12,
+      "class_bytes": 4096,
+      "order": null,
+      "capacity": null,
+      "anchors": [
+        "A20",
+        "A18",
+        "A06"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S24",
+      "request_bytes": 4097,
+      "path": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+      "cache_index": null,
+      "class_bytes": null,
+      "order": 1,
+      "capacity": 8192,
+      "anchors": [
+        "A23",
+        "A21",
+        "A22"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S25",
+      "request_bytes": 8192,
+      "path": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+      "cache_index": null,
+      "class_bytes": null,
+      "order": 1,
+      "capacity": 8192,
+      "anchors": [
+        "A23",
+        "A21",
+        "A22"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S26",
+      "request_bytes": 8193,
+      "path": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+      "cache_index": null,
+      "class_bytes": null,
+      "order": 2,
+      "capacity": 16384,
+      "anchors": [
+        "A23",
+        "A21",
+        "A22"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S27",
+      "request_bytes": 32768,
+      "path": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+      "cache_index": null,
+      "class_bytes": null,
+      "order": 3,
+      "capacity": 32768,
+      "anchors": [
+        "A23",
+        "A21",
+        "A22"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    },
+    {
+      "id": "AE75-S28",
+      "request_bytes": 32769,
+      "path": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+      "cache_index": null,
+      "class_bytes": null,
+      "order": 4,
+      "capacity": 65536,
+      "anchors": [
+        "A23",
+        "A21",
+        "A22"
+      ],
+      "boundary": "integer source model; cache/physical validity, ABI, build and runtime not asserted"
+    }
+  ],
+  "zeroing_failure_matrix": [
+    {
+      "input": "kzalloc(size,flags)",
+      "operation": "kmalloc(size,flags|__GFP_ZERO)",
+      "anchors": [
+        "B01",
+        "B02"
+      ],
+      "limit": "flag request only"
+    },
+    {
+      "input": "cache allocation valid nonNULL, flag ZERO",
+      "operation": "slab_alloc -> slab_post_alloc_hook: memset(*obj_p,0,s.object_size)",
+      "anchors": [
+        "B09",
+        "B10",
+        "B11",
+        "B12"
+      ],
+      "limit": "cache.object_size can exceed requested length; object validity required"
+    },
+    {
+      "input": "slab pages unavailable",
+      "operation": "alloc_slab NULL -> alloc_init_new_slab NULL -> slab_alloc NULL, hook not reached",
+      "anchors": [
+        "B07",
+        "B21",
+        "B06",
+        "B23"
+      ],
+      "limit": "not necessarily errno"
+    },
+    {
+      "input": "cache pointer NULL",
+      "operation": "__kmalloc returns NULL without kmem_cache_alloc",
+      "anchors": [
+        "B22",
+        "A28"
+      ],
+      "limit": "cache init timing unknown"
+    },
+    {
+      "input": "large pages valid",
+      "operation": "alloc_pages(flags|__GFP_COMP,get_order(size)), page_to_virt, if ZERO memset(ptr,0,size)",
+      "anchors": [
+        "A23",
+        "B16",
+        "B17",
+        "C18"
+      ],
+      "limit": "explicit memset size rather than order capacity; underlying alloc_pages zeroing unreviewed"
+    },
+    {
+      "input": "large alloc_pages NULL",
+      "operation": "ptr remains NULL; no page_to_virt or memset; return ptr",
+      "anchors": [
+        "B15",
+        "B24"
+      ],
+      "limit": "no stable errno from pointer"
+    },
+    {
+      "input": "task object",
+      "operation": "kzalloc(sizeof(task_s),GFP_KERNEL)",
+      "anchors": [
+        "A26",
+        "B19"
+      ],
+      "limit": "sizeof(task_s) unknown; cannot decide slab vs large without size"
+    },
+    {
+      "input": "new task stack",
+      "operation": "kmalloc(THREAD_SIZE=32768,GFP_KERNEL): large route; no explicit __GFP_ZERO in caller",
+      "anchors": [
+        "A27",
+        "B20",
+        "D01",
+        "D02",
+        "A23"
+      ],
+      "limit": "does not prove actual contents nonzero"
+    },
+    {
+      "input": "cache construction",
+      "operation": "create_cache/create_boot_cache set object_size from passed size",
+      "anchors": [
+        "B13",
+        "B14",
+        "A30"
+      ],
+      "limit": "not proof cache exists before caller"
+    },
+    {
+      "input": "slab fresh pages",
+      "operation": "prepare_alloc_flags masks original flags for alloc_pages; post hook sees original gfpflags",
+      "anchors": [
+        "B07",
+        "B08",
+        "B09"
+      ],
+      "limit": "no assumption that page allocator itself zeroes full physical block"
+    }
+  ],
+  "free_provenance_matrix": [
+    {
+      "object": "NULL",
+      "route": "kfree returns before folio lookup",
+      "anchors": [
+        "C01"
+      ],
+      "stop": "not general invalid pointer guarantee"
+    },
+    {
+      "object": "valid slab-base pointer",
+      "route": "virt_to_folio→folio_test_slab true→kmem_cache_free(cache,object)→slab_free",
+      "anchors": [
+        "C02",
+        "C03",
+        "C04",
+        "C06",
+        "C10",
+        "C15"
+      ],
+      "stop": "valid cache and base object; MC-07 later release remains"
+    },
+    {
+      "object": "valid large allocation start",
+      "route": "folio_test_slab false→free_large_kmalloc→folio_order→__free_pages(folio_page(folio,0),order)",
+      "anchors": [
+        "C04",
+        "C07",
+        "C09",
+        "C19"
+      ],
+      "stop": "provenance/metadata and normal return required"
+    },
+    {
+      "object": "nonslab/order0",
+      "route": "WARN_ON_ONCE(order==0) then pr_warn_once, still __free_pages if prior call returns",
+      "anchors": [
+        "C08",
+        "C19"
+      ],
+      "stop": "warning not a return; no physical guarantee"
+    },
+    {
+      "object": "interior slab pointer",
+      "route": "folio lookup may select slab, unadjusted object pointer passed to kmem_cache_free",
+      "anchors": [
+        "C04",
+        "C10"
+      ],
+      "stop": "no selected object-start validation or real outcome proof"
+    },
+    {
+      "object": "static init_stack or unrelated address",
+      "route": "no legitimate kfree route established",
+      "anchors": [
+        "C02",
+        "C03"
+      ],
+      "stop": "must prove dynamic allocator ownership and mapped folio"
+    },
+    {
+      "object": "invalid/freed nonNULL",
+      "route": "stop at invalid task state or virt_to_page/folio metadata",
+      "anchors": [
+        "C02",
+        "C16"
+      ],
+      "stop": "no stable warning/exception/NULL guarantee"
+    },
+    {
+      "object": "direct kmem_cache_free(NULL/mismatch)",
+      "route": "selected body comments cache_from_obj guard; calls slab_free and dereferences s->node",
+      "anchors": [
+        "C24",
+        "C10",
+        "C11"
+      ],
+      "stop": "do not import kfree(NULL) behavior"
+    }
+  ],
+  "caller_handoff_matrix": [
+    {
+      "caller": "alloc_task_struct_node",
+      "request": "kzalloc(sizeof(task_s),GFP_KERNEL)",
+      "next": "kzalloc->kmalloc->cache or large according to symbolic sizeof",
+      "anchors": [
+        "A26",
+        "B01",
+        "A01"
+      ],
+      "limit": "size unknown"
+    },
+    {
+      "caller": "alloc_thread_stack_node",
+      "request": "kmalloc(THREAD_SIZE,GFP_KERNEL)",
+      "next": "kmalloc_large under D00 32768 model",
+      "anchors": [
+        "A27",
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "A01"
+      ],
+      "limit": "no direct ZERO flag"
+    },
+    {
+      "caller": "free_task_struct",
+      "request": "kfree(tsk)",
+      "next": "NULL gate then folio classification",
+      "anchors": [
+        "C17",
+        "C01",
+        "C04"
+      ],
+      "limit": "task valid ownership"
+    },
+    {
+      "caller": "release_task_stack",
+      "request": "kfree(tsk->stack) then tsk->stack=NULL",
+      "next": "kfree(NULL) returns; otherwise folio classification; NULL field store only if callee returns",
+      "anchors": [
+        "C16",
+        "C01",
+        "C04"
+      ],
+      "limit": "exact TASK_DEAD state and valid tsk first, per R74-S02"
+    },
+    {
+      "caller": "repeat put_task_stack",
+      "request": "task still valid and stack NULL after first",
+      "next": "kfree(NULL) returns",
+      "anchors": [
+        "C16",
+        "C01"
+      ],
+      "limit": "invalid/freed task fails before kfree; no universal repeat safety"
+    },
+    {
+      "caller": "direct cache free",
+      "request": "kmem_cache_free(s,x)",
+      "next": "slab_free(s,virt_to_slab(x),x)",
+      "anchors": [
+        "C24",
+        "C10",
+        "C11"
+      ],
+      "limit": "separate from kfree NULL guard"
+    }
+  ],
+  "earliest_stop_matrix": [
+    {
+      "case": "size unknown sizeof(task_s)",
+      "at": "cannot classify task allocation route",
+      "anchors": [
+        "A26",
+        "A01"
+      ]
+    },
+    {
+      "case": "direct __kmalloc size>4096",
+      "at": "while true for stable size",
+      "anchors": [
+        "A02"
+      ],
+      "historic": "MC-09"
+    },
+    {
+      "case": "kmalloc size0",
+      "at": "kmalloc_slab returns NULL",
+      "anchors": [
+        "A04"
+      ]
+    },
+    {
+      "case": "cache pointer NULL",
+      "at": "__kmalloc returns NULL",
+      "anchors": [
+        "A03",
+        "A28"
+      ]
+    },
+    {
+      "case": "size_to_index out-of-bounds direct",
+      "at": "helper while; normal kmalloc_slab guards range",
+      "anchors": [
+        "A07",
+        "A04"
+      ]
+    },
+    {
+      "case": "new slab page alloc NULL",
+      "at": "alloc_slab/alloc_init_new_slab/slab_alloc returns NULL",
+      "anchors": [
+        "B21",
+        "B23"
+      ]
+    },
+    {
+      "case": "large page alloc NULL",
+      "at": "kmalloc_large returns NULL",
+      "anchors": [
+        "B15"
+      ]
+    },
+    {
+      "case": "slab zeroing invalid object/cache",
+      "at": "dereference s.object_size or memset pointer invalid",
+      "anchors": [
+        "B10",
+        "B11"
+      ]
+    },
+    {
+      "case": "invalid nonNULL pointer kfree",
+      "at": "virt_to_folio / flags access invalid",
+      "anchors": [
+        "C02",
+        "C03"
+      ]
+    },
+    {
+      "case": "folio not proven large allocation",
+      "at": "free_large_kmalloc origin cannot be certified",
+      "anchors": [
+        "C07"
+      ]
+    },
+    {
+      "case": "direct cache free bad s",
+      "at": "slab_free dereferences s->node",
+      "anchors": [
+        "C10",
+        "C11"
+      ]
+    },
+    {
+      "case": "order0 warn nonreturn",
+      "at": "cannot certify __free_pages unless prior warning call returns",
+      "anchors": [
+        "C08"
+      ]
+    },
+    {
+      "case": "already free task",
+      "at": "R74-S02 task-state read first; no second kfree(NULL) assumption",
+      "anchors": [
+        "C16",
+        "C01"
+      ]
+    },
+    {
+      "case": "slub slab_free history",
+      "at": "stop at MC-07; not full buddy free or last-owner proof",
+      "anchors": [
+        "C12",
+        "C13"
+      ]
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "id": "AE75-M01",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 0
+      },
+      "expected": {
+        "route": "__kmalloc→kmalloc_slab returns NULL",
+        "index": null,
+        "object_size": null,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M02",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 1
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 3,
+        "object_size": 8,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M03",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 8
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 3,
+        "object_size": 8,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M04",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 9
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 4,
+        "object_size": 16,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M05",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 16
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 4,
+        "object_size": 16,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M06",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 17
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 5,
+        "object_size": 32,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M07",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 32
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 5,
+        "object_size": 32,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M08",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 33
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 6,
+        "object_size": 64,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M09",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 64
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 6,
+        "object_size": 64,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M10",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 65
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 1,
+        "object_size": 96,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M11",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 96
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 1,
+        "object_size": 96,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M12",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 97
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 7,
+        "object_size": 128,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M13",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 128
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 7,
+        "object_size": 128,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M14",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 129
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 2,
+        "object_size": 192,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M15",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 192
+      },
+      "expected": {
+        "route": "__kmalloc→size_to_index",
+        "index": 2,
+        "object_size": 192,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M16",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 193
+      },
+      "expected": {
+        "route": "__kmalloc→fls(size−1)",
+        "index": 8,
+        "object_size": 256,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M17",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 256
+      },
+      "expected": {
+        "route": "__kmalloc→fls(size−1)",
+        "index": 8,
+        "object_size": 256,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M18",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 257
+      },
+      "expected": {
+        "route": "__kmalloc→fls(size−1)",
+        "index": 9,
+        "object_size": 512,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M19",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 512
+      },
+      "expected": {
+        "route": "__kmalloc→fls(size−1)",
+        "index": 9,
+        "object_size": 512,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M20",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 513
+      },
+      "expected": {
+        "route": "__kmalloc→fls(size−1)",
+        "index": 10,
+        "object_size": 1024,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M21",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 1024
+      },
+      "expected": {
+        "route": "__kmalloc→fls(size−1)",
+        "index": 10,
+        "object_size": 1024,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M22",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 2048
+      },
+      "expected": {
+        "route": "__kmalloc→fls(size−1)",
+        "index": 11,
+        "object_size": 2048,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M23",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 4096
+      },
+      "expected": {
+        "route": "__kmalloc→fls(size−1)",
+        "index": 12,
+        "object_size": 4096,
+        "order": null,
+        "capacity": null
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M24",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 4097
+      },
+      "expected": {
+        "route": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+        "index": null,
+        "object_size": null,
+        "order": 1,
+        "capacity": 8192
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M25",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 8192
+      },
+      "expected": {
+        "route": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+        "index": null,
+        "object_size": null,
+        "order": 1,
+        "capacity": 8192
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M26",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 8193
+      },
+      "expected": {
+        "route": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+        "index": null,
+        "object_size": null,
+        "order": 2,
+        "capacity": 16384
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M27",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 32768
+      },
+      "expected": {
+        "route": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+        "index": null,
+        "object_size": null,
+        "order": 3,
+        "capacity": 32768
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M28",
+      "kind": "size_class_boundary",
+      "input": {
+        "bytes": 32769
+      },
+      "expected": {
+        "route": "kmalloc_large→alloc_pages(__GFP_COMP,get_order)",
+        "index": null,
+        "object_size": null,
+        "order": 4,
+        "capacity": 65536
+      },
+      "assumptions": "selected source and valid representable integers; no kernel execution"
+    },
+    {
+      "id": "AE75-M29",
+      "kind": "small_zero_65",
+      "input": "size=65; request __GFP_ZERO; valid cache/object",
+      "expected": "cache index1 object_size96; hook requests memset 96 bytes",
+      "anchors": [
+        "B01",
+        "B10",
+        "B11"
+      ],
+      "assumptions": "object valid, hook reached and returns"
+    },
+    {
+      "id": "AE75-M30",
+      "kind": "small_zero_193",
+      "input": "size=193; __GFP_ZERO; valid cache/object",
+      "expected": "cache index8 object_size256; hook requests memset 256 bytes",
+      "anchors": [
+        "A20",
+        "B10",
+        "B11"
+      ],
+      "assumptions": "not proof of any physical page zeroing"
+    },
+    {
+      "id": "AE75-M31",
+      "kind": "large_zero_4097",
+      "input": "size=4097; __GFP_ZERO; valid page",
+      "expected": "order1 capacity8192; local memset length4097",
+      "anchors": [
+        "A23",
+        "B16"
+      ],
+      "assumptions": "alloc_pages own potential zero effect unreviewed"
+    },
+    {
+      "id": "AE75-M32",
+      "kind": "large_zero_stack",
+      "input": "size=32768; __GFP_ZERO; valid page",
+      "expected": "order3 capacity32768; local memset length32768",
+      "anchors": [
+        "A23",
+        "B16"
+      ],
+      "assumptions": "actual stack caller does not add ZERO"
+    },
+    {
+      "id": "AE75-M33",
+      "kind": "stack_plain",
+      "input": "size=32768; GFP_KERNEL",
+      "expected": "kmalloc_large selected, no local memset requested by flag",
+      "anchors": [
+        "A27",
+        "B20",
+        "B16"
+      ],
+      "assumptions": "do not claim actual bytes necessarily nonzero"
+    },
+    {
+      "id": "AE75-M34",
+      "kind": "cache_pointer_null",
+      "input": "size65; kmalloc_caches[1]=NULL",
+      "expected": "__kmalloc leaves ret NULL; no kmem_cache_alloc",
+      "anchors": [
+        "A03",
+        "A28"
+      ],
+      "assumptions": "cache initialization timing unproved"
+    },
+    {
+      "id": "AE75-M35",
+      "kind": "kfree_null",
+      "input": "object=NULL",
+      "expected": "returns before virt_to_folio",
+      "anchors": [
+        "C01"
+      ],
+      "assumptions": "does not generalize to invalid nonNULL or invalid tsk"
+    },
+    {
+      "id": "AE75-M36",
+      "kind": "non_slab_order0",
+      "input": "folio valid; PG_slab false; folio_order=0",
+      "expected": "pr_warn_once requested; __free_pages(order0) remains next source call",
+      "anchors": [
+        "C08",
+        "C19"
+      ],
+      "assumptions": "warn/log must return; no physical release proof"
+    },
+    {
+      "id": "AE75-M37",
+      "kind": "valid_slab",
+      "input": "object base with valid slab flag/cache",
+      "expected": "kfree→kmem_cache_free→slab_free",
+      "anchors": [
+        "C04",
+        "C10",
+        "C11"
+      ],
+      "assumptions": "MC-07 downstream issue preserved"
+    },
+    {
+      "id": "AE75-M38",
+      "kind": "oversize_direct",
+      "input": "direct __kmalloc(4097)",
+      "expected": "while(size>4096) does not return for stable size",
+      "anchors": [
+        "A02",
+        "A15"
+      ],
+      "assumptions": "old MC-09, not ordinary kmalloc"
+    },
+    {
+      "id": "AE75-M39",
+      "kind": "D00_stack",
+      "input": "_AC C branch, PAGE_SHIFT12, THREAD_SIZE_ORDER3",
+      "expected": "PAGE_SIZE4096 and THREAD_SIZE32768",
+      "anchors": [
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "D05"
+      ],
+      "assumptions": "bounded unsigned-long arithmetic; preprocessor/ABI not run"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U04",
+      "status": "needs_evidence",
+      "disposition": "entry now connected, but physical release/concurrency/ABA still unknown"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-07",
+      "status": "static_concern",
+      "disposition": "slab_free may free live slab on conditional threshold; no re-number"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-08",
+      "status": "static_concern",
+      "disposition": "constructor/freepointer historical, RF-02 limited"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-09",
+      "status": "static_concern",
+      "disposition": "direct __kmalloc oversize spin historical"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::DR-04",
+      "status": "historical_dependency_risk",
+      "disposition": "sighand allocator use history only"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::RF-02",
+      "status": "historical_refuted_claim",
+      "disposition": "old claimed siglock failure refuted, not revived"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-01",
+      "status": "CLOSED_DOCUMENTATION_ONLY"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-02",
+      "status": "CLOSED_BY_EXPLICIT_NARROWING"
+    },
+    {
+      "qualified_id": "CORE-USER-EXIT-REAP-73-DOC-CLOSURE-001",
+      "status": "CLOSED_DOCUMENTATION_ONLY",
+      "disposition": "R73-01 remains closed, batch73 PASS_PENDING_LOCAL"
+    },
+    {
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74-REVIEW-001::R74-01",
+      "status": "OPEN_PENDING_C05",
+      "disposition": "D00 submitted only"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-14",
+      "status": "needs_evidence",
+      "disposition": "failed cleanup/static sighand path historical"
+    }
+  ],
+  "new_findings_count": 0,
+  "new_evidence_gaps_count": 8,
+  "source_budget": {
+    "count": 14,
+    "soft_limit": 14,
+    "overrun": 0
+  },
+  "methods": {
+    "direct_pinned_sources": 14,
+    "short_quotes_reconfirmed": 87,
+    "pure_finite_cases": 39,
+    "preprocess_build_link_run": "NOT_RUN",
+    "local_P9": "NOT_RUN",
+    "Graphviz": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": []
+}
