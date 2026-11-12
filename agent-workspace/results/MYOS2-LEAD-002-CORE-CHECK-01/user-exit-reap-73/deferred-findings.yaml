@@ -1,0 +1,198 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXIT-REAP-73",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "model_per_owner": "GPT-6 + Extra (next tier)",
+  "backend_identity": "unknown_or_not_attestable",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "NOT_APPLICABLE",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "ER73-F01",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-F01",
+      "kind": "conditional_exit_vs_exit_group_status_encoding_difference",
+      "status": "needs_evidence",
+      "claim": "Selected syscall body for exit passes original int error_code to do_exit(long), while exit_group passes (error_code & 0xff) << 8 into do_group_exit and thence do_exit. Equal nonzero source parameters can thus produce different tsk.exit_code numbers if the assignment is reached with valid objects. This is only a conditional candidate for an intended common wait-status contract: the wait4 nonvoid body is empty and subsequent do_exit notification is subject to an indeterminate group_dead parameter. It is not a demonstrated userspace regression or kernel runtime bug.",
+      "premises": [
+        "Both source-level wrappers are invoked with matching input in otherwise defined paths",
+        "task.exit_code assignment is reached and source object remains valid",
+        "Owner's specified wait-status interpretation requires equal numeric representation from both entry points"
+      ],
+      "counter_evidence": "Different encodings may reflect intended interfaces; exit_group group-wide behavior is commented; there is no defined wait4 consumer or compiled/runtime result.",
+      "first_stop": "do_exit uninitialized group_dead at exit_notify; user wait4 body with no return; no userspace status contract attested",
+      "anchors": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A08",
+        "A09",
+        "A12",
+        "A05"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "ER73-U01",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U01",
+      "status": "needs_evidence",
+      "detail": "do_exit group_dead is an uninitialized int, assignment commented; passing to exit_notify is C undefined-value barrier, cannot certify downstream machine execution.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ER73-U02",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U02",
+      "status": "needs_evidence",
+      "detail": "exit_notify child list count/link consistency, nonnull child and valid target namespace/task lifetime have not been established by runtime producers.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ER73-U03",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U03",
+      "status": "needs_evidence",
+      "detail": "Selected exit_notify has no active EXIT_ZOMBIE, do_notify_parent, autoreap/EXIT_DEAD or parent/real_parent rebinding; other repo producers not exhaustively ruled out.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ER73-U04",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U04",
+      "status": "needs_evidence",
+      "detail": "wait4 empty nonvoid body gives no defined returned wait code, errno or status write; final generated binary and user program consumption NOT_RUN.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ER73-U05",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U05",
+      "status": "needs_evidence",
+      "detail": "do_group_exit group flags/zap_other_threads are comments; group_dead, signal_s.live and all signal/sighand owners still open under CG72.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ER73-U06",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U06",
+      "status": "needs_evidence",
+      "detail": "exit_files->put_files_struct needs valid counts/slots and filp_close object provenance; historical UV-09 and 44 caution unchanged.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ER73-U07",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U07",
+      "status": "needs_evidence",
+      "detail": "exit_fs users is plain signed int; root/pwd references, path_put effect and physical final cache free remain under R45 limitations.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ER73-U08",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U08",
+      "status": "needs_evidence",
+      "detail": "do_task_dead requests TASK_DEAD and __schedule, but actual never-reselected property and late finish/task/stack puts are not demonstrated; SF-C3-37 unchanged.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "ER73-U09",
+      "qualified_id": "CORE-USER-EXIT-REAP-73::ER73-U09",
+      "status": "needs_evidence",
+      "detail": "No demonstrated complete success-exit mm, PID detach/release_task, task/stack physical free or parent wait closure; full P9, Graphviz, build/QEMU/hardware NOT_RUN.",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "new_findings_count": 1,
+  "evidence_gaps_count": 9,
+  "observed_runtime_bugs": 0,
+  "historical_qualified_id_updates": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-15",
+      "status_preserved": "deferred_owner_not_ready",
+      "disposition": "existing root retained; refine no guaranteed reparent, notify, wait or physical leak after stop points",
+      "new_anchors": [
+        "A07",
+        "A09",
+        "B02",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "C02",
+        "C18",
+        "C23"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-PID-LIFETIME-11-REVIEW-001",
+      "disposition": "§3 unchanged, namespace enum and group_dead are historic, not duplicated",
+      "new_anchors": [
+        "A07",
+        "A09",
+        "B04",
+        "B08",
+        "B09",
+        "B10"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-14",
+      "status_preserved": "needs_evidence",
+      "disposition": "fork-failure sighand cleanup not successful exit",
+      "new_anchors": [
+        "C01",
+        "C02"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-16",
+      "status_preserved": "deferred_owner_not_ready",
+      "disposition": "prior NUMA dup_task_struct separate, no 73 activation"
+    },
+    {
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-F02",
+      "status_preserved": "needs_evidence",
+      "disposition": "late nonthread signal_s fork-failure cleanup remains open; exit path cannot close it",
+      "new_anchors": [
+        "C01",
+        "C02"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U05",
+      "status_preserved": "needs_evidence",
+      "disposition": "signal object owners and final release still open",
+      "new_anchors": [
+        "C01"
+      ]
+    },
+    {
+      "qualified_id": "CORE-SCHED-INTEGRATION-03::SF-C3-37",
+      "disposition": "conditional dead task rescheduling question retained; not a scheduler re-analysis",
+      "new_anchors": [
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23"
+      ]
+    }
+  ],
+  "excluded_actions": [
+    "no kernel fixes or patches",
+    "no changes to old artifacts or comments",
+    "no approval of batch73",
+    "no opening batch74",
+    "no build, repo script or runtime",
+    "no per-finding immediate Owner decision"
+  ]
+}
