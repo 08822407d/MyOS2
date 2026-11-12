@@ -1,0 +1,318 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77",
+  "record_type": "bounded_page_allocator_lifetime_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "executor_display_name": "MYOS2-A-C05c 代码分析执行",
+  "produced_by": "GPT-6 self-reported",
+  "model_per_owner": "next-tier GPT-6 + Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "date": "2026-11-12",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "89f84109b470",
+  "D00": "NOT_APPLICABLE",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "handoff_to": "MYOS2-A-C06 内核分析主线续建",
+  "new_findings": [
+    {
+      "id": "PA77-F01",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F01",
+      "kind": "conditional_buddy_lower_PFN_unsigned_pointer_offset",
+      "status": "needs_evidence",
+      "claim": "find_buddy_page_pfn derives __buddy_pfn = pfn ^ (1 << order) and then evaluates page + (__buddy_pfn - pfn) using unsigned ulong operands before page_is_buddy validates the candidate. When the buddy has lower PFN than pfn (e.g. pfn=9,order=0 -> buddy=8), unsigned subtraction wraps (under 64-bit ulong, 2^64-1) instead of yielding signed -1, so a lawful pointer to the preceding page cannot be certified under ordinary C pointer arithmetic. Later __myos_free_one_page uses analogous unsigned combined_pfn - pfn on a successful lower merge. This root is distinct from historical MC-01 absent buddy unlink and MC-04 zone preference array OOB. No compiled-machine outcome or reachable runtime fault is asserted.",
+      "premises": [
+        "valid real page_s source and pfn, representable unsigned long and chosen order",
+        "lower buddy candidate exists within the selected PFN arithmetic, including pfn=9/order0 example",
+        "no independent safe integer conversion/normalization inserted by actual compiler; final pointer legality not proved"
+      ],
+      "supporting_anchors": [
+        "C15",
+        "C16",
+        "C17",
+        "C13"
+      ],
+      "counter_evidence": "For higher PFN buddy, unsigned subtraction is small positive; even for lower PFN, target machine may wrap to intended address under some build/optimization, but that is not an audited C-language guarantee. The pointer has not been dereferenced in a real execution here.",
+      "first_stop": "source pointer expression in find_buddy_page_pfn before buddy validity test; do not infer a specific crash or resulting memory access",
+      "runtime_reproduced": false,
+      "physical_corruption_proven": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PA77-F02",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F02",
+      "kind": "conditional_direct_free_reallocate_refcount_drift",
+      "status": "needs_evidence",
+      "claim": "__rmqueue_smallest increments each returned page[i]._refcount, whereas the selected direct __free_pages(page,order)->__free_pages_ok->free_pages_prepare->__myos_free_one_page flow has no active matching _refcount decrement or reset. Starting from memblock_free_pages's set_page_count(page,0), a defined single-page sequence of allocation, direct release, and allocation of the same page with no other reference writers gives local source numeric transitions 0→1→1→2. This appears distinct from MC-05, where folio_put hits zero but the selected __folio_put body has no active page handoff. Whether callers rightfully remove references before direct release, the same page is actually reused, or counter state has other producers is not established.",
+      "premises": [
+        "valid boot page metadata and valid initialized zone free-area state",
+        "all selected allocation and free helper calls normal return without invalid buddy pointer or unreachable gates",
+        "correct order and same page selected twice, no external _refcount operations or concurrency between steps"
+      ],
+      "supporting_anchors": [
+        "C36",
+        "A31",
+        "C01",
+        "C03",
+        "C04",
+        "C14"
+      ],
+      "counter_evidence": "If callers decrement reference counts or set them to zero before direct release, or the same page is not reselected, the illustrated accumulation does not follow. Source naming and comments do not certify absence of such external ownership protocols.",
+      "first_stop": "valid producer/caller reference ownership and actual re-selection; report only source-level conditional numeric model PA77-M36",
+      "runtime_reproduced": false,
+      "physical_corruption_proven": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_findings_count": 2,
+  "evidence_gaps": [
+    {
+      "id": "PA77-U01",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-U01",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Zone attempt loop uses a 3-entry preferred zone array but a separately initialized nr_zones boundary. The model assumes nr_zones=5 from calculate_node_totalpages; live node initialization/other writes, which early candidates succeed, actual OOB consequences and return values have not been executed.",
+      "anchors": [
+        "A03",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A16"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PA77-U02",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-U02",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "The free_area head/list count and page.refcount transition models assume valid intrusive links, correct PFN/alignment, zone identity and no concurrent writes. get_page_from_free_area removes the node before del_page_from_free_list calls a conditional delete again; no full primitive invariant or real lock protocol has been tested.",
+      "anchors": [
+        "A17",
+        "A18",
+        "A20",
+        "A22",
+        "A23",
+        "A24",
+        "A26",
+        "A27",
+        "A28",
+        "A31",
+        "A32"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PA77-U03",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-U03",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "The post_alloc_hook ZERO path requests PAGE_SIZE-byte clear_page on base+i byte starts under the selected pointer arithmetic; actual address validity, the compiler's void* arithmetic semantics, memory contents before/after, failed callees and other clearing sources are not established. Historical MC-03 persists.",
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PA77-U04",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-U04",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Order>0 and __GFP_COMP conditionally request head/tail compound metadata. Tail pointer encoding, head PG_head, order/_folio_nr_pages and all count fields require valid folio layout and returning helpers; selecting final compiler/linker variant has not been done.",
+      "anchors": [
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13",
+        "B14",
+        "B15",
+        "B16",
+        "B17"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PA77-U05",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-U05",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "The page_type/_mapcount storage is a union, and selected mem_map memset+__init_single_page omit page_mapcount_reset. Other writers and aliases beyond historical Q34 and system runtime transitions are not excluded; PageBuddy and merge cannot be globally classified always false or globally unreachable.",
+      "anchors": [
+        "C24",
+        "C25",
+        "C26",
+        "C27",
+        "C28",
+        "C29",
+        "C30",
+        "C32",
+        "C33"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PA77-U06",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-U06",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "PA77-F01 lower-buddy unsigned PFN subtraction creates huge index before the conditional PageBuddy check if the lower buddy is chosen. For actual legality, pointer arithmetic, array bounds, zone holes, target-page existence, compiler behavior and whether a valid producer reaches the branch require separate evidence. No physical corruption proven.",
+      "anchors": [
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PA77-U07",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-U07",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "__free_pages_ok calls free_pages_prepare(bool) without inspecting a return; its selected definition falls off after flag operations. myos_page_zone may fall off without a return, and buddy merge lacks old-buddy unlink. Their defined input/ABI/metadata conditions and full physical reclaim effect are not proved. Historical MC-01/02 remain.",
+      "anchors": [
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C12",
+        "C13",
+        "C14"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PA77-U08",
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-U08",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Direct __free_pages and refcount-zero folio_put have different source callees. Selected __folio_put has comment-only body, but no full list of other page holders/aliases, physical page reuse, local full P9, preprocessing, compilation, scripts, Graphviz, QEMU or real hardware tests was done. Related PA77-F02 requires verification of direct-free caller reference protocols and whether the same page can be reselected without refcount reset.",
+      "anchors": [
+        "C01",
+        "C02",
+        "C36",
+        "C38",
+        "C39",
+        "C40",
+        "C41",
+        "C42",
+        "C43"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "observed_runtime_bugs": 0,
+  "prior_qualified_ids_preserved": [
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-01",
+      "status": "static_concern_local; globally_needs_evidence",
+      "disposition": "conditional missing buddy unlink, do not duplicate as PA77-F01"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-02",
+      "status": "static_concern",
+      "disposition": "alloc/free lock disparity remains conditional; no runtime race demonstrated"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-03",
+      "status": "static_concern",
+      "disposition": "high order ZERO byte offset cover sharpened without new duplicate root"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-04",
+      "status": "static_concern",
+      "disposition": "3-element array vs zone count5 existing root; stop before OOB instead of claiming NULL fallback"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-05",
+      "status": "static_concern",
+      "disposition": "selected folio_put refcount-zero calls empty __folio_put, not global leak"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::RF-01",
+      "status": "superseded_interpretation",
+      "disposition": "no global buddy false or no duplicate free list conclusion without full writer search"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::GAP-M08",
+      "status": "open",
+      "disposition": "page_type/_mapcount write producer and aliases not fully enumerated"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-01",
+      "status": "path_local_unclosed",
+      "disposition": "refcount-zero __folio_put stops without direct page release"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-08",
+      "status": "needs_evidence",
+      "disposition": "buddy merge reachability bounded by selected mem_map zero state, not whole-program"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-02",
+      "status": "CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF",
+      "disposition": "old absolute conclusions explicitly superseded"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-07",
+      "status": "static_concern",
+      "disposition": "slab live-object free root remains separate"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U07",
+      "status": "needs_evidence",
+      "disposition": "page free direct body now read but physical reclamation still unobserved"
+    },
+    {
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U09",
+      "status": "needs_evidence",
+      "disposition": "slab source handoff now extended, real completion unobserved"
+    },
+    {
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76-REVIEW-001",
+      "status": "PASS_PENDING_LOCAL",
+      "disposition": "R76-S01/S02/S03 apply"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75-REVIEW-001",
+      "status": "PASS_PENDING_LOCAL",
+      "disposition": "R75-S01/S02/S03 apply"
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "excluded": [
+    "no patch/kernel change",
+    "no build/preprocess/repo scripts/old fixtures/Graphviz/QEMU/runtime",
+    "no old files/comments/PR metadata changes",
+    "no branch/PR creation or merge",
+    "no self-sign77/start78"
+  ],
+  "phase": 2
+}
