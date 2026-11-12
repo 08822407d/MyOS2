@@ -1,0 +1,262 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76",
+  "record_type": "bounded_slab_lifecycle_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "model_per_owner": "GPT-6 + Extra next tier",
+  "produced_by": "GPT-6 (self-reported)",
+  "backend_identity": "unknown_or_not_attestable",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "bfb6578ca8c2",
+  "D00": "NOT_APPLICABLE",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [],
+  "new_findings_count": 0,
+  "evidence_gaps": [
+    {
+      "id": "SL76-U01",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U01",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "The C-source size/order/count algebra depends on power-of-two alignment, positive cache.size, integer representability, get_order input, NR_PAGE_ORDERS, and bitfield conversions: oo.obj_nr/order are 16-bit while slab.objects is 15-bit. No actual invalid generated cache or overflow has been demonstrated.",
+      "anchors": [
+        "A04",
+        "A05",
+        "A08",
+        "A10",
+        "A14",
+        "A15",
+        "A17",
+        "A19",
+        "A20",
+        "A39",
+        "A42"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SL76-U02",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U02",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "The selected create_cache/create_boot_cache producer sets size/object_size/align/ctor but does not establish every lifetime write of cache.offset. Selected initial cache zeroing may explain offset=0 for bounded producers; an exhaustive global offset writer/ctor consumer proof is absent. RF-02 and RF-05 refutations remain applicable.",
+      "anchors": [
+        "A01",
+        "A27",
+        "A29",
+        "A30",
+        "A35",
+        "A36"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SL76-U03",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U03",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "alloc_init_new_slab assumes valid folio, page_to_virt address, object count/stride/capacity, cache metadata and writable pointer-sized freepointer locations. First slot has no ctor call; later ctor effects may overlap offset writes, but actual harmful readers and all ctor fields were not audited.",
+      "anchors": [
+        "A25",
+        "A26",
+        "A27",
+        "A28",
+        "A29",
+        "A31",
+        "A32",
+        "A33",
+        "A34"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SL76-U04",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U04",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Membership, intrusive-list link/anchor integrity, count consistency, valid slab/cache identity, safe-iterator container projection and successful add/delete primitives are prerequisites for ordinary partial/full state models; the selected code does not globally prove them for all callers.",
+      "anchors": [
+        "B06",
+        "B07",
+        "B08",
+        "B17",
+        "B18",
+        "B21",
+        "B22",
+        "B23",
+        "B24",
+        "B25",
+        "B26",
+        "B27",
+        "B28"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SL76-U05",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U05",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "alloc_single_from_partial obtains slab.freelist then calls get_freepointer on that value before get_from_partial_list checks the returned object for non-NULL. A listed slab with freelist=NULL or invalid pointer is an ANALYSIS_STOP; reachability of that inconsistent state from valid producers is unproven.",
+      "anchors": [
+        "B04",
+        "B07",
+        "B19",
+        "B32"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SL76-U06",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U06",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "The source-level MC-07 witness of distinct-full-slab sequential frees meeting partial.count>=min_partial while slab.inuse>0 requires valid allocated slabs and consumers, successful full/partial transitions and stable source objects. It is neither a real kernel reproduction nor proof of physical UAF.",
+      "anchors": [
+        "C01",
+        "C02",
+        "C03",
+        "C06",
+        "C07",
+        "C17",
+        "C18",
+        "C19",
+        "C20",
+        "C21"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SL76-U07",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U07",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "free_to_partial_list unlocks before slab_free reads the OR gate; offline_exceeded_empty_slab re-locks and tries deletion, then free_slab follows outside lock. A possible interleaving/ABA is only a conditional window; no actual concurrent mutation or successful locking protocol was executed.",
+      "anchors": [
+        "C04",
+        "C06",
+        "C08",
+        "C10",
+        "C27"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SL76-U08",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U08",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "list_header_delete_node returns NULL if the node is not found. remove_from_partial is a macro for that call and offline_exceeded_empty_slab does not check its result before decrementing nr_slabs/total_objects. Whether a nonmember can reach offline from valid paths and whether stats actually diverge remain unknown.",
+      "anchors": [
+        "B18",
+        "B22",
+        "B30",
+        "C08",
+        "C09",
+        "C16",
+        "C24",
+        "C25"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "id": "SL76-U09",
+      "qualified_id": "CORE-USER-SLAB-OBJECT-LIFECYCLE-76::SL76-U09",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "free_slab has an order0/PG_head busy-wait gate and then mapping/flag changes before requesting __free_pages. The source handoff does not prove final physical page reclamation, buddy coalescing, allocator correctness, object liveness, or any compilation/runtime behavior. Full local P9, Graphviz, QEMU and hardware NOT_RUN.",
+      "anchors": [
+        "C11",
+        "C12",
+        "C13",
+        "C14",
+        "C26"
+      ],
+      "owner_action_now": "none",
+      "runtime_evidence": "NOT_RUN"
+    }
+  ],
+  "evidence_gaps_count": 9,
+  "observed_runtime_bugs": 0,
+  "prior_qualified_ids_preserved": [
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-07",
+      "status": "static_concern",
+      "disposition": "existing conditional premature whole-slab discard root: 76 adds threshold producer, lock boundaries, live-object sequential cross-slab witness and counterexamples; no new root or physical UAF certification"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-08",
+      "status": "static_concern",
+      "disposition": "existing ctor/freepointer overlap and skipped slot0 producer enriched; valid offset and consumers not globally proven"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-09",
+      "status": "static_concern",
+      "disposition": "old direct oversized __kmalloc busy loop not reexamined"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::DR-04",
+      "disposition": "sighand constructor/fork publication dependency remains historical, not audited in 76"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::RF-02",
+      "status": "original_claim_refuted",
+      "disposition": "do not assert first siglock of a forked task necessarily fails"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::RF-05",
+      "status": "original_claim_refuted",
+      "disposition": "do not assert sighand is the sole ctor cache"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-02",
+      "status": "CLOSED_BY_EXPLICIT_NARROWING_NOT_GLOBAL_PROOF",
+      "disposition": "revised whole-tree negative statements remain narrowed"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U06",
+      "status": "needs_evidence",
+      "disposition": "direct kmem_cache_free argument/provenance still conditional"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U07",
+      "status": "needs_evidence",
+      "disposition": "__free_pages physical effect still unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74-REVIEW-001::R74-01",
+      "status": "CLOSED_DOCUMENTATION_ONLY_BY_C05",
+      "disposition": "batch74 composite PASS_PENDING_LOCAL; no D00"
+    },
+    {
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75-REVIEW-001",
+      "status": "PASS_PENDING_LOCAL_WITH_R75_S01_S02_S03",
+      "disposition": "bounded numeric, argument-evaluation, partial-miss qualification retained"
+    }
+  ],
+  "owner_action_now": "none",
+  "owner_decisions_requested_now": [],
+  "phase": 2,
+  "excluded": [
+    "no kernel modification/patch",
+    "no old artifact/comment/PR metadata modification",
+    "no self-sign76 or start77",
+    "no repo scripts/compilation/runtime/Graphviz",
+    "no new branch or merge"
+  ]
+}
