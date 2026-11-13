@@ -1,0 +1,1567 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81",
+  "record_type": "bounded_early_pgtable_storage_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "model_per_owner": "GPT-6 + Extra (Owner-selected)",
+  "produced_by": "GPT-6 (self-report, not backend attested)",
+  "date": "2026-11-13",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "lead_contract_short12": "df960bf5c5e9",
+  "execution_parent_short12": "0e9e9e89c4be",
+  "read_channel": "connector",
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/setup.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/mm/fault/pgtable_macro.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/mm/fault/pgtable.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_macro_arch.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/mm/misc/init-mm.c",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/mm/fault/memfault_api.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/mmu/mmu_arch.c",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/getorder.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy.c",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy_const.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/page.h",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/mm/early/memblock.c",
+      "ref": "time@a039d9803ade",
+      "use": "fixed_source_definition_anchor"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/sections.h",
+      "ref": "time@a039d9803ade",
+      "use": "brk extern_symbol_reference_not_anchor"
+    },
+    {
+      "path": "mykernel/mm/highmem/highmem_macro.h",
+      "ref": "time@a039d9803ade",
+      "use": "ENT_PER_TABLE nearest_capacity_definition_not_anchor"
+    }
+  ],
+  "prior_status": {
+    "D00": "NOT_REQUIRED",
+    "R79_01": "CLOSED_DOCUMENTATION_ONLY_WITH_EXPLICIT_HISTORY_LIMIT",
+    "R79_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch79": "PASS_PENDING_LOCAL",
+    "batch80": "PASS_PENDING_LOCAL",
+    "R80_S01": "One-past pointer address at i=128 can form; member access/writing entries[128] is invalid. Old BM80-F03 conditional not reopened.",
+    "R80_S02": "e820_entry field types must be supported directly, A11 scope corrected, M03 zero tag not proven real infinite loop, M10 step=sizeof model only, M19 high start checked before any return",
+    "R80_S03": "Old DOT not CFG; dynamic producer, hardware and earlier source gates each separate. No shared fake callee path.",
+    "R77_S01": "page-layer filtered GFP vs slab-layer original flags; __GFP_ZERO name not proof of total clearing",
+    "R77_S02": "late allocator out-of-order immediate fail vs retries/array/OOB must be separated",
+    "R77_S03": "prior buddy order/metadata and root candidate constraints remain",
+    "R78_S01_S02_S03": "zone production and post-init overwritten/pointer/return chronology carry forward, no redoing 78",
+    "old_qualified_ids": [
+      "AE75-U07",
+      "SL76-U09",
+      "CORE-MM-BASELINE-04::MC-01..MC-05",
+      "CORE-MM-BASELINE-04::LB-01",
+      "CORE-MM-BASELINE-04::LB-08",
+      "CORE-MM-BASELINE-04::GAP-M08",
+      "MR-02 CLOSED_BY_EXPLICIT_NARROWING",
+      "PA77-F01/F02",
+      "PB78-F01..F06",
+      "MR79-F01..F08/U01..U10",
+      "BM80-F01..F08/U01..U10"
+    ],
+    "old_source_findings_closed": false
+  },
+  "G01": {
+    "buffer_capacity_matrix": [
+      {
+        "id": "A-C01",
+        "analysis": "EARLY_PGTBUF_CHUNK_SIZE=PMD_SIZE=2^21 B; MAX_CHUNKS=4; runtime tables=8MiB",
+        "anchors": [
+          "A04",
+          "A05",
+          "A06",
+          "A16",
+          "A26",
+          "A27"
+        ],
+        "earliest_stop": "constant-expression static model; no actual link/bootstrap"
+      },
+      {
+        "id": "A-C02",
+        "analysis": "RESERVE_BRK generates static array of EARLY_PGTBUF_SIZE+PMD_SIZE=10MiB in .bss..brk input section",
+        "anchors": [
+          "A07",
+          "A04",
+          "A05",
+          "A06"
+        ],
+        "earliest_stop": "must verify selected preprocessor/link output; do not claim actual .brk extent"
+      },
+      {
+        "id": "A-C03",
+        "analysis": "linker .bss matches .bss*; linker .brk separate and contains .+=64*1024, *(.brk*). Textual wildcard suggests .bss..brk input lands .bss, not .brk, conditional on linker selection",
+        "anchors": [
+          "A07",
+          "A08",
+          "A09",
+          "A10"
+        ],
+        "earliest_stop": "without link map cannot assert final actual section placement"
+      },
+      {
+        "id": "A-C04",
+        "analysis": "extend_brk requests 8MiB aligned to PMD_SIZE; alignment slack may approach PMD_SIZE-1, independently of static RESERVE_BRK nominal length",
+        "anchors": [
+          "A13",
+          "A14",
+          "A16",
+          "A26",
+          "A27"
+        ],
+        "earliest_stop": "valid _brk_end arithmetic, linker limit and pointer comparison"
+      },
+      {
+        "id": "A-C05",
+        "analysis": "if base physically page aligned and addresses valid, PFN top=start+(8MiB/4096)=start+2048; end=start+2; remaining=2046 pages or 8MiB-8192 bytes",
+        "anchors": [
+          "A17",
+          "A24",
+          "A25"
+        ],
+        "earliest_stop": "physical base/shift and addition nonoverflow"
+      },
+      {
+        "id": "A-C06",
+        "analysis": "first two buffer pages designated to PUD and PMD aliases; no separate free-list registration for them in early_alloc_pgt_buf",
+        "anchors": [
+          "A17",
+          "A18",
+          "A19"
+        ],
+        "earliest_stop": "physical+virtual object extents and alias validity"
+      },
+      {
+        "id": "A-C07",
+        "analysis": "runtime reserve_brk only runs after early_alloc_pgt_buf returns and requests positive brk extent; error code not read",
+        "anchors": [
+          "A20",
+          "A21",
+          "A22",
+          "A23"
+        ],
+        "earliest_stop": "cannot assume earlier allocation returned successfully"
+      }
+    ],
+    "address_domain_matrix": [
+      {
+        "id": "A-D01",
+        "analysis": "extend_brk returns virtual image-brk address; __pa function/macro conversion produces phys_addr_t base, not a direct-map pointer",
+        "anchors": [
+          "A13",
+          "A15",
+          "A16",
+          "A29",
+          "A30"
+        ],
+        "earliest_stop": "actual __phys_addr_nodebug mapping/phys_base and selected DEBUG branch"
+      },
+      {
+        "id": "A-D02",
+        "analysis": "pgt_buf_start/end/top are PAGE_SHIFT-divided physical PFNs, not byte addresses",
+        "anchors": [
+          "A01",
+          "A02",
+          "A03",
+          "A17",
+          "A24"
+        ],
+        "earliest_stop": "shift/cast and capacity validity"
+      },
+      {
+        "id": "A-D03",
+        "analysis": "early_pgtbuf_pud formed as base+__START_KERNEL_map image alias and early_pgtbuf_pmd as +PAGE_SIZE; not __va(base) direct-map expression",
+        "anchors": [
+          "A17",
+          "A18",
+          "A19",
+          "A28"
+        ],
+        "earliest_stop": "GNU void* arithmetic semantics and writable aliases require proof"
+      },
+      {
+        "id": "A-D04",
+        "analysis": "__va builds PAGE_OFFSET direct-map alias, distinct address domain from image __START_KERNEL_map alias",
+        "anchors": [
+          "A28",
+          "A31"
+        ],
+        "earliest_stop": "no direct-map mapping proven"
+      },
+      {
+        "id": "A-D05",
+        "analysis": "virtual end alignment is PMD_SIZE in extend_brk; whether translated physical base is PMD-aligned depends on conversion/phys_base",
+        "anchors": [
+          "A14",
+          "A16",
+          "A29",
+          "A30",
+          "A27"
+        ],
+        "earliest_stop": "do not silently assume physical alignment"
+      },
+      {
+        "id": "A-D06",
+        "analysis": "linker __brk_base/__brk_limit numerical values and page permissions unavailable without actual linked image",
+        "anchors": [
+          "A09",
+          "A10",
+          "A11",
+          "A12"
+        ],
+        "earliest_stop": "symbolic variables retained"
+      }
+    ],
+    "buffer_publication_order_matrix": [
+      {
+        "id": "A-P01",
+        "analysis": "extend_brk aligns and updates _brk_end before clearing; can leave advanced state if later pointer/memset not valid",
+        "anchors": [
+          "A14",
+          "A15"
+        ],
+        "earliest_stop": "first invalid arithmetic/pointer/extent"
+      },
+      {
+        "id": "A-P02",
+        "analysis": "early_alloc first obtains and converts base then writes pgt_buf_start, PUD alias, PMD alias, pgt_buf_end, pgt_buf_top in source order",
+        "anchors": [
+          "A16",
+          "A17"
+        ],
+        "earliest_stop": "separate pointer formation and integer overflow gates"
+      },
+      {
+        "id": "A-P03",
+        "analysis": "pgt_buf_end=start+2 immediately fences off first two pages without a success check beyond earlier extend_brk",
+        "anchors": [
+          "A17"
+        ],
+        "earliest_stop": "valid storage/extent"
+      },
+      {
+        "id": "A-P04",
+        "analysis": "reserve_brk later marks brk interval reserved but ignores return; clearing _brk_start is not proof of success",
+        "anchors": [
+          "A20",
+          "A21",
+          "A22",
+          "A23"
+        ],
+        "earliest_stop": "underlying MR79 reservation candidates remain"
+      },
+      {
+        "id": "A-P05",
+        "analysis": "setup_arch calls early direct-map hook only after reserve_brk and another mapping hook; call order not executed trace",
+        "anchors": [
+          "A21"
+        ],
+        "earliest_stop": "prior callee returns and early_map function itself valid"
+      }
+    ]
+  },
+  "G02": {
+    "table_identity_matrix": [
+      {
+        "id": "B-T01",
+        "analysis": "early_pgd is early_top_pgt[pgd_index(va)], init_pgd is distinct init_top_pgt[pgd_index(va)]; p4d is cast of early_pgd",
+        "anchors": [
+          "B04",
+          "B09",
+          "B10",
+          "B33"
+        ],
+        "earliest_stop": "both roots have valid storage and chosen index"
+      },
+      {
+        "id": "B-T02",
+        "analysis": "one early_pgtbuf_pud page and one early_pgtbuf_pmd page; page zeroing precedes corresponding populate",
+        "anchors": [
+          "B04",
+          "B05"
+        ],
+        "earliest_stop": "image alias writable, page size, pointer bounds"
+      },
+      {
+        "id": "B-T03",
+        "analysis": "p4d_populate -> fill_pud_to_p4d_ent -> __pa(pud)|_PAGE_TABLE -> set_p4d_ent WRITE_ONCE",
+        "anchors": [
+          "B16",
+          "B18",
+          "B20"
+        ],
+        "earliest_stop": "macro selection and __pa alias correctness"
+      },
+      {
+        "id": "B-T04",
+        "analysis": "pud_populate -> fill_pmd_to_pud_ent -> __pa(pmd)|_PAGE_TABLE -> set_pud_ent WRITE_ONCE",
+        "anchors": [
+          "B17",
+          "B19",
+          "B21"
+        ],
+        "earliest_stop": "pud slot in valid physical page and virtual alias"
+      },
+      {
+        "id": "B-T05",
+        "analysis": "set_pmd macro resolves set_pmd_ent, __pmd constructs pmd_t, WRITE_ONCE stores into page table slot",
+        "anchors": [
+          "B07",
+          "B22",
+          "B23",
+          "B24"
+        ],
+        "earliest_stop": "valid pmd slot and flags"
+      },
+      {
+        "id": "B-T06",
+        "analysis": "swapper_pg_dir is init_top_pgt macro and init_top_pgt has static array definition; early_top_pgt root has observed consumer but not independently proven physical root state",
+        "anchors": [
+          "B33",
+          "B34"
+        ],
+        "earliest_stop": "root provenance/actual CR3 remains gap"
+      }
+    ],
+    "slot_and_boundary_matrix": [
+      {
+        "id": "B-S01",
+        "analysis": "P4D/PGDIR SHIFT39 and PUD SHIFT30, PMD SHIFT21; indices masked by (PTRS-1) or 511",
+        "anchors": [
+          "B13",
+          "B14",
+          "B15",
+          "B25",
+          "B26",
+          "B27",
+          "B28",
+          "B29"
+        ],
+        "earliest_stop": "selected hierarchy and operand width"
+      },
+      {
+        "id": "B-S02",
+        "analysis": "for valid 8MiB aligned endpoints: nr_pmd=(end-start)/2MiB=4; pa increment2MiB each iteration",
+        "anchors": [
+          "B01",
+          "B06",
+          "B27"
+        ],
+        "earliest_stop": "physical PMD alignment and no endpoint overflow"
+      },
+      {
+        "id": "B-S03",
+        "analysis": "one PMD page 512 entries spans at most one fixed 1GiB PUD index; one PUD page spans single PGD index via 512 PUD slots",
+        "anchors": [
+          "B14",
+          "B15",
+          "B28",
+          "B29"
+        ],
+        "earliest_stop": "present parent slots and selected 4-level scheme"
+      },
+      {
+        "id": "B-S04",
+        "analysis": "begin at 1GiB-4MiB: pmd_index of four 2MiB leaves =510,511,0,1, while code creates only pud_index(va) parent link",
+        "anchors": [
+          "B05",
+          "B06",
+          "B07",
+          "B14",
+          "B15"
+        ],
+        "earliest_stop": "isolated aligned integer model; actual physical base not established"
+      },
+      {
+        "id": "B-S05",
+        "analysis": "crossing 1GiB boundary requires another PUD entry pointing at correct PMD table, but function only chooses pud once; index wrap may write earlier slots within old PMD page",
+        "anchors": [
+          "B05",
+          "B06",
+          "B07"
+        ],
+        "earliest_stop": "conditional hazard; don't declare actual hardware corruption"
+      },
+      {
+        "id": "B-S06",
+        "analysis": "crossing 512GiB PGD boundary requires new root entry, but early_pgd/init_pgd selected once at initial va",
+        "anchors": [
+          "B04",
+          "B09",
+          "B13",
+          "B25"
+        ],
+        "earliest_stop": "boundary-crossing conditional; actual base unknown"
+      },
+      {
+        "id": "B-S07",
+        "analysis": "guard for crossing PGD or PUD exists only as commented-out if/panic, cannot be treated as active rejection",
+        "anchors": [
+          "B03"
+        ],
+        "earliest_stop": "text only, no compiled selection"
+      },
+      {
+        "id": "B-S08",
+        "analysis": "phys_end<=phys_start or phys_end==0 creates subtract/huge nr_pmd/va issues before any leaf success; stop at first invalid address/loop bound",
+        "anchors": [
+          "B01",
+          "B02",
+          "B06"
+        ],
+        "earliest_stop": "isolated invalid-input case"
+      }
+    ],
+    "mapping_write_sequence_matrix": [
+      {
+        "id": "B-W01",
+        "analysis": "compute phys_start/end then va/vend; vend via __va(phys_end-1)+1 may overflow or form invalid pointer",
+        "anchors": [
+          "B01",
+          "B02"
+        ],
+        "earliest_stop": "physical extent and virtual address valid"
+      },
+      {
+        "id": "B-W02",
+        "analysis": "select root and cast to p4d, clear PUD page, populate early_pgd, then assign pud_base",
+        "anchors": [
+          "B04",
+          "B18",
+          "B20"
+        ],
+        "earliest_stop": "preexisting root slot compatibility and alias writable"
+      },
+      {
+        "id": "B-W03",
+        "analysis": "select single pud_index(va), clear PMD page, populate parent, set pmd_base",
+        "anchors": [
+          "B05",
+          "B19",
+          "B21"
+        ],
+        "earliest_stop": "bounds and address conversion"
+      },
+      {
+        "id": "B-W04",
+        "analysis": "PMD loop computes per-iteration this_va/pmd_slot and writes pa|pgprot_val(PAGE_KERNEL_LARGE) via __pmd and set_pmd",
+        "anchors": [
+          "B06",
+          "B07",
+          "B30",
+          "B31",
+          "B32",
+          "B23",
+          "B24"
+        ],
+        "earliest_stop": "physical PMD alignment and correct flags"
+      },
+      {
+        "id": "B-W05",
+        "analysis": "PAGE_KERNEL_LARGE is masked via __pgprot_mask and includes _PSE in underlying expression; mask producer may differ dynamically, cannot assume all bits survive",
+        "anchors": [
+          "B30",
+          "B31",
+          "B32"
+        ],
+        "earliest_stop": "actual __default_kernel_pte_mask; no hardware validation"
+      },
+      {
+        "id": "B-W06",
+        "analysis": "the same pmd slot may receive later overwrite when nr_pmd>512, or wrong-parent logical alias when crossing PUD earlier",
+        "anchors": [
+          "B06",
+          "B07",
+          "B15"
+        ],
+        "earliest_stop": "loop arithmetic valid and storage writable"
+      },
+      {
+        "id": "B-W07",
+        "analysis": "partial root/pud/pmd writes have no explicit rollback in this function after intermediate failure, but no actual fault can be asserted from source",
+        "anchors": [
+          "B04",
+          "B05",
+          "B07"
+        ],
+        "earliest_stop": "all accesses valid until first unproved expression"
+      }
+    ],
+    "root_publication_and_flush_matrix": [
+      {
+        "id": "B-R01",
+        "analysis": "__flush_tlb_all called after leaf writes, before *init_pgd=*early_pgd root copy",
+        "anchors": [
+          "B08"
+        ],
+        "earliest_stop": "function returns, CPU mapping state not proven"
+      },
+      {
+        "id": "B-R02",
+        "analysis": "__flush_tlb_all current local implementation delegates to flush_tlb_local; name alone does not prove multi-CPU/global effect",
+        "anchors": [
+          "B35",
+          "B36"
+        ],
+        "earliest_stop": "don't invoke hardware semantics without spec"
+      },
+      {
+        "id": "B-R03",
+        "analysis": "root copy publishes a single selected PGD entry, not full array and not an explicit CR3 switch",
+        "anchors": [
+          "B08",
+          "B09"
+        ],
+        "earliest_stop": "both root entries valid"
+      },
+      {
+        "id": "B-R04",
+        "analysis": "separate later init_mem_mapping calls load_cr3(swapper_pg_dir) and __flush_tlb_all, not simultaneous with earlier root copy",
+        "anchors": [
+          "B37",
+          "B34"
+        ],
+        "earliest_stop": "prior mappings and callee returns"
+      },
+      {
+        "id": "B-R05",
+        "analysis": "init_top_pgt defines root array; actual active CR3 and visibility of early_top_pgt still unproven until later phase",
+        "anchors": [
+          "B33",
+          "B34",
+          "B37"
+        ],
+        "earliest_stop": "hardware state gap"
+      }
+    ]
+  },
+  "G03": {
+    "allocation_source_matrix": [
+      {
+        "id": "C-A01",
+        "analysis": "after_bootmem true => get_order((ulong)num<<PAGE_SHIFT); __get_free_pages(GFP_ATOMIC|__GFP_ZERO,order) returned directly",
+        "anchors": [
+          "C01",
+          "C02",
+          "C12",
+          "C15",
+          "C17",
+          "C18"
+        ],
+        "earliest_stop": "no early clear_page loop on this branch"
+      },
+      {
+        "id": "C-A02",
+        "analysis": "after_bootmem false and pgt_buf_end+num<=top => pfn=old end, end+=num",
+        "anchors": [
+          "C03",
+          "C06"
+        ],
+        "earliest_stop": "integer no-overflow, initialized pointer/extent"
+      },
+      {
+        "id": "C-A03",
+        "analysis": "after_bootmem false and capacity insufficient => may request physical memblock only if min_pfn_mapped<max_pfn_mapped",
+        "anchors": [
+          "C03",
+          "C04",
+          "C26",
+          "C27"
+        ],
+        "earliest_stop": "mapped window validity separate from RAM availability"
+      },
+      {
+        "id": "C-A04",
+        "analysis": "phys fallback uses PAGE_SIZE*num, PAGE_SIZE alignment, shifted PFN window, returns address0 failure",
+        "anchors": [
+          "C04",
+          "C05",
+          "C21",
+          "C22"
+        ],
+        "earliest_stop": "physical range and type valid, no runtime allocation asserted"
+      },
+      {
+        "id": "C-A05",
+        "analysis": "buffer insufficiency does not itself increment pgt_buf_end; fallback returns pfn from ret>>PAGE_SHIFT",
+        "anchors": [
+          "C03",
+          "C06"
+        ],
+        "earliest_stop": "valid ret and callee return"
+      },
+      {
+        "id": "C-A06",
+        "analysis": "late phase flag is assigned in mem_init before calling memblock_free_all",
+        "anchors": [
+          "C09",
+          "C10"
+        ],
+        "earliest_stop": "the phase transition is a write, not completion proof"
+      },
+      {
+        "id": "C-A07",
+        "analysis": "alloc_low_page() wrapper requests exactly one page; direct larger num calls remain contract-allowed but caller scope not exhaustively audited",
+        "anchors": [
+          "C11",
+          "C02"
+        ],
+        "earliest_stop": "does not justify universal num==1"
+      }
+    ],
+    "num_order_extent_matrix": [
+      {
+        "id": "C-N01",
+        "analysis": "num=1 late => size4096/order0 under get_order; early buffer consumes exactly one 4KiB page if capacity",
+        "anchors": [
+          "C02",
+          "C13",
+          "C14",
+          "C06"
+        ],
+        "earliest_stop": "normal integer/allocator constraints"
+      },
+      {
+        "id": "C-N02",
+        "analysis": "num=3 late => requested bytes12288/order2 and allocator block of four pages in isolated model, not three",
+        "anchors": [
+          "C02",
+          "C13",
+          "C14"
+        ],
+        "earliest_stop": "nonzero valid size and allocator maximum order"
+      },
+      {
+        "id": "C-N03",
+        "analysis": "num=0 late feeds get_order(0), documented undefined; constant vs dynamic get_order branches differ",
+        "anchors": [
+          "C02",
+          "C12",
+          "C14"
+        ],
+        "earliest_stop": "must not claim normal zero-page success"
+      },
+      {
+        "id": "C-N04",
+        "analysis": "num=0 early with remaining buffer passes capacity and returns cursor VA without increment or clear loop",
+        "anchors": [
+          "C03",
+          "C06",
+          "C07",
+          "C08"
+        ],
+        "earliest_stop": "valid buffer cursor/address"
+      },
+      {
+        "id": "C-N05",
+        "analysis": "exactly num=remaining fits because condition uses >; num=remaining+1 falls back",
+        "anchors": [
+          "C03"
+        ],
+        "earliest_stop": "pgt_buf_end+num arithmetic nonwrap"
+      },
+      {
+        "id": "C-N06",
+        "analysis": "pgt_buf_end+num unsigned arithmetic may wrap, concealing oversubscription; no explicit carry gate in shown branch",
+        "anchors": [
+          "C03"
+        ],
+        "earliest_stop": "earliest sum overflow as physical allocation-domain validity stop"
+      },
+      {
+        "id": "C-N07",
+        "analysis": "num is uint, i is int; extremely large num may make i++ signed overflow before loop reaches num",
+        "anchors": [
+          "C03",
+          "C07"
+        ],
+        "earliest_stop": "only if path remains valid long enough; cannot assert actual execution"
+      },
+      {
+        "id": "C-N08",
+        "analysis": "get_order returns ceiling power-of-two page block; later 0 from __get_free_pages propagated without early panic loop",
+        "anchors": [
+          "C02",
+          "C12",
+          "C13",
+          "C14",
+          "C15"
+        ],
+        "earliest_stop": "actual allocator and flags constraints"
+      }
+    ],
+    "zeroing_and_failure_matrix": [
+      {
+        "id": "C-Z01",
+        "analysis": "buffer path advances pgt_buf_end then clears each of num pages with clear_page=memset(PAGE_SIZE)",
+        "anchors": [
+          "C06",
+          "C07",
+          "C19"
+        ],
+        "earliest_stop": "each __va((pfn+i)<<PAGE_SHIFT) formed and writable"
+      },
+      {
+        "id": "C-Z02",
+        "analysis": "fallback path may produce nonzero physical ret, convert to PFN and run same early clear loop; phys0 rejected",
+        "anchors": [
+          "C04",
+          "C05",
+          "C06",
+          "C07"
+        ],
+        "earliest_stop": "memblock return semantics, no overlapping reserved interval"
+      },
+      {
+        "id": "C-Z03",
+        "analysis": "early ret0 invokes panic and while(1) code; observed machine halt not proven",
+        "anchors": [
+          "C05"
+        ],
+        "earliest_stop": "actual panic return behavior not part of this case"
+      },
+      {
+        "id": "C-Z04",
+        "analysis": "late path bypasses early loop, ZERO bit is request to page allocator, not proof all order pages cleared by same mechanism",
+        "anchors": [
+          "C02",
+          "C17",
+          "C18",
+          "C20"
+        ],
+        "earliest_stop": "R77-S01 page-level flags and post_alloc_hook conditions"
+      },
+      {
+        "id": "C-Z05",
+        "analysis": "post_alloc_hook clear_page((void*)page_to_virt(page)+i) uses void* byte-wise offset rather than PAGE_SIZE*i; for order>0 this source may not clear every constituent page",
+        "anchors": [
+          "C20",
+          "C19"
+        ],
+        "earliest_stop": "compiler void* extension, object writable, branch flags reach hook"
+      },
+      {
+        "id": "C-Z06",
+        "analysis": "late __get_free_pages returns0 if alloc_pages fails; alloc_low_pages returns it directly, unlike early panic",
+        "anchors": [
+          "C02",
+          "C15"
+        ],
+        "earliest_stop": "0 is return value not proof caller detects failure"
+      },
+      {
+        "id": "C-Z07",
+        "analysis": "no rollback of pgt_buf_end if later early clear fails; cannot assert faulted machine state from static text",
+        "anchors": [
+          "C06",
+          "C07"
+        ],
+        "earliest_stop": "stop at first invalid address or callee"
+      }
+    ],
+    "mapped_window_provenance_matrix": [
+      {
+        "id": "C-M01",
+        "analysis": "min_pfn_mapped is static object declared in init.c; max_pfn_mapped is separate global in setup.c",
+        "anchors": [
+          "C26",
+          "C27"
+        ],
+        "earliest_stop": "declarations not a full writer search"
+      },
+      {
+        "id": "C-M02",
+        "analysis": "init_memory_mapping contains commented add_pfn_range_mapped, not evidence of active producer",
+        "anchors": [
+          "C28"
+        ],
+        "earliest_stop": "do not infer global absence of other writers"
+      },
+      {
+        "id": "C-M03",
+        "analysis": "get_max_mapped returns max_pfn_mapped shifted by PAGE_SHIFT; does not initialize producer",
+        "anchors": [
+          "C27",
+          "C28"
+        ],
+        "earliest_stop": "mapped bound validity remains gap"
+      },
+      {
+        "id": "C-M04",
+        "analysis": "if min>=max, no memblock call and ret remains0, leading early panic/while only if capacity fallback reached",
+        "anchors": [
+          "C04",
+          "C05",
+          "C26",
+          "C27"
+        ],
+        "earliest_stop": "no claim this happens on actual boot"
+      },
+      {
+        "id": "C-M05",
+        "analysis": "range predicate min<max is not proof that [min,max) is already directly mapped writable or contained in valid memblock.memory",
+        "anchors": [
+          "C04"
+        ],
+        "earliest_stop": "source range producer/consumer unknown"
+      },
+      {
+        "id": "C-M06",
+        "analysis": "after_bootmem source mem_init flag write must be combined with buddy-return and old PA77/PB78 limits",
+        "anchors": [
+          "C09",
+          "C10",
+          "C15"
+        ],
+        "earliest_stop": "no automatic closure"
+      }
+    ],
+    "cross_layer_boundary_matrix": [
+      {
+        "id": "C-X01",
+        "analysis": "early_alloc_pgt_buf uses extend_brk then stage pre-hook, requires A brk/alias correctness",
+        "anchors": [
+          "A16",
+          "A17",
+          "A13",
+          "A14"
+        ],
+        "earliest_stop": "if linker brk mismatch, later B/C actual reachability not proven"
+      },
+      {
+        "id": "C-X02",
+        "analysis": "early direct-map mapping maps phys_start..phys_end but only has one PUD parent path, requires B 1GiB/512GiB containment",
+        "anchors": [
+          "B01",
+          "B04",
+          "B05",
+          "B06",
+          "B07"
+        ],
+        "earliest_stop": "cross-PUD model isolated"
+      },
+      {
+        "id": "C-X03",
+        "analysis": "alloc_low_pages early success returns __va base, depends on B mapping pre-availability or another valid early mapping",
+        "anchors": [
+          "C07",
+          "C08",
+          "A31",
+          "B08"
+        ],
+        "earliest_stop": "no map writeability proven from address expression"
+      },
+      {
+        "id": "C-X04",
+        "analysis": "mapped-window memblock fallback depends on prior BM80/PFN and MR79/region proof; not automatically available",
+        "anchors": [
+          "C04",
+          "C21",
+          "C22"
+        ],
+        "earliest_stop": "stop at first prior unresolved gate"
+      },
+      {
+        "id": "C-X05",
+        "analysis": "late allocator/hook and ZERO request depends on R77-S01 and prior page initialization, not same as early memset",
+        "anchors": [
+          "C02",
+          "C15",
+          "C20"
+        ],
+        "earliest_stop": "no physical test"
+      },
+      {
+        "id": "C-X06",
+        "analysis": "R80-S01 distinguishes tail pointer formation from out-of-array member access; B uses in-bounds index expressions conditionally, not reproduced 80 defect",
+        "anchors": [
+          "B06",
+          "B07"
+        ],
+        "earliest_stop": "don't invent new R80 issues"
+      }
+    ]
+  },
+  "technical_matrix_counts": {
+    "G01": {
+      "buffer_capacity_matrix": 7,
+      "address_domain_matrix": 6,
+      "buffer_publication_order_matrix": 5
+    },
+    "G02": {
+      "table_identity_matrix": 6,
+      "slot_and_boundary_matrix": 8,
+      "mapping_write_sequence_matrix": 7,
+      "root_publication_and_flush_matrix": 5
+    },
+    "G03": {
+      "allocation_source_matrix": 7,
+      "num_order_extent_matrix": 8,
+      "zeroing_and_failure_matrix": 7,
+      "mapped_window_provenance_matrix": 6,
+      "cross_layer_boundary_matrix": 6
+    }
+  },
+  "technical_matrix_rows": 78,
+  "finite_model_cases": [
+    {
+      "id": "PT81-M01",
+      "scope": "A",
+      "inputs": {
+        "PMD_SIZE": 2097152,
+        "chunks": 4
+      },
+      "result": "tables_bytes=8388608; reserved_macro_bytes=10485760",
+      "anchors": [
+        "A04",
+        "A05",
+        "A06",
+        "A07"
+      ],
+      "earliest_stop": "linker section actual placement unknown",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M02",
+      "scope": "A",
+      "inputs": {
+        "PAGE_SIZE": 4096,
+        "tables_bytes": 8388608
+      },
+      "result": "top-start=2048 PFNs; end-start=2; remaining=2046 pages",
+      "anchors": [
+        "A17",
+        "A24",
+        "A25"
+      ],
+      "earliest_stop": "requires valid phys base and nonoverflow PFN sum",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M03",
+      "scope": "A",
+      "inputs": {
+        "brk_base_virtual": "aligned to 2MiB",
+        "phys_base_offset": "not aligned"
+      },
+      "result": "virtual align alone does not imply physical PMD align",
+      "anchors": [
+        "A14",
+        "A16",
+        "A29",
+        "A30"
+      ],
+      "earliest_stop": "phys translation selection",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M04",
+      "scope": "A",
+      "inputs": {
+        "brk_start": "B",
+        "brk_end": "B",
+        "requested_bytes": 8388608,
+        "brk_limit": "B+65536"
+      },
+      "result": "the requested span exceeds illustrative brk limit; extend_brk upper-limit condition is nonzero",
+      "anchors": [
+        "A14",
+        "A16",
+        "A10"
+      ],
+      "earliest_stop": "isolated symbolic link layout not actual image",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M05",
+      "scope": "A",
+      "inputs": {
+        "brk_end": "x",
+        "align": 2097152
+      },
+      "result": "round_up virtual_end_to_2MiB; potential <2MiB slack",
+      "anchors": [
+        "A13",
+        "A14"
+      ],
+      "earliest_stop": "no wrap, legal extent",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M06",
+      "scope": "A",
+      "inputs": {
+        "base_PFN": 1024
+      },
+      "result": "pud_pfn=1024;pmd_pfn=1025;cursor=1026;top=3072",
+      "anchors": [
+        "A17"
+      ],
+      "earliest_stop": "isolated valid aligned physical base",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M07",
+      "scope": "A",
+      "inputs": {
+        "allocated_bytes": 8388608,
+        "consumed_first_bytes": 8192
+      },
+      "result": "remaining_bytes=8380416",
+      "anchors": [
+        "A17",
+        "A24",
+        "A25"
+      ],
+      "earliest_stop": "no extra allocations",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M08",
+      "scope": "A",
+      "inputs": {
+        "brk_reserve_return": "nonzero_possible"
+      },
+      "result": "reserve_brk still sets _brk_start=0 if callee returns",
+      "anchors": [
+        "A22",
+        "A23"
+      ],
+      "earliest_stop": "not actual error reachability",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M09",
+      "scope": "B",
+      "inputs": {
+        "phys_start": "0x40000000",
+        "span_bytes": 8388608
+      },
+      "result": "four PMD indices 0,1,2,3 within a single PUD index if start aligned",
+      "anchors": [
+        "B06",
+        "B14",
+        "B15"
+      ],
+      "earliest_stop": "selected directmap offset aligned and valid",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M10",
+      "scope": "B",
+      "inputs": {
+        "phys_start": "0x3fc00000",
+        "span_bytes": 8388608
+      },
+      "result": "four PMD indices 510,511,0,1; second pair requires next PUD parent; code selects initial parent once",
+      "anchors": [
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "earliest_stop": "conditional crossing, not actual kernel address",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M11",
+      "scope": "B",
+      "inputs": {
+        "phys_start": "512GiB-4MiB",
+        "span_bytes": 8388608
+      },
+      "result": "cross both PUD and PGD boundary; one init/early PGD target cannot cover second root index",
+      "anchors": [
+        "B04",
+        "B05",
+        "B06"
+      ],
+      "earliest_stop": "requires valid PFN and virtual index model",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M12",
+      "scope": "B",
+      "inputs": {
+        "phys_start": "0x40000000",
+        "phys_end": "0x40800000",
+        "PMD_SIZE": 2097152
+      },
+      "result": "nr_pmd=4, pa starts physical start, increments by PMD_SIZE",
+      "anchors": [
+        "B01",
+        "B06"
+      ],
+      "earliest_stop": "nonwrapping endpoints",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M13",
+      "scope": "B",
+      "inputs": {
+        "phys_start": 8192,
+        "phys_end": 8192
+      },
+      "result": "nr_pmd=0; may still set parent root/PUD and flush before copy",
+      "anchors": [
+        "B01",
+        "B04",
+        "B05",
+        "B06",
+        "B08"
+      ],
+      "earliest_stop": "zero-length notwithstanding preceding alias validity",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M14",
+      "scope": "B",
+      "inputs": {
+        "phys_start": 16384,
+        "phys_end": 8192
+      },
+      "result": "unsigned phys_end-phys_start can produce a huge nr_pmd; do not run loop as normal",
+      "anchors": [
+        "B01",
+        "B02",
+        "B06"
+      ],
+      "earliest_stop": "stops at invalid span interpretation",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M15",
+      "scope": "B",
+      "inputs": {
+        "phys_end": 0
+      },
+      "result": "phys_end-1 wraps as ulong; vend address expression independent from mapping evidence",
+      "anchors": [
+        "B02"
+      ],
+      "earliest_stop": "C address and pointer validity",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M16",
+      "scope": "B",
+      "inputs": {
+        "leaf_count": 513,
+        "start_pmd_index": 0
+      },
+      "result": "pmd_index repeats after512; leaf513 would rewrite a prior pmd slot if prior path valid",
+      "anchors": [
+        "B07",
+        "B15",
+        "B28"
+      ],
+      "earliest_stop": "our usual 8MiB model has only4 leaves",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M17",
+      "scope": "B",
+      "inputs": {
+        "event_sequence": [
+          "clear_PUD",
+          "populate_early_root",
+          "clear_PMD",
+          "populate_PUD",
+          "set_four_PMD",
+          "flush",
+          "copy_root"
+        ]
+      },
+      "result": "flush request before root copy, no CR3 switch implied",
+      "anchors": [
+        "B04",
+        "B05",
+        "B07",
+        "B08"
+      ],
+      "earliest_stop": "all earlier writable aliases/parent/link effects unproven",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M18",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "num": 1,
+        "remaining": 1
+      },
+      "result": "buffer branch fits; pgt_buf_end advances1; clear 1 page",
+      "anchors": [
+        "C03",
+        "C06",
+        "C07"
+      ],
+      "earliest_stop": "valid directmap writable",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M19",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "num": 3,
+        "remaining": 2,
+        "mapped_window": "valid"
+      },
+      "result": "fallback requests12288 bytes; cursor unchanged by that branch",
+      "anchors": [
+        "C03",
+        "C04",
+        "C06"
+      ],
+      "earliest_stop": "physical range allocation and returned storage valid",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M20",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "num": 0,
+        "remaining": 2
+      },
+      "result": "buffer branch returns cursor address with zero cleared pages",
+      "anchors": [
+        "C03",
+        "C06",
+        "C07",
+        "C08"
+      ],
+      "earliest_stop": "pointer base valid, not an allocated 0-page object",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M21",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "num": 2046,
+        "remaining": 2046
+      },
+      "result": "exact boundary fits; new end=top",
+      "anchors": [
+        "C03",
+        "C06"
+      ],
+      "earliest_stop": "sum no wrap and valid buffer",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M22",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "num": 2047,
+        "remaining": 2046
+      },
+      "result": "fallback path selected without partial cursor increment",
+      "anchors": [
+        "C03",
+        "C04"
+      ],
+      "earliest_stop": "mapped window valid before allocation",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M23",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "num": 2,
+        "min_pfn_mapped": 100,
+        "max_pfn_mapped": 100,
+        "remaining": 0
+      },
+      "result": "mapped window false -> ret0 -> panic/while code; no observed machine stop",
+      "anchors": [
+        "C03",
+        "C04",
+        "C05"
+      ],
+      "earliest_stop": "real callee and inputs unknown",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M24",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "num": 2,
+        "mapped_window": "valid",
+        "memblock_return": 0
+      },
+      "result": "panic/while source branch, no valid pages returned",
+      "anchors": [
+        "C04",
+        "C05"
+      ],
+      "earliest_stop": "isolated return0; real allocator may not return0",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M25",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 1,
+        "num": 1
+      },
+      "result": "get_order(4096)=0 under valid model; direct __get_free_pages",
+      "anchors": [
+        "C02",
+        "C13",
+        "C14",
+        "C15"
+      ],
+      "earliest_stop": "buddy allocation may fail",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M26",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 1,
+        "num": 3
+      },
+      "result": "get_order(12288)=2; allocated block capacity 4 pages, not exactly3",
+      "anchors": [
+        "C02",
+        "C13",
+        "C14",
+        "C15"
+      ],
+      "earliest_stop": "page allocator success and selected architecture",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M27",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 1,
+        "num": 0
+      },
+      "result": "get_order(0) source comments undefined; actual builtin constant or dynamic case requires compile evidence",
+      "anchors": [
+        "C02",
+        "C12",
+        "C14"
+      ],
+      "earliest_stop": "no normal order asserted",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M28",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 1,
+        "num": 8,
+        "__get_free_pages_result": 0
+      },
+      "result": "alloc_low_pages propagates zero directly, no early panic path",
+      "anchors": [
+        "C02",
+        "C15"
+      ],
+      "earliest_stop": "returned zero is isolated model",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M29",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "pgt_buf_end": "ULONG_MAX",
+        "num": 2,
+        "pgt_buf_top": "ULONG_MAX"
+      },
+      "result": "end+num wraps in ulong; > top predicate may falsely be false",
+      "anchors": [
+        "C03"
+      ],
+      "earliest_stop": "numeric model not actual valid PFN state",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M30",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "num": "INT_MAX+1",
+        "range": "hypothetically sufficient"
+      },
+      "result": "signed int loop i may overflow during progression; do not assert reached if earlier extents invalid",
+      "anchors": [
+        "C03",
+        "C07"
+      ],
+      "earliest_stop": "earliest int overflow or prior storage invalidity",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M31",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 1,
+        "order": 2,
+        "zero_flag": true
+      },
+      "result": "post_alloc_hook source computes page_to_virt(page)+i bytes for i=0..3, not i*4096; cannot certify all pages cleared",
+      "anchors": [
+        "C20",
+        "C19"
+      ],
+      "earliest_stop": "page-layer hook and flags must be reached",
+      "kind": "isolated_finite_conditional_not_executed"
+    },
+    {
+      "id": "PT81-M32",
+      "scope": "C",
+      "inputs": {
+        "after_bootmem": 0,
+        "pgt_buf_end": "top-1",
+        "num": 1
+      },
+      "result": "one buffer page cleared if valid; `alloc_low_page` wrapper case",
+      "anchors": [
+        "C11",
+        "C03",
+        "C07"
+      ],
+      "earliest_stop": "no actual caller totality",
+      "kind": "isolated_finite_conditional_not_executed"
+    }
+  ],
+  "finite_model_count": 32,
+  "model_counts": {
+    "A": 8,
+    "B": 9,
+    "C": 15
+  },
+  "model_limit": 36,
+  "cross_layer_conditions": [
+    "A linker-brk and physical base valid before B/C real path can follow",
+    "B one-PUD/PMD extent and root selection valid before C clear_page __va mapping can be deemed writable",
+    "C bootmem fallback depends on BM80 and MR79 validity and mapped window source",
+    "Late buddy hook must be consumed under R77/R78 limits, not assumed same clear as early"
+  ],
+  "methods": {
+    "scope": "fixed source static only",
+    "new_short_anchor_count": 99,
+    "evidence_anchor_counts": {
+      "A": 32,
+      "B": 37,
+      "C": 30
+    },
+    "source_files_with_quotes": 20,
+    "source_ledger_files": 22,
+    "source_quote_check": "exact source line slices; separate prepublication reopen pending",
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "run": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "early_asm_or_loader": "NOT_AUDITED",
+    "independent_Pro_review": "PENDING"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "PT81-U01..U10 see deferred-findings.yaml"
+  ],
+  "mainline_acceptance": "PENDING",
+  "acceptance_ceiling": "PASS_PENDING_LOCAL",
+  "status": "READY_FOR_MAINLINE_REVIEW"
+}
