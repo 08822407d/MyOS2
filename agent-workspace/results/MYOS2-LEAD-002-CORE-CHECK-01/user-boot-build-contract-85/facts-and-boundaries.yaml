@@ -1,0 +1,2231 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOT-BUILD-CONTRACT-85",
+  "record_type": "static_build_contract_source_facts",
+  "produced_by": "GPT-6 (visible model family only; backend not independently attested)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-13",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_release_short12": "dd1e329a035c",
+  "prior_exec_short12": "7d53b2c1ca36",
+  "state": "G01_G03_STATIC_CONTENT_PREPARED",
+  "mainline_acceptance": "PENDING",
+  "runtime": "NOT_RUN",
+  "build": "NOT_RUN",
+  "phase": 2,
+  "rights": {
+    "actor": "MYOS2-LEAD-002-CHAT-EXEC-11",
+    "not_rotated": true,
+    "branch": "claude/dazzling-cori-q0dnyt",
+    "pr": 17,
+    "allowed_files": [
+      "MANIFEST.md",
+      "boot-build-contract.md",
+      "facts-and-boundaries.yaml",
+      "boot-build-contract-paths.dot",
+      "deferred-findings.yaml",
+      "evidence.md"
+    ],
+    "allowed_count": 6,
+    "allowed_extra": "exactly_one_FORMAL_DELIVERY_comment",
+    "kernel_script_build_permissions": false
+  },
+  "G00": {
+    "result": "PASS",
+    "lead_direct": "dd1e329a035c",
+    "exec_direct": "7d53b2c1ca36",
+    "master_direct": "e8e60cd19540",
+    "time_direct": "a039d9803ade",
+    "pr16": "OPEN_UNMERGED",
+    "pr17": "OPEN_DRAFT_UNMERGED",
+    "open_pr_count_observed": 2,
+    "batch85_directory_at_preflight": "EXPECTED_404",
+    "formal_85_marker_preflight": 0,
+    "previous_84_comment": 6849778226,
+    "source_canaries": "time and master exact lines independently re-read in current 85",
+    "startup_convention": "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。",
+    "pre_G00_write_count": 0
+  },
+  "rules_loading": {
+    "same_active_conversation": true,
+    "received_119_and_nine_project_rules_and_Mnemosyne_guidance": "previous current C06b turn actual fixed read; no fabricated new refresh",
+    "new_full_read_at_85": [
+      "121-user-boot-build-contract.md",
+      "110-owner-communication-and-delivery-continuity.md",
+      "reviews/CORE-USER-EARLY-ROOT-HANDOFF-84-review.md",
+      "checkpoints/2026-11-13-early-root84-reviewed-boot-build85-ready.md",
+      "63-github-write-retry-and-readback.md",
+      "79-work-package-sizing-and-pro-review.md",
+      "tasks/00-gpt-task-protocol-v2.md",
+      "time/options_flags.cmake full",
+      "master/options_flags.cmake full",
+      "84 formal comment 6849778226"
+    ],
+    "previous_actual_84_read_reused": "84 six originals and 119/120/nine rules, R81/R82/R83 supplements at same pinned objects",
+    "not_inherited_from_mainline": false
+  },
+  "D00": {
+    "returned_item": "R84-01",
+    "review_status": "RETURN_DOCUMENTATION_ONLY",
+    "tech_core": "RETAINED_WITH_R84_S01_S02_S03",
+    "closure_status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "map": [
+      {
+        "old_id": "ER84-E06",
+        "original_locator": "head_64.S::phys_base",
+        "problem": "included alignment/comment/EXPORT_SYMBOL outside one data symbol",
+        "replacement_evidence_ids": [
+          "BB85-E001"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G01 phys_base",
+          "facts startup delta/storage",
+          "evidence.md E06"
+        ],
+        "corrected_scope": "keep initializer 0; alignment and export separate contextual facts",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      },
+      {
+        "old_id": "ER84-E07",
+        "original_locator": "head_64.S::initial_code",
+        "problem": "preceding comment/section directive/alignment incorrectly part of data symbol",
+        "replacement_evidence_ids": [
+          "BB85-E002",
+          "BB85-E014"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G01/G03 initial_code",
+          "facts link_address_and_storage_matrix",
+          "DOT a_initialcode"
+        ],
+        "corrected_scope": "data definition and __REFDATA macro are distinct; .ref.data final placement remains unknown",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      },
+      {
+        "old_id": "ER84-E09",
+        "original_locator": "memfault_api.h::swapper_pg_dir",
+        "problem": "adjacent extern is not inside swapper macro",
+        "replacement_evidence_ids": [
+          "BB85-E003",
+          "BB85-E029"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G03",
+          "facts root_alias_and_copy_matrix",
+          "DOT c_final"
+        ],
+        "corrected_scope": "macro alias, separate actual init root storage, no active CR3 certification",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      },
+      {
+        "old_id": "ER84-E12",
+        "original_locator": "pgtable_const_arch.h::KERNEL_IMAGE_SIZE",
+        "problem": "two mutually exclusive macro definitions and preprocessor delimiters conflated",
+        "replacement_evidence_ids": [
+          "BB85-E004",
+          "BB85-E005"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G01",
+          "facts static_table_inventory/initial_mapping_coverage_matrix",
+          "A05/A06/A07 models",
+          "DOT a_imgconf"
+        ],
+        "corrected_scope": "two definitions separately; which compiles is configuration-dependent, no preprocess performed",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      },
+      {
+        "old_id": "ER84-E13",
+        "original_locator": "pgtable_const_arch.h::PMD_SHIFT",
+        "problem": "PTRS_PER_PMD separate macro merged",
+        "replacement_evidence_ids": [
+          "BB85-E006",
+          "BB85-E007"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G01/G02",
+          "facts temporary_identity_mapping_matrix",
+          "B19/B20 model capacities"
+        ],
+        "corrected_scope": "PMD_SHIFT=21 distinct from PTRS_PER_PMD=512",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      },
+      {
+        "old_id": "ER84-E18",
+        "original_locator": "kernel.lds::SECTIONS",
+        "problem": "ASSERT lies after SECTIONS closing brace",
+        "replacement_evidence_ids": [
+          "BB85-E008",
+          "BB85-E115"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G01 linker bound",
+          "facts link_address_and_storage_matrix",
+          "A07/B19/B20 models"
+        ],
+        "corrected_scope": "unique top-level ASSERT; not asserted inside output SECTIONS or a C function",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      },
+      {
+        "old_id": "ER84-E20",
+        "original_locator": "page_const_arch.h::PAGE_SHIFT",
+        "problem": "comment and different PAGE_SIZE macro included in PAGE_SHIFT definition",
+        "replacement_evidence_ids": [
+          "BB85-E009",
+          "BB85-E010"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G01 table bytes",
+          "facts static_table_inventory",
+          "model byte calculations"
+        ],
+        "corrected_scope": "two distinct definitions prove 12 and 4096 only jointly",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      },
+      {
+        "old_id": "ER84-E22",
+        "original_locator": "mm_type_declaration_arch.h::pgd_t",
+        "problem": "pgdval_t preceding typedef separate from pgd_t",
+        "replacement_evidence_ids": [
+          "BB85-E011",
+          "BB85-E012",
+          "BB85-E029"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G01 init_top_pgt",
+          "facts static_table_inventory/root_alias_and_copy_matrix"
+        ],
+        "corrected_scope": "real typedef pgd_t alias p4d_t; 8B ABI still conditional absent build",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      },
+      {
+        "old_id": "ER84-E38",
+        "original_locator": "mmzone_const_arch.h::MAX_PHYSMEM_BITS",
+        "problem": "inactive commented alternative included",
+        "replacement_evidence_ids": [
+          "BB85-E013"
+        ],
+        "affected_consumers": [
+          "early-root-handoff.md G02 upper bit",
+          "facts startup_argument_and_delta_matrix",
+          "B13 model"
+        ],
+        "corrected_scope": "only active macro=46; not CPU physical-bit attestation",
+        "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+        "old_artifact_unchanged": true
+      }
+    ],
+    "additional_support": {
+      "__STARTUP_and_KEEP": [
+        "BB85-E015",
+        "BB85-E016",
+        "BB85-E017",
+        "BB85-E026",
+        "BB85-E027"
+      ],
+      "setup_arch_real_caller": [
+        "BB85-E018",
+        "BB85-E019"
+      ],
+      "premap_single_entry_copy": [
+        "BB85-E020",
+        "BB85-E028"
+      ],
+      "va_text_va_end_assignments": [
+        "BB85-E021"
+      ],
+      "pmd_entry_initial_expression": [
+        "BB85-E022"
+      ],
+      "rip_rel_ptr_conditions": [
+        "BB85-E023",
+        "BB85-E024",
+        "BB85-E025"
+      ],
+      "actual_link_entry": [
+        "BB85-E026",
+        "BB85-E027"
+      ],
+      "subsequent_root": [
+        "BB85-E029"
+      ],
+      "PMDS_static_range": [
+        "BB85-E030"
+      ],
+      "link_lower_start_bound": [
+        "BB85-E031",
+        "BB85-E032"
+      ],
+      "exact_two_step_PUD_index": [
+        "BB85-E119"
+      ]
+    },
+    "corrected_B_ID03": {
+      "j": "j = physaddr >> PUD_SHIFT",
+      "index_0": "(j + 0) % PTRS_PER_PUD",
+      "index_1": "(j + 1) % PTRS_PER_PUD",
+      "not_expression": "(physaddr>>30+0/1)%512",
+      "source": "head64.c::__startup_64 BB85-E119 (C expression exactly two modular subscripts)",
+      "scope": "two separately evaluated C expressions, not precedence-shorthand"
+    },
+    "corrected_B19_B20": {
+      "assumptions": [
+        "_text-__START_KERNEL_map>=16MiB",
+        "_end-__START_KERNEL_map<=1GiB",
+        "_end>=_text",
+        "PMD_SIZE=2MiB",
+        "unsigned difference is representable and no wrap"
+      ],
+      "max_span_MiB": 1008,
+      "max_N": 504,
+      "original_case_B19_N512": "OUTSIDE_STATED_LINK_MODEL_STANDALONE_SLOT_ARITHMETIC_ONLY",
+      "original_case_B20_N513": "OUTSIDE_STATED_LINK_MODEL_STANDALONE_SLOT_ARITHMETIC_ONLY",
+      "independent_runtime_witness": false
+    },
+    "original_selfcheck_frozen": {
+      "original_author_claims": 49,
+      "original_author_reconfirmed": 49,
+      "original_author_downgraded": 0,
+      "author_history_not_rewritten": true,
+      "review_disposition": "P2_BOUNDARY_FAILURE_AND_RETURN",
+      "old_claim_all_49_within_definition": "RETRACTED",
+      "new_batch_tags_counted_separately": true
+    },
+    "matrix_clarification": {
+      "original_matrix_keys": 9,
+      "original_matrix_rows": 56,
+      "original_field_technical_matrix_count_56": "ROWS_NOT_NUMBER_OF_MATRICES",
+      "original_model_count": 28,
+      "reanalysis_full_84": "NOT_DONE"
+    },
+    "review_identity": "mainline C06 Pro reviewer (AI), no Owner manual source review claimed",
+    "roots": {
+      "L": "agent-workspace/lead/MYOS2-LEAD-002/",
+      "R": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/",
+      "old_dir": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-early-root-handoff-84/",
+      "new_dir": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-build-contract-85/"
+    }
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/kernel/head_64.S",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E001",
+        "BB85-E002",
+        "BB85-E016",
+        "BB85-E030",
+        "BB85-E032",
+        "BB85-E089",
+        "BB85-E090"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/mm/fault/memfault_api.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E003"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E004",
+        "BB85-E005",
+        "BB85-E006",
+        "BB85-E007"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E008",
+        "BB85-E017",
+        "BB85-E026",
+        "BB85-E027",
+        "BB85-E031",
+        "BB85-E091",
+        "BB85-E109",
+        "BB85-E110",
+        "BB85-E111",
+        "BB85-E112",
+        "BB85-E113",
+        "BB85-E114",
+        "BB85-E115"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E009",
+        "BB85-E010"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/mm_type_declaration_arch.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E011",
+        "BB85-E012"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/mmzone_const_arch.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E013"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/include/linux/init/init.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E014",
+        "BB85-E015"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E018",
+        "BB85-E019"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E020",
+        "BB85-E028"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/head64.c",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E021",
+        "BB85-E022",
+        "BB85-E119"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/asm.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E023",
+        "BB85-E024",
+        "BB85-E025"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/mm/misc/init-mm.c",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E029"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/CMakeLists.txt",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E033",
+        "BB85-E034",
+        "BB85-E035",
+        "BB85-E036",
+        "BB85-E037",
+        "BB85-E038",
+        "BB85-E039",
+        "BB85-E040",
+        "BB85-E041",
+        "BB85-E042",
+        "BB85-E043"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/scripts/target_kernel.cmake",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E044",
+        "BB85-E045",
+        "BB85-E050",
+        "BB85-E106",
+        "BB85-E107",
+        "BB85-E108"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/CMakeLists.txt",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E046"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/CMakeLists.txt",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E047",
+        "BB85-E048",
+        "BB85-E049"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E051",
+        "BB85-E052",
+        "BB85-E053",
+        "BB85-E054",
+        "BB85-E055",
+        "BB85-E056",
+        "BB85-E057",
+        "BB85-E058",
+        "BB85-E059",
+        "BB85-E060",
+        "BB85-E061",
+        "BB85-E062",
+        "BB85-E063",
+        "BB85-E064"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/scripts/target_kbuild.cmake",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E065",
+        "BB85-E066",
+        "BB85-E067",
+        "BB85-E068",
+        "BB85-E069",
+        "BB85-E070",
+        "BB85-E071",
+        "BB85-E072",
+        "BB85-E073",
+        "BB85-E074",
+        "BB85-E075",
+        "BB85-E076"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kbuild/asm-offsets.c",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E077",
+        "BB85-E078",
+        "BB85-E079",
+        "BB85-E080"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kbuild/asm-offsets_64.c",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E081",
+        "BB85-E082",
+        "BB85-E083"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/kbuild.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E084",
+        "BB85-E085",
+        "BB85-E086"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/include/generated/asm-offsets.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E087",
+        "BB85-E088"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E092"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/processor_types_arch.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E093"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/ptrace.h",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E094",
+        "BB85-E095"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/scripts/asm-offset_copy_asm.py",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E096",
+        "BB85-E097",
+        "BB85-E098",
+        "BB85-E099",
+        "BB85-E116",
+        "BB85-E117"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    },
+    {
+      "path": "mykernel/scripts/asm-offsets_generate.py",
+      "source_ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "quote_ids": [
+        "BB85-E100",
+        "BB85-E101",
+        "BB85-E102",
+        "BB85-E103",
+        "BB85-E104",
+        "BB85-E105",
+        "BB85-E118"
+      ],
+      "read_kind": "current_85_source_reopened_or_same_conversation_84_reused"
+    }
+  ],
+  "source_soft_cap": {
+    "limit": 24,
+    "actual_distinct_fixed_time_files": 28,
+    "overrun": 4,
+    "reason": "D00 nine cross-definition repairs require distinct types/constants/head/section source; three build subjects additionally require CMake, two Python texts, generated header and representative type declarations. Bounded direct dependencies only, no repository-wide build survey"
+  },
+  "read_count_separation": {
+    "new_85_construction_source_filenames": 28,
+    "d00_new_quote_ids": 33,
+    "total_new_evidence_quote_ids": 119,
+    "prior84_frozen_labels": 49,
+    "new_ids_not_merged_with_old": true
+  },
+  "P9_preflight_readback": {
+    "source_short_anchor_count": 119,
+    "source_exact_text_reopened_twice": "119_OF_119_AFTER_PREPUBLICATION_EXCERPT_FIXES",
+    "contiguous_source_lines_limit": 5,
+    "source_paths": 28,
+    "full_local_p9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "CMake": "NOT_RUN",
+    "gcc": "NOT_RUN",
+    "python_scripts": "NOT_RUN",
+    "link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN"
+  },
+  "open_questions": [
+    "BB85-U01",
+    "BB85-U02",
+    "BB85-U03",
+    "BB85-U04",
+    "BB85-U05",
+    "BB85-U06",
+    "BB85-U07",
+    "BB85-U08"
+  ],
+  "matrices": {
+    "source_selection_matrix": [
+      {
+        "row_id": "BB85-A-S01",
+        "subject": "root project and scripts",
+        "input": "mykernel/CMakeLists.txt",
+        "program_text": "project(ASM C); SCRIPTS_PATH=${PROJECT_SOURCE_DIR}/scripts; include(options_flags)",
+        "bounded_conclusion": "target config text rooted in mykernel project source dir",
+        "stop_or_unknown": "project configuration and filesystem not executed",
+        "evidence_ids": [
+          "BB85-E033",
+          "BB85-E034",
+          "BB85-E035"
+        ]
+      },
+      {
+        "row_id": "BB85-A-S02",
+        "subject": "kernel target creation",
+        "input": "root CMake after include options",
+        "program_text": "add_executable(kernel) before target_kbuild include",
+        "bounded_conclusion": "kernel named target exists in configuration declaration",
+        "stop_or_unknown": "not an executable disk file",
+        "evidence_ids": [
+          "BB85-E036",
+          "BB85-E037"
+        ]
+      },
+      {
+        "row_id": "BB85-A-S03",
+        "subject": "offset glob exclusion",
+        "input": "KBUILD_FILES",
+        "program_text": "file(GLOB_RECURSE ${PROJECT_SOURCE_DIR}/arch/${ARCH}/kbuild/*)",
+        "bounded_conclusion": "selected ARCH kbuild subtree is exclusion candidate",
+        "stop_or_unknown": "actual glob expansion and symlink/path normalization not tested",
+        "evidence_ids": [
+          "BB85-E038"
+        ]
+      },
+      {
+        "row_id": "BB85-A-S04",
+        "subject": "C candidate enumeration",
+        "input": "KERNEL_C_SRCS",
+        "program_text": "GLOB_RECURSE ${PROJECT_SOURCE_DIR}/*.c then REMOVE_ITEM KBUILD_FILES",
+        "bounded_conclusion": "head64.c is a conditional candidate; asm-offsets.c excluded when exact match exists",
+        "stop_or_unknown": "glob output and all other source modifiers unenumerated",
+        "evidence_ids": [
+          "BB85-E039",
+          "BB85-E041"
+        ]
+      },
+      {
+        "row_id": "BB85-A-S05",
+        "subject": "ASM candidate enumeration",
+        "input": "KERNEL_ASM_SRCS",
+        "program_text": "GLOB_RECURSE ${PROJECT_SOURCE_DIR}/*.S then REMOVE_ITEM KBUILD_FILES",
+        "bounded_conclusion": "head_64.S matches case-sensitive extension candidate under selected ARCH",
+        "stop_or_unknown": "unresolved evaluated glob set and later target changes",
+        "evidence_ids": [
+          "BB85-E040",
+          "BB85-E042"
+        ]
+      },
+      {
+        "row_id": "BB85-A-S06",
+        "subject": "producer target",
+        "input": "asm-offset",
+        "program_text": "target_sources(asm-offset PRIVATE ${KBUILD_DIR}/asm-offsets.c); #include asm-offsets_64.c in that C unit",
+        "bounded_conclusion": "offsets.c explicit producer; companion text included into same C translation unit in source",
+        "stop_or_unknown": "does not imply an independent companion target",
+        "evidence_ids": [
+          "BB85-E065",
+          "BB85-E066",
+          "BB85-E069",
+          "BB85-E070",
+          "BB85-E077"
+        ]
+      },
+      {
+        "row_id": "BB85-A-S07",
+        "subject": "kernel source consumer",
+        "input": "kernel",
+        "program_text": "target_sources(kernel PRIVATE ${KERNEL_C_SRCS} ${KERNEL_ASM_SRCS})",
+        "bounded_conclusion": "two list variables are handed to kernel target",
+        "stop_or_unknown": "no generated compile database or real evaluated list",
+        "evidence_ids": [
+          "BB85-E043",
+          "BB85-E044"
+        ]
+      },
+      {
+        "row_id": "BB85-A-S08",
+        "subject": "architecture CMake subtree",
+        "input": "ARCH-dependent route",
+        "program_text": "add_subdirectory(arch)->add_subdirectory(${ARCH})->add_subdirectory(kernel)",
+        "bounded_conclusion": "textual nested route and explicit arch flags",
+        "stop_or_unknown": "other subdirectories may add target sources/settings; not exhausted",
+        "evidence_ids": [
+          "BB85-E046",
+          "BB85-E047",
+          "BB85-E049",
+          "BB85-E050"
+        ]
+      },
+      {
+        "row_id": "BB85-A-S09",
+        "subject": "header visibility",
+        "input": "source include roots",
+        "program_text": "target_include_directories(kernel ${INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/../myloader)",
+        "bounded_conclusion": "include directories declared separately from kernel source glob",
+        "stop_or_unknown": "include existence/order and effective command unknown",
+        "evidence_ids": [
+          "BB85-E045",
+          "BB85-E063",
+          "BB85-E064"
+        ]
+      }
+    ],
+    "flag_and_macro_provenance_matrix": [
+      {
+        "row_id": "BB85-A-F01",
+        "subject": "ARCH selected default",
+        "input": "ARCH unset/specified",
+        "program_text": "if(NOT DEFINED ${ARCH}) then set(ARCH x86_64)",
+        "bounded_conclusion": "condition tests expanded name, not literally DEFINED ARCH",
+        "stop_or_unknown": "CMake interpretation, command line/environment injection untested",
+        "evidence_ids": [
+          "BB85-E051"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F02",
+        "subject": "Debug branch",
+        "input": "CMAKE_BUILD_TYPE = Debug",
+        "program_text": "RELEASE_FLAG=-DDEBUG via branch",
+        "bounded_conclusion": "Debug text token selected only if condition evaluates true",
+        "stop_or_unknown": "case/other configuration outcomes unknown",
+        "evidence_ids": [
+          "BB85-E052"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F03",
+        "subject": "non-Debug branch",
+        "input": "CMAKE_BUILD_TYPE differs from Debug",
+        "program_text": "RELEASE_FLAG=-DRELEASE, UNUSED_MACRO=-Wunused-macros",
+        "bounded_conclusion": "source text has else branch assignment",
+        "stop_or_unknown": "unknown actual selection and cache values",
+        "evidence_ids": [
+          "BB85-E053"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F04",
+        "subject": "ASM CMake flags",
+        "input": "ASM language",
+        "program_text": "CMAKE_ASM_FLAGS includes -m64 -mcmodel=kernel -fno-pie -fno-pic -D__ASSEMBLY__ -DASM_FILE -D__KERNEL__",
+        "bounded_conclusion": "text differs from C flags; source-level macro conditions may differ",
+        "stop_or_unknown": "actual assembler invocation/other flags NOT_RUN",
+        "evidence_ids": [
+          "BB85-E055",
+          "BB85-E056"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F05",
+        "subject": "C CMake flags",
+        "input": "C language",
+        "program_text": "CMAKE_C_FLAGS contains -m64 -mcmodel=kernel -fno-pie -fno-pic etc",
+        "bounded_conclusion": "no __ASSEMBLY__/ASM_FILE in this C set expression",
+        "stop_or_unknown": "actual compiler command/target overrides unknown",
+        "evidence_ids": [
+          "BB85-E057",
+          "BB85-E058"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F06",
+        "subject": "CONFIG macros",
+        "input": "C global options",
+        "program_text": "CMAKE_C_FLAGS += CONFIG_FLATMEM,64BIT,SLUB,GRUB2_BOOTUP_SUPPORT, KVM_GUEST...",
+        "bounded_conclusion": "selected source text advertises these defines",
+        "stop_or_unknown": "CONFIG_RANDOMIZE_BASE absent only from read options; other definitions not excluded",
+        "evidence_ids": [
+          "BB85-E059",
+          "BB85-E060"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F07",
+        "subject": "linker flag string",
+        "input": "global variable",
+        "program_text": "set(CMAKE_EXE_LINKER_FLAGS \"-Wl,--build-id=none,--gc-sections\")",
+        "bounded_conclusion": "only configuration text, not proof of gc effects",
+        "stop_or_unknown": "final link invocation and section GC unknown",
+        "evidence_ids": [
+          "BB85-E061"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F08",
+        "subject": "nested arch C FLAGS",
+        "input": "arch/x86_64 scope",
+        "program_text": "set(CMAKE_C_FLAGS \"${CMAKE_C_FLAGS} -DCONFIG_X86_64 ...\")",
+        "bounded_conclusion": "additional variable expression in child CMakeLists",
+        "stop_or_unknown": "no proof of when/how applied to already defined kernel target",
+        "evidence_ids": [
+          "BB85-E047"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F09",
+        "subject": "linker-like token in C flags",
+        "input": "arch/x86_64 scope",
+        "program_text": "-Wl,--no-check-sections appended to CMAKE_C_FLAGS",
+        "bounded_conclusion": "string placement is C flags rather than target_link_options",
+        "stop_or_unknown": "real command treatment and correctness not tested",
+        "evidence_ids": [
+          "BB85-E048"
+        ]
+      },
+      {
+        "row_id": "BB85-A-F10",
+        "subject": "external host query",
+        "input": "options_flags.cmake",
+        "program_text": "execute_process(COMMAND bash -c gcc --print-file-name=include...)",
+        "bounded_conclusion": "query would be invoked by CMake configuration if reached",
+        "stop_or_unknown": "not invoked in this static task; CC_INC_PATH runtime unknown",
+        "evidence_ids": [
+          "BB85-E054"
+        ]
+      }
+    ],
+    "startup_consumer_configuration_matrix": [
+      {
+        "row_id": "BB85-A-C01",
+        "subject": "C startup",
+        "input": "head64.c",
+        "program_text": "recursive C candidate + target_sources(kernel)",
+        "bounded_conclusion": "conditional kernel translation-unit inclusion",
+        "stop_or_unknown": "no compiled object or -fPIC backend attestation",
+        "evidence_ids": [
+          "BB85-E039",
+          "BB85-E044",
+          "BB85-E057"
+        ]
+      },
+      {
+        "row_id": "BB85-A-C02",
+        "subject": "ASM startup",
+        "input": "head_64.S",
+        "program_text": "recursive .S candidate and target_sources(kernel)",
+        "bounded_conclusion": "conditional assembly inclusion and generated header include",
+        "stop_or_unknown": "no preprocessor/assembler actually executed",
+        "evidence_ids": [
+          "BB85-E040",
+          "BB85-E044",
+          "BB85-E090"
+        ]
+      },
+      {
+        "row_id": "BB85-A-C03",
+        "subject": "offset producer",
+        "input": "asm-offsets.c",
+        "program_text": "excluded from kernel C list when exact KBUILD match; explicit asm-offset target source",
+        "bounded_conclusion": "producer and consumer roles separated",
+        "stop_or_unknown": "cannot infer either target built",
+        "evidence_ids": [
+          "BB85-E038",
+          "BB85-E041",
+          "BB85-E066",
+          "BB85-E070"
+        ]
+      },
+      {
+        "row_id": "BB85-A-C04",
+        "subject": "nonPIC DEBUG RIP helper",
+        "input": "head64.c conditional helper",
+        "program_text": "!__ASSEMBLY__ && !__pic__ && DEBUG uses rip_rel_ptr macro with leaq %a1",
+        "bounded_conclusion": "single source branch only",
+        "stop_or_unknown": "DEBUG selection and assembly validity unmeasured",
+        "evidence_ids": [
+          "BB85-E023",
+          "BB85-E024",
+          "BB85-E052"
+        ]
+      },
+      {
+        "row_id": "BB85-A-C05",
+        "subject": "nonPIC nonDEBUG RIP helper",
+        "input": "head64.c conditional helper",
+        "program_text": "!__ASSEMBLY__ && !__pic__ && !DEBUG uses inline rip_rel_ptr leaq %c1(%rip)",
+        "bounded_conclusion": "different source branch from DEBUG",
+        "stop_or_unknown": "actual codegen and address correctness unproved",
+        "evidence_ids": [
+          "BB85-E023",
+          "BB85-E057"
+        ]
+      },
+      {
+        "row_id": "BB85-A-C06",
+        "subject": "PIC variant",
+        "input": "when __pic__ defined",
+        "program_text": "read asm.h branch shows RIP_REL_REF(var) (var), not an equivalent rip_rel_ptr definition in that branch",
+        "bounded_conclusion": "cannot generalize nonPIC helper to PIC case",
+        "stop_or_unknown": "only read file snapshot scoped conclusion, not all headers/code",
+        "evidence_ids": [
+          "BB85-E025"
+        ]
+      },
+      {
+        "row_id": "BB85-A-C07",
+        "subject": "KERNEL_IMAGE_SIZE",
+        "input": "when CONFIG_RANDOMIZE_BASE defined/undefined",
+        "program_text": "two mutually exclusive source definitions (1GiB/512MiB)",
+        "bounded_conclusion": "actual macro branch requires preprocessor configuration, not filenames",
+        "stop_or_unknown": "none of the real builds was performed",
+        "evidence_ids": [
+          "BB85-E004",
+          "BB85-E005"
+        ]
+      }
+    ],
+    "offset_artifact_lineage_matrix": [
+      {
+        "row_id": "BB85-B-L01",
+        "subject": "producer source",
+        "input": "ARCH and KBUILD_DIR",
+        "program_text": "ASM_OFFSET_C_SRCS=${KBUILD_DIR}/asm-offsets.c; asm-offset target_sources",
+        "bounded_conclusion": "explicit C source producer",
+        "stop_or_unknown": "ARCH actual path not configured",
+        "evidence_ids": [
+          "BB85-E065",
+          "BB85-E066",
+          "BB85-E069",
+          "BB85-E070"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L02",
+        "subject": "producer include",
+        "input": "asm-offsets.c text",
+        "program_text": "#include asm-offsets_64.c; static common() and included main()",
+        "bounded_conclusion": "two source texts in one declared C translation unit",
+        "stop_or_unknown": "not actual compiled output",
+        "evidence_ids": [
+          "BB85-E077",
+          "BB85-E078",
+          "BB85-E081",
+          "BB85-E082"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L03",
+        "subject": "marker encoding",
+        "input": "kbuild.h macros",
+        "program_text": "DEFINE asm volatile .ascii marker; OFFSET uses offsetof(struct str,mem); BLANK emits empty marker",
+        "bounded_conclusion": "intended annotated assembly text for offset generation",
+        "stop_or_unknown": "not proof of emitted assembly/ABI",
+        "evidence_ids": [
+          "BB85-E084",
+          "BB85-E085",
+          "BB85-E086"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L04",
+        "subject": "representative field",
+        "input": "task_struct.thread.sp",
+        "program_text": "OFFSET(TASK_threadsp, task_struct, thread.sp); struct has thread member and thread_struct.sp",
+        "bounded_conclusion": "producer expression structurally targeted at type field",
+        "stop_or_unknown": "current numeric offset not measured",
+        "evidence_ids": [
+          "BB85-E078",
+          "BB85-E092",
+          "BB85-E093"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L05",
+        "subject": "representative size",
+        "input": "pt_regs",
+        "program_text": "DEFINE(PTREGS_SIZE, sizeof(struct pt_regs)); pt_regs type seen",
+        "bounded_conclusion": "producer computes type size at compile time",
+        "stop_or_unknown": "current ABI size not run",
+        "evidence_ids": [
+          "BB85-E079",
+          "BB85-E094",
+          "BB85-E095"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L06",
+        "subject": "saved assembly artifact",
+        "input": "asm-offset target",
+        "program_text": "-save-temps option and scripts expect asm-offsets.c.s",
+        "bounded_conclusion": "temporary assembly name is scripts' expected convention",
+        "stop_or_unknown": "no exact compiler output filename or encoding assured",
+        "evidence_ids": [
+          "BB85-E067",
+          "BB85-E071",
+          "BB85-E096",
+          "BB85-E116"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L07",
+        "subject": "copy intermediate",
+        "input": "copy script",
+        "program_text": "recursive pattern, first selection, shutil.copy to ${KBUILD_DIR}/asm-offsets.s",
+        "bounded_conclusion": "input under binary dir becomes nominal source-tree .s",
+        "stop_or_unknown": "no actual file copied",
+        "evidence_ids": [
+          "BB85-E067",
+          "BB85-E074",
+          "BB85-E096",
+          "BB85-E097"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L08",
+        "subject": "generate header",
+        "input": "generator script",
+        "program_text": "parse -> marker and emit #define; ASM_OFFSET_HEADER_DST=${PROJECT_SOURCE_DIR}/include/generated/asm-offsets.h",
+        "bounded_conclusion": "nominal derived header target in source tree",
+        "stop_or_unknown": "no actual generated bytes or freshness verified",
+        "evidence_ids": [
+          "BB85-E068",
+          "BB85-E075",
+          "BB85-E100",
+          "BB85-E101",
+          "BB85-E102"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L09",
+        "subject": "consumer",
+        "input": "head_64.S",
+        "program_text": "include <generated/asm-offsets.h>; movq TASK_threadsp(%rax),%rsp",
+        "bounded_conclusion": "ASM uses derived symbol via include path",
+        "stop_or_unknown": "no assembler preprocessing or register state verified",
+        "evidence_ids": [
+          "BB85-E087",
+          "BB85-E089",
+          "BB85-E090"
+        ]
+      },
+      {
+        "row_id": "BB85-B-L10",
+        "subject": "old tracked header",
+        "input": "include/generated/asm-offsets.h",
+        "program_text": "TASK_threadsp=552, PTREGS_SIZE=176 literal stored",
+        "bounded_conclusion": "bytes exist at fixed time repository object only",
+        "stop_or_unknown": "not current ABI or successful generator certificate",
+        "evidence_ids": [
+          "BB85-E087",
+          "BB85-E088",
+          "BB85-E091"
+        ]
+      }
+    ],
+    "generation_order_and_freshness_matrix": [
+      {
+        "row_id": "BB85-B-O01",
+        "subject": "prebuild inclusion",
+        "input": "root CMake",
+        "program_text": "include target_kbuild before KBUILD globs / kernel target_sources",
+        "bounded_conclusion": "definition order in CMake text",
+        "stop_or_unknown": "CMake configuration itself unexecuted",
+        "evidence_ids": [
+          "BB85-E037",
+          "BB85-E038",
+          "BB85-E043"
+        ]
+      },
+      {
+        "row_id": "BB85-B-O02",
+        "subject": "producer build",
+        "input": "asm-offset target",
+        "program_text": "C source, include dirs, -save-temps",
+        "bounded_conclusion": "producer target declared",
+        "stop_or_unknown": "compiler process/object/assembly absent",
+        "evidence_ids": [
+          "BB85-E070",
+          "BB85-E071",
+          "BB85-E072"
+        ]
+      },
+      {
+        "row_id": "BB85-B-O03",
+        "subject": "POST_BUILD deletion expression",
+        "input": "asm-offset",
+        "program_text": "COMMAND rm -f ${ASM_OFFSET_ASM_DST} && rm -f ${ASM_OFFSET_HEADER_DST}",
+        "bounded_conclusion": "string contains rm and && token; may affect old source-tree artifact",
+        "stop_or_unknown": "actual generator shell interpretation, command status and side effects untested",
+        "evidence_ids": [
+          "BB85-E073"
+        ]
+      },
+      {
+        "row_id": "BB85-B-O04",
+        "subject": "POST_BUILD copy/generate",
+        "input": "asm-offset",
+        "program_text": "COMMAND python3 copy ; COMMAND python3 generate",
+        "bounded_conclusion": "ordered text in one add_custom_command",
+        "stop_or_unknown": "not proof both commands ran successfully",
+        "evidence_ids": [
+          "BB85-E074",
+          "BB85-E075"
+        ]
+      },
+      {
+        "row_id": "BB85-B-O05",
+        "subject": "dependency edge",
+        "input": "kernel",
+        "program_text": "add_dependencies(kernel asm-offset)",
+        "bounded_conclusion": "target dependency exists in source",
+        "stop_or_unknown": "not full stale header/parallel/implicit cache guarantee",
+        "evidence_ids": [
+          "BB85-E076"
+        ]
+      },
+      {
+        "row_id": "BB85-B-O06",
+        "subject": "invalidation and old content",
+        "input": "tracked generated header",
+        "program_text": "preexisting macros in time snapshot",
+        "bounded_conclusion": "target may be skipped/cached; old header may remain when no postbuild",
+        "stop_or_unknown": "no build system executed or forced rebuild",
+        "evidence_ids": [
+          "BB85-E087",
+          "BB85-E088"
+        ]
+      },
+      {
+        "row_id": "BB85-B-O07",
+        "subject": "input path expectations",
+        "input": "copy script + CMake",
+        "program_text": "--input_dir=${CMAKE_CURRENT_BINARY_DIR}, glob **/asm-offsets.c.s; --output=${KBUILD_DIR}/asm-offsets.s",
+        "bounded_conclusion": "script matching depends on actual compiler temp artifact location",
+        "stop_or_unknown": "save-temps name/location uncertain",
+        "evidence_ids": [
+          "BB85-E067",
+          "BB85-E071",
+          "BB85-E074",
+          "BB85-E096"
+        ]
+      },
+      {
+        "row_id": "BB85-B-O08",
+        "subject": "failure and destination",
+        "input": "generator output",
+        "program_text": "header opened with write only after full source scan",
+        "bounded_conclusion": "if parser fails earlier, generator has not opened header; prior rm outcome separate",
+        "stop_or_unknown": "actual previous file state unknown",
+        "evidence_ids": [
+          "BB85-E073",
+          "BB85-E101",
+          "BB85-E102"
+        ]
+      }
+    ],
+    "parser_and_failure_boundary_matrix": [
+      {
+        "row_id": "BB85-B-P01",
+        "subject": "copy no matches",
+        "input": "glob returns []",
+        "program_text": "if (matching_files[0]): before length guard",
+        "bounded_conclusion": "Python indexing raises before copy",
+        "stop_or_unknown": "hypothetical file set, actual glob unrun",
+        "evidence_ids": [
+          "BB85-E096",
+          "BB85-E097"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P02",
+        "subject": "copy single match",
+        "input": "glob returns [f]",
+        "program_text": "copy first match if truthy",
+        "bounded_conclusion": "shutil.copy selected f to destination",
+        "stop_or_unknown": "path permissions and copy return unknown",
+        "evidence_ids": [
+          "BB85-E097",
+          "BB85-E117"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P03",
+        "subject": "copy multiple matches",
+        "input": "glob returns [f1,f2]",
+        "program_text": "matching_files[0] chosen",
+        "bounded_conclusion": "only first match copied; source does not sort explicitly",
+        "stop_or_unknown": "actual glob enumeration/order unknown",
+        "evidence_ids": [
+          "BB85-E096",
+          "BB85-E097"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P04",
+        "subject": "strict source basename",
+        "input": "named temp may differ",
+        "program_text": "pattern literal **/asm-offsets.c.s",
+        "bounded_conclusion": "other basename does not match this pattern",
+        "stop_or_unknown": "compiler naming is not verified",
+        "evidence_ids": [
+          "BB85-E096",
+          "BB85-E116"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P05",
+        "subject": "parser input lacks marker",
+        "input": "line has no double-quoted ->...",
+        "program_text": "re.findall produces no matched substring",
+        "bounded_conclusion": "no define emitted for this line",
+        "stop_or_unknown": "not actual generated input seen",
+        "evidence_ids": [
+          "BB85-E100",
+          "BB85-E118"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P06",
+        "subject": "parser first match",
+        "input": "line contains multiple \"->...\"",
+        "program_text": "matches[0] selected before field split",
+        "bounded_conclusion": "later markers on same line ignored by this code",
+        "stop_or_unknown": "no semantic guarantee about valid assembly strings",
+        "evidence_ids": [
+          "BB85-E100"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P07",
+        "subject": "empty marker",
+        "input": "line contains \"->\"",
+        "program_text": "matches list contains empty string; fields[0] false",
+        "bounded_conclusion": "writes tab+blank line, no #define",
+        "stop_or_unknown": "hypothetical input, no script run",
+        "evidence_ids": [
+          "BB85-E100",
+          "BB85-E101"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P08",
+        "subject": "single token marker",
+        "input": "line contains \"->NAME\" without space",
+        "program_text": "fields ['NAME']; if fields[0] then tests fields[1]",
+        "bounded_conclusion": "IndexError condition before opening output",
+        "stop_or_unknown": "hypothetical unexpected marker",
+        "evidence_ids": [
+          "BB85-E101",
+          "BB85-E102"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P09",
+        "subject": "double ASCII space",
+        "input": "line contains \"->NAME  $7\"",
+        "program_text": "re.split('[ ]') makes empty fields[1]",
+        "bounded_conclusion": "no #define emitted despite later numeric token",
+        "stop_or_unknown": "not a validated actual compiler line",
+        "evidence_ids": [
+          "BB85-E101",
+          "BB85-E104"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P10",
+        "subject": "normal marker",
+        "input": "line contains \"->TASK_threadsp $552\"",
+        "program_text": "split into name and $value; removeprefix('$')",
+        "bounded_conclusion": "candidate #define TASK_threadsp 552",
+        "stop_or_unknown": "illustrative numeric text; not evidence of fresh current ABI",
+        "evidence_ids": [
+          "BB85-E100",
+          "BB85-E101",
+          "BB85-E087"
+        ]
+      },
+      {
+        "row_id": "BB85-B-P11",
+        "subject": "partial failure state",
+        "input": "copy or generation fails",
+        "program_text": "generator opens output only at final stage; CMake deletion command is separate",
+        "bounded_conclusion": "header state may be stale/absent/partially rewritten depending command execution",
+        "stop_or_unknown": "never claim live file state without running authorized build",
+        "evidence_ids": [
+          "BB85-E073",
+          "BB85-E074",
+          "BB85-E075",
+          "BB85-E102"
+        ]
+      }
+    ],
+    "link_script_selection_matrix": [
+      {
+        "row_id": "BB85-C-S01",
+        "subject": "kernel link target",
+        "input": "target_kernel.cmake",
+        "program_text": "target_link_options(kernel PRIVATE -T ${PROJECT_SOURCE_DIR}/arch/${ARCH}/kernel.lds)",
+        "bounded_conclusion": "selected source script path under chosen ARCH",
+        "stop_or_unknown": "no actual linker command or script read by linker",
+        "evidence_ids": [
+          "BB85-E106"
+        ]
+      },
+      {
+        "row_id": "BB85-C-S02",
+        "subject": "global link options",
+        "input": "options_flags.cmake",
+        "program_text": "CMAKE_EXE_LINKER_FLAGS -Wl,--build-id=none,--gc-sections",
+        "bounded_conclusion": "string exists in source text",
+        "stop_or_unknown": "no actual gc-section operation verified",
+        "evidence_ids": [
+          "BB85-E061"
+        ]
+      },
+      {
+        "row_id": "BB85-C-S03",
+        "subject": "entry",
+        "input": "kernel.lds",
+        "program_text": "ENTRY(phys_startup_64) and phys_startup_64=ABSOLUTE(startup_64-__START_KERNEL_map)",
+        "bounded_conclusion": "declares intended ELF entry expression",
+        "stop_or_unknown": "actual ELF e_entry and loader behavior NOT_RUN",
+        "evidence_ids": [
+          "BB85-E026",
+          "BB85-E027"
+        ]
+      },
+      {
+        "row_id": "BB85-C-S04",
+        "subject": "program header skeleton",
+        "input": "kernel.lds",
+        "program_text": "PHDRS text/data PT_LOAD FLAGS(5)/(6)",
+        "bounded_conclusion": "two PT_LOAD declarations as script text",
+        "stop_or_unknown": "actual program header file offsets and effective segments unknown",
+        "evidence_ids": [
+          "BB85-E109"
+        ]
+      },
+      {
+        "row_id": "BB85-C-S05",
+        "subject": "text input route",
+        "input": "kernel.lds",
+        "program_text": "output .text AT link subtraction and KEEP startup/head; *( .text* )",
+        "bounded_conclusion": "matching and retention expressions exist",
+        "stop_or_unknown": "individual object sections and GC execution not proved",
+        "evidence_ids": [
+          "BB85-E110",
+          "BB85-E111"
+        ]
+      }
+    ],
+    "input_section_retention_matrix": [
+      {
+        "row_id": "BB85-C-I01",
+        "subject": "head.startup",
+        "input": "head_64.S __STARTUP",
+        "program_text": "input .head.text.startup; linker KEEP(*(.head.text.startup))",
+        "bounded_conclusion": "specific startup section matches protected input pattern",
+        "stop_or_unknown": "not actual object section verification",
+        "evidence_ids": [
+          "BB85-E015",
+          "BB85-E016",
+          "BB85-E017",
+          "BB85-E111"
+        ]
+      },
+      {
+        "row_id": "BB85-C-I02",
+        "subject": "head text",
+        "input": "__HEAD or other input",
+        "program_text": "KEEP(*(.head.text))",
+        "bounded_conclusion": "specific .head.text section match if produced",
+        "stop_or_unknown": "no actual contents or selected compiler path",
+        "evidence_ids": [
+          "BB85-E017",
+          "BB85-E111"
+        ]
+      },
+      {
+        "row_id": "BB85-C-I03",
+        "subject": "ordinary .text",
+        "input": "C and non-head assembly",
+        "program_text": "*(.text*) under .text output",
+        "bounded_conclusion": "prefix wildcard can match .text and .text.*",
+        "stop_or_unknown": "final object emission unknown",
+        "evidence_ids": [
+          "BB85-E111"
+        ]
+      },
+      {
+        "row_id": "BB85-C-I04",
+        "subject": "early PGD static .init.data",
+        "input": "head_64.S __INITDATA",
+        "program_text": "*(.init.data init.data.*) in output .init.data",
+        "bounded_conclusion": "section-creation macro and matching expression both visible",
+        "stop_or_unknown": "final section offset and PT_LOAD mapping unknown",
+        "evidence_ids": [
+          "BB85-E112",
+          "BB85-E015"
+        ]
+      },
+      {
+        "row_id": "BB85-C-I05",
+        "subject": "ordinary .data and aligned",
+        "input": "head_64.S tables and phys_base",
+        "program_text": "*(.data), *(.data.rel*), *(.data..page_aligned*) in .data",
+        "bounded_conclusion": "script explicitly lists these input patterns",
+        "stop_or_unknown": "phys_base alignment vs data symbol details kept separate",
+        "evidence_ids": [
+          "BB85-E001",
+          "BB85-E113"
+        ]
+      },
+      {
+        "row_id": "BB85-C-I06",
+        "subject": "orphan candidate .ref.data",
+        "input": "initial_code with __REFDATA",
+        "program_text": ".ref.data input directive, no explicit .ref.data match in shown kernel.lds",
+        "bounded_conclusion": "link orphan treatment/segment assignment unresolved",
+        "stop_or_unknown": "not proof of dropped section or unbootability",
+        "evidence_ids": [
+          "BB85-E002",
+          "BB85-E014",
+          "BB85-E113"
+        ]
+      },
+      {
+        "row_id": "BB85-C-I07",
+        "subject": "C root BSS candidate",
+        "input": "init_top_pgt uninitialized C global",
+        "program_text": "BSS/COMMON wildcard and actual root C declaration",
+        "bounded_conclusion": "candidate .bss or COMMON output under successful compilation",
+        "stop_or_unknown": "compiler emission, init/root byte layout unmeasured",
+        "evidence_ids": [
+          "BB85-E029",
+          "BB85-E114"
+        ]
+      },
+      {
+        "row_id": "BB85-C-I08",
+        "subject": "end and size",
+        "input": "symbol _end",
+        "program_text": "_end assigned near SECTIONS end; top-level ASSERT after closure",
+        "bounded_conclusion": "input section aggregation affects size condition",
+        "stop_or_unknown": "linker not run, no actual link map",
+        "evidence_ids": [
+          "BB85-E008",
+          "BB85-E115"
+        ]
+      },
+      {
+        "row_id": "BB85-C-I09",
+        "subject": "section vs segment",
+        "input": "all cited sections",
+        "program_text": "output sections .text/.data/.init.data/.bss and PHDRS text/data",
+        "bounded_conclusion": "input section, output section, PHDR are distinct levels",
+        "stop_or_unknown": "no file-backed PT_LOAD range verified",
+        "evidence_ids": [
+          "BB85-E109",
+          "BB85-E110",
+          "BB85-E112",
+          "BB85-E113",
+          "BB85-E114"
+        ]
+      }
+    ],
+    "entry_and_delivery_boundary_matrix": [
+      {
+        "row_id": "BB85-C-D01",
+        "subject": "entry point symbol",
+        "input": "linker global label",
+        "program_text": "ENTRY(phys_startup_64)",
+        "bounded_conclusion": "entry uses physical-expression symbol",
+        "stop_or_unknown": "not proof bootloader used ELF entry",
+        "evidence_ids": [
+          "BB85-E026",
+          "BB85-E027"
+        ]
+      },
+      {
+        "row_id": "BB85-C-D02",
+        "subject": "virtual-load address split",
+        "input": "output .text",
+        "program_text": "ADDR(.text) vs AT(ADDR(.text)-__START_KERNEL_map)",
+        "bounded_conclusion": "VMA and requested LMA expressions differ",
+        "stop_or_unknown": "actual load physical address unknown",
+        "evidence_ids": [
+          "BB85-E110"
+        ]
+      },
+      {
+        "row_id": "BB85-C-D03",
+        "subject": "_text/_end link bounds",
+        "input": "SECTIONS",
+        "program_text": "_text at start .text; _end after output section closure",
+        "bounded_conclusion": "static link length expression can be formed",
+        "stop_or_unknown": "actual bytes/layout not generated",
+        "evidence_ids": [
+          "BB85-E110",
+          "BB85-E115"
+        ]
+      },
+      {
+        "row_id": "BB85-C-D04",
+        "subject": "ASSERT outside SECTIONS",
+        "input": "top-level linker statement",
+        "program_text": "_end-0xffffffff80000000<=1GiB",
+        "bounded_conclusion": "apparent 1GiB global bound, not 512MiB static mapping guarantee",
+        "stop_or_unknown": "actual ASSERT pass/fail not observed",
+        "evidence_ids": [
+          "BB85-E008",
+          "BB85-E030"
+        ]
+      },
+      {
+        "row_id": "BB85-C-D05",
+        "subject": "executable output path",
+        "input": "options_flags.cmake",
+        "program_text": "set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})",
+        "bounded_conclusion": "declares output-directory variable",
+        "stop_or_unknown": "actual on-disk target artifact not observed",
+        "evidence_ids": [
+          "BB85-E062"
+        ]
+      },
+      {
+        "row_id": "BB85-C-D06",
+        "subject": "POST_BUILD header export",
+        "input": "kernel target",
+        "program_text": "copy_directory include/uapi to ${CMAKE_BINARY_DIR}/../headers",
+        "bounded_conclusion": "declared copying step after target build",
+        "stop_or_unknown": "command not invoked and destination not observed",
+        "evidence_ids": [
+          "BB85-E107"
+        ]
+      },
+      {
+        "row_id": "BB85-C-D07",
+        "subject": "install rule",
+        "input": "kernel target",
+        "program_text": "install(TARGETS kernel DESTINATION boot)",
+        "bounded_conclusion": "declares installation destination for install action",
+        "stop_or_unknown": "not proof installed into host or boot media",
+        "evidence_ids": [
+          "BB85-E108"
+        ]
+      },
+      {
+        "row_id": "BB85-C-D08",
+        "subject": "GC vs retain",
+        "input": "global link options / script",
+        "program_text": "--gc-sections string plus KEEP(.head.text.startup/.head.text)",
+        "bounded_conclusion": "potential behavior must be checked against real linker behavior",
+        "stop_or_unknown": "no current linker execution or external spec; do not infer deletion/survival",
+        "evidence_ids": [
+          "BB85-E061",
+          "BB85-E111"
+        ]
+      }
+    ]
+  },
+  "technical_matrix_count": 9,
+  "technical_matrix_rows": 77,
+  "technical_matrix_rows_by_name": {
+    "source_selection_matrix": 9,
+    "flag_and_macro_provenance_matrix": 10,
+    "startup_consumer_configuration_matrix": 7,
+    "offset_artifact_lineage_matrix": 10,
+    "generation_order_and_freshness_matrix": 8,
+    "parser_and_failure_boundary_matrix": 11,
+    "link_script_selection_matrix": 5,
+    "input_section_retention_matrix": 9,
+    "entry_and_delivery_boundary_matrix": 8
+  },
+  "finite_model_cases": [
+    {
+      "case_id": "BB85-M01",
+      "topic": "A",
+      "configuration": "ARCH not set",
+      "stage": "configuration",
+      "input_assumptions": "ARCH variable missing; `if(NOT DEFINED ${ARCH})` as written",
+      "unit_domain": "CMake variable-name string",
+      "file_existence_freshness": "source tree not examined outside bounded paths",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "CMake not executed",
+      "conditional_result": "cannot certify correct default selection by literal guard",
+      "first_unproven_gate": "CMake expression expansion and user/environment values",
+      "evidence_ids": [
+        "BB85-E051",
+        "BB85-E034"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M02",
+      "topic": "A",
+      "configuration": "ARCH=x86_64",
+      "stage": "configuration",
+      "input_assumptions": "selected ARCH path resolves to arch/x86_64",
+      "unit_domain": "path strings",
+      "file_existence_freshness": "chosen CMake files available fixed time",
+      "capacity_or_count": "KBUILD_FILES glob pattern",
+      "callee_and_command_return_assumption": "all include/add_subdir statements interpreted as expected",
+      "conditional_result": "conditional arch/kernel source and offset path joins",
+      "first_unproven_gate": "real CMake glob evaluation not run",
+      "evidence_ids": [
+        "BB85-E038",
+        "BB85-E046",
+        "BB85-E049",
+        "BB85-E065"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M03",
+      "topic": "A",
+      "configuration": "ARCH other",
+      "stage": "configuration",
+      "input_assumptions": "ARCH differs or resolves undefined dir",
+      "unit_domain": "path strings",
+      "file_existence_freshness": "target arch subtree unknown",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "CMake selects alternate dir",
+      "conditional_result": "script path construction changes with ARCH",
+      "first_unproven_gate": "no actual configuration or directory check for alternate ARCH",
+      "evidence_ids": [
+        "BB85-E038",
+        "BB85-E046",
+        "BB85-E065"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M04",
+      "topic": "A",
+      "configuration": "Debug branch",
+      "stage": "configuration",
+      "input_assumptions": "CMAKE_BUILD_TYPE text is Debug",
+      "unit_domain": "flag/macro strings",
+      "file_existence_freshness": "N/A",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "condition true",
+      "conditional_result": "RELEASE_FLAG becomes -DDEBUG string; no machine code claim",
+      "first_unproven_gate": "later target/source flags and compiler command",
+      "evidence_ids": [
+        "BB85-E052",
+        "BB85-E055",
+        "BB85-E057"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M05",
+      "topic": "A",
+      "configuration": "non-Debug branch",
+      "stage": "configuration",
+      "input_assumptions": "CMAKE_BUILD_TYPE differs from Debug",
+      "unit_domain": "flag/macro strings",
+      "file_existence_freshness": "N/A",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "else selected",
+      "conditional_result": "-DRELEASE and -Wunused-macros candidate text",
+      "first_unproven_gate": "actual effective compile command",
+      "evidence_ids": [
+        "BB85-E053"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M06",
+      "topic": "A",
+      "configuration": "kernel head64.c",
+      "stage": "source selection",
+      "input_assumptions": "ARCH=x86_64 and recursive C glob includes file; no later removal",
+      "unit_domain": "source relative path and file suffix .c",
+      "file_existence_freshness": "fixed time source exists",
+      "capacity_or_count": "KERNEL_C_SRCS set",
+      "callee_and_command_return_assumption": "CMake file GLOB and REMOVE_ITEM semantics assumed",
+      "conditional_result": "candidate kernel C compilation unit",
+      "first_unproven_gate": "no evaluated target file list",
+      "evidence_ids": [
+        "BB85-E039",
+        "BB85-E041",
+        "BB85-E044"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M07",
+      "topic": "A",
+      "configuration": "kernel head_64.S",
+      "stage": "source selection",
+      "input_assumptions": "ARCH=x86_64 and recursive ASM glob includes file; no later removal",
+      "unit_domain": "source relative path and suffix .S",
+      "file_existence_freshness": "fixed time source exists",
+      "capacity_or_count": "KERNEL_ASM_SRCS set",
+      "callee_and_command_return_assumption": "CMake source matching assumed",
+      "conditional_result": "candidate kernel assembly compilation unit",
+      "first_unproven_gate": "no assembly command or linked text verified",
+      "evidence_ids": [
+        "BB85-E040",
+        "BB85-E042",
+        "BB85-E044"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M08",
+      "topic": "A",
+      "configuration": "offset producer",
+      "stage": "source selection",
+      "input_assumptions": "kbuild asm-offsets.c matched by KBUILD_FILES",
+      "unit_domain": "path strings",
+      "file_existence_freshness": "fixed time source exists",
+      "capacity_or_count": "one source explicitly attached asm-offset target",
+      "callee_and_command_return_assumption": "exact glob match and REMOVE_ITEM",
+      "conditional_result": "excluded from kernel C list yet explicitly in asm-offset producer",
+      "first_unproven_gate": "other target mutation/cache not exhausted",
+      "evidence_ids": [
+        "BB85-E038",
+        "BB85-E041",
+        "BB85-E066",
+        "BB85-E070"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M09",
+      "topic": "A",
+      "configuration": "arch CMAKE_C_FLAGS",
+      "stage": "configuration",
+      "input_assumptions": "subdirectory CFLAGS appended after root target declared",
+      "unit_domain": "flag strings",
+      "file_existence_freshness": "N/A",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "CMake scope/target properties unknown",
+      "conditional_result": "do not infer kernel inherited these arch flags",
+      "first_unproven_gate": "actual scoped variable resolution and compiler command",
+      "evidence_ids": [
+        "BB85-E047",
+        "BB85-E048",
+        "BB85-E044"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M10",
+      "topic": "B",
+      "configuration": "copy none",
+      "stage": "POST_BUILD source extraction",
+      "input_assumptions": "root_dir.glob returns empty list []",
+      "unit_domain": "Python list / filenames",
+      "file_existence_freshness": "no matching .s",
+      "capacity_or_count": "0 candidates",
+      "callee_and_command_return_assumption": "script starts and reaches matching_files[0]",
+      "conditional_result": "IndexError before shutil.copy",
+      "first_unproven_gate": "actual filesystem glob not observed",
+      "evidence_ids": [
+        "BB85-E096",
+        "BB85-E097"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M11",
+      "topic": "B",
+      "configuration": "copy one",
+      "stage": "POST_BUILD source extraction",
+      "input_assumptions": "glob returns one matching file [f]",
+      "unit_domain": "path list",
+      "file_existence_freshness": "one candidate file exists",
+      "capacity_or_count": "1 candidate",
+      "callee_and_command_return_assumption": "f truthy; shutil.copy succeeds",
+      "conditional_result": "first matched .s copied to specified output",
+      "first_unproven_gate": "output path write and subsequent parser not tested",
+      "evidence_ids": [
+        "BB85-E096",
+        "BB85-E097"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M12",
+      "topic": "B",
+      "configuration": "copy several",
+      "stage": "POST_BUILD source extraction",
+      "input_assumptions": "glob yields [f1,f2]",
+      "unit_domain": "path list",
+      "file_existence_freshness": "two matching files exist",
+      "capacity_or_count": "2 candidates",
+      "callee_and_command_return_assumption": "copy completes",
+      "conditional_result": "f1 selected; source lacks explicit sorting",
+      "first_unproven_gate": "glob ordering and provenance not certified",
+      "evidence_ids": [
+        "BB85-E096",
+        "BB85-E097"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M13",
+      "topic": "B",
+      "configuration": "parser no markers",
+      "stage": "offset parsing",
+      "input_assumptions": "line has no double-quoted ->marker",
+      "unit_domain": "ASCII strings",
+      "file_existence_freshness": "input .s assumed present",
+      "capacity_or_count": "0 re.findall matches",
+      "callee_and_command_return_assumption": "file read succeeds",
+      "conditional_result": "line contributes no #define",
+      "first_unproven_gate": "assembly output not seen",
+      "evidence_ids": [
+        "BB85-E100",
+        "BB85-E118"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M14",
+      "topic": "B",
+      "configuration": "parser empty marker",
+      "stage": "offset parsing",
+      "input_assumptions": "input_line contains quoted -> with zero payload",
+      "unit_domain": "ASCII strings",
+      "file_existence_freshness": "input .s assumed present",
+      "capacity_or_count": "matches list length1, fields[0] empty",
+      "callee_and_command_return_assumption": "parser reached",
+      "conditional_result": "blank tab line, no #define",
+      "first_unproven_gate": "real compiler output not seen",
+      "evidence_ids": [
+        "BB85-E100",
+        "BB85-E101"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M15",
+      "topic": "B",
+      "configuration": "parser single token",
+      "stage": "offset parsing",
+      "input_assumptions": "input_line contains quoted ->NAME, no delimiter",
+      "unit_domain": "ASCII strings",
+      "file_existence_freshness": "input .s assumed present",
+      "capacity_or_count": "fields length1",
+      "callee_and_command_return_assumption": "parser reached",
+      "conditional_result": "fields[1] access raises IndexError before output open",
+      "first_unproven_gate": "unobserved input shape; no execution",
+      "evidence_ids": [
+        "BB85-E101",
+        "BB85-E102"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M16",
+      "topic": "B",
+      "configuration": "parser double spaces",
+      "stage": "offset parsing",
+      "input_assumptions": "quoted ->NAME  $552",
+      "unit_domain": "literal ASCII spaces",
+      "file_existence_freshness": "input .s assumed present",
+      "capacity_or_count": "fields[1] is empty",
+      "callee_and_command_return_assumption": "parser reached",
+      "conditional_result": "define not emitted; tab blank line contributed",
+      "first_unproven_gate": "actual emitted assembly format unknown",
+      "evidence_ids": [
+        "BB85-E101",
+        "BB85-E104"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M17",
+      "topic": "B",
+      "configuration": "parser canonical marker",
+      "stage": "offset parsing",
+      "input_assumptions": "quoted ->TASK_threadsp $552",
+      "unit_domain": "ASCII marker text",
+      "file_existence_freshness": "input .s assumed present",
+      "capacity_or_count": "fields name and $value",
+      "callee_and_command_return_assumption": "parser successful",
+      "conditional_result": "candidate #define TASK_threadsp 552 after dollar prefix stripping",
+      "first_unproven_gate": "not proof current producer ABI equals old header number",
+      "evidence_ids": [
+        "BB85-E100",
+        "BB85-E101",
+        "BB85-E087"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M18",
+      "topic": "B",
+      "configuration": "stale header",
+      "stage": "incremental build",
+      "input_assumptions": "tracked header exists, target or POST_BUILD not actually run",
+      "unit_domain": "file path and timestamps",
+      "file_existence_freshness": "existing stored source header",
+      "capacity_or_count": "TASK_threadsp=552 and PTREGS_SIZE=176 stored",
+      "callee_and_command_return_assumption": "kernel dependency declaration exists",
+      "conditional_result": "header visible does not prove fresh producer run",
+      "first_unproven_gate": "actual build graph/cache and current ABI unknown",
+      "evidence_ids": [
+        "BB85-E076",
+        "BB85-E087",
+        "BB85-E088"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M19",
+      "topic": "B",
+      "configuration": "postbuild failed",
+      "stage": "POST_BUILD",
+      "input_assumptions": "rm step, copy or parser fails or generator treats && differently",
+      "unit_domain": "exit statuses and file state",
+      "file_existence_freshness": "old header may exist or have been removed",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "cannot assume any command succeeded",
+      "conditional_result": "no legitimate claim of updated consistent header",
+      "first_unproven_gate": "generator shell semantics, partial mutation and error propagation",
+      "evidence_ids": [
+        "BB85-E073",
+        "BB85-E074",
+        "BB85-E075",
+        "BB85-E102"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M20",
+      "topic": "B",
+      "configuration": "save temps filename divergence",
+      "stage": "producer compile",
+      "input_assumptions": "compiler produces no matching asm-offsets.c.s under expected glob",
+      "unit_domain": "basename and directory",
+      "file_existence_freshness": "hypothetical generated temp with different name",
+      "capacity_or_count": "zero matching candidates",
+      "callee_and_command_return_assumption": "producer target built under hypothetical compiler",
+      "conditional_result": "copy script cannot use assumed basename; no proven header",
+      "first_unproven_gate": "no real compiler invocation/naming evidence",
+      "evidence_ids": [
+        "BB85-E071",
+        "BB85-E096",
+        "BB85-E116"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M21",
+      "topic": "C",
+      "configuration": "link script selection",
+      "stage": "link definition",
+      "input_assumptions": "kernel target and ARCH resolve to expected kernel.lds",
+      "unit_domain": "CMake path expression",
+      "file_existence_freshness": "fixed time kernel.lds exists",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "target linked with -T argument if CMake build invoked",
+      "conditional_result": "candidate linker-script consumption",
+      "first_unproven_gate": "actual link command/e_entry/segments unknown",
+      "evidence_ids": [
+        "BB85-E106",
+        "BB85-E026",
+        "BB85-E109"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M22",
+      "topic": "C",
+      "configuration": "orphan .ref.data",
+      "stage": "link definition",
+      "input_assumptions": "initial_code in .ref.data, script not explicitly matching it",
+      "unit_domain": "input/output section names",
+      "file_existence_freshness": "unprocessed object and linker output",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "linker behavior not run",
+      "conditional_result": "placement and retention unknown; not a confirmed deletion",
+      "first_unproven_gate": "toolchain orphan handling, GC, actual references",
+      "evidence_ids": [
+        "BB85-E002",
+        "BB85-E014",
+        "BB85-E113"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M23",
+      "topic": "C",
+      "configuration": "init_top_pgt BSS",
+      "stage": "link definition",
+      "input_assumptions": "uninitialized C global defined; script has .bss* COMMON input rule",
+      "unit_domain": "symbols and sections",
+      "file_existence_freshness": "C object not generated",
+      "capacity_or_count": "ENT_PER_TABLE depends sizeof pgd_t",
+      "callee_and_command_return_assumption": "compiler/linker not executed",
+      "conditional_result": "BSS candidate only, clear_bss target coverage not certified",
+      "first_unproven_gate": "actual compiler object layout and final map",
+      "evidence_ids": [
+        "BB85-E029",
+        "BB85-E114"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M24",
+      "topic": "C",
+      "configuration": "install not invoked",
+      "stage": "artifact delivery",
+      "input_assumptions": "install(TARGETS kernel DESTINATION boot) text only",
+      "unit_domain": "install destination string",
+      "file_existence_freshness": "build output/install roots not observed",
+      "capacity_or_count": "N/A",
+      "callee_and_command_return_assumption": "no install or target build invoked",
+      "conditional_result": "boot installation not established",
+      "first_unproven_gate": "installation prefix/toolchain and filesystem state",
+      "evidence_ids": [
+        "BB85-E108",
+        "BB85-E062"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M25",
+      "topic": "C",
+      "configuration": "CONFIG_RANDOMIZE_BASE",
+      "stage": "link-versus-coverage",
+      "input_assumptions": "macro enabled gives1GiB; disabled gives512MiB",
+      "unit_domain": "bytes, 2MiB page units",
+      "file_existence_freshness": "no preprocessed compile",
+      "capacity_or_count": "256 or512 PMD nominal entries",
+      "callee_and_command_return_assumption": "branch selection hypothetical",
+      "conditional_result": "source-level capacity depends on configuration",
+      "first_unproven_gate": "actual macro definition and ELF mapping unconfirmed",
+      "evidence_ids": [
+        "BB85-E004",
+        "BB85-E005",
+        "BB85-E030"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    },
+    {
+      "case_id": "BB85-M26",
+      "topic": "C",
+      "configuration": "1GiB assert vs 512MiB PMD",
+      "stage": "link bound",
+      "input_assumptions": "_text>=base+16MiB, _end<=base+1GiB, 512MiB config",
+      "unit_domain": "byte ranges and PMD entries",
+      "file_existence_freshness": "no actual link map",
+      "capacity_or_count": "N_max=504; static high-map covers only512MiB in that branch",
+      "callee_and_command_return_assumption": "link bounds assumed nonwrap and _end>=_text",
+      "conditional_result": "global ASSERT does not independently guarantee 512MiB static highmap; model 512/513 outside link range",
+      "first_unproven_gate": "actual ELF map and build config not checked",
+      "evidence_ids": [
+        "BB85-E008",
+        "BB85-E030",
+        "BB85-E031"
+      ],
+      "execution": "NOT_RUN_STATIC_CONDITIONAL_MODEL"
+    }
+  ],
+  "finite_model_count": 26,
+  "finite_model_by_subject": {
+    "A": 9,
+    "B": 11,
+    "C": 6
+  },
+  "d00_model_restrictions": [
+    {
+      "old": "ER84-B19",
+      "model_N": 512,
+      "under_link_bound": "N<=504 hence outside declared model",
+      "status": "STANDALONE_SLOT_ARITHMETIC_ONLY"
+    },
+    {
+      "old": "ER84-B20",
+      "model_N": 513,
+      "under_link_bound": "N<=504 hence outside declared model",
+      "status": "STANDALONE_SLOT_ARITHMETIC_ONLY"
+    }
+  ],
+  "prior_findings_links": [
+    "R84-01 pending C06 independent closure",
+    "R84-S01/S02/S03 applied to 85 D00, not a new signature of PASS",
+    "R83-S01/S02/S03 preserved mutually exclusive branch/present/index/requests",
+    "R82-S01/S02/S03 preserved phase, integer unit, capacity distinctions",
+    "R81-S01/S02/S03 preserved source location and address-translation restrictions",
+    "ER84-F02/F03/F05 and U01/U02/U07 narrowed by 85 build facts only; other ER84 retained",
+    "PT81/DM82/TI83 status not closed; old fixes not performed"
+  ],
+  "run_context": {
+    "record_version": "v0.2 (compact target task record)",
+    "actor": "MYOS2-LEAD-002-CHAT-EXEC-11",
+    "actor_kind": "model",
+    "product_surface": "ChatGPT ordinary conversation and GitHub connector",
+    "operator_selection": "Owner specifies GPT-6 + Extra; provider backend not attested",
+    "backend": "unknown_or_not_attestable",
+    "source_actor": "current 85 conversation continuing same 11",
+    "reviewer": "MYOS2-A-C06 independent Pro, PENDING",
+    "user_authorization": "Owner current message + 121 fixed work order, limited to six files and one PR17 comment",
+    "excluded_actions": [
+      "preprocess/build/link",
+      "execute Python scripts or CMake",
+      "change old artifacts or PR metadata",
+      "use external model or subagents or paid API",
+      "alter kernel/master/time/lead",
+      "merge, branch create/delete"
+    ],
+    "action_switch_history": "none asserted only same conversation per Owner; backend not attestable",
+    "preservation": "NORMALIZED_REVIEWABLE_DERIVED_ARTIFACT_WITH_SOURCE_POINTERS",
+    "limitations": [
+      "no physical link map",
+      "no actual generated CMake command",
+      "no runtime/host execution",
+      "P9 full local pending"
+    ]
+  },
+  "notes": [
+    "CMake file/target constructs may be present without any successful configuration",
+    "old tracked asm-offsets.h is source snapshot, not a fresh current-ABI certificate",
+    "script static control flow reviewed without importing, running, compiling or executing those scripts",
+    "CMake `COMMAND rm -f X && rm -f Y` semantics left unknown absent generator verification",
+    "input/output section vs PT_LOAD and orphan are separate evidence layers"
+  ]
+}
