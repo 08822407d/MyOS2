@@ -1,0 +1,422 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PERCPU-ALLOCATION-87",
+  "record_type": "bounded_percpu_allocator_and_workqueue_conditional_findings",
+  "produced_by": "GPT-6 (visible family, backend not attestable)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-14",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "STATIC_AUTHOR_READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "open_questions": [
+    "PA87-U01",
+    "PA87-U02",
+    "PA87-U03",
+    "PA87-U04",
+    "PA87-U05",
+    "PA87-U06",
+    "PA87-U07",
+    "PA87-U08",
+    "PA87-U09"
+  ],
+  "R86_01": {
+    "mainline_review": "RETURN_DOCUMENTATION_ONLY",
+    "D00_submission": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "old_files_and_comment_untouched": true,
+    "old_author_counts_frozen": [
+      77,
+      77,
+      0
+    ],
+    "original_definition_anchors": 77,
+    "explanatory_literal_prefix": 1,
+    "original_raw_prefixes_total": 78
+  },
+  "candidates": [
+    {
+      "qualified_id": "PA87-F01",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "ALIGN padding charged in fit but not deducted in commit",
+      "condition": "valid positive power-of-two alignment, sequential requests produce a gap>0 and no field reset",
+      "source_consequence": "need_size=pad+size for check, but free_bytes-=size in commit; accepted offset can exceed nominal chunk C in a third request",
+      "why_not_confirmed": "requires legal calls, object bounds and later actual consumer; pure arithmetic only",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E017",
+        "PA87-E018",
+        "PA87-E019",
+        "PA87-E020"
+      ],
+      "prior_qualified_id_links": [],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PA87-F02",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "invalid zero align can produce start behind free_offset and empty while",
+      "condition": "caller passes align0 with free_offset>0 and selected signed-int mask computations are valid",
+      "source_consequence": "ALIGN may yield zero start; area has while(start<free_offset); with no body/state update",
+      "why_not_confirmed": "caller uses pointer align normally; real zero align not established, optimizer/CPU liveness untested",
+      "evidence_ids": [
+        "PA87-E016",
+        "PA87-E018",
+        "PA87-E019",
+        "PA87-E020",
+        "PA87-E023"
+      ],
+      "prior_qualified_id_links": [],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PA87-F03",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "late chunk data allocation NULL is not checked before relative-pointer creation/publication",
+      "condition": "new metadata allocation succeeds but kzalloc(N*C) returns NULL",
+      "source_consequence": "function computes void* base difference and has list-insertion step without data return guard; metadata success not equivalent to backing success",
+      "why_not_confirmed": "C pointer semantics could stop proof earlier; actual allocator failure not observed",
+      "evidence_ids": [
+        "PA87-E010",
+        "PA87-E011",
+        "PA87-E012",
+        "PA87-E054"
+      ],
+      "prior_qualified_id_links": [
+        "PC86-F02 (early helper analogue; do not count as same implementation event)"
+      ],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PA87-F04",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "new chunk restart cannot satisfy request larger than chunk_size",
+      "condition": "ordinary request size>C, each newly created chunk retains same C, each retry re-enters unchanged fit",
+      "source_consequence": "loop creates another chunk until allocation failure; no finite successful fit under nonoverflow model",
+      "why_not_confirmed": "not proof of hardware infinite loop or real oversized request; resource exhaustion behavior untested",
+      "evidence_ids": [
+        "PA87-E010",
+        "PA87-E011",
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E034",
+        "PA87-E035"
+      ],
+      "prior_qualified_id_links": [],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PA87-F05",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "relative perCPU returned pointer lacks linked perCPU base term under numeric decode model",
+      "condition": "linked T nonzero mod 2^w; first/reserved/new chunk numeric encoded base as source and per_cpu_ptr uses O_i=B-T+i*S",
+      "source_consequence": "decoded value is backing+off-T+i*S, not backing+off+i*S; first NULL-base arithmetic separately unverified",
+      "why_not_confirmed": "compiler GNU void-pointer and C object validity unknown; no actual linked T/B or workqueue lvalue certified",
+      "evidence_ids": [
+        "PA87-E026",
+        "PA87-E012",
+        "PA87-E038",
+        "PA87-E093",
+        "PA87-E094",
+        "PA87-E096",
+        "PA87-E097"
+      ],
+      "prior_qualified_id_links": [
+        "PC86-F05",
+        "PC86-U09",
+        "R86-S01"
+      ],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PA87-F06",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "reserved chunk insufficient exits without normal fallback",
+      "condition": "reserved=true, reserved chunk exists, fit returns negative, another ordinary chunk would fit",
+      "source_consequence": "source jumps straight to fail return NULL; skips normal scan and expansion",
+      "why_not_confirmed": "API intended reserved semantics not established; could be deliberate policy rather than bug",
+      "evidence_ids": [
+        "PA87-E028",
+        "PA87-E029",
+        "PA87-E030",
+        "PA87-E041"
+      ],
+      "prior_qualified_id_links": [],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PA87-F07",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "workqueue constructor ignores inner PWQ allocation failure",
+      "condition": "outer wq allocation succeeds but perCPU helper returns -ENOMEM",
+      "source_consequence": "simple_alloc_workqueue discards return and proceeds to global list publication/returns wq",
+      "why_not_confirmed": "prior calls/callee returns and actual global-list use not observed",
+      "evidence_ids": [
+        "PA87-E060",
+        "PA87-E071",
+        "PA87-E074",
+        "PA87-E075",
+        "PA87-E076"
+      ],
+      "prior_qualified_id_links": [],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PA87-F08",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "partial PWQ cleanup frees objects but retains list links and perCPU allocation",
+      "condition": "bound N>=2 with earlier linked PWQ and later kmem_cache_alloc failure",
+      "source_consequence": "enomem loop frees nonNULL cache objects, lacks visible unlink in scoped function and free_percpu line commented",
+      "why_not_confirmed": "actual linked list lifetime and additional cleanup outside scope unknown; not a proven UAF/leak in run",
+      "evidence_ids": [
+        "PA87-E065",
+        "PA87-E067",
+        "PA87-E069",
+        "PA87-E070",
+        "PA87-E071",
+        "PA87-E100"
+      ],
+      "prior_qualified_id_links": [],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PA87-F09",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_RUNTIME_BUG",
+      "title": "unbound helper returns uninitialized local ret after successful slot allocation",
+      "condition": "WQ_UNBOUND true and alloc_percpu nonNULL",
+      "source_consequence": "after skipping bound CPU loop, source executes return ret without assignment to local ret in complete scoped function",
+      "why_not_confirmed": "known early named events flags lack WQ_UNBOUND; actual caller/ABI/compiler behavior unknown",
+      "evidence_ids": [
+        "PA87-E059",
+        "PA87-E061",
+        "PA87-E068",
+        "PA87-E084"
+      ],
+      "prior_qualified_id_links": [],
+      "status": "NEEDS_EVIDENCE",
+      "patch_requested": false,
+      "runtime_test": "NOT_RUN"
+    }
+  ],
+  "gaps": [
+    {
+      "qualified_id": "PA87-U01",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "runtime C integer conversion and alignment semantics",
+      "what_is_missing": "size_t request/align -> int fit and signed arithmetic/implementation-dependent conversion need actual ABI and call restrictions",
+      "future_gate": "compiler/ABI facts plus validated callers and sizes",
+      "evidence_ids": [
+        "PA87-E008",
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E016",
+        "PA87-E018",
+        "PA87-E019",
+        "PA87-E020",
+        "PA87-E023",
+        "PA87-E024"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    },
+    {
+      "qualified_id": "PA87-U02",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "first/reserved/new chunk true usable memory extent",
+      "what_is_missing": "chunk_size, free_offset, free_bytes may differ from mapped perCPU storage/CPU unit stride",
+      "future_gate": "real linker/map, perCPU allocation, adjacent object/layout evidence; no kernel execution",
+      "evidence_ids": [
+        "PA87-E002",
+        "PA87-E003",
+        "PA87-E008",
+        "PA87-E009",
+        "PA87-E026",
+        "PA87-E027",
+        "PA87-E038"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    },
+    {
+      "qualified_id": "PA87-U03",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "backing slab alloc return and zeroing",
+      "what_is_missing": "kzalloc forwards flags, but entire slab/buddy allocation and failure contracts not audited",
+      "future_gate": "bounded lower allocator proof or separately authorized controlled run",
+      "evidence_ids": [
+        "PA87-E010",
+        "PA87-E011",
+        "PA87-E012",
+        "PA87-E054",
+        "PA87-E055",
+        "PA87-E100"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    },
+    {
+      "qualified_id": "PA87-U04",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "list iteration/reentrancy and lock discipline",
+      "what_is_missing": "source lock calls commented; list headers/macro bodies seen but no global writer or concurrency study",
+      "future_gate": "explicit callers, lock context, list operations under competing activity; excluded concurrency test",
+      "evidence_ids": [
+        "PA87-E042",
+        "PA87-E043",
+        "PA87-E044",
+        "PA87-E049",
+        "PA87-E050",
+        "PA87-E053"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    },
+    {
+      "qualified_id": "PA87-U05",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "restart progress and finite resource policy",
+      "what_is_missing": "new chunk may stay unsuitable; whether retry terminates depends on allocator failure or changing state",
+      "future_gate": "real validated size limits, cache state, resource behavior and no concurrency assumption",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E034",
+        "PA87-E035",
+        "PA87-E041"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    },
+    {
+      "qualified_id": "PA87-U06",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "perCPU relative encoding/object legality",
+      "what_is_missing": "integer mod formulas do not establish pointer provenance, GNU extension compilation, valid mapping or correct T/B origins",
+      "future_gate": "real compiled ABI/GCC version, actual link values, memory object extents and permitted runtime test",
+      "evidence_ids": [
+        "PA87-E026",
+        "PA87-E038",
+        "PA87-E091",
+        "PA87-E093",
+        "PA87-E094",
+        "PA87-E096",
+        "PA87-E097"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    },
+    {
+      "qualified_id": "PA87-U07",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "workqueue slots and pool initialization at consumer",
+      "what_is_missing": "workqueue alloc uses pointer-sized perCPU slot, but actual decoded pointer and worker pools may not be initialized",
+      "future_gate": "valid perCPU setup, pwq_cache producer return, CPU count and real caller reachability",
+      "evidence_ids": [
+        "PA87-E059",
+        "PA87-E064",
+        "PA87-E065",
+        "PA87-E077",
+        "PA87-E078",
+        "PA87-E079",
+        "PA87-E101",
+        "PA87-E102"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    },
+    {
+      "qualified_id": "PA87-U08",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "partial cleanup and ownership of CPU PWQ allocations",
+      "what_is_missing": "free_percpu is commented, visible function does not unlink in error path",
+      "future_gate": "full destructor/ownership, list lifecycle and other callers beyond bounded source; no real leak claim",
+      "evidence_ids": [
+        "PA87-E069",
+        "PA87-E070",
+        "PA87-E071",
+        "PA87-E082",
+        "PA87-E083",
+        "PA87-E100"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    },
+    {
+      "qualified_id": "PA87-U09",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_CONFIRMED_BUG",
+      "title": "unbound routing, workqueue early invocation and return-value consumers",
+      "what_is_missing": "inner ret potentially indeterminate for unbound but early visible calls use 0/BH; actual startup path not proven",
+      "future_gate": "complete caller graph and live config, prohibited entire workqueue/SMP audit",
+      "evidence_ids": [
+        "PA87-E059",
+        "PA87-E061",
+        "PA87-E068",
+        "PA87-E074",
+        "PA87-E075",
+        "PA87-E078",
+        "PA87-E079",
+        "PA87-E084"
+      ],
+      "status": "DEFERRED",
+      "not_closed_by_this_batch": true
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "prior": "R86-01",
+      "state": "RETURN_DOCUMENTATION_ONLY",
+      "action": "D00 appended in 87 new artifacts only; C06 closure pending, not a new source bug"
+    },
+    {
+      "prior": "R86-S01/S02/S03",
+      "state": "MANDATORY_CONSUMPTION",
+      "action": "Use fixed-width unsigned modulo, pointer arithmetic gates, historic model reachability and early initialization conditions"
+    },
+    {
+      "prior": "R84-01",
+      "state": "CLOSED_DOCUMENTATION_ONLY_BY_C06",
+      "action": "No reopening; composite 84 PASS_PENDING_LOCAL"
+    },
+    {
+      "prior": "R85-S01/S02/S03",
+      "state": "PASS_PENDING_LOCAL_QUALIFIED",
+      "action": "Do not reuse incorrect parser/source/ABI assertions from prior author"
+    },
+    {
+      "prior": "PC86-F05/U09",
+      "state": "CONDITIONAL_OLD_IDS",
+      "action": "87 models test dynamic uses but preserve source-root identity; distinct new accounting/encoding claims must state overlap"
+    },
+    {
+      "prior": "BM80/PT81/DM82/TI83/ER84/BB85",
+      "state": "PRIOR_QUALIFIED_IDS_UNCHANGED",
+      "action": "No historical issues silently closed/recounted as new"
+    }
+  ],
+  "tallies": {
+    "new_condition_candidates": 9,
+    "new_uncertainty_gaps": 9,
+    "old_findings_counted_as_new": 0,
+    "confirmed_kernel_runtime_bugs": 0,
+    "automatic_fix_authorized": false,
+    "Owner_decisions_requested_now": []
+  }
+}
