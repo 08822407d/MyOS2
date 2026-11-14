@@ -1,0 +1,116 @@
+// task_id: MYOS2-LEAD-002-CORE-CHECK-01
+// track_id: MYOS2-LEAD-002
+// followup_id: CORE-USER-PERCPU-BOOTSTRAP-86
+// date: 2026-11-14
+// produced_by: GPT-6 (backend not independently attested)
+// model_per_owner: GPT-6 + Extra
+// base_snapshot: time
+// read_channel: connector
+// runtime_evidence: NOT_RUN
+// Drawing conventions: solid blue = source-visible C call; solid black = macro, data, pointer / direct memory association;
+// dotted = source order within one function or build/link expression; dashed = assumed success / unverified runtime transition.
+// NO graph edge by itself certifies machine execution or caller return.
+digraph PC86_PerCPU_First_Boot {
+graph [rankdir=LR, label="PC86 first perCPU template / offsets / bootstrap GDT and GS (read-only source)", labelloc=t, fontsize=16];
+node [shape=box,fontsize=10];
+edge [fontsize=9];
+subgraph cluster_A {
+label="G01/A: linked template and two early chunks";
+L [label="kernel.lds\n__per_cpu_load L\n__per_cpu_start T\n__per_cpu_end E"];
+sect [label=".data..percpu input\npage/hot/read-mostly aligned"];
+S [label="static_size S = E-T\nreserved=2*PAGE_SIZE\ndyn=0"];
+C [label="size_sum=S+8192\nchunk_size=C=roundup_pow_of_two(sum)\nvalid-width assumption"];
+setup [label="simple_pcpu_setup_first_chunk"];
+creator [label="early_pcpu_create_chunk"];
+meta [label="DMA32 metadata\nsizeof(chunk),align sizeof(chunk)"];
+data [label="DMA32 data\nN*chunk_size,align chunk_size"];
+list [label="list_header_add_to_tail\nData NULL not checked locally"];
+first [label="pcpu_first_chunk\npcpu_base_addr = first->data"];
+free [label="first free_offset=sum\nfree_bytes=C-sum\n(int fields)"];
+copy [label="memcpy(first->data, &L, S)\nONE visible call"];
+offsetalloc [label="normal memblock alloc\nN*sizeof(void*),align 8"];
+reserved [label="pcpu_reserved_chunk\nsecond early_pcpu_create_chunk\nbase_addr=data-(ulong)B"];
+fail [label="NULL/overflow/ABI gates\nno runtime failure verified",shape=note];
+L -> sect [style=dotted,label="linked output section"];
+L -> S [label="template bounds"];
+S -> C [label="size expression"];
+setup -> creator [color=blue,label="C call twice"];
+creator -> meta [color=blue,label="call"];
+creator -> data [color=blue,label="call"];
+creator -> list [style=dotted,label="source order"];
+data -> first [label="first->data"];
+first -> free [style=dotted,label="setup source order"];
+first -> copy [style=dotted,label="setup source order"];
+L -> copy [label="source pointer"];
+C -> data [label="N*C request"];
+setup -> offsetalloc [color=blue,label="call"];
+copy -> offsetalloc [style=dotted,label="same function order"];
+offsetalloc -> reserved [style=dotted,label="next source phase"];
+creator -> fail [style=dashed,label="conditional NULL"];
+offsetalloc -> fail [style=dashed,label="conditional NULL"];
+}
+subgraph cluster_B {
+label="G02/B: CPU index, unit offsets and published address formula";
+N [label="N = nr_cpu_ids\nget_smpinfo <- core_num"];
+mask [label="for_each_possible_cpu\n=> contiguous cpu=0..N-1"];
+limit [label="__per_cpu_offset[NR_CPUS]\nNR_CPUS=CONFIG_NR_CPUS"];
+U [label="pcpu_unit_offsets[i]=i*S\nunit STRIDE = static_size (not C)"];
+D [label="D=(ulong)B-(ulong)T"];
+O [label="O_i=D+U_i\nper_cpu_offset(i)"];
+other [label="per_cpu(this_cpu_off,i)=O_i\nper_cpu(pcpu_hot.cpu_number,i)=i"];
+var [label="per_cpu(var,i)\nV + O_i"];
+raw [label="arch_raw_cpu_ptr\nV+rdgsbase()\nnot memory this_cpu_off"];
+N -> mask [label="loop condition"];
+N -> limit [style=dashed,label="N<=NR_CPUS required"];
+offsetalloc -> U [label="array backing"];
+S -> U [label="stride source"];
+first -> D [label="B"];
+L -> D [label="T from section"];
+U -> O [label="addition"];
+D -> O [label="addition"];
+O -> limit [label="write index i"];
+O -> other [label="per_cpu writes"];
+O -> var [label="pointer shift"];
+other -> raw [style=dashed,label="memory write != GS register"];
+}
+subgraph cluster_C {
+label="G03/C: boot CPU selective GDT / GS request";
+start [label="start_kernel\nsetup_arch then setup_per_cpu_areas"];
+area [label="setup_per_cpu_areas\nfirst chunk, publish CPU offsets"];
+cpu0 [label="if(cpu==0)\nboot CPU conditional"];
+gdt [label="load_direct_gdt(cpu)"];
+getgdt [label="get_cpu_gdt_rw(cpu)\nper_cpu(gdt_page,cpu).gdt"];
+desc [label="gdt_descr.address / size\nGDT_SIZE-1 = 127 in macro model"];
+lgdt [label="load_gdt\ninline lgdt request"];
+refresh [label="refresh_segment_registers\nSS+far return request"];
+gs [label="wrmsrl(MSR_GS_BASE,O_i)\nCPU0 after GDT call"];
+hw [label="hardware effect unknown\nFSGSBASE / MSR / CPU privileges",shape=note];
+cur [label="get_current\n*this_cpu_ptr(&pcpu_hot.current_task)"];
+asm [label="secondary_startup_64 early asm\n__per_cpu_offset/current_task/TASK_threadsp\nseparate phase"];
+start -> area [color=blue,label="actual C call"];
+area -> setup [color=blue,label="actual C call"];
+area -> cpu0 [style=dotted,label="after per-CPU writes"];
+cpu0 -> gdt [color=blue,label="conditional call"];
+gdt -> getgdt [color=blue,label="actual C call"];
+getgdt -> desc [label="return GDT pointer"];
+gdt -> lgdt [color=blue,label="actual C call"];
+lgdt -> refresh [style=dotted,label="same caller later invokes refresh"];
+gdt -> refresh [color=blue,label="actual C call"];
+cpu0 -> gs [style=dotted,label="after GDT helper returns"];
+O -> gs [label="MSR value argument"];
+gs -> hw [style=dashed,label="unknown effect"];
+refresh -> hw [style=dashed,label="unknown CPU state"];
+raw -> cur [label="current CPU pointer wrapper"];
+hw -> raw [style=dashed,label="actual GSBASE needed"];
+asm -> O [style=dashed,label="earlier timing, NOT full path"];
+}
+subgraph cluster_H {
+label="historical and publication gates";
+r84 [label="R84-01 DOCUMENTATION CLOSED\n84 composite PASS_PENDING_LOCAL",shape=note];
+r85 [label="85 PASS_PENDING_LOCAL\nR85-S01/S02/S03 mandatory",shape=note];
+r86 [label="86 author static only\nC06 Pro acceptance PENDING\nSTOP_WRITING after delivery",shape=note];
+r84 -> r86 [style=dotted,label="bounded input"];
+r85 -> r86 [style=dotted,label="bounded input"];
+}
+}
+// No graphviz, compiler, CMake, Python, QEMU, firmware, hardware, or kernel execution.
