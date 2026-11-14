@@ -1,0 +1,383 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-COMPLETION-WAIT-49",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-06",
+  "record_type": "bounded_completion_wait_source_facts",
+  "source_pin_short12": "a039d9803ade",
+  "source_quote_count": 36,
+  "source_ledger": "evidence.md",
+  "finite_model_count": 15,
+  "runtime_evidence": "NOT_RUN",
+  "facts": [
+    {
+      "id": "CW49-T01",
+      "kind": "source_fact",
+      "claim": "completion_s 是 struct completion，字段 done:uint 和 wait:swqueue_hdr_s",
+      "evidence": [
+        "E01",
+        "E02"
+      ]
+    },
+    {
+      "id": "CW49-T02",
+      "kind": "source_fact",
+      "claim": "DECLARE_COMPLETION 经 COMPLETION_INITIALIZER 设置 done 0，静态 swait 锁及 list 头；ONSTACK 文本仅同名宏别称",
+      "evidence": [
+        "E03",
+        "E04",
+        "E05",
+        "E06"
+      ]
+    },
+    {
+      "id": "CW49-T03",
+      "kind": "source_fact",
+      "claim": "init_completion 把 done 写0，再调用 init_swait_queue_head；后者委托 __init_swait_queue_head 实际初始化锁和链表",
+      "evidence": [
+        "E07",
+        "E08",
+        "E33"
+      ]
+    },
+    {
+      "id": "CW49-T04",
+      "kind": "source_fact",
+      "claim": "complete 临界区中饱和判断→计数增加（若非UINT_MAX）→swake_up_locked 调用→解锁；饱和时仍调用swake",
+      "evidence": [
+        "E09",
+        "E10",
+        "E32"
+      ]
+    },
+    {
+      "id": "CW49-T05",
+      "kind": "source_fact",
+      "claim": "公开 void wait_for_completion 使用 MAX_SCHEDULE_TIMEOUT=LONG_MAX 和 TASK_UNINTERRUPTIBLE，内部 wrapper 持锁并传 schedule_timeout 函数指针",
+      "evidence": [
+        "E11",
+        "E12",
+        "E29"
+      ]
+    },
+    {
+      "id": "CW49-T06",
+      "kind": "source_fact",
+      "claim": "do_wait 初始 done>0 则跳过 action；done0 才准备局部队列项，按 signal→prepare→state→unlock→action→relock→loop→finish 路径",
+      "evidence": [
+        "E13",
+        "E14",
+        "E15",
+        "E16"
+      ]
+    },
+    {
+      "id": "CW49-T07",
+      "kind": "source_fact",
+      "claim": "若 finish 后 done 仍0，则return timeout无消费；否则除UINT_MAX外减一，并return timeout ?:1；外层void 丢弃 long",
+      "evidence": [
+        "E11",
+        "E12",
+        "E16",
+        "E17"
+      ]
+    },
+    {
+      "id": "CW49-T08",
+      "kind": "source_fact",
+      "claim": "固定 state TASK_UNINTERRUPTIBLE=0x2 不含 TASK_INTERRUPTIBLE=0x1 或 TASK_WAKEKILL=0x100 位，所以 signal_pending_state 的首个门返回0",
+      "evidence": [
+        "E26",
+        "E27",
+        "E28",
+        "E30"
+      ]
+    },
+    {
+      "id": "CW49-T09",
+      "kind": "source_fact",
+      "claim": "swait 栈上项含 current 和 list 初始化；prepare刷新task并有条件入队尾，finish设RUNNING并有条件摘队",
+      "evidence": [
+        "E18",
+        "E19",
+        "E20",
+        "E21",
+        "E22",
+        "E23"
+      ]
+    },
+    {
+      "id": "CW49-T10",
+      "kind": "source_fact",
+      "claim": "swake_up_locked 队列空即返回，非空选表头首待项、调用try_to_wake_up后list_del_init且不检查返回",
+      "evidence": [
+        "E24",
+        "E25"
+      ]
+    },
+    {
+      "id": "CW49-T11",
+      "kind": "bounded_source_relation",
+      "claim": "48 setup_done 宏声明由 devtmpfs_init 等待、由 devtmpfsd 后部通知；不据此重审全局生产者",
+      "evidence": [
+        "E34",
+        "E35",
+        "E36"
+      ]
+    }
+  ],
+  "producer_state_conditions": [
+    {
+      "initial": "0",
+      "after_complete": "1",
+      "swake_invocation": true
+    },
+    {
+      "initial": "1",
+      "after_complete": "2",
+      "swake_invocation": true
+    },
+    {
+      "initial": "k: 1<k<UINT_MAX-1",
+      "after_complete": "k+1",
+      "swake_invocation": true
+    },
+    {
+      "initial": "UINT_MAX-1",
+      "after_complete": "UINT_MAX",
+      "swake_invocation": true
+    },
+    {
+      "initial": "UINT_MAX",
+      "after_complete": "UINT_MAX",
+      "swake_invocation": true
+    }
+  ],
+  "wait_matrix": [
+    {
+      "stage": "init",
+      "condition": "static or dynamic",
+      "effect": "done0, swait head initializer",
+      "evidence": [
+        "E02",
+        "E03",
+        "E06",
+        "E07",
+        "E08"
+      ]
+    },
+    {
+      "stage": "producer",
+      "condition": "complete",
+      "effect": "lock→conditional ++→swake request→unlock",
+      "evidence": [
+        "E09",
+        "E10"
+      ]
+    },
+    {
+      "stage": "entry",
+      "condition": "public",
+      "effect": "void→long wrapper, MAX_SCHEDULE_TIMEOUT, TASK_UNINTERRUPTIBLE",
+      "evidence": [
+        "E11",
+        "E12",
+        "E29"
+      ]
+    },
+    {
+      "stage": "gate",
+      "condition": "done!=0",
+      "effect": "fast path, no local swait/action; consume except saturation",
+      "evidence": [
+        "E13",
+        "E17"
+      ]
+    },
+    {
+      "stage": "slow",
+      "condition": "done==0",
+      "effect": "signal check; prepare; TASK state; unlock; action; relock; loop",
+      "evidence": [
+        "E14",
+        "E15",
+        "E16"
+      ]
+    },
+    {
+      "stage": "exit",
+      "condition": "normal exit from helper loop",
+      "effect": "__finish; if no done return timeout else consume and return timeout ?: 1",
+      "evidence": [
+        "E16",
+        "E17",
+        "E23"
+      ]
+    },
+    {
+      "stage": "public-return",
+      "condition": "long available in wrapper",
+      "effect": "void wait_for_completion does not return it",
+      "evidence": [
+        "E11",
+        "E12"
+      ]
+    },
+    {
+      "stage": "unknown",
+      "condition": "cross-context runtime",
+      "effect": "actual wake/task execution/fairness/object lifetime/schedule_timeout results opaque",
+      "evidence": []
+    }
+  ],
+  "finite_models": [
+    {
+      "id": "M01",
+      "input": "done=0；complete 先于 wait",
+      "conditions": [
+        "对象有效",
+        "没有其它生产/消费"
+      ],
+      "local_result": "complete 增到1，发 swake 请求；随后 wait 快路减到0、不调 action；内部 long 取传入正 timeout",
+      "unknown": "不证明存在实际独立等待者"
+    },
+    {
+      "id": "M02",
+      "input": "初始 done=1；直接 wait",
+      "conditions": [
+        "入口持锁读到1"
+      ],
+      "local_result": "跳过局部 wait、schedule_timeout；done减到0；return timeout ?:1",
+      "unknown": "不保证此前通知缘由"
+    },
+    {
+      "id": "M03",
+      "input": "初始 done=k，2≤k<UINT_MAX",
+      "conditions": [
+        "k 次正常 wait 且无其他写者"
+      ],
+      "local_result": "逐次消费 k→k-1…→0；全部先走快路",
+      "unknown": "不证明通知与实体线程一一对应"
+    },
+    {
+      "id": "M04",
+      "input": "done=UINT_MAX−1；complete 再 wait",
+      "conditions": [
+        "无并行写者"
+      ],
+      "local_result": "complete 得 UINT_MAX，调用 swake；后续 wait 不减饱和 done",
+      "unknown": "不等同于已审 complete_all"
+    },
+    {
+      "id": "M05",
+      "input": "done=UINT_MAX；complete 与多次 wait",
+      "conditions": [
+        "对象完整"
+      ],
+      "local_result": "complete 不再递增但仍请求 swake；wait 反复不减 U",
+      "unknown": "未证明饱和态形成来源"
+    },
+    {
+      "id": "M06",
+      "input": "done=0；wait 先走慢路、解锁后 complete",
+      "conditions": [
+        "worker 获同一锁生产 done",
+        "action 正常返回",
+        "wait 再得锁"
+      ],
+      "local_result": "观察 done>0 后循环退出，__finish，再按非饱和规则消费",
+      "unknown": "不证明真的成功醒来或跨核全序"
+    },
+    {
+      "id": "M07",
+      "input": "done=0，无生产者，action 返回0",
+      "conditions": [
+        "信号门不跳出",
+        "确实正常返回0"
+      ],
+      "local_result": "循环条件变假，finish；!done return 0；不消耗 done",
+      "unknown": "不证真实 schedule_timeout 会返回0"
+    },
+    {
+      "id": "M08",
+      "input": "done=0，无生产者，action 返回正数",
+      "conditions": [
+        "正常返回且 done 未变"
+      ],
+      "local_result": "!done && timeout 为真；再次执行循环条件体，不能断言返回",
+      "unknown": "未来是否退出未知"
+    },
+    {
+      "id": "M09",
+      "input": "done=0，无生产者，action 返回负非零",
+      "conditions": [
+        "只把负值作为 helper 的假设输入"
+      ],
+      "local_result": "负 long 在 C 的条件判定为真，继续循环，不立即负返回",
+      "unknown": "schedule_timeout 是否能产生负值未核"
+    },
+    {
+      "id": "M10",
+      "input": "generic do_wait state 可响应信号且 signal_pending_state 为真",
+      "conditions": [
+        "初始done=0",
+        "信号门由非公开state触达"
+      ],
+      "local_result": "timeout=-ERESTARTSYS，break，__finish，若仍done0则返回该负long且不消费",
+      "unknown": "公开 TASK_UNINTERRUPTIBLE 不符合此门"
+    },
+    {
+      "id": "M11",
+      "input": "公开 wait_for_completion state=TASK_UNINTERRUPTIBLE",
+      "conditions": [
+        "宏固定状态掩码",
+        "signal_pending_state 按已读体执行"
+      ],
+      "local_result": "state 0x2 与 0x1/0x100 无交集，信号门返回0；最终 void 丢弃内部long",
+      "unknown": "不证明所有其它外部原因都不触发任务唤醒"
+    },
+    {
+      "id": "M12",
+      "input": "done=0 且 action 不正常返回",
+      "conditions": [
+        "执行路径停留在 action"
+      ],
+      "local_result": "relock/finish/消费/正常函数返回不可由已读路径证明已发生",
+      "unknown": "非真实永久睡眠证明"
+    },
+    {
+      "id": "M13",
+      "input": "swait 队列为空时 complete",
+      "conditions": [
+        "空队列表达式实际为真"
+      ],
+      "local_result": "计数仍按饱和门改变；swake_up_locked 直接return，不尝试 try_to_wake_up",
+      "unknown": "不证明系统其它醒来路径"
+    },
+    {
+      "id": "M14",
+      "input": "队列非空时 complete",
+      "conditions": [
+        "至少一项有效",
+        "调用者持锁"
+      ],
+      "local_result": "选队首，try_to_wake_up 一次，list_del_init；不检查醒来返回",
+      "unknown": "不证明公平性、唤醒成功与任务上CPU"
+    },
+    {
+      "id": "M15",
+      "input": "slow action 返回0但此前 done 已变正",
+      "conditions": [
+        "done>0先于重新持锁检查"
+      ],
+      "local_result": "即使 timeout0，因 !done 假而退出；finish并消费，内部 timeout ?:1 变1",
+      "unknown": "公开 void 不返回1"
+    }
+  ],
+  "conditional_compilation": "DEBUG / COMPLETION_DEFINATION macros are noted as textual source conditions, not preprocessed or linked",
+  "limits": [
+    "No deep scheduler, try_to_wake_up, schedule_timeout, signal chain or architecture spin/interrupt implementation",
+    "No build, preprocessing, runtime or kernel test",
+    "No global all-producer, all-waiter, lifespan or memory-order audit",
+    "No actual deadlock, fairness, wake success, FIFO or absence of lost wake proven"
+  ]
+}

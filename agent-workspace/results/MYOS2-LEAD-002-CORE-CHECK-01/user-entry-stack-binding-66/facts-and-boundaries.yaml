@@ -1,0 +1,969 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-ENTRY-STACK-BINDING-66",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (model self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "4b7b0b9642c3",
+  "contract_short12": "b603f4f09970",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_disposition": {
+    "batch64": "CLOSED_DOCUMENTATION_ONLY R64-01; combined PASS_PENDING_LOCAL with R64C-S01/R64-S01/R64-S02",
+    "batch65": "RETURN_DOCUMENTATION R65-01; D00 correction submitted, acceptance still pending C05",
+    "batch63_58": "blank-line allegations retracted and closed; no rework",
+    "R65_01_old_anchor_mapping": [
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::A01",
+        "new_evidence": [
+          "D01",
+          "D02"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "两独立静态对象，描述符初始化不覆盖数组定义"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::A16",
+        "new_evidence": [
+          "D03"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "去掉native_load_idt前置注释，仅load_idt定义"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::A17",
+        "new_evidence": [
+          "D04",
+          "D05"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "HAS_KERNEL_IBT和IDT_ALIGN各一个宏"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::A18",
+        "new_evidence": [
+          "D06",
+          "D07"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "IDT_ENTRIES和NUM_EXCEPTION_VECTORS各一宏"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::A20",
+        "new_evidence": [
+          "D08",
+          "D09"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "X86_TRAP_GP/PF独立"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::A21",
+        "new_evidence": [
+          "D10",
+          "D11"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "GEN_PROT_VEC/PAGE_FAULT_VEC独立"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::A22",
+        "new_evidence": [
+          "D12"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "定义外说明只作source_context"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::A23",
+        "new_evidence": [
+          "D13"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "SYM_CODE_START前的.align注释单作上下文"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::B11",
+        "new_evidence": [
+          "D14"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "reg_t单行typedef"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::B12",
+        "new_evidence": [
+          "D15",
+          "D16",
+          "D17",
+          "D18",
+          "D19"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "5个真正独立的生成偏移宏"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::B13",
+        "new_evidence": [
+          "D20",
+          "D21"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "RSP与SS两个独立宏"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::B14",
+        "new_evidence": [
+          "D22"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "OFFSET调用在main函数内部，OFFSET实现未审"
+      },
+      {
+        "old_qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::C04",
+        "new_evidence": [
+          "D23"
+        ],
+        "disposition": "reanchor_without_mutating_old",
+        "explanation": "警告注释移到source_context，宏本身3行"
+      }
+    ],
+    "R65_01_ref_matrix_overlay": [
+      {
+        "stage": "gate_data",
+        "evidence": [
+          "D24"
+        ],
+        "source_support": "init_idt_data sets data.vector, addr, segment, GATE_INTERRUPT and data.bits.p=1"
+      },
+      {
+        "stage": "gate_pack",
+        "evidence": [
+          "D25"
+        ],
+        "source_support": "idt_init_desc stores offset_low and copies segment/bits; other offsets remain original A14 qualified read"
+      },
+      {
+        "stage": "table_write",
+        "evidence": [
+          "D26"
+        ],
+        "source_support": "write_idt_entry memcpy(&idt[entry],gate,sizeof(*gate))"
+      },
+      {
+        "stage": "load_request",
+        "evidence": [
+          "D03"
+        ],
+        "source_support": "load_idt contains source inline lidt instruction; does not prove IDTR state"
+      },
+      {
+        "stage": "stubs",
+        "evidence": [
+          "D04",
+          "D05",
+          "D07",
+          "D13",
+          "D27",
+          "D28"
+        ],
+        "source_support": "HAS_KERNEL_IBT/IDT_ALIGN, exception count, actual label interval, conditional dummy error and vector/.fill"
+      },
+      {
+        "stage": "vector_classification",
+        "evidence": [
+          "D08",
+          "D09",
+          "D10",
+          "D11",
+          "D12"
+        ],
+        "source_support": "GP 13, PF 14, FIRST_EXTERNAL_VECTOR 0x20; names from separately defined macros"
+      },
+      {
+        "stage": "objects",
+        "evidence": [
+          "D01",
+          "D02"
+        ],
+        "source_support": "distinct idt_table array and idt_descr initializer"
+      }
+    ],
+    "old_A27_A30": "A27 and A30 DO_NOT_EXIST in original65 evidence.md; not uploaded records; removed from replacement matrix",
+    "other_original_50": "retained without whole-set P2 recheck; original 63/63 is author label count only",
+    "not_authorized": "edit 65 files/comments or self-close R65-01",
+    "graph_overlay": "65 common->push labelled CALL should be MACRO_EXPANSION/LOCAL_CONTROL; idt->gate->write are aggregate not direct calls; schedule and return branches conditional"
+  },
+  "prior_manifest_disposition": {
+    "original_65_missing": [
+      "read_channel",
+      "startup_selfcheck_quote",
+      "branch_canary_quotes"
+    ],
+    "not_missing": [
+      "produced_by",
+      "model_per_owner",
+      "self_check"
+    ],
+    "new66_fields_present_in": "MANIFEST.md",
+    "old65_comment_full_SHA": "historical comment 6743139361 contains 40-char commit; leave unchanged; new comment must use short only",
+    "actual_readback_scope": "new G00 time/master and conventions reread this round; not retroactive proof of prior run"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_macro_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：三个独立地址宏",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/sched/misc/sched_misc.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：task_stack_page",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：PAGE_SIZE/THREAD_SIZE",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/thread_info_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：栈padding",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：task.stack成员",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/init/init_task.c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：init_task.stack初始值",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：kmalloc及tsk.stack赋值窗口",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：loff_t定义",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/posix_types.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：__kernel_loff_t定义",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/ptrace.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：pt_regs_s尾帧",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "A：init_stack链接脚本赋值的source_context，不作P2短锚",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/smp/percpu_area.c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B：pcpu_hot/cpu_tss_rw定义",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/processor_types_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B：x86_hw_tss和thread.sp",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/common.c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B：cpu_init_exception_handling与cpu_init",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/desc_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B与D：TSS描述符/GDT/IDT直接定义",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/processor_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B：load_sp0",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B：update_task_stack",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process64_arch.c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B/C：__switch_to",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/current.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "B/C：pcpu_hot字段与get_current",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_types_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C：inactive_task_frame",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/entry_64.S",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C/D：switch_to/entry_SYSCALL/sa_entintr/stubs",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/include/generated/asm-offsets.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C/D：已存在生成偏移",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kbuild/asm-offsets.c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "C：TASK_threadsp的源生成表达",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kbuild/asm-offsets_64.c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "D：main内offset生成表达",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/idt.c",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "D：两个IDT对象",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/idtentry.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "D：IDT_ALIGN",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/processor/desc_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "D：IDT size",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/trapnr.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "D：向量宏",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "D：MyOS2向量宏",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "D：FIRST_EXTERNAL_VECTOR",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    },
+    {
+      "path": "mykernel/sched/scheduler/preempt_macro.h",
+      "ref": "time@a039d9803ade",
+      "read_channel": "connector",
+      "role": "D：in_atomic",
+      "scope": "full fixed content or explicit direct source window; exact individual evidence lines extracted from full fixed blob"
+    }
+  ],
+  "source_context": [
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "region": ".data linker-script statements",
+      "literal": "init_stack = .;",
+      "meaning": "link-time symbol assignment, not actual linked allocation proof"
+    },
+    {
+      "path": "mykernel/sched/task/task_api.h",
+      "region": "init_stack declaration",
+      "literal": "extern char init_stack[THREAD_SIZE] __page_aligned_data;",
+      "meaning": "declaration for sizeof(init_stack); linker defines symbol, no build"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/thread_info_const_arch.h",
+      "region": "padding comment",
+      "meaning": "x86_64 fixed-length hardware frame is source comment, not independent CPU norm"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/common.c::cpu_init",
+      "region": "commented load_sp0 trampoline code",
+      "meaning": "comment not active SP0 publishing"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/switch_to_arch.h::update_task_stack",
+      "region": "commented XENPV condition",
+      "meaning": "source always calls load_sp0 under examined definition; not conditional Xen runtime gate"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process64_arch.c::__switch_to",
+      "region": "save_fsgs/segments/x86_fsgsbase_load",
+      "meaning": "real previous callees and conditionals are opaque; cannot skip their return prerequisites"
+    }
+  ],
+  "stack_address_matrix": [
+    {
+      "object": "task.stack",
+      "producer": [
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14"
+      ],
+      "source_rule": "task_stack_page(task) returns task->stack; init_task.stack=init_stack; dup_task_struct calls alloc_thread_stack_node with kmalloc(THREAD_SIZE)",
+      "requires": [
+        "valid task",
+        "allocation succeeds",
+        "stack retained during access"
+      ]
+    },
+    {
+      "object": "THREAD_SIZE",
+      "producer": [
+        "A05",
+        "A06",
+        "A07",
+        "A08"
+      ],
+      "value_bytes": 32768,
+      "source_rule": "PAGE_SHIFT=12; PAGE_SIZE=4096; THREAD_SIZE_ORDER=3; 4096<<3"
+    },
+    {
+      "object": "padding",
+      "producer": [
+        "A09"
+      ],
+      "value_bytes": 0
+    },
+    {
+      "object": "sizeof(pt_regs_s)",
+      "producer": [
+        "A17",
+        "A18"
+      ],
+      "checked_in_offset_bytes": 176,
+      "compile_size": "NOT_RUN"
+    },
+    {
+      "object": "task_pt_regs",
+      "producer": [
+        "A02",
+        "A15",
+        "A16"
+      ],
+      "symbolic": "((pt_regs_s *)(loff_t(base)+THREAD_SIZE-padding))-1",
+      "integer_projection_if_valid": "base+32592",
+      "preconditions": [
+        "pointer-to-signed-loff_t conversion implementation-defined for out-of-range addresses",
+        "signed addition must not overflow",
+        "one-past and minus-one pointer operation must designate valid suitably aligned storage"
+      ]
+    },
+    {
+      "object": "task_top_of_stack",
+      "producer": [
+        "A03"
+      ],
+      "symbolic": "(unsigned long)(task_pt_regs(task)+1)",
+      "integer_projection_if_valid": "base+32768"
+    },
+    {
+      "object": "TOP_OF_INIT_STACK",
+      "producer": [
+        "A01"
+      ],
+      "symbolic": "(unsigned long)&init_stack+sizeof(init_stack)-padding",
+      "text_relationship": "init_task.stack initially init_stack; linker script assigns init_stack symbol; symbol bytes/placement not linked or run"
+    }
+  ],
+  "tss_percpu_publication_matrix": [
+    {
+      "stage": "static pcpu_hot",
+      "producer": [
+        "B01",
+        "B02"
+      ],
+      "effect": "separate current_task perCPU object plus pcpu_hot initialized current_task=&init_task, preempt_count, top_of_stack=TOP_OF_INIT_STACK",
+      "visibility": "initial source only"
+    },
+    {
+      "stage": "static cpu_tss_rw",
+      "producer": [
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08"
+      ],
+      "effect": "TSS x86_tss.sp0 initialized with poison expression and io_bitmap_base; x86_hw_tss contains sp0/sp1/sp2",
+      "visibility": "no CPU loaded proof"
+    },
+    {
+      "stage": "TSS descriptor",
+      "producer": [
+        "B09",
+        "B10",
+        "B16",
+        "B17",
+        "B18",
+        "B19",
+        "B20",
+        "B21",
+        "B22",
+        "B23",
+        "B24",
+        "B25",
+        "B26"
+      ],
+      "effect": "cpu_init_exception_handling uses per_cpu(cpu_tss_rw,cpu).x86_tss; set_tss_desc builds descriptor in get_cpu_gdt_rw(cpu) and writes TSS entry; load_TR_desc issues load_direct_gdt then ltr",
+      "visibility": "CPU TR/GDT not measured"
+    },
+    {
+      "stage": "cpu_init independent",
+      "producer": [
+        "B12",
+        "B13",
+        "B14",
+        "B15"
+      ],
+      "effect": "cpu_init calls syscall_init and load_direct_gdt; its former load_sp0 trampoline is comment",
+      "visibility": "no invocation ordering between cpu_init and cpu_init_exception_handling established"
+    },
+    {
+      "stage": "switch publication",
+      "producer": [
+        "B27",
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B32",
+        "B33"
+      ],
+      "effect": "__switch_to after preceding save_fsgs/segment work writes pcpu_hot.current_task=next_p; then top_of_stack=task_top_of_stack(next_p); update_task_stack(next_p) calls load_sp0 to set this_cpu(cpu_tss_rw).x86_tss.sp0",
+      "visibility": "source statement sequence only; not atomic or remote CPU synchronization"
+    }
+  ],
+  "switch_entry_consumption_matrix": [
+    {
+      "stage": "switch_to",
+      "evidence": [
+        "C01"
+      ],
+      "action": "switch_to(prev,next,last) invokes __switch_to_asm and records returned last"
+    },
+    {
+      "stage": "save_asm",
+      "evidence": [
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C10",
+        "C11"
+      ],
+      "action": "save six callee registers; store old %rsp into prev->thread.sp at checked-in offset; load %rsp from next->thread.sp",
+      "requires": [
+        "valid prev/next task pointers",
+        "valid thread.sp and inactive frame"
+      ]
+    },
+    {
+      "stage": "restore_asm",
+      "evidence": [
+        "C02",
+        "C03",
+        "C08",
+        "C09"
+      ],
+      "action": "pop six callee saved registers from next stack; jmp __switch_to; ret_addr slot is separate from saved task stack top",
+      "requires": [
+        "valid inactive_task_frame and 8-byte slot assumption",
+        "__switch_to normally returns"
+      ]
+    },
+    {
+      "stage": "C_switch",
+      "evidence": [
+        "B27",
+        "B28",
+        "B29",
+        "B30",
+        "B31",
+        "B32",
+        "C22"
+      ],
+      "action": "publish next pointers and SP0 in C after earlier callee path, return prev_p",
+      "requires": [
+        "save_fsgs and x86_fsgsbase_load etc normal returns",
+        "scheduler source beyond bounded path opaque"
+      ]
+    },
+    {
+      "stage": "software_SYSCALL",
+      "evidence": [
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C19",
+        "C20"
+      ],
+      "action": "save user RSP into TSS.sp2 scratch, then mov pcpu_hot.top_of_stack -> kernel RSP; construct user tail and pt_regs; TSS.sp0 is NOT read by selected software prefix",
+      "requires": [
+        "GS/perCPU mapping correct",
+        "valid top pointer",
+        "MSR setup/link/CPU not verified"
+      ]
+    },
+    {
+      "stage": "hardware_exception",
+      "evidence": [
+        "C17",
+        "C18"
+      ],
+      "action": "sa_entintr_retp uses existing RSP and saves regs; no software choose-stack sequence inside the selected body",
+      "requires": [
+        "CPU exception entry stack choice/privilege transition entirely unverified",
+        "TSS.sp0 real use not attested"
+      ]
+    },
+    {
+      "stage": "existing_scheduler_note",
+      "evidence": [],
+      "action": "old scheduler-integration-03/integration.md §1 C5 mentions conditional post-interrupt schedule and GAP-02; navigation only, not rechecked root"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "case_id": "STACK-100000",
+      "base_hex": "0x100000",
+      "thread_size": 32768,
+      "padding": 0,
+      "pt_regs_bytes": 176,
+      "task_pt_regs_hex": "0x107f50",
+      "top_of_stack_hex": "0x108000",
+      "result": "within_interval_if_32768_valid_alloc_and_normal_pointer_arithmetic"
+    },
+    {
+      "case_id": "STACK-200000",
+      "base_hex": "0x200000",
+      "thread_size": 32768,
+      "padding": 0,
+      "pt_regs_bytes": 176,
+      "task_pt_regs_hex": "0x207f50",
+      "top_of_stack_hex": "0x208000",
+      "result": "within_interval_if_32768_valid_alloc_and_normal_pointer_arithmetic"
+    },
+    {
+      "case_id": "STACK-10000000",
+      "base_hex": "0x10000000",
+      "thread_size": 32768,
+      "padding": 0,
+      "pt_regs_bytes": 176,
+      "task_pt_regs_hex": "0x10007f50",
+      "top_of_stack_hex": "0x10008000",
+      "result": "within_interval_if_32768_valid_alloc_and_normal_pointer_arithmetic"
+    },
+    {
+      "case_id": "STACK-7fff0000",
+      "base_hex": "0x7fff0000",
+      "thread_size": 32768,
+      "padding": 0,
+      "pt_regs_bytes": 176,
+      "task_pt_regs_hex": "0x7fff7f50",
+      "top_of_stack_hex": "0x7fff8000",
+      "result": "within_interval_if_32768_valid_alloc_and_normal_pointer_arithmetic"
+    },
+    {
+      "case_id": "SWITCH-1048576-2097152",
+      "old_task_thread_sp": "0x100000",
+      "next_task_thread_sp": "0x200000",
+      "saved_slots": 6,
+      "restore_slots": 6,
+      "retaddr_offset_after_six_pops": 48,
+      "source_control": "mov old, mov new, pop six, jump C",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "SWITCH-3145728-4194304",
+      "old_task_thread_sp": "0x300000",
+      "next_task_thread_sp": "0x400000",
+      "saved_slots": 6,
+      "restore_slots": 6,
+      "retaddr_offset_after_six_pops": 48,
+      "source_control": "mov old, mov new, pop six, jump C",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "SWITCH-1048576-1048576",
+      "old_task_thread_sp": "0x100000",
+      "next_task_thread_sp": "0x100000",
+      "saved_slots": 6,
+      "restore_slots": 6,
+      "retaddr_offset_after_six_pops": 48,
+      "source_control": "mov old, mov new, pop six, jump C",
+      "runtime_verified": false
+    },
+    {
+      "case_id": "TSS-poison-not_published",
+      "initial_sp0": "poison",
+      "later": "not_published",
+      "CPU_tr_selected_stack": "unknown",
+      "result": "source_state_only"
+    },
+    {
+      "case_id": "TSS-poison-update_sp0_called",
+      "initial_sp0": "poison",
+      "later": "update_sp0_called",
+      "CPU_tr_selected_stack": "unknown",
+      "result": "source_state_only"
+    },
+    {
+      "case_id": "TSS-valid_unknown-update_sp0_called",
+      "initial_sp0": "valid_unknown",
+      "later": "update_sp0_called",
+      "CPU_tr_selected_stack": "unknown",
+      "result": "source_state_only"
+    },
+    {
+      "case_id": "OLD65-SCHED-false-false",
+      "handler_returns": false,
+      "atomic": false,
+      "schedule_call_reachable": false,
+      "source_frame_identity": "unknown"
+    },
+    {
+      "case_id": "OLD65-SCHED-true-false",
+      "handler_returns": true,
+      "atomic": false,
+      "schedule_call_reachable": true,
+      "source_frame_identity": "unknown"
+    },
+    {
+      "case_id": "OLD65-SCHED-true-true",
+      "handler_returns": true,
+      "atomic": true,
+      "schedule_call_reachable": false,
+      "source_frame_identity": "unknown"
+    },
+    {
+      "case_id": "OLD65-SCHED-false-true",
+      "handler_returns": false,
+      "atomic": true,
+      "schedule_call_reachable": false,
+      "source_frame_identity": "unknown"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "conditional only; no prior item closed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F02",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "conditional only; no prior item closed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "conditional only; no prior item closed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F05",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "conditional only; no prior item closed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "conditional only; no prior item closed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U05",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "conditional only; no prior item closed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U06",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "conditional only; no prior item closed"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "limited by R64-S01/S02/R64C-S01; R64-01 doc alone closed"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "limited by R64-S01/S02/R64C-S01; R64-01 doc alone closed"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U08",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "limited by R64-S01/S02/R64C-S01; R64-01 doc alone closed"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "limited by R64-S01/S02/R64C-S01; R64-01 doc alone closed"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F06",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "limited by R64-S01/S02/R64C-S01; R64-01 doc alone closed"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "not reopened or duplicated"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption": "not reopened or duplicated"
+    }
+  ],
+  "assumptions": [
+    "all 64-bit pointer/loff_t conversions and arithmetic must be valid before computing model addresses",
+    "kmalloc(THREAD_SIZE) source request is not allocation object lifetime/alignment proof",
+    "perCPU thread switch stores require valid next task/current CPU access, normal predecessor callee return",
+    "real TSS/TR, GS, privilege transitions, hardware stack push and final kernel/userspace behavior NOT_RUN",
+    "new task first entry/ret_from_fork_asm and first userspace entry not audited; cannot assert routine switch applies to all paths"
+  ],
+  "p9_text_subset": {
+    "item1": "six new files full40 SHA regex zero at precommit",
+    "item2": "all 101 short quotes direct fixed single definition, 1–5 lines; actual local complete P9 NOT_RUN",
+    "item3": "source paths fetched; future branch/commit readback required",
+    "item4": "line windows bounded by current direct file length",
+    "item5": "new101 quote count, 101+0; not original65 full audit",
+    "item6": "no [EXTERNAL] hardware claims without source; explicit model assumptions",
+    "item7": "time/master canaries rechecked this round",
+    "item8": "startup_selfcheck_quote and read_channel appear in new MANIFEST",
+    "item9": "symbol list code artifact N/A",
+    "item10": "no kernel patches or diff, N/A",
+    "item11": "no compilation/runtime verification performed",
+    "item12": "no degraded file-fence delivery",
+    "item13": "all D00/A/B/C anchored definitions in evidence"
+  },
+  "run_context": {
+    "record_version": "v0.2",
+    "actor": "MYOS2-A-C05b / CHAT-EXEC-08",
+    "surface": "ChatGPT ordinary conversation + GitHub connector",
+    "operator_selection": "Owner states GPT-6 + Extra",
+    "backend": "unknown_or_not_attestable",
+    "authorization_ref": "Owner executes fixed 97 @ b603f4f09970",
+    "artifact_status": "six new files only",
+    "reviewer": "MYOS2-A-C05 independent acceptance pending",
+    "human_adjudication": "pending",
+    "switch_history": "unknown",
+    "external_paid_models_started": false
+  },
+  "source_budget": {
+    "core_and_direct_dependency_soft_limit": 14,
+    "source_paths": 31,
+    "reason": "D00 includes independent macro families/old source verification; 66 new source includes stack arithmetic typedef, task stack actual assignment, linker identity, perCPU TSS/GDT and saved frame offsets; only bounded direct definitions read, no repository-wide scan",
+    "navigation_search_batches": 2,
+    "source_directories": 4
+  },
+  "matrix_review": {
+    "verified_by": "task-bound independent label-to-claim recheck",
+    "checked_items": [
+      "gate_data D24 has present",
+      "gate_pack D25 has offset_low",
+      "TSS descriptor B16–B26",
+      "task switch B27–B33",
+      "save/restore C04–C09",
+      "syscall software stack C13–C16"
+    ],
+    "excluded_claims": [
+      "existing generated offsets not compiler ABI",
+      "actual CPU hardware stack choice not proven"
+    ]
+  }
+}

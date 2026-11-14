@@ -1,0 +1,397 @@
+{
+ "record": "remote_readback_of_results_commit",
+ "results_commit_short12": "22934124fe92",
+ "tool": "session scratch readback2.py（RECHECK-01 修订版，未交付）：object 模式按提交对象取文件；branch 模式按分支名取，只接受与目标相同或其后代且该文件 blob 相同的头",
+ "channels": [
+  "raw.githubusercontent.com",
+  "api.github.com contents（raw）"
+ ],
+ "note": "两个 Markdown 文件第一次带 followup_id 字段运行时，工具把整个文件当 YAML 解析，得到 PARSE_ERROR（传输与逐字节一致均通过）；随后按逐字节一致重跑，以下为重跑结果。front matter 中的 followup_id 已在本地对同一字节解析确认。",
+ "readbacks": [
+  {
+   "path": "deferred-findings.yaml",
+   "mode": "branch",
+   "field": "followup_id",
+   "expected_bytes": 42058,
+   "expected_sha256_segments": [
+    "7806cf55cdb195fe",
+    "1405c18fae9a5865",
+    "c164c04bc8a8357d",
+    "e5955048dab85f15"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 42058,
+     "byte_identical": true,
+     "field_value": "CORE-USER-VFS-BASELINE-05",
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 42058,
+     "byte_identical": true,
+     "field_value": "CORE-USER-VFS-BASELINE-05",
+     "ok": true
+    }
+   ],
+   "binding": null,
+   "ok": true
+  },
+  {
+   "path": "deferred-findings.yaml",
+   "mode": "object",
+   "field": "followup_id",
+   "expected_bytes": 42058,
+   "expected_sha256_segments": [
+    "7806cf55cdb195fe",
+    "1405c18fae9a5865",
+    "c164c04bc8a8357d",
+    "e5955048dab85f15"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 42058,
+     "byte_identical": true,
+     "field_value": "CORE-USER-VFS-BASELINE-05",
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 42058,
+     "byte_identical": true,
+     "field_value": "CORE-USER-VFS-BASELINE-05",
+     "ok": true
+    }
+   ],
+   "binding": "fetched at the target commit itself",
+   "ok": true
+  },
+  {
+   "path": "facts-and-dependencies.yaml",
+   "mode": "branch",
+   "field": "followup_id",
+   "expected_bytes": 145142,
+   "expected_sha256_segments": [
+    "a358f9d89dc982ae",
+    "463945efd573e1d8",
+    "e52a57db54131a9a",
+    "bf85fc1d04a3ea88"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 145142,
+     "byte_identical": true,
+     "field_value": "CORE-USER-VFS-BASELINE-05",
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 145142,
+     "byte_identical": true,
+     "field_value": "CORE-USER-VFS-BASELINE-05",
+     "ok": true
+    }
+   ],
+   "binding": null,
+   "ok": true
+  },
+  {
+   "path": "facts-and-dependencies.yaml",
+   "mode": "object",
+   "field": "followup_id",
+   "expected_bytes": 145142,
+   "expected_sha256_segments": [
+    "a358f9d89dc982ae",
+    "463945efd573e1d8",
+    "e52a57db54131a9a",
+    "bf85fc1d04a3ea88"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 145142,
+     "byte_identical": true,
+     "field_value": "CORE-USER-VFS-BASELINE-05",
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 145142,
+     "byte_identical": true,
+     "field_value": "CORE-USER-VFS-BASELINE-05",
+     "ok": true
+    }
+   ],
+   "binding": "fetched at the target commit itself",
+   "ok": true
+  },
+  {
+   "path": "mm-04-disposition.md",
+   "mode": "branch",
+   "field": null,
+   "expected_bytes": 16250,
+   "expected_sha256_segments": [
+    "848eb723a8fe6eb9",
+    "7a328431135a525a",
+    "e2d237bb4d4f7156",
+    "5d214e01b60df9c0"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 16250,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 16250,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    }
+   ],
+   "binding": null,
+   "ok": true
+  },
+  {
+   "path": "mm-04-disposition.md",
+   "mode": "object",
+   "field": null,
+   "expected_bytes": 16250,
+   "expected_sha256_segments": [
+    "848eb723a8fe6eb9",
+    "7a328431135a525a",
+    "e2d237bb4d4f7156",
+    "5d214e01b60df9c0"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 16250,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 16250,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    }
+   ],
+   "binding": "fetched at the target commit itself",
+   "ok": true
+  },
+  {
+   "path": "records/facts_check.json",
+   "mode": "branch",
+   "field": null,
+   "expected_bytes": 5418,
+   "expected_sha256_segments": [
+    "43238075da2597d0",
+    "d5abbc51cdaca093",
+    "9af615e4d11e2d4d",
+    "c604feefc404fa3f"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 5418,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 5418,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    }
+   ],
+   "binding": null,
+   "ok": true
+  },
+  {
+   "path": "records/facts_check.json",
+   "mode": "object",
+   "field": null,
+   "expected_bytes": 5418,
+   "expected_sha256_segments": [
+    "43238075da2597d0",
+    "d5abbc51cdaca093",
+    "9af615e4d11e2d4d",
+    "c604feefc404fa3f"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 5418,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 5418,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    }
+   ],
+   "binding": "fetched at the target commit itself",
+   "ok": true
+  },
+  {
+   "path": "scripts/uv_facts_check.py",
+   "mode": "branch",
+   "field": null,
+   "expected_bytes": 23037,
+   "expected_sha256_segments": [
+    "f11a8f7ee2fb96ae",
+    "b21b66ef30aab6e3",
+    "77d0ec36ece6c997",
+    "6bbd5ac75b161dc0"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 23037,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 23037,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    }
+   ],
+   "binding": null,
+   "ok": true
+  },
+  {
+   "path": "scripts/uv_facts_check.py",
+   "mode": "object",
+   "field": null,
+   "expected_bytes": 23037,
+   "expected_sha256_segments": [
+    "f11a8f7ee2fb96ae",
+    "b21b66ef30aab6e3",
+    "77d0ec36ece6c997",
+    "6bbd5ac75b161dc0"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 23037,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 23037,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    }
+   ],
+   "binding": "fetched at the target commit itself",
+   "ok": true
+  },
+  {
+   "path": "user-vfs-baseline.md",
+   "mode": "branch",
+   "field": null,
+   "expected_bytes": 39183,
+   "expected_sha256_segments": [
+    "b5afd2ad67183a9f",
+    "ea22b8317ed87ecd",
+    "7b17fcfad8cf9ed7",
+    "c4f497de14a39fc2"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 39183,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 39183,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    }
+   ],
+   "binding": null,
+   "ok": true
+  },
+  {
+   "path": "user-vfs-baseline.md",
+   "mode": "object",
+   "field": null,
+   "expected_bytes": 39183,
+   "expected_sha256_segments": [
+    "b5afd2ad67183a9f",
+    "ea22b8317ed87ecd",
+    "7b17fcfad8cf9ed7",
+    "c4f497de14a39fc2"
+   ],
+   "channels": [
+    {
+     "channel": "raw.githubusercontent.com",
+     "http_code": "200",
+     "bytes": 39183,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    },
+    {
+     "channel": "api.github.com_contents_raw",
+     "http_code": "200",
+     "bytes": 39183,
+     "byte_identical": true,
+     "field_value": null,
+     "ok": true
+    }
+   ],
+   "binding": "fetched at the target commit itself",
+   "ok": true
+  }
+ ],
+ "all_ok": true
+}

@@ -1,0 +1,419 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-DENTRY-LOOKUP-33",
+  "record_type": "typed_dentry_lookup_static_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-03",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "write_base_short12": "d6444512a213",
+  "lead_published_short12": "4b39bce5c8c6",
+  "package_id": "MYOS2-C03C-TO-C04A-20261103-01",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "read_channel": "connector",
+  "definitions": [
+    {
+      "symbol": "qstr_s",
+      "type": "struct",
+      "fields": [
+        "size_t len",
+        "const unsigned char* name"
+      ],
+      "distinct_from": [
+        "dentry_s",
+        "its allocated buffer"
+      ],
+      "premise": "name points to valid byte region of specified length"
+    },
+    {
+      "symbol": "dentry_s",
+      "type": "struct",
+      "fields": [
+        "d_parent",
+        "d_name",
+        "d_inode",
+        "d_sb",
+        "d_op",
+        "d_child",
+        "d_subdirs"
+      ],
+      "premise": "field access requires valid object"
+    },
+    {
+      "symbol": "inode_ops_s.lookup",
+      "type": "dentry_s* (*)(inode_s*,dentry_s*,unsigned int)",
+      "premise": "returned pointer != mutation of passed original object"
+    },
+    {
+      "symbol": "inode_s",
+      "type": "struct",
+      "fields": [
+        "i_op",
+        "i_mapping",
+        "i_size"
+      ],
+      "premise": "original dentry->d_inode and mapping must be valid before further read"
+    },
+    {
+      "symbol": "addr_spc_s",
+      "type": "struct",
+      "fields": [
+        "nrpages",
+        "page_array"
+      ],
+      "premise": "mapping valid"
+    },
+    {
+      "symbol": "__d_lookup",
+      "type": "dentry_s*(const dentry_s*,const qstr_s*)",
+      "returns": [
+        "NULL",
+        "first predicate-matching candidate pointer"
+      ],
+      "not_produced": [
+        "ERR_PTR"
+      ],
+      "basis": [
+        "DL33-A004",
+        "DL33-A005",
+        "DL33-A006",
+        "DL33-A007"
+      ]
+    },
+    {
+      "symbol": "__myos_d_alloc",
+      "type": "dentry_s*(super_block_s*,const qstr_s*)",
+      "returns": [
+        "ERR_PTR(-ENOMEM)",
+        "new dentry pointer"
+      ],
+      "basis": [
+        "DL33-A011",
+        "DL33-A012",
+        "DL33-A016"
+      ]
+    },
+    {
+      "symbol": "__lookup_slow",
+      "type": "dentry_s*(qstr_s*,dentry_s*,unsigned)",
+      "returns": [
+        "ERR_PTR(-ENOMEM)",
+        "ERR_PTR(-ENOENT)",
+        "original allocated dentry pointer"
+      ],
+      "not_produced_on_defined_exit": [
+        "NULL"
+      ],
+      "basis": [
+        "DL33-A020",
+        "DL33-A021",
+        "DL33-A024"
+      ]
+    }
+  ],
+  "fast_lookup": {
+    "entry_state": "dentry=NULL",
+    "source_path": "mykernel/fs/vfs/dcache.c",
+    "symbol": "__d_lookup",
+    "iteration": "parent->d_subdirs children via d_child",
+    "predicate": "dir_p != NULL && strncmp(name->name,dir_p->d_name.name,name->len)==0",
+    "not_checked": "dir_p->d_name.len==name->len",
+    "hit": "first matching dentry pointer",
+    "miss": "NULL",
+    "early_break": true,
+    "error_pointer_producer": false,
+    "guards_not_seen_in_complete_function": [
+      "candidate length equality",
+      "inode validity",
+      "dget",
+      "lock or refcount acquire",
+      "revalidate"
+    ],
+    "stop_conditions": [
+      "invalid list",
+      "invalid qstr and candidate byte ranges",
+      "false length premise",
+      "different strncmp selection"
+    ]
+  },
+  "allocation": {
+    "symbol": "__myos_d_alloc",
+    "sequence": [
+      {
+        "step": 1,
+        "code": "kzalloc(sizeof(dentry_s), GFP_KERNEL)",
+        "on_NULL": "return ERR_PTR(-ENOMEM)",
+        "on_nonnull": "allocate dentry object"
+      },
+      {
+        "step": 2,
+        "code": "kzalloc(name->len + 1,GFP_KERNEL)",
+        "on_NULL": "kfree(dentry); return ERR_PTR(-ENOMEM)",
+        "on_nonnull": "allocate independent name byte buffer"
+      },
+      {
+        "step": 3,
+        "code": "dentry->d_name.len=name->len; memcpy(name bytes, name->len)",
+        "premises": [
+          "unwrapped length",
+          "readable source",
+          "valid destination"
+        ]
+      },
+      {
+        "step": 4,
+        "code": "d_flags=0;d_inode=NULL;d_parent=dentry;d_sb=sb;d_op=NULL",
+        "premise": "both allocations succeeded"
+      },
+      {
+        "step": 5,
+        "code": "INIT_LIST_S(d_child);INIT_LIST_HEADER_S(d_subdirs);return dentry"
+      }
+    ],
+    "distinct_identities": [
+      "dentry object",
+      "allocated name byte buffer",
+      "borrowed qstr",
+      "borrowed source name byte region"
+    ],
+    "terminating_NUL": "conditional on no len+1 overflow, proper zeroing from kzalloc (__GFP_ZERO), allocations and memcpy success; cannot be asserted for bad input",
+    "wrapper_d_alloc": {
+      "check": "dentry==NULL",
+      "allocator_failure": "ERR_PTR(-ENOMEM)",
+      "verdict": "conditional contract mismatch, not real fault proof"
+    },
+    "source_anchors": [
+      "DL33-A011",
+      "DL33-A012",
+      "DL33-A013",
+      "DL33-A014",
+      "DL33-A015",
+      "DL33-A016",
+      "DL33-A017",
+      "DL33-A018",
+      "DL33-A048"
+    ]
+  },
+  "slow_lookup_matrix": [
+    {
+      "id": "S01",
+      "allocation": "ERR_PTR(-ENOMEM)",
+      "callback": "NOT_CALLED",
+      "original_inode": "NOT_READ",
+      "returned": "ERR_PTR(-ENOMEM)",
+      "upper": "IS_ERR -> ERR_CAST",
+      "stop": "failure return"
+    },
+    {
+      "id": "S02",
+      "allocation": "normal pointer",
+      "callback": "NULL",
+      "original_inode": "NOT_READ",
+      "returned": "ERR_PTR(-ENOENT)",
+      "releases": "kfree(original dentry) explicit",
+      "upper": "IS_ERR -> ERR_CAST",
+      "stop": "separately allocated name buffer physical release not audited"
+    },
+    {
+      "id": "S03",
+      "allocation": "normal pointer",
+      "callback": "same original nonNULL with inode set",
+      "original_inode": "valid",
+      "returned": "original pointer",
+      "upper": "step_into",
+      "stop": "callback body/mount/ref not audited"
+    },
+    {
+      "id": "S04",
+      "allocation": "normal pointer",
+      "callback": "OTHER nonNULL pointer",
+      "original_inode": "valid on original",
+      "returned": "original pointer",
+      "upper": "step_into",
+      "stop": "real alternate callback result not proven"
+    },
+    {
+      "id": "S05",
+      "allocation": "normal pointer",
+      "callback": "OTHER nonNULL pointer",
+      "original_inode": "NULL or invalid",
+      "returned": "UNESTABLISHED",
+      "upper": "UNESTABLISHED",
+      "stop": "invalid/undefined original inode field dereference"
+    },
+    {
+      "id": "S06",
+      "allocation": "normal pointer",
+      "callback": "ERR_PTR(-errno) nonNULL",
+      "original_inode": "not established",
+      "returned": "UNESTABLISHED",
+      "upper": "UNESTABLISHED",
+      "stop": "callback result compared with NULL only; not propagated as error"
+    },
+    {
+      "id": "S07",
+      "allocation": "normal pointer",
+      "callback": "nonNULL",
+      "original_inode": "valid mapping with nrpages>0",
+      "page_array_kzalloc": "NULL",
+      "returned": "may reach publication conditional",
+      "upper": "step_into if reaches return",
+      "stop": "no direct NULL check after this allocation, no actual allocation fail proven"
+    }
+  ],
+  "callback_semantics": {
+    "callback_type": "dentry_s* (*)(inode_s*,dentry_s*,unsigned)",
+    "actual_check": "return_pointer==NULL only",
+    "original_argument": "local allocated dentry",
+    "callback_return_assigned_to_original": false,
+    "downstream_object_consumed": "original dentry->d_inode",
+    "required_premise_for_defined_continuation": "original inode, mapping and related fields valid"
+  },
+  "slow_return_scope": {
+    "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+    "fast_NULL_can_trigger_slow": true,
+    "slow_normal_NULL_producer_in_selected_definition": false,
+    "prior_historical_file_edited": false,
+    "verdict": "LC32-F03 helper-only normal double-NULL assumption not supported on selected defined execution paths"
+  },
+  "upper_consumers": [
+    {
+      "function": "walk_component",
+      "route": "fast __d_lookup; fast NULL-> __lookup_slow; slow IS_ERR->ERR_CAST; else step_into",
+      "validity": "nonNULL dentry not automatically an inode-valid proof"
+    },
+    {
+      "function": "open_last_lookups",
+      "route": "inside !(open_flag&O_CREAT), fast then slow; IS_ERR->ERR_CAST; if(dentry) goto finish_lookup; step_into",
+      "flag_origin": "do_filp_open op.lookup_flags; still R32-S01 limitation",
+      "unassigned_0x40": "helper-only LC32-F02 conditional remains distinct"
+    }
+  ],
+  "finite_string_cases": [
+    {
+      "id": "DL33-T01",
+      "query": "a",
+      "candidate": "ab",
+      "query_len": 1,
+      "strncmp_result": 0,
+      "predicate_matches": true,
+      "context": "query shorter than candidate",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T02",
+      "query": "ab",
+      "candidate": "a",
+      "query_len": 2,
+      "strncmp_result": 1,
+      "predicate_matches": false,
+      "context": "reverse, NUL mismatch",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T03",
+      "query": "a",
+      "candidate": "a",
+      "query_len": 1,
+      "strncmp_result": 0,
+      "predicate_matches": true,
+      "context": "equal one byte",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T04",
+      "query": "a",
+      "candidate": "b",
+      "query_len": 1,
+      "strncmp_result": -1,
+      "predicate_matches": false,
+      "context": "different first byte",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T05",
+      "query": "",
+      "candidate": "ab",
+      "query_len": 0,
+      "strncmp_result": 0,
+      "predicate_matches": true,
+      "context": "helper-only empty qstr",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T06",
+      "query": "a",
+      "candidate": "aa",
+      "query_len": 1,
+      "strncmp_result": 0,
+      "predicate_matches": true,
+      "context": "another prefix match",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T07",
+      "query": "aa",
+      "candidate": "ab",
+      "query_len": 2,
+      "strncmp_result": -1,
+      "predicate_matches": false,
+      "context": "different second byte",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T08",
+      "query": "ab",
+      "candidate": "ab",
+      "query_len": 2,
+      "strncmp_result": 0,
+      "predicate_matches": true,
+      "context": "equal two bytes",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T09",
+      "query": "b",
+      "candidate": "ba",
+      "query_len": 1,
+      "strncmp_result": 0,
+      "predicate_matches": true,
+      "context": "first match among possible candidate order",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    },
+    {
+      "id": "DL33-T10",
+      "query": "ab",
+      "candidate": "a",
+      "query_len": 1,
+      "strncmp_result": 0,
+      "predicate_matches": true,
+      "context": "helper-only short declared qstr length",
+      "scope": "valid-buffer finite JavaScript model of selected C comparison, not repository code execution"
+    }
+  ],
+  "evidence_anchor_ids": [
+    "DL33-A001",
+    "DL33-A006",
+    "DL33-A008",
+    "DL33-A011",
+    "DL33-A012",
+    "DL33-A021",
+    "DL33-A022",
+    "DL33-A024",
+    "DL33-A025",
+    "DL33-A032",
+    "DL33-A036",
+    "DL33-A039",
+    "DL33-A047",
+    "DL33-A048"
+  ],
+  "not_executed": [
+    "repository C/ASM/scripts",
+    "preprocessing/build/QEMU/hardware",
+    "real pathname or filesystem callback",
+    "full permissions/mount/ref/lock/RCU/lifecycle",
+    "extra paid model or API"
+  ]
+}

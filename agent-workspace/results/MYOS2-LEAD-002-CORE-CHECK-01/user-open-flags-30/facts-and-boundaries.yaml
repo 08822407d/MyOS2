@@ -1,0 +1,733 @@
+---
+# YAML 1.2-compatible JSON mapping; validated by JS JSON.parse, no C compilation
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-OPEN-FLAGS-30",
+  "record_type": "bounded_open_flags_facts_and_boundaries",
+  "date": "2026-11-03",
+  "phase": 2,
+  "source": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task52_short12": "1412a1991aee",
+  "review29_short12": "1412a1991aee",
+  "results_base_short12": "239e2f8efc45",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "mainline_review_owner": "MYOS2-A-C04",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "read_channel": "connector",
+  "source_evidence": "evidence.md :: OF30-A001..OF30-A080",
+  "source_definitions": {
+    "open_how": "three __u64 fields flags,mode,resolve",
+    "old_legacy_input": "sys_open flags int, mode umode_t unsigned int; build_open_how initializer masks VALID_OPEN_FLAGS and S_IALLUGO, omitted resolve is 0 under C aggregate-init rule",
+    "build_flags_locals": "uint64_t flags, uint64_t strip=FMODE_NONOTIFY|O_CLOEXEC, int lookup_flags=0, int acc_mode=ACC_MODE(flags)",
+    "open_flags_fields": "int open_flag; umode_t mode; int acc_mode; int intent; int lookup_flags",
+    "ACC_MODE": "char-table [4,2,6,6] for O_ACCMODE low two bits 0,1,2,3; MAY_READ=4,MAY_WRITE=2,MAY_APPEND=8",
+    "mode_mask": "S_IALLUGO=07777 octal=4095 decimal; S_IFREG=0100000 octal=32768 decimal",
+    "O_TMPFILE": "__O_TMPFILE=0x400000, O_DIRECTORY=0x10000, O_TMPFILE=0x410000, O_TMPFILE_MASK=0x410040",
+    "O_PATH": "O_PATH=0x200000; permitted O_PATH_FLAGS is O_DIRECTORY|O_NOFOLLOW|O_PATH|O_CLOEXEC",
+    "O_SYNC": "__O_SYNC=0x100000 and O_DSYNC=0x1000 in selected generic constants; helper adds O_DSYNC if __O_SYNC is present",
+    "legacy_unknown": "flags & VALID_OPEN_FLAGS strips unknown bits before build_open_flags; how.resolve=0 on this path; cannot label raw-helper unknown resolve inputs as established sys_open producers",
+    "close_on_exec": "how.flags retains O_CLOEXEC for get_unused_fd_flags; local flags strips before op.open_flag. 08::US-03 historical close-on-exec lifecycle is NOT reaudited.",
+    "evidence": [
+      "OF30-A002",
+      "OF30-A003",
+      "OF30-A004",
+      "OF30-A005",
+      "OF30-A006",
+      "OF30-A007",
+      "OF30-A037",
+      "OF30-A042",
+      "OF30-A051",
+      "OF30-A053",
+      "OF30-A059",
+      "OF30-A060",
+      "OF30-A063",
+      "OF30-A065"
+    ]
+  },
+  "objects": [
+    {
+      "id": "OF30-O01",
+      "name": "sys_open int flags / umode_t mode",
+      "source": "MYOS_SYSCALL_DEFINE3(open) -> do_sys_open",
+      "ownership": "caller values, not validated full syscall flags by names",
+      "anchors": [
+        "OF30-A035",
+        "OF30-A036",
+        "OF30-A080"
+      ]
+    },
+    {
+      "id": "OF30-O02",
+      "name": "open_how_s how",
+      "source": "build_open_how C aggregate with flags/mode designated; resolve=0 by standard C aggregate initialization",
+      "ownership": "do_sys_open stack object, not a user openat2 sys copy",
+      "anchors": [
+        "OF30-A002",
+        "OF30-A003",
+        "OF30-A005",
+        "OF30-A053"
+      ]
+    },
+    {
+      "id": "OF30-O03",
+      "name": "how.flags",
+      "source": "flags & VALID_OPEN_FLAGS, then O_PATH masking",
+      "ownership": "retains O_CLOEXEC if permitted; also supplied unchanged to get_unused_fd_flags",
+      "anchors": [
+        "OF30-A002",
+        "OF30-A004",
+        "OF30-A032",
+        "OF30-A040"
+      ]
+    },
+    {
+      "id": "OF30-O04",
+      "name": "how.mode",
+      "source": "mode & S_IALLUGO and conditional forced0 if !WILL_CREATE",
+      "ownership": "__u64; not unconditional input mode",
+      "anchors": [
+        "OF30-A003",
+        "OF30-A005",
+        "OF30-A059"
+      ]
+    },
+    {
+      "id": "OF30-O05",
+      "name": "how.resolve",
+      "source": "omitted designated field; C aggregate-init gives0",
+      "ownership": "legacy open; raw helper-only may use nonzero values",
+      "anchors": [
+        "OF30-A003",
+        "OF30-A053"
+      ]
+    },
+    {
+      "id": "OF30-O06",
+      "name": "build_open_flags local flags",
+      "source": "how.flags->uint64_t; strip NONOTIFY and O_CLOEXEC; later modify O_DSYNC/O_NOFOLLOW",
+      "ownership": "local mutable value differs from already stored op.open_flag after assignment",
+      "anchors": [
+        "OF30-A006",
+        "OF30-A007",
+        "OF30-A014",
+        "OF30-A018",
+        "OF30-A019"
+      ]
+    },
+    {
+      "id": "OF30-O07",
+      "name": "ACC_MODE flags / acc_mode",
+      "source": "low2 flags indexes char map [4,2,6,6]",
+      "ownership": "changed to0 under valid O_PATH; updated with TRUNC/APPEND only after op.open_flag",
+      "anchors": [
+        "OF30-A006",
+        "OF30-A013",
+        "OF30-A015",
+        "OF30-A016",
+        "OF30-A017",
+        "OF30-A065"
+      ]
+    },
+    {
+      "id": "OF30-O08",
+      "name": "local lookup_flags",
+      "source": "int=0; add DIRECTORY/FOLLOW and RESOLVE mapping; CACHED branch",
+      "ownership": "not stored in op until after all checks",
+      "anchors": [
+        "OF30-A006",
+        "OF30-A020",
+        "OF30-A021",
+        "OF30-A022",
+        "OF30-A023",
+        "OF30-A025"
+      ]
+    },
+    {
+      "id": "OF30-O09",
+      "name": "open_flags_s *op",
+      "source": "caller uninitialized local object; 5 fields written sequentially",
+      "ownership": "helper receives pointer and only writes fields reached before return; no automatic rollback on error",
+      "anchors": [
+        "OF30-A006",
+        "OF30-A010",
+        "OF30-A011",
+        "OF30-A014",
+        "OF30-A017",
+        "OF30-A025",
+        "OF30-A037"
+      ]
+    },
+    {
+      "id": "OF30-O10",
+      "name": "op.mode",
+      "source": "first destination field, after initial flags/resolve/mode checks",
+      "ownership": "zero or how.mode|S_IFREG; initialized even if later TMPFILE/O_PATH/CACHED failure",
+      "anchors": [
+        "OF30-A010",
+        "OF30-A011"
+      ]
+    },
+    {
+      "id": "OF30-O11",
+      "name": "op.open_flag",
+      "source": "flags after O_DSYNC addition and before O_CREAT/O_EXCL local O_NOFOLLOW adjustment",
+      "ownership": "not rewritten at end; cannot conflate late flags modification with it",
+      "anchors": [
+        "OF30-A014",
+        "OF30-A018",
+        "OF30-A019"
+      ]
+    },
+    {
+      "id": "OF30-O12",
+      "name": "op.acc_mode / op.intent",
+      "source": "after O_TRUNC/O_APPEND; intent LOOKUP_OPEN vs zero for O_PATH, may add CREATE/EXCL",
+      "ownership": "written only after mode/path/tmfile gates passed",
+      "anchors": [
+        "OF30-A015",
+        "OF30-A016",
+        "OF30-A017",
+        "OF30-A018"
+      ]
+    },
+    {
+      "id": "OF30-O13",
+      "name": "op.lookup_flags",
+      "source": "last destination field, after RESOLVE_CACHED return gate",
+      "ownership": "not initialized on -EAGAIN CACHED refusal",
+      "anchors": [
+        "OF30-A024",
+        "OF30-A025",
+        "OF30-A037"
+      ]
+    },
+    {
+      "id": "OF30-O14",
+      "name": "do_sys_openat2 local fd",
+      "source": "first int fd=build_open_flags return; after getname success overwritten with get_unused_fd_flags(how.flags)",
+      "ownership": "no active guard consuming first validation return before overwrite",
+      "anchors": [
+        "OF30-A030",
+        "OF30-A031",
+        "OF30-A032"
+      ]
+    },
+    {
+      "id": "OF30-O15",
+      "name": "file_open_name local err",
+      "source": "int err=build_open_flags; if err return ERR_PTR(err)",
+      "ownership": "rejects before do_filp_open",
+      "anchors": [
+        "OF30-A026",
+        "OF30-A027"
+      ]
+    },
+    {
+      "id": "OF30-O16",
+      "name": "open_exec_flags local",
+      "source": "explicit open_flag/acc_mode/intent/lookup_flags initializer, mode omitted=>0 under C aggregate-init",
+      "ownership": "independent construction; do_open_execat accepts only AT_* bits, never builds via build_open_flags",
+      "anchors": [
+        "OF30-A074",
+        "OF30-A075",
+        "OF30-A076",
+        "OF30-A077"
+      ]
+    },
+    {
+      "id": "OF30-O17",
+      "name": "getname filename pointer",
+      "source": "do_sys_openat2 tmp=getname; conditional return on IS_ERR; else borrowed by do_filp_open",
+      "ownership": "historical batch29 result, not reaudited",
+      "anchors": [
+        "OF30-A031",
+        "OF30-A032",
+        "OF30-A034"
+      ]
+    },
+    {
+      "id": "OF30-O18",
+      "name": "do_filp_open op argument",
+      "source": "const open_flags_s* passed by file_open_name or do_sys_openat2 or do_open_execat",
+      "ownership": "first reads op.lookup_flags then path_openat uses op.open_flag; old UV-04 deeper return issue remains",
+      "anchors": [
+        "OF30-A027",
+        "OF30-A032",
+        "OF30-A069",
+        "OF30-A070",
+        "OF30-A071",
+        "OF30-A077"
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "id": "OF30-S01",
+      "stage": "build_open_how",
+      "effect": "mask flags then O_PATH filter then conditionally mode=0, unspecified resolve zeroed",
+      "anchors": [
+        "OF30-A002",
+        "OF30-A003",
+        "OF30-A004",
+        "OF30-A005"
+      ]
+    },
+    {
+      "id": "OF30-S02",
+      "stage": "build_open_flags upfront",
+      "effect": "copy and strip flags, compute ACC_MODE and lookup local",
+      "anchors": [
+        "OF30-A006",
+        "OF30-A007"
+      ]
+    },
+    {
+      "id": "OF30-S03",
+      "stage": "validation before any op write",
+      "effect": "unknown flags, unknown resolve, BENEATH+IN_ROOT, malformed mode",
+      "anchors": [
+        "OF30-A008",
+        "OF30-A009",
+        "OF30-A010",
+        "OF30-A011"
+      ]
+    },
+    {
+      "id": "OF30-S04",
+      "stage": "op.mode",
+      "effect": "assign mode, possible later TMPFILE or O_PATH EINVAL",
+      "anchors": [
+        "OF30-A010",
+        "OF30-A011",
+        "OF30-A012",
+        "OF30-A013"
+      ]
+    },
+    {
+      "id": "OF30-S05",
+      "stage": "op.open_flag",
+      "effect": "__O_SYNC to O_DSYNC, assign snapshot, then TRUNC/APPEND update acc_mode",
+      "anchors": [
+        "OF30-A014",
+        "OF30-A015",
+        "OF30-A016"
+      ]
+    },
+    {
+      "id": "OF30-S06",
+      "stage": "op.acc_mode/op.intent",
+      "effect": "write, maybe add CREATE/EXCL and mutate local flags O_NOFOLLOW",
+      "anchors": [
+        "OF30-A017",
+        "OF30-A018",
+        "OF30-A019"
+      ]
+    },
+    {
+      "id": "OF30-S07",
+      "stage": "lookup flags local",
+      "effect": "DIRECTORY/FOLLOW/RESOLVE mapping then CACHED guard",
+      "anchors": [
+        "OF30-A020",
+        "OF30-A021",
+        "OF30-A022",
+        "OF30-A023",
+        "OF30-A024"
+      ]
+    },
+    {
+      "id": "OF30-S08",
+      "stage": "op.lookup_flags",
+      "effect": "last field assignment and return0",
+      "anchors": [
+        "OF30-A025"
+      ]
+    }
+  ],
+  "return_gate_field_snapshots": [
+    {
+      "id": "OF30-G01",
+      "gate": "flags & ~VALID_OPEN_FLAGS",
+      "result": "-EINVAL",
+      "op_written": [],
+      "op_uninitialized": [
+        "mode",
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "origin": "helper-only raw unknown flags; legacy build_open_how strips",
+      "anchors": [
+        "OF30-A008",
+        "OF30-A002"
+      ]
+    },
+    {
+      "id": "OF30-G02",
+      "gate": "how.resolve & ~VALID_RESOLVE_FLAGS",
+      "result": "-EINVAL",
+      "op_written": [],
+      "op_uninitialized": [
+        "mode",
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "origin": "helper-only: legacy resolve=0",
+      "anchors": [
+        "OF30-A008",
+        "OF30-A003",
+        "OF30-A041"
+      ]
+    },
+    {
+      "id": "OF30-G03",
+      "gate": "RESOLVE_BENEATH and RESOLVE_IN_ROOT",
+      "result": "-EINVAL",
+      "op_written": [],
+      "op_uninitialized": [
+        "mode",
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "origin": "helper-only",
+      "anchors": [
+        "OF30-A009",
+        "OF30-A056"
+      ]
+    },
+    {
+      "id": "OF30-G04",
+      "gate": "WILL_CREATE and how.mode & ~S_IALLUGO",
+      "result": "-EINVAL",
+      "op_written": [],
+      "op_uninitialized": [
+        "mode",
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "origin": "raw helper-only: legacy masked input mode",
+      "anchors": [
+        "OF30-A010",
+        "OF30-A003",
+        "OF30-A059"
+      ]
+    },
+    {
+      "id": "OF30-G05",
+      "gate": "!WILL_CREATE and how.mode != 0",
+      "result": "-EINVAL",
+      "op_written": [],
+      "op_uninitialized": [
+        "mode",
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "origin": "raw helper-only: legacy sets mode=0",
+      "anchors": [
+        "OF30-A011",
+        "OF30-A005"
+      ]
+    },
+    {
+      "id": "OF30-G06",
+      "gate": "flags & __O_TMPFILE and (flags & O_TMPFILE_MASK)!=O_TMPFILE",
+      "result": "-EINVAL",
+      "op_written": [
+        "mode"
+      ],
+      "op_uninitialized": [
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "origin": "real legacy sys_open possible via raw __O_TMPFILE alone or O_TMPFILE|O_CREAT bits; assuming valid getname",
+      "anchors": [
+        "OF30-A012",
+        "OF30-A051",
+        "OF30-A040"
+      ]
+    },
+    {
+      "id": "OF30-G07",
+      "gate": "flags & __O_TMPFILE and !(acc_mode & MAY_WRITE)",
+      "result": "-EINVAL",
+      "op_written": [
+        "mode"
+      ],
+      "op_uninitialized": [
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "origin": "real legacy sys_open possible via O_TMPFILE|O_RDONLY",
+      "anchors": [
+        "OF30-A012",
+        "OF30-A063",
+        "OF30-A065"
+      ]
+    },
+    {
+      "id": "OF30-G08",
+      "gate": "flags & O_PATH and flags & ~O_PATH_FLAGS",
+      "result": "-EINVAL",
+      "op_written": [
+        "mode"
+      ],
+      "op_uninitialized": [
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "origin": "helper-only raw input, legacy O_PATH masking clears prohibited bits",
+      "anchors": [
+        "OF30-A013",
+        "OF30-A004"
+      ]
+    },
+    {
+      "id": "OF30-G09",
+      "gate": "how.resolve & RESOLVE_CACHED and flags & (O_TRUNC|O_CREAT|O_TMPFILE)",
+      "result": "-EAGAIN",
+      "op_written": [
+        "mode",
+        "open_flag",
+        "acc_mode",
+        "intent"
+      ],
+      "op_uninitialized": [
+        "lookup_flags"
+      ],
+      "origin": "helper-only nonzero RESOLVE_CACHED, absent in selected sys_open how.resolve=0",
+      "anchors": [
+        "OF30-A024",
+        "OF30-A025",
+        "OF30-A051"
+      ]
+    },
+    {
+      "id": "OF30-G10",
+      "gate": "all checks pass",
+      "result": "0",
+      "op_written": [
+        "mode",
+        "open_flag",
+        "acc_mode",
+        "intent",
+        "lookup_flags"
+      ],
+      "op_uninitialized": [],
+      "origin": "legacy or helper; true validation only for selected fields not downstream enforcement",
+      "anchors": [
+        "OF30-A025"
+      ]
+    }
+  ],
+  "caller_consumption": [
+    {
+      "id": "OF30-C01",
+      "caller": "sys_open -> do_sys_open -> do_sys_openat2",
+      "input": "int flags/umode_t mode -> build_open_how masking; resolve=0",
+      "validator": "int fd=build_open_flags(how,&op) but NOT checked before getname; overwritten by get_unused_fd_flags(how->flags) after getname succeeds",
+      "downstream": "on later fd>=0 calls do_filp_open(dfd,tmp,&op), possibly uninitialized op fields on earlier error",
+      "error_branch": "getname ERR_PTR returns PTR_ERR before fd overwrite; fd<0 skips do_filp_open; deep VFS UV-04 stops complete proof",
+      "anchors": [
+        "OF30-A035",
+        "OF30-A036",
+        "OF30-A030",
+        "OF30-A031",
+        "OF30-A032",
+        "OF30-A069"
+      ]
+    },
+    {
+      "id": "OF30-C02",
+      "caller": "filp_open -> file_open_name",
+      "input": "kernel const char* filename; build_open_how then build_open_flags",
+      "validator": "int err checked immediately, returns ERR_PTR(err) when nonzero",
+      "downstream": "only err==0 calls do_filp_open with all five op fields written (assuming normal helper completion)",
+      "error_branch": "filp_open's valid filename path putname after file_open_name returns; failed getname skips",
+      "anchors": [
+        "OF30-A026",
+        "OF30-A027",
+        "OF30-A028",
+        "OF30-A029"
+      ]
+    },
+    {
+      "id": "OF30-C03",
+      "caller": "do_open_execat / open_exec",
+      "input": "AT_SYMLINK_NOFOLLOW, AT_EMPTY_PATH flags (open_exec passes0)",
+      "validator": "explicitly initializes open_exec_flags; rejects disallowed AT flags before do_filp_open, not build_open_flags",
+      "downstream": "mode implicit0, other four fields explicit; modifies lookup_flags based on AT flags",
+      "error_branch": "file IS_ERR then out return; deeper file permissions/path not audited",
+      "anchors": [
+        "OF30-A074",
+        "OF30-A075",
+        "OF30-A076",
+        "OF30-A077",
+        "OF30-A078",
+        "OF30-A079"
+      ]
+    },
+    {
+      "id": "OF30-C04",
+      "caller": "do_filp_open / path_openat first boundary",
+      "input": "valid open_flags_s pointer supplied by caller",
+      "validator": "reads op->lookup_flags immediately; path_openat first reads op->open_flag for alloc_empty_file",
+      "downstream": "path_init/path_openat/do_open may read more, but complete behavior NOT audited",
+      "error_branch": "05::UV-04 concerns do_open and myos_do_dentry_open lacking return, NOT do_filp_open itself",
+      "anchors": [
+        "OF30-A069",
+        "OF30-A070",
+        "OF30-A071",
+        "OF30-A073"
+      ]
+    }
+  ],
+  "paper_models": [
+    {
+      "name": "O_RDONLY",
+      "input": 0,
+      "acc": 4
+    },
+    {
+      "name": "O_WRONLY",
+      "input": 1,
+      "acc": 2
+    },
+    {
+      "name": "O_RDWR",
+      "input": 2,
+      "acc": 6
+    },
+    {
+      "name": "O_ACCMODE=3",
+      "input": 3,
+      "acc": 6
+    },
+    {
+      "name": "O_PATH|O_CREAT legacy",
+      "input": 2097216,
+      "legacy_masked": 2097152,
+      "will_create_after_filter": false
+    },
+    {
+      "name": "__O_TMPFILE-only legacy",
+      "input": 4194304,
+      "tmpfile_masked": 4194304,
+      "expected": 4259840
+    },
+    {
+      "name": "O_TMPFILE|O_RDONLY legacy",
+      "input": 4259840,
+      "acc": 4,
+      "write_gate": false
+    },
+    {
+      "name": "O_TMPFILE|O_WRONLY legacy",
+      "input": 4259841,
+      "acc": 2,
+      "write_gate": true
+    },
+    {
+      "name": "O_DIRECTORY + RESOLVE_CACHED helper",
+      "input": 65536,
+      "resolve_cached": 32,
+      "cached_reject_mask": 4260416,
+      "will_reject": true
+    },
+    {
+      "name": "O_CREAT|O_EXCL nofollow synthesis",
+      "input": 192,
+      "op_open_flag_before_local_no_follow": 192,
+      "local_flags_after": 131264,
+      "lookup_follow": false
+    },
+    {
+      "name": "O_PATH|O_CLOEXEC legacy",
+      "input": 2621440,
+      "how_flags": 2621440,
+      "op_open_flag": 2097152
+    },
+    {
+      "name": "__O_SYNC only",
+      "input": 1048576,
+      "op_open_flag": 1052672
+    },
+    {
+      "name": "mode on O_CREAT legacy",
+      "input": 64,
+      "mode": 131071,
+      "normalized_mode": 4095,
+      "op_mode": 36863
+    },
+    {
+      "name": "noncreate mode old open",
+      "input": 0,
+      "mode": 131071,
+      "normalized_mode": 0
+    },
+    {
+      "name": "RESOLVE_BENEATH|RESOLVE_IN_ROOT helper-only",
+      "resolve": 24,
+      "result": "-EINVAL before any op writes"
+    }
+  ],
+  "additional_numeric": {
+    "MAY_READ": 4,
+    "MAY_WRITE": 2,
+    "MAY_APPEND": 8,
+    "O_DIRECTORY": 65536,
+    "O_PATH": 2097152,
+    "O_CLOEXEC": 524288,
+    "__O_TMPFILE": 4194304,
+    "O_TMPFILE": 4259840,
+    "O_TMPFILE_MASK": 4259904,
+    "O_CREAT": 64,
+    "O_EXCL": 128,
+    "O_NOFOLLOW": 131072,
+    "S_IALLUGO": 4095,
+    "S_IFREG": 32768,
+    "O_DSYNC": 4096,
+    "__O_SYNC": 1048576
+  },
+  "new_findings": [
+    "OF30-F01",
+    "OF30-F02",
+    "OF30-F03",
+    "OF30-F04"
+  ],
+  "historical_links": [
+    "CORE-USER-VFS-BASELINE-05::UV-04",
+    "CORE-USER-SYSCALL-STDIO-08::US-03",
+    "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S01",
+    "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S02",
+    "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S03"
+  ],
+  "not_done": [
+    "complete openat2 syscall endpoint or all direct helper clients",
+    "full fd close-on-exec lifecycle",
+    "entire pathwalk permission checks",
+    "compiled macro binding / actual user open flags from libc",
+    "runtime file side effects and allocator/fd table",
+    "all archived finding deduplication",
+    "hardware/ABI proof"
+  ],
+  "owner_decisions_requested_now": [],
+  "no_kernel_changes": true
+}

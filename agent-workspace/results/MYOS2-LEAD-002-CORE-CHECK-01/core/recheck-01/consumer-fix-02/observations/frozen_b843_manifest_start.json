@@ -1,0 +1,358 @@
+{
+ "commit_short12": "b843d475367a",
+ "root": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/",
+ "dest": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/dev-frozen",
+ "fixture_names_match_expected": true,
+ "observation_names_match_expected": true,
+ "files": [
+  {
+   "path": "fixtures/a46_check.py",
+   "bytes": 3751,
+   "sha256_segments": [
+    "1e500b5fa75ccba3",
+    "361cb31d311836cd",
+    "780974e2d5bd9378",
+    "2ff267ee30e2e787"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/build2.py",
+   "bytes": 6681,
+   "sha256_segments": [
+    "d3979aa307bbdb87",
+    "05c10bfd850d04bb",
+    "33a2cf0843e7fcea",
+    "aae5ff31490b794a"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/build_evidence2.py",
+   "bytes": 30952,
+   "sha256_segments": [
+    "69f9e304b1bff29a",
+    "4aad42f53b1d3b6b",
+    "d844a296d5d152b6",
+    "2d69b38bb98ed533"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/compare_runs2.py",
+   "bytes": 4989,
+   "sha256_segments": [
+    "7ded803dae45bb75",
+    "eceae010ee47c205",
+    "4e992d0d7c2908c4",
+    "39a99a7839523ff3"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/evaluate2.py",
+   "bytes": 38706,
+   "sha256_segments": [
+    "6a61e29a3b0b1c80",
+    "ebd5c68aec26c8e4",
+    "16332781d74d7581",
+    "6c2d38409c0a9aab"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": true
+  },
+  {
+   "path": "fixtures/final_check2.py",
+   "bytes": 13386,
+   "sha256_segments": [
+    "417a05a9be7dee45",
+    "7ae7455bfd682957",
+    "2c983d299195326b",
+    "f3f455eb4512d519"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/frozen.py",
+   "bytes": 2331,
+   "sha256_segments": [
+    "9226b52a81bb9f61",
+    "125539ffac8dcb6b",
+    "e00ed95ec9144dfe",
+    "c0c0c176d9adf0b7"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/h00_2.py",
+   "bytes": 8726,
+   "sha256_segments": [
+    "b358658147c607ab",
+    "1edadadf0de72834",
+    "1a3ff1b35c196f72",
+    "c7fab2bc86b653f3"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/harness2.py",
+   "bytes": 7501,
+   "sha256_segments": [
+    "9b9c5c23698a13a1",
+    "c00fb33adb1828dc",
+    "28505ae9a3ad53f3",
+    "bea48be70a932a01"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": true
+  },
+  {
+   "path": "fixtures/identity2.py",
+   "bytes": 8884,
+   "sha256_segments": [
+    "b4e36c60fa2dc53d",
+    "b233baebd044d89e",
+    "3327770f1a654c2e",
+    "0b322b091c24cced"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": true
+  },
+  {
+   "path": "fixtures/make_results2.py",
+   "bytes": 22174,
+   "sha256_segments": [
+    "dbeda2acada94bc1",
+    "92e638d7373c0172",
+    "8afb4c5f3b44eb16",
+    "235406be547e6ffa"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": true
+  },
+  {
+   "path": "fixtures/meta_tests.py",
+   "bytes": 38661,
+   "sha256_segments": [
+    "4bcb4332b3b62564",
+    "32d6b7ea169892d6",
+    "eaa8a6014a9764a4",
+    "f9e790fd24c3dcf3"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/old_counterexamples.py",
+   "bytes": 11934,
+   "sha256_segments": [
+    "e78483a36b7488d2",
+    "c384418383cbf0a1",
+    "4ecfa5d0a7856afd",
+    "60b4d46e29c00cc7"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "fixtures/readback2.py",
+   "bytes": 6039,
+   "sha256_segments": [
+    "41019aeb61216b01",
+    "f9eda8baeebb64d4",
+    "114d02ab5d0a9c11",
+    "e778132ab4ae6d34"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": true
+  },
+  {
+   "path": "fixtures/run_recheck.py",
+   "bytes": 12231,
+   "sha256_segments": [
+    "7faf475c2eb96c83",
+    "b8947e6a814ac46c",
+    "d976d09f4f956003",
+    "7d95fd77fcb50f5c"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/a46.json",
+   "bytes": 1050,
+   "sha256_segments": [
+    "26f3a98766dd4010",
+    "65006d4fca665e40",
+    "4b8756a702b024c1",
+    "bb6ea892aa6a80fb"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/after_batch1/identity_after_push.json",
+   "bytes": 1990,
+   "sha256_segments": [
+    "99d5f1b62ccb5d08",
+    "264550de028d3e47",
+    "daf79d994454c71b",
+    "f0473ca86658ad61"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/after_batch1/readback_results.branch.json",
+   "bytes": 1728,
+   "sha256_segments": [
+    "fa37c8ed96f5802d",
+    "8c7253017bf2a4f6",
+    "1ac6dca9fc7ab1a0",
+    "8bc5ca1cfa3b91b6"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/after_batch1/readback_results.object.json",
+   "bytes": 1691,
+   "sha256_segments": [
+    "ad584d9f5c0b2b8e",
+    "020cf5a53beddb32",
+    "c28fd1cddd14cb9a",
+    "1326f7cc6932c104"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/after_batch2/identity_after_push.json",
+   "bytes": 1990,
+   "sha256_segments": [
+    "c47d628d3af33825",
+    "06d7d2743c0251f6",
+    "bb0e07d9af98ed0d",
+    "c79ec5078a90fade"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/after_batch2/readback_results.branch.json",
+   "bytes": 1728,
+   "sha256_segments": [
+    "cf54c1dada6a9a8b",
+    "f5bc733794cdd540",
+    "f6827c5d1feda211",
+    "d0b62a0eee6370a8"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/after_batch2/readback_results.object.json",
+   "bytes": 1691,
+   "sha256_segments": [
+    "aaa90b83940f2ee0",
+    "9b93018c4d412ee3",
+    "b438a0d60f1a9f9c",
+    "723aba69f87ab620"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/meta_tests.json",
+   "bytes": 47618,
+   "sha256_segments": [
+    "bbcf2c77be4bd9fb",
+    "95c26d4a18e4eab3",
+    "4fbe04cc156ee11a",
+    "030fb5d7a3ce0038"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/old_counterexamples.json",
+   "bytes": 23717,
+   "sha256_segments": [
+    "6ceb530f3dfb0c4d",
+    "6715449bd97a3a7e",
+    "3815f3b9a6e2af3a",
+    "c8d2ba34a9a0457b"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/rerun_vs_batch1.json",
+   "bytes": 2363,
+   "sha256_segments": [
+    "0771e7808d3a207c",
+    "6efe99c1f179c835",
+    "32172f371f3617f5",
+    "909100f13e2a472d"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/run.json",
+   "bytes": 148341,
+   "sha256_segments": [
+    "70b17d1626d202c6",
+    "32c8a38bdde82184",
+    "564013367124dc3f",
+    "c00d900f2e326642"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/static.json",
+   "bytes": 8847,
+   "sha256_segments": [
+    "eef699fde72250f8",
+    "0863b0c900f16b7c",
+    "9d3a168232e2d049",
+    "26abaa5b44ed98ec"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/v00.json",
+   "bytes": 63054,
+   "sha256_segments": [
+    "ed89d8cfce3fc3c2",
+    "349f015c323e49af",
+    "0a6848180b23148f",
+    "02b7cdf0ac5d0b70"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  },
+  {
+   "path": "observations/v01.json",
+   "bytes": 6556,
+   "sha256_segments": [
+    "571dfd7616d344d7",
+    "d3f93abacb7f2099",
+    "3b56f2c8c4108dad",
+    "ad67899cf136eada"
+   ],
+   "unchanged_at_head": true,
+   "used_by_consumer_fix_02": false
+  }
+ ],
+ "all_unchanged_at_head": true
+}

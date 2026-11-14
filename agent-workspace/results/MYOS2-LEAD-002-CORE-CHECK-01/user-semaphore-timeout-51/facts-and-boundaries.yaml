@@ -1,0 +1,283 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-SEMAPHORE-TIMEOUT-51",
+  "source_pin_short12": "a039d9803ade",
+  "source_quote_count": 48,
+  "runtime_evidence": "NOT_RUN",
+  "mainline_prior": {
+    "R49_01": "CLOSED_DOCUMENTATION_ONLY",
+    "batch49_combined": "PASS_PENDING_LOCAL",
+    "batch50": "PASS_PENDING_LOCAL",
+    "supplements": [
+      "R49C-S01",
+      "R50-S01",
+      "R50-S02"
+    ],
+    "not_reopened": true
+  },
+  "objects": {
+    "sema_t": "typedef struct semaphore; fields spinlock_t lock,uint count,List_s wait_list",
+    "waiter": "stack struct semaphore_waiter has List_s list,task_s* task,bool up",
+    "initialization": "__SEMAPHORE_INITIALIZER and sema_init",
+    "queue": "ordinary List_s list, not List_hdr_s counted swait queue"
+  },
+  "entry_and_fast": {
+    "return_type": "int",
+    "result_initial": 0,
+    "lock": "spin_lock_irqsave",
+    "gate": "count>0",
+    "success": "count--, unlock, return0 ignoring timeout",
+    "slow": "__down_timeout → __down_common → ___down_common with TASK_UNINTERRUPTIBLE and original timeout"
+  },
+  "slow_control": [
+    "list_add_tail(waiter.list,sem.wait_list)",
+    "waiter.task=current;waiter.up=false",
+    "for signal_pending_state(state,current) first",
+    "then timeout<=0",
+    "if both false set task state and unlock",
+    "timeout=schedule_timeout(timeout)",
+    "if normal return spin_lock_irq",
+    "if waiter.up return0 else repeat"
+  ],
+  "slow_errors": {
+    "timeout": "list_del own waiter, return -ETIME",
+    "interrupt": "list_del own waiter, return -EINTR",
+    "signal_state": "long state to uint helper: fixed 0x2 no intersection with TASK_INTERRUPTIBLE|TASK_WAKEKILL",
+    "errno_provenance": "separate fixed ETIME and EINTR macro definitions"
+  },
+  "grant": {
+    "up_empty": "count++",
+    "up_waiters": "__up chooses first list_entry, list_del, waiter.up=true, calls wake_up_process; count not directly incremented",
+    "success_requires": "waiter action normally returns, retakes lock, observes waiter.up true; up request alone not sufficient",
+    "two_waiters": "local valid list head-first ordering only, no global FIFO/fairness certification"
+  },
+  "schedule_join": {
+    "CA_03": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-03",
+    "case": "V09",
+    "prior_level": "bounded host fixture, not rerun",
+    "finite_positive": "normal schedule_timeout returns same positive timeout, no natural countdown",
+    "max": "normal schedule(MAX) returns same MAX",
+    "zero_or_negative": "timeout<=0 checked before calling schedule_timeout",
+    "critical_counterexample": "up flag true allows success while timeout unchanged"
+  },
+  "direct_caller_scope": {
+    "queries": [
+      "GitHub default-index down_timeout",
+      "GitHub REST /search/code down_timeout"
+    ],
+    "observations": "no actionable fixed-time external callers found",
+    "limitation": "not complete fixed-time tree search, cannot assert no other callers"
+  },
+  "finite_models": [
+    {
+      "id": "SM51-M01",
+      "count": 0,
+      "timeout": "-1",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "enqueue then timeout<=0, remove, return -ETIME before schedule",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M02",
+      "count": 0,
+      "timeout": "0",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "enqueue then timeout<=0, remove, return -ETIME before schedule",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M03",
+      "count": 0,
+      "timeout": "1",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "slow schedule_timeout; unchanged positive return (finite or MAX) and waiter.up false → loop repeats",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M04",
+      "count": 0,
+      "timeout": "5",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "slow schedule_timeout; unchanged positive return (finite or MAX) and waiter.up false → loop repeats",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M05",
+      "count": 0,
+      "timeout": "MAX",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "slow schedule_timeout; unchanged positive return (finite or MAX) and waiter.up false → loop repeats",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M06",
+      "count": 1,
+      "timeout": "-1",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "fast count-- return0, timeout bypassed",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M07",
+      "count": 1,
+      "timeout": "0",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "fast count-- return0, timeout bypassed",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M08",
+      "count": 1,
+      "timeout": "1",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "fast count-- return0, timeout bypassed",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M09",
+      "count": 1,
+      "timeout": "5",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "fast count-- return0, timeout bypassed",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M10",
+      "count": 1,
+      "timeout": "MAX",
+      "state": "TASK_UNINTERRUPTIBLE",
+      "assumptions": "valid same-lock objects, no external up, all prior calls return normally",
+      "source_consequence": "fast count-- return0, timeout bypassed",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M11",
+      "scenario": "up queued waiter",
+      "assumptions": "same lock, up unlinks and sets waiter.up=true; action normally returns and waiter reacquires",
+      "source_consequence": "slow returns0 regardless of still-positive timeout",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M12",
+      "scenario": "up before enqueue",
+      "assumptions": "up checks empty queue, no other waiter",
+      "source_consequence": "count++ and subsequent down_timeout may fast succeed",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M13",
+      "scenario": "up after waiter timed_out",
+      "assumptions": "old waiter already removed, up sees empty queue",
+      "source_consequence": "old -ETIME unchanged, new up increments count",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M14",
+      "scenario": "two waiters A then B, one up",
+      "assumptions": "valid append order and same lock",
+      "source_consequence": "up chooses A from head; B remains queued",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M15",
+      "scenario": "two queued, two up",
+      "assumptions": "both up calls normal return",
+      "source_consequence": "successive head removals possible, no global fairness claim",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M16",
+      "scenario": "generic signal and timeout0",
+      "assumptions": "TASK_INTERRUPTIBLE, pending signal helper true",
+      "source_consequence": "-EINTR first, not -ETIME",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M17",
+      "scenario": "generic fatal signal",
+      "assumptions": "TASK_KILLABLE and signal helper true",
+      "source_consequence": "-EINTR before schedule",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M18",
+      "scenario": "public down_timeout with signal",
+      "assumptions": "TASK_UNINTERRUPTIBLE=2, helper fast mask 1|0x100",
+      "source_consequence": "no -EINTR from this signal gate",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M19",
+      "scenario": "public down_interruptible has count",
+      "assumptions": "count>0 even when pending signal",
+      "source_consequence": "fast decrement returns0; helper not called",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M20",
+      "scenario": "MAX no grant",
+      "assumptions": "schedule() normally returns, waiter.up false",
+      "source_consequence": "MAX remains, loop repeats, actual wake unknown",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M21",
+      "scenario": "finite positive no grant",
+      "assumptions": "all timer callees normal return",
+      "source_consequence": "timeout does not count down, loop repeats",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M22",
+      "scenario": "grant with timeout positive",
+      "assumptions": "waiter sees up=true after normal action return and re-lock",
+      "source_consequence": "return0 before next timeout check",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M23",
+      "scenario": "action never returns",
+      "assumptions": "waiter already queued, action nonnormal",
+      "source_consequence": "no claim of re-lock, cleanup or return",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M24",
+      "scenario": "wake request never returns",
+      "assumptions": "__up has unlinked and set up flag",
+      "source_consequence": "no proof of outer up unlock or waiter resume",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M25",
+      "scenario": "zero slow timeout",
+      "assumptions": "count=0 and signal gate false",
+      "source_consequence": "-ETIME before task-state write or schedule call",
+      "certifies_runtime": false
+    },
+    {
+      "id": "SM51-M26",
+      "scenario": "two simultaneous exit candidates",
+      "assumptions": "generic signal true and timeout<=0",
+      "source_consequence": "signal has priority in source order",
+      "certifies_runtime": false
+    }
+  ],
+  "model_count": 26,
+  "unknowns": [
+    "real task wake/interrupt/time source",
+    "full list validity, fairness and memory order",
+    "true callers or runtime reachability",
+    "semaphore stack waiter lifetime/lock correctness"
+  ],
+  "conclusion_kind": "conditional_static_not_runtime"
+}

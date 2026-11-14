@@ -1,0 +1,153 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-CLONE-GROUP-72",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "D00": "NOT_APPLICABLE",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [
+    {
+      "id": "CG72-F01",
+      "status": "needs_evidence",
+      "kind": "conditional_clone_thread_group_leader_predicate_mismatch",
+      "claim": "In copy_process the CLONE_THREAD branch writes p.tgid=current.tgid, while the active assignment p.exit_signal=-1 is commented. Real thread_group_leader(p) instead tests p.exit_signal>=0; via dup_task_struct the new task initially inherits orig values. If a valid direct kernel_clone caller supplied THREAD|SIGHAND|VM and the copied exit_signal remains nonnegative through all intervening calls, the later publication predicate can select the leader branch despite THREAD intent. The selected x86 syscall list provides no active clone mapping, so this is not a demonstrated reachable user syscall or runtime fault.",
+      "premises": [
+        "actual caller supplies legal CLONE_THREAD|CLONE_SIGHAND|CLONE_VM args, with no PIDFD/ns conflict and all previous stages valid",
+        "the new task has a defined copied exit_signal>=0 and no intermediate writer changes it",
+        "valid PID/signal/parent structures reach thread_group_leader branch and related attachment operations"
+      ],
+      "counter_evidence": "current direct fork/kernel_thread sources do not demonstrate such a caller; earlier scheduler/other code may modify exit_signal; no task built or executed",
+      "first_stop": "real production of THREAD arguments and inherited p.exit_signal after sched_fork; group pointer/PID identity validity",
+      "evidence": [
+        "A23",
+        "A24",
+        "A39",
+        "C01",
+        "C02",
+        "C05",
+        "C09",
+        "C16",
+        "C18",
+        "B02"
+      ],
+      "related": [
+        "CORE-USER-EXEC-COMMIT-GATES-71::EC71-F01"
+      ],
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-F01",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CG72-F02",
+      "status": "needs_evidence",
+      "kind": "conditional_new_signal_struct_no_local_cleanup_after_later_failure",
+      "claim": "For a non-CLONE_THREAD child, copy_signal uses kmem_cache_zalloc and publishes the new sig pointer to tsk.signal, then initializes sigcnt and nr_threads. If a later copy_mm/copy_namespaces/copy_thread/alloc_pid stage fails, the examined bad_fork_cleanup_signal branch leaves free_signal_struct(p.signal) commented. Thus this selected rollback contains no active local request to release the newly allocated signal_s; whether another owner/cleanup handles it and any physical leak require further evidence. This is a different object from older UV-14's inherited sighand issue.",
+      "premises": [
+        "non-thread signal allocation succeeds and object is valid",
+        "later stage reports a normal error causing entry through or above bad_fork_cleanup_signal",
+        "all preceding cleanup tasks normally return and no other resource owner handles signal_s"
+      ],
+      "counter_evidence": "the source may have other transitive owner or release paths not reviewed; earlier old sighand cleanup could stop progression; no failure injected or live allocator observation",
+      "first_stop": "actual later failure and signal_s lifetime/cleanup outside selected label; old UV-14 may stop at sighand",
+      "evidence": [
+        "B14",
+        "B15",
+        "B17",
+        "C33",
+        "C34",
+        "C35",
+        "C37",
+        "C38"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-14",
+        "CORE-USER-FORK-FILES-ROLLBACK-44-REVIEW-001"
+      ],
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-F02",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_findings_count": 2,
+  "evidence_gaps": [
+    {
+      "id": "CG72-U01",
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U01",
+      "status": "needs_evidence",
+      "detail": "No currently observed user-facing CLONE_THREAD syscall entry in selected x86_64 header; any other direct kernel_clone caller and generated syscall exposure not exhaustively audited",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CG72-U02",
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U02",
+      "status": "needs_evidence",
+      "detail": "Valid real CLONE_THREAD child production, inherited exit_signal after sched_fork, and group-leader predicate result not runtime proven",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CG72-U03",
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U03",
+      "status": "needs_evidence",
+      "detail": "CLONE_THREAD copy_signal returns without local signal sigcnt/nr_threads increase, and thread_head/thread_node linkage updates are commented; external group publication producers remain unknown",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CG72-U04",
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U04",
+      "status": "needs_evidence",
+      "detail": "Nonshared copy_sighand allocates new sighand but does not install it; inherited static pointer failure cleanup remains existing UV-14, not re-numbered or closed",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CG72-U05",
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U05",
+      "status": "needs_evidence",
+      "detail": "New nonthread signal_s allocation and all late rollback/exit consumers, signal_s sigcnt semantics, cache validity and physical release remain unreviewed",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CG72-U06",
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U06",
+      "status": "needs_evidence",
+      "detail": "init_sigpending helper initializes list but commented signal bitset clearing; task.pending and shared_pending source state beyond selected copy not fully audited",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CG72-U07",
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U07",
+      "status": "needs_evidence",
+      "detail": "PID allocation IDR registration, PID task link locking, parent/children list validity and stable current/namespace objects remain per 11 and 44 limits",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CG72-U08",
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U08",
+      "status": "needs_evidence",
+      "detail": "Kernel build preprocessing, syscall table final macro expansion, scheduler wake/run, multi-thread runtime, signal delivery, full local P9, QEMU and hardware all NOT_RUN",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "observed_runtime_bugs": 0,
+  "known_root_not_duplicated": "CORE-USER-VFS-BASELINE-05::UV-14",
+  "prior_EC71_findings_unmodified": true,
+  "excluded_actions": [
+    "modify old reports/comments",
+    "modify kernel/build/run",
+    "self-sign batch72",
+    "start 73",
+    "close prior UV-14"
+  ]
+}

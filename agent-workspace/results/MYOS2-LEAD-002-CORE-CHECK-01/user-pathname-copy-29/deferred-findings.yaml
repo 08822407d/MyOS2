@@ -1,0 +1,230 @@
+---
+# YAML1.2-compatible JSON mapping, prior qualified IDs only additive
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PATHNAME-COPY-29",
+  "record_type": "bounded_deferred_pathname_findings",
+  "date": "2026-11-03",
+  "phase": 2,
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "427604c818a5",
+  "recovery_ref_short12": "2a0a66faa76d",
+  "owner_decisions_requested_now": [],
+  "status": "deferred_owner_not_ready",
+  "runtime_evidence": "NOT_RUN",
+  "mainline_acceptance": "PENDING",
+  "no_full_repo_dedup": true,
+  "old_artifacts_unchanged": true,
+  "new_findings": [
+    {
+      "id": "PN29-F01",
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F01",
+      "kind": "signed_length_error_classification",
+      "status": "needs_evidence",
+      "title": "getname对strlen_user负返回先转size_t再按超长处理",
+      "source_fact": "strlen_user返回long且有-EFAULT分支；getname赋给size_t len，先判断len>PAGE_SIZE；负的long转无符号后可落在巨大值区",
+      "premises": [
+        "strlen(void*)本身正常完成扫描；选定__access_ok在扫描之后拒绝该地址范围",
+        "strlen_user确实产生负错误，未先在更早的读操作失去定义良好执行",
+        "目标x86-64的size_t无符号长、所选errno数值在约定范围"
+      ],
+      "possible_impact": "上层将原用户地址错误表现成-ENAMETOOLONG而非-EFAULT；在此本地分支getname尚未申请filename对象",
+      "counter_evidence": [
+        "多数无效指针可能在strlen先执行时已失败或不能正常返回，并无运行样本",
+        "该观察为errno分类，不自动证明权限被绕过或实际用户行为异常",
+        "在访问范围数值校验通过时strlen_user返回正长度，此分支不发生"
+      ],
+      "anchors": [
+        "PN29-A003",
+        "PN29-A017",
+        "PN29-A018",
+        "PN29-A067",
+        "PN29-A034"
+      ],
+      "related": [
+        "CORE-USER-ELF-INTERPRETER-28::EI28-F01"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来获得本地异常/运行或受限错误传播专项许可后再评估"
+    },
+    {
+      "id": "PN29-F02",
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F02",
+      "kind": "early_return_after_filename_object_allocation",
+      "status": "needs_evidence",
+      "title": "getname_kernel在已分配filename_s之后遇超长字符串直接返回而无本地kfree",
+      "source_fact": "getname_kernel首先name=__myos_getname，随后strlen；若len>PAGE_SIZE直接return ERR_PTR(-ENAMETOOLONG)，此早返支路没有kfree(name)",
+      "premises": [
+        "__myos_getname已正常分配非错误对象",
+        "k_filename是可完成strlen且长度>4096的合法C字符串",
+        "本函数按当前所选源码正常进入过长返回口"
+      ],
+      "possible_impact": "本地函数返回错误指针但不返回此前成功分配的filename_s对象，当前局部缺少释放调用；跨全局生命周期是否确为永久泄漏未认证",
+      "counter_evidence": [
+        "PT_INTERP路径有p_filesz<=4096且尾NUL门，该受限来源下strlen<=4095，不把此分支硬套给28已核解释器",
+        "首次分配失败返回ERR_PTR另由EI28-F01管理；不跨过该无效对象分支认定可继续",
+        "其他未来外层资源回收/系统终止机制未全审"
+      ],
+      "anchors": [
+        "PN29-A001",
+        "PN29-A009",
+        "PN29-A010",
+        "PN29-A011"
+      ],
+      "related": [
+        "CORE-USER-ELF-INTERPRETER-28::EI28-F01"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "待明确通用内核字符串生产者、有效长字符串与生命周期专项范围"
+    },
+    {
+      "id": "PN29-F03",
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F03",
+      "kind": "precheck_scan_and_terminator_coverage",
+      "status": "needs_evidence",
+      "title": "strlen_user先调用strlen访问源，后才检查不含NUL的长度区间",
+      "source_fact": "strlen_user先size=strlen(src)，后if(!access_ok(src,size)) return -EFAULT；strlen正常返回的是NUL之前字符数，范围检查的size不包括src[size]终止符",
+      "premises": [
+        "源指针/字符序列足以使所选strlen开始遍历",
+        "选定通用strlen实现和x86-64地址门适用",
+        "若数据确实包含NUL在offset len，数值范围检查只申请前len字节"
+      ],
+      "possible_impact": "地址范围校验不能被表述为提前保护扫描，也未覆盖发现NUL的那次源字节读取；映射/权限/异常恢复需另证",
+      "counter_evidence": [
+        "预检查缺失本身不证明真实硬件异常必发生，也不证明有机密信息访问",
+        "access_ok为数值门不是硬件页访问认证，不能据通过就宣称已验证目标内存",
+        "短路径、有效映射和典型页边界下未必出现异常"
+      ],
+      "anchors": [
+        "PN29-A017",
+        "PN29-A018",
+        "PN29-A023",
+        "PN29-A024",
+        "PN29-A027",
+        "PN29-A028",
+        "PN29-A031"
+      ],
+      "related": [
+        "CORE-USER-ELF-HEADER-READ-27::EH27-F03"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "待uaccess/异常专项和合法内存范围输入，当前只保留源码序关系"
+    },
+    {
+      "id": "PN29-F04",
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F04",
+      "kind": "two_observation_string_non_atomicity",
+      "status": "deferred_owner_not_ready",
+      "title": "用户字符串测长与再次复制是两次观察，输出长度不保证对应单一时刻的源字符串",
+      "source_fact": "getname先strlen_user计算len，再分配并调用strncpy_from_user(...,len)；name->len保留首次值；选定strncpy在count范围内复制当前字符并可在早NUL时填充剩余字节",
+      "premises": [
+        "另一执行主体或有能力的行为在第一次扫描与第二次复制之间更改同一源数组",
+        "两次读取都定义良好且路径没有更早错误/资源阻断"
+      ],
+      "possible_impact": "name->len可能描述旧字符串长度，复制内容来自后一次观察；不能把两次成功合称原子快照或认证稳定路径解析",
+      "counter_evidence": [
+        "未执行并发/用户指针测试，不证明现实发生时序竞争或任何安全影响",
+        "同一来源地址和旧长度经过纯数值__access_ok，在首次成功后没有成立的第二次-EFAULT生产者；不能为了触发恒假的len<0门虚构失败",
+        "kzalloc的额外尾部清零可以在正常分配条件下保证目标字节串终止，不同于源的时间稳定性"
+      ],
+      "anchors": [
+        "PN29-A003",
+        "PN29-A004",
+        "PN29-A005",
+        "PN29-A006",
+        "PN29-A015",
+        "PN29-A016",
+        "PN29-A020",
+        "PN29-A021",
+        "PN29-A032"
+      ],
+      "related": [
+        "CORE-USER-ELF-INTERPRETER-28::EI28-F05"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "仅未来用户字符串稳定性需求/约束明确后再判断是否属需修复问题"
+    }
+  ],
+  "historical_additions": [
+    {
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F01",
+      "kind": "same_root_no_new_id",
+      "status_change": false,
+      "note": "__myos_getname失败可返回ERR_PTR(-ENOMEM)；getname和getname_kernel都未在下一次name成员写入前做IS_ERR。已在28立项，不因多一个调用者重复编号。",
+      "anchors": [
+        "PN29-A001",
+        "PN29-A004",
+        "PN29-A009",
+        "PN29-A010"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F05",
+      "kind": "upstream_string_consumer_link",
+      "status_change": false,
+      "note": "PT_INTERP只核尾NUL，内部NUL之后getname_kernel的strlen取首个NUL；此处不重做ELF/完整文件解析。",
+      "anchors": [
+        "PN29-A009",
+        "PN29-A012",
+        "PN29-A024"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "kind": "existing_dependency",
+      "status_change": false,
+      "note": "do_filp_open后续已有缺return问题，所选open/exec的filename借用/释放只在下层正常返回条件下消费。",
+      "anchors": [
+        "PN29-A041",
+        "PN29-A042",
+        "PN29-A050",
+        "PN29-A060",
+        "PN29-A064"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28-REVIEW-001::R28-S01",
+      "kind": "review_correction_preserved",
+      "status_change": false,
+      "note": "方法返回与下游结果分别核，不能从合法数值自动认证状态和内存安全。",
+      "anchors": [
+        "PN29-A035",
+        "PN29-A036"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28-REVIEW-001::R28-S02",
+      "kind": "review_correction_preserved",
+      "status_change": false,
+      "note": "解释器PT_INTERP路径在尾NUL+p_filesz<=4096条件下不产生>PAGE_SIZE通用getname_kernel分支。",
+      "anchors": [
+        "PN29-A009",
+        "PN29-A010"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28-REVIEW-001::R28-S03",
+      "kind": "review_correction_preserved",
+      "status_change": false,
+      "note": "严格区分ERR_PTR生产、PTR_ERR转换、strncpy常量返回和直接getname语句，不用标题替代被引用函数内语句。",
+      "anchors": [
+        "PN29-A034",
+        "PN29-A035",
+        "PN29-A012",
+        "PN29-A022",
+        "PN29-A048"
+      ]
+    }
+  ],
+  "helper_consumer_corrections": {
+    "getname_copy_second_access_ok_negative": "Direct helper can return -EFAULT, but in getname after a normal positive strlen_user from unchanged pointer and measured length the same numerical access_ok check already passed. This negative outcome has no established legitimate caller producer; len<0 still is a false unsigned comparison.",
+    "getname_kernel_strncpy_non_dest": "Selected generic implementation always returns dest when it completes normally. The mismatch branch in getname_kernel has no selected normal producer; it must not be counted as an independently confirmed error or leak.",
+    "filename_uptr": "struct field exists; selected getname bodies do not assign it, but no read or resulting bug established in bounded caller analysis."
+  },
+  "count_new": 4,
+  "count_historical": 6,
+  "full_repo_dedup": "NOT_PERFORMED"
+}

@@ -1,0 +1,1712 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-SCHED-ORDER-02
+phase: scheduler_order_witness
+record_type: scheduler_order_results
+produced_by: Claude Code 云端会话执行者（claude.ai/code）；模型名不写入仓库产物，见 execution_model_selection
+execution_model_selection: unknown_or_not_attestable
+execution_surface: claude.ai/code 托管云端会话容器；普通用户态宿主进程（不是 MyOS2 运行）
+date: '2026-10-02'
+base_snapshot: kernel=time a039d9803ade；workspace=master de3bb1df906a；主线 6706013a079a（15 号任务书与 RECHECK-02 收口回执，开工时固定）；冻结执行头 0d62c4d19711（均为短 SHA）
+status: generated_from_observations
+acceptance_ceiling: PASS_PENDING_LOCAL
+results_are_generated: true
+kernel_correctness_verdict_template: 'not issued: these are bounded witnesses of one function''s boundary behaviour'
+input_identity:
+  guard_start_gate:
+    review_binding: true
+    contract_binding: true
+    analysis14_present: true
+    lead_advanced_by_additions_only: true
+    reviewed_chain: true
+    on_execution_branch: true
+    head_descends_from_0d62: true
+    0d62_files_unchanged_only_additions_under_prefix: true
+    remote_on_same_line_and_contains_0d62: true
+    kernel_source_equals_pin: true
+    ok: true
+  review_fields:
+    record_id: CORE-CHECK-01-RECHECK-02-REVIEW-001
+    status: BOUNDED_RECHECK_CLOSED
+    acceptance_verdict: PASS_PENDING_LOCAL
+    reviewed_pr: 17
+    reviewed_branch: claude/dazzling-cori-q0dnyt
+    reviewed_commit_short12: 0d62c4d19711
+    results_frozen_short12: 77faf51e9a43
+    remaining_return_items_in_contract13: []
+  contract_fields:
+    followup_id: CORE-SCHED-ORDER-02
+    required_review_record: CORE-CHECK-01-RECHECK-02-REVIEW-001
+    reviewed_execution_short12: 0d62c4d19711
+    consumer_results_frozen_short12: 77faf51e9a43
+    kernel_short12: a039d9803ade
+    execution_branch: claude/dazzling-cori-q0dnyt
+    initial_execution_pr: 17
+    allowed_write_prefix: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-order-02/
+    kernel_change_authorized: false
+    phase3_authorized: false
+    acceptance_ceiling: PASS_PENDING_LOCAL
+  lead_changes_since_previous_pin:
+  - "A\t15-scheduler-ordering-witness-contract.md"
+  - "A\tcheckpoints/2026-10-02-consumer-closed-scheduler-witness-ready.md"
+  - "A\treviews/CORE-CHECK-01-recheck-02-review.md"
+  pins:
+    time: a039d9803ade
+    master: de3bb1df906a
+    lead_prev: b0aa54db1b70
+    lead: 6706013a079a
+    reviewed: 0d62c4d19711
+    consumer_results: 77faf51e9a43
+  frozen_0d62_reused:
+  - - core/fixtures/fx_common.h
+    - 1854
+    - 5c3b5baaeb652c16
+    - fixture header (copied next to the template)
+  - - core/fixtures/fx_list.inc.c
+    - 3054
+    - 146d23b7aa2d1e4b
+    - verbatim list primitives via //@@ORIG (copied next to the template)
+  - - core/fixtures/locate.py
+    - 11783
+    - 2b89aff5cc0524fa
+    - locator used by build2.Builder
+  - - core/fixtures/fx_sched.c
+    - 10795
+    - 65c8f613d9854c93
+    - 'reference only: type choices; not compiled'
+  - - core/recheck-01/fixtures/build2.py
+    - 6681
+    - d3979aa307bbdb87
+    - Builder.expand, CFLAGS, COMPILE_LIMIT_S, RUN_LIMIT_S
+  - - core/recheck-01/fixtures/harness2.py
+    - 7501
+    - 9b9c5c23698a13a1
+    - run_pg (bounded runs), blob/short12 of the time pin
+  template:
+    bytes: 8846
+    sha256_segments:
+    - 05c6dfdfb1d459d7
+    - 5380b805bc15e5d5
+    - ede472de08000a83
+    - 41eec20b29b991dd
+  expanded_source:
+    bytes: 23713
+    sha256_segments:
+    - 716a2646484eb144
+    - 32a736e4092a75ec
+    - 70ccb3fc7b534641
+    - fd330f5833bb40f1
+  pick_next_task_myos:
+    pin: time
+    commit_short12: a039d9803ade
+    path: mykernel/sched/scheduler/myos_rt.c
+    kind: func
+    name: pick_next_task_myos
+    lines:
+    - 5
+    - 58
+    bytes: 1598
+    sha256_segments:
+    - 2ff36b570d0422f3
+    - ccb84857384d5cd7
+    - c8df90beee74d36a
+    - adda9dacb713e54f
+  orig_slices:
+  - - mykernel/lib/list/double_list_types.h
+    - struct
+    - list_head
+    - - 8
+      - 11
+    - 57
+    - ebf1c027f3463abc
+  - - mykernel/lib/list/double_list_types.h
+    - struct
+    - list_hdr
+    - - 13
+      - 16
+    - 56
+    - d248e3e72255d766
+  - - mykernel/lib/list/double_list_const.h
+    - macro
+    - LIST_POISON1
+    - - 5
+      - 5
+    - 39
+    - 4208b26ec9006c27
+  - - mykernel/lib/list/double_list_const.h
+    - macro
+    - LIST_POISON2
+    - - 6
+      - 6
+    - 39
+    - 7e513a95411558d5
+  - - mykernel/include/uapi/linux/stddef.h
+    - macro
+    - container_of
+    - - 9
+      - 13
+    - 263
+    - ae12efae715f1169
+  - - mykernel/lib/list/double_list.h
+    - macro
+    - INIT_LIST_HEAD
+    - - 125
+      - 125
+    - 48
+    - 0c5f3ae9c2784896
+  - - mykernel/lib/list/double_list.h
+    - macro
+    - list_is_head
+    - - 132
+      - 132
+    - 42
+    - 7eadc5411f450e4d
+  - - mykernel/lib/list/double_list_macro.h
+    - macro
+    - LIST_INIT
+    - - 5
+      - 8
+    - 65
+    - 3a4d4e1a6894cb52
+  - - mykernel/lib/list/double_list_macro.h
+    - macro
+    - LIST_HEADER_INIT
+    - - 9
+      - 12
+    - 106
+    - fd948458e96905d1
+  - - mykernel/lib/list/double_list_macro.h
+    - macro
+    - list_container
+    - - 25
+      - 26
+    - 80
+    - 98d6a6e49e50f5a3
+  - - mykernel/lib/list/double_list_macro.h
+    - macro
+    - list_entry
+    - - 27
+      - 27
+    - 34
+    - 18fedd137eb90cba
+  - - mykernel/lib/list/double_list_macro.h
+    - macro
+    - list_first_entry
+    - - 37
+      - 38
+    - 88
+    - 9158858037a4a4dc
+  - - mykernel/lib/list/double_list_macro.h
+    - macro
+    - list_for_each
+    - - 88
+      - 91
+    - 126
+    - 0d8764ba976cf21c
+  - - mykernel/lib/list/double_list_macro.h
+    - macro
+    - list_headr_first_container
+    - - 334
+      - 335
+    - 109
+    - 68549932735e1f43
+  - - mykernel/lib/list/double_list_macro.h
+    - macro
+    - list_header_foreach
+    - - 340
+      - 341
+    - 83
+    - 63e3a3c429a91383
+  - - mykernel/lib/list/double_list.h
+    - func
+    - INIT_LIST_S
+    - - 147
+      - 152
+    - 129
+    - 6503fe0d66ff1558
+  - - mykernel/lib/list/double_list.h
+    - func
+    - INIT_LIST_HEADER_S
+    - - 153
+      - 158
+    - 136
+    - 53598975b6d1421a
+  - - mykernel/lib/list/double_list.h
+    - func
+    - __list_add_valid
+    - - 160
+      - 168
+    - 247
+    - 3ed8f4cedd0f9fda
+  - - mykernel/lib/list/double_list.h
+    - func
+    - __list_del_entry_valid
+    - - 169
+      - 179
+    - 306
+    - 13f263662c49e0ff
+  - - mykernel/lib/list/double_list.h
+    - func
+    - __list_add_between
+    - - 187
+      - 197
+    - 248
+    - 9147161d2d4ba947
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_add_to_next
+    - - 206
+      - 210
+    - 127
+    - 1388a0b7eda6e30b
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_add_to_prev
+    - - 219
+      - 223
+    - 127
+    - 69a63f65475e8438
+  - - mykernel/lib/list/double_list.h
+    - func
+    - __list_del
+    - - 233
+      - 238
+    - 133
+    - 4b2d41eef303900b
+  - - mykernel/lib/list/double_list.h
+    - func
+    - __list_del_entry
+    - - 253
+      - 260
+    - 162
+    - 1e6b8fa214378a31
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_del_init
+    - - 278
+      - 283
+    - 120
+    - 69ca4826f39fa5d2
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_is_head_anchor
+    - - 419
+      - 423
+    - 121
+    - 2115a38e9262a008
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_is_empty_entry
+    - - 428
+      - 432
+    - 118
+    - a917ea3ed5156f20
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_header_is_empty
+    - - 628
+      - 632
+    - 125
+    - 6d2bbba923422901
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_header_contains
+    - - 633
+      - 642
+    - 212
+    - d2c885447e83747d
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_header_add_to_head
+    - - 644
+      - 649
+    - 157
+    - bdf1ccbe85075372
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_header_remove_head
+    - - 650
+      - 660
+    - 245
+    - c36e35500b6e3970
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_header_add_to_tail
+    - - 662
+      - 667
+    - 157
+    - e7451841f25dda30
+  - - mykernel/lib/list/double_list.h
+    - func
+    - list_header_delete_node
+    - - 681
+      - 691
+    - 224
+    - 239d2d2bf75873c5
+  - - mykernel/sched/scheduler/scheduler_types.h
+    - struct
+    - sched_entity
+    - - 8
+      - 40
+    - 811
+    - 2ae073a5d065956e
+  - - mykernel/sched/scheduler/scheduler_types.h
+    - struct
+    - sched_rt_entity
+    - - 42
+      - 58
+    - 454
+    - b5dd1d6f5523a96d
+  - - mykernel/arch/x86_64/sched/context/thread_info_types_arch.h
+    - struct
+    - thread_info
+    - - 19
+      - 24
+    - 189
+    - 848398c2f9f642ad
+  - - mykernel/sched/runqueue/runqueue_types.h
+    - struct
+    - myos_rq
+    - - 193
+      - 197
+    - 131
+    - 6470522644a0034b
+  - - mykernel/sched/task/task_const.h
+    - macro
+    - TASK_RUNNING
+    - - 26
+      - 26
+    - 34
+    - 1eb741bd7c9b5641
+  - - mykernel/sched/task/task_const.h
+    - macro
+    - TASK_UNINTERRUPTIBLE
+    - - 28
+      - 28
+    - 40
+    - 160d93bd1d542e1b
+  - - mykernel/sched/scheduler/myos_rt.c
+    - func
+    - pick_next_task_myos
+    - - 5
+      - 58
+    - 1598
+    - 2ff36b570d0422f3
+  compile:
+    returncode: 0
+    timed_out: false
+    terminal_state: exited
+    binary_exists: true
+  compile_stderr_bytes: 0
+  cflags:
+  - -std=gnu11
+  - -O0
+  - -g
+  - -fno-strict-aliasing
+  - -Wall
+  - -Wno-unused-label
+  - -Wno-unused-variable
+  - -Wno-unused-function
+  limits:
+    compile_s: 60
+    run_s: 5
+    walk_links: 16
+  tools:
+    gcc: gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+    python3: 3.11.15
+    git: git version 2.43.0
+  build_status: BUILT
+fidelity_template:
+- host user-space process; pick_next_task_myos and the list primitives are verbatim from time a039d9803ade
+- task_struct/runqueue reduced to the members the function touches (type choice of core/fixtures/fx_sched.c @ 0d62)
+- current, need_resched() and jiffies are explicit fixture inputs, not a clock, an interrupt or preemption
+- 'W07/W08: making the returned task current is a sequence model, not a context switch'
+- single CPU, no concurrent modification, time_slice=100, last_jiffies initial 100 set once per scenario
+- observers only before/after each call; no probe inside the original function; queue walk by address, max 16 links
+scenarios:
+  W01:
+    completed: true
+    evidence_status: VALID
+    evidence_reasons: []
+    declared_inputs:
+      jiffies: 100
+      need_resched: 1
+      last_jiffies: 100
+      time_slice: 100
+      current: 2
+      a_vr: 25
+      a_state: 0
+      idle_vr: 0
+      queue:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      steps: 1
+    runs:
+    - rep: 1
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1120
+      stdout_sha256_0: a756bcd6dc5a2d63
+      stderr_bytes: 0
+    - rep: 2
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1120
+      stdout_sha256_0: a756bcd6dc5a2d63
+      stderr_bytes: 0
+    stdout_identical: true
+    input_fidelity:
+      jiffies: true
+      last_jiffies: true
+      need_resched: true
+      current: true
+      current_state: true
+      queue: true
+      time_slice: true
+      task_vruntimes: true
+    steps:
+    - step: 1
+      current_before:
+        id: 2
+        state: 0
+        vruntime: 25
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 3
+      rq_curr: 3
+      queue_after:
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      - - 2
+        - 25
+      used: 0
+      switch_oracle: true
+      deltas_recorded: {}
+      deltas_oracle: {}
+      last_jiffies_after: 100
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: true
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: VIOLATED
+        descending_pairs:
+        - - 30
+          - 25
+        idle_tail: VIOLATED
+      P_conformant_order_oracle:
+      - 4
+      - 2
+      - 5
+      - 0
+    total_time_charged: 0
+    checks:
+      structure: true
+      accounting: true
+      selection: true
+      membership: true
+      input_fidelity: true
+    P_by_step:
+      '1':
+      - VIOLATED
+      - VIOLATED
+    candidate_P: VIOLATED
+    lead_derivation:
+      selected:
+      - - 3
+      - - 3
+      - AGREES
+      final_order:
+      - - 4
+        - 5
+        - 0
+        - 2
+      - - 4
+        - 5
+        - 0
+        - 2
+      - possible
+      - AGREES
+      used:
+      - - 0
+      - - 0
+      - AGREES
+      P_nonidle:
+      - VIOLATED
+      - VIOLATED
+      - AGREES
+    lead_derivation_all_agree: true
+  W02:
+    completed: true
+    evidence_status: VALID
+    evidence_reasons: []
+    declared_inputs:
+      jiffies: 110
+      need_resched: 1
+      last_jiffies: 100
+      time_slice: 100
+      current: 2
+      a_vr: 15
+      a_state: 0
+      idle_vr: 0
+      queue:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      steps: 1
+    runs:
+    - rep: 1
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1121
+      stdout_sha256_0: c0f6589fbb0589bb
+      stderr_bytes: 0
+    - rep: 2
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1121
+      stdout_sha256_0: c0f6589fbb0589bb
+      stderr_bytes: 0
+    stdout_identical: true
+    input_fidelity:
+      jiffies: true
+      last_jiffies: true
+      need_resched: true
+      current: true
+      current_state: true
+      queue: true
+      time_slice: true
+      task_vruntimes: true
+    steps:
+    - step: 1
+      current_before:
+        id: 2
+        state: 0
+        vruntime: 15
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 3
+      rq_curr: 3
+      queue_after:
+      - - 2
+        - 25
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      used: 10
+      switch_oracle: true
+      deltas_recorded:
+        '2': 10
+      deltas_oracle:
+        '2': 10
+      last_jiffies_after: 110
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: true
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: VIOLATED
+        descending_pairs:
+        - - 25
+          - 20
+        idle_tail: HOLDS
+      P_conformant_order_oracle:
+      - 4
+      - 2
+      - 5
+      - 0
+    total_time_charged: 10
+    checks:
+      structure: true
+      accounting: true
+      selection: true
+      membership: true
+      input_fidelity: true
+    P_by_step:
+      '1':
+      - VIOLATED
+      - HOLDS
+    candidate_P: VIOLATED
+    lead_derivation:
+      selected:
+      - - 3
+      - - 3
+      - AGREES
+      final_order:
+      - - 2
+        - 4
+        - 5
+        - 0
+      - - 2
+        - 4
+        - 5
+        - 0
+      - AGREES
+      P_nonidle:
+      - VIOLATED
+      - VIOLATED
+      - AGREES
+      a_final:
+      - 25
+      - 25
+      - AGREES
+    lead_derivation_all_agree: true
+  W03:
+    completed: true
+    evidence_status: VALID
+    evidence_reasons: []
+    declared_inputs:
+      jiffies: 100
+      need_resched: 1
+      last_jiffies: 100
+      time_slice: 100
+      current: 2
+      a_vr: 15
+      a_state: 0
+      idle_vr: 0
+      queue:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      steps: 1
+    runs:
+    - rep: 1
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1120
+      stdout_sha256_0: 60bcc910f2a470f5
+      stderr_bytes: 0
+    - rep: 2
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1120
+      stdout_sha256_0: 60bcc910f2a470f5
+      stderr_bytes: 0
+    stdout_identical: true
+    input_fidelity:
+      jiffies: true
+      last_jiffies: true
+      need_resched: true
+      current: true
+      current_state: true
+      queue: true
+      time_slice: true
+      task_vruntimes: true
+    steps:
+    - step: 1
+      current_before:
+        id: 2
+        state: 0
+        vruntime: 15
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 3
+      rq_curr: 3
+      queue_after:
+      - - 2
+        - 15
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      used: 0
+      switch_oracle: true
+      deltas_recorded: {}
+      deltas_oracle: {}
+      last_jiffies_after: 100
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: true
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: HOLDS
+        descending_pairs: []
+        idle_tail: HOLDS
+      P_conformant_order_oracle:
+      - 2
+      - 4
+      - 5
+      - 0
+    total_time_charged: 0
+    checks:
+      structure: true
+      accounting: true
+      selection: true
+      membership: true
+      input_fidelity: true
+    P_by_step:
+      '1':
+      - HOLDS
+      - HOLDS
+    candidate_P: SATISFIED
+    lead_derivation:
+      selected:
+      - - 3
+      - - 3
+      - AGREES
+      final_order:
+      - - 2
+        - 4
+        - 5
+        - 0
+      - - 2
+        - 4
+        - 5
+        - 0
+      - AGREES
+      P_nonidle:
+      - HOLDS
+      - HOLDS
+      - AGREES
+      a_final:
+      - 15
+      - 15
+      - AGREES
+    lead_derivation_all_agree: true
+  W04:
+    completed: true
+    evidence_status: VALID
+    evidence_reasons: []
+    declared_inputs:
+      jiffies: 105
+      need_resched: 1
+      last_jiffies: 100
+      time_slice: 100
+      current: 2
+      a_vr: 15
+      a_state: 0
+      idle_vr: 0
+      queue:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      steps: 1
+    runs:
+    - rep: 1
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1120
+      stdout_sha256_0: 3c09117baf541e8c
+      stderr_bytes: 0
+    - rep: 2
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1120
+      stdout_sha256_0: 3c09117baf541e8c
+      stderr_bytes: 0
+    stdout_identical: true
+    input_fidelity:
+      jiffies: true
+      last_jiffies: true
+      need_resched: true
+      current: true
+      current_state: true
+      queue: true
+      time_slice: true
+      task_vruntimes: true
+    steps:
+    - step: 1
+      current_before:
+        id: 2
+        state: 0
+        vruntime: 15
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 3
+      rq_curr: 3
+      queue_after:
+      - - 2
+        - 20
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      used: 5
+      switch_oracle: true
+      deltas_recorded:
+        '2': 5
+      deltas_oracle:
+        '2': 5
+      last_jiffies_after: 105
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: true
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: HOLDS
+        descending_pairs: []
+        idle_tail: HOLDS
+      P_conformant_order_oracle:
+      - 2
+      - 4
+      - 5
+      - 0
+    total_time_charged: 5
+    checks:
+      structure: true
+      accounting: true
+      selection: true
+      membership: true
+      input_fidelity: true
+    P_by_step:
+      '1':
+      - HOLDS
+      - HOLDS
+    candidate_P: SATISFIED
+    lead_derivation:
+      selected:
+      - - 3
+      - - 3
+      - AGREES
+      P_nonidle:
+      - HOLDS
+      - HOLDS
+      - AGREES
+      a_final:
+      - 20
+      - 20
+      - AGREES
+    lead_derivation_all_agree: true
+  W05:
+    completed: true
+    evidence_status: VALID
+    evidence_reasons: []
+    declared_inputs:
+      jiffies: 110
+      need_resched: 1
+      last_jiffies: 100
+      time_slice: 100
+      current: 2
+      a_vr: 15
+      a_state: 2
+      idle_vr: 0
+      queue:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      steps: 1
+    runs:
+    - rep: 1
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1114
+      stdout_sha256_0: cd71f83b1c54f937
+      stderr_bytes: 0
+    - rep: 2
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1114
+      stdout_sha256_0: cd71f83b1c54f937
+      stderr_bytes: 0
+    stdout_identical: true
+    input_fidelity:
+      jiffies: true
+      last_jiffies: true
+      need_resched: true
+      current: true
+      current_state: true
+      queue: true
+      time_slice: true
+      task_vruntimes: true
+    steps:
+    - step: 1
+      current_before:
+        id: 2
+        state: 2
+        vruntime: 15
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 3
+      rq_curr: 3
+      queue_after:
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      used: 10
+      switch_oracle: true
+      deltas_recorded:
+        '2': 10
+      deltas_oracle:
+        '2': 10
+      last_jiffies_after: 110
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: true
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: HOLDS
+        descending_pairs: []
+        idle_tail: HOLDS
+      P_conformant_order_oracle:
+      - 4
+      - 5
+      - 0
+    total_time_charged: 10
+    checks:
+      structure: true
+      accounting: true
+      selection: true
+      membership: true
+      input_fidelity: true
+    P_by_step:
+      '1':
+      - HOLDS
+      - HOLDS
+    candidate_P: SATISFIED
+    lead_derivation:
+      selected:
+      - - 3
+      - - 3
+      - AGREES
+      a_final:
+      - 25
+      - 25
+      - AGREES
+      a_requeued:
+      - false
+      - false
+      - AGREES
+    lead_derivation_all_agree: true
+  W06:
+    completed: true
+    evidence_status: VALID
+    evidence_reasons: []
+    declared_inputs:
+      jiffies: 110
+      need_resched: 1
+      last_jiffies: 100
+      time_slice: 100
+      current: 0
+      a_vr: 15
+      a_state: 0
+      idle_vr: 7
+      queue:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      steps: 1
+    runs:
+    - rep: 1
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1106
+      stdout_sha256_0: 107268ab5ee29e7c
+      stderr_bytes: 0
+    - rep: 2
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 1106
+      stdout_sha256_0: 107268ab5ee29e7c
+      stderr_bytes: 0
+    stdout_identical: true
+    input_fidelity:
+      jiffies: true
+      last_jiffies: true
+      need_resched: true
+      current: true
+      current_state: true
+      queue: true
+      time_slice: true
+      task_vruntimes: true
+    steps:
+    - step: 1
+      current_before:
+        id: 0
+        state: 0
+        vruntime: 7
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      returned: 3
+      rq_curr: 3
+      queue_after:
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 7
+      used: 10
+      switch_oracle: true
+      deltas_recorded: {}
+      deltas_oracle: {}
+      last_jiffies_after: 110
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: true
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: HOLDS
+        descending_pairs: []
+        idle_tail: HOLDS
+      P_conformant_order_oracle:
+      - 4
+      - 5
+      - 0
+    total_time_charged: 0
+    checks:
+      structure: true
+      accounting: true
+      selection: true
+      membership: true
+      input_fidelity: true
+    P_by_step:
+      '1':
+      - HOLDS
+      - HOLDS
+    candidate_P: SATISFIED
+    lead_derivation:
+      selected:
+      - - 3
+      - - 3
+      - AGREES
+      final_order:
+      - - 4
+        - 5
+        - 0
+      - - 4
+        - 5
+        - 0
+      - AGREES
+      idle_final:
+      - 7
+      - 7
+      - AGREES
+    lead_derivation_all_agree: true
+  W07:
+    completed: true
+    evidence_status: VALID
+    evidence_reasons: []
+    declared_inputs:
+      jiffies: 110
+      need_resched: 1
+      last_jiffies: 100
+      time_slice: 100
+      current: 2
+      a_vr: 15
+      a_state: 0
+      idle_vr: 0
+      queue:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      steps: 2
+    runs:
+    - rep: 1
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 2147
+      stdout_sha256_0: aa5a43e8b0b4ec44
+      stderr_bytes: 0
+    - rep: 2
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 2147
+      stdout_sha256_0: aa5a43e8b0b4ec44
+      stderr_bytes: 0
+    stdout_identical: true
+    input_fidelity:
+      jiffies: true
+      last_jiffies: true
+      need_resched: true
+      current: true
+      current_state: true
+      queue: true
+      time_slice: true
+      task_vruntimes: true
+    steps:
+    - step: 1
+      current_before:
+        id: 2
+        state: 0
+        vruntime: 15
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 3
+      rq_curr: 3
+      queue_after:
+      - - 2
+        - 25
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      used: 10
+      switch_oracle: true
+      deltas_recorded:
+        '2': 10
+      deltas_oracle:
+        '2': 10
+      last_jiffies_after: 110
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: true
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: VIOLATED
+        descending_pairs:
+        - - 25
+          - 20
+        idle_tail: HOLDS
+      P_conformant_order_oracle:
+      - 4
+      - 2
+      - 5
+      - 0
+    - step: 2
+      current_before:
+        id: 3
+        state: 0
+        vruntime: 10
+        time_slice: 100
+      queue_before:
+      - - 2
+        - 25
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 2
+      rq_curr: 2
+      queue_after:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      used: 0
+      switch_oracle: true
+      deltas_recorded: {}
+      deltas_oracle: {}
+      last_jiffies_after: 110
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: false
+      queue_minimum_before:
+      - 4
+      - 20
+      P:
+        P_nonidle: HOLDS
+        descending_pairs: []
+        idle_tail: HOLDS
+      P_conformant_order_oracle:
+      - 3
+      - 4
+      - 5
+      - 0
+    total_time_charged: 10
+    checks:
+      structure: true
+      accounting: true
+      selection: true
+      membership: true
+      input_fidelity: true
+    P_by_step:
+      '1':
+      - VIOLATED
+      - HOLDS
+      '2':
+      - HOLDS
+      - HOLDS
+    candidate_P: VIOLATED
+    lead_derivation:
+      step1_a_delta:
+      - 10
+      - 10
+      - AGREES
+      step2_switched_out_delta:
+      - 0
+      - 0
+      - AGREES
+      total_charged:
+      - 10
+      - 10
+      - AGREES
+    lead_derivation_all_agree: true
+  W08:
+    completed: true
+    evidence_status: VALID
+    evidence_reasons: []
+    declared_inputs:
+      jiffies: 105
+      need_resched: 0
+      last_jiffies: 100
+      time_slice: 100
+      current: 2
+      a_vr: 15
+      a_state: 0
+      idle_vr: 0
+      queue:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      steps: 2
+    runs:
+    - rep: 1
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 2146
+      stdout_sha256_0: a39b0ff7d6fde1e5
+      stderr_bytes: 0
+    - rep: 2
+      returncode: 0
+      timed_out: false
+      terminal_state: exited
+      reaped_confirmed: true
+      stdout_bytes: 2146
+      stdout_sha256_0: a39b0ff7d6fde1e5
+      stderr_bytes: 0
+    stdout_identical: true
+    input_fidelity:
+      jiffies: true
+      last_jiffies: true
+      need_resched: true
+      current: true
+      current_state: true
+      queue: true
+      time_slice: true
+      task_vruntimes: true
+    steps:
+    - step: 1
+      current_before:
+        id: 2
+        state: 0
+        vruntime: 15
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 2
+      rq_curr: 2
+      queue_after:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      used: 5
+      switch_oracle: false
+      deltas_recorded: {}
+      deltas_oracle: {}
+      last_jiffies_after: 100
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: null
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: HOLDS
+        descending_pairs: []
+        idle_tail: HOLDS
+      P_conformant_order_oracle: null
+    - step: 2
+      current_before:
+        id: 2
+        state: 0
+        vruntime: 15
+        time_slice: 100
+      queue_before:
+      - - 3
+        - 10
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      returned: 3
+      rq_curr: 3
+      queue_after:
+      - - 2
+        - 20
+      - - 4
+        - 20
+      - - 5
+        - 30
+      - - 0
+        - 0
+      used: 5
+      switch_oracle: true
+      deltas_recorded:
+        '2': 5
+      deltas_oracle:
+        '2': 5
+      last_jiffies_after: 105
+      structure:
+        count_equals_walk: true
+        walk_complete: true
+        no_duplicate_nodes: true
+        idle_occurrences_ok: true
+        returned_not_queued: true
+      structure_ok: true
+      accounting_ok: true
+      selection_matches_oracle: true
+      membership_matches_oracle: true
+      selected_key_is_queue_minimum: true
+      queue_minimum_before:
+      - 3
+      - 10
+      P:
+        P_nonidle: HOLDS
+        descending_pairs: []
+        idle_tail: HOLDS
+      P_conformant_order_oracle:
+      - 2
+      - 4
+      - 5
+      - 0
+    total_time_charged: 5
+    checks:
+      structure: true
+      accounting: true
+      selection: true
+      membership: true
+      input_fidelity: true
+    P_by_step:
+      '1':
+      - HOLDS
+      - HOLDS
+      '2':
+      - HOLDS
+      - HOLDS
+    candidate_P: SATISFIED
+    lead_derivation:
+      step2_a_delta:
+      - 5
+      - 5
+      - AGREES
+      step1_unchanged:
+      - true
+      - true
+      - AGREES
+      total_charged:
+      - 5
+      - 5
+      - AGREES
+    lead_derivation_all_agree: true
+cursor_fix_alone_basis:
+  W02_current_key_at_insertion: 15
+  W02_head_after_removal:
+  - 4
+  - 20
+  W02_insert_position_recorded: 0
+  W02_charged_after: 10
+  reading_template: the current task's key before charging (15) is not greater than the head after removal (C, 20), so the insertion loop is not entered and the task is placed first; the 10 jiffies are added afterwards. A change confined to the loop (moving the compared entity with the cursor) cannot alter this case; it only concerns W01, where the loop runs past D and idle to the anchor. Source reading of myos_rt.c lines 37-50 plus the recorded boundary values; no modified function was run.
+  loop_condition_order_note_template: 'INFERRED from the source only, not executed: the loop tests the vruntime comparison before ''tmp_list != anchor''. Today the compared entity stays at the first node, so W01 reaches the anchor without an invalid read. A cursor change that re-derives the compared entity from tmp_list each step, without reordering that condition, would evaluate the anchor''s container once the walk reaches the anchor.'
+controls:
+  input: runs.json scenarios.W03 (real record; copies only)
+  results:
+    C1_complete_W03:
+      transformation: null
+      evidence_status: VALID
+      P_nonidle: HOLDS
+      lead_P_nonidle:
+      - HOLDS
+      - HOLDS
+      - AGREES
+      met: true
+    C2_after_snapshot_removed:
+      transformation: 'HARNESS_META_TEST: the snap/after/1 line removed from both runs'' stdout'
+      evidence_status: INCOMPLETE_EVIDENCE
+      P_nonidle: null
+      lead_P_nonidle: null
+      met: true
+    C3_complete_but_different:
+      transformation: 'HARNESS_META_TEST: in both runs the snap/after/1 queue reordered to C20,A15,D30,I (same members, count, keys)'
+      evidence_status: VALID
+      P_nonidle: VIOLATED
+      lead_P_nonidle:
+      - VIOLATED
+      - HOLDS
+      - DIFFERS
+      met: true
+  all_met: true
+summary:
+  scenarios_completed:
+  - W01
+  - W02
+  - W03
+  - W04
+  - W05
+  - W06
+  - W07
+  - W08
+  scenarios_not_completed: []
+  candidate_P:
+    W01: VIOLATED
+    W02: VIOLATED
+    W03: SATISFIED
+    W04: SATISFIED
+    W05: SATISFIED
+    W06: SATISFIED
+    W07: VIOLATED
+    W08: SATISFIED
+  P_violations_by_step:
+    W01:
+      '1':
+      - VIOLATED
+      - VIOLATED
+    W02:
+      '1':
+      - VIOLATED
+      - HOLDS
+    W07:
+      '1':
+      - VIOLATED
+      - HOLDS
+  all_structure_ok: true
+  all_accounting_matches_oracle: true
+  all_selection_matches_oracle: true
+  lead_derivations_all_agree: true
+  lead_derivations_differing: {}
+  selected_task_not_queue_minimum:
+  - - W07
+    - 2
+    - 2
+    - - 4
+      - 20
+  controls_all_met: true
+open_template:
+- global reachability of these states in a running MyOS2 (CA-02) is not established
+- real IRQ / SMP / context switch / clock not executed
+- P is the candidate constraint of the 15 contract, not a policy chosen by the Owner
+- no kernel change or candidate patch was produced

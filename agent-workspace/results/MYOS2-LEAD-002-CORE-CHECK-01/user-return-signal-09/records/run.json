@@ -1,0 +1,65 @@
+{
+ "record": "USER_RETURN_SIGNAL_09_CHECK_RUN",
+ "cwd": "<clone 根> = /home/cheyh/projs/myos2-handoff06-local/MyOS2",
+ "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B -P agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/scripts/rs_check.py /home/cheyh/projs/myos2-handoff06-local/MyOS2 check agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09 agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/rs_check.json",
+ "returncode": 0,
+ "started_utc": "2026-10-28T20:09:25+00:00",
+ "finished_utc": "2026-10-28T20:09:33+00:00",
+ "stdout_summary": {
+  "anchors": [
+   75,
+   75
+  ],
+  "markdown_tags": [
+   16,
+   16
+  ],
+  "queries": [
+   262,
+   0
+  ],
+  "hit_refs": 353,
+  "hit_refs_with_expect": 353,
+  "role_errors": 0,
+  "structure_checks": [
+   110,
+   110
+  ],
+  "value_tables_ok": true,
+  "structure_errors": 0,
+  "deferred_findings_errors": 0,
+  "dot_errors": 0,
+  "hex40_in_package": 0,
+  "all_ok": true
+ },
+ "stderr": [
+  "{\"scan_index_repo_frozen\": \"/home/user/MyOS2\", \"scan_index_repo_rebound\": \"/home/cheyh/projs/myos2-handoff06-local/MyOS2\", \"pin\": \"a039d9803ade\"}"
+ ],
+ "outputs": [
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/rs_check.json",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-return-signal-09/records/queries.json"
+ ],
+ "pin_time": "a039d9803ade",
+ "base_execution_head": "8983a9235c8a",
+ "tools": {
+  "git": "git version 2.53.0",
+  "python": "Python 3.14.4",
+  "pyyaml": "6.0.3"
+ },
+ "input_sha256": {
+  "facts-and-boundaries.yaml": "59f31084d9030411bca07a9a77ca015fa2a5c8bce3457cf4c2aaf06815770a8a",
+  "deferred-findings.yaml": "e05d78395c0a2b4b0b0df05868225d7cb12a99056e2fdf83dd71f872f26c599c",
+  "user-return-signal.md": "a8383b4f2d772f123a63af04934376302cf29927774528b3385c9168f1dc8f37",
+  "stdio-08-disposition.md": "103204f2800556ef3b00c0bebb690348d01ead4b55f9f60f39b60268fe90b287",
+  "return-paths.dot": "83192d6735691ffcb59eb46852353c7df22f639ea1785d9f445d0a7de6f55022",
+  "scripts/rs_check.py": "42c0669743ee06841b126de8e4369123713338775efd73755edbd773dade398c"
+ },
+ "reused_module": {
+  "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/scripts/scan_index.py",
+  "sha256": "468fd2d538f0862c1f00de7e8d8147352c6fbfd7ec0e39ce597b32df8cc60efc",
+  "use": "import 读取原语（show/analyse），REPO 重绑到 clone 根；文件本身未改"
+ },
+ "pycache_before": [],
+ "pycache_after": [],
+ "not_run": "没有编译或运行 C/ASM、cmake、内核、QEMU、宿主安装/挂盘脚本或仓库原有脚本"
+}

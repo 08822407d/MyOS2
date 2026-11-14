@@ -1,0 +1,1980 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+packet_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-CHECK-01-RECHECK-02
+phase: evidence_consumer_recheck
+record_type: recorded_observation_revalidation
+produced_by: Claude Code 云端会话执行者（claude.ai/code）；模型名不写入仓库产物，见 execution_model_selection
+execution_model_selection: unknown_or_not_attestable
+status: consumer_COMPLETE
+acceptance_ceiling: PASS_PENDING_LOCAL
+results_are_generated: true
+consumer_validation:
+  kind: RECORDED_OBSERVATION_REVALIDATION
+  status: COMPLETE
+  exit_code_template: 0 complete; 2 partial (report written); 4 consumer failure
+  consumer_date_utc: '2026-10-01'
+  consumer_programs: consumer-fix-02/fixtures/consumer3.py + make_results3.py; frozen evaluate2/make_results2 from b843d475367a
+  inputs:
+  - file: run.json
+    state: OK
+    error: null
+    bytes: 148341
+    sha256_segments:
+    - 70b17d1626d202c6
+    - 32c8a38bdde82184
+    - 564013367124dc3f
+    - c00d900f2e326642
+  - file: v00.json
+    state: OK
+    error: null
+    bytes: 63054
+    sha256_segments:
+    - ed89d8cfce3fc3c2
+    - 349f015c323e49af
+    - 0a6848180b23148f
+    - 02b7cdf0ac5d0b70
+  - file: v01.json
+    state: OK
+    error: null
+    bytes: 6556
+    sha256_segments:
+    - 571dfd7616d344d7
+    - d3f93abacb7f2099
+    - 3b56f2c8c4108dad
+    - ad67899cf136eada
+  - file: static.json
+    state: OK
+    error: null
+    bytes: 8847
+    sha256_segments:
+    - eef699fde72250f8
+    - 0863b0c900f16b7c
+    - 9d3a168232e2d049
+    - 26abaa5b44ed98ec
+  - file: a46.json
+    state: OK
+    error: null
+    bytes: 1050
+    sha256_segments:
+    - 26f3a98766dd4010
+    - 65006d4fca665e40
+    - 4b8756a702b024c1
+    - bb6ea892aa6a80fb
+  - file: old_counterexamples.json
+    state: OK
+    error: null
+    bytes: 23717
+    sha256_segments:
+    - 6ceb530f3dfb0c4d
+    - 6715449bd97a3a7e
+    - 3815f3b9a6e2af3a
+    - c8d2ba34a9a0457b
+  - file: meta_tests.json
+    state: OK
+    error: null
+    bytes: 47618
+    sha256_segments:
+    - bbcf2c77be4bd9fb
+    - 95c26d4a18e4eab3
+    - 4fbe04cc156ee11a
+    - 030fb5d7a3ce0038
+  input_problems: {}
+  schema_problems: {}
+  dynamic_raw_observations_available: true
+  stage_usability:
+    v00_anchors.py:
+      usable: true
+      reason: null
+    v01_structure.py:
+      usable: true
+      reason: null
+    static_checks.py:
+      usable: true
+      reason: null
+    a46_check.py:
+      usable: true
+      reason: null
+  static_parts_usable:
+    V08: true
+    V14: true
+  affected_by_input: {}
+  items:
+    V00:
+    - VALID
+    - COUNTEREVIDENCE
+    V01:
+    - VALID
+    - NO_FAILURE_IN_SCOPE
+    V02:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V03:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V04:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V05:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V06:
+    - VALID
+    - NO_FAILURE_IN_SCOPE
+    V07:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V08:
+    - VALID
+    - COUNTEREVIDENCE
+    V09:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V10:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V11:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V12:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V13:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V14_model:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+    V00_A46_correction:
+    - VALID
+    - OBSERVED_AS_PREDICTED
+  items_not_valid: {}
+  cached_evaluation_vs_consumer:
+    differs: []
+    detail:
+      V00:
+        cached_in_run_json:
+        - VALID
+        - COUNTEREVIDENCE
+        consumer_now:
+        - VALID
+        - COUNTEREVIDENCE
+        same: true
+      V01:
+        cached_in_run_json:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        consumer_now:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        same: true
+      V02:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V03:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V04:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V05:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V06:
+        cached_in_run_json:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        consumer_now:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        same: true
+      V07:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V08:
+        cached_in_run_json:
+        - VALID
+        - COUNTEREVIDENCE
+        consumer_now:
+        - VALID
+        - COUNTEREVIDENCE
+        same: true
+      V09:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V10:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V11:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V12:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V13:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V14_model:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+      V00_A46_correction:
+        cached_in_run_json:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        consumer_now:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        same: true
+source_execution:
+  note_template: facts recorded by the source run; this consumer did not re-execute anything
+  run:
+    status: COMPLETE
+    exit_code: 0
+    execution_complete: true
+    verification_findings:
+    - V00
+    - V08
+    infrastructure_errors: []
+    dynamic_calls:
+      h00: 1
+      fixtures: 1
+    workdir: /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf
+    meta_injection: null
+    stage_outputs_present:
+      v00: true
+      v01: true
+      static: true
+      a46: true
+    stage_outputs_usable:
+      v00: true
+      v01: true
+      static: true
+      a46: true
+  identity:
+    gate:
+      core_review_record: true
+      core_review_input_refs: true
+      contract12_binding: true
+      technical_inputs_unchanged: true
+      lead_head_descends_from_taskbook: true
+      on_execution_branch: true
+      head_descends_from_reviewed_core: true
+      originals_unchanged: true
+      remote_on_same_line: true
+      remote_descends_from_reviewed_core: true
+      worktree_clean_outside_recheck: true
+      ok: true
+    error: null
+    pins:
+      time: a039d9803ade
+      master: de3bb1df906a
+      taskbook: 57a7c3e0eebf
+      pilot_review: f79b3a281616
+      lead_head: ec62453e76d2
+      core_frozen: a1e7c2277705
+      core_results: 7e2fa84a9823
+      pilot_head: 0851af4fc08b
+      pilot_result: 10ecb7dd0bdb
+    execution:
+      branch: claude/dazzling-cori-q0dnyt
+      head_short12: f9ae2bce9a64
+      remote_relation: equal
+    originals:
+      frozen_files: 26
+      changed_or_missing: []
+      added_outside_recheck: []
+      pilot_changed_since_pilot_head: []
+    technical_inputs_unchanged:
+      07-scheduler-wakeup-timer-audit.md: true
+      07-core-audit-map.yaml: true
+      MANIFEST.md: true
+      09-local-verification-contract.md: true
+      10-cloud-pilot-and-github-handoff.md: true
+      11-core-verification-cloud.md: true
+      reviews/CORE-CHECK-01-pilot-review.md: true
+    core_review_fields:
+      record_id: CORE-CHECK-01-CORE-REVIEW-001
+      disposition: RETURN
+      reviewed_pr: 17
+      reviewed_branch: claude/dazzling-cori-q0dnyt
+      reviewed_commit_short12: a1e7c2277705
+      frozen_results_commit_short12: 7e2fa84a9823
+      pilot_head_short12: 0851af4fc08b
+      followup_id: CORE-CHECK-01-RECHECK-01
+      allowed_write_prefix: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/core/recheck-01/
+  h00:
+    dynamic_safety_ok: true
+    transport_ok: true
+    error: null
+    probes:
+    - probe: group_kill
+      as_expected: true
+      gates_dynamic: true
+      terminal_state: timeout_group_killed
+      kill: group_signalled
+      reaped_confirmed: true
+      collect_timed_out: null
+      output_lost: null
+      error: null
+    - probe: fast_exit
+      as_expected: true
+      gates_dynamic: true
+      terminal_state: exited
+      kill: null
+      reaped_confirmed: true
+      collect_timed_out: null
+      output_lost: null
+      error: null
+    - probe: group_already_gone_injected
+      as_expected: true
+      gates_dynamic: true
+      terminal_state: timeout_group_already_gone
+      kill: group_already_gone
+      reaped_confirmed: true
+      collect_timed_out: null
+      output_lost: null
+      error: null
+    - probe: collect_timeout_escaped_grandchild
+      as_expected: true
+      gates_dynamic: true
+      terminal_state: timeout_group_killed_collect_timeout
+      kill: group_signalled
+      reaped_confirmed: true
+      collect_timed_out: true
+      output_lost: true
+      error: null
+    - probe: compile_failure
+      as_expected: true
+      gates_dynamic: true
+      terminal_state: null
+      kill: null
+      reaped_confirmed: null
+      collect_timed_out: null
+      output_lost: null
+      error: null
+    - probe: case_exception_isolated
+      as_expected: true
+      gates_dynamic: true
+      terminal_state: null
+      kill: null
+      reaped_confirmed: null
+      collect_timed_out: null
+      output_lost: null
+      error: null
+    - probe: readback_criteria
+      as_expected: true
+      gates_dynamic: false
+      terminal_state: null
+      kill: null
+      reaped_confirmed: null
+      collect_timed_out: null
+      output_lost: null
+      error: null
+  frozen_verifier:
+    commit_short12: a1e7c2277705
+    names_match_expected: true
+    files: 20
+  identity_read_time_utc: '2026-09-27T08:58:15Z'
+  execution_head_short12: f9ae2bce9a64
+consumer_stage_view:
+  v00_anchors.py:
+    source: frozen a1e7c2277705
+    returncode: 0
+    timed_out: false
+    terminal_state: exited
+    status: null
+    reason: null
+  v01_structure.py:
+    source: frozen a1e7c2277705
+    returncode: 0
+    timed_out: false
+    terminal_state: exited
+    status: null
+    reason: null
+  static_checks.py:
+    source: frozen a1e7c2277705
+    returncode: 0
+    timed_out: false
+    terminal_state: exited
+    status: null
+    reason: null
+  a46_check.py:
+    source: recheck-01
+    returncode: 0
+    timed_out: false
+    terminal_state: exited
+    status: null
+    reason: null
+cases:
+- case_id: V00
+  evidence_status: VALID
+  result: COUNTEREVIDENCE
+  layers:
+    source_match: EXECUTED
+  failing_anchors:
+  - id: A46
+    verdict_mech: OUTSIDE_OR_PARTIAL_DEFINITION
+  mechanical_verdict_counts:
+    MATCH_IN_DEFINITION: 45
+    MATCH_IN_DEFINITION_INCLUDES_COMMENT_LINE: 1
+    OUTSIDE_OR_PARTIAL_DEFINITION: 1
+  semantic_verdict_counts:
+    SUPPORTS_WITH_NOTE: 12
+    SUPPORTS: 34
+    PARTIAL_BOUNDARY: 1
+  semantic_source: v00_semantic_review.yaml reused unchanged from a1e7c2277705 (executor reading judgement, not recomputed)
+  checks:
+  - - tag_count
+    - 47
+    - 47
+    - true
+  - - raw_tag_count
+    - 47
+    - 47
+    - true
+  - - ids_unique
+    - true
+    - true
+    - true
+  - - ids_missing
+    - []
+    - []
+    - true
+  - - ids_duplicated
+    - []
+    - []
+    - true
+  - - anchors_failing_boundary_or_match
+    - - id: A46
+        verdict_mech: OUTSIDE_OR_PARTIAL_DEFINITION
+    - []
+    - false
+  - - canaries
+    - - DISCRIMINATES
+      - DISCRIMINATES
+    - - DISCRIMINATES
+      - DISCRIMINATES
+    - true
+- case_id: V01
+  evidence_status: VALID
+  result: NO_FAILURE_IN_SCOPE
+  layers:
+    structure: EXECUTED
+  checks:
+  - - all_six_parse
+    - true
+    - true
+    - true
+  - - issue_ids_CA01_CA07
+    - true
+    - true
+    - true
+  - - anchor_refs_dangling
+    - []
+    - []
+    - true
+  - - anchor_dups_within_issue
+    - {}
+    - {}
+    - true
+  - - case_refs_dangling
+    - []
+    - []
+    - true
+  - - contract09_anchor_refs_dangling
+    - []
+    - []
+    - true
+  - - referenced_paths_exist
+    - true
+    - true
+    - true
+  - - report_inputs_read_exist
+    - true
+    - true
+    - true
+  - - self_check_automated_equals_declared
+    - true
+    - true
+    - true
+  - - self_check_arithmetic
+    - true
+    - true
+    - true
+  - - startup_selfcheck_quote
+    - true
+    - true
+    - true
+  - - no_whole_completion_claims
+    - - false
+      - false
+      - false
+      - false
+    - - false
+      - false
+      - false
+      - false
+    - true
+  - - hex40_hits
+    - 0
+    - 0
+    - true
+- case_id: V02
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_slice: EXECUTED
+  constituents:
+    v02_single: VALID
+  checks:
+  - - prepare.count
+    - 1
+    - 1
+    - true
+  - - prepare.walk_len
+    - 1
+    - 1
+    - true
+  - - wake.links_empty(anchor_self)
+    - true
+    - true
+    - true
+  - - wake.count
+    - 1
+    - 1
+    - true
+  - - wake.waiter_self_linked
+    - true
+    - true
+    - true
+  - - finish.count
+    - 1
+    - 1
+    - true
+  - - finish.header_is_empty
+    - false
+    - false
+    - true
+- case_id: V03
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_slice: EXECUTED
+  constituents:
+    v03_second_wake_direct: VALID
+    v03_second_wake_via_complete: VALID
+    v03_all_two_waiters: VALID
+  checks:
+  - - direct.invalid_at_call
+    - 2
+    - 2
+    - true
+  - - direct.task_field_is_lock_word
+    - true
+    - true
+    - true
+  - - layout.anchor_container_task_aliases_lock
+    - true
+    - true
+    - true
+  - - via_complete.task_field_is_lock_word
+    - true
+    - true
+    - true
+  - - via_complete.task_ptr_nonzero_while_lock_held
+    - true
+    - true
+    - true
+  - - all_two.valid_wakeups_in_order
+    - - 1
+      - 2
+    - - 1
+      - 2
+    - true
+  - - all_two.third_iteration_invalid
+    - 3
+    - 3
+    - true
+- case_id: V04
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_slice: EXECUTED
+    smp_or_real_scheduler: NOT_RUN
+  constituents:
+    v04_noncurrent_wake: VALID
+  checks:
+  - - ret
+    - 0
+    - 0
+    - true
+  - - state_after(RUNNING)
+    - 0
+    - 0
+    - true
+  - - queued_once
+    - 1
+    - 1
+    - true
+  - - rq0.count
+    - 1
+    - 1
+    - true
+  - - preempt_balanced
+    - 0
+    - 0
+    - true
+- case_id: V05
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_slice: EXECUTED
+    irq_or_signal_context: NOT_RUN
+  constituents:
+    v05_state_not_in_mask: VALID
+  checks:
+  - - stopped_via_wake_up_process.state_in_mask
+    - false
+    - false
+    - true
+  - - stopped_via_wake_up_process.state_after(RUNNING)
+    - 0
+    - 0
+    - true
+  - - stopped_via_wake_up_process.queued
+    - 1
+    - 1
+    - true
+  - - stopped_via_wake_up_process.ret
+    - 0
+    - 0
+    - true
+  - - uninterruptible_mask_interruptible.state_in_mask
+    - false
+    - false
+    - true
+  - - uninterruptible_mask_interruptible.state_after(RUNNING)
+    - 0
+    - 0
+    - true
+  - - uninterruptible_mask_interruptible.queued
+    - 1
+    - 1
+    - true
+  - - uninterruptible_mask_interruptible.ret
+    - 0
+    - 0
+    - true
+  - - task_new_via_wake_up_process.state_in_mask
+    - false
+    - false
+    - true
+  - - task_new_via_wake_up_process.state_after(RUNNING)
+    - 0
+    - 0
+    - true
+  - - task_new_via_wake_up_process.queued
+    - 1
+    - 1
+    - true
+  - - task_new_via_wake_up_process.ret
+    - 0
+    - 0
+    - true
+  - - running_not_queued_via_wake_up_process.state_in_mask
+    - false
+    - false
+    - true
+  - - running_not_queued_via_wake_up_process.state_after(RUNNING)
+    - 0
+    - 0
+    - true
+  - - running_not_queued_via_wake_up_process.queued
+    - 1
+    - 1
+    - true
+  - - running_not_queued_via_wake_up_process.ret
+    - 0
+    - 0
+    - true
+  - - current_uninterruptible_mask_interruptible.state_in_mask
+    - false
+    - false
+    - true
+  - - current_uninterruptible_mask_interruptible.state_after(RUNNING)
+    - 0
+    - 0
+    - true
+  - - current_uninterruptible_mask_interruptible.queued
+    - 0
+    - 0
+    - true
+  - - current_uninterruptible_mask_interruptible.ret
+    - 0
+    - 0
+    - true
+- case_id: V06
+  evidence_status: VALID
+  result: NO_FAILURE_IN_SCOPE
+  layers:
+    host_original_slice_serial: EXECUTED
+    concurrent_wakeups: NOT_RUN
+  constituents:
+    v06_double_wake: VALID
+  checks:
+  - - after_first.occurrences
+    - 1
+    - 1
+    - true
+  - - after_second.occurrences
+    - 1
+    - 1
+    - true
+  - - after_third.occurrences
+    - 1
+    - 1
+    - true
+  - - after_first.count
+    - 1
+    - 1
+    - true
+  - - after_second.count
+    - 1
+    - 1
+    - true
+  - - after_third.count
+    - 1
+    - 1
+    - true
+  - - returns
+    - - 0
+      - 0
+      - 0
+    - - 0
+      - 0
+      - 0
+    - true
+- case_id: V07
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_slice: EXECUTED
+    ap_migration: NOT_RUN
+  constituents:
+    v07_cpu_metadata: VALID
+  checks:
+  - - set_task_cpu(A,1).queued_on_rq1
+    - 1
+    - 1
+    - true
+  - - set_task_cpu(A,1).task_cpu_meta_unchanged(3)
+    - 3
+    - 3
+    - true
+  - - wake(B meta=2).queued_on_rq0
+    - 1
+    - 1
+    - true
+  - - wake(B meta=2).not_on_rq2
+    - 0
+    - 0
+    - true
+  - - new_task(C meta=3).queued_on_rq0
+    - 1
+    - 1
+    - true
+  - - new_task(C meta=3).task_cpu_meta_unchanged(3)
+    - 3
+    - 3
+    - true
+- case_id: V08
+  evidence_status: VALID
+  result: COUNTEREVIDENCE
+  layers:
+    host_original_slice_function_level: EXECUTED
+    limited_model_reachability: EXECUTED
+    global_reachability: NOT_RUN
+  constituents:
+    v08_pick_combinations: VALID
+    v08_sequence_idle_requeue: VALID
+    v08_sequence_idle_switched_out_blocked: VALID
+    v08_vruntime_requeue_order: VALID
+  result_basis:
+    function_level: OBSERVED_AS_PREDICTED
+    limited_model_reachability: COUNTEREVIDENCE_IN_LIMITED_MODEL
+    global_reachability: NOT_ESTABLISHED_BY_THIS_CHECK
+    static_criteria:
+      no_active_idle_state_writer: true
+      no_explicit_state_change_in_rest_init: true
+      single_rq_idle_assignment: true
+      init_task_starts_running: true
+  extra_observation_requeue_order:
+    order_before:
+    - 3
+    - 4
+    - 5
+    order_after:
+    - 4
+    - 5
+    - 2
+    vruntime_sorted_would_be:
+    - 4
+    - 2
+    - 5
+  subresults:
+    function_level_combinations:
+      status: VALID
+      result: OBSERVED_AS_PREDICTED
+      checks:
+      - - a_running_empty.returns_current
+        - true
+        - true
+        - true
+      - - b_blocked_empty.returns_current
+        - true
+        - true
+        - true
+      - - c_blocked_one_runnable.returns_other
+        - 3
+        - 3
+        - true
+      - - c.blocked_current_not_requeued(count 0)
+        - 0
+        - 0
+        - true
+      - - d_idle.requeued_at_tail
+        - - 0
+        - - 0
+        - true
+      - - e_blocked_only_idle.returns_idle
+        - 0
+        - 0
+        - true
+    sequence_with_idle_requeue:
+      status: VALID
+      result: OBSERVED_AS_PREDICTED
+      checks:
+      - - s1.idle_in_list_after_switch_out
+        - true
+        - true
+        - true
+      - - s2.idle_still_in_list
+        - true
+        - true
+        - true
+      - - s3.blocked_last_task_yields_idle
+        - 0
+        - 0
+        - true
+    sequence_when_idle_switched_out_blocked:
+      status: VALID
+      result: OBSERVED_AS_PREDICTED
+      checks:
+      - - t1.idle_not_requeued
+        - false
+        - false
+        - true
+      - - t2.blocked_current_returned_with_empty_queue
+        - true
+        - true
+        - true
+- case_id: V09
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_slice_stub_timers: EXECUTED
+    real_timer_expiry: NOT_RUN
+  constituents:
+    v09_schedule_timeout_values: VALID
+    v09_uninterruptible_wrapper: VALID
+    v09_msleep_bounded: VALID
+  checks:
+  - - in=0.ret
+    - 0
+    - 0
+    - true
+  - - in=0.schedule_calls
+    - 0
+    - 0
+    - true
+  - - in=0.state_after(UNINTERRUPTIBLE=2)
+    - 2
+    - 2
+    - true
+  - - in=1.ret
+    - 1
+    - 1
+    - true
+  - - in=1.schedule_calls
+    - 0
+    - 0
+    - true
+  - - in=1.state_after(UNINTERRUPTIBLE=2)
+    - 2
+    - 2
+    - true
+  - - in=5.ret
+    - 5
+    - 5
+    - true
+  - - in=5.schedule_calls
+    - 0
+    - 0
+    - true
+  - - in=5.state_after(UNINTERRUPTIBLE=2)
+    - 2
+    - 2
+    - true
+  - - in=-1.ret
+    - 0
+    - 0
+    - true
+  - - in=-1.state_after(RUNNING)
+    - 0
+    - 0
+    - true
+  - - in=MAX.schedule_calls
+    - 1
+    - 1
+    - true
+  - - in=MAX.ret
+    - 9223372036854775807
+    - 9223372036854775807
+    - true
+  - - wrapper(5).ret
+    - 5
+    - 5
+    - true
+  - - wrapper(5).state_after
+    - 2
+    - 2
+    - true
+  - - msleep(5).stopped_at_step_cap
+    - 100
+    - 100
+    - true
+  - - msleep.first_timeouts
+    - - 5
+      - 5
+      - 5
+    - - 5
+      - 5
+      - 5
+    - true
+  - - msleep.last_timeout
+    - 5
+    - 5
+    - true
+  - - msleep.schedule_calls
+    - 0
+    - 0
+    - true
+- case_id: V10
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_slice_scripted_interleaving: EXECUTED
+    real_timer_or_scheduler: NOT_RUN
+  constituents:
+    v10_done_preset_fast_path: VALID
+    v10_infinite_notify_during_schedule: VALID
+    v10_finite_timeout_no_notifier: VALID
+  observations_beyond_prediction:
+    infinite.header_count_after_return: 1
+    infinite.walk_len_after_return: 0
+  checks:
+  - - preset.schedule_calls
+    - 0
+    - 0
+    - true
+  - - preset.done_consumed
+    - 0
+    - 0
+    - true
+  - - preset.ret_is_MAX
+    - true
+    - true
+    - true
+  - - preset.wait_for_completion.schedule_calls
+    - 0
+    - 0
+    - true
+  - - infinite.schedule_calls
+    - 1
+    - 1
+    - true
+  - - infinite.done_consumed
+    - 0
+    - 0
+    - true
+  - - infinite.state_after(RUNNING)
+    - 0
+    - 0
+    - true
+  - - finite(no notifier).bounded_non_progress
+    - 100
+    - 100
+    - true
+  - - finite.schedule_calls
+    - 0
+    - 0
+    - true
+- case_id: V11
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    local_sequence_with_scripted_interleaving: EXECUTED
+    real_context_switch: NOT_RUN
+  constituents:
+    v11_wait_then_notify_then_reuse: VALID
+  checks:
+  - - waiter_state_at_schedule(UNINTERRUPTIBLE)
+    - 2
+    - 2
+    - true
+  - - queued_before_notify.count
+    - 1
+    - 1
+    - true
+  - - queued_before_notify.walk_len
+    - 1
+    - 1
+    - true
+  - - after_notify.waiter_state(RUNNING)
+    - 0
+    - 0
+    - true
+  - - after_notify.done
+    - 1
+    - 1
+    - true
+  - - after_notify.count(stays 1)
+    - 1
+    - 1
+    - true
+  - - after_notify.walk_len
+    - 0
+    - 0
+    - true
+  - - after_return.count(stays 1)
+    - 1
+    - 1
+    - true
+  - - after_return.done
+    - 0
+    - 0
+    - true
+  - - reuse.complete_hits_anchor_container
+    - true
+    - true
+    - true
+- case_id: V12
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_asm_single_thread: EXECUTED
+    multicore_atomicity: NOT_RUN
+  constituents:
+    v12_add_test_negative: VALID
+  contract_mismatch_vectors:
+  - - -1
+    - 1
+  - - 1
+    - 2
+  - - 2
+    - -1
+  - - 5
+    - 3
+  checks:
+  - - (-1,1).after_is_subtraction
+    - -2
+    - -2
+    - true
+  - - (-1,1).ret_is_sign_of_subtraction
+    - true
+    - true
+    - true
+  - - (1,2).after_is_subtraction
+    - -1
+    - -1
+    - true
+  - - (1,2).ret_is_sign_of_subtraction
+    - true
+    - true
+    - true
+  - - (2,-1).after_is_subtraction
+    - 3
+    - 3
+    - true
+  - - (2,-1).ret_is_sign_of_subtraction
+    - false
+    - false
+    - true
+- case_id: V13
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    host_original_slice_serial: EXECUTED
+    smp_stress: NOT_RUN
+  constituents:
+    v13_trylock: VALID
+  checks:
+  - - init.val
+    - 0
+    - 0
+    - true
+  - - first_trylock.ret(success)
+    - 1
+    - 1
+    - true
+  - - first_trylock.val_unchanged
+    - 0
+    - 0
+    - true
+  - - first_trylock.is_locked_after
+    - 0
+    - 0
+    - true
+  - - second_trylock_without_unlock.ret(success again)
+    - 1
+    - 1
+    - true
+  - - control.trylock_while_held_by_arch_spin_lock.ret
+    - 0
+    - 0
+    - true
+- case_id: V14
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  layers:
+    source_and_build_reference: EXECUTED
+    host_link_model: EXECUTED
+    existing_elf: NOT_RUN
+  layers_detail:
+    source:
+      status: VALID
+      result: OBSERVED_AS_PREDICTED
+      checks:
+      - - anchors_A28_A29_A30_A31_in_definition
+        - - true
+          - true
+          - true
+          - true
+        - - true
+          - true
+          - true
+          - true
+        - true
+      - - lds_alias_line_present
+        - 1
+        - 1
+        - true
+      - - link_option_uses_lds
+        - 1
+        - 1
+        - true
+      - - no_c_definition_of_jiffies
+        - 0
+        - 0
+        - true
+      - - jiffies_64_defined_in_c
+        - 1
+        - 1
+        - true
+    model:
+      status: VALID
+      result: OBSERVED_AS_PREDICTED
+      constituents:
+        v14: VALID
+        v14_control: VALID
+      checks:
+      - - alias.same_address
+        - true
+        - true
+        - true
+      - - alias.jiffies_64_delta_per_handler
+        - 2
+        - 2
+        - true
+      - - control.same_address
+        - false
+        - false
+        - true
+      - - control.jiffies_64_delta_per_handler
+        - 1
+        - 1
+        - true
+  existing_elf_reason: no ELF file in the pinned time tree and none provided
+- case_id: V00_A46_correction
+  evidence_status: VALID
+  result: OBSERVED_AS_PREDICTED
+  checks:
+  - - A46-C.verdict_mech
+    - MATCH_IN_DEFINITION
+    - MATCH_IN_DEFINITION
+    - true
+  - - A46-ASM.verdict_mech
+    - MATCH_IN_DEFINITION
+    - MATCH_IN_DEFINITION
+    - true
+  - - old_A46_still_fails_in_frozen_v00
+    - OUTSIDE_OR_PARTIAL_DEFINITION
+    - OUTSIDE_OR_PARTIAL_DEFINITION
+    - true
+  anchors:
+  - - A46-C
+    - MATCH_IN_DEFINITION
+    - - 30
+  - - A46-ASM
+    - MATCH_IN_DEFINITION
+    - - 31
+ca_rulings:
+  CA-01:
+    ruling: SUPPORTED_IN_SCOPE
+    criteria:
+      V04: evidence VALID and result == OBSERVED_AS_PREDICTED
+      V05: evidence VALID and result == OBSERVED_AS_PREDICTED
+      V06: evidence VALID and result == NO_FAILURE_IN_SCOPE
+      V07: evidence VALID and result == OBSERVED_AS_PREDICTED
+    observed:
+      V04:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V05:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V06:
+      - VALID
+      - NO_FAILURE_IN_SCOPE
+      V07:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+    missing_or_invalid: []
+    contradicting: []
+  CA-02:
+    ruling: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+    criteria:
+      V08.function_level: blocked current + empty queue returns current
+      V08.limited_model_reachability: idle requeue sequence observed and static idle criteria all true
+      V08.global_reachability: not decidable by this host check
+    observed:
+      V08:
+      - VALID
+      - COUNTEREVIDENCE
+      result_basis:
+        function_level: OBSERVED_AS_PREDICTED
+        limited_model_reachability: COUNTEREVIDENCE_IN_LIMITED_MODEL
+        global_reachability: NOT_ESTABLISHED_BY_THIS_CHECK
+        static_criteria:
+          no_active_idle_state_writer: true
+          no_explicit_state_change_in_rest_init: true
+          single_rq_idle_assignment: true
+          init_task_starts_running: true
+  CA-03:
+    ruling: SUPPORTED_IN_SCOPE
+    criteria:
+      V09: evidence VALID and result == OBSERVED_AS_PREDICTED
+      V10: evidence VALID and result == OBSERVED_AS_PREDICTED
+      V11: evidence VALID and result == OBSERVED_AS_PREDICTED
+    observed:
+      V09:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V10:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V11:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+    missing_or_invalid: []
+    contradicting: []
+  CA-04:
+    ruling: SUPPORTED_IN_SCOPE
+    criteria:
+      V02: evidence VALID and result == OBSERVED_AS_PREDICTED
+      V03: evidence VALID and result == OBSERVED_AS_PREDICTED
+      V11: evidence VALID and result == OBSERVED_AS_PREDICTED
+    observed:
+      V02:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V03:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V11:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+    missing_or_invalid: []
+    contradicting: []
+  CA-05:
+    ruling: SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE
+    criteria:
+      V14: source layer and host link model both as predicted
+    observed:
+      V14:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      layers:
+        source_and_build_reference: EXECUTED
+        host_link_model: EXECUTED
+        existing_elf: NOT_RUN
+  CA-06:
+    ruling: SUPPORTED_AT_SOURCE_LEVEL
+    criteria:
+      A01/A35/A36/A37: mechanical match in definition and semantic review SUPPORTS*
+      A35: 'definition inside #ifdef CONFIG_BUG'
+    observed:
+      A01:
+      - MATCH_IN_DEFINITION
+      - SUPPORTS_WITH_NOTE
+      A35:
+      - MATCH_IN_DEFINITION
+      - SUPPORTS_WITH_NOTE
+      A36:
+      - MATCH_IN_DEFINITION
+      - SUPPORTS
+      A37:
+      - MATCH_IN_DEFINITION
+      - SUPPORTS
+      A35_under_CONFIG_BUG: true
+    semantic_source: v00_semantic_review.yaml reused unchanged from a1e7c2277705
+  CA-07:
+    ruling: SUPPORTED_IN_SCOPE
+    criteria:
+      V12: evidence VALID and result == OBSERVED_AS_PREDICTED
+      V13: evidence VALID and result == OBSERVED_AS_PREDICTED
+    observed:
+      V12:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V13:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+    missing_or_invalid: []
+    contradicting: []
+counts:
+  top_level_cases: 15
+  evidence_status:
+    VALID: 15
+  results_for_valid_evidence:
+    COUNTEREVIDENCE: 2
+    NO_FAILURE_IN_SCOPE: 2
+    OBSERVED_AS_PREDICTED: 11
+  layers_not_executed:
+  - V04.smp_or_real_scheduler
+  - V05.irq_or_signal_context
+  - V06.concurrent_wakeups
+  - V07.ap_migration
+  - V08.global_reachability
+  - V09.real_timer_expiry
+  - V10.real_timer_or_scheduler
+  - V11.real_context_switch
+  - V12.multicore_atomicity
+  - V13.smp_stress
+  - V14.existing_elf
+  layers_not_executed_reason_template: outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)
+diff_vs_frozen_core:
+  source: results.yaml @ 7e2fa84a9823
+  case_results:
+    V00:
+      frozen: COUNTEREVIDENCE
+      recheck: COUNTEREVIDENCE
+      same: true
+    V01:
+      frozen: NO_FAILURE_IN_SCOPE
+      recheck: NO_FAILURE_IN_SCOPE
+      same: true
+    V02:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V03:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V04:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V05:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V06:
+      frozen: NO_FAILURE_IN_SCOPE
+      recheck: NO_FAILURE_IN_SCOPE
+      same: true
+    V07:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V08:
+      frozen: COUNTEREVIDENCE
+      recheck: COUNTEREVIDENCE
+      same: true
+    V09:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V10:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V11:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V12:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V13:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+    V14:
+      frozen: OBSERVED_AS_PREDICTED
+      recheck: OBSERVED_AS_PREDICTED
+      same: true
+  ca_rulings:
+    CA-01:
+      frozen: SUPPORTED_IN_SCOPE
+      recheck: SUPPORTED_IN_SCOPE
+      same: true
+    CA-02:
+      frozen: FUNCTION_LEVEL_SUPPORTED_REACHABILITY_COUNTEREVIDENCE
+      recheck: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+      same: false
+    CA-03:
+      frozen: SUPPORTED_IN_SCOPE
+      recheck: SUPPORTED_IN_SCOPE
+      same: true
+    CA-04:
+      frozen: SUPPORTED_IN_SCOPE
+      recheck: SUPPORTED_IN_SCOPE
+      same: true
+    CA-05:
+      frozen: SUPPORTED_AT_SOURCE_AND_MODEL_LEVEL
+      recheck: SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE
+      same: false
+    CA-06:
+      frozen: SUPPORTED_AT_SOURCE_LEVEL
+      recheck: SUPPORTED_AT_SOURCE_LEVEL
+      same: true
+    CA-07:
+      frozen: SUPPORTED_BY_HOST_ORIGINAL_SLICE
+      recheck: SUPPORTED_IN_SCOPE
+      same: false
+  frozen_counts:
+    cases_total: 15
+    executed: 15
+    not_run: 0
+    results:
+      COUNTEREVIDENCE: 2
+      NO_FAILURE_IN_SCOPE: 2
+      OBSERVED_AS_PREDICTED: 11
+r_items:
+  R01:
+    old_v05_empty_return: OBSERVED_AS_PREDICTED
+    old_dispatch_on_empty_cases:
+      V02: COUNTEREVIDENCE
+      V03: COMPARATOR_INVALID
+      V09: COUNTEREVIDENCE
+      V10: COUNTEREVIDENCE
+      V11: COUNTEREVIDENCE
+      V04: COUNTEREVIDENCE
+      V05: OBSERVED_AS_PREDICTED
+      V06: COUNTEREVIDENCE
+      V07: COUNTEREVIDENCE
+      V08:
+        function_level_combinations: COUNTEREVIDENCE
+        sequence_with_idle_requeue: COUNTEREVIDENCE
+        sequence_when_idle_switched_out_blocked: COUNTEREVIDENCE
+        extra_observation_requeue_order: null
+      V12: COUNTEREVIDENCE
+      V13: COUNTEREVIDENCE
+      V14: COUNTEREVIDENCE
+    handled_by_template: evaluate2.validate_case contracts; results only for VALID evidence
+  R02:
+    old_dynamic_entry_calls:
+      gate_false: 2
+      identity_raises: 2
+      h00_fails: 2
+    handled_by_template: run_recheck identity gate before any dynamic entry; H00 gates fixtures
+  R03:
+    old_generator:
+      baseline_real_replay:
+        returncode: 0
+        generated: true
+        V01:
+        - NO_FAILURE_IN_SCOPE
+        - EXECUTED
+      v01_paths_missing_and_parse_failed:
+        returncode: 0
+        generated: true
+        V01:
+        - NO_FAILURE_IN_SCOPE
+        - EXECUTED
+      missing_static_stage:
+        returncode: 1
+        generated: false
+        V01: null
+      fixture_blocked_compile:
+        returncode: 1
+        generated: false
+        V01: null
+    handled_by_template: make_results2 computes every result/ruling from data
+  R04:
+    old_identity_remote_heads_match:
+      master==pin.master: true
+      time==pin.time: true
+      agent/MYOS2-LEAD-002==pin.review: false
+      claude/dazzling-cori-q0dnyt==pin.pilot_head: false
+    old_readback_probe_as_expected: false
+    old_readback_cli:
+      no_field_with_out: 1
+      with_field_with_out: 1
+    old_run_pg_group_gone:
+      old_run_pg_returned: false
+      exception: 'ProcessLookupError: HARNESS_META_TEST injected: group already gone'
+    handled_by_template: identity2 separates frozen objects from the moving head; readback2 object mode and fixed CLI
+m_items:
+  M01:
+    requirement: no valid observation -> no OBSERVED_AS_PREDICTED / NO_FAILURE / COUNTEREVIDENCE
+    met: true
+    old_side: 'v05 -> OBSERVED_AS_PREDICTED; dispatch false results: [''COMPARATOR_INVALID'', ''COUNTEREVIDENCE'', ''OBSERVED_AS_PREDICTED'', ''composite'']'
+    new_side: 'v05 -> INCOMPLETE_EVIDENCE; behaviour verdicts on empty input: 0'
+  M02:
+    requirement: missing label/association detected
+    met: true
+    old_side:
+      drop_label_group_task_new: OBSERVED_AS_PREDICTED
+      drop_q_of_uninterruptible_mask: COUNTEREVIDENCE
+      truncate_last_two_events: OBSERVED_AS_PREDICTED
+    new_side:
+      drop_label_group_task_new: INCOMPLETE_EVIDENCE
+      drop_q_of_uninterruptible_mask: INCOMPLETE_EVIDENCE
+      truncate_last_two_events: INCOMPLETE_EVIDENCE
+      control_delivered_five_groups: VALID
+  M03:
+    requirement: duplicates/conflicts/type errors/unparsable lines give an invalid-evidence state
+    met: true
+    old_side:
+      duplicate_conflicting_ret: OBSERVED_AS_PREDICTED
+      wrong_field_type: COUNTEREVIDENCE
+      unparsable_line: OBSERVED_AS_PREDICTED
+      duplicate_q_dict_override: COMPARATOR_INVALID
+    new_side:
+      duplicate_conflicting_ret: INVALID_EVIDENCE
+      wrong_field_type: INVALID_EVIDENCE
+      unparsable_line: INVALID_EVIDENCE
+      duplicate_q_dict_override: INVALID_EVIDENCE
+  M04:
+    requirement: unreliable runs are not behaviour evidence; not reported as kernel counterevidence
+    met: true
+    old_side:
+      timed_out: OBSERVED_AS_PREDICTED
+      collect_timed_out: OBSERVED_AS_PREDICTED
+      case_status_ERROR_with_output: OBSERVED_AS_PREDICTED
+      repeat_not_identical: OBSERVED_AS_PREDICTED
+      terminal_state_killed: OBSERVED_AS_PREDICTED
+    new_side:
+      timed_out: INVALID_EVIDENCE
+      collect_timed_out: INVALID_EVIDENCE
+      case_status_ERROR_with_output: ERROR
+      repeat_not_identical: INVALID_EVIDENCE
+      terminal_state_killed: INVALID_EVIDENCE
+  M05:
+    requirement: exit code checked together with events/case contract; 0/42/43 controls accepted
+    met: true
+    old_side:
+      v02_valid_events_exit_42: COUNTEREVIDENCE
+      v03_stop_event_exit_0: COUNTEREVIDENCE
+      v09_msleep_step_cap_exit_0: OBSERVED_AS_PREDICTED
+      v03_exit_42_without_stop_event: COMPARATOR_INVALID
+    new_side:
+      v02_valid_events_exit_42: INVALID_EVIDENCE
+      v03_stop_event_exit_0: INVALID_EVIDENCE
+      v09_msleep_step_cap_exit_0: INVALID_EVIDENCE
+      v03_exit_42_without_stop_event: INVALID_EVIDENCE
+      controls_delivered:
+        exit_0_v02: VALID
+        exit_42_v03: VALID
+        exit_43_v09: VALID
+  M06:
+    requirement: identity false/exception -> zero dynamic calls, accurate blocked/error record
+    met: true
+    old_side:
+      gate_false: 2
+      identity_raises: 2
+      h00_fails: 2
+    new_side:
+      gate_false:
+      - 3
+      - BLOCKED_IDENTITY
+      - h00: 0
+        stage: 0
+        fixtures: 0
+      identity_raises:
+      - 3
+      - ERROR_IDENTITY
+      - h00: 0
+        stage: 0
+        fixtures: 0
+      real_identity_on_bad_repo:
+      - 3
+      - ERROR_IDENTITY
+      - h00: 0
+        stage: 0
+        fixtures: 0
+  M07:
+    requirement: failed/timed-out H00 blocks dynamic fixtures; independent read-only check continues; partial report
+    met: true
+    old_side:
+      stage_script:
+      - h00_hardening.py
+      - v00_anchors.py
+      - v01_structure.py
+      - static_checks.py
+      fixtures: 1
+      evaluate: 1
+    new_side:
+      h00_probe_failed:
+      - 2
+      - 0
+      - - VALID
+        - NO_FAILURE_IN_SCOPE
+      - - BLOCKED
+        - null
+      h00_raised_timeout:
+      - 2
+      - 0
+      - - VALID
+        - NO_FAILURE_IN_SCOPE
+      - - BLOCKED
+        - null
+  M08:
+    requirement: no hard-coded NO_FAILURE / fixed conclusions in YAML, text or CA summary
+    met: true
+    old_side:
+      baseline_real_replay:
+      - NO_FAILURE_IN_SCOPE
+      - EXECUTED
+      v01_paths_missing_and_parse_failed:
+      - NO_FAILURE_IN_SCOPE
+      - EXECUTED
+      missing_static_stage: null
+      fixture_blocked_compile: null
+    new_side:
+      real_base:
+      - COUNTEREVIDENCE
+      - NO_FAILURE_IN_SCOPE
+      - SUPPORTED_AT_SOURCE_LEVEL
+      v01_referenced_paths_missing:
+      - COUNTEREVIDENCE
+      - COUNTEREVIDENCE
+      - SUPPORTED_AT_SOURCE_LEVEL
+      v01_parse_failure:
+      - COUNTEREVIDENCE
+      - COUNTEREVIDENCE
+      - SUPPORTED_AT_SOURCE_LEVEL
+      v00_A46_changed_to_match:
+      - OBSERVED_AS_PREDICTED
+      - NO_FAILURE_IN_SCOPE
+      - SUPPORTED_AT_SOURCE_LEVEL
+      v00_A35_changed_to_quote_not_found:
+      - COUNTEREVIDENCE
+      - NO_FAILURE_IN_SCOPE
+      - CONTRADICTED_OR_UNSUPPORTED_AT_SOURCE_LEVEL
+  M09:
+    requirement: no crash; full list of not-executed layers, affected CA, still-valid items; complete control = M12
+    met: true
+    old_side:
+      missing_static_stage:
+        returncode: 1
+        generated: false
+        error_tail:
+        - 'FileNotFoundError: [Errno 2] No such file or directory: ''/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/phaseA-jw7vf60z/a5_missing_static_stage/static.json'''
+      fixture_blocked_compile:
+        returncode: 1
+        generated: false
+        error_tail:
+        - 'KeyError: ''run'''
+    new_side:
+      exit: 2
+      cases:
+        V00:
+        - VALID
+        - COUNTEREVIDENCE
+        V01:
+        - VALID
+        - NO_FAILURE_IN_SCOPE
+        V02:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        V03:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        V04:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        V05:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        V06:
+        - ERROR
+        - null
+        V07:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        V08:
+        - INCOMPLETE_EVIDENCE
+        - null
+        V09:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        V10:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        V11:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+        V12:
+        - BLOCKED
+        - null
+        V13:
+        - BLOCKED
+        - null
+        V14:
+        - INCOMPLETE_EVIDENCE
+        - null
+        V00_A46_correction:
+        - VALID
+        - OBSERVED_AS_PREDICTED
+      ca:
+        CA-01: UNDETERMINED_MISSING_EVIDENCE
+        CA-02: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+        CA-03: SUPPORTED_IN_SCOPE
+        CA-04: SUPPORTED_IN_SCOPE
+        CA-05: UNDETERMINED_MISSING_EVIDENCE
+        CA-06: SUPPORTED_AT_SOURCE_LEVEL
+        CA-07: UNDETERMINED_MISSING_EVIDENCE
+      static_stage_failed:
+        exit: 2
+        V08:
+        - INCOMPLETE_EVIDENCE
+        - null
+        V14:
+        - INCOMPLETE_EVIDENCE
+        - null
+        CA-02: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+        CA-05: UNDETERMINED_MISSING_EVIDENCE
+  M10:
+    requirement: legit successor replays; wrong branch / non-descendant / changed originals / bad remote are rejected
+    met: true
+    old_side: old identity has no head/branch/originals inputs; it flags the legit advance as a mismatch and the run continues anyway
+    new_side:
+      legit_successor_head:
+      - true
+      - []
+      legit_equal_head:
+      - true
+      - []
+      legit_local_ahead_of_remote:
+      - true
+      - []
+      wrong_branch_name:
+      - false
+      - - on_execution_branch
+      non_descendant_head:
+      - false
+      - - head_descends_from_reviewed_core
+        - originals_unchanged
+        - remote_descends_from_reviewed_core
+      pilot_original_changed:
+      - false
+      - - originals_unchanged
+      core_original_changed:
+      - false
+      - - originals_unchanged
+      remote_reset_to_master:
+      - false
+      - - remote_descends_from_reviewed_core
+      remote_ahead_of_local:
+      - false
+      - - remote_on_same_line
+  M11:
+    requirement: --out parsed with/without field=value; HTTP/timeout/object/bytes/field all in status
+    met: true
+    old_side:
+      no_field_with_out: 1
+      with_field_with_out: 1
+    new_side:
+      with_field_object: 0
+      without_field_object: 0
+      with_field_branch_mode: 0
+      missing_path: 1
+      wrong_field_value: 1
+      malformed_field: 2
+      injected_curl_timeout: false
+  M12:
+    requirement: frozen sources/predictions, full valid data -> scoped conclusions; old A46 still fails; A46-C/ASM checked separately
+    met: true
+    old_side: n/a (this row is the real replay)
+    new_side:
+      V02:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V03:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V04:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V05:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V06:
+      - VALID
+      - NO_FAILURE_IN_SCOPE
+      V07:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V09:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V10:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V11:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V12:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V13:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V08:
+      - VALID
+      - COUNTEREVIDENCE
+      V14_model:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+      V00:
+      - VALID
+      - COUNTEREVIDENCE
+      V01:
+      - VALID
+      - NO_FAILURE_IN_SCOPE
+      V00_A46_correction:
+      - VALID
+      - OBSERVED_AS_PREDICTED
+generator_errors: []
+diff_vs_recheck01_frozen_results:
+  source: recheck-01 results.yaml @ efb9846b88ec
+  cases_identical:
+  - V00
+  - V00_A46_correction
+  - V01
+  - V02
+  - V03
+  - V04
+  - V05
+  - V06
+  - V07
+  - V08
+  - V09
+  - V10
+  - V11
+  - V12
+  - V13
+  - V14
+  cases_different: {}
+  ca_rulings:
+    CA-01:
+      efb: SUPPORTED_IN_SCOPE
+      now: SUPPORTED_IN_SCOPE
+      same: true
+    CA-02:
+      efb: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+      now: FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK
+      same: true
+    CA-03:
+      efb: SUPPORTED_IN_SCOPE
+      now: SUPPORTED_IN_SCOPE
+      same: true
+    CA-04:
+      efb: SUPPORTED_IN_SCOPE
+      now: SUPPORTED_IN_SCOPE
+      same: true
+    CA-05:
+      efb: SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE
+      now: SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE
+      same: true
+    CA-06:
+      efb: SUPPORTED_AT_SOURCE_LEVEL
+      now: SUPPORTED_AT_SOURCE_LEVEL
+      same: true
+    CA-07:
+      efb: SUPPORTED_IN_SCOPE
+      now: SUPPORTED_IN_SCOPE
+      same: true
+  counts_same: true
+  diff_vs_frozen_core_same: true
+  r_items_same: true
+  m_items_same: true

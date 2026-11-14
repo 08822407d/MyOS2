@@ -1,0 +1,365 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PERCPU-BOOTSTRAP-86",
+  "record_type": "conditional_findings_and_proof_gaps",
+  "produced_by": "GPT-6 (not independently backend attested)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-14",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_PENDING_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "open_questions": [
+    "PC86-U01",
+    "PC86-U02",
+    "PC86-U03",
+    "PC86-U04",
+    "PC86-U05",
+    "PC86-U06",
+    "PC86-U07",
+    "PC86-U08",
+    "PC86-U09"
+  ],
+  "new_conditional_candidates": [
+    {
+      "qualified_id": "PC86-F01",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "首块元数据失败后无判空解引用",
+      "trigger": "first early_pcpu_create_chunk returns NULL",
+      "source_logic": "helper checks NULL and returns; setup dereferences pcpu_first_chunk->data",
+      "conditional_impact": "normal completion cannot be certified; no actual null-page trap claimed",
+      "evidence_ids": [
+        "PC86-E013",
+        "PC86-E018"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    },
+    {
+      "qualified_id": "PC86-F02",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "首块data分配失败仍入链并继续",
+      "trigger": "metadata succeeds but second DMA32 request returns NULL",
+      "source_logic": "early helper inserts into list with no data guard, setup memcpy to pcpu_first_chunk->data",
+      "conditional_impact": "S>0 if destination NULL, normal template copy cannot be certified",
+      "evidence_ids": [
+        "PC86-E014",
+        "PC86-E015",
+        "PC86-E020",
+        "PC86-E024"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    },
+    {
+      "qualified_id": "PC86-F03",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "offset数组失败后直接写入",
+      "trigger": "myos_memblock_alloc_normal returns NULL and N>0",
+      "source_logic": "setup writes ((ulong*)pcpu_unit_offsets)[i] without prior success test",
+      "conditional_impact": "no legal successful offset initialization under that condition",
+      "evidence_ids": [
+        "PC86-E021",
+        "PC86-E025"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    },
+    {
+      "qualified_id": "PC86-F04",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "reserved chunk第二次创建失败后仍解引用",
+      "trigger": "second early_pcpu_create_chunk returns NULL",
+      "source_logic": "pcpu_reserved_chunk->base_addr is assigned unconditionally",
+      "conditional_impact": "postcall legal object operation cannot be certified",
+      "evidence_ids": [
+        "PC86-E022",
+        "PC86-E013"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    },
+    {
+      "qualified_id": "PC86-F05",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "每CPU单位步长与分配chunk跨度不一致",
+      "trigger": "N>1, C>S and future consumer occupies range past S in a unit",
+      "source_logic": "buffer requested N*C, but unit addresses shifted by i*S; potential overlap of hypothetical per-unit reserved tail",
+      "conditional_impact": "real overlapping user allocation not shown; only address-window model",
+      "evidence_ids": [
+        "PC86-E014",
+        "PC86-E017",
+        "PC86-E019",
+        "PC86-E021",
+        "PC86-E048"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    },
+    {
+      "qualified_id": "PC86-F06",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "只复制CPU0模板而未为其余CPU复制非零初始化",
+      "trigger": "N>1, DMA32 backing allocation successful/zeroed, nonzero template variable and no later writer for that field",
+      "source_logic": "single memcpy to first unit, loop initializes cpu_number/this_cpu_off but not all pcpu_hot/GDT bytes",
+      "conditional_impact": "other unit may retain zero for fields required by CPU-specific consumers; no real AP use proved",
+      "evidence_ids": [
+        "PC86-E020",
+        "PC86-E024",
+        "PC86-E042",
+        "PC86-E055",
+        "PC86-E057",
+        "PC86-E070"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    },
+    {
+      "qualified_id": "PC86-F07",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "运行CPU数超出固定offset数组容量",
+      "trigger": "N>NR_CPUS with CPU index reaching NR_CPUS",
+      "source_logic": "for_each_possible_cpu is dense 0..N-1; __per_cpu_offset has fixed NR_CPUS entries",
+      "conditional_impact": "array element at NR_CPUS has no defined storage in scoped C model",
+      "evidence_ids": [
+        "PC86-E032",
+        "PC86-E033",
+        "PC86-E035",
+        "PC86-E037",
+        "PC86-E038",
+        "PC86-E040",
+        "PC86-E042"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    },
+    {
+      "qualified_id": "PC86-F08",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "size_t向int自由区元数据转换可能超范围",
+      "trigger": "sum or C-sum outside int range",
+      "source_logic": "size_sum/chunk_size are size_t, simple_pcpu_chunk free_offset/free_bytes int",
+      "conditional_impact": "out-of-range conversion implementation-dependent, not observed at real linked size",
+      "evidence_ids": [
+        "PC86-E011",
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E019"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    },
+    {
+      "qualified_id": "PC86-F09",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_CONFIRMED_RUNTIME_DEFECT",
+      "title": "启动CPU当前指针读依赖可用GSBASE而非this_cpu_off内存值",
+      "trigger": "feature or register precondition for rdgsbase is not satisfied or MSR write fails",
+      "source_logic": "arch_raw_cpu_ptr reads rdgsbase independent of passed variable; CPU0 branch requests wrmsrl",
+      "conditional_impact": "source-level implicit hardware/phase dependency, no CPU failure claim without manual references",
+      "evidence_ids": [
+        "PC86-E052",
+        "PC86-E053",
+        "PC86-E061",
+        "PC86-E072",
+        "PC86-E074",
+        "PC86-E075"
+      ],
+      "status": "needs_evidence",
+      "runtime_reproduction": "NOT_RUN",
+      "owner_fix_approval": false
+    }
+  ],
+  "new_uncertainty_gaps": [
+    {
+      "qualified_id": "PC86-U01",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "模板真实链接布局",
+      "scope": "__per_cpu_load/start/end are separate script values with section alignment and AT",
+      "needed_before_certification": "ELF map/segment addresses/explicit template byte extent and allocation validity; no link run",
+      "evidence_ids": [
+        "PC86-E001",
+        "PC86-E002",
+        "PC86-E003",
+        "PC86-E004"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PC86-U02",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "size_t、int、ulong与roundup的实际ABI门",
+      "scope": "pointer-size equality, integer shift maximum, overflow and narrowing",
+      "needed_before_certification": "actual compiled ABI/layout/link extent; models are only conditional",
+      "evidence_ids": [
+        "PC86-E011",
+        "PC86-E016",
+        "PC86-E017",
+        "PC86-E019",
+        "PC86-E021",
+        "PC86-E026",
+        "PC86-E027",
+        "PC86-E028"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PC86-U03",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "memblock正常/异常分配与生命周期",
+      "scope": "DMA32/normal wrapper returns and memset are source-level conditions",
+      "needed_before_certification": "physical range validity, mapping, align requirements, data lifetime and error returns",
+      "evidence_ids": [
+        "PC86-E013",
+        "PC86-E014",
+        "PC86-E023",
+        "PC86-E024",
+        "PC86-E025"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PC86-U04",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "nr_cpu_ids生产者的有效性与上界",
+      "scope": "get_smpinfo copies core_num; parse_tag calls it; only selected producer read",
+      "needed_before_certification": "real tag provenance, bounded acceptance, other writes, CPU index mapping; not full parser audit",
+      "evidence_ids": [
+        "PC86-E032",
+        "PC86-E033",
+        "PC86-E034",
+        "PC86-E035",
+        "PC86-E037"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PC86-U05",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "其余CPU模板字节与后继写者",
+      "scope": "single static memcpy plus targeted loop writes observed",
+      "needed_before_certification": "all later perCPU initialization, AP continuation and real consumer state, outside scope",
+      "evidence_ids": [
+        "PC86-E020",
+        "PC86-E024",
+        "PC86-E042",
+        "PC86-E055",
+        "PC86-E057",
+        "PC86-E070"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PC86-U06",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "GDT目标地址/实际描述符及段切换",
+      "scope": "get_cpu_gdt_rw selects per_cpu gdt template, wrappers include lgdt/refresh",
+      "needed_before_certification": "real ELF placement, descriptor bytes, feature/privilege, CPU return and segment state",
+      "evidence_ids": [
+        "PC86-E062",
+        "PC86-E063",
+        "PC86-E064",
+        "PC86-E065",
+        "PC86-E066",
+        "PC86-E067",
+        "PC86-E070"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PC86-U07",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "GS_BASE寄存器写入及rdgsbase可用性",
+      "scope": "wrmsrl emits request, rdgsbase wrapper source body",
+      "needed_before_certification": "CPU model, CPUID FSGSBASE enabling, actual MSR value and return; no external manual verified",
+      "evidence_ids": [
+        "PC86-E052",
+        "PC86-E053",
+        "PC86-E061",
+        "PC86-E071",
+        "PC86-E072",
+        "PC86-E073",
+        "PC86-E074",
+        "PC86-E075"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PC86-U08",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "早期asm路径与当前CPU代表消费者的阶段门",
+      "scope": "secondary_startup_64 uses __per_cpu_offset/current_task while get_current uses hot template",
+      "needed_before_certification": "effective machine code/offset header freshness, CR3/GS path ordering, post-switch program reachability",
+      "evidence_ids": [
+        "PC86-E057",
+        "PC86-E076",
+        "PC86-E077",
+        "PC86-E040"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "PC86-U09",
+      "classification": "UNRESOLVED_EVIDENCE_GATE_NOT_CONFIRMED_BUG",
+      "title": "后续动态/保留区使用契约",
+      "scope": "first/reserved chunks, free_offset and base_addr structurally published",
+      "needed_before_certification": "actual simple_pcpu_alloc_noprof consumers, cross-unit access and complete allocator/reclaim excluded",
+      "evidence_ids": [
+        "PC86-E019",
+        "PC86-E022",
+        "PC86-E011",
+        "PC86-E012"
+      ],
+      "status": "deferred",
+      "runtime_evidence": "NOT_RUN"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "prior": "R84-01",
+      "status": "CLOSED_DOCUMENTATION_ONLY_BY_C06_COMPOSITE_PASS_PENDING_LOCAL",
+      "this_batch": "NO_D00_NO_REOPEN"
+    },
+    {
+      "prior": "R85-S01/S02/S03",
+      "status": "MANDATORY_CONSUMPTION_CORRECTIONS_APPLIED",
+      "this_batch": "No restatement of parser double-space false blank line; P5/tool scope/source metadata conservatively preserved"
+    },
+    {
+      "prior": "R84-S01/S02/S03;R83-S01/S02/S03;R82-S01/S02/S03;R81-S01/S02/S03",
+      "status": "RETAIN_HISTORICAL_BOUNDED_LAYERS",
+      "this_batch": "No CR3, machine-code, AP startup or physical startup re-affirmation"
+    },
+    {
+      "prior": "BM80-F/U;PT81-F/U;DM82-F/U;TI83-F/U;ER84-F/U;BB85-F/U",
+      "status": "ORIGINAL_IDS_UNCHANGED",
+      "this_batch": "No prior issue counted new; candidate overlap not summed as independent verified root causes"
+    }
+  ],
+  "classification_totals": {
+    "new_candidate_count": 9,
+    "new_gap_count": 9,
+    "legacy_ids_closed_or_rewritten": 0,
+    "assumed_confirmed_kernel_defects": 0,
+    "source_only": true,
+    "Owner_decisions_requested_now": [],
+    "patch_authorization": false
+  }
+}

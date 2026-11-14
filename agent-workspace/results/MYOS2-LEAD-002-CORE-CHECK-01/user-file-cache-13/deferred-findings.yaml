@@ -1,0 +1,147 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-FILE-CACHE-13
+record_type: incremental_deferred_cache_findings
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+model_per_owner: GPT-6
+effort_per_owner: Extra
+backend_identity: unknown_or_not_attestable
+date: "2026-10-31"
+read_channel: connector
+source_pin: "time @ a039d9803ade"
+result_base: "16b77f23003f"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+policy_ref: "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md"
+owner_decisions_requested_now: []
+counts: {findings: 6, evidence_appends: 4, documentation_errata_candidates: 2}
+findings:
+  - qualified_id: CORE-USER-FILE-CACHE-13::FC13-F01
+    id: FC13-F01
+    title: "缓存槽页指针先于后端读完成发布，缺少数据就绪状态"
+    kind: [conditional_inference]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-file-cache-13/facts-and-boundaries.yaml::anchors"
+    claim: "simple_filemap_read和simple_filemap_fault均先将alloc_page结果写入page_array槽，再调用file->f_op->read；后续消费者仅按槽指针非NULL使用数据。读返回值未消费，没有在所读路径看到独立的加载中/已完成/失败标记。"
+    premises: ["须有有效mapping、索引及页，并发读取该槽或读失败/短读后再次命中。"]
+    counter_evidence: ["若后端完整成功且没有并发重入，缺少状态不自动等于数据错误。"]
+    unknown: ["实际并发交错、磁盘故障及文件数据不一致未运行。"]
+    evidence: [FC13-A44, FC13-A46, FC13-A47, FC13-A57, FC13-A58, FC13-A49, FC13-A50]
+    related: ["CORE-USER-VFS-BASELINE-05::UV-08"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner后续明确准备好、独立专项授权，且重新验证当时源码"
+  - qualified_id: CORE-USER-FILE-CACHE-13::FC13-F02
+    id: FC13-F02
+    title: "mapping初始化与page_array仅在部分查找路径分配的前提缺口"
+    kind: [source_fact, conditional_inference]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade; user-file-cache-13/facts-and-boundaries.yaml::anchors"
+    claim: "fat_alloc_inode用kmalloc取得包含inode的对象，inode_init_always把i_mapping关联到i_data，但所读初始化未给page_array/nrpages活动赋值；__lookup_slow仅在其实际调用成功后按i_size设置nrpages，且正页数才kzalloc数组。现成dentry命中绕过此分支。零长文件不等于page_array已被保证为NULL。"
+    premises: ["假设所读FAT inode与lookup链被调用且未有其它未核初始化者先写上述字段。"]
+    counter_evidence: ["其它inode创建、zero-init及cache初始化路径并未穷尽，正常慢查找且kzalloc成功可得到有效数组。"]
+    unknown: ["分配器返回的具体内存初态与运行发生率未知。"]
+    evidence: [FC13-A16, FC13-A17, FC13-A18, FC13-A20, FC13-A01, FC13-A02, FC13-A03, FC13-A04]
+    related: ["CORE-USER-VFS-BASELINE-05::UV-07"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner后续明确准备好、独立专项授权，且重新验证当时源码"
+  - qualified_id: CORE-USER-FILE-CACHE-13::FC13-F03
+    id: FC13-F03
+    title: "私有文件写缺页可绕过缓存命中分支直接遇到已占槽的BUG_ON"
+    kind: [source_fact, conditional_liveness_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-file-cache-13/facts-and-boundaries.yaml::anchors"
+    claim: "do_cow_fault直接调用__do_fault，后者在FAT32 generic文件VM绑定下到simple_filemap_fault；该函数对page_array[index]非NULL执行BUG_ON，没有自动复用缓存命中页。与do_read_fault先查map_single_page的条件不同。"
+    premises: ["需要私有文件写缺页走此通路且绑定generic_file_vm_ops，目标索引有效，槽内已有页，并抵达BUG_ON。"]
+    counter_evidence: ["读缺页先尝试快速map，缓存命中可能直接返回；并非所有写入或缺页都触发断言。"]
+    unknown: ["BUG_ON在具体编译/硬件中的表现与触发频率均NOT_RUN。"]
+    evidence: [FC13-A75, FC13-A74, FC13-A43, FC13-A44, FC13-A51, FC13-A70, FC13-A71, FC13-A52]
+    related: []
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner后续明确准备好、独立专项授权，且重新验证当时源码"
+  - qualified_id: CORE-USER-FILE-CACHE-13::FC13-F04
+    id: FC13-F04
+    title: "文件长度变化与cache数组容量在已读路径中没有同步调整"
+    kind: [source_fact, conditional_inference]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-file-cache-13/facts-and-boundaries.yaml::anchors"
+    claim: "__lookup_slow按当时inode->i_size算出nrpages和array；myos_do_dentry_open的O_TRUNC分支仅设置i_size=0，所读函数不调整nrpages、page_array和已有槽。随后缓存消费者直接按页号访问，无容量检查。"
+    premises: ["数组已经创建，之后有合法触发的O_TRUNC或其它长度变化，且同一mapping仍被使用。"]
+    counter_evidence: ["未发生大小变化的文件没有这个时间错位；其它truncate或inode重建/失效路径未穷尽。"]
+    unknown: ["其它路径是否修复缓存容量或并发一致性尚未核实。"]
+    evidence: [FC13-A03, FC13-A04, FC13-A25, FC13-A56, FC13-A43, FC13-A49]
+    related: ["CORE-USER-VFS-BASELINE-05::UV-07"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner后续明确准备好、独立专项授权，且重新验证当时源码"
+  - qualified_id: CORE-USER-FILE-CACHE-13::FC13-F05
+    id: FC13-F05
+    title: "cache页与file引用/释放缺少当前路径可证明的配对"
+    kind: [evidence_gap, conditional_inference]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade; user-file-cache-13/facts-and-boundaries.yaml::anchors"
+    claim: "file.f_mapping只是inode.i_mapping指针，VMA的get_file增加file.f_count；simple_filemap_read、simple_filemap_map_page的缓存命中未见get_page；filp_close/fput归零释放file对象，所读函数体没有遍历释放page_array或对每个page执行put。iput大部分释放逻辑被注释。"
+    premises: ["缓存页实际已经分配且对象进入关闭或退出边界，需同时考虑其它未核的缓存/映射回收入口。"]
+    counter_evidence: ["缺少本链调用不等于全树没有缓存失效/回收；若VMA仍持file引用，fput未必使file对象归零。"]
+    unknown: ["页引用和释放实际实现、VMA/truncate时序及是否泄漏均无运行证据。"]
+    evidence: [FC13-A23, FC13-A12, FC13-A78, FC13-A27, FC13-A28, FC13-A81, FC13-A82, FC13-A83, FC13-A19]
+    related: ["CORE-USER-VFS-BASELINE-05::UV-10", "CORE-USER-VFS-BASELINE-05::UV-07"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner后续明确准备好、独立专项授权，且重新验证当时源码"
+  - qualified_id: CORE-USER-FILE-CACHE-13::FC13-F06
+    id: FC13-F06
+    title: "普通缓存写共享同一page_array，但局部未证明数据状态和写回完成"
+    kind: [source_fact, conditional_inference]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade; user-file-cache-13/facts-and-boundaries.yaml::anchors"
+    claim: "generic_perform_write按page_array页号取页，空槽先alloc_page并调用f_op->read，然后memcpy写入数据；所读函数体没有独立的IO错误处理、dirty/flush成功或就绪标记。FAT32_file_ops绑定generic_file_write_iter，但未将所有写入前提升级成已验证入口。"
+    premises: ["写请求经符合绑定的路径到达generic_perform_write，mapping、页号及页指针有效。"]
+    counter_evidence: ["其他写回/dirty路径与FAT32_write未穷尽，不能由本函数局部缺失就断言无法持久化。"]
+    unknown: ["实际写入、存储持久化和并发保护均NOT_RUN。"]
+    evidence: [FC13-A65, FC13-A66, FC13-A67, FC13-A30]
+    related: []
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_or_runtime: separate_authorization}
+    reopen_conditions: "Owner后续明确准备好、独立专项授权，且重新验证当时源码"
+evidence_appends:
+  - target: CORE-USER-VFS-BASELINE-05::UV-07
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "补充nrpages计算仅发生在已读__lookup_slow、dentry缓存命中可绕开分配，且零长度跳过kzalloc不等于page_array一定初始化为NULL；读/缺页下标无容量门。"
+    evidence: [FC13-A01, FC13-A02, FC13-A03, FC13-A04, FC13-A20, FC13-A56, FC13-A43, FC13-A49]
+  - target: CORE-USER-VFS-BASELINE-05::UV-08
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "补充slot先发布再调用read、非NULL命中仅表示页指针存在；simple_filemap_fault不消费负值/零/短读结果。正常return0也受有效array/index/page与无重复槽前提限制。"
+    evidence: [FC13-A41, FC13-A42, FC13-A43, FC13-A44, FC13-A45, FC13-A46, FC13-A47, FC13-A48, FC13-A35, FC13-A37]
+  - target: CORE-USER-VFS-BASELINE-05::UV-06
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "补普通读页号和末页len表达式、FAT32_read对i_size截短与更新局部position的源文依据；不重跑旧边界值与ELF/ATA分析。"
+    evidence: [FC13-A55, FC13-A56, FC13-A60, FC13-A35, FC13-A39, FC13-A40]
+  - target: CORE-USER-VFS-BASELINE-05::UV-10
+    operation: evidence_append_only
+    old_status_change: none
+    rationale: "补file.f_mapping别名、VMA get_file增加file引用以及filp_close→fput只释放file对象不逐页清理的局部限定；不混同sys_close已有直接释放路径。"
+    evidence: [FC13-A23, FC13-A12, FC13-A78, FC13-A26, FC13-A27, FC13-A28]
+errata_candidates:
+  - id: FC13-ER01
+    target: CORE-USER-VFS-BASELINE-05::UV-07
+    old_location: "user-vfs-baseline-05/deferred-findings.yaml::UV-07.impact: 空文件时 page_array 为 NULL"
+    kind: documentation_erratum_candidate
+    status: awaiting_mainline_disposition
+    replacement: "只能确认__lookup_slow在nrpages==0时不分配新array；本次已读的inode_init_always、fat_alloc_inode未保证page_array原值为NULL。已有或其它初始化者仍未知。"
+    anchors: [FC13-A03, FC13-A04, FC13-A16, FC13-A17, FC13-A18, FC13-A20]
+    old_file_modified: false
+  - id: FC13-ER02
+    target: CORE-USER-VFS-BASELINE-05::UV-08
+    old_location: "user-vfs-baseline-05/deferred-findings.yaml::UV-08.claim: vm_file与f_mapping有效时返回0"
+    kind: documentation_erratum_candidate
+    status: awaiting_mainline_disposition
+    replacement: "正常return0仍需有效page_array、索引、原槽为空以及alloc_page/page_to_virt/f_op.read的定义良好与返回；旧记录已经说明槽已有页时BUG_ON，此处新增其它前提。"
+    anchors: [FC13-A41, FC13-A42, FC13-A43, FC13-A44, FC13-A45, FC13-A46, FC13-A48]
+    old_file_modified: false
+not_covered: ["whole-tree inode and page reclaim", "actual file/block read outcome", "VMA/PTE and folio concurrency", "all file operations and cache invalidation", "preprocessing/build/kernel runtime"]

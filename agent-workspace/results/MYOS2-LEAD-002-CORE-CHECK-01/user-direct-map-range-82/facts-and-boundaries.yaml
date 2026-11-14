@@ -1,0 +1,2636 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DIRECT-MAP-RANGE-82",
+  "record_type": "bounded_static_facts_and_proof_navigation",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "date": "2026-11-13",
+  "produced_by": "GPT-6 (self-report)",
+  "model_per_owner": "GPT-6 + Extra (Owner selected)",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_fixed_short12": "e8f950fa4ad8",
+  "execution_parent_short12": "05fe580c12a3",
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/include/asm/cpufeatures.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/early/e820_const.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/math.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/mm/early/memblock.c",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/mm/early/memblock.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/mm/early/memblock_macro.h",
+      "snapshot": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/mm/highmem/highmem_macro.h",
+      "snapshot": "time@a039d9803ade"
+    }
+  ],
+  "source_fact_index": {
+    "gb_default": {
+      "anchor": "A01",
+      "fact_key": "gb_default",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "direct_gbpages",
+      "quote": "int direct_gbpages = 1;",
+      "support_literal": "direct_gbpages",
+      "line_start": 227,
+      "line_end": 227,
+      "definition_start": 227,
+      "definition_end": 227
+    },
+    "global_mask": {
+      "anchor": "A02",
+      "fact_key": "global_mask",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "page_size_mask",
+      "quote": "static int page_size_mask;",
+      "support_literal": "page_size_mask",
+      "line_start": 234,
+      "line_end": 234,
+      "definition_start": 234,
+      "definition_end": 234
+    },
+    "probe_2m": {
+      "anchor": "A03",
+      "fact_key": "probe_2m",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "simple_probe_page_size_mask",
+      "quote": "\tif (boot_cpu_data.x86_capa_bits.PageSize_Ext)\n\t\tpage_size_mask |= 1 << PG_LEVEL_2M;\n\telse\n\t\tdirect_gbpages = 0;",
+      "support_literal": "PageSize_Ext",
+      "line_start": 268,
+      "line_end": 271,
+      "definition_start": 261,
+      "definition_end": 280
+    },
+    "probe_1g": {
+      "anchor": "A04",
+      "fact_key": "probe_1g",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "simple_probe_page_size_mask",
+      "quote": "\tif (direct_gbpages && boot_cpu_data.x86_capa_bits.Page_1GB) {\n\t\tprintk(KERN_INFO \"Using GB pages for direct mapping\\n\");\n\t\tpage_size_mask |= 1 << PG_LEVEL_1G;\n\t} else {",
+      "support_literal": "Page_1GB",
+      "line_start": 274,
+      "line_end": 277,
+      "definition_start": 261,
+      "definition_end": 280
+    },
+    "probe_1g_else": {
+      "anchor": "A05",
+      "fact_key": "probe_1g_else",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "simple_probe_page_size_mask",
+      "quote": "\t\tdirect_gbpages = 0;\n\t}",
+      "support_literal": "direct_gbpages",
+      "line_start": 278,
+      "line_end": 279,
+      "definition_start": 261,
+      "definition_end": 280
+    },
+    "probe_alias": {
+      "anchor": "A06",
+      "fact_key": "probe_alias",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "probe_page_size_mask",
+      "quote": "#define probe_page_size_mask simple_probe_page_size_mask",
+      "support_literal": "simple_probe",
+      "line_start": 281,
+      "line_end": 281,
+      "definition_start": 281,
+      "definition_end": 281
+    },
+    "level_enum": {
+      "anchor": "A07",
+      "fact_key": "level_enum",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "pg_level",
+      "quote": "\t\tenum pg_level {\n\t\t\tPG_LEVEL_NONE,\n\t\t\tPG_LEVEL_4K,\n\t\t\tPG_LEVEL_2M,\n\t\t\tPG_LEVEL_1G,",
+      "support_literal": "PG_LEVEL_1G",
+      "line_start": 7,
+      "line_end": 11,
+      "definition_start": 7,
+      "definition_end": 14
+    },
+    "pmd_shift": {
+      "anchor": "A08",
+      "fact_key": "pmd_shift",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PMD_SHIFT",
+      "quote": "\t#define PMD_SHIFT\t\t\t21",
+      "support_literal": "21",
+      "line_start": 260,
+      "line_end": 260,
+      "definition_start": 260,
+      "definition_end": 260
+    },
+    "pud_shift": {
+      "anchor": "A09",
+      "fact_key": "pud_shift",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PUD_SHIFT",
+      "quote": "\t#define PUD_SHIFT\t\t\t30",
+      "support_literal": "30",
+      "line_start": 254,
+      "line_end": 254,
+      "definition_start": 254,
+      "definition_end": 254
+    },
+    "pmd_size": {
+      "anchor": "A10",
+      "fact_key": "pmd_size",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PMD_SIZE",
+      "quote": "\t#define PMD_SIZE\t\t\t(_AC(1, UL) << PMD_SHIFT)",
+      "support_literal": "PMD_SHIFT",
+      "line_start": 274,
+      "line_end": 274,
+      "definition_start": 274,
+      "definition_end": 274
+    },
+    "pud_size": {
+      "anchor": "A11",
+      "fact_key": "pud_size",
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "symbol": "PUD_SIZE",
+      "quote": "\t#define PUD_SIZE\t\t\t(_AC(1, UL) << PUD_SHIFT)",
+      "support_literal": "PUD_SHIFT",
+      "line_start": 276,
+      "line_end": 276,
+      "definition_start": 276,
+      "definition_end": 276
+    },
+    "cpu_pse": {
+      "anchor": "A12",
+      "fact_key": "cpu_pse",
+      "path": "mykernel/arch/x86_64/include/asm/cpufeatures.h",
+      "symbol": "x86_cap_bits",
+      "quote": "\t\t\t\tPageSize_Ext\t\t\t: 1,",
+      "support_literal": "PageSize_Ext",
+      "line_start": 49,
+      "line_end": 49,
+      "definition_start": 42,
+      "definition_end": 500
+    },
+    "cpu_1g": {
+      "anchor": "A13",
+      "fact_key": "cpu_1g",
+      "path": "mykernel/arch/x86_64/include/asm/cpufeatures.h",
+      "symbol": "x86_cap_bits",
+      "quote": "\t\t\t\tPage_1GB\t\t\t\t: 1,\t/* 1-GByte page available */",
+      "support_literal": "Page_1GB",
+      "line_start": 91,
+      "line_end": 91,
+      "definition_start": 42,
+      "definition_end": 500
+    },
+    "phase_flag": {
+      "anchor": "A14",
+      "fact_key": "phase_flag",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "after_bootmem",
+      "quote": "int after_bootmem;",
+      "support_literal": "after_bootmem",
+      "line_start": 226,
+      "line_end": 226,
+      "definition_start": 226,
+      "definition_end": 226
+    },
+    "promote_2m_gate": {
+      "anchor": "A15",
+      "fact_key": "promote_2m_gate",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "adjust_range_page_size_mask",
+      "quote": "\t\tif ((page_size_mask & (1<<PG_LEVEL_2M)) &&\n\t\t\t!(mr[i].page_size_mask & (1<<PG_LEVEL_2M))) {\n\t\t\tulong start = round_down(mr[i].start, PMD_SIZE);\n\t\t\tulong end = round_up(mr[i].end, PMD_SIZE);",
+      "support_literal": "PG_LEVEL_2M",
+      "line_start": 309,
+      "line_end": 312,
+      "definition_start": 304,
+      "definition_end": 326
+    },
+    "promote_2m_write": {
+      "anchor": "A16",
+      "fact_key": "promote_2m_write",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "adjust_range_page_size_mask",
+      "quote": "\t\t\tif (memblock_is_region_memory(start, end - start))\n\t\t\t\tmr[i].page_size_mask |= 1<<PG_LEVEL_2M;",
+      "support_literal": "memblock_is_region_memory",
+      "line_start": 314,
+      "line_end": 315,
+      "definition_start": 304,
+      "definition_end": 326
+    },
+    "promote_1g_gate": {
+      "anchor": "A17",
+      "fact_key": "promote_1g_gate",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "adjust_range_page_size_mask",
+      "quote": "\t\tif ((page_size_mask & (1<<PG_LEVEL_1G)) &&\n\t\t\t!(mr[i].page_size_mask & (1<<PG_LEVEL_1G))) {\n\t\t\tulong start = round_down(mr[i].start, PUD_SIZE);\n\t\t\tulong end = round_up(mr[i].end, PUD_SIZE);",
+      "support_literal": "PG_LEVEL_1G",
+      "line_start": 317,
+      "line_end": 320,
+      "definition_start": 304,
+      "definition_end": 326
+    },
+    "promote_1g_write": {
+      "anchor": "A18",
+      "fact_key": "promote_1g_write",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "adjust_range_page_size_mask",
+      "quote": "\t\t\tif (memblock_is_region_memory(start, end - start))\n\t\t\t\tmr[i].page_size_mask |= 1<<PG_LEVEL_1G;",
+      "support_literal": "memblock_is_region_memory",
+      "line_start": 322,
+      "line_end": 323,
+      "definition_start": 304,
+      "definition_end": 326
+    },
+    "single_search": {
+      "anchor": "A19",
+      "fact_key": "single_search",
+      "path": "mykernel/mm/early/memblock.c",
+      "symbol": "memblock_is_region_memory",
+      "quote": "bool __init_memblock\nmemblock_is_region_memory(phys_addr_t base, phys_addr_t size) {\n\tint idx = memblock_search(&memblock.memory, base);\n\tphys_addr_t end = base + memblock_cap_size(base, &size);",
+      "support_literal": "memblock_search",
+      "line_start": 640,
+      "line_end": 643,
+      "definition_start": 640,
+      "definition_end": 649
+    },
+    "single_containment": {
+      "anchor": "A20",
+      "fact_key": "single_containment",
+      "path": "mykernel/mm/early/memblock.c",
+      "symbol": "memblock_is_region_memory",
+      "quote": "\tif (idx == -1)\n\t\treturn false;\n\treturn (memblock.memory.regions[idx].base +\n\t\t memblock.memory.regions[idx].size) >= end;",
+      "support_literal": "regions[idx]",
+      "line_start": 645,
+      "line_end": 648,
+      "definition_start": 640,
+      "definition_end": 649
+    },
+    "search_enter": {
+      "anchor": "A21",
+      "fact_key": "search_enter",
+      "path": "mykernel/mm/early/memblock.h",
+      "symbol": "memblock_search",
+      "quote": "\t\tint __init_memblock\n\t\tmemblock_search(mmblk_type_s *type, phys_addr_t addr) {\n\t\t\tuint left = 0, right = type->cnt;\n\n\t\t\tdo {",
+      "support_literal": "do",
+      "line_start": 49,
+      "line_end": 53,
+      "definition_start": 48,
+      "definition_end": 65
+    },
+    "search_access": {
+      "anchor": "A22",
+      "fact_key": "search_access",
+      "path": "mykernel/mm/early/memblock.h",
+      "symbol": "memblock_search",
+      "quote": "\n\t\t\t\tif (addr < type->regions[mid].base)\n\t\t\t\t\tright = mid;\n\t\t\t\telse if (addr >= (type->regions[mid].base +\n\t\t\t\t\t\ttype->regions[mid].size))",
+      "support_literal": "regions[mid]",
+      "line_start": 55,
+      "line_end": 59,
+      "definition_start": 48,
+      "definition_end": 65
+    },
+    "cap_size": {
+      "anchor": "A23",
+      "fact_key": "cap_size",
+      "path": "mykernel/mm/early/memblock.c",
+      "symbol": "memblock_cap_size",
+      "quote": "static inline phys_addr_t\nmemblock_cap_size(phys_addr_t base, IN OUT phys_addr_t *size) {\n\treturn *size = min(*size, PHYS_ADDR_MAX - base);\n}",
+      "support_literal": "PHYS_ADDR_MAX",
+      "line_start": 102,
+      "line_end": 105,
+      "definition_start": 102,
+      "definition_end": 105
+    },
+    "round_up": {
+      "anchor": "A24",
+      "fact_key": "round_up",
+      "path": "mykernel/include/linux/kernel/math.h",
+      "symbol": "round_up",
+      "quote": "\t#define round_up(x, y)\t\t((((x)-1) | __round_mask(x, y))+1)",
+      "support_literal": "__round_mask",
+      "line_start": 24,
+      "line_end": 24,
+      "definition_start": 24,
+      "definition_end": 24
+    },
+    "round_down": {
+      "anchor": "A25",
+      "fact_key": "round_down",
+      "path": "mykernel/include/linux/kernel/math.h",
+      "symbol": "round_down",
+      "quote": "\t#define round_down(x, y)\t((x) & ~__round_mask(x, y))",
+      "support_literal": "__round_mask",
+      "line_start": 34,
+      "line_end": 34,
+      "definition_start": 34,
+      "definition_end": 34
+    },
+    "promotion_phase": {
+      "anchor": "A26",
+      "fact_key": "promotion_phase",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\tif (!after_bootmem)\n\t\tadjust_range_page_size_mask(mr, nr_range);",
+      "support_literal": "after_bootmem",
+      "line_start": 401,
+      "line_end": 402,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "display_preference": {
+      "anchor": "A27",
+      "fact_key": "display_preference",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "page_size_string",
+      "quote": "\tif (mr->page_size_mask & (1<<PG_LEVEL_1G))\n\t\treturn str_1g;\n\n\tif (mr->page_size_mask & (1<<PG_LEVEL_2M))\n\t\treturn str_2m;",
+      "support_literal": "str_2m",
+      "line_start": 335,
+      "line_end": 339,
+      "definition_start": 328,
+      "definition_end": 342
+    },
+    "display_4k": {
+      "anchor": "A28",
+      "fact_key": "display_4k",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "page_size_string",
+      "quote": "\treturn str_4k;",
+      "support_literal": "str_4k",
+      "line_start": 341,
+      "line_end": 341,
+      "definition_start": 328,
+      "definition_end": 342
+    },
+    "capacity": {
+      "anchor": "B01",
+      "fact_key": "capacity",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "NR_RANGE_MR",
+      "quote": "#define NR_RANGE_MR\t5",
+      "support_literal": "5",
+      "line_start": 15,
+      "line_end": 15,
+      "definition_start": 15,
+      "definition_end": 15
+    },
+    "range_fields": {
+      "anchor": "B02",
+      "fact_key": "range_fields",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "map_range",
+      "quote": "struct map_range {\n\tulong\tstart;\n\tulong\tend;\n\tuint\tpage_size_mask;\n};",
+      "support_literal": "page_size_mask",
+      "line_start": 228,
+      "line_end": 232,
+      "definition_start": 228,
+      "definition_end": 232
+    },
+    "save_args": {
+      "anchor": "B03",
+      "fact_key": "save_args",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "save_mr",
+      "quote": "static int __meminit\nsave_mr(struct map_range *mr,\n\tint nr_range, ulong start_pfn,\n\tulong end_pfn, ulong page_size_mask) {\n",
+      "support_literal": "end_pfn",
+      "line_start": 284,
+      "line_end": 288,
+      "definition_start": 284,
+      "definition_end": 298
+    },
+    "save_guard": {
+      "anchor": "B04",
+      "fact_key": "save_guard",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "save_mr",
+      "quote": "\tif (start_pfn < end_pfn) {\n\t\tif (nr_range >= NR_RANGE_MR)\n\t\t\tpanic(\"run out of range for init_memory_mapping\\n\");\n\t\tmr[nr_range].start = start_pfn<<PAGE_SHIFT;\n\t\tmr[nr_range].end   = end_pfn<<PAGE_SHIFT;",
+      "support_literal": "NR_RANGE_MR",
+      "line_start": 289,
+      "line_end": 293,
+      "definition_start": 284,
+      "definition_end": 298
+    },
+    "save_count": {
+      "anchor": "B05",
+      "fact_key": "save_count",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "save_mr",
+      "quote": "\t\tmr[nr_range].end   = end_pfn<<PAGE_SHIFT;\n\t\tmr[nr_range].page_size_mask = page_size_mask;\n\t\tnr_range++;\n\t}\n\treturn nr_range;",
+      "support_literal": "nr_range++",
+      "line_start": 293,
+      "line_end": 297,
+      "definition_start": 284,
+      "definition_end": 298
+    },
+    "split_args": {
+      "anchor": "B06",
+      "fact_key": "split_args",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "static int __meminit\nsplit_mem_range(struct map_range *mr,\n\tint nr_range, ulong start, ulong end) {\n\n\tulong start_pfn, end_pfn, limit_pfn, pfn;",
+      "support_literal": "start",
+      "line_start": 344,
+      "line_end": 348,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "limit_floor": {
+      "anchor": "B07",
+      "fact_key": "limit_floor",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\tlimit_pfn = PFN_DOWN(end);",
+      "support_literal": "PFN_DOWN",
+      "line_start": 351,
+      "line_end": 351,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "head_bounds": {
+      "anchor": "B08",
+      "fact_key": "head_bounds",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t/* head if not big page alignment ? */\n\tpfn = start_pfn = PFN_DOWN(start);\n\tend_pfn = round_up(pfn, PFN_DOWN(PMD_SIZE));\n\tif (end_pfn > limit_pfn)\n\t\tend_pfn = limit_pfn;",
+      "support_literal": "PFN_DOWN",
+      "line_start": 353,
+      "line_end": 357,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "head_save": {
+      "anchor": "B09",
+      "fact_key": "head_save",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\tif (start_pfn < end_pfn) {\n\t\tnr_range = save_mr(mr, nr_range, start_pfn, end_pfn, 0);\n\t\tpfn = end_pfn;\n\t}",
+      "support_literal": "save_mr",
+      "line_start": 358,
+      "line_end": 361,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "two_bounds": {
+      "anchor": "B10",
+      "fact_key": "two_bounds",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t/* big page (2M) range */\n\tstart_pfn = round_up(pfn, PFN_DOWN(PMD_SIZE));\n\tend_pfn = round_up(pfn, PFN_DOWN(PUD_SIZE));\n\tif (end_pfn > round_down(limit_pfn, PFN_DOWN(PMD_SIZE)))\n\t\tend_pfn = round_down(limit_pfn, PFN_DOWN(PMD_SIZE));",
+      "support_literal": "PUD_SIZE",
+      "line_start": 363,
+      "line_end": 367,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "two_save": {
+      "anchor": "B11",
+      "fact_key": "two_save",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\tif (start_pfn < end_pfn) {\n\t\tnr_range =\n\t\t\tsave_mr(mr, nr_range, start_pfn, end_pfn,\n\t\t\t\tpage_size_mask & (1<<PG_LEVEL_2M));\n\t\tpfn = end_pfn;",
+      "support_literal": "PG_LEVEL_2M",
+      "line_start": 369,
+      "line_end": 373,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "one_bounds": {
+      "anchor": "B12",
+      "fact_key": "one_bounds",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t/* big page (1G) range */\n\tstart_pfn = round_up(pfn, PFN_DOWN(PUD_SIZE));\n\tend_pfn = round_down(limit_pfn, PFN_DOWN(PUD_SIZE));",
+      "support_literal": "PUD_SIZE",
+      "line_start": 376,
+      "line_end": 378,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "one_save": {
+      "anchor": "B13",
+      "fact_key": "one_save",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\tif (start_pfn < end_pfn) {\n\t\tnr_range =\n\t\t\tsave_mr(mr, nr_range, start_pfn, end_pfn,\n\t\t\t\tpage_size_mask & ((1<<PG_LEVEL_2M)|(1<<PG_LEVEL_1G)));\n\t\tpfn = end_pfn;",
+      "support_literal": "PG_LEVEL_1G",
+      "line_start": 379,
+      "line_end": 383,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "tail2_bounds": {
+      "anchor": "B14",
+      "fact_key": "tail2_bounds",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t/* tail is not big page (1G) alignment */\n\tstart_pfn = round_up(pfn, PFN_DOWN(PMD_SIZE));\n\tend_pfn = round_down(limit_pfn, PFN_DOWN(PMD_SIZE));\n\tif (start_pfn < end_pfn) {",
+      "support_literal": "PMD_SIZE",
+      "line_start": 386,
+      "line_end": 389,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "tail2_save": {
+      "anchor": "B15",
+      "fact_key": "tail2_save",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t\tnr_range =\n\t\t\tsave_mr(mr, nr_range, start_pfn, end_pfn,\n\t\t\t\tpage_size_mask & (1<<PG_LEVEL_2M));\n\t\tpfn = end_pfn;\n\t}",
+      "support_literal": "PG_LEVEL_2M",
+      "line_start": 390,
+      "line_end": 394,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "tail4_save": {
+      "anchor": "B16",
+      "fact_key": "tail4_save",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t/* tail is not big page (2M) alignment */\n\tstart_pfn = pfn;\n\tend_pfn = limit_pfn;\n\tnr_range = save_mr(mr, nr_range, start_pfn, end_pfn, 0);",
+      "support_literal": "save_mr",
+      "line_start": 396,
+      "line_end": 399,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "merge_guard": {
+      "anchor": "B17",
+      "fact_key": "merge_guard",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t/* try to merge same page size and continuous */\n\tfor (i = 0; nr_range > 1 && i < nr_range - 1; i++) {\n\t\tulong old_start;\n\t\tif (mr[i].end != mr[i+1].start ||\n\t\t\tmr[i].page_size_mask != mr[i+1].page_size_mask)",
+      "support_literal": "mr[i+1]",
+      "line_start": 404,
+      "line_end": 408,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "merge_move": {
+      "anchor": "B18",
+      "fact_key": "merge_move",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t\t\tcontinue;\n\t\t/* move it */\n\t\told_start = mr[i].start;\n\t\tmemmove(&mr[i], &mr[i+1],\n\t\t\t(nr_range - 1 - i) * sizeof(struct map_range));",
+      "support_literal": "memmove",
+      "line_start": 409,
+      "line_end": 413,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "merge_count": {
+      "anchor": "B19",
+      "fact_key": "merge_count",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\t\tmr[i--].start = old_start;\n\t\tnr_range--;\n\t}",
+      "support_literal": "nr_range--",
+      "line_start": 414,
+      "line_end": 416,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "print_only": {
+      "anchor": "B20",
+      "fact_key": "print_only",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\tfor (i = 0; i < nr_range; i++)\n\t\tpr_debug(\" [mem %#010lx-%#010lx] page %s\\n\",\n\t\t\t\tmr[i].start, mr[i].end - 1,\n\t\t\t\tpage_size_string(&mr[i]));",
+      "support_literal": "page_size_string",
+      "line_start": 418,
+      "line_end": 421,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "split_return": {
+      "anchor": "B21",
+      "fact_key": "split_return",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "split_mem_range",
+      "quote": "\treturn nr_range;",
+      "support_literal": "nr_range",
+      "line_start": 423,
+      "line_end": 423,
+      "definition_start": 344,
+      "definition_end": 424
+    },
+    "pfn_down": {
+      "anchor": "B22",
+      "fact_key": "pfn_down",
+      "path": "mykernel/mm/highmem/highmem_macro.h",
+      "symbol": "PFN_DOWN",
+      "quote": "\t#define PFN_DOWN(x)\t\t\t((x) >> PAGE_SHIFT)",
+      "support_literal": "PAGE_SHIFT",
+      "line_start": 8,
+      "line_end": 8,
+      "definition_start": 8,
+      "definition_end": 8
+    },
+    "shift_4k": {
+      "anchor": "B23",
+      "fact_key": "shift_4k",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_SHIFT",
+      "quote": "\t#define PAGE_SHIFT\t\t\t\t12",
+      "support_literal": "12",
+      "line_start": 9,
+      "line_end": 9,
+      "definition_start": 9,
+      "definition_end": 9
+    },
+    "size_4k": {
+      "anchor": "B24",
+      "fact_key": "size_4k",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_SIZE",
+      "quote": "\t#define PAGE_SIZE\t\t\t\t(_AC(1,UL) << PAGE_SHIFT)",
+      "support_literal": "PAGE_SHIFT",
+      "line_start": 10,
+      "line_end": 10,
+      "definition_start": 10,
+      "definition_end": 10
+    },
+    "local_state": {
+      "anchor": "C01",
+      "fact_key": "local_state",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_memory_mapping",
+      "quote": "ulong __ref\ninit_memory_mapping(ulong start, ulong end, pgprot_t prot) {\n\tstruct map_range mr[NR_RANGE_MR];\n\tulong ret = 0;\n\tint nr_range, i;",
+      "support_literal": "ret",
+      "line_start": 433,
+      "line_end": 437,
+      "definition_start": 433,
+      "definition_end": 452
+    },
+    "call_split": {
+      "anchor": "C02",
+      "fact_key": "call_split",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_memory_mapping",
+      "quote": "\tpr_debug(\"init_memory_mapping: [mem %#010lx-%#010lx]\\n\",\n\t\t\tstart, end - 1);\n\n\tmemset(mr, 0, sizeof(mr));\n\tnr_range = split_mem_range(mr, 0, start, end);",
+      "support_literal": "split_mem_range",
+      "line_start": 439,
+      "line_end": 443,
+      "definition_start": 433,
+      "definition_end": 452
+    },
+    "each_request": {
+      "anchor": "C03",
+      "fact_key": "each_request",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_memory_mapping",
+      "quote": "\tfor (i = 0; i < nr_range; i++)\n\t\tret = kernel_physical_mapping_init(mr[i].start,\n\t\t\t\tmr[i].end, mr[i].page_size_mask, prot);",
+      "support_literal": "kernel_physical_mapping_init",
+      "line_start": 445,
+      "line_end": 447,
+      "definition_start": 433,
+      "definition_end": 452
+    },
+    "last_return": {
+      "anchor": "C04",
+      "fact_key": "last_return",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_memory_mapping",
+      "quote": "\t// add_pfn_range_mapped(start >> PAGE_SHIFT, ret >> PAGE_SHIFT);\n\n\treturn ret >> PAGE_SHIFT;",
+      "support_literal": "return",
+      "line_start": 449,
+      "line_end": 451,
+      "definition_start": 433,
+      "definition_end": 452
+    },
+    "mapping_macro": {
+      "anchor": "C05",
+      "fact_key": "mapping_macro",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "kernel_physical_mapping_init",
+      "quote": "#define kernel_physical_mapping_init(paddr_start,\t\t\t\\\n\t\t\t\tpaddr_end, page_size_mask, prot)\t\t\t\\\n\t\t\t__kernel_physical_mapping_init(paddr_start,\t\t\\\n\t\t\t\t\tpaddr_end, page_size_mask, prot, true)",
+      "support_literal": "__kernel_physical_mapping_init",
+      "line_start": 27,
+      "line_end": 30,
+      "definition_start": 27,
+      "definition_end": 30
+    },
+    "lower_signature": {
+      "anchor": "C06",
+      "fact_key": "lower_signature",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "static ulong __meminit\n__kernel_physical_mapping_init(ulong paddr_start,\n\t\tulong paddr_end, ulong page_size_mask,\n\t\tpgprot_t prot, bool init) {",
+      "support_literal": "page_size_mask",
+      "line_start": 823,
+      "line_end": 826,
+      "definition_start": 823,
+      "definition_end": 864
+    },
+    "lower_initial": {
+      "anchor": "C07",
+      "fact_key": "lower_initial",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "\tulong vaddr, vaddr_start, vaddr_end, vaddr_next, paddr_last;\n\n\tpaddr_last = paddr_end;\n\tvaddr = (ulong)__va(paddr_start);\n\tvaddr_end = (ulong)__va(paddr_end);",
+      "support_literal": "paddr_last",
+      "line_start": 829,
+      "line_end": 833,
+      "definition_start": 823,
+      "definition_end": 864
+    },
+    "lower_return": {
+      "anchor": "C08",
+      "fact_key": "lower_return",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "__kernel_physical_mapping_init",
+      "quote": "\t\tpgd_changed = true;\n\t}\n\t// if (pgd_changed)\n\t// \tsync_global_pgds(vaddr_start, vaddr_end - 1);\n\treturn paddr_last;",
+      "support_literal": "paddr_last",
+      "line_start": 859,
+      "line_end": 863,
+      "definition_start": 823,
+      "definition_end": 864
+    },
+    "range_initial": {
+      "anchor": "C09",
+      "fact_key": "range_initial",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_range_memory_mapping",
+      "quote": "static ulong __init\ninit_range_memory_mapping(ulong r_start, ulong r_end) {\n\tulong start_pfn, end_pfn;\n\tulong mapped_ram_size = 0;\n\tint i;",
+      "support_literal": "mapped_ram_size",
+      "line_start": 467,
+      "line_end": 471,
+      "definition_start": 467,
+      "definition_end": 484
+    },
+    "range_clamp": {
+      "anchor": "C10",
+      "fact_key": "range_clamp",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_range_memory_mapping",
+      "quote": "\tfor_each_mem_pfn_range(i, &start_pfn, &end_pfn) {\n\t\tu64 start = clamp_val(PFN_PHYS(start_pfn), r_start, r_end);\n\t\tu64 end = clamp_val(PFN_PHYS(end_pfn), r_start, r_end);\n\t\tif (start >= end)\n\t\t\tcontinue;",
+      "support_literal": "clamp_val",
+      "line_start": 473,
+      "line_end": 477,
+      "definition_start": 467,
+      "definition_end": 484
+    },
+    "range_account": {
+      "anchor": "C11",
+      "fact_key": "range_account",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_range_memory_mapping",
+      "quote": "\t\tinit_memory_mapping(start, end, PAGE_KERNEL);\n\t\tmapped_ram_size += end - start;",
+      "support_literal": "mapped_ram_size",
+      "line_start": 479,
+      "line_end": 480,
+      "definition_start": 467,
+      "definition_end": 484
+    },
+    "range_return": {
+      "anchor": "C12",
+      "fact_key": "range_return",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_range_memory_mapping",
+      "quote": "\treturn mapped_ram_size;",
+      "support_literal": "mapped_ram_size",
+      "line_start": 483,
+      "line_end": 483,
+      "definition_start": 467,
+      "definition_end": 484
+    },
+    "bottomup_alias": {
+      "anchor": "C13",
+      "fact_key": "bottomup_alias",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "memory_map_bottom_up",
+      "quote": "#define memory_map_bottom_up\tinit_range_memory_mapping",
+      "support_literal": "init_range_memory_mapping",
+      "line_start": 485,
+      "line_end": 485,
+      "definition_start": 485,
+      "definition_end": 485
+    },
+    "pfn_phys": {
+      "anchor": "C14",
+      "fact_key": "pfn_phys",
+      "path": "mykernel/mm/highmem/highmem_macro.h",
+      "symbol": "PFN_PHYS",
+      "quote": "\t#define PFN_PHYS(x)\t\t\t((phys_addr_t)(x) << PAGE_SHIFT)",
+      "support_literal": "phys_addr_t",
+      "line_start": 9,
+      "line_end": 9,
+      "definition_start": 9,
+      "definition_end": 9
+    },
+    "clamp_val": {
+      "anchor": "C15",
+      "fact_key": "clamp_val",
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "symbol": "clamp_val",
+      "quote": "\t#define clamp_val(val, lo, hi)\tclamp_t(typeof(val), val, lo, hi)",
+      "support_literal": "clamp_t",
+      "line_start": 148,
+      "line_end": 148,
+      "definition_start": 148,
+      "definition_end": 148
+    },
+    "clamp_t": {
+      "anchor": "C16",
+      "fact_key": "clamp_t",
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "symbol": "clamp_t",
+      "quote": "\t#define clamp_t(type, val, lo, hi)\tmin_t(type, max_t(type, val, lo), hi)",
+      "support_literal": "max_t",
+      "line_start": 135,
+      "line_end": 135,
+      "definition_start": 135,
+      "definition_end": 135
+    },
+    "iterator_macro": {
+      "anchor": "C17",
+      "fact_key": "iterator_macro",
+      "path": "mykernel/mm/early/memblock_macro.h",
+      "symbol": "for_each_mem_pfn_range",
+      "quote": "\t#define for_each_mem_pfn_range(i, p_start, p_end)\t\t\t\t\t\\\n\t\t\t\tfor (i = -1, __next_mem_pfn_range(&i, p_start, p_end);\t\\\n\t\t\t\t\ti >= 0; __next_mem_pfn_range(&i, p_start, p_end))",
+      "support_literal": "__next_mem_pfn_range",
+      "line_start": 64,
+      "line_end": 66,
+      "definition_start": 64,
+      "definition_end": 66
+    },
+    "iterator_entry": {
+      "anchor": "C18",
+      "fact_key": "iterator_entry",
+      "path": "mykernel/mm/early/memblock.c",
+      "symbol": "__next_mem_pfn_range",
+      "quote": "__init_memblock void\n__next_mem_pfn_range(OUT int *idx,\n\t\tOUT ulong *out_start_pfn,\n\t\tOUT ulong *out_end_pfn) {",
+      "support_literal": "__next_mem_pfn_range",
+      "line_start": 680,
+      "line_end": 683,
+      "definition_start": 680,
+      "definition_end": 701
+    },
+    "iterator_scan": {
+      "anchor": "C19",
+      "fact_key": "iterator_scan",
+      "path": "mykernel/mm/early/memblock.c",
+      "symbol": "__next_mem_pfn_range",
+      "quote": "\tmmblk_type_s *type = &memblock.memory;\n\tmmblk_rgn_s *r;\n\twhile (++*idx < type->cnt) {\n\t\tr = &type->regions[*idx];\n\t\tif (PFN_UP(r->base) < PFN_DOWN(r->base + r->size))",
+      "support_literal": "PFN_UP",
+      "line_start": 685,
+      "line_end": 689,
+      "definition_start": 680,
+      "definition_end": 701
+    },
+    "iterator_stop": {
+      "anchor": "C20",
+      "fact_key": "iterator_stop",
+      "path": "mykernel/mm/early/memblock.c",
+      "symbol": "__next_mem_pfn_range",
+      "quote": "\tif (*idx >= type->cnt) {\n\t\t*idx = -1;\n\t\treturn;\n\t}",
+      "support_literal": "-1",
+      "line_start": 692,
+      "line_end": 695,
+      "definition_start": 680,
+      "definition_end": 701
+    },
+    "iterator_publish": {
+      "anchor": "C21",
+      "fact_key": "iterator_publish",
+      "path": "mykernel/mm/early/memblock.c",
+      "symbol": "__next_mem_pfn_range",
+      "quote": "\tif (out_start_pfn)\n\t\t*out_start_pfn = PFN_UP(r->base);\n\tif (out_end_pfn)\n\t\t*out_end_pfn = PFN_DOWN(r->base + r->size);",
+      "support_literal": "out_end_pfn",
+      "line_start": 697,
+      "line_end": 700,
+      "definition_start": 680,
+      "definition_end": 701
+    },
+    "top_entry": {
+      "anchor": "C22",
+      "fact_key": "top_entry",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_mem_mapping",
+      "quote": "void __init init_mem_mapping(void)\n{\n\tulong end;",
+      "support_literal": "init_mem_mapping",
+      "line_start": 487,
+      "line_end": 489,
+      "definition_start": 487,
+      "definition_end": 532
+    },
+    "top_probe": {
+      "anchor": "C23",
+      "fact_key": "top_probe",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_mem_mapping",
+      "quote": "\t// pti_check_boottime_disable();\n\tprobe_page_size_mask();\n\t// setup_pcid();\n\n\tend = max_pfn << PAGE_SHIFT;",
+      "support_literal": "probe_page_size_mask",
+      "line_start": 491,
+      "line_end": 495,
+      "definition_start": 487,
+      "definition_end": 532
+    },
+    "top_isa": {
+      "anchor": "C24",
+      "fact_key": "top_isa",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_mem_mapping",
+      "quote": "\t/* the ISA range is always mapped regardless of memory holes */\n\tinit_memory_mapping(0, ISA_END_ADDRESS, PAGE_KERNEL);",
+      "support_literal": "init_memory_mapping",
+      "line_start": 497,
+      "line_end": 498,
+      "definition_start": 487,
+      "definition_end": 532
+    },
+    "direction_gate": {
+      "anchor": "C25",
+      "fact_key": "direction_gate",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_mem_mapping",
+      "quote": "\tif (memblock_bottom_up()) {\n\t\tulong kernel_end = __pa_symbol(_end);",
+      "support_literal": "memblock_bottom_up",
+      "line_start": 507,
+      "line_end": 508,
+      "definition_start": 487,
+      "definition_end": 532
+    },
+    "two_calls": {
+      "anchor": "C26",
+      "fact_key": "two_calls",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_mem_mapping",
+      "quote": "\t\tmemory_map_bottom_up(kernel_end, end);\n\t\tmemory_map_bottom_up(ISA_END_ADDRESS, kernel_end);\n\t} else {\n\t\t// memory_map_top_down(ISA_END_ADDRESS, end);",
+      "support_literal": "memory_map_bottom_up",
+      "line_start": 517,
+      "line_end": 520,
+      "definition_start": 487,
+      "definition_end": 532
+    },
+    "devices_and_low": {
+      "anchor": "C27",
+      "fact_key": "devices_and_low",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_mem_mapping",
+      "quote": "\tmyos_memory_map();\n\n\tif (max_pfn > max_low_pfn) {\n\t\t/* can we preserve max_low_pfn ?*/\n\t\tmax_low_pfn = max_pfn;",
+      "support_literal": "myos_memory_map",
+      "line_start": 522,
+      "line_end": 526,
+      "definition_start": 487,
+      "definition_end": 532
+    },
+    "load_root": {
+      "anchor": "C28",
+      "fact_key": "load_root",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "init_mem_mapping",
+      "quote": "\tload_cr3(swapper_pg_dir);\n\t__flush_tlb_all();",
+      "support_literal": "load_cr3",
+      "line_start": 529,
+      "line_end": 530,
+      "definition_start": 487,
+      "definition_end": 532
+    },
+    "bottomup_accessor": {
+      "anchor": "C29",
+      "fact_key": "bottomup_accessor",
+      "path": "mykernel/mm/early/memblock.h",
+      "symbol": "memblock_bottom_up",
+      "quote": "\t\tPREFIX_STATIC_INLINE\n\t\t__init_memblock bool\n\t\tmemblock_bottom_up(void) {\n\t\t\treturn memblock.bottom_up;",
+      "support_literal": "memblock.bottom_up",
+      "line_start": 114,
+      "line_end": 117,
+      "definition_start": 114,
+      "definition_end": 118
+    },
+    "bottomup_initial": {
+      "anchor": "C30",
+      "fact_key": "bottomup_initial",
+      "path": "mykernel/mm/early/memblock.c",
+      "symbol": "memblock",
+      "quote": "\t.bottom_up\t\t\t= true,\n\t.current_limit\t\t= (phys_addr_t)MEMBLOCK_ALLOC_ANYWHERE,",
+      "support_literal": "bottom_up",
+      "line_start": 95,
+      "line_end": 96,
+      "definition_start": 84,
+      "definition_end": 97
+    },
+    "isa_end": {
+      "anchor": "C31",
+      "fact_key": "isa_end",
+      "path": "mykernel/arch/x86_64/mm/early/e820_const.h",
+      "symbol": "ISA_END_ADDRESS",
+      "quote": "\t#define ISA_END_ADDRESS\t\t0x00100000",
+      "support_literal": "0x00100000",
+      "line_start": 51,
+      "line_end": 51,
+      "definition_start": 51,
+      "definition_end": 51
+    },
+    "pa_symbol": {
+      "anchor": "C32",
+      "fact_key": "pa_symbol",
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "symbol": "__pa_symbol",
+      "quote": "\t#define __pa_symbol(x) __phys_addr_symbol((ulong)(x))",
+      "support_literal": "__phys_addr_symbol",
+      "line_start": 22,
+      "line_end": 22,
+      "definition_start": 22,
+      "definition_end": 22
+    },
+    "device_vbe": {
+      "anchor": "C33",
+      "fact_key": "device_vbe",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "myos_memory_map",
+      "quote": "static void __init\nmyos_memory_map() {\nextern void myos_init_VBE_mapping(void);\n\tmyos_init_VBE_mapping();",
+      "support_literal": "myos_init_VBE_mapping",
+      "line_start": 249,
+      "line_end": 252,
+      "definition_start": 249,
+      "definition_end": 257
+    },
+    "device_apic": {
+      "anchor": "C34",
+      "fact_key": "device_apic",
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "myos_memory_map",
+      "quote": "extern void __init init_io_apic_mappings(void);\n\tinit_io_apic_mappings();",
+      "support_literal": "init_io_apic_mappings",
+      "line_start": 255,
+      "line_end": 256,
+      "definition_start": 249,
+      "definition_end": 257
+    },
+    "max_pfn_upstream": {
+      "anchor": "C35",
+      "fact_key": "max_pfn_upstream",
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "symbol": "setup_arch",
+      "quote": "\tmax_pfn = e820__end_of_ram_pfn();\n\tmax_possible_pfn = max_pfn;",
+      "support_literal": "max_pfn",
+      "line_start": 220,
+      "line_end": 221,
+      "definition_start": 169,
+      "definition_end": 256
+    }
+  },
+  "prior_findings_links": {
+    "batch81": "PASS_PENDING_LOCAL_WITH_R81_S01_S02_S03",
+    "R81_S01": "原81证据A索引错位由C06正式回执给出事实表；82全部使用自己冻结的事实键与新引文",
+    "R81_S02": "直接页分配链不等于slab过滤路径；本82不重新复审ZERO物理回收",
+    "R81_S03": "地址域、空/反向区间和图边须保持独立前提；不跨层拼接调用",
+    "batch80": "PASS_PENDING_LOCAL_WITH_R80_S01_S02_S03",
+    "batch79": "PASS_PENDING_LOCAL_WITH_R79_S01_S02_S03_AND_R79_DOC_CLOSED",
+    "batch78": "PASS_PENDING_LOCAL_WITH_R78_S01_S02_S03",
+    "batch77": "PASS_PENDING_LOCAL_WITH_R77_S01_S02_S03",
+    "prior_qualified_ids": [
+      "PT81-F01..F08/U01..U10",
+      "BM80-F01..F08/U01..U10",
+      "MR79-F01..F08/U01..U10",
+      "PB78-F01..F06/U01..U08",
+      "PA77-F01/F02",
+      "AE75-U07",
+      "SL76-U09",
+      "MC-01/02/03/04/05/LB-01/LB-08/GAP-M08",
+      "05/MR-02 explicit narrowed closed",
+      "58/63 withdrawals"
+    ],
+    "D00": "NOT_REQUIRED",
+    "no_old_source_problem_closed": true
+  },
+  "G01": {
+    "capability_and_mask_matrix": [
+      {
+        "id": "AC01",
+        "claim": "初始候选状态为direct_gbpages等于1且page_size_mask按静态存储初始0",
+        "source_fact_keys": [
+          "gb_default",
+          "global_mask"
+        ],
+        "evidence_ids": [
+          "A01",
+          "A02"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "后续外部写者未知",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AC02",
+        "claim": "PageSize_Ext真时用OR添加2M位0x4，否则把direct_gbpages清零",
+        "source_fact_keys": [
+          "probe_2m",
+          "level_enum"
+        ],
+        "evidence_ids": [
+          "A03",
+          "A07"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "能力值来自外部，不认证真实CPU",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AC03",
+        "claim": "1G位0x8仅当direct_gbpages及Page_1GB均真才OR，失败清开关",
+        "source_fact_keys": [
+          "probe_1g",
+          "probe_1g_else",
+          "level_enum"
+        ],
+        "evidence_ids": [
+          "A04",
+          "A05",
+          "A07"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "是否实际进入函数需先证",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AC04",
+        "claim": "探测是位OR而非每轮重置，重复调用可能保留旧候选位",
+        "source_fact_keys": [
+          "probe_2m",
+          "probe_1g",
+          "global_mask"
+        ],
+        "evidence_ids": [
+          "A03",
+          "A04",
+          "A02"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "重复调用路径没有实测",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AC05",
+        "claim": "两个输入是x86_cap_bits字段声明，非硬件能力事实",
+        "source_fact_keys": [
+          "cpu_pse",
+          "cpu_1g"
+        ],
+        "evidence_ids": [
+          "A12",
+          "A13"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "尚未审计字段生产者",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AC06",
+        "claim": "page_size_string只是MR掩码文字显示，不能认证硬件页大小",
+        "source_fact_keys": [
+          "display_preference",
+          "display_4k"
+        ],
+        "evidence_ids": [
+          "A27",
+          "A28"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "仅MR对象输入合法",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AC07",
+        "claim": "顶层通过probe别名先探测再计算映射end",
+        "source_fact_keys": [
+          "probe_alias",
+          "top_probe"
+        ],
+        "evidence_ids": [
+          "A06",
+          "C23"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "需前序callee正常返回",
+        "run": "NOT_RUN"
+      }
+    ],
+    "range_promotion_matrix": [
+      {
+        "id": "AP01",
+        "claim": "仅after_bootmem为假时split调用提升",
+        "source_fact_keys": [
+          "phase_flag",
+          "promotion_phase"
+        ],
+        "evidence_ids": [
+          "A14",
+          "A26"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "必须到达split对应调用点",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AP02",
+        "claim": "缺2M位的MR按PMD取整后要求单条memory包含才添加位",
+        "source_fact_keys": [
+          "promote_2m_gate",
+          "promote_2m_write",
+          "pmd_size"
+        ],
+        "evidence_ids": [
+          "A15",
+          "A16",
+          "A10"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "端点取整无溢出且查询有效",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AP03",
+        "claim": "缺1G位的MR按PUD取整后作独立包含判断",
+        "source_fact_keys": [
+          "promote_1g_gate",
+          "promote_1g_write",
+          "pud_size"
+        ],
+        "evidence_ids": [
+          "A17",
+          "A18",
+          "A11"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不能以2M通过推1G通过",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AP04",
+        "claim": "查询搜索含base的单一memory记录，再核同一记录end不早于查询end",
+        "source_fact_keys": [
+          "single_search",
+          "single_containment"
+        ],
+        "evidence_ids": [
+          "A19",
+          "A20"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "此前memblock计数与记录合法",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AP05",
+        "claim": "两个尚未合并的邻接记录联合覆盖不自动等于单条包含",
+        "source_fact_keys": [
+          "single_search",
+          "single_containment"
+        ],
+        "evidence_ids": [
+          "A19",
+          "A20"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "声明输入为两条不同记录",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AP06",
+        "claim": "取整与算术裁切须单独看溢出；不能凭函数名取得合法物理extent",
+        "source_fact_keys": [
+          "round_up",
+          "round_down",
+          "cap_size"
+        ],
+        "evidence_ids": [
+          "A24",
+          "A25",
+          "A23"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "上端回绕停止实际区间解释",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AP07",
+        "claim": "memblock_search以do-while形式在cnt0仍形成读取mid字段的风险",
+        "source_fact_keys": [
+          "search_enter",
+          "search_access"
+        ],
+        "evidence_ids": [
+          "A21",
+          "A22"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "停于首次未证数组访问",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AP08",
+        "claim": "提升只修改MR候选位，不在此函数内建立真实映射",
+        "source_fact_keys": [
+          "promote_1g_write",
+          "promote_2m_write"
+        ],
+        "evidence_ids": [
+          "A18",
+          "A16"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不能据flag推物理页表效果",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "AP09",
+        "claim": "所读成员查询不在此实现体里减去reserved集合或判NOMAP可用性",
+        "source_fact_keys": [
+          "single_containment"
+        ],
+        "evidence_ids": [
+          "A20"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不是free区间验证",
+        "run": "NOT_RUN"
+      }
+    ]
+  },
+  "G02": {
+    "partition_coverage_matrix": [
+      {
+        "id": "BC01",
+        "claim": "输入start和end分别PFN_DOWN，非对齐请求的低端可能被扩张且高端尾部被舍弃",
+        "source_fact_keys": [
+          "limit_floor",
+          "head_bounds",
+          "pfn_down"
+        ],
+        "evidence_ids": [
+          "B07",
+          "B08",
+          "B22"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "要求合法有序端点",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BC02",
+        "claim": "第一段是起始非PMD对齐的4K候选，非空才保存mask0",
+        "source_fact_keys": [
+          "head_bounds",
+          "head_save"
+        ],
+        "evidence_ids": [
+          "B08",
+          "B09"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "pfn小于limit",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BC03",
+        "claim": "第二段止于下一PUD界或limit的PMD下界，按全局2M位存入",
+        "source_fact_keys": [
+          "two_bounds",
+          "two_save"
+        ],
+        "evidence_ids": [
+          "B10",
+          "B11"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "pfn算术有效",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BC04",
+        "claim": "第三段用PUD对齐边界，保存2M与1G候选交集",
+        "source_fact_keys": [
+          "one_bounds",
+          "one_save"
+        ],
+        "evidence_ids": [
+          "B12",
+          "B13"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不能断言已用1G叶",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BC05",
+        "claim": "第四段2M尾部，第五段4K尾部按非空门保存",
+        "source_fact_keys": [
+          "tail2_bounds",
+          "tail2_save",
+          "tail4_save"
+        ],
+        "evidence_ids": [
+          "B14",
+          "B15",
+          "B16"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "五段只描述临时MR",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BC06",
+        "claim": "从nr_range0开始最多五个阶段分别尝试save_mr",
+        "source_fact_keys": [
+          "head_save",
+          "two_save",
+          "one_save",
+          "tail2_save",
+          "tail4_save"
+        ],
+        "evidence_ids": [
+          "B09",
+          "B11",
+          "B13",
+          "B15",
+          "B16"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "正常范围无指针异常",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BC07",
+        "claim": "换算中4K、2M、1G需按实际宏位数处理",
+        "source_fact_keys": [
+          "size_4k",
+          "pmd_size",
+          "pud_size"
+        ],
+        "evidence_ids": [
+          "B24",
+          "A10",
+          "A11"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "数据类型与非回绕为前提",
+        "run": "NOT_RUN"
+      }
+    ],
+    "range_capacity_matrix": [
+      {
+        "id": "BK01",
+        "claim": "map_range临时数组容量5，每个记录有字节start/end及掩码",
+        "source_fact_keys": [
+          "capacity",
+          "range_fields"
+        ],
+        "evidence_ids": [
+          "B01",
+          "B02"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "数组空间可读写",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BK02",
+        "claim": "save只在start_pfn小于end_pfn时使用数组，nr_range达到5先调用panic",
+        "source_fact_keys": [
+          "save_args",
+          "save_guard",
+          "save_count"
+        ],
+        "evidence_ids": [
+          "B03",
+          "B04",
+          "B05"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不能假定panic必定不返回",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BK03",
+        "claim": "在有效索引和callee返回的前提下才把PFN左移写回字节起终点及计数",
+        "source_fact_keys": [
+          "save_guard",
+          "save_count"
+        ],
+        "evidence_ids": [
+          "B04",
+          "B05"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "数组访问前停止非法路径",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BK04",
+        "claim": "init_memory_mapping从nr_range0调用split，不能照搬任意外部nr_range输入",
+        "source_fact_keys": [
+          "call_split",
+          "capacity"
+        ],
+        "evidence_ids": [
+          "C02",
+          "B01"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "限制此调用者",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BK05",
+        "claim": "保存数与打印不证明页表映射成功",
+        "source_fact_keys": [
+          "split_return",
+          "print_only"
+        ],
+        "evidence_ids": [
+          "B21",
+          "B20"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "没有下层运行结果",
+        "run": "NOT_RUN"
+      }
+    ],
+    "merge_transition_matrix": [
+      {
+        "id": "BM01",
+        "claim": "只有前段end等于后段start且掩码一致才合并",
+        "source_fact_keys": [
+          "merge_guard"
+        ],
+        "evidence_ids": [
+          "B17"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "至少两条合法MR",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BM02",
+        "claim": "先保存old_start，memmove左移，再恢复start和缩减nr_range",
+        "source_fact_keys": [
+          "merge_move",
+          "merge_count"
+        ],
+        "evidence_ids": [
+          "B18",
+          "B19"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "数组搬移范围合法",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BM03",
+        "claim": "地址不相邻或掩码不同的记录保持分离",
+        "source_fact_keys": [
+          "merge_guard",
+          "merge_count"
+        ],
+        "evidence_ids": [
+          "B17",
+          "B19"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不会因为显示相同名字而合并",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BM04",
+        "claim": "提升先于相邻合并，故提升结果会影响合并条件",
+        "source_fact_keys": [
+          "promotion_phase",
+          "merge_guard"
+        ],
+        "evidence_ids": [
+          "A26",
+          "B17"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "after_bootmem假且查询有效",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "BM05",
+        "claim": "i--后由for的i++重新考察当前位置",
+        "source_fact_keys": [
+          "merge_move",
+          "merge_count"
+        ],
+        "evidence_ids": [
+          "B18",
+          "B19"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "每次nr_range下降且索引合法",
+        "run": "NOT_RUN"
+      }
+    ]
+  },
+  "G03": {
+    "mapping_request_matrix": [
+      {
+        "id": "CR01",
+        "claim": "局部mr先清零、ret初始0，随后split(...,0,start,end)",
+        "source_fact_keys": [
+          "local_state",
+          "call_split"
+        ],
+        "evidence_ids": [
+          "C01",
+          "C02"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不代表下层效果成功",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CR02",
+        "claim": "每条MR参数被宏转发至真实__kernel_physical_mapping_init接口并带init=true",
+        "source_fact_keys": [
+          "each_request",
+          "mapping_macro",
+          "lower_signature"
+        ],
+        "evidence_ids": [
+          "C03",
+          "C05",
+          "C06"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "仅核接口不审递归内部",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CR03",
+        "claim": "循环每次覆盖ret，最终返回最后一次ret右移12而非所有请求总和",
+        "source_fact_keys": [
+          "each_request",
+          "last_return"
+        ],
+        "evidence_ids": [
+          "C03",
+          "C04"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "callee每次返回且循环结束",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CR04",
+        "claim": "下层入口先设paddr_last=end并最终返回它可能被更新的值",
+        "source_fact_keys": [
+          "lower_initial",
+          "lower_return"
+        ],
+        "evidence_ids": [
+          "C07",
+          "C08"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "初值不证明区间实际全部映射",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CR05",
+        "claim": "无保存区间时循环跳过且ret保持0",
+        "source_fact_keys": [
+          "local_state",
+          "each_request",
+          "last_return"
+        ],
+        "evidence_ids": [
+          "C01",
+          "C03",
+          "C04"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "正常空nr_range",
+        "run": "NOT_RUN"
+      }
+    ],
+    "return_and_accounting_matrix": [
+      {
+        "id": "CT01",
+        "claim": "按memory整页PFN区间遍历而非memory减reserved的free集合",
+        "source_fact_keys": [
+          "range_initial",
+          "iterator_macro",
+          "iterator_scan"
+        ],
+        "evidence_ids": [
+          "C09",
+          "C17",
+          "C19"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "memblock和PFN有效",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CT02",
+        "claim": "PFN转字节再clamp到请求上下界，start不小于end时跳过",
+        "source_fact_keys": [
+          "range_clamp",
+          "pfn_phys",
+          "clamp_val",
+          "clamp_t"
+        ],
+        "evidence_ids": [
+          "C10",
+          "C14",
+          "C15",
+          "C16"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "r_start不大于r_end",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CT03",
+        "claim": "请求每个有效交集后加end-start，返回的是请求字节累计而非真实成功映射字节",
+        "source_fact_keys": [
+          "range_account",
+          "range_return"
+        ],
+        "evidence_ids": [
+          "C11",
+          "C12"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "下层callee正常返回",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CT04",
+        "claim": "__next_mem_pfn_range忽略无法组成完整页的区段，完成设idx=-1",
+        "source_fact_keys": [
+          "iterator_scan",
+          "iterator_stop",
+          "iterator_publish"
+        ],
+        "evidence_ids": [
+          "C19",
+          "C20",
+          "C21"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "源memory记录合法",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CT05",
+        "claim": "memory洞可导致请求字节累计小于总跨度",
+        "source_fact_keys": [
+          "range_clamp",
+          "range_account"
+        ],
+        "evidence_ids": [
+          "C10",
+          "C11"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "声明分散不重叠memory样本",
+        "run": "NOT_RUN"
+      }
+    ],
+    "boot_order_and_boundary_matrix": [
+      {
+        "id": "CB01",
+        "claim": "顶层先探测页大小，再由max_pfn构造end并请求ISA区间",
+        "source_fact_keys": [
+          "top_probe",
+          "max_pfn_upstream",
+          "top_isa"
+        ],
+        "evidence_ids": [
+          "C23",
+          "C35",
+          "C24"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "上游max_pfn已有效",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CB02",
+        "claim": "memblock.bottom_up初始true，方向分支由真实状态读取决定",
+        "source_fact_keys": [
+          "bottomup_accessor",
+          "bottomup_initial",
+          "direction_gate"
+        ],
+        "evidence_ids": [
+          "C29",
+          "C30",
+          "C25"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "未穷尽其它写者",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CB03",
+        "claim": "bottom-up先请求kernel_end至end，再请求1MiB至kernel_end",
+        "source_fact_keys": [
+          "two_calls",
+          "pa_symbol",
+          "isa_end"
+        ],
+        "evidence_ids": [
+          "C26",
+          "C32",
+          "C31"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "端点是否正序需独立证明",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CB04",
+        "claim": "else中的top-down函数调用是注释，不是当前源码活动调用",
+        "source_fact_keys": [
+          "two_calls"
+        ],
+        "evidence_ids": [
+          "C26"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "只限定本函数及所读配置",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CB05",
+        "claim": "区间请求后调用myos_memory_map及设备callee",
+        "source_fact_keys": [
+          "devices_and_low",
+          "device_vbe",
+          "device_apic"
+        ],
+        "evidence_ids": [
+          "C27",
+          "C33",
+          "C34"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "设备初始化效果未审",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CB06",
+        "claim": "max_pfn大于max_low_pfn时才将后者置为max_pfn",
+        "source_fact_keys": [
+          "devices_and_low"
+        ],
+        "evidence_ids": [
+          "C27"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "值更新不是实际映射证明",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CB07",
+        "claim": "最后调用load_cr3然后__flush_tlb_all",
+        "source_fact_keys": [
+          "load_root"
+        ],
+        "evidence_ids": [
+          "C28"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "当前CR3或TLB硬件效果未测",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CB08",
+        "claim": "kernel_end高于end或低于ISA将产生方向反常的请求",
+        "source_fact_keys": [
+          "two_calls",
+          "range_clamp"
+        ],
+        "evidence_ids": [
+          "C26",
+          "C10"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不能假定clamp保障逆序安全",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CB09",
+        "claim": "ISA直接请求与逐memory区间的请求字节累计是两条不同调用路径",
+        "source_fact_keys": [
+          "top_isa",
+          "range_initial",
+          "range_account"
+        ],
+        "evidence_ids": [
+          "C24",
+          "C09",
+          "C11"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不能重复记为实际映射字节",
+        "run": "NOT_RUN"
+      }
+    ],
+    "cross_layer_boundary_matrix": [
+      {
+        "id": "CX01",
+        "claim": "全局候选、每项提升和临时MR掩码各有先行门",
+        "source_fact_keys": [
+          "probe_2m",
+          "promote_2m_write",
+          "two_save"
+        ],
+        "evidence_ids": [
+          "A03",
+          "A16",
+          "B11"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "候选不等于硬件叶",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CX02",
+        "claim": "单记录包含查询与逐memory整页迭代分别消费不同语义",
+        "source_fact_keys": [
+          "single_search",
+          "iterator_macro",
+          "range_account"
+        ],
+        "evidence_ids": [
+          "A19",
+          "C17",
+          "C11"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "MR79未证边界依旧",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CX03",
+        "claim": "bottom-up映射请求须合读memory洞和callee结果",
+        "source_fact_keys": [
+          "bottomup_accessor",
+          "range_clamp",
+          "range_account"
+        ],
+        "evidence_ids": [
+          "C29",
+          "C10",
+          "C11"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "不把请求累计当成功字节",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CX04",
+        "claim": "下层返回、CR3设置及TLB刷新是不同阶段",
+        "source_fact_keys": [
+          "load_root",
+          "lower_return"
+        ],
+        "evidence_ids": [
+          "C28",
+          "C08"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "未认证硬件效果",
+        "run": "NOT_RUN"
+      },
+      {
+        "id": "CX05",
+        "claim": "相同memory集合的两种访问分别有空计数/游标前置条件",
+        "source_fact_keys": [
+          "iterator_scan",
+          "search_enter"
+        ],
+        "evidence_ids": [
+          "C19",
+          "A21"
+        ],
+        "preconditions": "仅固定time源码静态结论；该行条件与文中先行存储、整数及callee正常返回限制合读",
+        "earliest_stop": "首个未证读取即停止",
+        "run": "NOT_RUN"
+      }
+    ]
+  },
+  "finite_model_cases": [
+    {
+      "id": "DM82-M01",
+      "scope": "A",
+      "input": "初始gb=1 mask=0，PSE0，1G0",
+      "expected": "结果gb=0 mask=0",
+      "source_fact_keys": [
+        "gb_default",
+        "global_mask",
+        "probe_2m",
+        "probe_1g_else"
+      ],
+      "evidence_ids": [
+        "A01",
+        "A02",
+        "A03",
+        "A05"
+      ],
+      "earliest_stop": "不作为真实CPU数据",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M02",
+      "scope": "A",
+      "input": "初始，PSE1，1G0",
+      "expected": "结果gb=0 mask=4",
+      "source_fact_keys": [
+        "gb_default",
+        "probe_2m",
+        "probe_1g_else",
+        "level_enum"
+      ],
+      "evidence_ids": [
+        "A01",
+        "A03",
+        "A05",
+        "A07"
+      ],
+      "earliest_stop": "仅隔离能力条件",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M03",
+      "scope": "A",
+      "input": "初始，PSE1，1G1",
+      "expected": "结果gb=1 mask=12",
+      "source_fact_keys": [
+        "probe_2m",
+        "probe_1g",
+        "level_enum"
+      ],
+      "evidence_ids": [
+        "A03",
+        "A04",
+        "A07"
+      ],
+      "earliest_stop": "硬件能力未实测",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M04",
+      "scope": "A",
+      "input": "初始，PSE0，1G1",
+      "expected": "结果gb=0 mask=0",
+      "source_fact_keys": [
+        "probe_2m",
+        "probe_1g_else",
+        "level_enum"
+      ],
+      "evidence_ids": [
+        "A03",
+        "A05",
+        "A07"
+      ],
+      "earliest_stop": "PSE条件先清gb",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M05",
+      "scope": "A",
+      "input": "第一次PSE1且1G1得mask12，第二次PSE0",
+      "expected": "第二次mask仍12而gb归0，体现旧OR位保留",
+      "source_fact_keys": [
+        "probe_2m",
+        "probe_1g",
+        "probe_1g_else"
+      ],
+      "evidence_ids": [
+        "A03",
+        "A04",
+        "A05"
+      ],
+      "earliest_stop": "是否重复调用未证",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M06",
+      "scope": "A",
+      "input": "MR[1MiB,3MiB)，memory单条[0,4MiB)且2M候选可用",
+      "expected": "取整区间[0,4MiB)包含，2M位可OR",
+      "source_fact_keys": [
+        "promote_2m_gate",
+        "promote_2m_write",
+        "single_containment"
+      ],
+      "evidence_ids": [
+        "A15",
+        "A16",
+        "A20"
+      ],
+      "earliest_stop": "memblock计数与指针合法",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M07",
+      "scope": "A",
+      "input": "memory两条[0,2MiB)和[2MiB,4MiB)，查询[0,4MiB)",
+      "expected": "首条不足覆盖end，查询返回false，不能提升",
+      "source_fact_keys": [
+        "single_search",
+        "single_containment",
+        "promote_2m_write"
+      ],
+      "evidence_ids": [
+        "A19",
+        "A20",
+        "A16"
+      ],
+      "earliest_stop": "两条尚未在memblock合并",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M08",
+      "scope": "A",
+      "input": "memory单条[0,4MiB)，reserved另有[2MiB,3MiB)，查询[0,4MiB)",
+      "expected": "此memory查询可true但不证明免费",
+      "source_fact_keys": [
+        "single_search",
+        "single_containment"
+      ],
+      "evidence_ids": [
+        "A19",
+        "A20"
+      ],
+      "earliest_stop": "reserved仅作未查询的隔离条件",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M09",
+      "scope": "A",
+      "input": "接近无符号最大值的区间向上取整发生回绕",
+      "expected": "不得以回绕后的值认证扩大范围合法",
+      "source_fact_keys": [
+        "round_up",
+        "round_down",
+        "cap_size"
+      ],
+      "evidence_ids": [
+        "A24",
+        "A25",
+        "A23"
+      ],
+      "earliest_stop": "最先停止在端点有效性",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M10",
+      "scope": "B",
+      "input": "start=4097 end=8193，mask12，PAGE4096",
+      "expected": "保存单区间[4096,8192) mask0，低端扩1，高端舍1",
+      "source_fact_keys": [
+        "limit_floor",
+        "head_bounds",
+        "tail4_save"
+      ],
+      "evidence_ids": [
+        "B07",
+        "B08",
+        "B16"
+      ],
+      "earliest_stop": "固定整数独立模型",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M11",
+      "scope": "B",
+      "input": "start=4096 end=8191，mask12",
+      "expected": "limit和start同为PFN1，保存0条",
+      "source_fact_keys": [
+        "limit_floor",
+        "split_return"
+      ],
+      "evidence_ids": [
+        "B07",
+        "B21"
+      ],
+      "earliest_stop": "不是证明实际映射0字节",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M12",
+      "scope": "B",
+      "input": "start0 end2MiB mask12",
+      "expected": "一段[0,2MiB) mask4",
+      "source_fact_keys": [
+        "two_save",
+        "tail2_save",
+        "level_enum"
+      ],
+      "evidence_ids": [
+        "B11",
+        "B15",
+        "A07"
+      ],
+      "earliest_stop": "无真实大页效果",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M13",
+      "scope": "B",
+      "input": "start0 end1GiB mask12",
+      "expected": "一段[0,1GiB) mask12",
+      "source_fact_keys": [
+        "one_bounds",
+        "one_save",
+        "level_enum"
+      ],
+      "evidence_ids": [
+        "B12",
+        "B13",
+        "A07"
+      ],
+      "earliest_stop": "候选优先级不等于硬件",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M14",
+      "scope": "B",
+      "input": "start4096 end2149584896 mask12",
+      "expected": "五段依次mask0,4,12,4,0；数值边界2MiB,1GiB,2GiB,2GiB+2MiB",
+      "source_fact_keys": [
+        "head_save",
+        "two_save",
+        "one_save",
+        "tail2_save",
+        "tail4_save"
+      ],
+      "evidence_ids": [
+        "B09",
+        "B11",
+        "B13",
+        "B15",
+        "B16"
+      ],
+      "earliest_stop": "仅有限数值",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M15",
+      "scope": "B",
+      "input": "同M14 start/end但mask0",
+      "expected": "先五段mask全0，合并后单条[4096,2149584896)",
+      "source_fact_keys": [
+        "merge_guard",
+        "merge_move",
+        "merge_count"
+      ],
+      "evidence_ids": [
+        "B17",
+        "B18",
+        "B19"
+      ],
+      "earliest_stop": "无实际页表变化",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M16",
+      "scope": "B",
+      "input": "start2MiB end1GiB+2MiB mask4",
+      "expected": "两段邻接且mask4，合并为一段",
+      "source_fact_keys": [
+        "two_save",
+        "tail2_save",
+        "merge_guard"
+      ],
+      "evidence_ids": [
+        "B11",
+        "B15",
+        "B17"
+      ],
+      "earliest_stop": "无运行测试",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M17",
+      "scope": "B",
+      "input": "MR0 end=2MiB,mask4；MR1 start=2MiB,mask8",
+      "expected": "掩码不同故不合并",
+      "source_fact_keys": [
+        "merge_guard"
+      ],
+      "evidence_ids": [
+        "B17"
+      ],
+      "earliest_stop": "输入MR均合法",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M18",
+      "scope": "B",
+      "input": "save_mr入参nr_range=5且start_pfn<end_pfn",
+      "expected": "先执行panic调用；若其返回则后面的索引无有效第6元素",
+      "source_fact_keys": [
+        "save_guard",
+        "save_count",
+        "capacity"
+      ],
+      "evidence_ids": [
+        "B04",
+        "B05",
+        "B01"
+      ],
+      "earliest_stop": "不声称panic必不返回",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M19",
+      "scope": "B",
+      "input": "start=end=4096",
+      "expected": "PFN端点相等，保存0段",
+      "source_fact_keys": [
+        "limit_floor",
+        "tail4_save",
+        "split_return"
+      ],
+      "evidence_ids": [
+        "B07",
+        "B16",
+        "B21"
+      ],
+      "earliest_stop": "不推断任何后续映射成功",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M20",
+      "scope": "B",
+      "input": "start或end在ulong高端发生取整回绕",
+      "expected": "只能保留原始模算术，正常覆盖论证停止",
+      "source_fact_keys": [
+        "round_up",
+        "round_down"
+      ],
+      "evidence_ids": [
+        "A24",
+        "A25"
+      ],
+      "earliest_stop": "最早端点回绕",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M21",
+      "scope": "B",
+      "input": "MR mask同时含2M和1G位",
+      "expected": "page_size_string返回1G文字，不证明1G叶项",
+      "source_fact_keys": [
+        "display_preference",
+        "one_save"
+      ],
+      "evidence_ids": [
+        "A27",
+        "B13"
+      ],
+      "earliest_stop": "仅显示行为",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M22",
+      "scope": "C",
+      "input": "split返回nr_range=0",
+      "expected": "for不执行，ret初值0，返回0PFN",
+      "source_fact_keys": [
+        "local_state",
+        "call_split",
+        "each_request",
+        "last_return"
+      ],
+      "evidence_ids": [
+        "C01",
+        "C02",
+        "C03",
+        "C04"
+      ],
+      "earliest_stop": "合法下层未被调用",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M23",
+      "scope": "C",
+      "input": "两段下层依次返回物理端点4096和8192",
+      "expected": "最终return8192>>12=2，不是两个结果总和",
+      "source_fact_keys": [
+        "each_request",
+        "last_return"
+      ],
+      "evidence_ids": [
+        "C03",
+        "C04"
+      ],
+      "earliest_stop": "仅隔离下层返回",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M24",
+      "scope": "C",
+      "input": "memory两段[0,8192)、[16384,24576)，请求[0,24576)",
+      "expected": "请求字节累计8192+8192=16384，空洞不计",
+      "source_fact_keys": [
+        "range_clamp",
+        "range_account",
+        "iterator_macro"
+      ],
+      "evidence_ids": [
+        "C10",
+        "C11",
+        "C17"
+      ],
+      "earliest_stop": "底层callee均正常返回",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M25",
+      "scope": "C",
+      "input": "memory[0,8192)，请求[4096,12288)",
+      "expected": "交集[4096,8192)，请求累计4096字节",
+      "source_fact_keys": [
+        "range_clamp",
+        "range_account",
+        "clamp_val"
+      ],
+      "evidence_ids": [
+        "C10",
+        "C11",
+        "C15"
+      ],
+      "earliest_stop": "上界有序",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M26",
+      "scope": "C",
+      "input": "memblock.memory有效但cnt=0",
+      "expected": "迭代器置idx=-1，无交集，本次累计0",
+      "source_fact_keys": [
+        "iterator_scan",
+        "iterator_stop",
+        "range_initial"
+      ],
+      "evidence_ids": [
+        "C19",
+        "C20",
+        "C09"
+      ],
+      "earliest_stop": "不借memblock_search的空表风险混同此iterator",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M27",
+      "scope": "C",
+      "input": "memblock_bottom_up返回false且callee正常",
+      "expected": "仍请求ISA，跳过两次bottom-up后走设备及CR3阶段",
+      "source_fact_keys": [
+        "direction_gate",
+        "two_calls",
+        "top_isa",
+        "devices_and_low",
+        "load_root"
+      ],
+      "evidence_ids": [
+        "C25",
+        "C26",
+        "C24",
+        "C27",
+        "C28"
+      ],
+      "earliest_stop": "top-down else只有注释",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M28",
+      "scope": "C",
+      "input": "bottom_up=true，但kernel_end>end",
+      "expected": "第一范围方向反常，不能推断两次请求都正常建立",
+      "source_fact_keys": [
+        "direction_gate",
+        "two_calls",
+        "pa_symbol"
+      ],
+      "evidence_ids": [
+        "C25",
+        "C26",
+        "C32"
+      ],
+      "earliest_stop": "止于第一次无效反向范围",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M29",
+      "scope": "C",
+      "input": "内层对非空区间返回端点0，但函数仍正常返回",
+      "expected": "范围调用者仍按end-start累计请求字节，不校对实际返回值",
+      "source_fact_keys": [
+        "range_account",
+        "range_return",
+        "last_return"
+      ],
+      "evidence_ids": [
+        "C11",
+        "C12",
+        "C04"
+      ],
+      "earliest_stop": "不宣称内核已成功映射",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "DM82-M30",
+      "scope": "C",
+      "input": "init_memory_mapping end=0，start=0",
+      "expected": "调试打印end-1为ulong高端值；范围可能空，返回值仍须按callee/段数论证",
+      "source_fact_keys": [
+        "call_split",
+        "last_return"
+      ],
+      "evidence_ids": [
+        "C02",
+        "C04"
+      ],
+      "earliest_stop": "日志不是映射证明",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 30,
+  "finite_models_by_scope": {
+    "A": 9,
+    "B": 12,
+    "C": 9
+  },
+  "technical_matrix_count": 9,
+  "technical_matrix_rows": 57,
+  "methods": {
+    "source_quote_anchors": 87,
+    "source_files": 13,
+    "content_support_count": 87,
+    "source_content_support": "Each matrix/model fact key resolves to source_fact_index entry with actual source path::symbol, exact source quote, evidence ID and literal contained in that quote. No label-only support.",
+    "independent_models_not_kernel_execution": true,
+    "all_87_quotes_reopened_before_publication": "YES_87_OF_87_AT_FIXED_TIME",
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "narrative_fact_key_quote_groups_checked": 25,
+    "matrix_rows_source_content_checked": 57,
+    "finite_models_source_content_checked": 30,
+    "graph_nodes_source_content_checked": 46,
+    "graph_edges_source_content_checked": 63,
+    "findings_source_content_checked": 8,
+    "semantic_content_support_audit": "PASS_LOCAL_STATIC_CONTENT_MATCH_AND_AUTHOR_REASONING_CHECK_NOT_FULL_P9"
+  },
+  "mainline_acceptance": "PENDING",
+  "acceptance_ceiling": "PASS_PENDING_LOCAL",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "DM82-U01..U10 in deferred-findings.yaml"
+  ]
+}

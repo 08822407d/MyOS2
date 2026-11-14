@@ -1,0 +1,108 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-EXECUTION-HANDOFF-06
+phase: LOCAL_ACCEPT
+record_type: deferred_findings_increment
+produced_by: Claude Code desktop app (Code tab), local session
+model: unknown_or_not_attestable
+model_declared_by_runtime: claude-opus-5-5
+date: '2026-10-25'
+policy_ref: agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md（agent/MYOS2-LEAD-002）
+policy_status: ACTIVE_RECORD_FIRST_OWNER_REPAIR_DEFERRED
+owner_action_now: none
+owner_decisions_requested_now: []
+kernel_change_authorized: false
+scope: 只登记本次本地接手中发现的交接/环境类普通问题；不涉及内核缺陷，不复制旧问题全文，不改旧条目。
+empty_set_statement: 本批集合非空：4 项。范围限于 L00–L04 实际接触的对象与记录；没有登记的部分不等于已确认无问题。
+counts:
+  findings: 4
+  findings_by_status:
+    superseded_interpretation: 1
+    needs_evidence: 1
+    deferred_owner_not_ready: 2
+findings:
+- qualified_id: CORE-EXECUTION-HANDOFF-06::LA-01
+  id: LA-01
+  title: 云端HANDOFF所记master短号是其本地旧视图
+  kind: [documentation_erratum]
+  status: superseded_interpretation
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    commit: 9c36fb3ba7ff
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/HANDOFF.md
+    entry_id: "§2 C01表“其他引用”行、front matter base_snapshot"
+  claim: 云端HANDOFF写“本地 master 与 origin/master 均为 de3bb1df906a”；本机新clone读到的 origin/master 为 e8e60cd19540（PR #18 合并，2026-10-15），de3bb1df906a 是其祖先。
+  premises: [云端容器的 origin/master 在 2026-10-15（e8e60cd19540 合并）之后没有更新；更早是否取过远端无法从仓库判断。]
+  impact: 只影响交接文件对 master 的描述；执行成果不以 master 为准，05 检查器不读 master，L01/L02 结论不受影响。
+  counter_evidence: []
+  unknown: [云端容器收尾时是否执行过 fetch。]
+  evidence:
+    records: [local/records/l01_identity.json（refs.master_remote、cloud_master_view_is_ancestor_of_master、master_commits_after_cloud_view）]
+  ai_suggestion: 以后引用 master 状态时以当时远端读取为准，不沿用交接文件中的值。
+  correction: 以本记录为准；cloud/HANDOFF.md 原件冻结不改。
+  reopen_conditions: none
+  blocks: {static_work: false, future_runtime_work: false}
+- qualified_id: CORE-EXECUTION-HANDOFF-06::LA-02
+  id: LA-02
+  title: 早期批次云端scratch未逐文件清点，05其余生成器未保全
+  kind: [evidence_gap]
+  status: needs_evidence
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    commit: 9c36fb3ba7ff
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/HANDOFF.md
+    entry_id: "§3 C02表末行与“未保全的生成器文件”"
+  claim: 云端逐个文件看过 05 的 scratch，另核对了 integ03/rbtool 下两件回读工具与 c17/c19 任务书副本；其余更早目录（pilot-work、core-work、raw、recheck-runs、recheck02、order02、integ03 其余部分、mm04、reread-1001）只记了目录名（CLOUD_SCRATCH_NOT_INVENTORIED）。05 生成器 18 个文件只保全 3 个，探针驱动保全 1 个；docs 模式 scope_docs.json 与三条文档提交回读也未保全。
+  premises: [云端容器回收后 scratch 不保留（HANDOFF §6）。]
+  impact: 依赖这些 scratch 的逐步复现（例如 04 生成器、05 模板渲染）以后可能无法逐字重做；已入库正文、YAML 与检查记录不因此判为丢失。
+  counter_evidence: [05 检查器只读入库文件与固定 Git 对象，不读 scratch；本机复核两份输出已与冻结记录逐字节一致（local/records/l02_compare.json）。]
+  unknown: [云端容器目前是否仍可访问；未清点目录中是否有独有文本。]
+  evidence:
+    records: [local/records/l01_identity.json（cloud_handoff、cloud_assets）]
+  ai_suggestion: 若云会话仍可用且另获授权，只做目录清单比对与小型文本保全；不需要为此重跑研究。
+  future_verification: 本轮不要求；需要时另立任务。
+  reopen_conditions: 后续任务需要逐字复现 04/05 生成过程，或发现入库资料与 scratch 版本不一致。
+  blocks: {static_work: false, future_runtime_work: "仅阻塞依赖缺失 scratch 的逐字复现"}
+- qualified_id: CORE-EXECUTION-HANDOFF-06::LA-03
+  id: LA-03
+  title: 本机工具版本与云端不同
+  kind: [limited_host_observation]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    commit: "随本记录所在提交（本文件不自引用）"
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02_compare.json
+    entry_id: versions
+  claim: 本机为 git 2.53.0、Python 3.14.4、PyYAML 6.0.3（系统 dist-packages）；云端记录为 git 2.43.0、Python 3.11.15、PyYAML 6.0.1。
+  premises: [版本来自本机实际查询与 cloud/HANDOFF.md §6。]
+  impact: 本次 05 复核两份输出与冻结记录逐字节一致，未观察到版本影响；其他旧脚本（未运行）在新版本下的行为未知。
+  counter_evidence: [local/records/l02_compare.json outputs_vs_frozen 两项 byte_identical 为 true。]
+  unknown: [旧 C/ASM 夹具、构建脚本在本机的行为——本轮禁止运行，不推断。]
+  evidence:
+    records: [local/records/l02/run.json, local/records/l02_compare.json]
+  ai_suggestion: 以后若获准运行其他旧 Python 检查器，先在记录中写版本，并与冻结输出逐字节比较。
+  reopen_conditions: 以后获准运行旧脚本或夹具时。
+  blocks: {static_work: false, future_runtime_work: "以后若获运行授权需先单独核环境"}
+- qualified_id: CORE-EXECUTION-HANDOFF-06::LA-04
+  id: LA-04
+  title: 会话默认目录是原开发工作树而非空目录
+  kind: [limited_host_observation]
+  status: deferred_owner_not_ready
+  owner_action_now: none
+  source_ref:
+    branch: claude/dazzling-cori-q0dnyt
+    commit: "随本记录所在提交（本文件不自引用）"
+    path: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/RECEIPT.md
+    entry_id: "§2 L00"
+  claim: Owner转发的启动块说“当前空目录用于接手”，但本会话的工作目录是原开发工作树（time 分支，非空）。20 号 L00 原文为“新目录若已有文件就换一个新的子目录，不覆盖”；在原工作树内建子目录会留下未跟踪文件、违反“不改动原开发工作树”，因此有意偏离字面，改在其同级新建空目录 /home/cheyh/projs/myos2-handoff06-local/ 并在其中 clone。
+  premises: [原工作树不得 checkout/pull/stash/reset/clean 或写入。]
+  impact: 只是本机路径与合同字面不同；仓库、分支、PR 与写区不变。
+  counter_evidence: []
+  unknown: [Owner 是否另有预备的空目录。]
+  evidence:
+    records: [local/records/l01_identity.json（repo_root）]
+  ai_suggestion: 以后的本地任务从专用空目录启动会话，可免去这一偏离。
+  reopen_conditions: none
+  blocks: {static_work: false, future_runtime_work: false}

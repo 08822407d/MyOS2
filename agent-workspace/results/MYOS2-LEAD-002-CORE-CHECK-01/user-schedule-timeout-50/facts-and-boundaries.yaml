@@ -1,0 +1,356 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-SCHEDULE-TIMEOUT-50",
+  "source_pin_short12": "a039d9803ade",
+  "record_type": "schedule_timeout_facts_with_R49_01_correction",
+  "R49_01": {
+    "prior_49_verdict": "RETURN",
+    "status": "OPEN",
+    "request": "R49-01_DOCUMENTATION_CLOSURE_REQUESTED",
+    "not_closed_by_executor": true,
+    "original_49_modified": false
+  },
+  "correction_anchor_count": 7,
+  "independent_schedule_anchor_count": 31,
+  "prior_36_36_claim": "historical_not_fully_revalidated",
+  "correction_matrix": [
+    {
+      "old": "E01",
+      "issue": "struct completion前向声明与typedef混记",
+      "repair": "C49-A01",
+      "consumers": "W01; facts CW49-T01",
+      "limit": "前向声明仅CONTEXT"
+    },
+    {
+      "old": "E12",
+      "issue": "旧片段实际位于do_wait_for_common 59–63，而非wait_for_common",
+      "repair": "C49-A02/C49-A03/C49-A05",
+      "consumers": "W02 wrapper; facts T05/T07; wait_matrix entry/public-return; DOT wrapper/lock/wunlock",
+      "limit": "旧E12不得证明wrapper锁、实参或返回"
+    },
+    {
+      "old": "E13",
+      "issue": "旧片段位于DEBUG extern区，不是do_wait定义",
+      "repair": "C49-A04/C49-A05/C49-A06",
+      "consumers": "W02快慢路径; facts T06/T07; wait_matrix gate/slow/exit; DOT gate/fast/make",
+      "limit": "旧E13降为CONTEXT"
+    },
+    {
+      "old": "W02与return",
+      "issue": "long wrapper和void公开接口分层",
+      "repair": "C49-A02/C49-A03/C49-A06/C49-A07",
+      "consumers": "W02；facts T05/T07; wait_matrix public-return; DOT rvoid",
+      "limit": "不能当worker errno"
+    },
+    {
+      "old": "49 DOT节点",
+      "issue": "原图正确结构不弥补错误引文",
+      "repair": "C49-A02..A07",
+      "consumers": "wrapper/lock/gate/fast/make/wunlock/rvoid",
+      "limit": "只提供外置证据修正，不重画49原图"
+    },
+    {
+      "old": "49 MANIFEST 36/36",
+      "issue": "原标签数量自报成立但P2定义归属至少E12/E13失败",
+      "repair": "C49新增7条",
+      "consumers": "原49 MANIFEST及评论6681100222;本批独立计数",
+      "limit": "未重核其余34项不追认"
+    }
+  ],
+  "schedule_timeout": [
+    {
+      "input": "MAX=LONG_MAX",
+      "active": "schedule(); goto out;",
+      "normal_return": "original LONG_MAX",
+      "direct_schedule_calls": 1,
+      "evidence": [
+        "ST50-A04",
+        "ST50-A05",
+        "ST50-A11",
+        "ST50-A26"
+      ]
+    },
+    {
+      "input": "negative",
+      "active": "__set_current_state(TASK_RUNNING); goto out;",
+      "normal_return": "0",
+      "direct_schedule_calls": 0,
+      "evidence": [
+        "ST50-A06",
+        "ST50-A07",
+        "ST50-A11"
+      ]
+    },
+    {
+      "input": "0..LONG_MAX-1",
+      "active": "expire=timeout+jiffies; setup; __mod_timer; del_timer_sync; destroy",
+      "normal_return": "original nonnegative input",
+      "direct_schedule_calls": 0,
+      "commented_call": "// schedule();",
+      "evidence": [
+        "ST50-A08",
+        "ST50-A09",
+        "ST50-A10",
+        "ST50-A11"
+      ]
+    }
+  ],
+  "timer_layers": [
+    {
+      "stage": "local object",
+      "claim": "proc_timer_s has timer/task; timer_list has entry/expires/function/flags",
+      "evidence": [
+        "ST50-A01",
+        "ST50-A16"
+      ]
+    },
+    {
+      "stage": "setup",
+      "claim": "task=current then setup_on_stack routes simple_init_timer_key",
+      "evidence": [
+        "ST50-A09",
+        "ST50-A12",
+        "ST50-A17"
+      ]
+    },
+    {
+      "stage": "register request",
+      "claim": "__mod_timer int-return not consumed",
+      "evidence": [
+        "ST50-A09",
+        "ST50-A30",
+        "ST50-A31"
+      ]
+    },
+    {
+      "stage": "callback candidate",
+      "claim": "from_timer is container_of, process_timeout issues wake_up_process on legal callback",
+      "evidence": [
+        "ST50-A02",
+        "ST50-A15"
+      ],
+      "status": "only_if_dispatched"
+    },
+    {
+      "stage": "delete/destroy",
+      "claim": "del_timer_sync aliases timer_delete_sync; returned int not used; destroy_timer_on_stack empty",
+      "evidence": [
+        "ST50-A10",
+        "ST50-A13",
+        "ST50-A14",
+        "ST50-A18"
+      ]
+    },
+    {
+      "stage": "return",
+      "claim": "only out expression, never computed remaining jiffies",
+      "evidence": [
+        "ST50-A11"
+      ]
+    }
+  ],
+  "expiry_math": {
+    "timeout_type": "long",
+    "expire_type": "ulong=unsigned long",
+    "jiffies_decl": "extern volatile ulong CONTEXT, not a verified variable definition",
+    "conditional_C_rule": "signed long converted to unsigned long; addition modulo 2^W",
+    "width": "64 only in models",
+    "formula": "(unsigned_long(timeout)+jiffies_observed) mod 2^W",
+    "return_dependency": "none; return uses unchanged timeout",
+    "limits": "ABI/link/time sampling unknown"
+  },
+  "completion_consumer": {
+    "wrapper_evidence": [
+      "C49-A02",
+      "C49-A03",
+      "C49-A07"
+    ],
+    "rule": "public done0 action=MAX; if normal schedule returns and done remains0, nonzero MAX keeps waiting; generic action0/negative models do not prove public return values",
+    "limits": "actual task wake/return not certified"
+  },
+  "msleep_consumer": {
+    "evidence": [
+      "ST50-A19",
+      "ST50-A20",
+      "ST50-A21",
+      "ST50-A23",
+      "ST50-A24"
+    ],
+    "condition": "conversion=0 means skip; representable positive timeout remains unchanged on every normally completed finite iteration",
+    "limits": "real msec conversion and actual sleep not certified"
+  },
+  "finite_models": [
+    {
+      "id": "ST50-M1",
+      "input": "-2",
+      "branch": "negative",
+      "source_normal_return": "0",
+      "direct_schedule_calls": 0,
+      "timer_operations_each": 0,
+      "model": "W64, all prior callees normally return, no undefined behavior; not kernel runtime"
+    },
+    {
+      "id": "ST50-M2",
+      "input": "-1",
+      "branch": "negative",
+      "source_normal_return": "0",
+      "direct_schedule_calls": 0,
+      "timer_operations_each": 0,
+      "model": "W64, all prior callees normally return, no undefined behavior; not kernel runtime"
+    },
+    {
+      "id": "ST50-M3",
+      "input": "0",
+      "branch": "finite",
+      "source_normal_return": "0",
+      "direct_schedule_calls": 0,
+      "timer_operations_each": 1,
+      "model": "W64, all prior callees normally return, no undefined behavior; not kernel runtime"
+    },
+    {
+      "id": "ST50-M4",
+      "input": "1",
+      "branch": "finite",
+      "source_normal_return": "1",
+      "direct_schedule_calls": 0,
+      "timer_operations_each": 1,
+      "model": "W64, all prior callees normally return, no undefined behavior; not kernel runtime"
+    },
+    {
+      "id": "ST50-M5",
+      "input": "5",
+      "branch": "finite",
+      "source_normal_return": "5",
+      "direct_schedule_calls": 0,
+      "timer_operations_each": 1,
+      "model": "W64, all prior callees normally return, no undefined behavior; not kernel runtime"
+    },
+    {
+      "id": "ST50-M6",
+      "input": "LONG_MAX-1",
+      "branch": "finite",
+      "source_normal_return": "9223372036854775806",
+      "direct_schedule_calls": 0,
+      "timer_operations_each": 1,
+      "model": "W64, all prior callees normally return, no undefined behavior; not kernel runtime"
+    },
+    {
+      "id": "ST50-M7",
+      "input": "LONG_MAX",
+      "branch": "MAX",
+      "source_normal_return": "9223372036854775807",
+      "direct_schedule_calls": 1,
+      "timer_operations_each": 0,
+      "model": "W64, all prior callees normally return, no undefined behavior; not kernel runtime"
+    },
+    {
+      "id": "ST50-E1",
+      "timeout": "0",
+      "jiffies": "0",
+      "expire_unsigned64": "0",
+      "wrap": false,
+      "model": "hypothetical unsigned long width64, jiffies snapshot only; not CPU measurement"
+    },
+    {
+      "id": "ST50-E2",
+      "timeout": "1",
+      "jiffies": "2",
+      "expire_unsigned64": "3",
+      "wrap": false,
+      "model": "hypothetical unsigned long width64, jiffies snapshot only; not CPU measurement"
+    },
+    {
+      "id": "ST50-E3",
+      "timeout": "5",
+      "jiffies": "18446744073709551615",
+      "expire_unsigned64": "4",
+      "wrap": true,
+      "model": "hypothetical unsigned long width64, jiffies snapshot only; not CPU measurement"
+    },
+    {
+      "id": "ST50-E4",
+      "timeout": "9223372036854775806",
+      "jiffies": "1",
+      "expire_unsigned64": "9223372036854775807",
+      "wrap": false,
+      "model": "hypothetical unsigned long width64, jiffies snapshot only; not CPU measurement"
+    },
+    {
+      "id": "ST50-E5",
+      "timeout": "9223372036854775806",
+      "jiffies": "9223372036854775810",
+      "expire_unsigned64": "0",
+      "wrap": true,
+      "model": "hypothetical unsigned long width64, jiffies snapshot only; not CPU measurement"
+    },
+    {
+      "id": "ST50-C1",
+      "premise": "public done=0 and action MAX returns",
+      "local_consequence": "if done remains0, !done && MAX is true; no zero timeout producer",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C2",
+      "premise": "public done>0",
+      "local_consequence": "fast path bypasses schedule_timeout",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C3",
+      "premise": "public waiter after MAX action sees done>0",
+      "local_consequence": "if normally reacquires lock, may consume one non-saturated done",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C4",
+      "premise": "generic action 0/negative",
+      "local_consequence": "abstract do_wait model only, not public MAX schedule_timeout value",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C5",
+      "premise": "msleep conversion=0",
+      "local_consequence": "while skipped",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C6",
+      "premise": "msleep conversion positive <LONG_MAX",
+      "local_consequence": "normal schedule_timeout returns same positive each completed iteration, no countdown",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C7",
+      "premise": "msleep conversion=LONG_MAX",
+      "local_consequence": "normal active schedule() then still returns MAX; loop remains positive",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C8",
+      "premise": "callback dispatched to proc_timer_s",
+      "local_consequence": "only request wake_up_process, no actual run guarantee",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C9",
+      "premise": "schedule_timeout(0)",
+      "local_consequence": "normal timer setup/mod/delete/destroy path then return0 without direct schedule",
+      "model": "conditional source control, NOT_RUN"
+    },
+    {
+      "id": "ST50-C10",
+      "premise": "timer callee does not return",
+      "local_consequence": "later cleanup and normal return not established",
+      "model": "conditional source control, NOT_RUN"
+    }
+  ],
+  "finite_model_count": 22,
+  "prior_related_id": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-03",
+  "prior_case_id": "V09",
+  "prior_observation_class": "bounded HOST_ORIGINAL_SLICE fixture not rerun; no duplicate ST50-F same root",
+  "limits": [
+    "actual timer wheel/scheduler/callback/object life opaque",
+    "ABI/clock/msecs-to-jiffies effects conditional",
+    "no C/ASM/scripts/preprocessor/build/QEMU/hardware, no full P9"
+  ]
+}

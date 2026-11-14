@@ -1,0 +1,792 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-WAIT-WAKE-CONSISTENCY-52",
+  "record_type": "bounded_A_B_C_source_facts_and_models",
+  "source_pin_short12": "a039d9803ade",
+  "scope": {
+    "phase": 2,
+    "executor": "MYOS2-LEAD-002-CHAT-EXEC-06",
+    "subjects": {
+      "A": "completed_in_scope",
+      "B": "completed_in_scope",
+      "C": "completed_in_scope"
+    },
+    "runtime_evidence": "NOT_RUN",
+    "mainline_acceptance": "PENDING"
+  },
+  "input_status": {
+    "batch51": "PASS_PENDING_LOCAL",
+    "batch50": "PASS_PENDING_LOCAL",
+    "batch49": "PASS_PENDING_LOCAL combined after R49-01 documentation closure",
+    "mandatory": [
+      "R51-S01",
+      "R51-S02",
+      "R50-S01",
+      "R50-S02",
+      "R49C-S01"
+    ],
+    "old_review_reopened": false
+  },
+  "source_ledger": [
+    {
+      "key": "swt",
+      "path": "mykernel/kactive/swait/swait_types.h",
+      "blob_short12": "5ce44773eda2",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 17
+    },
+    {
+      "key": "sw",
+      "path": "mykernel/kactive/swait/swait.c",
+      "blob_short12": "b97d3e347bed",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 66
+    },
+    {
+      "key": "dl",
+      "path": "mykernel/lib/list/double_list.h",
+      "blob_short12": "6e3e1aa8e724",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 695
+    },
+    {
+      "key": "dlm",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "blob_short12": "985a8262e578",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 353
+    },
+    {
+      "key": "dlt",
+      "path": "mykernel/lib/list/double_list_types.h",
+      "blob_short12": "2ef93df3fe63",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 18
+    },
+    {
+      "key": "ch",
+      "path": "mykernel/kactive/completion/completion.h",
+      "blob_short12": "7695d432946a",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 84
+    },
+    {
+      "key": "cc",
+      "path": "mykernel/kactive/completion/completion.c",
+      "blob_short12": "422ed6eee18b",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 55
+    },
+    {
+      "key": "sem",
+      "path": "mykernel/lock_IPC/semaphore/semaphore.c",
+      "blob_short12": "bab1d368ce97",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 212
+    },
+    {
+      "key": "semh",
+      "path": "mykernel/lock_IPC/semaphore/semaphore.h",
+      "blob_short12": "5f4a3fbd2ecb",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 86
+    },
+    {
+      "key": "timer",
+      "path": "mykernel/time/timer/timer.c",
+      "blob_short12": "753350236555",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 873
+    },
+    {
+      "key": "th",
+      "path": "mykernel/time/timer/timer.h",
+      "blob_short12": "1e96e0e5aad5",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 179
+    },
+    {
+      "key": "tm",
+      "path": "mykernel/time/timer/timer_macro.h",
+      "blob_short12": "9def7fd021b6",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 29
+    },
+    {
+      "key": "kth",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "blob_short12": "4782afc6b3f2",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 363
+    },
+    {
+      "key": "dev",
+      "path": "mykernel/drivers/base/devtmpfs.c",
+      "blob_short12": "633678e473c0",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 446
+    },
+    {
+      "key": "init",
+      "path": "mykernel/init/main.c",
+      "blob_short12": "06a900f8d509",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 365
+    },
+    {
+      "key": "hash",
+      "path": "mykernel/lib/list/hash_list.h",
+      "blob_short12": "91330c9d43a6",
+      "read_ref": "time@a039d9803ade",
+      "read_scope": "complete_source_file",
+      "line_count": 288
+    }
+  ],
+  "supplementary_source_reads": [
+    {
+      "path": "mykernel/kactive/swait/swait_macro.h",
+      "blob_short12": "f3540a96dddf",
+      "read_scope": "complete_this_turn"
+    },
+    {
+      "path": "mykernel/time/timer/timer_const.h",
+      "blob_short12": "a486a06e7764",
+      "read_scope": "target flags plus complete_this_turn"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/ide.c",
+      "blob_short12": "39c36c8cc4f9",
+      "read_scope": "target direct caller ranges"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/MineOS_NVMe.c",
+      "blob_short12": "6602a0c42fcf",
+      "read_scope": "target direct caller ranges"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/myos_XHCI.c",
+      "blob_short12": "35ffad69b710",
+      "read_scope": "target direct caller ranges"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/keyboard.c",
+      "blob_short12": "a40b5c7e56b3",
+      "read_scope": "target direct caller ranges"
+    }
+  ],
+  "verified_anchor_count": 67,
+  "anchor_topics": {
+    "A": 22,
+    "B": 29,
+    "C": 16
+  },
+  "A": {
+    "object_model": "swqueue_hdr_s has lock+List_hdr_s task_list_hdr; waiter swqueue_s has task+List_s node; List_hdr_s has anchor+ulong count; semaphore uses ordinary List_s wait_list (different model)",
+    "expected_local_invariant": "for valid initialized counted list and no unmodeled mutation: count equals actual nodes traversable from anchor; empty/count0 agrees with anchor.next==anchor; linked node vs self-linked node distinguished",
+    "observed_source_separation": "list_header_add_to_tail increments count; swake_up_locked uses list_del_init (not counted delete); finish_swait skips counted delete when node has been self-linked",
+    "stop_condition": "after one wake: counted header count1 with zero linked nodes; second swake checks count nonzero and computes first_container(anchor.next==anchor), not a valid swqueue_s object",
+    "contrast": "unwoken __finish_swait linked node uses list_header_delete_node, which scans membership and decrements count; semaphore __up uses ordinary list_del and waiter.up flag, no separate header count",
+    "previous_root": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-04 (V02/V03/V11) already SUPPORTED_IN_SCOPE",
+    "not_established": "actual invalid dereference/crash, scheduler result, full memory ordering, global FIFO, lifetime or mis-locked crossqueue access"
+  },
+  "B": {
+    "source_object": "proc_timer_s local.timer has HList_s entry, ulong expires, function pointer, flags; local.task gets current before setup; simple_init_timer_key writes entry.pprev=NULL, callback function, flags masked/CPU composed; timer.expires written later in __mod_timer",
+    "mod_selection": "schedule_timeout passes MOD_TIMER_NOTPENDING: bypasses __mod_timer early pending optimization; idx starts UINT_MAX and is never set by skipped optimization branch, so successful path selects internal_add_timer (not precomputed enqueue branch)",
+    "mod_gates": "lock_timer_base uses flags to select base and lock, function NULL returns with ret initial0; detach_if_pending(false) yields0 if not pending,1 when pending; migration if base differs additionally requires running_timer!=timer; may set TIMER_MIGRATING/CPU flags; enqueue eventually writes hlist node",
+    "return_values": "__mod_timer int return describes prior pending/requeue status, not evidence callback fired; schedule_timeout ignores it",
+    "delete_selection": "del_timer_sync aliases timer_delete_sync, wrapper calls __timer_delete_sync(timer,false); __try returns -1 while running_timer same, else detach_if_pending(timer,base,true)->0/1; shutdown false does not clear function",
+    "delete_retry": "__timer_delete_sync loops while ret<0 and calls cpu_relax; negative one/multiple/nonnormal sequence do not prove actual progress or safe stack lifetime",
+    "schedule_consumption": "finite schedule_timeout does not actively schedule at commented call site; calls mod and del sequentially if preceding normal, destroy_timer_on_stack is empty inline (see prior fixed macro), returns original positive timeout",
+    "unknowns": [
+      "timer wheel/softirq callback dispatch",
+      "real jiffies progression",
+      "lock/per-cpu base correctness",
+      "external timer rearm and lifecycle",
+      "object lifetime and preprocessor/build"
+    ]
+  },
+  "C": {
+    "scan": {
+      "fixed_tree": "time@a039d9803ade/mykernel",
+      "recursive_tree_truncated": false,
+      "source_files_c": 205,
+      "c_files_read": 205,
+      "c_file_errors": 0,
+      "match_pattern": "\\b(down_timeout|msleep|wait_for_completion|complete|schedule_timeout)\\s*\\(",
+      "scope_limit": "only .c textual occurrences: not all 632 .h, macros, assembly, link/runtime; comments excluded from active-site claims",
+      "externally_in_c": "no external direct down_timeout or msleep invocation found among scanned .c; both definitions exist",
+      "commented_text_not_executed": true
+    },
+    "direct_caller_sites": [
+      {
+        "path": "mykernel/drivers/base/devtmpfs.c",
+        "blob_short12": "633678e473c0",
+        "calls": [
+          "wait_for_completion(&req->done)@102",
+          "complete(&req->done)@367",
+          "complete(&setup_done)@399",
+          "wait_for_completion(&setup_done)@429"
+        ],
+        "objects": [
+          "req.done",
+          "setup_done"
+        ],
+        "limits": "request object lifetime and worker startup conditions unknown"
+      },
+      {
+        "path": "mykernel/sched/forkexec/kthread.c",
+        "blob_short12": "4782afc6b3f2",
+        "calls": [
+          "complete(comp)@158",
+          "complete(done)@204",
+          "complete(done)@234",
+          "wait_for_completion(&done)@282"
+        ],
+        "objects": [
+          "local done",
+          "create->done",
+          "comp"
+        ],
+        "limits": "actual producer order and thread lifetime not globally certified"
+      },
+      {
+        "path": "mykernel/init/main.c",
+        "blob_short12": "06a900f8d509",
+        "calls": [
+          "complete(&kthreadd_done)@120",
+          "wait_for_completion(&kthreadd_done)@277"
+        ],
+        "objects": [
+          "kthreadd_done"
+        ],
+        "limits": "task scheduling not audited"
+      },
+      {
+        "path": "mykernel/arch/x86_64/myos/keyboard.c",
+        "blob_short12": "a40b5c7e56b3",
+        "calls": [
+          "complete(&getcode_done)@130",
+          "wait_for_completion(&getcode_done)@151"
+        ],
+        "objects": [
+          "getcode_done"
+        ],
+        "limits": "driver/build/runtime unknown"
+      },
+      {
+        "path": "mykernel/arch/x86_64/myos/ide.c",
+        "blob_short12": "39c36c8cc4f9",
+        "calls": [
+          "complete(node->done)@155",
+          "wait_for_completion(&done)@286"
+        ],
+        "objects": [
+          "node->done -> &done"
+        ],
+        "limits": "request ownership not audited"
+      },
+      {
+        "path": "mykernel/arch/x86_64/myos/MineOS_NVMe.c",
+        "blob_short12": "6602a0c42fcf",
+        "calls": [
+          "complete(node->done)@143",
+          "wait_for_completion(&done)@225"
+        ],
+        "objects": [
+          "node->done -> &done"
+        ],
+        "limits": "request ownership not audited"
+      },
+      {
+        "path": "mykernel/arch/x86_64/myos/myos_XHCI.c",
+        "blob_short12": "35ffad69b710",
+        "calls": [
+          "complete(node->done)@309",
+          "wait_for_completion(&done)@383"
+        ],
+        "objects": [
+          "node->done -> &done"
+        ],
+        "limits": "request ownership not audited"
+      },
+      {
+        "path": "mykernel/time/timer/timer.c",
+        "blob_short12": "753350236555",
+        "calls": [
+          "schedule_timeout entry@759",
+          "wrappers schedule_timeout(timeout)@815/822/829/840",
+          "msleep entry@852"
+        ],
+        "limits": "real scheduling only special MAX branch, finite timer path no direct active schedule"
+      },
+      {
+        "path": "mykernel/lock_IPC/semaphore/semaphore.h",
+        "blob_short12": "5f4a3fbd2ecb",
+        "calls": [
+          "timeout=schedule_timeout(timeout)@57"
+        ],
+        "limits": "helper in header, actual build preprocessing not certified"
+      },
+      {
+        "path": "mykernel/kactive/completion/completion.h",
+        "blob_short12": "7695d432946a",
+        "calls": [
+          "do_wait_for_common(...,schedule_timeout,...)@76"
+        ],
+        "limits": "function-pointer use not textual schedule_timeout(...) call; public wait is MAX, void"
+      }
+    ],
+    "contract_matrix": [
+      {
+        "entry": "complete(x)",
+        "producer": "completion.done increment unless saturated",
+        "queue": "swqueue counted header, swake plain unlink",
+        "timeout": "none directly",
+        "schedule_request": "try_to_wake_up request",
+        "return_to_caller": "void",
+        "status": "source + CA-04 bounded model"
+      },
+      {
+        "entry": "wait_for_completion(x)",
+        "producer": "consumes done if observed positive",
+        "queue": "prepare counted, finish may skip after self-link",
+        "timeout": "MAX_SCHEDULE_TIMEOUT",
+        "schedule_request": "schedule_timeout(MAX) calls schedule()",
+        "return_to_caller": "public void; internal long discarded",
+        "status": "source + R49/R50 restrictions"
+      },
+      {
+        "entry": "down_timeout(sem,long)",
+        "producer": "sem.count fast decrement or waiter.up grant",
+        "queue": "ordinary List_s, error exit list_del, success grant side list_del",
+        "timeout": "finite input only if supplied and count0",
+        "schedule_request": "___down_common calls schedule_timeout(timeout)",
+        "return_to_caller": "int 0, -ETIME; generic -EINTR not public uninterruptible gate",
+        "status": "source + R51 restrictions; no external .c direct caller seen"
+      },
+      {
+        "entry": "msleep(uint)",
+        "producer": "msecs_to_jiffies conversion",
+        "queue": "none directly",
+        "timeout": "ulong conversion then long argument, signed boundary conditional",
+        "schedule_request": "schedule_timeout_uninterruptible finite path lacks direct schedule()",
+        "return_to_caller": "void, loops on positive returned timeout",
+        "status": "source + CA-03; no external .c direct caller seen"
+      },
+      {
+        "entry": "devtmpfs setup_done",
+        "producer": "worker complete if mount success path reaches it",
+        "queue": "completion swait",
+        "timeout": "public MAX",
+        "schedule_request": "indirect MAX schedule",
+        "return_to_caller": "creator void wait, worker err not carried",
+        "status": "R48 bounds unchanged"
+      },
+      {
+        "entry": "devtmpfs req.done",
+        "producer": "worker sets req.err then complete and kfree(req)",
+        "queue": "completion swait",
+        "timeout": "public MAX",
+        "schedule_request": "indirect MAX schedule",
+        "return_to_caller": "submitter reads req.err; lifetime unverified",
+        "status": "owner/lifetime not audited"
+      }
+    ],
+    "classifications": [
+      {
+        "class": "REUSE",
+        "items": [
+          "R49C-S01 wrapper correction",
+          "R50-S01/S02 schedule_timeout finite/MAX",
+          "R51-S01/S02 semaphore grant/errno",
+          "CA-03 and CA-04 bounded historical root"
+        ]
+      },
+      {
+        "class": "NEW_LOCAL_EVIDENCE",
+        "items": [
+          "counted list remove helper vs swake plain deletion proven across actual bodies",
+          "MOD_TIMER_NOTPENDING skips early optimization and uses internal_add path under normal conditions",
+          "timer_delete_sync false/ret negative retry with pending and callback conditions",
+          "205/205 fixed .c direct-call text coverage and named completion caller map"
+        ]
+      },
+      {
+        "class": "LIMIT_OR_DOWNGRADE",
+        "items": [
+          "stale count does not prove actual invalid CPU dereference",
+          "timeout nondecrement does not prove all blocking impossible",
+          "lack of direct .c caller is not complete compiled or header call absence",
+          "one producer completed does not guarantee a particular waiter obtained done"
+        ]
+      },
+      {
+        "class": "RUNTIME_UNPROVEN",
+        "items": [
+          "real scheduler/timer callback/lock ordering",
+          "actual build configuration, 632 header/assembly callsites and reachability",
+          "object lifetimes and concurrent double frees, if any"
+        ]
+      }
+    ]
+  },
+  "finite_models": {
+    "count": 36,
+    "method": "pure_JS_abstract_transition_and_conditional_models_not_kernel_source_execution",
+    "cases": [
+      {
+        "id": "A01",
+        "description": "empty wake",
+        "steps": "empty_stop",
+        "observed": {
+          "count": 0,
+          "linked": [],
+          "linked_count": 0,
+          "count_equals_links": true
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A02",
+        "description": "one prepare",
+        "steps": "prepared_A",
+        "observed": {
+          "count": 1,
+          "linked": [
+            "A"
+          ],
+          "linked_count": 1,
+          "count_equals_links": true
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A03",
+        "description": "one wake",
+        "steps": "wake_request_A",
+        "observed": {
+          "count": 1,
+          "linked": [],
+          "linked_count": 0,
+          "count_equals_links": false
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A04",
+        "description": "wake then finish",
+        "steps": "skip_self_or_not_member",
+        "observed": {
+          "count": 1,
+          "linked": [],
+          "linked_count": 0,
+          "count_equals_links": false
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A05",
+        "description": "second wake without linked node",
+        "steps": "STOP:anchor_not_waiter",
+        "observed": {
+          "count": 1,
+          "linked": [],
+          "linked_count": 0,
+          "count_equals_links": false
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A06",
+        "description": "two waiters one wake",
+        "steps": "wake_request_A",
+        "observed": {
+          "count": 2,
+          "linked": [
+            "B"
+          ],
+          "linked_count": 1,
+          "count_equals_links": false
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A07",
+        "description": "two waiters third wake",
+        "steps": [
+          "wake_request_A",
+          "wake_request_B",
+          "STOP:anchor_not_waiter"
+        ],
+        "observed": {
+          "count": 2,
+          "linked": [],
+          "linked_count": 0,
+          "count_equals_links": false
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A08",
+        "description": "unwoken finish",
+        "steps": "counted_delete",
+        "observed": {
+          "count": 0,
+          "linked": [],
+          "linked_count": 0,
+          "count_equals_links": true
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A09",
+        "description": "double prepare while linked",
+        "steps": "no_second_append",
+        "observed": {
+          "count": 1,
+          "linked": [
+            "A"
+          ],
+          "linked_count": 1,
+          "count_equals_links": true
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A10",
+        "description": "reprepare after wake",
+        "steps": "reappend_increments_stale_count",
+        "observed": {
+          "count": 2,
+          "linked": [
+            "A"
+          ],
+          "linked_count": 1,
+          "count_equals_links": false
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A11",
+        "description": "unwoken waiter B cancelled after A wake",
+        "steps": "counted_delete",
+        "observed": {
+          "count": 1,
+          "linked": [],
+          "linked_count": 0,
+          "count_equals_links": false
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "A12",
+        "description": "wake then finish then new waiter",
+        "steps": "count_stale_remains",
+        "observed": {
+          "count": 2,
+          "linked": [
+            "B"
+          ],
+          "linked_count": 1,
+          "count_equals_links": false
+        },
+        "scope": "pure_JS_list_and_count_transition_model_not_kernel_code"
+      },
+      {
+        "id": "B01",
+        "scenario": "fresh_stack_timer",
+        "source_consequence": "entry.pprev NULL, callback function set, flags composed; expires assigned later",
+        "limit": "no fully initialized whole-object claim",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B02",
+        "scenario": "mod_notpending_initial_nonpending",
+        "source_consequence": "skip early optimization, detach_if_pending=0, idx UINT_MAX, reach internal_add if all prior callees normal",
+        "limit": "not proof timer actually fired",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B03",
+        "scenario": "mod_notpending_still_pending",
+        "source_consequence": "early shortcut bypassed; detach_if_pending(clear=false) returns1 if pending; then reinsert if path completes",
+        "limit": "requires valid pending list",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B04",
+        "scenario": "mod_function_null",
+        "source_consequence": "lock base then goto out_unlock; initial ret0, no newly enqueued instance from this path",
+        "limit": "no global shutdown inference",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B05",
+        "scenario": "mod_running_timer_same_base",
+        "source_consequence": "skip base migration when same running_timer; can still reach expires/enqueue under conditions",
+        "limit": "not racing lifecycle proof",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B06",
+        "scenario": "mod_base_mismatch_running_different",
+        "source_consequence": "migration guarded by base->running_timer != timer; unlock/lock and cpu flags update may occur",
+        "limit": "SMP correctness unverified",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B07",
+        "scenario": "del_nonpending_notrunning",
+        "source_consequence": "__try_del ret=0; delete wrapper exits",
+        "limit": "prior source effects and object lifetime unknown",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B08",
+        "scenario": "del_pending_notrunning",
+        "source_consequence": "clear_pending=true detach; __try_del ret=1; delete wrapper exits",
+        "limit": "valid HList, normal return",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B09",
+        "scenario": "del_running_one_negative_then_zero",
+        "source_consequence": "first __try_del -1 then cpu_relax; second0 and return0",
+        "limit": "conditional external running_timer change",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B10",
+        "scenario": "del_running_two_negatives_then_one",
+        "source_consequence": "two cpu_relax rounds, third1 and return1",
+        "limit": "conditional external status changes",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B11",
+        "scenario": "del_running_never_nonnegative",
+        "source_consequence": "ret<0 each completed call => source retry condition remains true",
+        "limit": "not machine infinite-loop certification",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B12",
+        "scenario": "shutdown_false",
+        "source_consequence": "timer_delete_sync forwards false; does not force function NULL",
+        "limit": "external rearm could happen but not proven",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B13",
+        "scenario": "shutdown_true_generic",
+        "source_consequence": "generic __try_del shutdown=true writes function=NULL",
+        "limit": "not used by this schedule_timeout",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "B14",
+        "scenario": "mod_or_del_nonnormal",
+        "source_consequence": "if callee not normally return, later cleanup/return is not evidenced",
+        "limit": "do not equate nonreturn with real deadlock",
+        "run": "pure_JS_conditional_model_only"
+      },
+      {
+        "id": "C01",
+        "scenario": "completion_done_preexisting",
+        "local_inference": "public wait uses MAX, but do_wait skips action if done already positive and consumes unless saturated",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C02",
+        "scenario": "completion_done0_producer_later",
+        "local_inference": "complete may raise done and request swake; waiter normal action return/relock must still observe done",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C03",
+        "scenario": "completion_stale_count",
+        "local_inference": "if swake unlinks node without count decrease, next same header notify can reach anchor invalidity",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C04",
+        "scenario": "semaphore_count_present",
+        "local_inference": "down_timeout fast count decrement returns int0 regardless timeout",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C05",
+        "scenario": "semaphore_waiter_granted",
+        "local_inference": "up removes waiter, flags up=true; only after normal schedule action return/relock may down_timeout return0",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C06",
+        "scenario": "msleep_finite_nonprogress",
+        "local_inference": "finite representable timeout and all callee normal return produce unchanged positive value each loop",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C07",
+        "scenario": "devtmpfs_setup_worker_error",
+        "local_inference": "init_mount nonzero skips this worker complete(setup_done); other notifier and runtime unknown",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C08",
+        "scenario": "devtmpfs_request_lifetime",
+        "local_inference": "worker complete(&req.done) followed by kfree(req), creator later reads req.err; ownership/read safety remains unresolved",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C09",
+        "scenario": "kthread_onstack_done",
+        "local_inference": "create path uses local done wait; producer uses complete(done) before schedule_preempt_disabled",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      },
+      {
+        "id": "C10",
+        "scenario": "static_kthreadd_done",
+        "local_inference": "rest_init complete and kernel_init wait refer same named static completion symbol",
+        "requirements": "valid objects, selected calls normally return and interthread ordering not presumed",
+        "run": "source_bound_inference_not_kernel_execution"
+      }
+    ]
+  },
+  "graph": {
+    "nodes": 47,
+    "edges": 54,
+    "undefined_endpoints": 0,
+    "semantic_rule": "no shared return fan-out; cross-context edges dashed; STOP for unproven callee"
+  },
+  "status": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope",
+    "overall": "READY_FOR_MAINLINE_REVIEW"
+  }
+}

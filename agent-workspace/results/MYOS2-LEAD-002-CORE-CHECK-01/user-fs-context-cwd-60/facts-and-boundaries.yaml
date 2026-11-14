@@ -1,0 +1,1419 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FS-CONTEXT-CWD-60",
+  "record_type": "bounded_fs_context_cwd_facts_and_models",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "2b3aec6f71e1",
+  "fixed_contract90_short12": "94777b770c43",
+  "read_channel": "GitHub_connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_ledger": [
+    {
+      "path": "mykernel/fs/vfs/open.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "f9794a8d8fe1",
+      "ranges": "272-293",
+      "role": "A main"
+    },
+    {
+      "path": "mykernel/fs/vfs/init.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "29996a104297",
+      "ranges": "44-80",
+      "role": "A main"
+    },
+    {
+      "path": "mykernel/sched/misc/fs_struct.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "67e13be24066",
+      "ranges": "1-140 FULL",
+      "role": "A/C main"
+    },
+    {
+      "path": "mykernel/fs/vfs/d_path.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "75aae754bb56",
+      "ranges": "1-231 FULL",
+      "role": "B main"
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "2b705f35ced8",
+      "ranges": "273-357;702-720;959-962;1122-1130;1404-1409;1648-1669",
+      "role": "C bounded"
+    },
+    {
+      "path": "mykernel/fs/vfs/myos_vfs.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "389876e6cb22",
+      "ranges": "42-60;142-145",
+      "role": "A direct"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exit.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ceede39ca88a",
+      "ranges": "117-134",
+      "role": "C direct"
+    },
+    {
+      "path": "mykernel/init/init_task.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "7124adc92a41",
+      "ranges": "116-123",
+      "role": "C initial"
+    },
+    {
+      "path": "mykernel/sched/misc/fs_struct_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "96d03013fef9",
+      "ranges": "9-16",
+      "role": "type"
+    },
+    {
+      "path": "mykernel/sched/misc/fs_struct.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "115dc207b974",
+      "ranges": "1-44 FULL",
+      "role": "C getters"
+    },
+    {
+      "path": "mykernel/sched/sched_type_declaration.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0db68faa0fcf",
+      "ranges": "22-24",
+      "role": "C alias"
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "87518a05fa49",
+      "ranges": "338-342",
+      "role": "C task"
+    },
+    {
+      "path": "mykernel/include/linux/fs/path.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "41adf0cc84bb",
+      "ranges": "7-17",
+      "role": "A type"
+    },
+    {
+      "path": "mykernel/fs/vfs/namei.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "99eb1fabe735",
+      "ranges": "266-282;547-611;743-747",
+      "role": "A direct"
+    },
+    {
+      "path": "mykernel/include/linux/fs/namei.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "42d98f742755",
+      "ranges": "39-46;72-78",
+      "role": "A wrapper"
+    },
+    {
+      "path": "mykernel/include/linux/fs/dcache.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "72fdb5b01968",
+      "ranges": "47-50;66-85;281-285",
+      "role": "A/B dentry"
+    },
+    {
+      "path": "mykernel/fs/vfs/dcache.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "eca8e13627fa",
+      "ranges": "108-129",
+      "role": "A dput"
+    },
+    {
+      "path": "mykernel/include/linux/fs/mount.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "3a512620b5e6",
+      "ranges": "41-45;83-91",
+      "role": "B mount"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/sched.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "883e874a7792",
+      "ranges": "12-13",
+      "role": "C clone flags"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/limits.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "bddfd09e4be2",
+      "ranges": "13",
+      "role": "B limit"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/uaccess.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ab39e43ad2f7",
+      "ranges": "171-181;196-205",
+      "role": "B copy"
+    }
+  ],
+  "prior_review_disposition": {
+    "batch58": {
+      "status": "PASS_PENDING_LOCAL",
+      "R58_01": "CLOSED_DOCUMENTATION_ONLY",
+      "B24": "CORRECTED_BY_59_D01_D02",
+      "B25": "ORIGINAL_VALID_FIVE_LINES_REVIEWER_ERROR_WITHDRAWN",
+      "supplement": "R58C-S01",
+      "historical_anchors": 87,
+      "corrected_cross_macro": 1,
+      "rechecked_valid_B25": 1,
+      "others_not_rechecked": 85
+    },
+    "batch59": {
+      "status": "PASS_PENDING_LOCAL",
+      "supplements": [
+        "R59-S01",
+        "R59-S02",
+        "R58C-S01"
+      ],
+      "D00": "R58-01 closed by separate mainline review"
+    },
+    "other_history": {
+      "batch57": "PASS_PENDING_LOCAL, R57-01/02 closed",
+      "batches56_52_53": "unchanged"
+    },
+    "new_D00_required": false,
+    "old_artifacts_modified": false
+  },
+  "fs_update_matrix": [
+    {
+      "case_id": "user_chdir_lookup_negative",
+      "observable": "user_path_at nonzero -> goto out; no pwd store, no path_put",
+      "limit": "no write to root",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "user_chdir_lookup_zero",
+      "observable": "direct curr->fs->pwd = path, no fs lock or old path release request",
+      "limit": "root unchanged",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "user_chdir_same_path",
+      "observable": "identical path pointer pair written, no active cleanup",
+      "limit": "not proof of correct refs",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "init_chdir_lookup_negative",
+      "observable": "return error before setter",
+      "limit": "pwd unchanged locally",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "init_chdir_lookup_zero",
+      "observable": "set_fs_pwd then path_put local path",
+      "limit": "root unchanged",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "init_chroot_lookup_zero",
+      "observable": "set_fs_root then path_put local path, permissions and CAP checks commented",
+      "limit": "pwd unchanged",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "setter_old_dentry_nonnull",
+      "observable": "path_get input before lock, save/assign under lock, unlock then path_put(old)",
+      "limit": "dget/dput no count",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "setter_old_dentry_null_mount_nonnull",
+      "observable": "skip old path_put because only dentry tested",
+      "limit": "mount owner unknown",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "setter_path_NULL",
+      "observable": "path_get reads path->dentry first; no safe completed store",
+      "limit": "early invalid",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "setter_valid_path_with_null_dentry",
+      "observable": "dget(NULL) returns same value, cannot equate to NULL path_s storage",
+      "limit": "true object validity still unknown",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "set_init_taskfs",
+      "observable": "pwd/root dentry both s_root, mnt both myos_root_mnt; final *curr->fs=*taskfs_p self-copy",
+      "limit": "no reference acquisition",
+      "source": "selected time code only"
+    },
+    {
+      "case_id": "CLONE_FS_then_chdir",
+      "observable": "same taskfs pointer shared; direct pwd member assignment mutates shared object",
+      "limit": "not a measured SMP race",
+      "source": "selected time code only"
+    }
+  ],
+  "cwd_buffer_return_traces": {
+    "pwd_root_paths": [
+      {
+        "id": "root_same",
+        "component_lengths": [],
+        "status": "same_root",
+        "b_after_nul": 4095,
+        "b_after_prepend": 4094,
+        "required_bytes": 2,
+        "content": "/ + NUL"
+      },
+      {
+        "id": "one_a",
+        "component_lengths": [
+          1
+        ],
+        "status": "ordinary",
+        "b_after_nul": 4095,
+        "b_after_prepend": 4093,
+        "required_bytes": 3,
+        "content": "/a + NUL"
+      },
+      {
+        "id": "one_foo",
+        "component_lengths": [
+          3
+        ],
+        "status": "ordinary",
+        "b_after_nul": 4095,
+        "b_after_prepend": 4091,
+        "required_bytes": 5,
+        "content": "/foo + NUL"
+      },
+      {
+        "id": "two_a_b",
+        "component_lengths": [
+          1,
+          1
+        ],
+        "status": "ordinary",
+        "b_after_nul": 4095,
+        "b_after_prepend": 4091,
+        "required_bytes": 5,
+        "content": "/a/b + NUL"
+      },
+      {
+        "id": "usr_bin_app",
+        "component_lengths": [
+          3,
+          3,
+          3
+        ],
+        "status": "ordinary",
+        "b_after_nul": 4095,
+        "b_after_prepend": 4083,
+        "required_bytes": 13,
+        "content": "/usr/bin/app + NUL"
+      },
+      {
+        "id": "name_exact",
+        "component_lengths": [
+          4094
+        ],
+        "status": "helper_only_large",
+        "b_after_nul": 4095,
+        "b_after_prepend": 0,
+        "required_bytes": 4096,
+        "content": "/ + 4094 chars + NUL"
+      },
+      {
+        "id": "name_too_long",
+        "component_lengths": [
+          4095
+        ],
+        "status": "helper_only_large",
+        "b_after_nul": 4095,
+        "b_after_prepend": -1,
+        "required_bytes": 4097,
+        "content": "prepend_name skips copy after length subtraction"
+      }
+    ],
+    "buffer_sizes": [
+      {
+        "id": "ROOT-SIZE-0",
+        "need": 2,
+        "user_size": 0,
+        "source_branch": "-ERANGE before copy",
+        "success_result": null
+      },
+      {
+        "id": "ROOT-SIZE-1",
+        "need": 2,
+        "user_size": 1,
+        "source_branch": "-ERANGE before copy",
+        "success_result": null
+      },
+      {
+        "id": "ROOT-SIZE-2",
+        "need": 2,
+        "user_size": 2,
+        "source_branch": "copy_to_user invoked conditionally",
+        "success_result": "int error=(long)user_buf, not 2"
+      },
+      {
+        "id": "ROOT-SIZE-3",
+        "need": 2,
+        "user_size": 3,
+        "source_branch": "copy_to_user invoked conditionally",
+        "success_result": "int error=(long)user_buf, not 2"
+      },
+      {
+        "id": "ROOT-SIZE-4",
+        "need": 2,
+        "user_size": 4,
+        "source_branch": "copy_to_user invoked conditionally",
+        "success_result": "int error=(long)user_buf, not 2"
+      },
+      {
+        "id": "ROOT-SIZE-5",
+        "need": 2,
+        "user_size": 5,
+        "source_branch": "copy_to_user invoked conditionally",
+        "success_result": "int error=(long)user_buf, not 2"
+      },
+      {
+        "id": "ROOT-SIZE-14",
+        "need": 2,
+        "user_size": 14,
+        "source_branch": "copy_to_user invoked conditionally",
+        "success_result": "int error=(long)user_buf, not 2"
+      },
+      {
+        "id": "ROOT-SIZE-15",
+        "need": 2,
+        "user_size": 15,
+        "source_branch": "copy_to_user invoked conditionally",
+        "success_result": "int error=(long)user_buf, not 2"
+      },
+      {
+        "id": "ROOT-SIZE-4095",
+        "need": 2,
+        "user_size": 4095,
+        "source_branch": "copy_to_user invoked conditionally",
+        "success_result": "int error=(long)user_buf, not 2"
+      },
+      {
+        "id": "ROOT-SIZE-4096",
+        "need": 2,
+        "user_size": 4096,
+        "source_branch": "copy_to_user invoked conditionally",
+        "success_result": "int error=(long)user_buf, not 2"
+      }
+    ],
+    "source_buffer_and_pointer_cases": [
+      {
+        "id": "root_size_1",
+        "required": 2,
+        "size": 1,
+        "expected": "-ERANGE"
+      },
+      {
+        "id": "root_size_2",
+        "required": 2,
+        "size": 2,
+        "expected": "if copy returns zero, pointer-cast integer; not 2"
+      },
+      {
+        "id": "a_size_2",
+        "required": 3,
+        "size": 2,
+        "expected": "-ERANGE"
+      },
+      {
+        "id": "a_size_3",
+        "required": 3,
+        "size": 3,
+        "expected": "if copy returns zero, pointer-cast integer; not 3"
+      },
+      {
+        "id": "too_long_len_4097",
+        "required": 4097,
+        "size": 4096,
+        "expected": "-ENAMETOOLONG; buffer source incomplete"
+      },
+      {
+        "id": "unreachable_size_14",
+        "required": 15,
+        "size": 14,
+        "expected": "-ERANGE if detached at mount root and no prior components"
+      },
+      {
+        "id": "unreachable_size_15",
+        "required": 15,
+        "size": 15,
+        "expected": "if copy returns zero, pointer-cast integer"
+      },
+      {
+        "id": "kzalloc_NULL",
+        "required": null,
+        "size": 4096,
+        "expected": "stop at bufhead + PATH_MAX invalid pointer arithmetic; cannot invent -ENOMEM"
+      },
+      {
+        "id": "copy_nonzero_residue",
+        "required": 2,
+        "size": 4096,
+        "expected": "-EFAULT if all prior operations valid and copy_to_user returns nonzero"
+      },
+      {
+        "id": "user_buf_NULL",
+        "required": 2,
+        "size": 4096,
+        "expected": "copy_to_user path only after earlier successful prepends; access_ok/raw result or earlier invalid access uncertain"
+      },
+      {
+        "id": "qstr_len_2pow32plus1",
+        "required": null,
+        "size": 4096,
+        "expected": "uint32 dlen becomes1 under explicit LP64 narrowing; helper-only name semantics"
+      },
+      {
+        "id": "qstr_len_uint32_max",
+        "required": null,
+        "size": 4096,
+        "expected": "dlen+1 wraps0 under uint32 model, slash store position risks invalid; helper-only, stop at first bad store"
+      },
+      {
+        "id": "myos_prepend_p_len_0_namelen1",
+        "required": null,
+        "size": 4096,
+        "expected": "p.len becomes -1, no memcpy, helper returns true; later len may exceed PATH_MAX"
+      },
+      {
+        "id": "getcwd_ptr_low32_zero",
+        "required": 2,
+        "size": 2,
+        "expected": "if user pointer is 0x0000000100000000 and explicit LP64 narrowing truncates to low32, error result0; not proof of ABI"
+      },
+      {
+        "id": "getcwd_ptr_low32_neg",
+        "required": 2,
+        "size": 2,
+        "expected": "if user pointer low32=0xffffffff and explicit two's-complement narrowing, int result -1; not real pointer validity proof"
+      },
+      {
+        "id": "parent_self_escape",
+        "required": 15,
+        "size": 15,
+        "expected": "__prepend_path returns3; b reset, root slash + unreachable prefix"
+      },
+      {
+        "id": "mount_root_detached",
+        "required": 15,
+        "size": 15,
+        "expected": "__prepend_path returns2; no prior components model, prefix unreachable"
+      }
+    ],
+    "write_order": [
+      {
+        "op": "copy pwd/root",
+        "proof": "task_s.fs valid and paths have valid two pointer fields; no lock/get_fs_pwd invocation in selected body"
+      },
+      {
+        "op": "kzalloc(PATH_MAX)",
+        "proof": "returns char* or NULL; no local failure check"
+      },
+      {
+        "op": "b.buf=bufhead+PATH_MAX",
+        "proof": "first invalid if NULL"
+      },
+      {
+        "op": "myos_prepend empty length1",
+        "proof": "write trailing NUL by memcpy if path buffer valid"
+      },
+      {
+        "op": "__prepend_path",
+        "proof": "walk dentry/mount parents while dentry/mount pair differs; finite valid acyclic chain only"
+      },
+      {
+        "op": "prepend_name",
+        "proof": "p.len subtract uint32 length+1, slash and name copy may stop on early NUL, if insufficient returns false"
+      },
+      {
+        "op": "myos_prepend_path",
+        "proof": "error 3 resets buffer, error>0 unreachable prefix, restart label has no active goto"
+      },
+      {
+        "op": "len=PATH_MAX-b.len",
+        "proof": "arithmetic valid else stop; if >PATH_MAX -> ENAMETOOLONG; if >size -> ERANGE"
+      },
+      {
+        "op": "copy_to_user",
+        "proof": "zero residue required; invalid target/access errors only in chosen valid prefix"
+      },
+      {
+        "op": "error=(long)buf",
+        "proof": "assigned to int error then returned, not length; pointer cast/width implementation-dependent"
+      },
+      {
+        "op": "kfree(bufhead)",
+        "proof": "called on normal control regardless result, not physical free attestation"
+      }
+    ],
+    "math": {
+      "valid_simple_path_formula": "1 NUL + sum(each non-root dentry_name.len+1 for slash); no mount transitions",
+      "PATH_MAX": 4096,
+      "initial_b_len": 4096,
+      "after_NUL": 4095,
+      "normal_root_len": 2,
+      "cast_model": "(long)buf assigned to int, not sizeof path; actual width not attested",
+      "stdint32_length": "qstr.size_t narrowed to uint32_t; name.length may mismatch stored pointer",
+      "helper_bug": "myos_prepend returns true even after p.len<0, but getcwd later checks len; no automatic successful copy"
+    },
+    "limitations": [
+      "normal object and copy prerequisite",
+      "real parent and mount topology unknown",
+      "kzalloc(NULL) earliest stop",
+      "full ABI/sizeof not compiled",
+      "copy_to_user real user buffer not run",
+      "only root and paths in explicit model"
+    ]
+  },
+  "fs_copy_share_exit_matrix": {
+    "cases": [
+      {
+        "id": "share_1_inexec0",
+        "flag": "CLONE_FS",
+        "users": 1,
+        "in_exec": 0,
+        "stage": "copy_fs",
+        "outcome": "returns0, tsk->fs inherited same fs, users 1→2",
+        "cleanup": "later child exit 2→1, no free",
+        "premise": "valid task clone and no concurrent writer"
+      },
+      {
+        "id": "share_2_inexec0",
+        "flag": "CLONE_FS",
+        "users": 2,
+        "in_exec": 0,
+        "stage": "copy_fs",
+        "outcome": "returns0, users 2→3",
+        "cleanup": "one exit 3→2, no free"
+      },
+      {
+        "id": "share_1_inexec1",
+        "flag": "CLONE_FS",
+        "users": 1,
+        "in_exec": 1,
+        "stage": "copy_fs",
+        "outcome": "-EAGAIN before users++",
+        "cleanup": "copy_process goto bad_fork_cleanup_files skips exit_fs; inherited tsk->fs pointer not new ref"
+      },
+      {
+        "id": "share_NULL_fs",
+        "flag": "CLONE_FS",
+        "users": null,
+        "in_exec": null,
+        "stage": "copy_fs",
+        "outcome": "invalid fs->in_exec access",
+        "cleanup": "no safe errno or users operation"
+      },
+      {
+        "id": "share_INT_MAX",
+        "flag": "CLONE_FS",
+        "users": 2147483647,
+        "in_exec": 0,
+        "stage": "copy_fs",
+        "outcome": "signed int increment beyond representable; STOP",
+        "cleanup": "not modeled beyond"
+      },
+      {
+        "id": "copy_nonshare_success",
+        "flag": "no CLONE_FS",
+        "users": 2,
+        "in_exec": 0,
+        "stage": "copy_fs_struct",
+        "outcome": "new taskfs allocated from fs_cachep, users1, in_exec0, lock init, umask copied, root/pwd shallow copy with path_get requests",
+        "cleanup": "parent users unchanged; newfs last exit 1→0 releases requests"
+      },
+      {
+        "id": "copy_nonshare_alloc_NULL",
+        "flag": "no CLONE_FS",
+        "users": 2,
+        "in_exec": 0,
+        "stage": "copy_fs_struct",
+        "outcome": "returns NULL without deref old members; copy_fs sets tsk->fs=NULL then -ENOMEM",
+        "cleanup": "copy_process jumps bad_fork_cleanup_files, not exit_fs"
+      },
+      {
+        "id": "copy_nonshare_old_NULL_alloc_succeeds",
+        "flag": "no CLONE_FS",
+        "users": null,
+        "in_exec": null,
+        "stage": "copy_fs_struct",
+        "outcome": "first invalid old->umask after new object initial assignments",
+        "cleanup": "no safe NULL result or caller -ENOMEM"
+      },
+      {
+        "id": "oldFS_umask_outside_lock",
+        "flag": "no CLONE_FS",
+        "users": 1,
+        "in_exec": 0,
+        "stage": "copy_fs_struct",
+        "outcome": "fs->umask=old->umask before spin_lock(&old->lock)",
+        "cleanup": "no consistent umask/root/pwd snapshot guaranteed without other-writer proof"
+      },
+      {
+        "id": "exit_null_taskfs",
+        "flag": "exit_fs",
+        "users": null,
+        "in_exec": null,
+        "stage": "exit_fs",
+        "outcome": "if(tsk->fs) false, returns with no lock/kill",
+        "cleanup": "tsk.fs already NULL"
+      },
+      {
+        "id": "exit_users_2",
+        "flag": "exit_fs",
+        "users": 2,
+        "in_exec": null,
+        "stage": "exit_fs",
+        "outcome": "tsk->fs=NULL, --users=1, kill false",
+        "cleanup": "no free_fs_struct"
+      },
+      {
+        "id": "exit_users_1",
+        "flag": "exit_fs",
+        "users": 1,
+        "in_exec": null,
+        "stage": "exit_fs",
+        "outcome": "tsk->fs=NULL, --users=0, kill true",
+        "cleanup": "free_fs_struct -> path_put(root), path_put(pwd), kmem_cache_free"
+      },
+      {
+        "id": "exit_users_0",
+        "flag": "exit_fs",
+        "users": 0,
+        "in_exec": null,
+        "stage": "exit_fs",
+        "outcome": "signed int 0→-1 is representable but invalid ownership; kill false",
+        "cleanup": "cannot infer valid owner semantics"
+      },
+      {
+        "id": "exit_users_INT_MIN",
+        "flag": "exit_fs",
+        "users": -2147483648,
+        "in_exec": null,
+        "stage": "exit_fs",
+        "outcome": "signed int decrement overflow, STOP",
+        "cleanup": "no safe condition or return"
+      },
+      {
+        "id": "static_init_fs_last",
+        "flag": "exit_fs",
+        "users": 1,
+        "in_exec": 0,
+        "stage": "free_fs_struct",
+        "outcome": "if tsk.fs points static &init_fs and last user exits, call kmem_cache_free on static pointer",
+        "cleanup": "prior FS45-F01: needs_evidence, not new"
+      },
+      {
+        "id": "copy_process_later_failure",
+        "flag": "copy_fs succeeded",
+        "users": 1,
+        "in_exec": 0,
+        "stage": "copy_process failure after copy_fs",
+        "outcome": "goto bad_fork_cleanup_fs -> exit_fs(p)",
+        "cleanup": "then bad_fork_cleanup_files"
+      },
+      {
+        "id": "taskfs_vs_files",
+        "flag": "CLONE_FS v CLONE_FILES",
+        "users": 1,
+        "in_exec": 0,
+        "stage": "bit model",
+        "outcome": "CLONE_FS=0x200 != CLONE_FILES=0x400; taskfs vs files_struct_s distinct",
+        "cleanup": "no relabel of FT43 or file fd table"
+      }
+    ],
+    "event_order": [
+      {
+        "function": "dup_task_struct",
+        "order": [
+          "alloc_task_struct_node only conditional node==NUMA_NO_NODE source path",
+          "*tsk=*orig",
+          "later copy_process uses result p"
+        ],
+        "conditions": "R43-S01 requires node/input/preceding valid; *tsk=*orig copies pointer not counted new fs holder"
+      },
+      {
+        "function": "copy_fs share",
+        "order": [
+          "fs=current->fs",
+          "check clone_flags & CLONE_FS",
+          "if fs->in_exec return -EAGAIN",
+          "fs->users++",
+          "return0"
+        ],
+        "conditions": "no active fs lock; share tsk->fs inherited from duplication"
+      },
+      {
+        "function": "copy_fs unshared",
+        "order": [
+          "copy_fs_struct(fs)",
+          "tsk->fs=returned pointer",
+          "if NULL return -ENOMEM"
+        ],
+        "conditions": "alloc NULL and old NULL+successful allocation different"
+      },
+      {
+        "function": "copy_fs_struct",
+        "order": [
+          "fs_cachep allocation",
+          "if fs present: users=1,in_exec=0",
+          "spin_lock_init",
+          "umask=old->umask outside old lock",
+          "lock old",
+          "root shallow copy; path_get",
+          "pwd shallow copy; path_get",
+          "unlock old",
+          "return fs"
+        ],
+        "conditions": "all old/lock/path members valid; path_get dget no-op and mntget commented"
+      },
+      {
+        "function": "exit_fs",
+        "order": [
+          "fs=tsk->fs",
+          "if nonNULL: task_lock",
+          "spin_lock fs",
+          "tsk->fs=NULL",
+          "kill=!--users",
+          "unlock fs and task",
+          "if kill free_fs_struct"
+        ],
+        "conditions": "signed finite users, valid object"
+      },
+      {
+        "function": "free_fs_struct",
+        "order": [
+          "path_put(root)",
+          "path_put(pwd)",
+          "kmem_cache_free(fs_cachep,fs)"
+        ],
+        "conditions": "helper request not actual reference decrement, static init_fs source prior FS45"
+      },
+      {
+        "function": "copy_process failure",
+        "order": [
+          "copy_files",
+          "copy_fs",
+          "on copy_fs failure goto bad_fork_cleanup_files",
+          "after successful copy_fs and later failure goto bad_fork_cleanup_fs",
+          "exit_fs(p)",
+          "exit_files(p)"
+        ],
+        "conditions": "paths depend on actual goto and earlier functions normal completion"
+      },
+      {
+        "function": "do_exit",
+        "order": [
+          "exit_files(tsk)",
+          "exit_fs(tsk)",
+          "exit_thread(tsk)"
+        ],
+        "conditions": "selected direct fragment only; not all task exit behavior"
+      }
+    ],
+    "prior_findings": [
+      {
+        "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F01",
+        "source_field": "status",
+        "source_value": "needs_evidence",
+        "relation": "static init_fs final users freeing source mismatch"
+      },
+      {
+        "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F02",
+        "source_field": "status",
+        "source_value": "needs_evidence",
+        "relation": "path_get/put no active mount refs and dget/dput current body no count"
+      },
+      {
+        "qualified_id": "CORE-USER-FILES-COPY-SHARE-43::FT43-F01",
+        "source_field": "status",
+        "source_value": "deferred_owner_not_ready",
+        "relation": "CLONE_FILES is separate task.files object"
+      }
+    ],
+    "limits": [
+      "no full fork/exec or all task exit audit",
+      "single int users no atomic/lock proof across all writers",
+      "full slab physical free not observed",
+      "real task/fs provenance unknown outside selected source",
+      "no complete mount/dentry ownership or reference semantics",
+      "source code not compiled or executed"
+    ]
+  },
+  "finite_model_cases": [
+    {
+      "id": "A-1",
+      "inputs": "user_chdir_lookup_negative",
+      "result": "user_path_at nonzero -> goto out; no pwd store, no path_put",
+      "premise": "no write to root"
+    },
+    {
+      "id": "A-2",
+      "inputs": "user_chdir_lookup_zero",
+      "result": "direct curr->fs->pwd = path, no fs lock or old path release request",
+      "premise": "root unchanged"
+    },
+    {
+      "id": "A-3",
+      "inputs": "user_chdir_same_path",
+      "result": "identical path pointer pair written, no active cleanup",
+      "premise": "not proof of correct refs"
+    },
+    {
+      "id": "A-4",
+      "inputs": "init_chdir_lookup_negative",
+      "result": "return error before setter",
+      "premise": "pwd unchanged locally"
+    },
+    {
+      "id": "A-5",
+      "inputs": "init_chdir_lookup_zero",
+      "result": "set_fs_pwd then path_put local path",
+      "premise": "root unchanged"
+    },
+    {
+      "id": "A-6",
+      "inputs": "init_chroot_lookup_zero",
+      "result": "set_fs_root then path_put local path, permissions and CAP checks commented",
+      "premise": "pwd unchanged"
+    },
+    {
+      "id": "A-7",
+      "inputs": "setter_old_dentry_nonnull",
+      "result": "path_get input before lock, save/assign under lock, unlock then path_put(old)",
+      "premise": "dget/dput no count"
+    },
+    {
+      "id": "A-8",
+      "inputs": "setter_old_dentry_null_mount_nonnull",
+      "result": "skip old path_put because only dentry tested",
+      "premise": "mount owner unknown"
+    },
+    {
+      "id": "A-9",
+      "inputs": "setter_path_NULL",
+      "result": "path_get reads path->dentry first; no safe completed store",
+      "premise": "early invalid"
+    },
+    {
+      "id": "A-10",
+      "inputs": "setter_valid_path_with_null_dentry",
+      "result": "dget(NULL) returns same value, cannot equate to NULL path_s storage",
+      "premise": "true object validity still unknown"
+    },
+    {
+      "id": "A-11",
+      "inputs": "set_init_taskfs",
+      "result": "pwd/root dentry both s_root, mnt both myos_root_mnt; final *curr->fs=*taskfs_p self-copy",
+      "premise": "no reference acquisition"
+    },
+    {
+      "id": "A-12",
+      "inputs": "CLONE_FS_then_chdir",
+      "result": "same taskfs pointer shared; direct pwd member assignment mutates shared object",
+      "premise": "not a measured SMP race"
+    },
+    {
+      "id": "B-PATH-root_same",
+      "input": [],
+      "need": 2,
+      "status": "same_root",
+      "scope": "valid selected path model"
+    },
+    {
+      "id": "B-PATH-one_a",
+      "input": [
+        1
+      ],
+      "need": 3,
+      "status": "ordinary",
+      "scope": "valid selected path model"
+    },
+    {
+      "id": "B-PATH-one_foo",
+      "input": [
+        3
+      ],
+      "need": 5,
+      "status": "ordinary",
+      "scope": "valid selected path model"
+    },
+    {
+      "id": "B-PATH-two_a_b",
+      "input": [
+        1,
+        1
+      ],
+      "need": 5,
+      "status": "ordinary",
+      "scope": "valid selected path model"
+    },
+    {
+      "id": "B-PATH-usr_bin_app",
+      "input": [
+        3,
+        3,
+        3
+      ],
+      "need": 13,
+      "status": "ordinary",
+      "scope": "valid selected path model"
+    },
+    {
+      "id": "B-PATH-name_exact",
+      "input": [
+        4094
+      ],
+      "need": 4096,
+      "status": "helper_only_large",
+      "scope": "helper_only"
+    },
+    {
+      "id": "B-PATH-name_too_long",
+      "input": [
+        4095
+      ],
+      "need": 4097,
+      "status": "helper_only_large",
+      "scope": "helper_only"
+    },
+    {
+      "id": "ROOT-SIZE-0",
+      "need": 2,
+      "user_size": 0,
+      "source_branch": "-ERANGE before copy",
+      "success_result": null
+    },
+    {
+      "id": "ROOT-SIZE-1",
+      "need": 2,
+      "user_size": 1,
+      "source_branch": "-ERANGE before copy",
+      "success_result": null
+    },
+    {
+      "id": "ROOT-SIZE-2",
+      "need": 2,
+      "user_size": 2,
+      "source_branch": "copy_to_user invoked conditionally",
+      "success_result": "int error=(long)user_buf, not 2"
+    },
+    {
+      "id": "ROOT-SIZE-3",
+      "need": 2,
+      "user_size": 3,
+      "source_branch": "copy_to_user invoked conditionally",
+      "success_result": "int error=(long)user_buf, not 2"
+    },
+    {
+      "id": "ROOT-SIZE-4",
+      "need": 2,
+      "user_size": 4,
+      "source_branch": "copy_to_user invoked conditionally",
+      "success_result": "int error=(long)user_buf, not 2"
+    },
+    {
+      "id": "ROOT-SIZE-5",
+      "need": 2,
+      "user_size": 5,
+      "source_branch": "copy_to_user invoked conditionally",
+      "success_result": "int error=(long)user_buf, not 2"
+    },
+    {
+      "id": "ROOT-SIZE-14",
+      "need": 2,
+      "user_size": 14,
+      "source_branch": "copy_to_user invoked conditionally",
+      "success_result": "int error=(long)user_buf, not 2"
+    },
+    {
+      "id": "ROOT-SIZE-15",
+      "need": 2,
+      "user_size": 15,
+      "source_branch": "copy_to_user invoked conditionally",
+      "success_result": "int error=(long)user_buf, not 2"
+    },
+    {
+      "id": "ROOT-SIZE-4095",
+      "need": 2,
+      "user_size": 4095,
+      "source_branch": "copy_to_user invoked conditionally",
+      "success_result": "int error=(long)user_buf, not 2"
+    },
+    {
+      "id": "ROOT-SIZE-4096",
+      "need": 2,
+      "user_size": 4096,
+      "source_branch": "copy_to_user invoked conditionally",
+      "success_result": "int error=(long)user_buf, not 2"
+    },
+    {
+      "id": "root_size_1",
+      "required": 2,
+      "size": 1,
+      "expected": "-ERANGE"
+    },
+    {
+      "id": "root_size_2",
+      "required": 2,
+      "size": 2,
+      "expected": "if copy returns zero, pointer-cast integer; not 2"
+    },
+    {
+      "id": "a_size_2",
+      "required": 3,
+      "size": 2,
+      "expected": "-ERANGE"
+    },
+    {
+      "id": "a_size_3",
+      "required": 3,
+      "size": 3,
+      "expected": "if copy returns zero, pointer-cast integer; not 3"
+    },
+    {
+      "id": "too_long_len_4097",
+      "required": 4097,
+      "size": 4096,
+      "expected": "-ENAMETOOLONG; buffer source incomplete"
+    },
+    {
+      "id": "unreachable_size_14",
+      "required": 15,
+      "size": 14,
+      "expected": "-ERANGE if detached at mount root and no prior components"
+    },
+    {
+      "id": "unreachable_size_15",
+      "required": 15,
+      "size": 15,
+      "expected": "if copy returns zero, pointer-cast integer"
+    },
+    {
+      "id": "kzalloc_NULL",
+      "required": null,
+      "size": 4096,
+      "expected": "stop at bufhead + PATH_MAX invalid pointer arithmetic; cannot invent -ENOMEM"
+    },
+    {
+      "id": "copy_nonzero_residue",
+      "required": 2,
+      "size": 4096,
+      "expected": "-EFAULT if all prior operations valid and copy_to_user returns nonzero"
+    },
+    {
+      "id": "user_buf_NULL",
+      "required": 2,
+      "size": 4096,
+      "expected": "copy_to_user path only after earlier successful prepends; access_ok/raw result or earlier invalid access uncertain"
+    },
+    {
+      "id": "qstr_len_2pow32plus1",
+      "required": null,
+      "size": 4096,
+      "expected": "uint32 dlen becomes1 under explicit LP64 narrowing; helper-only name semantics"
+    },
+    {
+      "id": "qstr_len_uint32_max",
+      "required": null,
+      "size": 4096,
+      "expected": "dlen+1 wraps0 under uint32 model, slash store position risks invalid; helper-only, stop at first bad store"
+    },
+    {
+      "id": "myos_prepend_p_len_0_namelen1",
+      "required": null,
+      "size": 4096,
+      "expected": "p.len becomes -1, no memcpy, helper returns true; later len may exceed PATH_MAX"
+    },
+    {
+      "id": "getcwd_ptr_low32_zero",
+      "required": 2,
+      "size": 2,
+      "expected": "if user pointer is 0x0000000100000000 and explicit LP64 narrowing truncates to low32, error result0; not proof of ABI"
+    },
+    {
+      "id": "getcwd_ptr_low32_neg",
+      "required": 2,
+      "size": 2,
+      "expected": "if user pointer low32=0xffffffff and explicit two's-complement narrowing, int result -1; not real pointer validity proof"
+    },
+    {
+      "id": "parent_self_escape",
+      "required": 15,
+      "size": 15,
+      "expected": "__prepend_path returns3; b reset, root slash + unreachable prefix"
+    },
+    {
+      "id": "mount_root_detached",
+      "required": 15,
+      "size": 15,
+      "expected": "__prepend_path returns2; no prior components model, prefix unreachable"
+    },
+    {
+      "id": "C-01",
+      "input": {
+        "flag": "CLONE_FS",
+        "users": 1,
+        "in_exec": 0
+      },
+      "result": "returns0, tsk->fs inherited same fs, users 1→2",
+      "cleanup": "later child exit 2→1, no free",
+      "premise": "valid task clone and no concurrent writer"
+    },
+    {
+      "id": "C-02",
+      "input": {
+        "flag": "CLONE_FS",
+        "users": 2,
+        "in_exec": 0
+      },
+      "result": "returns0, users 2→3",
+      "cleanup": "one exit 3→2, no free",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-03",
+      "input": {
+        "flag": "CLONE_FS",
+        "users": 1,
+        "in_exec": 1
+      },
+      "result": "-EAGAIN before users++",
+      "cleanup": "copy_process goto bad_fork_cleanup_files skips exit_fs; inherited tsk->fs pointer not new ref",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-04",
+      "input": {
+        "flag": "CLONE_FS",
+        "users": null,
+        "in_exec": null
+      },
+      "result": "invalid fs->in_exec access",
+      "cleanup": "no safe errno or users operation",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-05",
+      "input": {
+        "flag": "CLONE_FS",
+        "users": 2147483647,
+        "in_exec": 0
+      },
+      "result": "signed int increment beyond representable; STOP",
+      "cleanup": "not modeled beyond",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-06",
+      "input": {
+        "flag": "no CLONE_FS",
+        "users": 2,
+        "in_exec": 0
+      },
+      "result": "new taskfs allocated from fs_cachep, users1, in_exec0, lock init, umask copied, root/pwd shallow copy with path_get requests",
+      "cleanup": "parent users unchanged; newfs last exit 1→0 releases requests",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-07",
+      "input": {
+        "flag": "no CLONE_FS",
+        "users": 2,
+        "in_exec": 0
+      },
+      "result": "returns NULL without deref old members; copy_fs sets tsk->fs=NULL then -ENOMEM",
+      "cleanup": "copy_process jumps bad_fork_cleanup_files, not exit_fs",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-08",
+      "input": {
+        "flag": "no CLONE_FS",
+        "users": null,
+        "in_exec": null
+      },
+      "result": "first invalid old->umask after new object initial assignments",
+      "cleanup": "no safe NULL result or caller -ENOMEM",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-09",
+      "input": {
+        "flag": "no CLONE_FS",
+        "users": 1,
+        "in_exec": 0
+      },
+      "result": "fs->umask=old->umask before spin_lock(&old->lock)",
+      "cleanup": "no consistent umask/root/pwd snapshot guaranteed without other-writer proof",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-10",
+      "input": {
+        "flag": "exit_fs",
+        "users": null,
+        "in_exec": null
+      },
+      "result": "if(tsk->fs) false, returns with no lock/kill",
+      "cleanup": "tsk.fs already NULL",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-11",
+      "input": {
+        "flag": "exit_fs",
+        "users": 2,
+        "in_exec": null
+      },
+      "result": "tsk->fs=NULL, --users=1, kill false",
+      "cleanup": "no free_fs_struct",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-12",
+      "input": {
+        "flag": "exit_fs",
+        "users": 1,
+        "in_exec": null
+      },
+      "result": "tsk->fs=NULL, --users=0, kill true",
+      "cleanup": "free_fs_struct -> path_put(root), path_put(pwd), kmem_cache_free",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-13",
+      "input": {
+        "flag": "exit_fs",
+        "users": 0,
+        "in_exec": null
+      },
+      "result": "signed int 0→-1 is representable but invalid ownership; kill false",
+      "cleanup": "cannot infer valid owner semantics",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-14",
+      "input": {
+        "flag": "exit_fs",
+        "users": -2147483648,
+        "in_exec": null
+      },
+      "result": "signed int decrement overflow, STOP",
+      "cleanup": "no safe condition or return",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-15",
+      "input": {
+        "flag": "exit_fs",
+        "users": 1,
+        "in_exec": 0
+      },
+      "result": "if tsk.fs points static &init_fs and last user exits, call kmem_cache_free on static pointer",
+      "cleanup": "prior FS45-F01: needs_evidence, not new",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-16",
+      "input": {
+        "flag": "copy_fs succeeded",
+        "users": 1,
+        "in_exec": 0
+      },
+      "result": "goto bad_fork_cleanup_fs -> exit_fs(p)",
+      "cleanup": "then bad_fork_cleanup_files",
+      "premise": "source-level finite model; objects/normal return valid"
+    },
+    {
+      "id": "C-17",
+      "input": {
+        "flag": "CLONE_FS v CLONE_FILES",
+        "users": 1,
+        "in_exec": 0
+      },
+      "result": "CLONE_FS=0x200 != CLONE_FILES=0x400; taskfs vs files_struct_s distinct",
+      "cleanup": "no relabel of FT43 or file fd table",
+      "premise": "source-level finite model; objects/normal return valid"
+    }
+  ],
+  "finite_model_count": 63,
+  "model_groups": {
+    "A": 12,
+    "B": 34,
+    "C": 17
+  },
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "static init_fs last owner/free_fs_struct request; do not duplicate"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F02",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "path_get/path_put mount ref absence, dget/dput empty effects; do not duplicate"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "devtmpfsd ignores init_chdir/init_chroot returned errno"
+    },
+    {
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F05",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "path lookup output and empty cleanup limited"
+    },
+    {
+      "qualified_id": "CORE-USER-FILES-COPY-SHARE-43::FT43-F01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "consumption_notes": "CLONE_FILES distinct from taskfs"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F01",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "consumption_notes": "filename error pointer consumer not equivalent to pwd"
+    }
+  ],
+  "not_proven": [
+    "LOOKUP_DIRECTORY actually checks directory type/permissions everywhere",
+    "dget/dput/mount ref increments and lifetime",
+    "real user cwd string and user buffer pointer validity",
+    "compiled getcwd pointer-to-int semantics and ABI",
+    "full mount topology or namespace rules",
+    "SMP data race or full cross-reader consistency",
+    "complete fork/exec/exit correctness",
+    "static init_fs actually reaches final free",
+    "physical memory allocator or real disk",
+    "any kernel C/ASM run"
+  ]
+}

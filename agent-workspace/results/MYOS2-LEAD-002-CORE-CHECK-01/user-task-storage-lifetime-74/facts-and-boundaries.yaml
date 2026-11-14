@@ -1,0 +1,910 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-TASK-STORAGE-LIFETIME-74",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "source_pin_short12": "a039d9803ade",
+  "contract_commit_short12": "d46bab628653",
+  "initial_execution_head_short12": "8bc7583e45c9",
+  "read_channel": "connector",
+  "produced_by": "GPT-6 self-reported",
+  "model_per_owner": "next tier GPT-6 + Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "documentation_disposition_submitted",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_disposition": {
+    "return_id": "R73-01",
+    "review_verdict": "RETURN_DOCUMENTATION",
+    "submit_status": "documentation_disposition_submitted",
+    "close_by": "MYOS2-A-C05 only",
+    "old_delivery_commit_short12": "8bc7583e45c9",
+    "old_comment_id": 6810987102,
+    "scope": "append-only documentation correction; old six files and comment preserved",
+    "new_to_old_anchor_map": [
+      {
+        "old": "CORE-USER-EXIT-REAP-73::A16",
+        "old_label": "mykernel/sched/task/task_types.h::task_s",
+        "new": "D01",
+        "new_label": "mykernel/sched/task/task_types.h::task_struct",
+        "status": "corrected_source_definition_identity",
+        "quote_scope": "exit_state, exit_code, exit_signal fields"
+      },
+      {
+        "old": "CORE-USER-EXIT-REAP-73::B13",
+        "old_label": "mykernel/sched/task/task_types.h::task_s",
+        "new": "D02",
+        "new_label": "mykernel/sched/task/task_types.h::task_struct",
+        "status": "corrected_source_definition_identity",
+        "quote_scope": "real_parent and parent fields"
+      },
+      {
+        "old": "CORE-USER-EXIT-REAP-73::B14",
+        "old_label": "mykernel/sched/task/task_types.h::task_s",
+        "new": "D03",
+        "new_label": "mykernel/sched/task/task_types.h::task_struct",
+        "status": "corrected_source_definition_identity",
+        "quote_scope": "children and sibling fields"
+      }
+    ],
+    "alias_evidence": {
+      "id": "D04",
+      "label": "mykernel/sched/sched_type_declaration.h::task_s",
+      "quote": "typedef struct task_struct task_s;",
+      "scope": "separate true alias, never used to mislabel struct field definition"
+    },
+    "canary_replacement": {
+      "for_old_manifest": "user-exit-reap-73/MANIFEST.md",
+      "old_state": "two physical quotes existed in G00 text; branch_canary_quotes YAML field absent",
+      "replacement_field": "branch_canary_quotes",
+      "values": {
+        "options_flags_cmake": "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\",
+        "panic_c": "\tthis_cpu = smp_processor_id();"
+      },
+      "readback": {
+        "time": "a039d9803ade",
+        "master": "e8e60cd19540",
+        "master_options_line_same": false,
+        "master_panic_line": "\tthis_cpu = raw_smp_processor_id();"
+      },
+      "already_present_in_73": [
+        "read_channel",
+        "startup_selfcheck_quote"
+      ],
+      "not_a_wrong_branch_or_absent_text_claim": true
+    },
+    "exit_group_replacement": {
+      "target": "CORE-USER-EXIT-REAP-73/facts-and-boundaries.yaml::exit_entry_status_matrix[sys_exit_group].operation",
+      "old": "do_group_exit((error_code & 0xff)<<8) then do_exit(current)",
+      "replacement": "do_group_exit((error_code & 0xff) << 8) then do_exit(exit_code)",
+      "anchor": "D05",
+      "distinction": "current task is acted on by do_exit, but actual argument is integer exit_code, not task_s* current"
+    },
+    "consumption_updates": [
+      "old 73 exit-reap.md field/parent narratives and evidence A16/B13/B14 now cite new D01/D02/D03; semantics retained",
+      "old 73 facts exit_group row replaced for downstream interpretation only",
+      "old 73 MANIFEST and facts p9 claims of every definition passing cannot be consumed as complete P2 proof",
+      "old 73 PR17 formal comment 6810987102 numeric 56/56 is historical author quote-byte claim, not all original definitions certified",
+      "old 73 has 56 tags, 3 wrong definition labels; other 53 have not been reaudited here",
+      "new 74 P6 counts count only 74 new evidence tags including 5 D; no 73 retroactive repair"
+    ],
+    "old_evidence_count": 56,
+    "old_evidence_definition_gate": "failed_for_three_tags; other_53_not_reaudited",
+    "old_files_changed": false,
+    "owner_decisions_requested_now": []
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "blob_short12": "2b705f35ced8",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "blob_short12": "87518a05fa49",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/sched_type_declaration.h",
+      "blob_short12": "0db68faa0fcf",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "blob_short12": "b10e280f26f0",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/task/task_const.h",
+      "blob_short12": "47597e0beb47",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/task/pid.c",
+      "blob_short12": "2e6b8a1510d7",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/task/pid.h",
+      "blob_short12": "26e57f4a3bdb",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "blob_short12": "a210c885bc4f",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/init/init_task.c",
+      "blob_short12": "7124adc92a41",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/rwonce.h",
+      "blob_short12": "43007188d892",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "blob_short12": "82c62cfc07a3",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/misc/sched_misc.h",
+      "blob_short12": "316c948452af",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exit.c",
+      "blob_short12": "ceede39ca88a",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler.h",
+      "blob_short12": "436df1335aa0",
+      "source": "time@a039d9803ade",
+      "read_channel": "connector",
+      "kind": "core_or_nearest_dependency"
+    }
+  ],
+  "task_allocation_matrix": [
+    {
+      "stage": "static_init_task",
+      "new_task_identity": "&init_task",
+      "stack_provenance": "init_stack static",
+      "usage": "REFCOUNT_INIT(2)",
+      "tasks": "LIST_INIT",
+      "anchors": [
+        "A18",
+        "A19",
+        "B17"
+      ],
+      "limits": "initial data, not future task dynamic allocation"
+    },
+    {
+      "stage": "alloc_task_struct_node",
+      "new_task_identity": "kzalloc(sizeof(task_s),GFP_KERNEL) result",
+      "stack_provenance": "initial zero allocation only; actual allocator behavior not tested",
+      "usage": "not yet reset",
+      "anchors": [
+        "A01",
+        "A16"
+      ],
+      "limits": "node argument unused in selected function"
+    },
+    {
+      "stage": "dup_task_struct conditional node",
+      "new_task_identity": "tsk declared uninitialized, assigned only if node==NUMA_NO_NODE",
+      "stack_provenance": "no known value if node mismatch",
+      "anchors": [
+        "A03",
+        "A04",
+        "A05",
+        "A15"
+      ],
+      "limits": "UV-16; mismatched node earliest STOP at if(!tsk) invalid value"
+    },
+    {
+      "stage": "dup structure copy",
+      "new_task_identity": "*tsk=*orig after INIT_LIST_S(&tsk.tasks)",
+      "stack_provenance": "stack copied old parent pointer until replaced",
+      "usage": "copied orig.usage temporarily",
+      "tasks": "list init overwritten by copied orig.tasks",
+      "anchors": [
+        "A06",
+        "A07",
+        "A17",
+        "A18"
+      ],
+      "limits": "valid orig and tsk required; copy is not ownership/reference acquisition"
+    },
+    {
+      "stage": "new_stack_allocation",
+      "new_task_identity": "same tsk",
+      "stack_provenance": "kmalloc(THREAD_SIZE); only on success tsk.stack=stack",
+      "usage": "still copied before later reset",
+      "anchors": [
+        "A08",
+        "B01",
+        "B02",
+        "B03"
+      ],
+      "limits": "failure goes free_tsk releasing task object only, original stack pointer not explicitly freed"
+    },
+    {
+      "stage": "final_dup_state",
+      "new_task_identity": "return tsk",
+      "stack_provenance": "new pointer if all previous stages return",
+      "usage": "refcount_set(tsk.usage,1)",
+      "tasks": "copy_process later sets children/sibling, not a second init of tasks member in dup",
+      "anchors": [
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A14"
+      ],
+      "limits": "usage 1 is a local counter, not global holder audit"
+    },
+    {
+      "stage": "copy_process_success",
+      "new_task_identity": "p returned to kernel_clone",
+      "stack_provenance": "new stack if success",
+      "usage": "does not gain a new usage increment in chosen kernel_clone",
+      "anchors": [
+        "A13",
+        "A15",
+        "A21",
+        "C12"
+      ],
+      "limits": "later publication and real scheduler work conditional"
+    }
+  ],
+  "task_reference_matrix": [
+    {
+      "api": "find_get_task_by_vpid",
+      "returns": "task_s* from find_task_by_vpid",
+      "task_usage_change": "none in selected body; get_task_struct commented",
+      "pid_ref_change": "none local",
+      "anchors": [
+        "C01",
+        "C02",
+        "C03"
+      ],
+      "limits": "naming get not evidence for task reference"
+    },
+    {
+      "api": "get_pid_task",
+      "returns": "task_s* from pid_task",
+      "task_usage_change": "get_task_struct commented",
+      "pid_ref_change": "none locally",
+      "anchors": [
+        "C04",
+        "C05",
+        "C09"
+      ],
+      "limits": "valid pid/tasks hlist required"
+    },
+    {
+      "api": "get_task_pid",
+      "returns": "pid_s* via get_pid",
+      "task_usage_change": "none local",
+      "pid_ref_change": "get_pid increments pid.count if nonNULL",
+      "anchors": [
+        "C06",
+        "C07"
+      ],
+      "limits": "pid pointer not equivalent to task holder"
+    },
+    {
+      "api": "get_pid/put_pid",
+      "returns": "pid_s*/void",
+      "task_usage_change": "none",
+      "pid_ref_change": "conditional increment/decrement and potential free of pid cache object only",
+      "anchors": [
+        "C07",
+        "C08"
+      ],
+      "limits": "reference arithmetic requires same valid pid object and representability"
+    },
+    {
+      "api": "kernel_clone",
+      "returns": "numeric pid_t",
+      "task_usage_change": "vfork get_task_struct(p) is commented",
+      "pid_ref_change": "get_task_pid then put_pid if both reachable",
+      "anchors": [
+        "C10",
+        "C11",
+        "C12"
+      ],
+      "limits": "borrow task pointer during wake requires separate lifetime proof"
+    },
+    {
+      "api": "task_struct.usage",
+      "returns": "field refcount_t",
+      "task_usage_change": "explicit reset to 1 after dup",
+      "pid_ref_change": "different object",
+      "anchors": [
+        "A09",
+        "C23"
+      ],
+      "limits": "no selected active get_task_struct/put_task_struct definitions established by targeted search; no global negative conclusion"
+    }
+  ],
+  "stack_lifetime_matrix": [
+    {
+      "stage": "storage_size",
+      "operation": "kmalloc(THREAD_SIZE) where PAGE_SHIFT=12/THREAD_SIZE_ORDER=3 => 32768 in stated macro model",
+      "anchors": [
+        "B02",
+        "B12"
+      ],
+      "boundary": "macro source not generated build guarantee"
+    },
+    {
+      "stage": "alloc_success",
+      "operation": "tsk.stack gets new pointer after nonNULL test",
+      "anchors": [
+        "B02",
+        "B03"
+      ],
+      "boundary": "allocation size/provenance not physical mapping validation"
+    },
+    {
+      "stage": "alloc_failure",
+      "operation": "returns -ENOMEM before assignment; duplicated prior stack field retained until free_tsk",
+      "anchors": [
+        "A07",
+        "B02",
+        "A12"
+      ],
+      "boundary": "no new stack ownership, do not free inherited pointer on failure"
+    },
+    {
+      "stage": "put_task_stack",
+      "operation": "refcount_dec_and_test(stack_refcount) is commented; release_task_stack called unconditionally",
+      "anchors": [
+        "B06",
+        "B21",
+        "B16"
+      ],
+      "boundary": "not a counted stack owner release; exact other references unknown"
+    },
+    {
+      "stage": "release_state_gate",
+      "operation": "WARN_ON(READ_ONCE(tsk.__state)!=TASK_DEAD) then return",
+      "anchors": [
+        "B04",
+        "B13",
+        "B14",
+        "B15"
+      ],
+      "boundary": "DEBUG/CONFIG macro inclusion and pointer validity required; `WARN_ON` selected source reduces to condition, not proof of emitted warning"
+    },
+    {
+      "stage": "release_allowed",
+      "operation": "kfree(tsk.stack) then tsk.stack=NULL",
+      "anchors": [
+        "B05",
+        "B20"
+      ],
+      "boundary": "if object valid and call returns; no allocator physical effect attestation"
+    },
+    {
+      "stage": "free_task",
+      "operation": "free_task_struct calls kfree(tsk) independently of stack pointer",
+      "anchors": [
+        "B07",
+        "B09",
+        "B22"
+      ],
+      "boundary": "free_task alone does not run put_task_stack; task memory source must match"
+    },
+    {
+      "stage": "static_init_stack",
+      "operation": "init_task.stack=init_stack static",
+      "anchors": [
+        "B17",
+        "A18"
+      ],
+      "boundary": "no universal rule that all task stacks are kmalloc allocations"
+    },
+    {
+      "stage": "normal_exit",
+      "operation": "do_task_dead sets TASK_DEAD; finish_task_switch death-state put_task_stack is commented",
+      "anchors": [
+        "C17",
+        "C18",
+        "C15",
+        "C16"
+      ],
+      "boundary": "no actual task/stack release proof on selected normal exit chain"
+    }
+  ],
+  "destroy_caller_matrix": [
+    {
+      "caller": "dup_task_struct::free_tsk",
+      "condition": "alloc_task success but stack alloc failed or err test branch",
+      "path": "free_task_struct(tsk) -> kfree task",
+      "anchors": [
+        "A08",
+        "A12",
+        "A02"
+      ],
+      "not_proved": "successfully allocated new stack or put_task_stack"
+    },
+    {
+      "caller": "copy_process::bad_fork_free",
+      "condition": "only paths entering this label after earlier cleanup",
+      "path": "WRITE_ONCE(TASK_DEAD) -> put_task_stack -> delayed_free_task -> free_task -> free_task_struct",
+      "anchors": [
+        "B10",
+        "C13",
+        "C22",
+        "B07",
+        "B09"
+      ],
+      "not_proved": "prior cleanup defined/returned, no concurrent task use or real kfree effect"
+    },
+    {
+      "caller": "copy_process success",
+      "condition": "return p before labels",
+      "path": "caller kernel_clone consumes and may request wake",
+      "anchors": [
+        "A21",
+        "A15",
+        "C10"
+      ],
+      "not_proved": "automatic destructor"
+    },
+    {
+      "caller": "kernel_clone",
+      "condition": "valid p and pid object",
+      "path": "get_task_pid + put_pid; get_task_struct(vfork) commented",
+      "anchors": [
+        "C10",
+        "C11",
+        "C12"
+      ],
+      "not_proved": "task usage increment/decrement or physical task ownership"
+    },
+    {
+      "caller": "normal exit selected",
+      "condition": "do_exit defined through do_task_dead",
+      "path": "set TASK_DEAD, __schedule; finish dead put code comments",
+      "anchors": [
+        "C20",
+        "C17",
+        "C18",
+        "C15",
+        "C16",
+        "C21"
+      ],
+      "not_proved": "normal successful task/stack destruction"
+    }
+  ],
+  "earliest_stop_matrix": [
+    {
+      "case": "node!=NUMA_NO_NODE",
+      "stop": "tsk indeterminate at `if(!tsk)`",
+      "anchors": [
+        "A03",
+        "A04",
+        "A05"
+      ],
+      "historical": "CORE-USER-VFS-BASELINE-05::UV-16"
+    },
+    {
+      "case": "node match, allocator NULL",
+      "stop": "dup returns NULL; copy_process goto fork_out; not bad_fork_free",
+      "anchors": [
+        "A01",
+        "A05",
+        "A13"
+      ],
+      "historical": "R44-S01"
+    },
+    {
+      "case": "orig invalid at *tsk",
+      "stop": "dereference invalid input; cannot assert stack allocation or usage",
+      "anchors": [
+        "A07"
+      ]
+    },
+    {
+      "case": "stack allocation NULL",
+      "stop": "new stack never assigned; free_tsk only task kfree",
+      "anchors": [
+        "A08",
+        "B02",
+        "A12"
+      ]
+    },
+    {
+      "case": "release tsk invalid",
+      "stop": "READ_ONCE(tsk.__state) invalid; cannot use WARN_ON as error recovery",
+      "anchors": [
+        "B04",
+        "B14"
+      ]
+    },
+    {
+      "case": "stack not owned by allocation",
+      "stop": "kfree request invalid storage; do not continue to NULL assignment",
+      "anchors": [
+        "B05",
+        "B17"
+      ]
+    },
+    {
+      "case": "already free task passed again",
+      "stop": "state evaluation invalid before kfree(NULL) speculation",
+      "anchors": [
+        "B04",
+        "B09"
+      ]
+    },
+    {
+      "case": "prior fork cleanup invalid or nonreturning",
+      "stop": "cannot certify state DEAD or stack/task free labels",
+      "anchors": [
+        "C13"
+      ],
+      "historical": "R44-S01, UV-14"
+    },
+    {
+      "case": "normal exit indeterminate group_dead",
+      "stop": "cannot certify call do_task_dead or finish-task switch",
+      "anchors": [
+        "C20",
+        "C17"
+      ],
+      "historical": "UV-15, R73-S01"
+    },
+    {
+      "case": "PID lookup has only naked task",
+      "stop": "object liveness/RCU and stable owner unproved; no actual usage inc",
+      "anchors": [
+        "C01",
+        "C02",
+        "C04",
+        "C05"
+      ]
+    },
+    {
+      "case": "context_switch not resumed",
+      "stop": "cannot certify finish_task_switch, which has put block commented anyway",
+      "anchors": [
+        "C21",
+        "C15"
+      ],
+      "historical": "R15-S02"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "id": "TSL74-M01",
+      "kind": "alloc_node_match",
+      "input": "node==NUMA_NO_NODE; kzalloc nonNULL",
+      "expected": "tsk assigned; caller then may inspect",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M02",
+      "kind": "alloc_node_mismatch",
+      "input": "node!=NUMA_NO_NODE",
+      "expected": "local tsk uninitialized; if(!tsk) invalid-value STOP",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M03",
+      "kind": "alloc_failure",
+      "input": "match, kzalloc=NULL",
+      "expected": "dup_task_struct returns NULL before full copy or stack call",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M04",
+      "kind": "orig_invalid",
+      "input": "assigned tsk but orig pointer invalid",
+      "expected": "*tsk=*orig STOP; no success or error return asserted",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M05",
+      "kind": "list_overwrite",
+      "input": "INIT_LIST_S successful then *tsk=*orig",
+      "expected": "tasks links replaced by values of orig; later init not in this dup body",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M06",
+      "kind": "stack_failure",
+      "input": "valid tsk, alloc_thread_stack_node kmalloc NULL",
+      "expected": "returns -ENOMEM before tsk.stack assignment; copy has inherited orig.stack, free_tsk only releases tsk",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M07",
+      "kind": "stack_success",
+      "input": "valid tsk, kmalloc fresh nonNULL",
+      "expected": "tsk.stack overwritten with new pointer, then usage=1 if later steps complete",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M08",
+      "kind": "usage_reset",
+      "input": "orig.usage=2 valid, successful dup",
+      "expected": "child.usage=1 after explicit refcount_set; not two refs transferred",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M09",
+      "kind": "worker_reset",
+      "input": "worker_private initially copied",
+      "expected": "worker_private=NULL after usage assignment",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M10",
+      "kind": "init_task_static",
+      "input": "init_task valid static object",
+      "expected": "init_task.stack=init_stack, init_task.usage=2, not new kmalloc",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M11",
+      "kind": "child_success",
+      "input": "copy_process returns p",
+      "expected": "skips bad_fork labels, wake path is kernel_clone later",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M12",
+      "kind": "early_clone_error",
+      "input": "flags reject before dup",
+      "expected": "ERR_PTR(-EINVAL); no task/stack allocated through dup",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M13",
+      "kind": "null_task_copy",
+      "input": "copy_process dup_task_struct returned NULL",
+      "expected": "goto fork_out, does not enter bad_fork_free",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M14",
+      "kind": "stack_size",
+      "input": "PAGE_SHIFT=12, THREAD_SIZE_ORDER=3",
+      "expected": "(1UL<<12)<<3 =32768 bytes in bounded unsigned-integer model",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M15",
+      "kind": "state_not_dead",
+      "input": "valid tsk.__state != TASK_DEAD",
+      "expected": "release_task_stack returns before kfree",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M16",
+      "kind": "state_dead",
+      "input": "valid tsk.__state == TASK_DEAD, valid allocated stack",
+      "expected": "release calls kfree(tsk.stack), then NULL only if callee returns",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M17",
+      "kind": "state_invalid_task",
+      "input": "tsk pointer invalid / freed",
+      "expected": "READ_ONCE member evaluation STOP; not a normal no-op",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M18",
+      "kind": "state_dead_invalid_stack",
+      "input": "task valid, stack stale/non-owned",
+      "expected": "kfree request not proof of legitimate physical free; STOP if invalid",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M19",
+      "kind": "put_task_stack",
+      "input": "task valid, stack_refcount not a compiled member",
+      "expected": "direct release_task_stack call regardless of task.usage",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M20",
+      "kind": "free_task_alone",
+      "input": "task valid, separate stack still set",
+      "expected": "free_task_struct(tsk) called; free_task does not itself call put_task_stack",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M21",
+      "kind": "bad_fork_cleanup",
+      "input": "late failure, all prior cleanup completed, task/stack valid",
+      "expected": "WRITE_ONCE DEAD -> put stack -> delayed_free_task -> free_task -> free_task_struct",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M22",
+      "kind": "bad_fork_cleanup_stopped",
+      "input": "earlier sighand cleanup invalid/non-returning",
+      "expected": "no certification of reaching bad_fork_free",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M23",
+      "kind": "double_put",
+      "input": "same task valid after first put; stack now NULL",
+      "expected": "second source call requests kfree(NULL) subject to actual kfree semantics not examined",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M24",
+      "kind": "pid_get_valid",
+      "input": "pid_s.count n>=1, representable, get_pid(pid)",
+      "expected": "n->n+1, returns pid_s, no task.usage increment",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M25",
+      "kind": "pid_put_valid",
+      "input": "pid_s.count n+1, put_pid(pid) normal",
+      "expected": "n+1->n; only zero would call pid cache free",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M26",
+      "kind": "pid_get_null",
+      "input": "get_pid(NULL)",
+      "expected": "returns NULL, does not touch task.usage",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M27",
+      "kind": "task_lookup",
+      "input": "find_get_task_by_vpid returns nonNULL",
+      "expected": "get_task_struct is commented; no local usage increment",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M28",
+      "kind": "pid_to_task",
+      "input": "get_pid_task returns nonNULL",
+      "expected": "pid_task returns pointer; get_task_struct is commented",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M29",
+      "kind": "kernel_clone_pid",
+      "input": "valid p and PID object with stable other owners",
+      "expected": "get_task_pid then put_pid potentially balances PID count, not task.usage",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M30",
+      "kind": "vfork_comment",
+      "input": "CLONE_VFORK path selected",
+      "expected": "get_task_struct(p) is commented, not an active hold",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M31",
+      "kind": "normal_exit",
+      "input": "valid do_exit prefix through do_task_dead",
+      "expected": "TASK_DEAD and __schedule request; finish TASK_DEAD task/stack puts commented",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    },
+    {
+      "id": "TSL74-M32",
+      "kind": "state_equals_dead_not_lifetime",
+      "input": "TASK_DEAD=0x80",
+      "expected": "flag equality alone does not prove stack has no CPU user",
+      "limitations": "hypothetical defined source objects and normal callee returns only; no compiled kernel code"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-16",
+      "status": "deferred_owner_not_ready",
+      "role": "node!=NUMA_NO_NODE uninitialized pointer, no duplicate new bug"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-15",
+      "status": "deferred_owner_not_ready",
+      "role": "normal task/stack reaping not proved; source-specific owner chain expansion"
+    },
+    {
+      "qualified_id": "CORE-USER-PID-LIFETIME-11-REVIEW-001",
+      "scope": "§3",
+      "role": "bare task pointer vs refcounted pid_s, no revalidation all PID"
+    },
+    {
+      "qualified_id": "CORE-USER-FORK-FILES-ROLLBACK-44-REVIEW-001",
+      "scope": "§2–4",
+      "role": "first valid cleanup prefix and success label separation"
+    },
+    {
+      "qualified_id": "CORE-USER-ENTRY-STACK-BINDING-66-REVIEW-001",
+      "scope": "R66-S01/S02",
+      "role": "THREAD_SIZE and source-only stack-top constraints; no rework"
+    },
+    {
+      "qualified_id": "CORE-USER-FIRST-RUN-FRAME-67",
+      "scope": "D00 R66-01 disposition",
+      "role": "prior task.stack short-anchor corrected with 67 D01; do not reopen"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-CONTEXT-15-REVIEW-001",
+      "scope": "§2–4",
+      "role": "context_switch finish path conditional, mm is separate"
+    },
+    {
+      "qualified_id": "CORE-USER-EXIT-REAP-73-REVIEW-001",
+      "scope": "R73-01/S01/S02/S03",
+      "role": "documentation correction submitted, technical core retained, no self-closure"
+    }
+  ],
+  "new_conditional_findings": [
+    "TSL74-F01"
+  ],
+  "new_evidence_gaps": [
+    "TSL74-U01",
+    "TSL74-U02",
+    "TSL74-U03",
+    "TSL74-U04",
+    "TSL74-U05",
+    "TSL74-U06",
+    "TSL74-U07",
+    "TSL74-U08"
+  ],
+  "methods": {
+    "direct_source_files": 14,
+    "quotes_pinned_reconfirmed": 74,
+    "pure_finite_cases": 32,
+    "text_only": true,
+    "full_local_P9": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "kernel_scripts_compilation_execution": "NOT_RUN"
+  },
+  "source_budget": {
+    "direct_core_and_nearest": 14,
+    "soft_limit": 14,
+    "overrun": 0
+  }
+}

@@ -1,0 +1,511 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FAT-DIR-ITERATOR-35",
+  "record_type": "bounded_fat_directory_iterator_typed_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "mainline_owner": "MYOS2-A-C04",
+  "date": "2026-11-04",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "bce8404efe6a",
+  "fixed_task59_short12": "98608f6c58df",
+  "mandatory_prior_supplements": [
+    "R34-S01",
+    "R34-S02"
+  ],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "definitions": [
+    {
+      "id": "inode",
+      "type": "inode_s*",
+      "producer": "FAT32_lookup parent input",
+      "consumed": "i_sb/private_idx_info",
+      "status": "borrowed; validity premise"
+    },
+    {
+      "id": "finode",
+      "type": "FAT32_inode_info_s*",
+      "producer": "dir->private_idx_info",
+      "consumed": "first_cluster in get_cluster_chain",
+      "status": "borrowed"
+    },
+    {
+      "id": "fsbi",
+      "type": "FAT32_SBinfo_s*",
+      "producer": "dir->i_sb->private_sb_info",
+      "consumed": "bytes_per_cluster and sector_per_cluster",
+      "status": "borrowed; must be valid and have nonzero bufsize"
+    },
+    {
+      "id": "clus_lhdrp",
+      "type": "List_hdr_s*",
+      "producer": "get_cluster_chain(inode)",
+      "consumed": "clus_lhdrp->count and list removal",
+      "status": "returns ordinary pointer or ERR_PTR; no defined NULL producer in selected exits"
+    },
+    {
+      "id": "clus_sp",
+      "type": "clus_list_s*",
+      "producer": "kmalloc in get_cluster_chain",
+      "consumed": "cluster/list link",
+      "status": "node allocator and list internals opaque"
+    },
+    {
+      "id": "iobuf",
+      "type": "FAT32_iobuf_s*",
+      "producer": "kzalloc in FAT32_iobuf_init",
+      "consumed": "lookup and getter",
+      "status": "normal object or ERR_PTR failure; no direct NULL defined return"
+    },
+    {
+      "id": "nr_clus",
+      "type": "int",
+      "producer": "clus_lhdrp->count",
+      "consumed": "bufend and count-dependent arrays",
+      "status": "integer count; list integrity required"
+    },
+    {
+      "id": "max_nr_clus",
+      "type": "int",
+      "producer": "FAT32_MAX_FILE_SIZE / bufsize through size_t expression",
+      "consumed": "arrays allocated max_nr",
+      "status": "size/assignment require nonzero bufsize, representability, count<=capacity"
+    },
+    {
+      "id": "bufsize",
+      "type": "size_t",
+      "producer": "fsbi->bytes_per_cluster",
+      "consumed": "division, arrays, readent and ROOTBLK_TRANSFER",
+      "status": "must be nonzero"
+    },
+    {
+      "id": "buffers",
+      "type": "char**",
+      "producer": "kzalloc(max_nr * sizeof(char*)) only if count>0",
+      "consumed": "buffers[bufidx] and address return",
+      "status": "array capacity must include selected bufidx"
+    },
+    {
+      "id": "clusters",
+      "type": "u32*",
+      "producer": "kzalloc(max_nr * sizeof(u32)) only if count>0, then populated from list",
+      "consumed": "readent uses clusters[0]",
+      "status": "cluster field count and valid index required"
+    },
+    {
+      "id": "flags",
+      "type": "u32*",
+      "producer": "kzalloc(max_nr * sizeof(u32)) and fill zero per copy",
+      "consumed": "outside selected readent/iterator",
+      "status": "not an actual read-status test here"
+    },
+    {
+      "id": "iter_cursor",
+      "type": "loff_t",
+      "producer": "init initially -1 then iter_init sets 0, next adds sizeof(msdos_dirent_s)",
+      "consumed": "get_full_ent next and FAT32_lookup while",
+      "status": "mutable byte offset, distinct from ent count"
+    },
+    {
+      "id": "iter_reach_end",
+      "type": "bool",
+      "producer": "iter_init false, iter_next true if cursor>=bufend",
+      "consumed": "get_full_ent loop and result override",
+      "status": "not an error-pointer predicate"
+    },
+    {
+      "id": "iter_init",
+      "type": "int (*)(FAT32_iobuf_s*)",
+      "producer": "FAT32_iobuf_init assigns FAT32_iobuf_iter_init",
+      "consumed": "FAT32_lookup calls it; int return ignored",
+      "status": "binding only on successful init path"
+    },
+    {
+      "id": "next",
+      "type": "const msdos_dirent_s* (*)(FAT32_iobuf_s*)",
+      "producer": "FAT32_iobuf_init assigns FAT32_iobuf_iter_next",
+      "consumed": "FAT32_get_full_ent calls it",
+      "status": "binding only on valid iobuf"
+    },
+    {
+      "id": "off",
+      "type": "loff_t",
+      "producer": "argument to FAT32_iobuf_readent",
+      "consumed": "off<0 or >=bufend, bufidx and bufoff",
+      "status": "start offset not full-record extent"
+    },
+    {
+      "id": "bufidx",
+      "type": "int",
+      "producer": "off / bufsize",
+      "consumed": "buffers[bufidx] access",
+      "status": "not equal to read request clusters index"
+    },
+    {
+      "id": "bufoff",
+      "type": "int",
+      "producer": "off % bufsize",
+      "consumed": "return buffers[bufidx]+bufoff",
+      "status": "whole sizeof(dirent) availability not checked locally"
+    },
+    {
+      "id": "ret_val",
+      "type": "const msdos_dirent_s*",
+      "producer": "readent via iter_next",
+      "consumed": "get_full_ent immediately reads ret_val->attr and name[0]",
+      "status": "can be ordinary or ERR_PTR, no guard before deref"
+    },
+    {
+      "id": "tmpval",
+      "type": "const msdos_dirslot_s*",
+      "producer": "cast from ret_val in get_full_ent",
+      "consumed": "not further read in selected body",
+      "status": "cast not an independent validated value"
+    },
+    {
+      "id": "tmpde",
+      "type": "const msdos_dirent_s*",
+      "producer": "FAT32_lookup assignment from get_full_ent when while left operand true",
+      "consumed": "IS_ERR at callback and later fat_build_inode",
+      "status": "preserves stale previous pointer on left-bound false"
+    },
+    {
+      "id": "bufend",
+      "type": "loff_t",
+      "producer": "nr_clus * bufsize",
+      "consumed": "readent start-offset boundary and iter_next end predicate",
+      "status": "not the same as FAT_MAX_DIR_SIZE"
+    },
+    {
+      "id": "ROOTBLK_TRANSFER",
+      "type": "macro invocation",
+      "producer": "readent cache miss",
+      "consumed": "CMD_READ, FAT32_clus_to_blknr(fsbi,clusters[0]),sector_per_cluster,buf",
+      "status": "return ignored; no device/driver inference"
+    }
+  ],
+  "source_domains": {
+    "iobuf_init": "FAT32_iobuf_init",
+    "iter_init": "FAT32_iobuf_iter_init",
+    "iter_next": "FAT32_iobuf_iter_next",
+    "getter": "FAT32_get_full_ent",
+    "empty": "FAT32_ent_empty",
+    "readent": "FAT32_iobuf_readent",
+    "producer_chain": "get_cluster_chain (only local returns and direct consumer)",
+    "lookup": "FAT32_lookup (only next consuming loop)"
+  },
+  "contracts": {
+    "cluster_chain": {
+      "normal": "new allocated List_hdr_s*, including count==0 if cluster<=0, on valid inputs",
+      "error_producers": [
+        "ERR_PTR(-ENOMEM) on list allocation failure",
+        "ERR_PTR(-ENOMEM) on node allocation failure",
+        "ERR_PTR(-EIO) on FAT_ENT_BAD"
+      ],
+      "null": "no direct NULL return on selected defined exits",
+      "opaque": "FAT32_read_FAT_Entry, list management and physical ownership"
+    },
+    "iobuf_init": {
+      "size": "bufsize=fsbi->bytes_per_cluster; max_nr=FAT32_MAX_FILE_SIZE/bufsize",
+      "chain_test": "if(clus_lhdrp==NULL) return ERR_PTR(-ENOMEM)",
+      "chain_error_limit": "chain ERR_PTR passes this NULL test then is consumed at clus_lhdrp->count; stop",
+      "allocation": "kzalloc(sizeof iobuf), then if count>0 arrays of max_nr",
+      "successful_fields": [
+        "nr_clus=count",
+        "max_nr_clus=max_nr",
+        "bufsize=bufsize",
+        "fsbi=fsbi",
+        "iter_cursor=-1",
+        "iter_init=FAT32_iobuf_iter_init",
+        "next=FAT32_iobuf_iter_next"
+      ],
+      "normal_return": "iobuf pointer",
+      "failure_return": "ERR_PTR(error); usually -ENOMEM in selected allocation labels",
+      "no_direct_normal_NULL_return": true,
+      "source_notes": "arrays not explicitly allocated for count==0; later access needs allocation and offset validation"
+    },
+    "iter_init": {
+      "old_cursor": "any valid iobuf cursor",
+      "new_cursor": 0,
+      "new_end": false,
+      "return_int": "-ENOERR=0",
+      "callback_observation": "lookup calls iobuf->iter_init(iobuf) without using int result",
+      "limit": "requires valid iobuf and bound function pointer"
+    },
+    "iter_next": {
+      "sequence": [
+        "ret_val=FAT32_iobuf_readent(iobuf,old_cursor)",
+        "iter_cursor += sizeof(msdos_dirent_s)",
+        "if cursor >= nr_clus*bufsize set iter_reach_end=true",
+        "return original ret_val"
+      ],
+      "ret_can_be": [
+        "ordinary entry pointer",
+        "ERR_PTR(-ENOENT)",
+        "ERR_PTR(-ENOMEM)"
+      ],
+      "ret_before_state_change": true,
+      "readent_error_not_checked": true,
+      "already_end_not_rejected": true
+    },
+    "getter": {
+      "sequence": [
+        "do ret_val=iobuf->next(iobuf)",
+        "cast tmpval from ret_val (not validated)",
+        "read ret_val->attr or FAT32_ent_empty(ret_val) without IS_ERR",
+        "repeat if long/empty and !iter_reach_end",
+        "if iter_reach_end then overwrite ret_val=ERR_PTR(-ENOENT)",
+        "return ret_val"
+      ],
+      "defined_returns": [
+        "ordinary entry pointer when valid and end remains false",
+        "ERR_PTR(-ENOENT) when end becomes true and all earlier derefs valid"
+      ],
+      "not_validly_proven": "propagation of ERR_PTR or NULL from next, because attr/name are read before any guard",
+      "terminal_normal_entry": "overwritten even if last item is ordinary when iter_next flags end",
+      "unused_locals": [
+        "len",
+        "tmpval"
+      ]
+    },
+    "empty": {
+      "predicate": "de->name[0] is 0xe5 or 0x00 or 0x05",
+      "return_type": "bool",
+      "requires": "valid msdos_dirent_s pointer readable through name[0]"
+    },
+    "readent": {
+      "bufend": "nr_clus * bufsize",
+      "real_gate": "off>=bufend || off<0 => ERR_PTR(-ENOENT)",
+      "indexing": "bufidx=off/bufsize; bufoff=off%bufsize",
+      "cache_hit": "return buffers[bufidx]+bufoff cast to msdos_dirent_s*",
+      "cache_miss": "kmalloc(bufsize), if NULL ERR_PTR(-ENOMEM); ROOTBLK_TRANSFER(CMD_READ,clus_to_blknr(fsbi,clusters[0]),sector_per_cluster,buf); buffers[bufidx]=buf; return address",
+      "index_mismatch": "buffers[bufidx] for cache slot but clusters[0] for disk read",
+      "transfer_result_guard": false,
+      "whole_entry_extent_guard": false,
+      "validity_requires": [
+        "nonzero bufsize",
+        "integer calculations and index within capacities",
+        "entire sizeof(msdos_dirent_s) readable from returned address",
+        "valid buffer and disk data; transfer success not established"
+      ],
+      "opaque": "ROOTBLK_TRANSFER macro/driver, FAT32_clus_to_blknr downstream device behavior"
+    },
+    "lookup": {
+      "bound": "FAT_MAX_DIR_SIZE=(65536<<5)=2097152 bytes",
+      "left_operand_evaluation_before_getter": true,
+      "getter_err_consumer": "IS_ERR(tmpde) then callback NULL after release",
+      "success": "valid nonerror returned entry enters callback body; matching/p/a_ops downstream require separate proof",
+      "stale_tmpde": "lookup bound failure skips getter and retains prior tmpde",
+      "different_bounds": "FAT_MAX_DIR_SIZE not identical to nr_clus*bufsize; no equality shown"
+    }
+  },
+  "finite_state_cases": [
+    {
+      "id": "IT35-T01",
+      "classification": "source_derived_conditional",
+      "input": "valid 1-cluster iobuf, cursor=0, end=false, bufend=B>=E, first ordinary nonempty entry, E=sizeof(msdos_dirent_s)",
+      "old_cursor": "0",
+      "readent": "ordinary pointer",
+      "new_cursor": "E",
+      "new_end": "E>=B",
+      "getter_next": "returns pointer if E<B; else override to ERR_PTR(-ENOENT)",
+      "lookup": "when E<B and entry non-skipped, body may run; when E==B, callback sees encoded ENOENT",
+      "stop": "B and E represent valid sizes; no physical data attested"
+    },
+    {
+      "id": "IT35-T02",
+      "classification": "source_derived_conditional",
+      "input": "valid iobuf, cursor=bufend-E, last ordinary nonempty complete entry",
+      "old_cursor": "bufend-E",
+      "readent": "ordinary entry pointer",
+      "new_cursor": "bufend",
+      "new_end": true,
+      "getter_next": "reads attr then overwrites with ERR_PTR(-ENOENT)",
+      "lookup": "while second operand IS_ERR => skip body, callback NULL if normal release",
+      "stop": "valid last record and read normal; real directory existence not proven"
+    },
+    {
+      "id": "IT35-T03",
+      "classification": "source_derived_conditional",
+      "input": "last entry ATTR_LONG_NAME, cursor=bufend-E",
+      "old_cursor": "bufend-E",
+      "readent": "ordinary long slot pointer",
+      "new_cursor": "bufend",
+      "new_end": true,
+      "getter_next": "do-while false due end; ret_val overwritten to ERR_PTR(-ENOENT)",
+      "lookup": "error pointer branch, no decoded longname",
+      "stop": "requires readent ordinary valid"
+    },
+    {
+      "id": "IT35-T04",
+      "classification": "source_derived_conditional",
+      "input": "last entry name[0] marked empty, cursor=bufend-E",
+      "old_cursor": "bufend-E",
+      "readent": "ordinary entry pointer",
+      "new_cursor": "bufend",
+      "new_end": true,
+      "getter_next": "empty test true but !end false, override to ERR_PTR(-ENOENT)",
+      "lookup": "callback NULL after cleanup",
+      "stop": "requires full entry valid"
+    },
+    {
+      "id": "IT35-T05",
+      "classification": "source_derived_conditional",
+      "input": "zero cluster count yields bufend=0, iter_init set cursor0",
+      "old_cursor": "0",
+      "readent": "ERR_PTR(-ENOENT) from off>=bufend",
+      "new_cursor": "E (iter_next runs)",
+      "new_end": true,
+      "getter_next": "ret_val->attr deref occurs before end-override check",
+      "lookup": "no defined result category established",
+      "stop": "at encoded error pointer attribute access; zero-count real parent reachability not proven"
+    },
+    {
+      "id": "IT35-T06",
+      "classification": "source_derived_conditional",
+      "input": "valid nonzero iobuf, iterator cursor=bufend before next",
+      "old_cursor": "bufend",
+      "readent": "ERR_PTR(-ENOENT)",
+      "new_cursor": "bufend+E",
+      "new_end": true,
+      "getter_next": "ret_val->attr before IS_ERR or end test",
+      "lookup": "cannot claim proper ENOENT propagation",
+      "stop": "first invalid ret_val attribute access; no CPU outcome"
+    },
+    {
+      "id": "IT35-T07",
+      "classification": "source_derived_conditional",
+      "input": "cache miss, readent kmalloc(bufsize)==NULL",
+      "old_cursor": "any in-range off",
+      "readent": "ERR_PTR(-ENOMEM)",
+      "new_cursor": "old+E if called by iter_next",
+      "new_end": "depends new_cursor>=bufend",
+      "getter_next": "attribute deref before checking error",
+      "lookup": "error not proven to reach lookup",
+      "stop": "first encoded-pointer attr access"
+    },
+    {
+      "id": "IT35-T08",
+      "classification": "source_derived_conditional",
+      "input": "get_cluster_chain list allocation returns NULL",
+      "old_cursor": "not initialized",
+      "readent": "NOT_CALLED",
+      "new_cursor": "none",
+      "new_end": "unknown",
+      "getter_next": "NOT_CALLED",
+      "lookup": "iobuf_init receives ERR_PTR(-ENOMEM) and checks ==NULL only",
+      "stop": "at clus_lhdrp->count invalid pointer consumption, no return attested"
+    },
+    {
+      "id": "IT35-T09",
+      "classification": "source_derived_conditional",
+      "input": "get_cluster_chain returns ERR_PTR(-EIO) after FAT_ENT_BAD",
+      "old_cursor": "not initialized",
+      "readent": "NOT_CALLED",
+      "new_cursor": "none",
+      "new_end": "unknown",
+      "getter_next": "NOT_CALLED",
+      "lookup": "iobuf_init NULL-only check fails to intercept ERR_PTR",
+      "stop": "at invalid list pointer .count, no safe caller error propagation"
+    },
+    {
+      "id": "IT35-T10",
+      "classification": "source_derived_conditional",
+      "input": "count>0, buffers array kzalloc returns NULL",
+      "old_cursor": "not bound",
+      "readent": "NOT_CALLED",
+      "new_cursor": "none",
+      "new_end": "unknown",
+      "getter_next": "NOT_CALLED",
+      "lookup": "iobuf_init returns ERR_PTR(-ENOMEM), caller unguarded iter_init use",
+      "stop": "at caller iobuf->iter_init without IS_ERR guard, no callback return guaranteed"
+    },
+    {
+      "id": "IT35-T11",
+      "classification": "source_derived_conditional",
+      "input": "valid iobuf, readent cache miss at bufidx>0",
+      "old_cursor": "off in second or later buffer",
+      "readent": "disk read macro uses clusters[0] despite buffers[bufidx] destination",
+      "new_cursor": "old+E if next",
+      "new_end": "depends",
+      "getter_next": "may read result, but actual bytes/transfer not certified",
+      "lookup": "no proof of correct directory record",
+      "stop": "drive correctness/read success and pointer validity unexamined"
+    },
+    {
+      "id": "IT35-T12",
+      "classification": "helper_only",
+      "input": "readent called off=bufend-1 with partial room for an entry",
+      "old_cursor": "not necessarily produced by iter_init/next",
+      "readent": "passes start-offset check and produces pointer near end if cached",
+      "new_cursor": "off+E if via next",
+      "new_end": "true",
+      "getter_next": "whole struct read needs more than one byte; stop before field access",
+      "lookup": "no safe result",
+      "stop": "full-struct extent not checked; actual source of misaligned offset not proven"
+    },
+    {
+      "id": "IT35-T13",
+      "classification": "source_derived_conditional",
+      "input": "valid body receives ordinary long/empty nonterminal entry with end=false",
+      "old_cursor": "kE within bufend",
+      "readent": "ordinary readable entry",
+      "new_cursor": "(k+1)E",
+      "new_end": false,
+      "getter_next": "continue do-while for next; may then return ordinary later record or stop",
+      "lookup": "only after getter returns nonERR does lookup evaluate body",
+      "stop": "no long/short decode or disk chain audited"
+    },
+    {
+      "id": "IT35-T14",
+      "classification": "helper_only",
+      "input": "valid cursor and already iter_reach_end=true despite enough bufend",
+      "old_cursor": "arbitrary valid offset",
+      "readent": "ordinary pointer possible",
+      "new_cursor": "old+E",
+      "new_end": "remains true (not cleared)",
+      "getter_next": "returns ERR_PTR(-ENOENT) due sticky end flag",
+      "lookup": "encoded result if no prior invalid access",
+      "stop": "state producer after iter_init not independently established for this offset"
+    },
+    {
+      "id": "IT35-T15",
+      "classification": "source_derived_conditional",
+      "input": "valid iobuf with bufend < FAT_MAX_DIR_SIZE, last read reaches bufend while lookup left condition true",
+      "old_cursor": "bufend-E",
+      "readent": "ordinary entry",
+      "new_cursor": "bufend",
+      "new_end": true,
+      "getter_next": "overwritten -ENOENT, since getter runs before next lookup-bound test",
+      "lookup": "CB34-F02 NULL failure branch may be reached; CB34-F01 upper-bound stale tmpde not required",
+      "stop": "depends cursor and buffer/record valid; no general assertion all directories behave this way"
+    }
+  ],
+  "arithmetic_model": {
+    "FAT_MAX_DIR_SIZE": 2097152,
+    "FAT32_MAX_FILE_SIZE": 67108864,
+    "ENOERR": 0,
+    "ENOENT": 2,
+    "ENOMEM": 12,
+    "EIO": 5,
+    "entry_size": "sizeof(msdos_dirent_s); packed struct with fixed width members; may evaluate conditionally as 32, uncompiled",
+    "readent_bufend": "nr_clus*bufsize; may differ from FAT_MAX_DIR_SIZE"
+  },
+  "stop_rules": [
+    "C pointer validity and numeric conversions must be established before operations",
+    "get_full_ent does not guard ERR_PTR/NULL before attr/name read",
+    "no physical storage read success, no actual user-file outcome certified",
+    "iter_next end marker not a standalone CPU/error contract",
+    "do not cross invalid object dereference/nonreturn to assert a later return"
+  ],
+  "not_run": [
+    "all repository C/ASM/scripts and preprocessor/compiler/QEMU/hardware",
+    "ROOTBLK_TRANSFER implementation and disk data",
+    "FAT cluster chain traversal implementation beyond selected helper",
+    "complete memory ownership and all FAT dir functions",
+    "permissions, mounts, locks, RCU, refs, pagecache/full VFS"
+  ]
+}

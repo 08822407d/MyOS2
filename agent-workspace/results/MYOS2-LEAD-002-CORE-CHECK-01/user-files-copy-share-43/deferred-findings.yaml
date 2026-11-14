@@ -1,0 +1,149 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FILES-COPY-SHARE-43",
+  "record_type": "incremental_deferred_findings_and_history_append_only",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-05",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "owner_action_now": "none",
+  "new_finding_count": 1,
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-FILES-COPY-SHARE-43::FT43-F01",
+      "id": "FT43-F01",
+      "title": "dup_fd逐非空槽的kzalloc结果未检查NULL就解引用赋值",
+      "kind": [
+        "source_fact",
+        "bounded_conditional_inference"
+      ],
+      "status": "deferred_owner_not_ready",
+      "source_ref": {
+        "path": "mykernel/fs/vfs/file.c",
+        "symbol": "dup_fd",
+        "time_pin": "a039d9803ade",
+        "evidence": [
+          "FT43-A020",
+          "FT43-A025",
+          "FT43-A026",
+          "FT43-A027",
+          "FT43-A029",
+          "FT43-A047"
+        ]
+      },
+      "premises": [
+        "进入dup_fd的有效oldf/newf与max_fds物理合法迭代",
+        "old_fds[i]为非NULL且指向可读取的有效file_s",
+        "该次kzalloc(sizeof(file_s),GFP_KERNEL)正常返回NULL",
+        "选定活动定义被调用且没有其他控制改写"
+      ],
+      "claim": "完整dup_fd活动体在new_fp=kzalloc(sizeof(file_s),GFP_KERNEL)后直接执行*new_fp=*old_fp，没有检查new_fp是否NULL、跳转错误清理或修改errorp；因此假定kzalloc返回NULL时不能得到定义良好的对象赋值，无法从该路径证明正常返回NULL/-ENOMEM或已完成清理。",
+      "impact": "该条件下丢失了有效的赋值目标，copy_files/unshare_fd调用者的后置if(!newf)/if(!*new_fdp)无法保护callee更早的访问；实际机器或分配失败频度未运行。",
+      "counter_evidence": [
+        "旧槽为NULL时不执行kzalloc或new_fp解引用",
+        "本次kzalloc返回有效可写目标且old_fp有效时，可正常复制并存入新槽",
+        "外层kmem_cache_alloc失败有独立goto out返回NULL并保留-ENOMEM；不能把外层失败错当内层失败",
+        "当前没有实测内层分配失败或运行中错误"
+      ],
+      "unknown": [
+        "真实内层分配失败条件和频度",
+        "编译配置下kzalloc包装体的实际绑定及深层分配器行为",
+        "完整错误路径的内存资源回收和真实CPU结果",
+        "上游能否在具体运行中到达这个失败点"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-09",
+        "CORE-USER-FD-CLOSE-42::CL42-F01",
+        "CORE-USER-FILES-COPY-SHARE-43::source_dup_fd"
+      ],
+      "blocks": {
+        "independent_static_work": false,
+        "full_runtime_or_repair": "Requires separate scope and authorization"
+      },
+      "future_verification": {
+        "read_only_candidate": "固定源码之外另获授权后定点检查dup_fd错误处理及内层分配失败边；先重核最新源码",
+        "runtime_candidate": "在明确编译/运行许可后采用受控分配故障注入，不以本轮模型充当实测",
+        "owner_authorization_needed": true
+      },
+      "reopen_conditions": "Owner明确准备处理并批准修复或运行专项，按当时源码重新核验；本批不修内核",
+      "ai_suggestion": "将内层分配返回校验、已分配file副本的错误清理及errorp契约一起列为以后候选设计，但本轮不选择或实施修复"
+    }
+  ],
+  "history_preserved": [
+    {
+      "qualified_id": "CORE-USER-FD-CLOSE-42::CL42-F01",
+      "status": "needs_evidence",
+      "new_evidence": [
+        "FT43-A002",
+        "FT43-A003",
+        "FT43-A004",
+        "FT43-A007",
+        "FT43-A012",
+        "FT43-A036",
+        "FT43-A038"
+      ],
+      "increment": "init_task.files静态绑定、在有效dup_task_struct/CLONE_FILES条件下可传指针并增加表计数；仍未证明任何运行任务最后一次put触及静态init_files或物理缓存释放，不关闭"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-09",
+      "status": "needs_evidence",
+      "new_evidence": [
+        "FT43-A025",
+        "FT43-A026",
+        "FT43-A027",
+        "FT43-A030",
+        "FT43-A031",
+        "FT43-A032",
+        "FT43-A033",
+        "FT43-A034"
+      ],
+      "increment": "按值file_s副本与原对象不同地址、拷贝计数/偏移标量而指针成员只复制值、NULL旧槽不写新槽；跨cache与slab风险均仍是旧问题，未重新注册"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-10",
+      "status": "deferred_owner_not_ready",
+      "increment": "本批不重审close与fput；新表持有身份不证明单fd关闭安全"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-11",
+      "status": "deferred_owner_not_ready",
+      "increment": "dup_fd的max_fds、fd_count、物理256界限三分；不把helper-only >256输入当成正常调用必达"
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-01",
+      "status": "deferred_owner_not_ready",
+      "increment": "引用标签问题仍可能影响实际file.f_count初态；本批不重演write/fcntl或取消缺口"
+    },
+    {
+      "qualified_id": "CORE-USER-SYSCALL-STDIO-08::US-03",
+      "status": "deferred_owner_not_ready",
+      "increment": "exec仅以unshare_files单调用点定向核，不重审close-on-exec"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-LOOKUP-REF-41::FG41-F01",
+      "status": "deferred_owner_not_ready",
+      "increment": "fget空槽与dup_fd复制空槽行为属不同操作，不相互替代"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-CLOSE-42-REVIEW-001::R42-S01",
+      "status": "mandatory_consumption_note",
+      "increment": "计数、并发对象和释放请求前提持续有效"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-CLOSE-42-REVIEW-001::R42-S02",
+      "status": "mandatory_consumption_note",
+      "increment": "单符号引文、数据别名与图中分析前提分开"
+    }
+  ],
+  "not_promoted_to_new_finding": [
+    "dup_fd按值复制file导致引用计数数值和身份变化，已有UV-09",
+    "内嵌fd_array仅256而helper可传更大max_fds，作为有条件helper边界；所读两个调用者均传256，旧UV-11/US-02范围限制不能被偷换",
+    "共享表本地atomic_inc与目标tsk.files继承须先证有效task结构复制；不是已证并发竞态",
+    "无复制时unshare_fd不写输出，由本调用者copy=NULL保证；不是本调用者未初始化缺陷"
+  ],
+  "no_old_files_modified": true,
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "kernel_change_authorized": false,
+  "mainline_acceptance": "PENDING"
+}

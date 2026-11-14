@@ -1,0 +1,594 @@
+---
+# YAML 1.2 compatible JSON mapping (single YAML document)
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-ELF-SEGMENT-LOAD-26",
+  "record_type": "bounded_source_facts_and_boundaries",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "instruction_ref_short12": "e5ea70e40bd4",
+  "result_base_short12": "897c3a935aa8",
+  "read_channel": "connector",
+  "date": "2026-11-02",
+  "writer": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "phase": 2,
+  "execution_status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "run_status": "NOT_RUN",
+  "definitions": {
+    "size_type": "ulong=unsigned long, 64-bit x86_64 model; ELF64 p_filesz/memsz are Elf64_Xword __u64",
+    "page_size_bytes": 4096,
+    "page_shift": 12,
+    "elf_min_align": "PAGE_SIZE on fixed source",
+    "file_interval": "[p_offset,p_offset+p_filesz), bytes; file page mapping begins at offset p_offset-(p_vaddr mod P) conditional on no underflow and congruent inputs",
+    "memory_interval": "[load_bias+p_vaddr, load_bias+p_vaddr+p_memsz), bytes, assuming no address overflow",
+    "file_map_rounded": "ELF_PAGEALIGN(p_filesz + ELF_PAGEOFFSET(p_vaddr)); elf_map aligns incoming addr down",
+    "trim_range": "[map_addr+size,map_addr+total_size) when total_size>0 and vm_mmap returned !BAD_ADDR; no local return check",
+    "zero_tail": "[map_addr+p_filesz+d, ELF_PAGEALIGN(map_addr+p_filesz+d)) if memsz>filesz and filesz>0; padzero clears to end of page, not just memsz",
+    "anon_extension": "[ELF_PAGEALIGN(zero_start), ELF_PAGEALIGN(zero_end)) when memsz>filesz; length=right-left",
+    "zero_file": "filesz=0 sets map_addr=zero_start=ELF_PAGESTART(addr), zero_end=zero_start+d+memsz; then anon extension includes initial aligned page",
+    "evidence": [
+      "EL26-A020",
+      "EL26-A021",
+      "EL26-A025",
+      "EL26-A026",
+      "EL26-A033",
+      "EL26-A035",
+      "EL26-A037",
+      "EL26-A077",
+      "EL26-A078",
+      "EL26-A080",
+      "EL26-A081"
+    ]
+  },
+  "inputs": [
+    {
+      "id": "EL26-I01",
+      "object": "elf_ppnt->p_type",
+      "type": "Elf64_Word",
+      "producer": "load_elf_phdrs buffer",
+      "role": "PT_LOAD filter",
+      "evidence": [
+        "EL26-A003",
+        "EL26-A004"
+      ]
+    },
+    {
+      "id": "EL26-I02",
+      "object": "p_vaddr",
+      "type": "Elf64_Addr",
+      "unit": "bytes",
+      "role": "virtual offset and d page offset",
+      "evidence": [
+        "EL26-A025",
+        "EL26-A077"
+      ]
+    },
+    {
+      "id": "EL26-I03",
+      "object": "p_offset",
+      "type": "Elf64_Off",
+      "unit": "bytes",
+      "role": "mapped file offset after subtract d",
+      "evidence": [
+        "EL26-A025",
+        "EL26-A078"
+      ]
+    },
+    {
+      "id": "EL26-I04",
+      "object": "p_filesz",
+      "type": "Elf64_Xword",
+      "unit": "bytes",
+      "role": "file segment byte length before page round",
+      "evidence": [
+        "EL26-A025",
+        "EL26-A032",
+        "EL26-A078"
+      ]
+    },
+    {
+      "id": "EL26-I05",
+      "object": "p_memsz",
+      "type": "Elf64_Xword",
+      "unit": "bytes",
+      "role": "requested memory byte length; compared after mapping",
+      "evidence": [
+        "EL26-A017",
+        "EL26-A033",
+        "EL26-A035"
+      ]
+    },
+    {
+      "id": "EL26-I06",
+      "object": "p_flags",
+      "type": "Elf64_Word",
+      "role": "PF_* to PROT_* request",
+      "evidence": [
+        "EL26-A005",
+        "EL26-A042",
+        "EL26-A043",
+        "EL26-A079"
+      ]
+    },
+    {
+      "id": "EL26-I07",
+      "object": "elf_flags",
+      "type": "int",
+      "role": "MAP_PRIVATE then FIXED or NOREPLACE depending first PT_LOAD and ET type",
+      "evidence": [
+        "EL26-A006",
+        "EL26-A007",
+        "EL26-A009"
+      ]
+    },
+    {
+      "id": "EL26-I08",
+      "object": "total_size",
+      "type": "ulong bytes",
+      "role": "0 except chosen first ET_DYN reservation",
+      "evidence": [
+        "EL26-A008",
+        "EL26-A039",
+        "EL26-A041"
+      ]
+    },
+    {
+      "id": "EL26-I09",
+      "object": "load_bias",
+      "type": "ulong bytes",
+      "role": "main program mapping offset, may be derived from preliminary probe",
+      "evidence": [
+        "EL26-A010",
+        "EL26-A011",
+        "EL26-A012",
+        "EL26-A015"
+      ]
+    },
+    {
+      "id": "EL26-I10",
+      "object": "map_addr",
+      "type": "ulong address or error encoding",
+      "role": "elf_map vm_mmap result; may be overwritten with int brk error",
+      "evidence": [
+        "EL26-A027",
+        "EL26-A032",
+        "EL26-A038",
+        "EL26-A075"
+      ]
+    },
+    {
+      "id": "EL26-I11",
+      "object": "zero_start/zero_end",
+      "type": "ulong byte address",
+      "role": "assigned only in filesz>0 && memsz>filesz or filesz=0 branch; read guarded by memsz>filesz",
+      "evidence": [
+        "EL26-A031",
+        "EL26-A033",
+        "EL26-A035",
+        "EL26-A036"
+      ]
+    }
+  ],
+  "ordering": [
+    {
+      "id": "EL26-O01",
+      "before": "load_elf_binary initial ELF/arch/fop check",
+      "after": "load_elf_phdrs",
+      "evidence": [
+        "EL26-A001",
+        "EL26-A002",
+        "EL26-A003"
+      ]
+    },
+    {
+      "id": "EL26-O02",
+      "before": "setup_arg_pages",
+      "after": "main PT_LOAD loop",
+      "evidence": [
+        "EL26-A004"
+      ]
+    },
+    {
+      "id": "EL26-O03",
+      "before": "ET_DYN total_mapping_size and optional preliminary elf_load",
+      "after": "actual elf_load",
+      "evidence": [
+        "EL26-A008",
+        "EL26-A010",
+        "EL26-A011",
+        "EL26-A014"
+      ]
+    },
+    {
+      "id": "EL26-O04",
+      "before": "elf_load(map) + BAD_ADDR consumer",
+      "after": "post-call p_filesz>p_memsz and address check",
+      "evidence": [
+        "EL26-A014",
+        "EL26-A017"
+      ]
+    },
+    {
+      "id": "EL26-O05",
+      "before": "elf_map vm_mmap",
+      "after": "vm_munmap attempted without return consumption",
+      "evidence": [
+        "EL26-A027",
+        "EL26-A028"
+      ]
+    },
+    {
+      "id": "EL26-O06",
+      "before": "elf_load file map success",
+      "after": "padzero attempt then conditional anonymous vm_brk_flags",
+      "evidence": [
+        "EL26-A032",
+        "EL26-A034",
+        "EL26-A037"
+      ]
+    },
+    {
+      "id": "EL26-O07",
+      "before": "vm_brk_flags PAGE_ALIGN(request) and len0 gate",
+      "after": "do_brk_flags only if len nonzero",
+      "evidence": [
+        "EL26-A063",
+        "EL26-A064"
+      ]
+    }
+  ],
+  "conditional_claims": [
+    {
+      "id": "EL26-C01",
+      "fact": "elf_map !size early return is a helper-only direct case when p_filesz=0: elf_load bypasses elf_map",
+      "premises": [
+        "source elf_load branches as pinned",
+        "no unsigned overflow assumption except named alternative"
+      ],
+      "evidence": [
+        "EL26-A026",
+        "EL26-A032",
+        "EL26-A035"
+      ]
+    },
+    {
+      "id": "EL26-C02",
+      "fact": "vm_munmap return ignored; success or physical cleanup not proven",
+      "premises": [
+        "total_size>0",
+        "vm_mmap result passes BAD_ADDR"
+      ],
+      "evidence": [
+        "EL26-A027",
+        "EL26-A059",
+        "EL26-A060"
+      ]
+    },
+    {
+      "id": "EL26-C03",
+      "fact": "total_size-size unsigned underflow possible in direct model",
+      "premises": [
+        "size>total_size",
+        "ulong arithmetic",
+        "subtraction actually reached"
+      ],
+      "evidence": [
+        "EL26-A025",
+        "EL26-A027",
+        "EL26-A017"
+      ]
+    },
+    {
+      "id": "EL26-C04",
+      "fact": "padzero evaluated before prot&PROT_WRITE, and failure ignored for nonwritable segment",
+      "premises": [
+        "p_filesz>0",
+        "p_memsz>p_filesz",
+        "elf_map returns usable address",
+        "padzero actually returns nonzero"
+      ],
+      "evidence": [
+        "EL26-A034",
+        "EL26-A023",
+        "EL26-A024"
+      ]
+    },
+    {
+      "id": "EL26-C05",
+      "fact": "no actual read of uninitialized zero_start/end in filesz>0 memsz<=filesz branch",
+      "premises": [
+        "fixed function's guards",
+        "no out-of-scope alternate call sites imported"
+      ],
+      "evidence": [
+        "EL26-A031",
+        "EL26-A033",
+        "EL26-A035",
+        "EL26-A036"
+      ]
+    },
+    {
+      "id": "EL26-C06",
+      "fact": "vm_brk_flags length zero returns success without entering do_brk_flags",
+      "premises": [
+        "page-aligned equal zero_start/end",
+        "no overflow"
+      ],
+      "evidence": [
+        "EL26-A037",
+        "EL26-A063",
+        "EL26-A064"
+      ]
+    },
+    {
+      "id": "EL26-C07",
+      "fact": "do_brk_flags adds VM_DATA_DEFAULT_FLAGS and does not check simple_vma_link return",
+      "premises": [
+        "new-VMA branch reached",
+        "valid objects",
+        "no earlier fail"
+      ],
+      "evidence": [
+        "EL26-A065",
+        "EL26-A068",
+        "EL26-A070"
+      ]
+    },
+    {
+      "id": "EL26-C08",
+      "fact": "vm_mmap file mapping does not prove page-cache data loaded; fault path has separate read return contract",
+      "premises": [
+        "file-backed callback binding valid",
+        "no physical page observation"
+      ],
+      "evidence": [
+        "EL26-A056",
+        "EL26-A083",
+        "EL26-A084"
+      ]
+    }
+  ],
+  "worked_examples": [
+    {
+      "id": "EL26-X01",
+      "kind": "normal_symbolic_valid_source_arithmetic",
+      "P": 4096,
+      "p_vaddr": "0x401234",
+      "p_offset": "0x1234",
+      "p_filesz": "0x1800",
+      "p_memsz": "0x3000",
+      "d": "0x234",
+      "mapped_start": "0x401000",
+      "mapped_file_offset": "0x1000",
+      "mapped_bytes": "0x2000",
+      "end_file_bytes": "0x402a34",
+      "zero_tail_bytes": 1484,
+      "zero_tail_end": "0x403000",
+      "memory_requested_end": "0x404234",
+      "anon_start": "0x403000",
+      "anon_end": "0x405000",
+      "anon_bytes": "0x2000",
+      "runtime_proven": false
+    },
+    {
+      "id": "EL26-X02",
+      "kind": "filesz_zero_direct_local_model",
+      "addr": "0x401234",
+      "p_vaddr": "0x401234",
+      "p_filesz": "0x0",
+      "p_memsz": "0x100",
+      "mapped_start_candidate": "0x401000",
+      "zero_start": "0x401000",
+      "zero_end_raw": "0x401334",
+      "anon_start": "0x401000",
+      "anon_end": "0x402000",
+      "anon_bytes": "0x1000",
+      "note": "initial page INCLUDED, elf_map and padzero not called; VMA success not proven"
+    },
+    {
+      "id": "EL26-X03",
+      "kind": "unsigned_underflow_hypothesis_not_production_trace",
+      "total_size": "0x1000",
+      "size": "0x3000",
+      "difference_u64": "0xffffffffffffe000",
+      "condition": "size>total_size",
+      "runtime_proven": false
+    },
+    {
+      "id": "EL26-X04",
+      "kind": "file_tail_stays_within_last_mapped_page",
+      "p_vaddr": "0x400100",
+      "map_addr": "0x400000",
+      "p_filesz": "0x200",
+      "p_memsz": "0x300",
+      "zero_start": "0x400300",
+      "zero_end": "0x400400",
+      "aligned_start": "0x401000",
+      "aligned_end": "0x401000",
+      "anon_request_bytes": 0,
+      "padzero_attempt_bytes": 3328,
+      "notes": "no brk map; zeroing attempt still separate"
+    }
+  ],
+  "effects_matrix": [
+    {
+      "id": "EL26-M01",
+      "scenario": "elf_map aligned size=0",
+      "prefix": "alignment arithmetic only",
+      "returned": "addr aligned; no vm_mmap",
+      "classification": "helper_local",
+      "evidence": [
+        "EL26-A026"
+      ]
+    },
+    {
+      "id": "EL26-M02",
+      "scenario": "vm_mmap returns coded failure",
+      "prefix": "vm_mmap/do_mmap may have own partial effects",
+      "returned": "BAD_ADDR -> same code; outer IS_ERR_VALUE or -EINVAL",
+      "classification": "conditional",
+      "evidence": [
+        "EL26-A032",
+        "EL26-A014",
+        "EL26-A075"
+      ]
+    },
+    {
+      "id": "EL26-M03",
+      "scenario": "total_size>0 and vm_mmap returns usable map_addr",
+      "prefix": "whole mapped span may have been established",
+      "returned": "vm_munmap trim result ignored, return original addr",
+      "classification": "conditional",
+      "evidence": [
+        "EL26-A027",
+        "EL26-A028"
+      ]
+    },
+    {
+      "id": "EL26-M04",
+      "scenario": "MAP_FIXED_NOREPLACE returns -EEXIST",
+      "prefix": "may log message",
+      "returned": "unchanged error address",
+      "classification": "conditional",
+      "evidence": [
+        "EL26-A029",
+        "EL26-A030"
+      ]
+    },
+    {
+      "id": "EL26-M05",
+      "scenario": "filesz>0 and memsz==filesz",
+      "prefix": "file map",
+      "returned": "no zero_start/end read, no padzero or brk",
+      "classification": "defined_branch_local",
+      "evidence": [
+        "EL26-A032",
+        "EL26-A036"
+      ]
+    },
+    {
+      "id": "EL26-M06",
+      "scenario": "filesz>0 and memsz<filesz",
+      "prefix": "file mapping can precede check",
+      "returned": "post caller -EINVAL, no local rollback",
+      "classification": "possible_path_not_runtime_proven",
+      "evidence": [
+        "EL26-A014",
+        "EL26-A017"
+      ]
+    },
+    {
+      "id": "EL26-M07",
+      "scenario": "last file byte page-aligned",
+      "prefix": "file mapping before padzero",
+      "returned": "padzero has no clear_user call; brk may be zero length",
+      "classification": "conditional",
+      "evidence": [
+        "EL26-A023",
+        "EL26-A024",
+        "EL26-A063"
+      ]
+    },
+    {
+      "id": "EL26-M08",
+      "scenario": "padzero returns nonzero and prot PROT_WRITE",
+      "prefix": "file mapping and possibly partial clear",
+      "returned": "-EFAULT encoded; brk not called afterwards",
+      "classification": "conditional",
+      "evidence": [
+        "EL26-A034",
+        "EL26-A024"
+      ]
+    },
+    {
+      "id": "EL26-M09",
+      "scenario": "padzero returns nonzero and no prot PROT_WRITE",
+      "prefix": "clear attempted but not all bytes certified",
+      "returned": "error ignored; may proceed to brk",
+      "classification": "conditional",
+      "evidence": [
+        "EL26-A034"
+      ]
+    },
+    {
+      "id": "EL26-M10",
+      "scenario": "filesz0 memsz>0",
+      "prefix": "no elf_map or padzero",
+      "returned": "anonymous request from floor(addr) through ceil(floor(addr)+d+memsz)",
+      "classification": "conditional",
+      "evidence": [
+        "EL26-A035",
+        "EL26-A037"
+      ]
+    },
+    {
+      "id": "EL26-M11",
+      "scenario": "vm_brk_flags request 0",
+      "prefix": "prior mapped file or none by caller",
+      "returned": "0 with no do_brk_flags",
+      "classification": "local_condition",
+      "evidence": [
+        "EL26-A063"
+      ]
+    },
+    {
+      "id": "EL26-M12",
+      "scenario": "vm_brk_flags returns nonzero",
+      "prefix": "prior file mapping and clear may exist",
+      "returned": "int error assigned to ulong map_addr, caller BAD_ADDR",
+      "classification": "conditional",
+      "evidence": [
+        "EL26-A038",
+        "EL26-A014"
+      ]
+    },
+    {
+      "id": "EL26-M13",
+      "scenario": "post PT_LOAD filesz/memsz/address guard fails",
+      "prefix": "elf_load may already map or unmap portions",
+      "returned": "caller -EINVAL and header cleanup only",
+      "classification": "local_conditional",
+      "evidence": [
+        "EL26-A017",
+        "EL26-A019"
+      ]
+    },
+    {
+      "id": "EL26-M14",
+      "scenario": "all selected source return branches pass",
+      "prefix": "VMA/metadata writes conditional",
+      "returned": "source-level continuation only, physical pages and CPU NOT_RUN",
+      "classification": "conditional_not_full_execution",
+      "evidence": [
+        "EL26-A014",
+        "EL26-A018"
+      ]
+    }
+  ],
+  "prior_qualified_items": [
+    "CORE-USER-VFS-BASELINE-05::UV-02",
+    "CORE-USER-VFS-BASELINE-05::UV-07",
+    "CORE-USER-VFS-BASELINE-05::UV-08",
+    "CORE-USER-VMA-LIFETIME-14::VL14-F01",
+    "CORE-USER-MMAP-PLACEMENT-21::AP21-F03",
+    "CORE-USER-ELF-STACK-TABLES-25-REVIEW-001::R25-S01",
+    "CORE-USER-ELF-STACK-TABLES-25-REVIEW-001::R25-S02",
+    "CORE-USER-ELF-STACK-TABLES-25-REVIEW-001::R25-S03"
+  ],
+  "new_deferred_ids": [
+    "EL26-F01",
+    "EL26-F02",
+    "EL26-F03",
+    "EL26-F04",
+    "EL26-F05"
+  ],
+  "semantic_limits": [
+    "C static source and bounded arithmetic only",
+    "no code execution/build/preprocess",
+    "no guaranteed user page, physical allocation, zero data or CPU permission",
+    "valid addresses and no unsigned overflow explicitly assumed where needed",
+    "no full repository old-findings dedup",
+    "upstream R25 and R23/R24 remain unresolved"
+  ]
+}

@@ -1,0 +1,922 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DEVTMPFS-SETUP-48",
+  "record_type": "bounded_devtmpfs_creation_worker_err_completion_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-06",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "encoding": "JSON syntax compatible with YAML 1.2",
+  "source_quote_count": 52,
+  "source_quote_ids": [
+    "DS48-A001",
+    "DS48-A002",
+    "DS48-A003",
+    "DS48-A004",
+    "DS48-A005",
+    "DS48-A006",
+    "DS48-A007",
+    "DS48-A008",
+    "DS48-A009",
+    "DS48-A010",
+    "DS48-A011",
+    "DS48-A012",
+    "DS48-A013",
+    "DS48-A014",
+    "DS48-A015",
+    "DS48-A016",
+    "DS48-A017",
+    "DS48-A018",
+    "DS48-A019",
+    "DS48-A020",
+    "DS48-A021",
+    "DS48-A022",
+    "DS48-A023",
+    "DS48-A024",
+    "DS48-A025",
+    "DS48-A026",
+    "DS48-A027",
+    "DS48-A028",
+    "DS48-A029",
+    "DS48-A030",
+    "DS48-A031",
+    "DS48-A032",
+    "DS48-A033",
+    "DS48-A034",
+    "DS48-A035",
+    "DS48-A036",
+    "DS48-A037",
+    "DS48-A038",
+    "DS48-A039",
+    "DS48-A040",
+    "DS48-A041",
+    "DS48-A042",
+    "DS48-A043",
+    "DS48-A044",
+    "DS48-A045",
+    "DS48-A046",
+    "DS48-A047",
+    "DS48-A048",
+    "DS48-A049",
+    "DS48-A050",
+    "DS48-A051",
+    "DS48-A052"
+  ],
+  "provenance": {
+    "contract": "74-user-devtmpfs-setup-contract.md",
+    "review47": "CORE-USER-INIT-PATH-SWITCH-47-REVIEW-001",
+    "review46closure": "CORE-USER-FS-PATH-ACCESS-46-DOC-CLOSURE-REVIEW-001",
+    "mandatory": [
+      "R46C-S01",
+      "R47-S01",
+      "R47-S02"
+    ],
+    "previous_delivery_head": "6f8408772ea7"
+  },
+  "identity_table": [
+    {
+      "id": "mount_pointer",
+      "type": "vfsmount_s* (stored in static mnt)",
+      "producer": "vfs_kern_mount",
+      "consumer": "IS_ERR/PTR_ERR at devtmpfs_init",
+      "not_same_as": [
+        "thread task_s*",
+        "err ints"
+      ],
+      "evidence": [
+        "DS48-A002",
+        "DS48-A003"
+      ]
+    },
+    {
+      "id": "thread",
+      "type": "static task_s*",
+      "producer": "kthread_run macro; task pointer or ERR_PTR",
+      "consumer": "IS_ERR then wait/err decode",
+      "not_same_as": [
+        "devtmpfsd int return",
+        "completion.done"
+      ],
+      "evidence": [
+        "DS48-A020",
+        "DS48-A005",
+        "DS48-A006"
+      ]
+    },
+    {
+      "id": "caller_err",
+      "type": "int automatic local in devtmpfs_init",
+      "write_sites": [
+        "register_filesystem normal return",
+        "PTR_ERR(thread) only in creation error branch"
+      ],
+      "address_passed_to": "kthread_run(...,&err,...)",
+      "not_automatically_shared_with": "worker_err",
+      "evidence": [
+        "DS48-A001",
+        "DS48-A004",
+        "DS48-A005",
+        "DS48-A006"
+      ]
+    },
+    {
+      "id": "worker_p",
+      "type": "void* parameter to devtmpfsd",
+      "source": "caller passes &caller_err through creation macro",
+      "reads_or_writes_in_selected_worker_body": 0,
+      "lifetime": "NOT_AUDITED",
+      "evidence": [
+        "DS48-A011",
+        "DS48-A026"
+      ]
+    },
+    {
+      "id": "worker_err",
+      "type": "int automatic local in devtmpfsd",
+      "write_sites": [
+        "initialize0",
+        "assign init_mount normal return"
+      ],
+      "consumer": "if(err)goto out; return err if reached",
+      "same_storage_as_caller_err": false,
+      "evidence": [
+        "DS48-A011",
+        "DS48-A012",
+        "DS48-A015"
+      ]
+    },
+    {
+      "id": "setup_done",
+      "type": "static __initdata completion_s",
+      "members": [
+        "uint done",
+        "swqueue_hdr_s wait"
+      ],
+      "initial_done_literal_under_selected_macro": 0,
+      "wait_site": "devtmpfs_init",
+      "complete_site": "devtmpfsd after mount and path calls",
+      "status_payload": "NONE in interface",
+      "evidence": [
+        "DS48-A019",
+        "DS48-A028",
+        "DS48-A029",
+        "DS48-A030",
+        "DS48-A007",
+        "DS48-A048"
+      ]
+    },
+    {
+      "id": "req_done",
+      "type": "completion_s member of req_s",
+      "init_site": "devtmpfs_submit_req",
+      "wait_site": "devtmpfs_submit_req",
+      "complete_site": "devtmpfs_work_loop",
+      "distinct_from_setup_done": true,
+      "evidence": [
+        "DS48-A021",
+        "DS48-A022",
+        "DS48-A023",
+        "DS48-A017"
+      ]
+    },
+    {
+      "id": "req_err",
+      "type": "int member of req_s",
+      "producer": "handle in work_loop",
+      "consumer": "devtmpfs_submit_req normal return",
+      "distinct_from_caller_and_worker_err": true,
+      "evidence": [
+        "DS48-A050",
+        "DS48-A017",
+        "DS48-A024"
+      ]
+    }
+  ],
+  "source_contracts": [
+    {
+      "id": "devtmpfs_init",
+      "return_type": "int",
+      "ops": [
+        "opts mode=0755; local int err",
+        "INIT_LIST_HEADER_S",
+        "mnt=vfs_kern_mount",
+        "if(IS_ERR(mnt)) return PTR_ERR(mnt)",
+        "err=register_filesystem(dev_fs_type)",
+        "if(err) return err",
+        "thread=kthread_run(devtmpfsd,&err,kdevtmpfs)",
+        "if(!IS_ERR(thread)) wait_for_completion(setup_done) else err=PTR_ERR(thread),thread=NULL",
+        "while(err);",
+        "if(err) unregister_filesystem then return err",
+        "pr_info then return0"
+      ],
+      "err_transport_from_worker": "NONE_IN_SELECTED_SOURCE",
+      "cleanup_after_stable_nonzero": "NOT_REACHED_BY_NORMAL_SOURCE_FLOW",
+      "evidence": [
+        "DS48-A001",
+        "DS48-A003",
+        "DS48-A004",
+        "DS48-A005",
+        "DS48-A006",
+        "DS48-A008",
+        "DS48-A009",
+        "DS48-A010"
+      ]
+    },
+    {
+      "id": "kthread_create",
+      "kind": "single macro definition",
+      "ops": [
+        "kthread_create_on_node(threadfn,data,NUMA_NO_NODE,namefmt,args)"
+      ],
+      "return_kind": "task_s* or encoded error pointer dependent on opaque lower callee",
+      "evidence": [
+        "DS48-A025"
+      ]
+    },
+    {
+      "id": "kthread_run",
+      "kind": "GNU statement-expression macro",
+      "ops": [
+        "__k=kthread_create(threadfn,data,namefmt,args)",
+        "if(!IS_ERR(__k)) wake_up_process(__k)",
+        "yield __k"
+      ],
+      "return_kind": "task pointer or error pointer",
+      "evidence": [
+        "DS48-A026",
+        "DS48-A027"
+      ]
+    },
+    {
+      "id": "devtmpfsd",
+      "return_type": "int",
+      "argument": "void*p not actively accessed in selected full body",
+      "ops": [
+        "local err=0",
+        "err=init_mount",
+        "if(err) goto out",
+        "init_chdir and init_chroot, each return ignored",
+        "complete(&setup_done)",
+        "devtmpfs_work_loop()",
+        "out: return local err"
+      ],
+      "worker_return_to_caller_stack_int": "NONE_IN_SOURCE",
+      "evidence": [
+        "DS48-A011",
+        "DS48-A012",
+        "DS48-A013",
+        "DS48-A014",
+        "DS48-A015"
+      ]
+    },
+    {
+      "id": "complete",
+      "return_type": "void",
+      "parameter": "completion_s*",
+      "source_effects": [
+        "if(done!=UINT_MAX) done++",
+        "swake_up_locked",
+        "unlock"
+      ],
+      "error_payload_arg": false,
+      "full_queue_and_schedule": "OPAQUE",
+      "evidence": [
+        "DS48-A031",
+        "DS48-A032"
+      ]
+    },
+    {
+      "id": "wait_for_completion",
+      "return_type": "void",
+      "parameter": "completion_s*",
+      "source_effects": [
+        "wait_for_common(x,MAX_SCHEDULE_TIMEOUT,TASK_UNINTERRUPTIBLE) call"
+      ],
+      "returns_worker_error": false,
+      "full_wait_semantics": "OPAQUE",
+      "evidence": [
+        "DS48-A033",
+        "DS48-A052"
+      ]
+    },
+    {
+      "id": "devtmpfs_work_loop",
+      "return_type": "void",
+      "outer_loop": "while(1)",
+      "active_source_break_or_return": false,
+      "source_tail": [
+        "__set_current_state",
+        "spin_unlock",
+        "schedule"
+      ],
+      "actual_runtime": "NOT_RUN",
+      "evidence": [
+        "DS48-A016",
+        "DS48-A018",
+        "DS48-A049"
+      ]
+    },
+    {
+      "id": "devtmpfs_submit_req",
+      "return_type": "int",
+      "completion": "req->done",
+      "returned_integer": "req->err",
+      "distinct_from_setup_notification": true,
+      "evidence": [
+        "DS48-A022",
+        "DS48-A023",
+        "DS48-A024"
+      ]
+    }
+  ],
+  "selected_completion_definition": {
+    "actual_time_directory": "mykernel/kactive/completion/",
+    "do_not_substitute_default_branch": "mykernel/include/linux/kernel/completion.h",
+    "source_decl": "static __initdata DECLARE_COMPLETION(setup_done)",
+    "macro_chain": [
+      "DECLARE_COMPLETION(work)",
+      "COMPLETION_INITIALIZER(work) -> done0, initialized wait head"
+    ],
+    "structure": "struct completion {uint done; swqueue_hdr_s wait;}",
+    "init_completion_separate": "dynamically allocated req.done helper, not explicit setup_done call",
+    "preprocessing": "NOT_RUN",
+    "evidence": [
+      "DS48-A019",
+      "DS48-A028",
+      "DS48-A029",
+      "DS48-A030",
+      "DS48-A022",
+      "DS48-A034"
+    ]
+  },
+  "gates": [
+    {
+      "where": "mount_return",
+      "source_condition": "IS_ERR(mnt)",
+      "true": "return PTR_ERR(mnt)",
+      "false": "continue, NOT validate NULL",
+      "evidence": "DS48-A003"
+    },
+    {
+      "where": "register_result",
+      "source_condition": "if(err)",
+      "true": "direct return err",
+      "false": "create thread",
+      "evidence": "DS48-A004"
+    },
+    {
+      "where": "thread_create_result",
+      "source_condition": "if(!IS_ERR(thread))",
+      "true": "wait_for_completion(setup_done)",
+      "false": "err=PTR_ERR(thread),thread=NULL",
+      "evidence": [
+        "DS48-A005",
+        "DS48-A006"
+      ]
+    },
+    {
+      "where": "after_create_or_wait",
+      "source_condition": "while(err);",
+      "true": "empty loop rechecks same local unless modified",
+      "false": "continue to if(err), pr_info/return",
+      "evidence": [
+        "DS48-A008",
+        "DS48-A009"
+      ]
+    },
+    {
+      "where": "worker_mount_result",
+      "source_condition": "if(err)",
+      "true": "goto out, bypass setup_done",
+      "false": "directory calls, setup_done complete, work loop",
+      "evidence": [
+        "DS48-A012",
+        "DS48-A014"
+      ]
+    }
+  ],
+  "finite_models": [
+    {
+      "id": "M01",
+      "domain": "devtmpfs_init",
+      "input": "vfs_kern_mount returns IS_ERR-encoded pointer with valid PTR_ERR",
+      "source_path": "print; return PTR_ERR(mnt)",
+      "last_certified": "no registration, kthread creation, wait, or while in this function branch",
+      "stop_or_unknown": "actual mount failure producer and register status opaque",
+      "evidence": [
+        "DS48-A003",
+        "DS48-A039",
+        "DS48-A036"
+      ]
+    },
+    {
+      "id": "M02",
+      "domain": "devtmpfs_init",
+      "input": "vfs_kern_mount returns defined nonERR NULL pointer",
+      "source_path": "IS_ERR false; proceed to register_filesystem",
+      "last_certified": "mount pointer not certified live",
+      "stop_or_unknown": "nonERR != valid nonNULL task/mount",
+      "evidence": [
+        "DS48-A002",
+        "DS48-A003",
+        "DS48-A037"
+      ]
+    },
+    {
+      "id": "M03",
+      "domain": "devtmpfs_init",
+      "input": "vfs mount defined valid pointer; registration returns nonzero",
+      "source_path": "err=nonzero; if(err) true; print and return err",
+      "last_certified": "no kthread creation, wait, or unregister on this branch",
+      "stop_or_unknown": "no partial-registration cleanup conclusion",
+      "evidence": [
+        "DS48-A004",
+        "DS48-A040"
+      ]
+    },
+    {
+      "id": "M04",
+      "domain": "devtmpfs_init",
+      "input": "registration normal success returns0",
+      "source_path": "err=0; evaluate kthread_run(devtmpfsd,&err,...)",
+      "last_certified": "caller err initialized to0 before &err passed",
+      "stop_or_unknown": "no worker thread run implied by expression alone",
+      "evidence": [
+        "DS48-A004",
+        "DS48-A005",
+        "DS48-A038"
+      ]
+    },
+    {
+      "id": "M05",
+      "domain": "devtmpfs_init",
+      "input": "kthread_run yields defined valid task pointer and normal returned macro",
+      "source_path": "assign static thread; !IS_ERR true; call wait_for_completion(&setup_done)",
+      "last_certified": "wait attempt on setup_done; err retains0 absent other writes",
+      "stop_or_unknown": "waiting completion/error outcome not certified",
+      "evidence": [
+        "DS48-A005",
+        "DS48-A007",
+        "DS48-A027"
+      ]
+    },
+    {
+      "id": "M06",
+      "domain": "devtmpfs_init",
+      "input": "kthread_run returns encoded ERR_PTR(-ENOMEM)",
+      "source_path": "!IS_ERR false; err=PTR_ERR(thread); thread=NULL",
+      "last_certified": "does not call wait_for_completion; err negative nonzero",
+      "stop_or_unknown": "next while(err) obstacle if err stable",
+      "evidence": [
+        "DS48-A006",
+        "DS48-A036",
+        "DS48-A042"
+      ]
+    },
+    {
+      "id": "M07",
+      "domain": "devtmpfs_init",
+      "input": "kthread_run returns encoded error pointer with other recognized nonzero errno",
+      "source_path": "same creation error branch assigns decoded err and null thread",
+      "last_certified": "does not wait, reaches while(err) if normal",
+      "stop_or_unknown": "exact errno producer unknown",
+      "evidence": [
+        "DS48-A006",
+        "DS48-A035",
+        "DS48-A037"
+      ]
+    },
+    {
+      "id": "M08",
+      "domain": "devtmpfs_init",
+      "input": "kthread_run returns defined NULL value (not IS_ERR)",
+      "source_path": "!IS_ERR true; wait_for_completion(&setup_done)",
+      "last_certified": "wait source call attempted; no worker validity proven",
+      "stop_or_unknown": "no real NULL producer or notifier inferred",
+      "evidence": [
+        "DS48-A005",
+        "DS48-A037"
+      ]
+    },
+    {
+      "id": "M09",
+      "domain": "devtmpfs_init",
+      "input": "kthread_run returns nonERR invalid nonNULL task value",
+      "source_path": "!IS_ERR true then wait for setup_done",
+      "last_certified": "IS_ERR gate alone doesn't establish live worker",
+      "stop_or_unknown": "no assumption on wake or setup_done post",
+      "evidence": [
+        "DS48-A005",
+        "DS48-A027"
+      ]
+    },
+    {
+      "id": "M10",
+      "domain": "devtmpfs_init",
+      "input": "caller local err stable nonzero at while(err)",
+      "source_path": "while(err); checks nonzero without any local body writes",
+      "last_certified": "no normal exit to later if(err) from this stable-value source loop",
+      "stop_or_unknown": "no claim compiled program physically spins forever",
+      "evidence": [
+        "DS48-A008",
+        "DS48-A043"
+      ]
+    },
+    {
+      "id": "M11",
+      "domain": "devtmpfs_init",
+      "input": "caller local err stable zero at while(err)",
+      "source_path": "condition false; skip while and if(err), pr_info,return0",
+      "last_certified": "local source success result if prior calls normal",
+      "stop_or_unknown": "worker status, mount, notification not globally certified",
+      "evidence": [
+        "DS48-A008",
+        "DS48-A009",
+        "DS48-A010"
+      ]
+    },
+    {
+      "id": "M12",
+      "domain": "devtmpfs_init",
+      "input": "err initially nonzero but an unmodeled writer later changes it to zero",
+      "source_path": "loop might eventually evaluate zero and proceed",
+      "last_certified": "possibility only; not current worker-code write proof",
+      "stop_or_unknown": "extra writer/timing and C memory model not established",
+      "evidence": [
+        "DS48-A008",
+        "DS48-A041"
+      ]
+    },
+    {
+      "id": "M13",
+      "domain": "devtmpfs_init",
+      "input": "err nonzero at after-while if(err) in hypothetical external-modification scenario",
+      "source_path": "if(err) source body prints, unregisters, returns err",
+      "last_certified": "textual branch exists after while",
+      "stop_or_unknown": "reachability requires normal exit from preceding while and nonzero later value",
+      "evidence": [
+        "DS48-A009",
+        "DS48-A044"
+      ]
+    },
+    {
+      "id": "M14",
+      "domain": "devtmpfs_init",
+      "input": "IS_ERR(mnt) negative integer pointer and print returns normally",
+      "source_path": "PTR_ERR decoded immediately to int return",
+      "last_certified": "no later registration events",
+      "stop_or_unknown": "actual display success not separately tested",
+      "evidence": [
+        "DS48-A003",
+        "DS48-A036"
+      ]
+    },
+    {
+      "id": "M15",
+      "domain": "kthread_macro",
+      "input": "kthread_create receives threadfn=devtmpfsd, data=&caller.err",
+      "source_path": "passes threadfn,data,NUMA_NO_NODE,namefmt to kthread_create_on_node",
+      "last_certified": "data pointer value forwarded by source macro",
+      "stop_or_unknown": "internal kthread creation/stack lifetime opaque",
+      "evidence": [
+        "DS48-A025",
+        "DS48-A026"
+      ]
+    },
+    {
+      "id": "M16",
+      "domain": "kthread_macro",
+      "input": "__k from kthread_create is defined IS_ERR pointer",
+      "source_path": "kthread_run if(!IS_ERR(__k)) false, yields __k",
+      "last_certified": "no wake_up_process in this branch",
+      "stop_or_unknown": "no worker dispatch/status inferred",
+      "evidence": [
+        "DS48-A027",
+        "DS48-A037"
+      ]
+    },
+    {
+      "id": "M17",
+      "domain": "kthread_macro",
+      "input": "__k valid nonERR task pointer",
+      "source_path": "if(!IS_ERR(__k)) wake_up_process(__k); yield __k",
+      "last_certified": "wake call attempted before macro returns",
+      "stop_or_unknown": "doesn't certify worker scheduled or completed",
+      "evidence": [
+        "DS48-A027"
+      ]
+    },
+    {
+      "id": "M18",
+      "domain": "kthread_macro",
+      "input": "__k NULL defined, !IS_ERR true",
+      "source_path": "attempt wake_up_process(NULL), then yield __k if callee returns",
+      "last_certified": "cannot certify normal return or live thread",
+      "stop_or_unknown": "NULL not rejected by IS_ERR",
+      "evidence": [
+        "DS48-A027",
+        "DS48-A037"
+      ]
+    },
+    {
+      "id": "M19",
+      "domain": "devtmpfsd",
+      "input": "valid p points to caller.err, worker init_mount returns0",
+      "source_path": "worker has separate int err=0 then assigned mount0; does not read or deref p",
+      "last_certified": "no source writeback into caller.err in selected full worker body",
+      "stop_or_unknown": "no other possible writer excluded outside this body",
+      "evidence": [
+        "DS48-A011",
+        "DS48-A045",
+        "DS48-A014"
+      ]
+    },
+    {
+      "id": "M20",
+      "domain": "devtmpfsd",
+      "input": "worker init_mount normally returns nonzero",
+      "source_path": "err=nonzero; if(err) goto out; return worker.err",
+      "last_certified": "setup_done complete skipped on this direct path",
+      "stop_or_unknown": "thread execution and return consequences not proved",
+      "evidence": [
+        "DS48-A012",
+        "DS48-A015",
+        "DS48-A046"
+      ]
+    },
+    {
+      "id": "M21",
+      "domain": "devtmpfsd",
+      "input": "worker init_mount returns0, both path switches return normally0",
+      "source_path": "call chdir then chroot then complete then work_loop",
+      "last_certified": "setup_done complete request reached conditional on valid returns",
+      "stop_or_unknown": "path validity and worker-loop exit not proved",
+      "evidence": [
+        "DS48-A012",
+        "DS48-A013",
+        "DS48-A014"
+      ]
+    },
+    {
+      "id": "M22",
+      "domain": "devtmpfsd",
+      "input": "worker init_mount returns0, chdir normal returns -ENOENT",
+      "source_path": "return discarded; chroot still called",
+      "last_certified": "worker-local err remains mount result 0",
+      "stop_or_unknown": "IP47-F01 remains old finding for ignored directory result",
+      "evidence": [
+        "DS48-A013",
+        "DS48-A045"
+      ]
+    },
+    {
+      "id": "M23",
+      "domain": "devtmpfsd",
+      "input": "worker init_mount returns0, chroot normal returns nonzero",
+      "source_path": "return discarded; complete attempted if other calls normal",
+      "last_certified": "notification does not convey chroot error",
+      "stop_or_unknown": "actual chroot negative-error producer unknown",
+      "evidence": [
+        "DS48-A013",
+        "DS48-A048"
+      ]
+    },
+    {
+      "id": "M24",
+      "domain": "devtmpfsd",
+      "input": "init_chdir does not return normally",
+      "source_path": "no certifiable init_chroot or complete",
+      "last_certified": "stop at first directory call",
+      "stop_or_unknown": "invalid objects or timing not audited",
+      "evidence": [
+        "DS48-A013",
+        "DS48-A014"
+      ]
+    },
+    {
+      "id": "M25",
+      "domain": "devtmpfsd",
+      "input": "init_chroot does not return normally",
+      "source_path": "no certifiable complete",
+      "last_certified": "stop at second directory call",
+      "stop_or_unknown": "no assumption of worker int return",
+      "evidence": [
+        "DS48-A013",
+        "DS48-A048"
+      ]
+    },
+    {
+      "id": "M26",
+      "domain": "devtmpfsd",
+      "input": "complete returns normally on successful mount/path prefix",
+      "source_path": "calls devtmpfs_work_loop with while(1) body",
+      "last_certified": "worker enters loop; no normal return source exit found",
+      "stop_or_unknown": "not a proof of actual perpetual CPU run",
+      "evidence": [
+        "DS48-A048",
+        "DS48-A016",
+        "DS48-A018"
+      ]
+    },
+    {
+      "id": "M27",
+      "domain": "devtmpfsd",
+      "input": "hypothetically work_loop normal returns",
+      "source_path": "source falls through out label and returns worker.err",
+      "last_certified": "counterfactual branch only",
+      "stop_or_unknown": "selected work_loop has no active normal return",
+      "evidence": [
+        "DS48-A014",
+        "DS48-A016",
+        "DS48-A015"
+      ]
+    },
+    {
+      "id": "M28",
+      "domain": "completion",
+      "input": "static setup_done declaration under selected macro definitions",
+      "source_path": "DECLARE_COMPLETION uses COMPLETION_INITIALIZER with done literal0",
+      "last_certified": "source initialization model done=0 and wait head init expression",
+      "stop_or_unknown": "actual preprocessor binding/runtime done not attested",
+      "evidence": [
+        "DS48-A019",
+        "DS48-A028",
+        "DS48-A029",
+        "DS48-A030"
+      ]
+    },
+    {
+      "id": "M29",
+      "domain": "completion",
+      "input": "setup_done initial done0; worker init_mount error skips complete",
+      "source_path": "only selected worker notifier before workloop not reached",
+      "last_certified": "no worker-origin completion signal in this source branch",
+      "stop_or_unknown": "wait outcome needs complete scheduling/other notifier assumptions",
+      "evidence": [
+        "DS48-A019",
+        "DS48-A012",
+        "DS48-A014"
+      ]
+    },
+    {
+      "id": "M30",
+      "domain": "completion",
+      "input": "worker calls complete(&setup_done) with valid object",
+      "source_path": "if done!=UINT_MAX done++; swake_up_locked; unlock",
+      "last_certified": "event state and wake request, not worker errno delivery",
+      "stop_or_unknown": "full wake/wait semantics not audited",
+      "evidence": [
+        "DS48-A031",
+        "DS48-A032"
+      ]
+    },
+    {
+      "id": "M31",
+      "domain": "completion",
+      "input": "caller waits for setup_done",
+      "source_path": "wait_for_completion returns void; calls wait_for_common, ignores returned long",
+      "last_certified": "no integer error result assigned to caller.err",
+      "stop_or_unknown": "no guarantee wait actually returns or memory sync",
+      "evidence": [
+        "DS48-A007",
+        "DS48-A033",
+        "DS48-A052"
+      ]
+    },
+    {
+      "id": "M32",
+      "domain": "completion",
+      "input": "worker completed setup_done after both switch calls normal but nonzero",
+      "source_path": "completion request still emitted; caller may resume if wait semantics and scheduling permit",
+      "last_certified": "notification independent of directory success",
+      "stop_or_unknown": "not overall init success or path validity",
+      "evidence": [
+        "DS48-A013",
+        "DS48-A048",
+        "DS48-A031"
+      ]
+    },
+    {
+      "id": "M33",
+      "domain": "completion",
+      "input": "setup_done initially done0, no other signalers, worker early failure",
+      "source_path": "caller waiting with no worker setup_done notifier",
+      "last_certified": "conditional unmatched handshake",
+      "stop_or_unknown": "do not claim physical deadlock",
+      "evidence": [
+        "DS48-A012",
+        "DS48-A019",
+        "DS48-A028",
+        "DS48-A033"
+      ]
+    },
+    {
+      "id": "M34",
+      "domain": "request_completion",
+      "input": "req_s object has its own done and err",
+      "source_path": "devtmpfs_submit_req init_completion(&req.done); wait_for_completion(&req.done); return req.err",
+      "last_certified": "request completion/result independent from setup_done/caller.err",
+      "stop_or_unknown": "worker queue/handle ownership not audited",
+      "evidence": [
+        "DS48-A021",
+        "DS48-A022",
+        "DS48-A023",
+        "DS48-A024"
+      ]
+    },
+    {
+      "id": "M35",
+      "domain": "request_completion",
+      "input": "work_loop processes a valid req",
+      "source_path": "req.err=handle(...); complete(&req.done)",
+      "last_certified": "request local int status plus its own notifier",
+      "stop_or_unknown": "does not notify setup_done",
+      "evidence": [
+        "DS48-A017",
+        "DS48-A050"
+      ]
+    },
+    {
+      "id": "M36",
+      "domain": "cross_context",
+      "input": "devtmpfs_init valid worker created, worker init_mount succeeds and completes, waiter normal return, caller.err stays0",
+      "source_path": "worker signals setup; caller exits wait; checks while(0), if(0), return0",
+      "last_certified": "caller returns0 even while worker loop continues separately",
+      "stop_or_unknown": "no actual init completion or mount/path success guarantee",
+      "evidence": [
+        "DS48-A005",
+        "DS48-A014",
+        "DS48-A008",
+        "DS48-A010"
+      ]
+    },
+    {
+      "id": "M37",
+      "domain": "cross_context",
+      "input": "creator succeeds, worker returns nonzero from init_mount before setup signal",
+      "source_path": "worker out returns its own err; no write to caller.err; caller wait setup_done",
+      "last_certified": "no direct status bridge; conditional absence of signal",
+      "stop_or_unknown": "creation/scheduling and wait protocol no runtime evidence",
+      "evidence": [
+        "DS48-A005",
+        "DS48-A011",
+        "DS48-A012",
+        "DS48-A015"
+      ]
+    },
+    {
+      "id": "M38",
+      "domain": "cross_context",
+      "input": "creator returns nonERR but setup_done already completed from unrelated time",
+      "source_path": "wait may return if completion contract permits, even without worker reaching complete",
+      "last_certified": "cannot declare guaranteed block solely from worker branch",
+      "stop_or_unknown": "other notifier and reuse not audited",
+      "evidence": [
+        "DS48-A019",
+        "DS48-A033"
+      ]
+    },
+    {
+      "id": "M39",
+      "domain": "cross_context",
+      "input": "kthread_run produces encoded error, caller.err=-ENOMEM",
+      "source_path": "no wait; while(err) follows",
+      "last_certified": "register cleanup and final error return not observed in stable model",
+      "stop_or_unknown": "physical hang not attested",
+      "evidence": [
+        "DS48-A042",
+        "DS48-A043",
+        "DS48-A044"
+      ]
+    },
+    {
+      "id": "M40",
+      "domain": "cross_context",
+      "input": "valid worker but init_mount result valid0; chdir fails with nonzero int then chroot normal",
+      "source_path": "worker still completes, caller wait void",
+      "last_certified": "the old IP47-F01 directory error is not corrected by completion",
+      "stop_or_unknown": "not a duplicate new finding",
+      "evidence": [
+        "DS48-A013",
+        "DS48-A048",
+        "DS48-A033"
+      ]
+    }
+  ],
+  "finite_model_count": 40,
+  "new_conditional_candidates": [
+    "DS48-F01",
+    "DS48-F02",
+    "DS48-F03"
+  ],
+  "old_issues_preserved": [
+    "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01",
+    "CORE-USER-VFS-BASELINE-05::UV-01",
+    "CORE-USER-PATH-INIT-31::PI31-F05"
+  ],
+  "preprocessing": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "runtime_evidence": "NOT_RUN",
+  "graphviz": "NOT_RUN"
+}

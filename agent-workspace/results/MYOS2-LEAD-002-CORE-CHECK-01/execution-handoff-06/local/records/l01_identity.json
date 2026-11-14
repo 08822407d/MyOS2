@@ -1,0 +1,224 @@
+{
+ "record": "L01_INPUT_IDENTITY",
+ "repo_root": "/home/cheyh/projs/myos2-handoff06-local/MyOS2",
+ "refs": {
+  "HEAD": {
+   "ref": "HEAD",
+   "short12": "9c36fb3ba7ff",
+   "date": "2026-10-25T10:22:30Z"
+  },
+  "exec_remote": {
+   "ref": "origin/claude/dazzling-cori-q0dnyt",
+   "short12": "9c36fb3ba7ff",
+   "date": "2026-10-25T10:22:30Z"
+  },
+  "time_remote": {
+   "ref": "origin/time",
+   "short12": "a039d9803ade",
+   "date": "2026-04-19T22:12:39+08:00"
+  },
+  "master_remote": {
+   "ref": "origin/master",
+   "short12": "e8e60cd19540",
+   "date": "2026-10-15T09:01:57-07:00"
+  },
+  "lead_remote": {
+   "ref": "origin/agent/MYOS2-LEAD-002",
+   "short12": "ad850ce5405b",
+   "date": "2026-10-25T02:35:42-07:00"
+  },
+  "frozen": {
+   "ref": "short id",
+   "short12": "293a9e3ef5f4",
+   "date": "2026-10-02T16:24:48Z"
+  },
+  "cloud_head": {
+   "ref": "short id",
+   "short12": "9c36fb3ba7ff",
+   "date": "2026-10-25T10:22:30Z"
+  },
+  "results_05": {
+   "ref": "short id",
+   "short12": "22934124fe92",
+   "date": "2026-10-02T16:22:09Z"
+  },
+  "results_04": {
+   "ref": "short id",
+   "short12": "eb75b3100601",
+   "date": "2026-10-02T12:08:06Z"
+  },
+  "prev_exec_05_start": {
+   "ref": "short id",
+   "short12": "de7c96ede546",
+   "date": "2026-10-02T12:10:05Z"
+  },
+  "time_pin": {
+   "ref": "short id",
+   "short12": "a039d9803ade",
+   "date": "2026-04-19T22:12:39+08:00"
+  },
+  "cloud_master_view": {
+   "ref": "short id",
+   "short12": "de3bb1df906a",
+   "date": "2026-09-24T02:44:58-07:00"
+  }
+ },
+ "time_matches_pin": true,
+ "frozen_is_ancestor_of_head": true,
+ "cloud_master_view_is_ancestor_of_master": true,
+ "master_commits_after_cloud_view": [
+  "e8e60cd19540 Merge pull request #18 from 08822407d/agent/MYOS2-LEAD-001"
+ ],
+ "commits_after_frozen": [
+  {
+   "commit": "9c36fb3ba7ff",
+   "parents": [
+    "293a9e3ef5f4"
+   ],
+   "subject": "MYOS2-LEAD-002-CORE-CHECK-01: execution-handoff-06 cloud close (HANDOFF.md and four 05 scratch assets)",
+   "files": 5,
+   "statuses": [
+    "A"
+   ],
+   "write_prefixes": [
+    "cloud"
+   ]
+  }
+ ],
+ "diff_frozen_to_head": [
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/HANDOFF.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/assets/anchor_specs.py"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/assets/gen_facts.py"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/assets/resolve.py"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/assets/run_probes.py"
+  }
+ ],
+ "frozen_files_identity_at_head": {
+  "files": 1324,
+  "identical": 1324,
+  "differing": [],
+  "missing": [],
+  "method": "mode, type and blob id per path; equal blob id means equal bytes"
+ },
+ "cloud_handoff": {
+  "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/HANDOFF.md",
+  "present": true,
+  "cloud_writer_state": "STOPPED_AFTER_THIS_PUSH",
+  "status": "CLOUD_CLOSE_DONE",
+  "scratch_preservation": "PARTIAL"
+ },
+ "cloud_assets": {
+  "rows": [
+   {
+    "path": "assets/anchor_specs.py",
+    "id": "A4",
+    "bytes": 18883,
+    "sha256": "cec77291a771f5db 2faf84768af44ae8 67dc11ada720037b 447dd8e22112f4a4",
+    "matches_handoff_table": true
+   },
+   {
+    "path": "assets/gen_facts.py",
+    "id": "A2",
+    "bytes": 12453,
+    "sha256": "1dda26dccb4b0e73 fb5cf62f072081a6 152c9238bc1688f9 620cc04c31563eae",
+    "matches_handoff_table": true
+   },
+   {
+    "path": "assets/resolve.py",
+    "id": "A3",
+    "bytes": 2224,
+    "sha256": "f0cf757e1c3c3830 1f2efdcc6c1c5f3b ce8058f0fb863eac f78f5d1cd9211fe5",
+    "matches_handoff_table": true
+   },
+   {
+    "path": "assets/run_probes.py",
+    "id": "A1",
+    "bytes": 3939,
+    "sha256": "42b4e0caea82f132 23d2b7f222b8aeb9 a81615198800d843 56c99379124f8457",
+    "matches_handoff_table": true
+   }
+  ],
+  "table_rows": 4,
+  "all_match": true
+ },
+ "contract": {
+  "path": "agent-workspace/lead/MYOS2-LEAD-002/20-cloud-to-local-handoff.md",
+  "branch": "agent/MYOS2-LEAD-002",
+  "bytes": 16580,
+  "sha256": "43e5e1d52d225872 854db4582b4e77a7 fde2002d6db028e9 ec25261623fed423",
+  "downloaded_raw_bytes_equal": true
+ },
+ "working_tree_porcelain": [
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/RECEIPT.md",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/deferred-findings.yaml",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l01_identity.json",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/facts_check.json",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/queries.json",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/run.json",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/stderr.txt",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/stdout.txt",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02_compare.json",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l03_map_spotcheck.json",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/pr17_state.json",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/resume-map.md",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/resume-map.yaml",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/scripts/make_local_records.py",
+  "?? agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/scripts/run_uv05_recheck.py"
+ ],
+ "commands_run": [
+  "git diff --name-status --no-renames 293a9e3ef5f4 9c36fb3ba7ff",
+  "git diff --name-status --no-renames 293a9e3ef5f4 HEAD",
+  "git log --first-parent --format=%H %s de3bb1df906a..origin/master",
+  "git log -1 --format=%cI 22934124fe92",
+  "git log -1 --format=%cI 293a9e3ef5f4",
+  "git log -1 --format=%cI 9c36fb3ba7ff",
+  "git log -1 --format=%cI HEAD",
+  "git log -1 --format=%cI a039d9803ade",
+  "git log -1 --format=%cI de3bb1df906a",
+  "git log -1 --format=%cI de7c96ede546",
+  "git log -1 --format=%cI eb75b3100601",
+  "git log -1 --format=%cI origin/agent/MYOS2-LEAD-002",
+  "git log -1 --format=%cI origin/claude/dazzling-cori-q0dnyt",
+  "git log -1 --format=%cI origin/master",
+  "git log -1 --format=%cI origin/time",
+  "git log -1 --format=%s 9c36fb3ba7ff",
+  "git ls-tree -r -z --full-tree 293a9e3ef5f4",
+  "git ls-tree -r -z --full-tree HEAD",
+  "git merge-base --is-ancestor 293a9e3ef5f4 HEAD",
+  "git merge-base --is-ancestor de3bb1df906a origin/master",
+  "git rev-list --reverse --parents 293a9e3ef5f4..HEAD",
+  "git rev-parse --short=12 22934124fe92^{commit}",
+  "git rev-parse --short=12 293a9e3ef5f4^{commit}",
+  "git rev-parse --short=12 9c36fb3ba7ff^{commit}",
+  "git rev-parse --short=12 HEAD^{commit}",
+  "git rev-parse --short=12 a039d9803ade^{commit}",
+  "git rev-parse --short=12 de3bb1df906a^{commit}",
+  "git rev-parse --short=12 de7c96ede546^{commit}",
+  "git rev-parse --short=12 eb75b3100601^{commit}",
+  "git rev-parse --short=12 origin/agent/MYOS2-LEAD-002^{commit}",
+  "git rev-parse --short=12 origin/claude/dazzling-cori-q0dnyt^{commit}",
+  "git rev-parse --short=12 origin/master^{commit}",
+  "git rev-parse --short=12 origin/time^{commit}",
+  "git show HEAD:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/HANDOFF.md",
+  "git show HEAD:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/assets/anchor_specs.py",
+  "git show HEAD:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/assets/gen_facts.py",
+  "git show HEAD:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/assets/resolve.py",
+  "git show HEAD:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/cloud/assets/run_probes.py",
+  "git show origin/agent/MYOS2-LEAD-002:agent-workspace/lead/MYOS2-LEAD-002/20-cloud-to-local-handoff.md",
+  "git status --porcelain --untracked-files=all"
+ ]
+}

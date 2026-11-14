@@ -1,0 +1,65 @@
+{
+ "record": "C04_WRITE_AREA_BOUNDARY",
+ "base": "ab3b4b86662c",
+ "target": "index (staged)",
+ "base_files": 1356,
+ "base_files_identical": 1356,
+ "differing": [],
+ "missing": [],
+ "changes_vs_base": [
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/MANIFEST.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/deferred-findings.yaml"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/evidence.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/facts-and-boundaries.yaml"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/records/boundary_staged.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/records/queries.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/records/run.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/records/ss_check.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/scripts/ss_check.py"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md"
+  }
+ ],
+ "only_additions_under_prefix": true,
+ "unstaged": [],
+ "untracked": [],
+ "remote_exec_head": "ab3b4b86662c",
+ "head": "ab3b4b86662c",
+ "commands_run": [
+  "git diff --cached --name-status --no-renames ab3b4b86662c",
+  "git diff --name-status --no-renames",
+  "git ls-files --others --exclude-standard",
+  "git ls-files -s -z",
+  "git ls-remote origin refs/heads/claude/dazzling-cori-q0dnyt",
+  "git ls-tree -r -z --full-tree ab3b4b86662c",
+  "git rev-parse --short=12 HEAD"
+ ]
+}

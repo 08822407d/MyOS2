@@ -1,0 +1,4650 @@
+{
+ "check": "CONSUMER_TESTS_N01_N06",
+ "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/official/tests/consumer-tests-pj4dud6e",
+ "frozen_extraction": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/official/frozen",
+ "tests": [
+  {
+   "id": "N01",
+   "input_label": "HARNESS_META_TEST (fields removed/changed on the real b843 V04 record)",
+   "requirement": "missing run metadata is never VALID; error class recorded; explicit failures still rejected; complete control valid",
+   "variants": {
+    "delete_run.collect_timed_out": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_FIELD"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [MISSING_FIELD] run.collect_timed_out missing"
+     ],
+     "met": true
+    },
+    "delete_run.terminal_state": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_FIELD"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [MISSING_FIELD] run.terminal_state missing"
+     ],
+     "met": true
+    },
+    "delete_run.reaped_confirmed": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_FIELD"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [MISSING_FIELD] run.reaped_confirmed missing"
+     ],
+     "met": true
+    },
+    "delete_run.stderr": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_FIELD"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [MISSING_FIELD] run.stderr missing"
+     ],
+     "met": true
+    },
+    "delete_all_four": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_FIELD"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [MISSING_FIELD] run.collect_timed_out missing; [MISSING_FIELD] run.terminal_state missing; [MISSING_FIELD] run.reaped_confirmed missing; [MISSING_FIELD] run.stderr missing"
+     ],
+     "met": true
+    },
+    "delete_case.repeat_terminal_state": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_FIELD"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [MISSING_FIELD] case.repeat_terminal_state missing"
+     ],
+     "met": true
+    },
+    "delete_run.output_lost": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_FIELD"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [MISSING_FIELD] run.output_lost missing"
+     ],
+     "met": true
+    },
+    "explicit_collect_timed_out_true": {
+     "kind": "explicit",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [],
+     "new_reasons": [
+      "v04_noncurrent_wake: output collection timed out"
+     ],
+     "met": true
+    },
+    "explicit_terminal_state_killed": {
+     "kind": "explicit",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [],
+     "new_reasons": [
+      "v04_noncurrent_wake: terminal_state='timeout_group_killed'"
+     ],
+     "met": true
+    },
+    "explicit_reaped_confirmed_false": {
+     "kind": "explicit",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [],
+     "new_reasons": [
+      "v04_noncurrent_wake: reap not confirmed"
+     ],
+     "met": true
+    },
+    "explicit_stderr_nonempty": {
+     "kind": "explicit",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [],
+     "new_reasons": [
+      "v04_noncurrent_wake: stderr not empty"
+     ],
+     "met": true
+    },
+    "explicit_output_lost_true": {
+     "kind": "explicit",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "EXPLICIT_FAILURE"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [EXPLICIT_FAILURE] run.output_lost=True"
+     ],
+     "met": true
+    },
+    "explicit_repeat_terminal_state_killed": {
+     "kind": "explicit",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "EXPLICIT_FAILURE"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: [EXPLICIT_FAILURE] repeat run terminal_state='timeout_group_killed'"
+     ],
+     "met": true
+    },
+    "wrong_type_reaped_confirmed_string": {
+     "kind": "wrong_type",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "WRONG_TYPE"
+     ],
+     "new_reasons": [
+      "v04_noncurrent_wake: reap not confirmed; [WRONG_TYPE] run.reaped_confirmed has type str, expected bool"
+     ],
+     "met": true
+    },
+    "control_complete_real_record": {
+     "kind": "control",
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "new": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "met": true
+    }
+   },
+   "met": true
+  },
+  {
+   "id": "N02",
+   "input_label": "HARNESS_META_TEST (members removed/duplicated/changed on the real b843 v01.json)",
+   "requirement": "missing checked objects are missing evidence, not 'no failure'; legal empty error lists stay valid; a real False is a finding",
+   "variants": {
+    "drop_one_referenced_path": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_OBJECT"
+     ],
+     "met": true
+    },
+    "empty_referenced_paths": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_OBJECT"
+     ],
+     "met": true
+    },
+    "drop_one_report_input": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_OBJECT"
+     ],
+     "met": true
+    },
+    "empty_report_inputs_read": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_OBJECT"
+     ],
+     "met": true
+    },
+    "drop_one_hex40_scope_file": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_OBJECT"
+     ],
+     "met": true
+    },
+    "empty_hex40_hits_in_scope_files": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_OBJECT"
+     ],
+     "met": true
+    },
+    "empty_all_three": {
+     "kind": "missing",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MISSING_OBJECT"
+     ],
+     "met": true
+    },
+    "duplicate_report_input": {
+     "kind": "invalid",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "DUPLICATE_OBJECT"
+     ],
+     "met": true
+    },
+    "renamed_referenced_path_member": {
+     "kind": "invalid",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new_categories": [
+      "MEMBER_IDENTITY"
+     ],
+     "met": true
+    },
+    "control_complete_empty_error_lists": {
+     "kind": "control",
+     "old": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "old_reasons": [
+      null
+     ],
+     "new": [
+      "VALID",
+      "NO_FAILURE_IN_SCOPE"
+     ],
+     "met": true,
+     "empty_error_lists_in_record": {
+      "anchor_refs.dangling": [],
+      "case_refs.dangling": [],
+      "contract09_anchor_refs_dangling": [],
+      "p9_wording_hits_in_scope_files": {}
+     }
+    },
+    "control_member_exists_false": {
+     "kind": "control",
+     "old": [
+      "VALID",
+      "COUNTEREVIDENCE"
+     ],
+     "old_reasons": [
+      null
+     ],
+     "new": [
+      "VALID",
+      "COUNTEREVIDENCE"
+     ],
+     "met": true
+    },
+    "control_complete_hex40_hit_found": {
+     "kind": "control",
+     "old": [
+      "ERROR",
+      null
+     ],
+     "old_reasons": [
+      "COMPARATOR_INVALID: wrong prediction not detected"
+     ],
+     "new": [
+      "VALID",
+      "COUNTEREVIDENCE"
+     ],
+     "met": true
+    }
+   },
+   "met": true
+  },
+  {
+   "id": "N03",
+   "input_label": "HARNESS_META_TEST (b843 observations copied with one file omitted)",
+   "requirement": "no cached verdict hides a missing original; V08 keeps only the independent function layer; independent items unaffected",
+   "variants": {
+    "control_full": {
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "stdout_tail": [
+       "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/official/tests/consumer-tests-pj4dud6e/055_n03_control_full/results.yaml (39525 bytes); generator_errors=0"
+      ],
+      "stderr_tail": [],
+      "report_written": true,
+      "report": {
+       "status": "generated_from_run_status_COMPLETE",
+       "run_status": "COMPLETE",
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        },
+        "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+       },
+       "V14": {
+        "evidence_status": "VALID",
+        "result": "OBSERVED_AS_PREDICTED",
+        "layers": {
+         "source_and_build_reference": "EXECUTED",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+       "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+       "generator_errors": [],
+       "counts_evidence_status": {
+        "VALID": 15
+       }
+      },
+      "report_file": {
+       "bytes": 39525,
+       "sha256_segments": [
+        "e45e07b5a66bd919",
+        "c59164563be73ee4",
+        "fd564a0f8b09acb2",
+        "65ab18b3c242d592"
+       ]
+      }
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_COMPLETE",
+       "source_run_status": "COMPLETE",
+       "input_problems": {},
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "VALID",
+        "result": "OBSERVED_AS_PREDICTED",
+        "layers": {
+         "source_and_build_reference": "EXECUTED",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "VALID",
+        "result": "NO_FAILURE_IN_SCOPE",
+        "layers": {
+         "structure": "EXECUTED"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [],
+       "affected_by_input": {},
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 15
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 2,
+         "NO_FAILURE_IN_SCOPE": 2,
+         "OBSERVED_AS_PREDICTED": 11
+        },
+        "layers_not_executed": [
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 46489,
+       "sha256_segments": [
+        "27d28d7a4660406f",
+        "6ff08d37fe7f38c7",
+        "e996929dd05c938b",
+        "7af18cb3fe532af9"
+       ]
+      }
+     }
+    },
+    "omit_static": {
+     "inputs_present": [
+      "a46.json",
+      "meta_tests.json",
+      "old_counterexamples.json",
+      "run.json",
+      "v00.json",
+      "v01.json"
+     ],
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "stdout_tail": [
+       "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/official/tests/consumer-tests-pj4dud6e/056_n03_omit_static/results.yaml (39004 bytes); generator_errors=0"
+      ],
+      "stderr_tail": [],
+      "report_written": true,
+      "report": {
+       "status": "generated_from_run_status_COMPLETE",
+       "run_status": "COMPLETE",
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        },
+        "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+       },
+       "V14": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+       "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+       "generator_errors": [],
+       "counts_evidence_status": {
+        "VALID": 14,
+        "INCOMPLETE_EVIDENCE": 1
+       }
+      },
+      "report_file": {
+       "bytes": 39004,
+       "sha256_segments": [
+        "ecace02b89b37816",
+        "3723925aba68666d",
+        "fc50560f4d5a69bd",
+        "a99d327d1b45b972"
+       ]
+      }
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": "COMPLETE",
+       "input_problems": {
+        "static.json": "static.json MISSING"
+       },
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "INCOMPLETE_EVIDENCE",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "VALID",
+        "result": "NO_FAILURE_IN_SCOPE",
+        "layers": {
+         "structure": "EXECUTED"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [
+        "V08"
+       ],
+       "affected_by_input": {
+        "static.json": [
+         "V08.limited_model_reachability",
+         "V14.source_and_build_reference",
+         "CA-02 limited-model part",
+         "CA-05"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 13,
+         "INCOMPLETE_EVIDENCE": 2
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 1,
+         "NO_FAILURE_IN_SCOPE": 2,
+         "OBSERVED_AS_PREDICTED": 10
+        },
+        "layers_not_executed": [
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.limited_model_reachability",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.source_and_build_reference",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 46160,
+       "sha256_segments": [
+        "36c69245c63c1d04",
+        "58de07ae101cf5b5",
+        "bd12742bcc7ec5b5",
+        "5746661f1090b565"
+       ]
+      }
+     }
+    },
+    "omit_v01": {
+     "inputs_present": [
+      "a46.json",
+      "meta_tests.json",
+      "old_counterexamples.json",
+      "run.json",
+      "static.json",
+      "v00.json"
+     ],
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "stdout_tail": [
+       "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/official/tests/consumer-tests-pj4dud6e/057_n03_omit_v01/results.yaml (39525 bytes); generator_errors=0"
+      ],
+      "stderr_tail": [],
+      "report_written": true,
+      "report": {
+       "status": "generated_from_run_status_COMPLETE",
+       "run_status": "COMPLETE",
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        },
+        "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+       },
+       "V14": {
+        "evidence_status": "VALID",
+        "result": "OBSERVED_AS_PREDICTED",
+        "layers": {
+         "source_and_build_reference": "EXECUTED",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+       "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+       "generator_errors": [],
+       "counts_evidence_status": {
+        "VALID": 15
+       }
+      },
+      "report_file": {
+       "bytes": 39525,
+       "sha256_segments": [
+        "e45e07b5a66bd919",
+        "c59164563be73ee4",
+        "fd564a0f8b09acb2",
+        "65ab18b3c242d592"
+       ]
+      }
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": "COMPLETE",
+       "input_problems": {
+        "v01.json": "v01.json MISSING"
+       },
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "VALID",
+        "result": "OBSERVED_AS_PREDICTED",
+        "layers": {
+         "source_and_build_reference": "EXECUTED",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "structure": "INCOMPLETE_EVIDENCE"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [
+        "V01"
+       ],
+       "affected_by_input": {
+        "v01.json": [
+         "V01"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 14,
+         "INCOMPLETE_EVIDENCE": 1
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 2,
+         "OBSERVED_AS_PREDICTED": 11,
+         "NO_FAILURE_IN_SCOPE": 1
+        },
+        "layers_not_executed": [
+         "V01.structure",
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 45798,
+       "sha256_segments": [
+        "eea9105efaeed185",
+        "90947812625e0b2e",
+        "41d4f0263b9b4983",
+        "7ff569c53e4fddb8"
+       ]
+      }
+     }
+    }
+   },
+   "checks": {
+    "control_complete_exit0": true,
+    "omit_static_partial_exit2": true,
+    "omit_static_V08_not_valid_function_layer_kept": true,
+    "omit_static_CA02_function_level_only": true,
+    "omit_static_V14_source_layer_not_executed": true,
+    "omit_static_cache_not_used": true,
+    "omit_static_independent_items_unchanged": true,
+    "omit_v01_partial_exit2": true,
+    "omit_v01_V01_not_valid": true,
+    "omit_v01_independent_items_unchanged": true,
+    "source_run_status_kept_as_history": true
+   },
+   "met": true
+  },
+  {
+   "id": "N04",
+   "input_label": "HARNESS_META_TEST (b843 observations copied with one file corrupted)",
+   "requirement": "error/partial report written with matching exit code; no behaviour verdict for affected items; no dynamic claim without run data",
+   "variants": {
+    "static_syntax_open_brace": {
+     "file": "static.json",
+     "content": "{",
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 1,
+      "timed_out": false,
+      "stdout_tail": [],
+      "stderr_tail": [
+       "    obj, end = self.scan_once(s, idx)",
+       "               ^^^^^^^^^^^^^^^^^^^^^^",
+       "json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      ],
+      "report_written": false,
+      "report": null,
+      "report_file": null
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": "COMPLETE",
+       "input_problems": {
+        "static.json": "static.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+       },
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "INCOMPLETE_EVIDENCE",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "VALID",
+        "result": "NO_FAILURE_IN_SCOPE",
+        "layers": {
+         "structure": "EXECUTED"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [
+        "V08"
+       ],
+       "affected_by_input": {
+        "static.json": [
+         "V08.limited_model_reachability",
+         "V14.source_and_build_reference",
+         "CA-02 limited-model part",
+         "CA-05"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 13,
+         "INCOMPLETE_EVIDENCE": 2
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 1,
+         "NO_FAILURE_IN_SCOPE": 2,
+         "OBSERVED_AS_PREDICTED": 10
+        },
+        "layers_not_executed": [
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.limited_model_reachability",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.source_and_build_reference",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 46870,
+       "sha256_segments": [
+        "35df68f3a6f8f2ff",
+        "bf4d35d84efacbbd",
+        "6508d3b4810a6b30",
+        "fbd2c51470a314d0"
+       ]
+      }
+     }
+    },
+    "static_empty_file": {
+     "file": "static.json",
+     "content": "",
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 1,
+      "timed_out": false,
+      "stdout_tail": [],
+      "stderr_tail": [
+       "  File \"/usr/lib/python3.11/json/decoder.py\", line 355, in raw_decode",
+       "    raise JSONDecodeError(\"Expecting value\", s, err.value) from None",
+       "json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)"
+      ],
+      "report_written": false,
+      "report": null,
+      "report_file": null
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": "COMPLETE",
+       "input_problems": {
+        "static.json": "static.json EMPTY"
+       },
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "INCOMPLETE_EVIDENCE",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "VALID",
+        "result": "NO_FAILURE_IN_SCOPE",
+        "layers": {
+         "structure": "EXECUTED"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [
+        "V08"
+       ],
+       "affected_by_input": {
+        "static.json": [
+         "V08.limited_model_reachability",
+         "V14.source_and_build_reference",
+         "CA-02 limited-model part",
+         "CA-05"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 13,
+         "INCOMPLETE_EVIDENCE": 2
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 1,
+         "NO_FAILURE_IN_SCOPE": 2,
+         "OBSERVED_AS_PREDICTED": 10
+        },
+        "layers_not_executed": [
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.limited_model_reachability",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.source_and_build_reference",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 46232,
+       "sha256_segments": [
+        "173892d3f1962e9f",
+        "ab4dc0504809486b",
+        "9306d45c393fa35f",
+        "328f30cacbb6fa06"
+       ]
+      }
+     }
+    },
+    "static_wrong_top_type_list": {
+     "file": "static.json",
+     "content": "[]",
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "stdout_tail": [
+       "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/official/tests/consumer-tests-pj4dud6e/060_n04_static_wrong_top_type_list/results.yaml (39004 bytes); generator_errors=0"
+      ],
+      "stderr_tail": [],
+      "report_written": true,
+      "report": {
+       "status": "generated_from_run_status_COMPLETE",
+       "run_status": "COMPLETE",
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        },
+        "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+       },
+       "V14": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+       "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+       "generator_errors": [],
+       "counts_evidence_status": {
+        "VALID": 14,
+        "INCOMPLETE_EVIDENCE": 1
+       }
+      },
+      "report_file": {
+       "bytes": 39004,
+       "sha256_segments": [
+        "ecace02b89b37816",
+        "3723925aba68666d",
+        "fc50560f4d5a69bd",
+        "a99d327d1b45b972"
+       ]
+      }
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": "COMPLETE",
+       "input_problems": {
+        "static.json": "static.json WRONG_TOP_TYPE: top-level list, expected object"
+       },
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "INCOMPLETE_EVIDENCE",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "VALID",
+        "result": "NO_FAILURE_IN_SCOPE",
+        "layers": {
+         "structure": "EXECUTED"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [
+        "V08"
+       ],
+       "affected_by_input": {
+        "static.json": [
+         "V08.limited_model_reachability",
+         "V14.source_and_build_reference",
+         "CA-02 limited-model part",
+         "CA-05"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 13,
+         "INCOMPLETE_EVIDENCE": 2
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 1,
+         "NO_FAILURE_IN_SCOPE": 2,
+         "OBSERVED_AS_PREDICTED": 10
+        },
+        "layers_not_executed": [
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.limited_model_reachability",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.source_and_build_reference",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 46484,
+       "sha256_segments": [
+        "9df39636907c8d07",
+        "84ae4d8ae86d7a95",
+        "4b078b67f0176ae7",
+        "9d90e7522f208c42"
+       ]
+      }
+     }
+    },
+    "v01_syntax_open_brace": {
+     "file": "v01.json",
+     "content": "{",
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 1,
+      "timed_out": false,
+      "stdout_tail": [],
+      "stderr_tail": [
+       "    obj, end = self.scan_once(s, idx)",
+       "               ^^^^^^^^^^^^^^^^^^^^^^",
+       "json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      ],
+      "report_written": false,
+      "report": null,
+      "report_file": null
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": "COMPLETE",
+       "input_problems": {
+        "v01.json": "v01.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+       },
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "VALID",
+        "result": "OBSERVED_AS_PREDICTED",
+        "layers": {
+         "source_and_build_reference": "EXECUTED",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "INVALID_EVIDENCE",
+        "result": null,
+        "layers": {
+         "structure": "INVALID_EVIDENCE"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [
+        "V01"
+       ],
+       "affected_by_input": {
+        "v01.json": [
+         "V01"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 14,
+         "INVALID_EVIDENCE": 1
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 2,
+         "OBSERVED_AS_PREDICTED": 11,
+         "NO_FAILURE_IN_SCOPE": 1
+        },
+        "layers_not_executed": [
+         "V01.structure",
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 46493,
+       "sha256_segments": [
+        "3881a953b65c7bba",
+        "a703a78abec14fa6",
+        "425bbad2817f36b7",
+        "f4cc05a808c0e710"
+       ]
+      }
+     }
+    },
+    "v01_empty_file": {
+     "file": "v01.json",
+     "content": "",
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 1,
+      "timed_out": false,
+      "stdout_tail": [],
+      "stderr_tail": [
+       "  File \"/usr/lib/python3.11/json/decoder.py\", line 355, in raw_decode",
+       "    raise JSONDecodeError(\"Expecting value\", s, err.value) from None",
+       "json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)"
+      ],
+      "report_written": false,
+      "report": null,
+      "report_file": null
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": "COMPLETE",
+       "input_problems": {
+        "v01.json": "v01.json EMPTY"
+       },
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "VALID",
+        "result": "OBSERVED_AS_PREDICTED",
+        "layers": {
+         "source_and_build_reference": "EXECUTED",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "INVALID_EVIDENCE",
+        "result": null,
+        "layers": {
+         "structure": "INVALID_EVIDENCE"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [
+        "V01"
+       ],
+       "affected_by_input": {
+        "v01.json": [
+         "V01"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 14,
+         "INVALID_EVIDENCE": 1
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 2,
+         "OBSERVED_AS_PREDICTED": 11,
+         "NO_FAILURE_IN_SCOPE": 1
+        },
+        "layers_not_executed": [
+         "V01.structure",
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 45855,
+       "sha256_segments": [
+        "f4a2dbd5104ffec7",
+        "dcc72fda1ab08faf",
+        "4cd1fa3299ba39b2",
+        "42b99dc5391f225a"
+       ]
+      }
+     }
+    },
+    "v01_wrong_top_type_list": {
+     "file": "v01.json",
+     "content": "[]",
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 0,
+      "timed_out": false,
+      "stdout_tail": [
+       "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/official/tests/consumer-tests-pj4dud6e/063_n04_v01_wrong_top_type_list/results.yaml (39525 bytes); generator_errors=0"
+      ],
+      "stderr_tail": [],
+      "report_written": true,
+      "report": {
+       "status": "generated_from_run_status_COMPLETE",
+       "run_status": "COMPLETE",
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        },
+        "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+       },
+       "V14": {
+        "evidence_status": "VALID",
+        "result": "OBSERVED_AS_PREDICTED",
+        "layers": {
+         "source_and_build_reference": "EXECUTED",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+       "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+       "generator_errors": [],
+       "counts_evidence_status": {
+        "VALID": 15
+       }
+      },
+      "report_file": {
+       "bytes": 39525,
+       "sha256_segments": [
+        "e45e07b5a66bd919",
+        "c59164563be73ee4",
+        "fd564a0f8b09acb2",
+        "65ab18b3c242d592"
+       ]
+      }
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": "COMPLETE",
+       "input_problems": {
+        "v01.json": "v01.json WRONG_TOP_TYPE: top-level list, expected object"
+       },
+       "dynamic_raw_observations_available": true,
+       "items": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14_model": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "V08": {
+        "evidence_status": "VALID",
+        "result": "COUNTEREVIDENCE",
+        "layers": {
+         "host_original_slice_function_level": "EXECUTED",
+         "limited_model_reachability": "EXECUTED",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "VALID",
+        "result": "OBSERVED_AS_PREDICTED",
+        "layers": {
+         "source_and_build_reference": "EXECUTED",
+         "host_link_model": "EXECUTED",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "INVALID_EVIDENCE",
+        "result": null,
+        "layers": {
+         "structure": "INVALID_EVIDENCE"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "cached_differs": [
+        "V01"
+       ],
+       "affected_by_input": {
+        "v01.json": [
+         "V01"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "VALID": 14,
+         "INVALID_EVIDENCE": 1
+        },
+        "results_for_valid_evidence": {
+         "COUNTEREVIDENCE": 2,
+         "OBSERVED_AS_PREDICTED": 11,
+         "NO_FAILURE_IN_SCOPE": 1
+        },
+        "layers_not_executed": [
+         "V01.structure",
+         "V04.smp_or_real_scheduler",
+         "V05.irq_or_signal_context",
+         "V06.concurrent_wakeups",
+         "V07.ap_migration",
+         "V08.global_reachability",
+         "V09.real_timer_expiry",
+         "V10.real_timer_or_scheduler",
+         "V11.real_context_switch",
+         "V12.multicore_atomicity",
+         "V13.smp_stress",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 46107,
+       "sha256_segments": [
+        "9c77a3c536ab0164",
+        "d10ca5e3b24f69f6",
+        "8be41e40145de505",
+        "a7855b8e2d0f44c7"
+       ]
+      }
+     }
+    },
+    "run_unparsable_control": {
+     "file": "run.json",
+     "content": "{",
+     "old": {
+      "argv": [
+       "make_results2.py",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 1,
+      "timed_out": false,
+      "stdout_tail": [],
+      "stderr_tail": [
+       "    obj, end = self.scan_once(s, idx)",
+       "               ^^^^^^^^^^^^^^^^^^^^^^",
+       "json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+      ],
+      "report_written": false,
+      "report": null,
+      "report_file": null
+     },
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 2,
+      "timed_out": false,
+      "stderr_tail": [],
+      "report_written": true,
+      "error_record_written": false,
+      "report": {
+       "status": "consumer_PARTIAL",
+       "source_run_status": null,
+       "input_problems": {
+        "run.json": "run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+        "v00.json": "stage completion record unavailable (run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))",
+        "v01.json": "stage completion record unavailable (run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))",
+        "static.json": "stage completion record unavailable (run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))",
+        "a46.json": "stage completion record unavailable (run.json JSON_SYNTAX_ERROR: JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1))"
+       },
+       "dynamic_raw_observations_available": false,
+       "items": {
+        "V00": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V01": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V03": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V04": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V05": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V06": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V07": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V08": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V10": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V11": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V12": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V13": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V14_model": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V00_A46_correction": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ]
+       },
+       "cases": {
+        "V00": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V01": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V03": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V04": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V05": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V06": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V07": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V08": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V10": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V11": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V12": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V13": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V14": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V00_A46_correction": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ]
+       },
+       "V08": {
+        "evidence_status": "INVALID_EVIDENCE",
+        "result": null,
+        "layers": {
+         "host_original_slice_function_level": "INVALID_EVIDENCE",
+         "limited_model_reachability": "INVALID_EVIDENCE",
+         "global_reachability": "NOT_RUN"
+        }
+       },
+       "V14": {
+        "evidence_status": "INVALID_EVIDENCE",
+        "result": null,
+        "layers": {
+         "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+         "host_link_model": "INVALID_EVIDENCE",
+         "existing_elf": "NOT_RUN"
+        }
+       },
+       "V01": {
+        "evidence_status": "INCOMPLETE_EVIDENCE",
+        "result": null,
+        "layers": {
+         "structure": "INCOMPLETE_EVIDENCE"
+        }
+       },
+       "ca_rulings": {
+        "CA-01": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-02": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-03": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-04": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-06": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-07": "UNDETERMINED_MISSING_EVIDENCE"
+       },
+       "cached_differs": [
+        "V00",
+        "V00_A46_correction",
+        "V01",
+        "V02",
+        "V03",
+        "V04",
+        "V05",
+        "V06",
+        "V07",
+        "V08",
+        "V09",
+        "V10",
+        "V11",
+        "V12",
+        "V13",
+        "V14_model"
+       ],
+       "affected_by_input": {
+        "run.json": [
+         "V02",
+         "V03",
+         "V04",
+         "V05",
+         "V06",
+         "V07",
+         "V08",
+         "V09",
+         "V10",
+         "V11",
+         "V12",
+         "V13",
+         "V14_model",
+         "V14",
+         "stage completion of V00/V01/V08-static/V14-source/A46"
+        ],
+        "v00.json": [
+         "V00",
+         "V14.source_and_build_reference",
+         "CA-05",
+         "CA-06"
+        ],
+        "v01.json": [
+         "V01"
+        ],
+        "static.json": [
+         "V08.limited_model_reachability",
+         "V14.source_and_build_reference",
+         "CA-02 limited-model part",
+         "CA-05"
+        ],
+        "a46.json": [
+         "V00_A46_correction"
+        ]
+       },
+       "generator_errors": [],
+       "counts": {
+        "top_level_cases": 15,
+        "evidence_status": {
+         "INCOMPLETE_EVIDENCE": 2,
+         "INVALID_EVIDENCE": 13
+        },
+        "results_for_valid_evidence": {},
+        "layers_not_executed": [
+         "V00.source_match",
+         "V01.structure",
+         "V02.host_original_slice",
+         "V03.host_original_slice",
+         "V04.host_original_slice",
+         "V04.smp_or_real_scheduler",
+         "V05.host_original_slice",
+         "V05.irq_or_signal_context",
+         "V06.host_original_slice_serial",
+         "V06.concurrent_wakeups",
+         "V07.host_original_slice",
+         "V07.ap_migration",
+         "V08.host_original_slice_function_level",
+         "V08.limited_model_reachability",
+         "V08.global_reachability",
+         "V09.host_original_slice_stub_timers",
+         "V09.real_timer_expiry",
+         "V10.host_original_slice_scripted_interleaving",
+         "V10.real_timer_or_scheduler",
+         "V11.local_sequence_scripted_interleaving",
+         "V11.real_context_switch",
+         "V12.host_original_asm_single_thread",
+         "V12.multicore_atomicity",
+         "V13.host_original_slice_serial",
+         "V13.smp_stress",
+         "V14.source_and_build_reference",
+         "V14.host_link_model",
+         "V14.existing_elf"
+        ],
+        "layers_not_executed_reason_template": "outside the authorised scope of this host recheck (no kernel run, no QEMU, no SMP/IRQ, no ELF build)"
+       }
+      },
+      "report_file": {
+       "bytes": 38408,
+       "sha256_segments": [
+        "c09b9d620ff95f14",
+        "c5b03cfb0a4b7313",
+        "ca417ed56c9be896",
+        "60da3b26202d3f04"
+       ]
+      }
+     }
+    },
+    "consumer_failure_control": {
+     "alteration": "comment appended to a copy of frozen evaluate2.py",
+     "new": {
+      "argv": [
+       "make_results3.py",
+       "--frozen",
+       "<b843 fixtures>",
+       "<obs>",
+       "<out.yaml>"
+      ],
+      "returncode": 4,
+      "timed_out": false,
+      "stderr_tail": [
+       "consumer failure: RuntimeError: frozen extraction differs from b843: ['fixtures/evaluate2.py']"
+      ],
+      "report_written": false,
+      "error_record_written": true,
+      "report": null
+     }
+    }
+   },
+   "checks": {
+    "static_syntax_open_brace": true,
+    "static_empty_file": true,
+    "static_wrong_top_type_list": true,
+    "v01_syntax_open_brace": true,
+    "v01_empty_file": true,
+    "v01_wrong_top_type_list": true,
+    "run_unparsable_control": true,
+    "consumer_failure_control": true
+   },
+   "met": true
+  },
+  {
+   "id": "N05",
+   "input_label": "HARNESS_META_TEST (M01-M05/M08/M09 transformations re-applied to the real b843 records)",
+   "requirement": "old rejections still hold, legal 0/42/43 and a valid-but-different record still accepted; N02/N03 transforms through the real entry",
+   "variants": {
+    "M01_empty_cases": {
+     "m_source": "M01",
+     "old_all": {
+      "V02": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V03": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V04": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V05": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V06": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V07": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V09": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V10": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V11": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V12": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V13": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V08": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V14_model": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ]
+     },
+     "new_all": {
+      "V02": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V03": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V04": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V05": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V06": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V07": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V09": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V10": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V11": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V12": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V13": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V08": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ],
+      "V14_model": [
+       "INCOMPLETE_EVIDENCE",
+       null
+      ]
+     },
+     "met": true
+    },
+    "M02_drop_label_task_new": {
+     "m_source": "M02",
+     "old": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M02_drop_q_uninterruptible": {
+     "m_source": "M02",
+     "old": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M02_truncate_last_two": {
+     "m_source": "M02",
+     "old": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INCOMPLETE_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M03_duplicate_conflicting_ret": {
+     "m_source": "M03",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M03_wrong_field_type": {
+     "m_source": "M03",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M03_unparsable_line": {
+     "m_source": "M03",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M03_duplicate_q": {
+     "m_source": "M03",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M04_timed_out": {
+     "m_source": "M04",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M04_collect_timed_out": {
+     "m_source": "M04",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M04_case_status_ERROR": {
+     "m_source": "M04",
+     "old": [
+      "ERROR",
+      null
+     ],
+     "new": [
+      "ERROR",
+      null
+     ],
+     "met": true
+    },
+    "M04_repeat_not_identical": {
+     "m_source": "M04",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M04_terminal_state_killed": {
+     "m_source": "M04",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M05_v02_exit_42": {
+     "m_source": "M05",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M05_v03_stop_event_exit_0": {
+     "m_source": "M05",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M05_v09_step_cap_exit_0": {
+     "m_source": "M05",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "M05_v03_exit_42_without_stop_event": {
+     "m_source": "M05",
+     "old": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "new": [
+      "INVALID_EVIDENCE",
+      null
+     ],
+     "met": true
+    },
+    "control_exit_0_v02": {
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "old_reasons": [
+      null
+     ],
+     "new": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "met": true
+    },
+    "control_exit_42_v03": {
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "old_reasons": [
+      null
+     ],
+     "new": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "met": true
+    },
+    "control_exit_43_v09": {
+     "old": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "old_reasons": [
+      null
+     ],
+     "new": [
+      "VALID",
+      "OBSERVED_AS_PREDICTED"
+     ],
+     "met": true
+    },
+    "valid_but_different_from_prediction_v04_ret_1": {
+     "old": [
+      "ERROR",
+      null
+     ],
+     "old_reasons": [
+      "COMPARATOR_INVALID: wrong prediction not detected"
+     ],
+     "new": [
+      "VALID",
+      "COUNTEREVIDENCE"
+     ],
+     "met": true
+    },
+    "through_cli": {
+     "M08_v01_member_exists_false": {
+      "old_cli": {
+       "returncode": 0,
+       "report_written": true,
+       "summary": {
+        "status": "generated_from_run_status_COMPLETE",
+        "run_status": "COMPLETE",
+        "V08": {
+         "evidence_status": "VALID",
+         "result": "COUNTEREVIDENCE",
+         "layers": {
+          "host_original_slice_function_level": "EXECUTED",
+          "limited_model_reachability": "EXECUTED",
+          "global_reachability": "NOT_RUN"
+         },
+         "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+        },
+        "V14": {
+         "evidence_status": "VALID",
+         "result": "OBSERVED_AS_PREDICTED",
+         "layers": {
+          "source_and_build_reference": "EXECUTED",
+          "host_link_model": "EXECUTED",
+          "existing_elf": "NOT_RUN"
+         }
+        },
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "generator_errors": [],
+        "counts_evidence_status": {
+         "VALID": 15
+        }
+       }
+      },
+      "new_cli": {
+       "returncode": 0,
+       "status": "consumer_COMPLETE",
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "input_problems": {}
+      },
+      "met": true
+     },
+     "M08_v00_A46_changed_to_match": {
+      "old_cli": {
+       "returncode": 0,
+       "report_written": true,
+       "summary": {
+        "status": "generated_from_run_status_COMPLETE",
+        "run_status": "COMPLETE",
+        "V08": {
+         "evidence_status": "VALID",
+         "result": "COUNTEREVIDENCE",
+         "layers": {
+          "host_original_slice_function_level": "EXECUTED",
+          "limited_model_reachability": "EXECUTED",
+          "global_reachability": "NOT_RUN"
+         },
+         "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+        },
+        "V14": {
+         "evidence_status": "VALID",
+         "result": "OBSERVED_AS_PREDICTED",
+         "layers": {
+          "source_and_build_reference": "EXECUTED",
+          "host_link_model": "EXECUTED",
+          "existing_elf": "NOT_RUN"
+         }
+        },
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "generator_errors": [],
+        "counts_evidence_status": {
+         "VALID": 15
+        }
+       }
+      },
+      "new_cli": {
+       "returncode": 0,
+       "status": "consumer_COMPLETE",
+       "cases": {
+        "V00": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "input_problems": {}
+      },
+      "met": true
+     },
+     "M08_v00_A35_changed_to_quote_not_found": {
+      "old_cli": {
+       "returncode": 0,
+       "report_written": true,
+       "summary": {
+        "status": "generated_from_run_status_COMPLETE",
+        "run_status": "COMPLETE",
+        "V08": {
+         "evidence_status": "VALID",
+         "result": "COUNTEREVIDENCE",
+         "layers": {
+          "host_original_slice_function_level": "EXECUTED",
+          "limited_model_reachability": "EXECUTED",
+          "global_reachability": "NOT_RUN"
+         },
+         "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+        },
+        "V14": {
+         "evidence_status": "VALID",
+         "result": "OBSERVED_AS_PREDICTED",
+         "layers": {
+          "source_and_build_reference": "EXECUTED",
+          "host_link_model": "EXECUTED",
+          "existing_elf": "NOT_RUN"
+         }
+        },
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "generator_errors": [],
+        "counts_evidence_status": {
+         "VALID": 15
+        }
+       }
+      },
+      "new_cli": {
+       "returncode": 0,
+       "status": "consumer_COMPLETE",
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "CONTRADICTED_OR_UNSUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "input_problems": {}
+      },
+      "met": true
+     },
+     "M09_partial_compile_case_skipped_stage": {
+      "old_cli": {
+       "returncode": 0,
+       "report_written": true,
+       "summary": {
+        "status": "generated_from_run_status_COMPLETE",
+        "run_status": "COMPLETE",
+        "V08": {
+         "evidence_status": "VALID",
+         "result": "COUNTEREVIDENCE",
+         "layers": {
+          "host_original_slice_function_level": "EXECUTED",
+          "limited_model_reachability": "EXECUTED",
+          "global_reachability": "NOT_RUN"
+         },
+         "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+        },
+        "V14": {
+         "evidence_status": "INCOMPLETE_EVIDENCE",
+         "result": null,
+         "layers": {
+          "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+          "host_link_model": "EXECUTED",
+          "existing_elf": "NOT_RUN"
+         }
+        },
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "generator_errors": [],
+        "counts_evidence_status": {
+         "VALID": 14,
+         "INCOMPLETE_EVIDENCE": 1
+        }
+       }
+      },
+      "new_cli": {
+       "returncode": 2,
+       "status": "consumer_PARTIAL",
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "ERROR",
+         null
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "BLOCKED",
+         null
+        ],
+        "V13": [
+         "BLOCKED",
+         null
+        ],
+        "V14": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "ca_rulings": {
+        "CA-01": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "UNDETERMINED_MISSING_EVIDENCE"
+       },
+       "input_problems": {
+        "static.json": "source stage static_checks.py did not complete per run.json"
+       }
+      },
+      "met": true
+     },
+     "M09B_static_stage_failed_output_present": {
+      "old_cli": {
+       "returncode": 0,
+       "report_written": true,
+       "summary": {
+        "status": "generated_from_run_status_COMPLETE",
+        "run_status": "COMPLETE",
+        "V08": {
+         "evidence_status": "VALID",
+         "result": "COUNTEREVIDENCE",
+         "layers": {
+          "host_original_slice_function_level": "EXECUTED",
+          "limited_model_reachability": "EXECUTED",
+          "global_reachability": "NOT_RUN"
+         },
+         "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+        },
+        "V14": {
+         "evidence_status": "INCOMPLETE_EVIDENCE",
+         "result": null,
+         "layers": {
+          "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+          "host_link_model": "EXECUTED",
+          "existing_elf": "NOT_RUN"
+         }
+        },
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "generator_errors": [],
+        "counts_evidence_status": {
+         "VALID": 14,
+         "INCOMPLETE_EVIDENCE": 1
+        }
+       }
+      },
+      "new_cli": {
+       "returncode": 2,
+       "status": "consumer_PARTIAL",
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=UNDETERMINED_STATIC_INPUT_MISSING; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "input_problems": {
+        "static.json": "source stage static_checks.py did not complete per run.json"
+       }
+      },
+      "met": true
+     },
+     "N02_through_cli_empty_referenced_paths": {
+      "old_cli": {
+       "returncode": 0,
+       "report_written": true,
+       "summary": {
+        "status": "generated_from_run_status_COMPLETE",
+        "run_status": "COMPLETE",
+        "V08": {
+         "evidence_status": "VALID",
+         "result": "COUNTEREVIDENCE",
+         "layers": {
+          "host_original_slice_function_level": "EXECUTED",
+          "limited_model_reachability": "EXECUTED",
+          "global_reachability": "NOT_RUN"
+         },
+         "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+        },
+        "V14": {
+         "evidence_status": "VALID",
+         "result": "OBSERVED_AS_PREDICTED",
+         "layers": {
+          "source_and_build_reference": "EXECUTED",
+          "host_link_model": "EXECUTED",
+          "existing_elf": "NOT_RUN"
+         }
+        },
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "generator_errors": [],
+        "counts_evidence_status": {
+         "VALID": 15
+        }
+       }
+      },
+      "new_cli": {
+       "returncode": 2,
+       "status": "consumer_PARTIAL",
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INCOMPLETE_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "input_problems": {}
+      },
+      "met": true
+     },
+     "N02_through_cli_duplicate_report_input": {
+      "old_cli": {
+       "returncode": 0,
+       "report_written": true,
+       "summary": {
+        "status": "generated_from_run_status_COMPLETE",
+        "run_status": "COMPLETE",
+        "V08": {
+         "evidence_status": "VALID",
+         "result": "COUNTEREVIDENCE",
+         "layers": {
+          "host_original_slice_function_level": "EXECUTED",
+          "limited_model_reachability": "EXECUTED",
+          "global_reachability": "NOT_RUN"
+         },
+         "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+        },
+        "V14": {
+         "evidence_status": "VALID",
+         "result": "OBSERVED_AS_PREDICTED",
+         "layers": {
+          "source_and_build_reference": "EXECUTED",
+          "host_link_model": "EXECUTED",
+          "existing_elf": "NOT_RUN"
+         }
+        },
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "generator_errors": [],
+        "counts_evidence_status": {
+         "VALID": 15
+        }
+       }
+      },
+      "new_cli": {
+       "returncode": 2,
+       "status": "consumer_PARTIAL",
+       "cases": {
+        "V00": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V01": [
+         "INVALID_EVIDENCE",
+         null
+        ],
+        "V02": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V03": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V04": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V05": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V06": [
+         "VALID",
+         "NO_FAILURE_IN_SCOPE"
+        ],
+        "V07": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V08": [
+         "VALID",
+         "COUNTEREVIDENCE"
+        ],
+        "V09": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V10": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V11": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V12": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V13": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V14": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ],
+        "V00_A46_correction": [
+         "VALID",
+         "OBSERVED_AS_PREDICTED"
+        ]
+       },
+       "ca_rulings": {
+        "CA-01": "SUPPORTED_IN_SCOPE",
+        "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+        "CA-03": "SUPPORTED_IN_SCOPE",
+        "CA-04": "SUPPORTED_IN_SCOPE",
+        "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+        "CA-06": "SUPPORTED_AT_SOURCE_LEVEL",
+        "CA-07": "SUPPORTED_IN_SCOPE"
+       },
+       "input_problems": {}
+      },
+      "met": true
+     }
+    }
+   },
+   "met": true
+  },
+  {
+   "id": "N06",
+   "kind": "RECORDED_OBSERVATION_REVALIDATION",
+   "source_execution": {
+    "identity_read_time_utc": "2026-09-27T08:58:15Z",
+    "execution_head_short12": "f9ae2bce9a64",
+    "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck-runs/canonical2/run-l9jn2nzf"
+   },
+   "consumer_check": {
+    "date_utc": "2026-10-01",
+    "programs": "consumer-fix-02/fixtures/consumer3.py + make_results3.py; frozen evaluate2/make_results2 from b843d475367a"
+   },
+   "report_file": {
+    "bytes": 46489,
+    "sha256_segments": [
+     "27d28d7a4660406f",
+     "6ff08d37fe7f38c7",
+     "e996929dd05c938b",
+     "7af18cb3fe532af9"
+    ]
+   },
+   "cli": {
+    "returncode": 0
+   },
+   "diff_vs_recheck01_frozen_results": {
+    "source": "recheck-01 results.yaml @ efb9846b88ec",
+    "cases_identical": [
+     "V00",
+     "V00_A46_correction",
+     "V01",
+     "V02",
+     "V03",
+     "V04",
+     "V05",
+     "V06",
+     "V07",
+     "V08",
+     "V09",
+     "V10",
+     "V11",
+     "V12",
+     "V13",
+     "V14"
+    ],
+    "cases_different": {},
+    "ca_rulings": {
+     "CA-01": {
+      "efb": "SUPPORTED_IN_SCOPE",
+      "now": "SUPPORTED_IN_SCOPE",
+      "same": true
+     },
+     "CA-02": {
+      "efb": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+      "now": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+      "same": true
+     },
+     "CA-03": {
+      "efb": "SUPPORTED_IN_SCOPE",
+      "now": "SUPPORTED_IN_SCOPE",
+      "same": true
+     },
+     "CA-04": {
+      "efb": "SUPPORTED_IN_SCOPE",
+      "now": "SUPPORTED_IN_SCOPE",
+      "same": true
+     },
+     "CA-05": {
+      "efb": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+      "now": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+      "same": true
+     },
+     "CA-06": {
+      "efb": "SUPPORTED_AT_SOURCE_LEVEL",
+      "now": "SUPPORTED_AT_SOURCE_LEVEL",
+      "same": true
+     },
+     "CA-07": {
+      "efb": "SUPPORTED_IN_SCOPE",
+      "now": "SUPPORTED_IN_SCOPE",
+      "same": true
+     }
+    },
+    "counts_same": true,
+    "diff_vs_frozen_core_same": true,
+    "r_items_same": true,
+    "m_items_same": true
+   },
+   "checks": {
+    "exit0_consumer_complete": true,
+    "all_cases_identical_to_efb": true,
+    "ca_rulings_identical": true,
+    "counts_identical": true,
+    "r_m_items_identical": true,
+    "old_A46_failure_kept": true,
+    "A46_C_ASM_listed_separately": true,
+    "not_run_layers_not_upgraded": true,
+    "cached_equals_consumer": true
+   },
+   "met": true
+  }
+ ],
+ "S04_valid_observation_equal_to_negcontrol_value": {
+  "N02.control_complete_hex40_hit_found": {
+   "old": [
+    "ERROR",
+    null
+   ],
+   "old_reasons": [
+    "COMPARATOR_INVALID: wrong prediction not detected"
+   ],
+   "new": [
+    "VALID",
+    "COUNTEREVIDENCE"
+   ]
+  },
+  "N05.valid_but_different_from_prediction_v04_ret_1": {
+   "old": [
+    "ERROR",
+    null
+   ],
+   "old_reasons": [
+    "COMPARATOR_INVALID: wrong prediction not detected"
+   ],
+   "new": [
+    "VALID",
+    "COUNTEREVIDENCE"
+   ]
+  }
+ },
+ "met": {
+  "N01": true,
+  "N02": true,
+  "N03": true,
+  "N04": true,
+  "N05": true,
+  "N06": true
+ },
+ "all_met": true
+}

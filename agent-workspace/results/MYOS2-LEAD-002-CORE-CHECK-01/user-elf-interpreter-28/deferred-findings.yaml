@@ -1,0 +1,301 @@
+---
+# YAML1.2-compatible JSON mapping; conditional candidates, no prior artifact modification
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-ELF-INTERPRETER-28",
+  "record_type": "deferred_conditional_findings_and_historical_evidence",
+  "status": "deferred_owner_not_ready",
+  "date": "2026-11-02",
+  "source_pin_short12": "a039d9803ade",
+  "results_base_short12": "f98ee06bbce8",
+  "writer": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "phase": 2,
+  "run_status": "NOT_RUN",
+  "no_kernel_patch": true,
+  "mainline_acceptance": "PENDING",
+  "owner_decisions_requested_now": [],
+  "findings": [
+    {
+      "id": "EI28-F01",
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F01",
+      "kind": "conditional_getname_kernel_allocation_failure_boundary",
+      "status": "needs_evidence",
+      "title": "getname_kernel未在__myos_getname的ERR_PTR结果后校验便写name字段",
+      "premises": [
+        "PT_INTERP尾NUL通过，open_exec经getname_kernel",
+        "__myos_getname中的kmalloc返回NULL并按源返回ERR_PTR(-ENOMEM)",
+        "随后getname_kernel实际继续执行name->len或name->name访问"
+      ],
+      "source_fact": "__myos_getname能返回ERR_PTR(-ENOMEM)；getname_kernel直接读取k_filename后执行name->len=len，未先IS_ERR(name)",
+      "possible_impact": "在给定分配失败条件下对错误编码指针作成员访问，不能保证open_exec正常返回ERR_PTR由上层消费",
+      "counterevidence": [
+        "没有分配失败的实机记录/可达频度；不能宣称已触发硬件异常",
+        "在成功分配和有效路径对象条件下该缺口不会命中",
+        "getname_kernel自身对长度大于PAGE_SIZE的路径另有返回，但此所选PT_INTERP尾NUL且p_filesz<=4096不证明那条长路径出口可达"
+      ],
+      "anchors": [
+        "EI28-A066",
+        "EI28-A067",
+        "EI28-A068",
+        "EI28-A063",
+        "EI28-A064"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "仅未来获得输入/安全性验证授权后，确认分配器错误返回的编译语义及本调用到达性"
+    },
+    {
+      "id": "EI28-F02",
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F02",
+      "kind": "late_interpreter_type_and_mmap_gate",
+      "status": "needs_evidence",
+      "title": "解释器e_type和f_op->mmap在load_elf_interp中才检查，晚于begin_new_exec及主程序映射",
+      "premises": [
+        "已读取解释器ELF头并通过magic/e_machine/fdpic及程序头长度门",
+        "begin_new_exec与主程序PT_LOAD迭代定义良好且抵达load_elf_interp",
+        "解释器类型不支持或f_op->mmap缺失，或其他晚到门失败"
+      ],
+      "source_fact": "load_elf_binary前置解释器检查限magic/arch/fdpic及phdr，load_elf_interp首次检查e_type ET_EXEC/DYN、arch和mmap，helper在main mapping后调用",
+      "possible_impact": "错误出现时point_of_no_return及主程序映射等先行副作用可能已发生，局部错误出口只显示相关对象kfree/fput，不能认证完整回滚",
+      "counterevidence": [
+        "实际文件打开和更早的路径/mmap元信息可能有额外限制，但本批未全链读取",
+        "没有可到达的真实异常ELF样本或系统运行证明，不能称一定发生崩溃/永久泄漏",
+        "旧05::UV-02和26::EL26-F02已涵盖部分不可返回点/先行映射语义，按新使用端补证，不统计全部独立根因"
+      ],
+      "anchors": [
+        "EI28-A017",
+        "EI28-A018",
+        "EI28-A019",
+        "EI28-A021",
+        "EI28-A024",
+        "EI28-A026",
+        "EI28-A039",
+        "EI28-A084",
+        "EI28-A035"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-02",
+        "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F02"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "需明确pre/post commit错误管理契约及真实类型生产者才能判断修复"
+    },
+    {
+      "id": "EI28-F03",
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F03",
+      "kind": "shared_elf_load_zero_filesz_extension_not_independent_root",
+      "status": "deferred_owner_not_ready",
+      "title": "解释器首个PT_LOAD若filesz为0，共享elf_load不执行文件预留仍可能返回可用数值",
+      "premises": [
+        "interp total_mapping_size>0且首个PT_LOAD p_filesz==0",
+        "后续匿名vm_brk_flags和地址运算成功返回符合BAD_ADDR数值门",
+        "ET_DYN路径将该返回用来设load_addr_set，并后续使用MAP_FIXED"
+      ],
+      "source_fact": "load_elf_interp向elf_load传total_size并立即置0，只有filesz>0才走elf_map，filesz0走匿名分支；load_addr_set以!BAD_ADDR判定",
+      "possible_impact": "第一段的成功数值不证明预期整体文件预留已经成立，后续MAP_FIXED不能从此推导地址间不重叠",
+      "counterevidence": [
+        "零文件长度且有memsz的PT_LOAD可以合法映射匿名部分，不能据此判断一定错误",
+        "total_size=0直接拒绝且后续相关段/地址输入需分别证明",
+        "共享源已在26分析，优先作为EL26的解释器消费追加"
+      ],
+      "anchors": [
+        "EI28-A043",
+        "EI28-A044",
+        "EI28-A049",
+        "EI28-A050",
+        "EI28-A051",
+        "EI28-A052"
+      ],
+      "related": [
+        "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F01",
+        "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F02"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "继续有限独立VMA/占位证明，不重审共享助手"
+    },
+    {
+      "id": "EI28-F04",
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F04",
+      "kind": "interpreter_error_encoding_and_diagnostic_identity",
+      "status": "needs_evidence",
+      "title": "load_elf_interp早退用~0UL初值，返回-1编码而非调用者前置-ELIBBAD",
+      "premises": [
+        "解释器已通过调用者的magic/arch/phdr门并进入helper",
+        "helper的e_type/架构/mmap门任一成立并goto out",
+        "error还保持~0UL，最终在load_elf_binary通过IS_ERR_VALUE/BAD_ADDR转换"
+      ],
+      "source_fact": "helper error初始~0UL，晚到检查goto out未替换error；调用者将编码值用(int)elf_entry当retval",
+      "possible_impact": "这个返回表示-1而非更精细-ELIBBAD/-EINVAL；仅是所选静态错误值来源事实，不自动判定API违约",
+      "counterevidence": [
+        "某些晚到arch条件已在调用前检查，重复判定失败生产者不能凭门存在宣告必可达",
+        "不能据数值返回-1推导硬件异常或诊断程序表现",
+        "对已提前检查的属性，若无变更行为，需要额外输入才能让晚到门为真"
+      ],
+      "anchors": [
+        "EI28-A083",
+        "EI28-A039",
+        "EI28-A084",
+        "EI28-A086",
+        "EI28-A027",
+        "EI28-A029",
+        "EI28-A080"
+      ],
+      "related": [
+        "CORE-USER-ELF-HEADER-READ-27::EH27-F02",
+        "CORE-USER-VFS-BASELINE-05::UV-02"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "独立将此C返回与预期错误约定比对，或补真实非预检属性值源"
+    },
+    {
+      "id": "EI28-F05",
+      "qualified_id": "CORE-USER-ELF-INTERPRETER-28::EI28-F05",
+      "kind": "embedded_nul_path_selection_conditional",
+      "status": "needs_evidence",
+      "title": "PT_INTERP当前仅检查末字节NUL，路径内部含NUL时可在更短前缀处终止",
+      "premises": [
+        "主phdr PT_INTERP p_filesz在2..PATH_MAX",
+        "elf_read返回完整长度且最后一字节NUL",
+        "字节数组内部另含更早NUL",
+        "open_exec/getname_kernel按C字符串消费直至首次NUL"
+      ],
+      "source_fact": "代码只测试buffer[p_filesz-1] != '\\0'，之后将buffer交给open_exec，getname_kernel用strlen和strncpy按首NUL计算长度",
+      "possible_impact": "传给路径解析的名称可能短于PT_INTERP整个字段长度；合法性、路径选择与安全影响未验证",
+      "counterevidence": [
+        "这不证明攻击者能获得其它文件、绕过权限或发生实际运行错误",
+        "成功打开/校验与磁盘内容仍需独立证据",
+        "PT_INTERP语法或构建工具可能已有更强输入约束，未开展外部ABI/样本研究"
+      ],
+      "anchors": [
+        "EI28-A008",
+        "EI28-A010",
+        "EI28-A011",
+        "EI28-A012",
+        "EI28-A063",
+        "EI28-A067",
+        "EI28-A069"
+      ],
+      "related": [
+        "CORE-USER-ELF-HEADER-READ-27::EH27-F04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "仅在明确标准兼容/错误语义要求与合法样本后再评估"
+    }
+  ],
+  "historical_evidence_only": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-02",
+      "kind": "evidence_append",
+      "note": "解释器晚到失败发生在begin_new_exec与主映射后，旧不可返回点规则不变",
+      "anchors": [
+        "EI28-A021",
+        "EI28-A024",
+        "EI28-A026",
+        "EI28-A035"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "kind": "boundary_dependency",
+      "note": "do_filp_open及其下层正确返回/权限不在此批闭合",
+      "anchors": [
+        "EI28-A061",
+        "EI28-A062"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F01",
+      "kind": "evidence_append",
+      "note": "解释器首次PT_LOAD的total_size向elf_load传入，共享elf_map可能尝试裁剪且忽略返回",
+      "anchors": [
+        "EI28-A043",
+        "EI28-A052"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26::EL26-F02",
+      "kind": "evidence_append",
+      "note": "解释器段后置p_filesz/memsz/TASK_SIZE在elf_load后，错误码解释器为-ENOMEM",
+      "anchors": [
+        "EI28-A043",
+        "EI28-A045"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27::EH27-F02",
+      "kind": "evidence_append",
+      "note": "调用者在解释器load_elf_phdrs前置retval=-ELIBBAD，NULL结果与主程序-ENOEXEC不同",
+      "anchors": [
+        "EI28-A017",
+        "EI28-A019",
+        "EI28-A054",
+        "EI28-A056"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27::EH27-F03",
+      "kind": "boundary_dependency",
+      "note": "PT_INTERP路径和解释器头经elf_read共享接口，读计数和文件字节认证仍未闭合",
+      "anchors": [
+        "EI28-A010",
+        "EI28-A014",
+        "EI28-A053"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-STACK-TABLES-25::ET25-F01",
+      "kind": "boundary_dependency",
+      "note": "create_elf_tables局部vma未初始化不能因成功interp偏移证明栈表真实可达",
+      "anchors": [
+        "EI28-A033",
+        "EI28-A034"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27-REVIEW-001::R27-S01",
+      "kind": "review_limit",
+      "note": "物理数据/读取位置/文件对象状态不可按接口名推断",
+      "anchors": [
+        "EI28-A010",
+        "EI28-A014"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27-REVIEW-001::R27-S02",
+      "kind": "review_limit",
+      "note": "错误值生产者与计算中的无符号宽度须实际定位",
+      "anchors": [
+        "EI28-A083",
+        "EI28-A085",
+        "EI28-A086"
+      ],
+      "status_change": false
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27-REVIEW-001::R27-S03",
+      "kind": "review_limit",
+      "note": "调用者/类型/数据和目标字段在图中分开，不伪称helper成功",
+      "anchors": [
+        "EI28-A026",
+        "EI28-A027",
+        "EI28-A037"
+      ],
+      "status_change": false
+    }
+  ],
+  "candidate_count": 5,
+  "history_count": 10,
+  "dedup_scope": "Only named old records. No repository-wide root-cause deduplication",
+  "source_or_runtime": "conditional static only; NOT_RUN"
+}

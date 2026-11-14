@@ -1,0 +1,292 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FS-CONTEXT-CWD-60",
+  "record_type": "bounded_new_conditional_findings_and_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "2b3aec6f71e1",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "prior_return_items": [],
+  "prior_review_status": {
+    "batch58": "PASS_PENDING_LOCAL; R58-01 CLOSED; R58C-S01 B25 reviewer error withdrawn",
+    "batch59": "PASS_PENDING_LOCAL with R59-S01/S02; no retest",
+    "batch45": "PASS_PENDING_LOCAL with R45-S01/S02; FS45-F01/F02 remain needs_evidence",
+    "batch46": "R46-01 CLOSED documentation only and existing R46C-S01",
+    "batch47": "PASS_PENDING_LOCAL; IP47-F01 remains needs_evidence",
+    "batch43": "PASS_PENDING_LOCAL; FT43-F01 separate files table"
+  },
+  "new_findings": [
+    {
+      "id": "FC60-F01",
+      "topic": "A",
+      "kind": "user_chdir_bypasses_setter_protocol",
+      "claim": "在有效user_path_at正常返回0后，chdir直接将path_s的两指针值写入curr->fs->pwd，未调用set_fs_pwd，亦未保存/请求归还原pwd，且本活动体没有fs->lock门；init_chdir通过set_fs_pwd走另一序列。",
+      "premises": [
+        "有效current/fs、有效输出path、lookup正常0",
+        "同一执行源码选择且表达式正常",
+        "引用与路径持有规则另证"
+      ],
+      "counterexample": "如果新旧pwd完全相同，赋值不改变指针值；path_put在所读实现中也不能自动解释为真实引用减少",
+      "earliest_stop": "不合法curr/fs或lookup输出在直接赋值前; 不推实际泄漏或数据竞争",
+      "anchors": [
+        "A01",
+        "A02",
+        "A03",
+        "A13",
+        "A17",
+        "A18",
+        "A22",
+        "A23"
+      ],
+      "prior": [
+        "CORE-USER-FS-CONTEXT-45::FS45-F02"
+      ],
+      "scope": "direct_user_chdir_consumer_only",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-F01",
+      "evidence_class": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "future_gate": "Owner explicitly authorizes further focused review or separate run; preserve historical status"
+    },
+    {
+      "id": "FC60-F02",
+      "topic": "B",
+      "kind": "getcwd_allocation_failure_first_invalid_boundary",
+      "claim": "getcwd为PATH_MAX缓冲调用kzalloc后，未先检测NULL就计算bufhead+PATH_MAX并将其交给myos_prepend；在kzalloc失败条件下不具合法指针运算前提。",
+      "premises": [
+        "curr/fs/pwd/root有效且已执行到分配",
+        "kzalloc返回NULL",
+        "选定C指针运算求值模型"
+      ],
+      "counterexample": "分配成功且PATH_MAX空间有效时该前提不会发生；未测试真实内存不足",
+      "earliest_stop": "bufhead + PATH_MAX pointer arithmetic; cannot assert safe -ENOMEM or later kfree",
+      "anchors": [
+        "B22",
+        "B23",
+        "B24",
+        "B25"
+      ],
+      "prior": [],
+      "scope": "source-only allocation failure",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-F02",
+      "evidence_class": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "future_gate": "Owner explicitly authorizes further focused review or separate run; preserve historical status"
+    },
+    {
+      "id": "FC60-F03",
+      "topic": "B",
+      "kind": "getcwd_success_returns_pointer_narrowed_instead_of_length",
+      "claim": "getcwd成功copy_to_user残量为0时将(long)buf赋给局部int error并返回error，选定活动体并非返回已计算的len；其返回值依指针转整数及long→int转换。",
+      "premises": [
+        "已构造合法路径串且len<=size",
+        "copy_to_user正常返回0",
+        "kfree正常返回，指针/整数模型明确"
+      ],
+      "counterexample": "某些具体指针的窄化int可能碰巧等于实际len，但不能由此说实现计算返回len；真实ABI宏展开未执行",
+      "earliest_stop": "失败分支或指针转换未有定义良好模型时停止，不虚构用户实际errno",
+      "anchors": [
+        "B26",
+        "B27",
+        "B28",
+        "B29"
+      ],
+      "prior": [],
+      "scope": "return_type_boundary",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-F03",
+      "evidence_class": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "future_gate": "Owner explicitly authorizes further focused review or separate run; preserve historical status"
+    },
+    {
+      "id": "FC60-F04",
+      "topic": "B",
+      "kind": "myos_prepend_true_without_capacity_copy",
+      "claim": "myos_prepend在p->len非负入口时先减namelen；若减后变负会跳过memcpy，但函数仍无条件return true。其布尔值不能证明实际复制完成。",
+      "premises": [
+        "有效prpndbuf_s、可表示的int算术",
+        "namelen超过当前剩余空间且此前p->len>=0",
+        "所选helper正常结束"
+      ],
+      "counterexample": "真实getcwd调用该helper的字符串长度是1或13，后续getcwd还有len>PATH_MAX检查；不证明最终越界写成功或漏报错误",
+      "earliest_stop": "输入算术或buf指针非法时不得声称函数正常return true",
+      "anchors": [
+        "B05",
+        "B06",
+        "B07",
+        "B21"
+      ],
+      "prior": [],
+      "scope": "helper_capacity_boolean",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-F04",
+      "evidence_class": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "future_gate": "Owner explicitly authorizes further focused review or separate run; preserve historical status"
+    },
+    {
+      "id": "FC60-F05",
+      "topic": "B",
+      "kind": "prepend_name_declared_length_narrowing_and_early_NUL",
+      "claim": "prepend_name将qstr的size_t len转换到uint32_t dlen，按dlen+1预留并写斜线，然后逐字节复制至dlen或首个NUL。声明长度、实际复制长度、保留空间及可能的uint32溢出是不同概念。",
+      "premises": [
+        "有效name和源缓冲、目标缓冲、dentry/mount对象",
+        "LP64和uint32宽度明确用于有限模型",
+        "不把helper-only超大长度当真实路径生产者"
+      ],
+      "counterexample": "普通短且无内嵌NUL、数值在范围内的名字，预留宽度与复制的字节数一致",
+      "earliest_stop": "长度/指针无效、dlen+1环绕或目标存储越界时停在最早访问",
+      "anchors": [
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B33"
+      ],
+      "prior": [],
+      "scope": "name_vs_buffer_source_domain",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-F05",
+      "evidence_class": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "future_gate": "Owner explicitly authorizes further focused review or separate run; preserve historical status"
+    },
+    {
+      "id": "FC60-F06",
+      "topic": "A/B/C",
+      "kind": "shared_taskfs_direct_chdir_and_getcwd_snapshot",
+      "claim": "copy_fs的CLONE_FS成功分支沿dup_task_struct得到相同taskfs指针并增加users；chdir直接修改该共享对象pwd且没有所见setter锁，getcwd分别直接读取pwd/root，未调用带锁get_fs_pwd/get_fs_root。两条消费者之间未在所读定义内建立统一读写锁/快照协议。",
+      "premises": [
+        "同一有效taskfs由两任务共享、共享计数不溢出",
+        "其它任务确实可能在相关调用期间修改pwd/root",
+        "path与锁操作均有定义良好执行"
+      ],
+      "counterexample": "单线程/无同步冲突时可得到一致字段值；无法从局部缺少锁证明机器上具体竞态或错误路径字符串已发生",
+      "earliest_stop": "任一无效task/fs/dentry/mount访问或不返回优先止步",
+      "anchors": [
+        "A03",
+        "B22",
+        "B23",
+        "C04",
+        "C05",
+        "C07",
+        "C08",
+        "C32",
+        "C33"
+      ],
+      "prior": [
+        "CORE-USER-FS-CONTEXT-45::FS45-F02",
+        "CORE-USER-FS-CONTEXT-45::FS45-F01"
+      ],
+      "scope": "cross_consumer_limited_concurrency",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-F06",
+      "evidence_class": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "future_gate": "Owner explicitly authorizes further focused review or separate run; preserve historical status"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "FC60-U01",
+      "topic": "A",
+      "kind": "lookup_directory_and_permission",
+      "detail": "LOOKUP_DIRECTORY passed in selected helpers, but actual directory-type/permission enforcement across path lookup, mount and callback remains outside scope.",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-U01",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FC60-U02",
+      "topic": "A/C",
+      "kind": "dentry_mount_reference_ownership",
+      "detail": "dget/dput selected active bodies show no counters and mntget/mntput commented, but actual global owner/physical reclamation is not certified; R45/46 root issue preserved.",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-U02",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FC60-U03",
+      "topic": "B",
+      "kind": "getcwd_user_pointer_and_ABI",
+      "detail": "Pointer-to-(long)-to-int conversion and syscall macro expansion not compiled; no actual user result type or errno proof.",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-U03",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FC60-U04",
+      "topic": "B",
+      "kind": "real_path_topology_and_qstr_length",
+      "detail": "Infinite/cyclic parent or mount chains, early NUL or widened qstr length producer, detach/escape real reachability and mount state untested.",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-U04",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FC60-U05",
+      "topic": "B",
+      "kind": "memory_copy_and_allocator",
+      "detail": "kzalloc/cache/free and copy_to_user raw access_ok/user fault behavior not run; cannot claim allocation fault physically occurred or copy always succeeds.",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-U05",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FC60-U06",
+      "topic": "C",
+      "kind": "taskfs_provenance_and_count",
+      "detail": "Validity of actual users count, other writers, static init_fs last-holder path, slab cache release and task all-exit lifetimes remain unproven; existing FS45-F01.",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-U06",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FC60-U07",
+      "topic": "A/B/C",
+      "kind": "SMP_and_lock_protocol",
+      "detail": "Neither existence of setter lock nor getcwd direct reads proves all readers/writers and scheduling races; no lockdep, preprocessor or hardware.",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-U07",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "FC60-U08",
+      "topic": "C",
+      "kind": "complete_fork_cleanup",
+      "detail": "dup_task_struct source has conditional allocation on NUMA_NO_NODE; full fork, error labels and unwinding of unrelated subsystems not audited; R43-S01 remains.",
+      "qualified_id": "CORE-USER-FS-CONTEXT-CWD-60::FC60-U08",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    }
+  ],
+  "conditional_candidate_count": 6,
+  "gap_count": 8,
+  "actual_runtime_fault_count": 0,
+  "not_claimed": [
+    "all six independent root vulnerabilities",
+    "static init_fs actually freed",
+    "runtime userspace chdir/getcwd observed",
+    "SMP data race proven",
+    "physical reference leak quantified"
+  ],
+  "not_authorized": [
+    "kernel modification",
+    "fix of prior review/error",
+    "P9 full local compile",
+    "close PR, merge, force push",
+    "self-acceptance",
+    "start61"
+  ]
+}

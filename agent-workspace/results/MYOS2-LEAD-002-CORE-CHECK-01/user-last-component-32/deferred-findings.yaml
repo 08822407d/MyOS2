@@ -1,0 +1,253 @@
+---
+# YAML 1.2-compatible JSON mapping, unchanged historical records
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LAST-COMPONENT-32",
+  "record_type": "bounded_conditional_deferred_findings",
+  "date": "2026-11-03",
+  "phase": 2,
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "45a065270e28",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "mainline_owner": "MYOS2-A-C04",
+  "status": "deferred_owner_not_ready",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "new_findings": [
+    {
+      "id": "LC32-F01",
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F01",
+      "status": "needs_evidence",
+      "kind": "O_CREAT_test_on_lookup_flags_domain",
+      "title": "open_last_lookups参数叫open_flag但实际由op.lookup_flags提供，O_CREAT检查与LOOKUP_RCU发生同位混淆",
+      "source_fact": "do_filp_open中int flags=op->lookup_flags，path_openat把flags传给open_last_lookups；该函数以if(!(open_flag&O_CREAT))分派；O_CREAT=0100=64=LOOKUP_RCU(0x0040)，而build_open_flags把用户O_CREAT编码为op.intent中的LOOKUP_CREATE=0x0200，未直接放入lookup_flags。",
+      "premises": [
+        "所选代码函数和宏在同一个固定构建配置使用",
+        "上游build_open_flags成功生成合法op并进入do_filp_open；实际用户O_CREAT仅改变intent，通常lookup_flags不包含0x40",
+        "只有未来证据证明需要在open_last_lookups以O_CREAT而不是LOOKUP位改变分派时，才可升级为行为违约"
+      ],
+      "possible_impact": "局部测试并不根据真实用户O_CREAT请求分支；如有LOOKUP_RCU位源则会把它误当O_CREAT数值门",
+      "counterevidence": [
+        "当前有效build_open_flags和do_open_execat没有已确认LOOKUP_RCU位0x40的生产者",
+        "在普通有效标志组合中这个测试可能一直为假，只说明语义域和分支参数不一致，不证成功创建/拒绝的实际后果",
+        "op.intent的创建位由上游生成，但完整创建实现和下游文件系统回调没有审计"
+      ],
+      "anchors": [
+        "LC32-A013",
+        "LC32-A014",
+        "LC32-A015",
+        "LC32-A050",
+        "LC32-A066",
+        "LC32-A067",
+        "LC32-A070",
+        "LC32-A071",
+        "LC32-A074"
+      ],
+      "related": [
+        "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+        "CORE-USER-OPEN-FLAGS-30::OF30-F01"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来有类型的创建语义与调用者/下游真实消费专项才判断可达性和修复"
+    },
+    {
+      "id": "LC32-F02",
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F02",
+      "status": "needs_evidence",
+      "kind": "indeterminate_dentry_before_step_into",
+      "title": "如果末分量flags具有O_CREAT数值位且LAST_NORM，open_last_lookups局部dentry可在未赋值时被step_into消费",
+      "source_fact": "dentry_s *dentry在函数开头仅声明，只有!(open_flag&O_CREAT)内有__d_lookup/__lookup_slow赋值；对应else/lookup_open代码被注释，随后finish_lookup执行step_into(nd,dentry)。",
+      "premises": [
+        "nd.last_type==LAST_NORM且flags&0x40非零，导致唯一活动赋值块被跳过",
+        "函数沿活动控制流到finish_lookup，没有先触发其它错误返回",
+        "必须证明来自定义良好的有效调用者的0x40 lookupflags生产者，或使用raw helper-only条件示例"
+      ],
+      "possible_impact": "本地可能把没有确定值的dentry_s*传给step_into/handle_mounts；不能合法推导后续路径结果",
+      "counterevidence": [
+        "对于已核有效build_open_flags和open_exec直接调用，尚未建立0x40 lookupflags位生产者；这个条件在所选正常路径不是可复现证明",
+        "与LC32-F01为同一标志域失配的条件后果，不能按两个编号统计两项已证独立漏洞",
+        "当前未执行编译/运行或任何安全破坏测试；不推断CPU错误、文件创建或越权"
+      ],
+      "anchors": [
+        "LC32-A048",
+        "LC32-A050",
+        "LC32-A053",
+        "LC32-A054",
+        "LC32-A013",
+        "LC32-A014",
+        "LC32-A067"
+      ],
+      "related": [
+        "CORE-USER-LAST-COMPONENT-32::LC32-F01",
+        "CORE-USER-OPEN-FLAGS-30::OF30-F01"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "确认valid op.lookup_flags真正带0x40的路径后再深化"
+    },
+    {
+      "id": "LC32-F03",
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+      "status": "needs_evidence",
+      "kind": "null_dentry_fallthrough_into_step_into",
+      "title": "在非O_CREAT数值门分支，快慢查结果若仍为NULL，会落入finish_lookup对NULL dentry的使用",
+      "source_fact": "open_last_lookups先dentry=__d_lookup，NULL则dentry=__lookup_slow；后面if(IS_ERR)返回，if(dentry) goto finish_lookup；为NULL时仍顺序落入finish_lookup: res=step_into(nd,dentry)。",
+      "premises": [
+        "nd.last_type==LAST_NORM，flags&0x40==0",
+        "__d_lookup返回NULL且__lookup_slow也正常返回NULL（其定义/有效生产者未在本次扩审中成立）",
+        "随后step_into/handle_mounts处理NULL的行为未被独立证明"
+      ],
+      "possible_impact": "此假设下会尝试把NULL作为dentry实参交给step_into；由此不能推断正常成功或特定errno",
+      "counterevidence": [
+        "所选__lookup_slow在某些失败会返回ERR_PTR(-ENOENT)，并非已证真实NULL正常返回者",
+        "快查得到非NULL会明确goto finish_lookup；IS_ERR会提前return",
+        "不允许以假想NULL值替代真实生产者；没有运行故障或实际VFS结果"
+      ],
+      "anchors": [
+        "LC32-A050",
+        "LC32-A051",
+        "LC32-A052",
+        "LC32-A054",
+        "LC32-A043"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来有针对__lookup_slow真实返回契约和step_into NULL语义的授权后再复核"
+    },
+    {
+      "id": "LC32-F04",
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F04",
+      "status": "deferred_owner_not_ready",
+      "kind": "typed_result_and_outer_loop_evidence_boundary",
+      "title": "NULL与ERR_PTR经两层while转为不同的整数终态；既有31的前缀0不足以证明最终完整路径结果",
+      "source_fact": "lookup_last/open_last_lookups返回const char*，link_path_walk返回int；成功step_into返回ERR_PTR(-ENOERR)=NULL，负错返回ERR_PTR(err)使外层下一次link_path_walk调用PTR_ERR。最后才有complete_walk或do_open分支。",
+      "premises": [
+        "有效字符串、nd/文件/路径对象，相关函数实际正常返回",
+        "step_into下层handle_mounts返回非负或编码错误值，且不会在对象无效时中断",
+        "外层循环完成后才讨论err/error和后续结果"
+      ],
+      "possible_impact": "要求将返回值类别和下一消费者显式保存，不能以step_into的NULL推断文件/权限正确，也不能把-ENOERR当非零error",
+      "counterevidence": [
+        "这一项是证据边界和历史R31-S01的延伸，不是已证独立内核bug",
+        "真实源中ENOERR=0，正常指针NULL是控制流设计的一部分",
+        "后续do_open缺返回值仍受原UV-04约束"
+      ],
+      "anchors": [
+        "LC32-A005",
+        "LC32-A009",
+        "LC32-A010",
+        "LC32-A029",
+        "LC32-A043",
+        "LC32-A044",
+        "LC32-A045",
+        "LC32-A056",
+        "LC32-A062",
+        "LC32-A063"
+      ],
+      "related": [
+        "CORE-USER-PATH-INIT-31-REVIEW-001::R31-S01",
+        "CORE-USER-VFS-BASELINE-05::UV-04"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "只在后续有界退出契约复核时延续，不要求修复"
+    }
+  ],
+  "historical_additions": [
+    {
+      "qualified_id": "CORE-USER-PATH-INIT-31-REVIEW-001::R31-S01",
+      "status_change": false,
+      "kind": "mandatory_type_correction",
+      "note": "path_lookupat/path_openat的err/error来自link_path_walk int；lookup_last/open_last_lookups是const char*。NULL终止，ERR_PTR在下一轮转换，普通非NULL指针不能无生产者断言可达。",
+      "anchors": [
+        "LC32-A056",
+        "LC32-A062",
+        "LC32-A031",
+        "LC32-A054"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-PATH-INIT-31-REVIEW-001::R31-S02",
+      "status_change": false,
+      "kind": "mandatory_actual_gate_correction",
+      "note": "真实open_last_lookups的创建测试接收lookupflags，不是额外validated op门。标题与引文分别写真实行，合法对象是分析前提不是源码控制门。",
+      "anchors": [
+        "LC32-A050",
+        "LC32-A066",
+        "LC32-A067"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "status_change": false,
+      "kind": "upstream_partial_op_boundary",
+      "note": "do_sys_openat2忽略build_open_flags错误时可能传入未由helper写的lookup_flags；本批不把这个无定义值当确定0x40的生产者。30证据须合读DOC-FIX。",
+      "anchors": [
+        "LC32-A066",
+        "LC32-A075",
+        "LC32-A076"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+      "status_change": false,
+      "kind": "lookup_policy_translation_boundary",
+      "note": "O_CREAT创建意图在op.intent；实际open_last_lookups却只得op.lookup_flags。30已登记完整下游策略尚未证实。",
+      "anchors": [
+        "LC32-A070",
+        "LC32-A071",
+        "LC32-A074"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F03",
+      "status_change": false,
+      "kind": "invalid_input_boundary",
+      "note": "path_init对nd.name.name的早访问先于link_path_walk的IS_ERR(name)检查，不能用后者保护前者。",
+      "anchors": [
+        "LC32-A084",
+        "LC32-A021"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F04",
+      "status_change": false,
+      "kind": "empty_prefix_boundary",
+      "note": "空串和全斜线时LAST_ROOT与int0只证明前缀；lookup_last和open_last_lookups的handle_dots仍须分别消费。",
+      "anchors": [
+        "LC32-A020",
+        "LC32-A022",
+        "LC32-A033",
+        "LC32-A049"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "status_change": false,
+      "kind": "existing_undefined_int_return",
+      "note": "path_openat在error0后调用非void且没有确定return的do_open，不能把后继文件结果断言为确定状态；do_filp_open本身有return。",
+      "anchors": [
+        "LC32-A063",
+        "LC32-A086",
+        "LC32-A067"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::fs.vfs.path_open",
+      "status_change": false,
+      "kind": "capability_reference_only",
+      "note": "05已有路径打开与起点概览；本批仅增加末分量类型/标志/返回局部证据。能力标签不是UV编号。",
+      "anchors": [
+        "LC32-A066",
+        "LC32-A062"
+      ]
+    }
+  ],
+  "new_count": 4,
+  "history_count": 8,
+  "all_new_issues_conditional": true,
+  "full_repo_dedup": "NOT_PERFORMED",
+  "kernel_changes": false
+}

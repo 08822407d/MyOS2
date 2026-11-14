@@ -1,0 +1,212 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LOOKUP-CALLBACK-34",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "mainline_owner": "MYOS2-A-C04",
+  "date": "2026-11-03",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "a6d39cdb22f0",
+  "fixed_contract58_short12": "a87124c1cf6c",
+  "mandatory_supplements": [
+    "R33-S01",
+    "R33-S02"
+  ],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "record_type": "bounded_conditional_deferred_findings",
+  "not_vulnerability_count": true,
+  "new_findings": [
+    {
+      "id": "CB34-F01",
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F01",
+      "status": "needs_evidence",
+      "kind": "loop_exit_without_confirmed_name_match",
+      "title": "目录扫描达到上界并不等于找到目标名字",
+      "fact": "while首先比较de_start<FAT_MAX_DIR_SIZE；条件假时跳过get_full_ent赋值，后续只IS_ERR(tmpde)而不是matched标志；已有非错误tmpde可能继续fat_build_inode",
+      "premises": [
+        "达到上界且无equal break",
+        "之前tmpde有非ERR、在后续仍有效的值",
+        "下游构造与分配均完成"
+      ],
+      "counterevidence": [
+        "若前一次get_full_ent返回ERR_PTR则转NULL失败分支",
+        "不证明真实cursor达到该上界或非匹配条目被使用",
+        "首次判界失败tmpde=NULL时有效继续不能证立"
+      ],
+      "anchors": [
+        "CB34-A021",
+        "CB34-A022",
+        "CB34-A027",
+        "CB34-A028",
+        "CB34-A029"
+      ],
+      "possible_impact": "仅条件静态模型中可能以未匹配条目构造inode；真实目标文件误匹配未证",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CB34-F02",
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F02",
+      "status": "needs_evidence",
+      "kind": "callback_error_class_collapsed_to_ENOENT",
+      "title": "FAT32回调NULL失败路径令上层统一返回-ENOENT",
+      "fact": "FAT32_get_full_ent错误和fat_build_inode错误分别把dest_dentry置NULL并goto共同清理；__lookup_slow仅用callback==NULL检测并回ERR_PTR(-ENOENT)",
+      "premises": [
+        "iobuf有效并能正常release",
+        "fat_build_inode出现一个明确ERR_PTR(-ENOMEM)等失败，或get_full_ent返回IS_ERR-coded pointer",
+        "上层调用通过分配器有效门"
+      ],
+      "counterevidence": [
+        "具体get_full_ent错误的真实生产者和传播时机未展开",
+        "若因无效对象未定义，不能按正常NULL路径推论",
+        "若无错误或成功完成则返回原dentry而非NULL"
+      ],
+      "anchors": [
+        "CB34-A002",
+        "CB34-A022",
+        "CB34-A028",
+        "CB34-A029",
+        "CB34-A030",
+        "CB34-A036",
+        "CB34-A038"
+      ],
+      "possible_impact": "上层失去原底层错误类别，实际错误与行为需另核",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CB34-F03",
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F03",
+      "status": "needs_evidence",
+      "kind": "unchecked_helper_pointers_and_name_lengths",
+      "title": "iobuf及临时目录项/名字值缺少本函数内完整有效性门",
+      "fact": "iobuf_init结果未在iter_init之前检查；tmpde初始NULL，若初次上界条件为假或helper返回NULL仍不能由IS_ERR排除；解析名直接传strncmp，其count由int max值传size_t",
+      "premises": [
+        "需要特定错误/NULL/无效长度生产者",
+        "进入对应有界代码前缀",
+        "错误编码按本固定定义"
+      ],
+      "counterevidence": [
+        "未证明这些无效值能由真实helper产生",
+        "不能跨过无效参数声称CPU或回调出口",
+        "FAT_MAX_DIR_SIZE正常使用下的可达游标尚未取证"
+      ],
+      "anchors": [
+        "CB34-A020",
+        "CB34-A021",
+        "CB34-A022",
+        "CB34-A024",
+        "CB34-A027",
+        "CB34-A057"
+      ],
+      "possible_impact": "conditional invalid parameter consumption, not a tested crash",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CB34-F04",
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F04",
+      "status": "needs_evidence",
+      "kind": "private_inode_allocation_and_arithmetic_preconditions",
+      "title": "分配私有inode信息后无NULL门便写finode字段",
+      "fact": "p->i_blocks先以fsbi->bytes_per_sector为除数；随后private_idx_info=kzalloc并直接使用finode->first_cluster等字段，未见本函数内NULL测试；d_inode赋值在这些步骤后",
+      "premises": [
+        "p构造成功",
+        "fsbi与tmpde/iobuf有效、除数非零且计算合法",
+        "private_idx_info分配可能返回NULL"
+      ],
+      "counterevidence": [
+        "实际分配失败未复现",
+        "不能自动声称CPU故障/资源损失",
+        "new_inode分配与其它内存保障未展开"
+      ],
+      "anchors": [
+        "CB34-A031",
+        "CB34-A032",
+        "CB34-A035",
+        "CB34-A048",
+        "CB34-A049"
+      ],
+      "possible_impact": "字段填充可能在原dentry inode绑定前失去定义良好继续前提",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "CB34-F05",
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F05",
+      "status": "needs_evidence",
+      "kind": "directory_inode_size_mapping_premises",
+      "title": "目录分支未在fat_fill_inode局部直接设置i_size及mapping操作表",
+      "fact": "fat_fill_inode先i_mode=0；目录分支活动设置i_op/i_fop；非目录分支额外设置i_size与i_mapping->a_ops；上层和FAT32_lookup会消费i_size/i_mapping",
+      "premises": [
+        "实际目录分支执行",
+        "new_inode未保证相关状态前不能据缺少局部写入断言值",
+        "后续有效使用需要i_size/mapping值合法"
+      ],
+      "counterevidence": [
+        "new_inode或先行分配可以初始化相关字段，本批没有审其内部",
+        "不等于真实运行时一定未初始化或越权",
+        "无真实目录创建/访问证据"
+      ],
+      "anchors": [
+        "CB34-A009",
+        "CB34-A010",
+        "CB34-A011",
+        "CB34-A012",
+        "CB34-A014",
+        "CB34-A031",
+        "CB34-A003"
+      ],
+      "possible_impact": "条件性上游字段值来源缺口，不是已证明inode损坏",
+      "owner_action_now": "none"
+    }
+  ],
+  "historical_links": [
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F02",
+      "disposition": "bounded_FAT_source_detail",
+      "note": "selected FAT callback defined success returns original after d_inode=p; failures return NULL; other pointer/ERR_PTR cases not produced by selected exits"
+    },
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F04",
+      "disposition": "FAT_producer_condition_added",
+      "note": "FAT callback has NULL paths for iterator or build error, which enter upper kfree(original); actual name-buffer reclamation remains unexamined"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+      "disposition": "retained_narrowing",
+      "note": "upper slow lookup still has no defined normal NULL return; callback NULL goes to -ENOENT"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F01",
+      "disposition": "retained",
+      "note": "LOOKUP/O flag mismatch not reanalyzed"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F02",
+      "disposition": "retained",
+      "note": "helper-only flag bit and unassigned dentry precondition unchanged"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "disposition": "retained",
+      "note": "do_open missing nonvoid return remains separate downstream boundary"
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "disposition": "retained_with_DOC_FIX",
+      "note": "no concrete flag value can be deduced from an uninitialized field"
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+      "disposition": "retained_with_DOC_FIX",
+      "note": "not a newly confirmed access-control failure"
+    }
+  ],
+  "avoid_claims": [
+    "five candidate IDs do not represent five proven bugs",
+    "no physical resource reclaim or refcount conclusion",
+    "no real FAT file matching, disk or corruption result",
+    "no claim that actual parent always uses VFAT operation table"
+  ],
+  "owner_decisions_requested_now": []
+}

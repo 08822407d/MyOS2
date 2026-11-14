@@ -1,0 +1,65 @@
+{
+ "record": "B04_WRITE_AREA_BOUNDARY",
+ "base": "b12572f14eae",
+ "target": "index (staged)",
+ "base_files": 1346,
+ "base_files_identical": 1346,
+ "differing": [],
+ "missing": [],
+ "changes_vs_base": [
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/MANIFEST.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/deferred-findings.yaml"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/evidence.md"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/facts-and-boundaries.yaml"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/records/boundary_staged.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/records/queries.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/records/run.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/records/ub_check.json"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/scripts/ub_check.py"
+  },
+  {
+   "status": "A",
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boundaries-07/user-entry-console.md"
+  }
+ ],
+ "only_additions_under_prefix": true,
+ "unstaged": [],
+ "untracked": [],
+ "remote_exec_head": "b12572f14eae",
+ "head": "b12572f14eae",
+ "commands_run": [
+  "git diff --cached --name-status --no-renames b12572f14eae",
+  "git diff --name-status --no-renames",
+  "git ls-files --others --exclude-standard",
+  "git ls-files -s -z",
+  "git ls-remote origin refs/heads/claude/dazzling-cori-q0dnyt",
+  "git ls-tree -r -z --full-tree b12572f14eae",
+  "git rev-parse --short=12 HEAD"
+ ]
+}

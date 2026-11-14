@@ -1,0 +1,1797 @@
+{
+ "pin_time": "a039d9803ade",
+ "queries": [
+  {
+   "id": "QS-01",
+   "command": "git grep -n -w -E freopen|printf|fork|execve|sched_yield|getpid <time> -- myinitramfs/myinit/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 11,
+   "hits_active": 9,
+   "hits": [
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 11,
+     "text": "freopen(\"/dev/console\", \"r\", stdin);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 12,
+     "text": "freopen(\"/dev/console\", \"w\", stdout);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 13,
+     "text": "freopen(\"/dev/console\", \"w\", stderr);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 16,
+     "text": "printf(\"Welcome to MyOS2\\n\\n\");",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 30,
+     "text": "int rv = fork();",
+     "active": true,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 33,
+     "text": "pid_t pid = getpid();",
+     "active": true,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 34,
+     "text": "// printf(\"child task, %d\\n\", rv);",
+     "active": false,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 35,
+     "text": "execve(prog_name, args, envs);",
+     "active": true,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 38,
+     "text": "pid_t pid = getpid();",
+     "active": true,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 39,
+     "text": "// printf(\"parent task, %d\\n\", rv);",
+     "active": false,
+     "enclosing": "normal_boot"
+    },
+    {
+     "path": "myinitramfs/myinit/initd.c",
+     "line": 41,
+     "text": "sched_yield();",
+     "active": true,
+     "enclosing": "normal_boot"
+    }
+   ]
+  },
+  {
+   "id": "QS-02",
+   "command": "git grep -n -w console_fd <time> -- myinitramfs/myshell/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 7,
+   "hits_active": 7,
+   "hits": [
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 58,
+     "text": "int console_fd = -1;",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 73,
+     "text": "console_fd = open(\"/dev/console\", O_RDWR);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 111,
+     "text": "while(read(console_fd, &key, 1) == 1 && key != 4)",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 113,
+     "text": "write(console_fd, \"\\b\", 1);",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 126,
+     "text": "write(console_fd, \"\\b\", 1);",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 132,
+     "text": "write(console_fd, &key, 1);",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 135,
+     "text": "write(console_fd, \"_\", 1);",
+     "active": true,
+     "enclosing": "read_line"
+    }
+   ]
+  },
+  {
+   "id": "QS-03",
+   "command": "git grep -n -E \\b(open|read|write|close|lseek|creat|mkdir|rmdir|unlink|chdir|getcwd|opendir|readdir|closedir|fflush|reboot)\\s*\\( <time> -- myinitramfs/myshell/myshell.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 26,
+   "hits_active": 26,
+   "hits": [
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 39,
+     "text": "char *\tgetcwd(char *, size_t);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 40,
+     "text": "int\t\tchdir(const char *);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 41,
+     "text": "int\t\treboot(int);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 73,
+     "text": "console_fd = open(\"/dev/console\", O_RDWR);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 76,
+     "text": "getcwd(current_dir, PATH_MAX);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 87,
+     "text": "fflush(stdout);",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 111,
+     "text": "while(read(console_fd, &key, 1) == 1 && key != 4)",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 113,
+     "text": "write(console_fd, \"\\b\", 1);",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 126,
+     "text": "write(console_fd, \"\\b\", 1);",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 132,
+     "text": "write(console_fd, &key, 1);",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 135,
+     "text": "write(console_fd, \"_\", 1);",
+     "active": true,
+     "enclosing": "read_line"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 203,
+     "text": "i = chdir(path);",
+     "active": true,
+     "enclosing": "cd_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 207,
+     "text": "getcwd(current_dir, PATH_MAX);",
+     "active": true,
+     "enclosing": "cd_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 224,
+     "text": "dir = opendir(path);",
+     "active": true,
+     "enclosing": "ls_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 233,
+     "text": "buf = readdir(dir);",
+     "active": true,
+     "enclosing": "ls_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 241,
+     "text": "closedir(dir);",
+     "active": true,
+     "enclosing": "ls_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 270,
+     "text": "fd = open(filename, O_RDONLY, 0);",
+     "active": true,
+     "enclosing": "cat_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 276,
+     "text": "i = lseek(fd, 0, SEEK_END);",
+     "active": true,
+     "enclosing": "cat_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 277,
+     "text": "lseek(fd, 0, SEEK_SET);",
+     "active": true,
+     "enclosing": "cat_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 280,
+     "text": "len = read(fd, buf, i);",
+     "active": true,
+     "enclosing": "cat_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 284,
+     "text": "close(fd);",
+     "active": true,
+     "enclosing": "cat_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 332,
+     "text": "err = creat(argv[1], nmode);",
+     "active": true,
+     "enclosing": "touch_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 344,
+     "text": "err = mkdir(argv[1], nmode);",
+     "active": true,
+     "enclosing": "mkdir_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 356,
+     "text": "err = rmdir(dirname);",
+     "active": true,
+     "enclosing": "rmdir_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 370,
+     "text": "err = unlink(filename);",
+     "active": true,
+     "enclosing": "rm_command"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 379,
+     "text": "reboot(SYSTEM_REBOOT);",
+     "active": true,
+     "enclosing": "reboot_command"
+    }
+   ]
+  },
+  {
+   "id": "QS-04",
+   "command": "git grep -n -w -E syscall|__syscall|SYS_[a-z_0-9]+ <time> -- myinitramfs/myinit/ myinitramfs/myshell/",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QS-05",
+   "command": "git grep -n -E add_subdirectory|include_directories|CMAKE_C_COMPILER|MUSL_ <time> -- myinitramfs/CMakeLists.txt",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 7,
+   "hits_active": 7,
+   "hits": [
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 40,
+     "text": "set(MUSL_PATH /home/cheyh/projs/musl/build)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 41,
+     "text": "set(CMAKE_C_COMPILER ${MUSL_PATH}/exec/bin/musl-gcc)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 43,
+     "text": "set(MUSL_INC_PATH ${MUSL_PATH}/include)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 44,
+     "text": "set(MUSL_LIB_PATH ${MUSL_PATH}/lib)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 46,
+     "text": "include_directories(\"${MUSL_INC_PATH}\")",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 47,
+     "text": "add_subdirectory(myinit)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/CMakeLists.txt",
+     "line": 48,
+     "text": "add_subdirectory(myshell)",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-06",
+   "command": "git grep -n -w mylib <time> -- myinitramfs/CMakeLists.txt myinitramfs/myinit/CMakeLists.txt myinitramfs/myshell/CMakeLists.txt make_install.sh scripts/",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QS-07",
+   "command": "git grep -n -E ^SYSFUNC_DEF\\((open|close|read|write|putstring)\\)|\"syscall[[:space:]] <time> -- myinitramfs/mylib/myglibc/syscall/syscall.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 6,
+   "hits_active": 6,
+   "hits": [
+    {
+     "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+     "line": 30,
+     "text": "SYSFUNC_DEF(open)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+     "line": 31,
+     "text": "SYSFUNC_DEF(close)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+     "line": 32,
+     "text": "SYSFUNC_DEF(read)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+     "line": 33,
+     "text": "SYSFUNC_DEF(write)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+     "line": 68,
+     "text": "SYSFUNC_DEF(putstring)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+     "line": 73,
+     "text": "\"syscall\t\t\t\t\t\t\t\t\\n\\t\"",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-08",
+   "command": "git grep -n -w -E freopen|writev|dup2|dup3|fflush <time> -- myinitramfs/mylib/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 11,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "myinitramfs/mylib/myglibc/include/stdio.h",
+     "line": 231,
+     "text": "// \tlibc_hidden_proto(fflush)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/fileops.c",
+     "line": 106,
+     "text": "// \t   position before we do the first fseek (and until a following fflush). */",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/fileops.c",
+     "line": 867,
+     "text": "// \t/* POSIX.1 8.2.3.7 says that after a call the fflush() the file",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/stdio.h",
+     "line": 216,
+     "text": "// extern int fflush(FILE *__stream);",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/stdio.h",
+     "line": 251,
+     "text": "// extern FILE *freopen(const char *__restrict __filename,",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/stdio.h",
+     "line": 258,
+     "text": "// extern FILE *__REDIRECT(freopen, (const char *__restrict __filename, const char *__restrict __modes, FILE *__restrict __stream), freopen64)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/stdio.h",
+     "line": 262,
+     "text": "// #define freopen freopen64",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/libio/stdio.h",
+     "line": 296,
+     "text": "// and the number of characters written on fflush or fclose.  */",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/posix/unistd.h",
+     "line": 548,
+     "text": "// extern int dup2(int __fd, int __fd2) __THROW;",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/posix/unistd.h",
+     "line": 553,
+     "text": "// extern int dup3(int __fd, int __fd2, int __flags) __THROW;",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/mylib/myglibc/stdio/printf.c",
+     "line": 24,
+     "text": "// fflush(stdout);",
+     "active": false,
+     "enclosing": "printf"
+    }
+   ]
+  },
+  {
+   "id": "QS-09",
+   "command": "git grep -n -E MUSL_|LINK_TYPE|patchelf <time> -- scripts/make_install_initranfs.sh make_install.sh",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 12,
+   "hits_active": 11,
+   "hits": [
+    {
+     "path": "make_install.sh",
+     "line": 6,
+     "text": "LINK_TYPE=static",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "make_install.sh",
+     "line": 7,
+     "text": "# LINK_TYPE=dynamic",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "make_install.sh",
+     "line": 25,
+     "text": "make_install_initranfs $PROJ_ROOT $DEBUG_FLAG $LINK_TYPE",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 5,
+     "text": "MUSL_LIB_PATH=\"/home/cheyh/projs/musl/build/lib\"",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 6,
+     "text": "MUSL_LD_PATH=\"/home/cheyh/projs/musl/build/sys\"",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 7,
+     "text": "MUSL_DYN_LD=\"$LIB_PATH/ld-musl-x86_64.so.1\"",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 13,
+     "text": "cp $MUSL_LIB_PATH/libc.so $MYOS2_LIB_PATH",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 14,
+     "text": "cp $MUSL_LD_PATH/ld-musl-x86_64.so.1 $MYOS2_LIB_PATH",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 29,
+     "text": "cmake $1/myinitramfs $2 -DLINK_TYPE=$3 -DCMAKE_INSTALL_PREFIX=/mnt && make",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 31,
+     "text": "if [[ \"$LINK_TYPE\" == \"dynamic\" ]]; then",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 33,
+     "text": "patchelf --set-interpreter $MUSL_DYN_LD init",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "scripts/make_install_initranfs.sh",
+     "line": 34,
+     "text": "patchelf --set-interpreter $MUSL_DYN_LD sh",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-10",
+   "command": "git grep -n -E Ported musl|Currently support syscalls|io -- read, write, writev|syscall/syscall.c|configure --prefix=/home/cheyh/projs/musl|llibmylibc <time> -- changelog.md user-guide/ documents/useful_cmds.md",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 7,
+   "hits_active": 7,
+   "hits": [
+    {
+     "path": "changelog.md",
+     "line": 3,
+     "text": "Ported musl c-library, now test-purpose initd and shell are static linked to musl.",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "changelog.md",
+     "line": 5,
+     "text": "Currently support syscalls (only main flags/options):",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "changelog.md",
+     "line": 11,
+     "text": "io -- read, write, writev,",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "documents/useful_cmds.md",
+     "line": 15,
+     "text": "bash ./configure --prefix=/home/cheyh/projs/musl/build --enable-debug --enable-static --disable-shared --exec-prefix=/home/cheyh/projs/musl/build/exec --syslibdir=/home/cheyh/projs/musl/build/sys --di",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "user-guide/Syscall-Table.md",
+     "line": 5,
+     "text": "And the corresponding User APIs are listed in `MyOS2/mylib/myglibc/syscall/syscall.c`",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "user-guide/User-Application.md",
+     "line": 5,
+     "text": "`gcc -o main main.c -static -llibmycrt.a -llibmylibc.a -IMyOS2/mylib/myglibc/include`",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "user-guide/User-Application.md",
+     "line": 7,
+     "text": "It is obvious that you need to link libraries compatible for MyOS2 Kernel, thus you need compile options `-static -llibmycrt.a -llibmylibc.a -IMyOS2/mylib/myglibc/include`",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-11",
+   "command": "git grep -n -E wrmsrl\\(MSR_LSTAR|syscall_init\\(\\); <time> -- mykernel/arch/x86_64/kernel/cpu/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/kernel/cpu/common.c",
+     "line": 543,
+     "text": "wrmsrl(MSR_LSTAR, (unsigned long)entry_SYSCALL_64);",
+     "active": true,
+     "enclosing": "syscall_init"
+    },
+    {
+     "path": "mykernel/arch/x86_64/kernel/cpu/common.c",
+     "line": 608,
+     "text": "syscall_init();",
+     "active": true,
+     "enclosing": "cpu_init"
+    }
+   ]
+  },
+  {
+   "id": "QS-12",
+   "command": "git grep -n -w CONFIG_INTEL_X64_GDT_LAYOUT <time> -- mykernel/scripts/options_flags.cmake",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QS-13",
+   "command": "git grep -n -w __NR_syscalls <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/common.c",
+     "line": 42,
+     "text": "if (unr < __NR_syscalls) {",
+     "active": true,
+     "enclosing": "do_syscall_64"
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 1,
+     "text": "__SYSCALL(__NR_syscalls - 1, sys_no_syscall)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd.h",
+     "line": 20,
+     "text": "// #define NR_syscalls (__NR_syscalls)",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+     "line": 443,
+     "text": "#\tdefine\t__NR_syscalls\t453",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-14",
+   "command": "git grep -n -w sys_call_table <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+     "line": 15,
+     "text": "* The sys_call_table[] is no longer used for system calls, but",
+     "active": false,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+     "line": 20,
+     "text": "const sys_call_ptr_t sys_call_table[] = {",
+     "active": true,
+     "enclosing": "const sys_call_ptr_t sys_call_table[]"
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscall.h",
+     "line": 24,
+     "text": "extern const sys_call_ptr_t sys_call_table[];",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-15",
+   "command": "git grep -n -w x64_sys_call <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/common.c",
+     "line": 44,
+     "text": "regs->ax = x64_sys_call(regs, unr);",
+     "active": true,
+     "enclosing": "do_syscall_64"
+    },
+    {
+     "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+     "line": 27,
+     "text": "long x64_sys_call(const pt_regs_s *regs, unsigned int nr)",
+     "active": true,
+     "enclosing": "x64_sys_call"
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscall.h",
+     "line": 32,
+     "text": "extern long x64_sys_call(const pt_regs_s *, unsigned int nr);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-16",
+   "command": "git grep -n -E ALERT_DUMMY_SYSCALL\\s*\\(\\s*\\w+\\s*, <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 8,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 133,
+     "text": "ALERT_DUMMY_SYSCALL(ioctl, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_ioctl"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 187,
+     "text": "ALERT_DUMMY_SYSCALL(mprotect, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_mprotect"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 105,
+     "text": "ALERT_DUMMY_SYSCALL(dup, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_dup"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 123,
+     "text": "ALERT_DUMMY_SYSCALL(dup2, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_dup2"
+    },
+    {
+     "path": "mykernel/include/linux/kernel/syscalls.h",
+     "line": 1393,
+     "text": "#define ALERT_DUMMY_SYSCALL(syscall_name, show_alert)\t\t\\",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/lock_IPC/syscall.c",
+     "line": 93,
+     "text": "ALERT_DUMMY_SYSCALL(kill, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_kill"
+    },
+    {
+     "path": "mykernel/sched/syscall.c",
+     "line": 70,
+     "text": "ALERT_DUMMY_SYSCALL(exit, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_exit"
+    },
+    {
+     "path": "mykernel/sched/syscall.c",
+     "line": 135,
+     "text": "ALERT_DUMMY_SYSCALL(exit_group, IF_ALERT_DUMMY_SYSCALL);",
+     "active": true,
+     "enclosing": "sys_exit_group"
+    }
+   ]
+  },
+  {
+   "id": "QS-17",
+   "command": "git grep -n -w putstring <time> -- myinitramfs/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+     "line": 68,
+     "text": "SYSFUNC_DEF(putstring)",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-18",
+   "command": "git grep -n -F PUSH_AND_CLEAR_REGS rax=$-ENOSYS <time> -- mykernel/arch/x86_64/entry/entry_64.S",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/entry/entry_64.S",
+     "line": 165,
+     "text": "// PUSH_AND_CLEAR_REGS rax=$-ENOSYS",
+     "active": false,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-19",
+   "command": "git grep -n -w console_on_rootfs <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 0,
+   "hits": [
+    {
+     "path": "mykernel/init/main.c",
+     "line": 344,
+     "text": "// console_on_rootfs();",
+     "active": false,
+     "enclosing": "kernel_init_freeable"
+    }
+   ]
+  },
+  {
+   "id": "QS-20",
+   "command": "git grep -n -E \\bfdget(_pos|_raw)?\\s*\\( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 7,
+   "hits_active": 6,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 135,
+     "text": "// \tstruct fd f = fdget(fd);",
+     "active": false,
+     "enclosing": "sys_ioctl"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 143,
+     "text": "fd_s f = fdget_raw(fd);",
+     "active": true,
+     "enclosing": "sys_fcntl"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 321,
+     "text": "fd_s f = fdget_pos(fd);",
+     "active": true,
+     "enclosing": "ksys_write"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 388,
+     "text": "fd_s f = fdget_pos(fd);",
+     "active": true,
+     "enclosing": "do_writev"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 60,
+     "text": "fdget(uint fd) {",
+     "active": true,
+     "enclosing": "fdget"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 66,
+     "text": "fdget_raw(uint fd) {",
+     "active": true,
+     "enclosing": "fdget_raw"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 72,
+     "text": "fdget_pos(int fd) {",
+     "active": true,
+     "enclosing": "fdget_pos"
+    }
+   ]
+  },
+  {
+   "id": "QS-21",
+   "command": "git grep -n -E \\bfdput(_pos)?\\s*\\( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 9,
+   "hits_active": 8,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 150,
+     "text": "// \tfdput(f);",
+     "active": false,
+     "enclosing": "sys_ioctl"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 159,
+     "text": "fdput(f);",
+     "active": true,
+     "enclosing": "sys_fcntl"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 194,
+     "text": "fdput_pos(f);",
+     "active": true,
+     "enclosing": "ksys_read"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 334,
+     "text": "fdput_pos(f);",
+     "active": true,
+     "enclosing": "ksys_write"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 400,
+     "text": "fdput_pos(f);",
+     "active": true,
+     "enclosing": "do_writev"
+    },
+    {
+     "path": "mykernel/fs/vfs/readdir.c",
+     "line": 167,
+     "text": "fdput_pos(f);",
+     "active": true,
+     "enclosing": "sys_getdents64"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 36,
+     "text": "static inline void fdput(fd_s fd)",
+     "active": true,
+     "enclosing": "fdput"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 78,
+     "text": "fdput_pos(fd_s f) {",
+     "active": true,
+     "enclosing": "fdput_pos"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 81,
+     "text": "fdput(f);",
+     "active": true,
+     "enclosing": "fdput_pos"
+    }
+   ]
+  },
+  {
+   "id": "QS-22",
+   "command": "git grep -n -F myos_fdget_pos( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 197,
+     "text": "fd_s myos_fdget_pos(int fd)",
+     "active": true,
+     "enclosing": "myos_fdget_pos"
+    },
+    {
+     "path": "mykernel/fs/vfs/read_write.c",
+     "line": 182,
+     "text": "fd_s f = myos_fdget_pos(fd);",
+     "active": true,
+     "enclosing": "ksys_read"
+    },
+    {
+     "path": "mykernel/fs/vfs/readdir.c",
+     "line": 143,
+     "text": "f = myos_fdget_pos(fd);",
+     "active": true,
+     "enclosing": "sys_getdents64"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 114,
+     "text": "extern fd_s myos_fdget_pos(int fd);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-23",
+   "command": "git grep -n -F f_dupfd( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 16,
+     "text": "err = f_dupfd(argi, filp, 0);",
+     "active": true,
+     "enclosing": "do_fcntl"
+    },
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 19,
+     "text": "err = f_dupfd(argi, filp, O_CLOEXEC);",
+     "active": true,
+     "enclosing": "do_fcntl"
+    },
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 229,
+     "text": "int f_dupfd(uint from, file_s *file, uint flags)",
+     "active": true,
+     "enclosing": "f_dupfd"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 84,
+     "text": "extern int f_dupfd(uint from, file_s *file, uint flags);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-24",
+   "command": "git grep -n -E \\[RLIMIT_NOFILE\\]|\\.rlim[[:space:]]+= INIT_RLIMITS|memcpy\\(sig->rlim <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/include/uapi/asm-generic/resource.h",
+     "line": 76,
+     "text": "[RLIMIT_NOFILE]\t\t= {   INR_OPEN_CUR,   INR_OPEN_MAX },\t\\",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/init/init_task.c",
+     "line": 37,
+     "text": ".rlim\t\t\t\t= INIT_RLIMITS,",
+     "active": true,
+     "enclosing": "init_signals"
+    },
+    {
+     "path": "mykernel/sched/forkexec/fork.c",
+     "line": 823,
+     "text": "memcpy(sig->rlim, current->signal->rlim, sizeof sig->rlim);",
+     "active": true,
+     "enclosing": "copy_signal"
+    }
+   ]
+  },
+  {
+   "id": "QS-25",
+   "command": "git grep -n -E do_close_on_exec|unshare_files\\(\\) <time> -- mykernel/sched/forkexec/exec.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 2,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 887,
+     "text": "retval = unshare_files();",
+     "active": true,
+     "enclosing": "begin_new_exec"
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 947,
+     "text": "// do_close_on_exec(me->files);",
+     "active": false,
+     "enclosing": "begin_new_exec"
+    }
+   ]
+  },
+  {
+   "id": "QS-26",
+   "command": "git grep -n -E case F_(GETFD|SETFD|SETFL): <time> -- mykernel/fs/vfs/fcntl.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 21,
+     "text": "// case F_GETFD:",
+     "active": false,
+     "enclosing": "do_fcntl"
+    },
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 24,
+     "text": "// case F_SETFD:",
+     "active": false,
+     "enclosing": "do_fcntl"
+    },
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 31,
+     "text": "// case F_SETFL:",
+     "active": false,
+     "enclosing": "do_fcntl"
+    },
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 121,
+     "text": "case F_GETFD:",
+     "active": true,
+     "enclosing": "check_fcntl_cmd"
+    },
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 122,
+     "text": "case F_SETFD:",
+     "active": true,
+     "enclosing": "check_fcntl_cmd"
+    }
+   ]
+  },
+  {
+   "id": "QS-27",
+   "command": "git grep -n -E \\b(set|get)_close_on_exec\\s*\\( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 2,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 22,
+     "text": "// \terr = get_close_on_exec(fd) ? FD_CLOEXEC : 0;",
+     "active": false,
+     "enclosing": "do_fcntl"
+    },
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 26,
+     "text": "// \tset_close_on_exec(fd, argi & FD_CLOEXEC);",
+     "active": false,
+     "enclosing": "do_fcntl"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 86,
+     "text": "extern void set_close_on_exec(uint fd, int flag);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 87,
+     "text": "extern bool get_close_on_exec(uint fd);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/sched/forkexec/exec.c",
+     "line": 1137,
+     "text": "// if (get_close_on_exec(fd))",
+     "active": false,
+     "enclosing": "alloc_bprm"
+    }
+   ]
+  },
+  {
+   "id": "QS-28",
+   "command": "git grep -n -E fp[[:space:]]*==[[:space:]]*NULL|!fp\\b|fp[[:space:]]*!=[[:space:]]*NULL <time> -- mykernel/fs/syscall.c",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QS-29",
+   "command": "git grep -n -E -e [a-z]->dfd\\b <time> -- mykernel/fs/vfs/namei.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/namei.c",
+     "line": 152,
+     "text": "p->dfd = dfd;",
+     "active": true,
+     "enclosing": "set_nameidata"
+    }
+   ]
+  },
+  {
+   "id": "QS-30",
+   "command": "git grep -n -F kmem_cache_free(filp_cachep <time> -- mykernel/fs/vfs/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/file_table.c",
+     "line": 127,
+     "text": "kmem_cache_free(filp_cachep, file);",
+     "active": true,
+     "enclosing": "fput"
+    }
+   ]
+  },
+  {
+   "id": "QS-31",
+   "command": "git grep -n -F long err = -EINVAL; <time> -- mykernel/fs/vfs/fcntl.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 1,
+   "hits_active": 1,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/fcntl.c",
+     "line": 12,
+     "text": "long err = -EINVAL;",
+     "active": true,
+     "enclosing": "do_fcntl"
+    }
+   ]
+  },
+  {
+   "id": "QS-32",
+   "command": "git grep -n -E __SYSCALL\\(__NR_(read|write|open|close|lseek|ioctl|writev|dup|dup2|fcntl|putstring), <time> -- mykernel/arch/x86_64/include/asm/syscalls_64.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 11,
+   "hits_active": 11,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 4,
+     "text": "__SYSCALL(__NR_read, sys_read)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 5,
+     "text": "__SYSCALL(__NR_write, sys_write)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 6,
+     "text": "__SYSCALL(__NR_open, sys_open)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 7,
+     "text": "__SYSCALL(__NR_close, sys_close)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 11,
+     "text": "__SYSCALL(__NR_lseek, sys_lseek)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 20,
+     "text": "__SYSCALL(__NR_ioctl, sys_ioctl)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 22,
+     "text": "__SYSCALL(__NR_writev, sys_writev)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 26,
+     "text": "__SYSCALL(__NR_dup, sys_dup)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 27,
+     "text": "__SYSCALL(__NR_dup2, sys_dup2)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 38,
+     "text": "__SYSCALL(__NR_fcntl, sys_fcntl)",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+     "line": 80,
+     "text": "__SYSCALL(__NR_putstring, sys_myos_putstring)",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-33",
+   "command": "git grep -n -E MYOS_SYSCALL_DEFINE[0-9]\\((read|write|open|close|lseek|writev|dup|dup2|fcntl|ioctl|myos_putstring|no_syscall)[,)] <time> -- mykernel/fs/syscall.c mykernel/arch/x86_64/myos/syscall.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 12,
+   "hits_active": 12,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 24,
+     "text": "MYOS_SYSCALL_DEFINE0(no_syscall)",
+     "active": true,
+     "enclosing": "sys_no_syscall"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 30,
+     "text": "MYOS_SYSCALL_DEFINE1(myos_putstring, char *, string)",
+     "active": true,
+     "enclosing": "sys_myos_putstring"
+    },
+    {
+     "path": "mykernel/arch/x86_64/myos/syscall.c",
+     "line": 131,
+     "text": "MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)",
+     "active": true,
+     "enclosing": "sys_ioctl"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 11,
+     "text": "MYOS_SYSCALL_DEFINE3(read, unsigned int, fd,",
+     "active": true,
+     "enclosing": "sys_read"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 17,
+     "text": "MYOS_SYSCALL_DEFINE3(write, unsigned int, fd,",
+     "active": true,
+     "enclosing": "sys_write"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 38,
+     "text": "MYOS_SYSCALL_DEFINE3(open, const char *, filename,",
+     "active": true,
+     "enclosing": "sys_open"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 45,
+     "text": "MYOS_SYSCALL_DEFINE1(close, unsigned int, fd)",
+     "active": true,
+     "enclosing": "sys_close"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 75,
+     "text": "MYOS_SYSCALL_DEFINE3(lseek, unsigned int, fd,",
+     "active": true,
+     "enclosing": "sys_lseek"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 95,
+     "text": "MYOS_SYSCALL_DEFINE3(writev, unsigned long, fd,",
+     "active": true,
+     "enclosing": "sys_writev"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 103,
+     "text": "MYOS_SYSCALL_DEFINE1(dup, unsigned int, fildes)",
+     "active": true,
+     "enclosing": "sys_dup"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 121,
+     "text": "MYOS_SYSCALL_DEFINE2(dup2, unsigned int, oldfd, unsigned int, newfd)",
+     "active": true,
+     "enclosing": "sys_dup2"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 140,
+     "text": "MYOS_SYSCALL_DEFINE3(fcntl, unsigned int, fd,",
+     "active": true,
+     "enclosing": "sys_fcntl"
+    }
+   ]
+  },
+  {
+   "id": "QS-34",
+   "command": "git grep -n -E \\bfget\\s*\\( <time> -- mykernel/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 3,
+   "hits_active": 3,
+   "hits": [
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 219,
+     "text": "file_s *fget(uint fd) {",
+     "active": true,
+     "enclosing": "fget"
+    },
+    {
+     "path": "mykernel/include/linux/fs/file.h",
+     "line": 42,
+     "text": "extern file_s *fget(unsigned int fd);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/mm/vm_map/mmap.c",
+     "line": 1327,
+     "text": "file = fget(fd);",
+     "active": true,
+     "enclosing": "sys_mmap"
+    }
+   ]
+  },
+  {
+   "id": "QS-36",
+   "command": "git grep -n -E \\b(test_PrintDateTime|test_all|gettimeofday|perror|localtime|strftime)[[:space:]]*\\( <time> -- myinitramfs/myshell/",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 10,
+   "hits_active": 9,
+   "hits": [
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 68,
+     "text": "test_PrintDateTime();",
+     "active": true,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myshell/myshell.c",
+     "line": 81,
+     "text": "// test_all();",
+     "active": false,
+     "enclosing": "main"
+    },
+    {
+     "path": "myinitramfs/myshell/tests.c",
+     "line": 5,
+     "text": "void test_all()",
+     "active": true,
+     "enclosing": "test_all"
+    },
+    {
+     "path": "myinitramfs/myshell/tests.c",
+     "line": 104,
+     "text": "int test_PrintDateTime() {",
+     "active": true,
+     "enclosing": "test_PrintDateTime"
+    },
+    {
+     "path": "myinitramfs/myshell/tests.c",
+     "line": 110,
+     "text": "if (gettimeofday(&tv, NULL) == -1) {",
+     "active": true,
+     "enclosing": "test_PrintDateTime"
+    },
+    {
+     "path": "myinitramfs/myshell/tests.c",
+     "line": 111,
+     "text": "perror(\"gettimeofday failed\");",
+     "active": true,
+     "enclosing": "test_PrintDateTime"
+    },
+    {
+     "path": "myinitramfs/myshell/tests.c",
+     "line": 118,
+     "text": "tm_info = localtime(&tv.tv_sec);",
+     "active": true,
+     "enclosing": "test_PrintDateTime"
+    },
+    {
+     "path": "myinitramfs/myshell/tests.c",
+     "line": 121,
+     "text": "strftime(buffer, sizeof(buffer), \"%Y-%m-%d %H:%M:%S\", tm_info);",
+     "active": true,
+     "enclosing": "test_PrintDateTime"
+    },
+    {
+     "path": "myinitramfs/myshell/tests.h",
+     "line": 12,
+     "text": "void test_all(void);",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "myinitramfs/myshell/tests.h",
+     "line": 18,
+     "text": "int test_PrintDateTime(void);",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  },
+  {
+   "id": "QS-37",
+   "command": "git grep -n -w writev <time> -- myinitramfs/myinit/ myinitramfs/myshell/",
+   "returncode": 1,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 0,
+   "hits_active": 0,
+   "hits": []
+  },
+  {
+   "id": "QS-38",
+   "command": "git grep -n -E fd >= curr->files->fd_count|i < files->fd_count|fd < files->fd_count <time> -- mykernel/fs/syscall.c mykernel/fs/vfs/file.c",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 5,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 24,
+     "text": "// if(fd < 0 || fd >= curr->files->fd_count)",
+     "active": false,
+     "enclosing": "sys_write"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 51,
+     "text": "if(fd < 0 || fd >= curr->files->fd_count)",
+     "active": true,
+     "enclosing": "sys_close"
+    },
+    {
+     "path": "mykernel/fs/syscall.c",
+     "line": 82,
+     "text": "if(fd < 0 || fd >= curr->files->fd_count)",
+     "active": true,
+     "enclosing": "sys_lseek"
+    },
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 84,
+     "text": "for(i = 0; i < files->fd_count; i++) {",
+     "active": true,
+     "enclosing": "put_files_struct"
+    },
+    {
+     "path": "mykernel/fs/vfs/file.c",
+     "line": 212,
+     "text": "if (fd < files->fd_count) {",
+     "active": true,
+     "enclosing": "__simple_fget"
+    }
+   ]
+  },
+  {
+   "id": "QS-35",
+   "command": "git grep -n -E define[[:space:]]+__NR_(fstat|readv|openat|dup3)[[:space:]] <time> -- mykernel/arch/x86_64/include/asm/unistd_64.h",
+   "returncode": 0,
+   "tool_failure": false,
+   "stderr": "",
+   "hits_total": 4,
+   "hits_active": 4,
+   "hits": [
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+     "line": 10,
+     "text": "#define __NR_fstat\t\t\t5",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+     "line": 26,
+     "text": "#define __NR_readv\t\t\t19",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+     "line": 312,
+     "text": "#define __NR_openat\t\t\t\t257",
+     "active": true,
+     "enclosing": null
+    },
+    {
+     "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+     "line": 354,
+     "text": "#define __NR_dup3\t\t\t\t292",
+     "active": true,
+     "enclosing": null
+    }
+   ]
+  }
+ ]
+}

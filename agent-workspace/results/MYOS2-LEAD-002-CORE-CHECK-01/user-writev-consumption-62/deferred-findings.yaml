@@ -1,0 +1,391 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-WRITEV-CONSUMPTION-62",
+  "record_type": "new_source_conditional_consumers_and_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "7f37c7b1e445",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "prior_return_items": [],
+  "prior_discipline": {
+    "batch61": "PASS_PENDING_LOCAL, R61-S01/S02/S03, no D00",
+    "batch55": "PASS_PENDING_LOCAL with R55-S01/S02",
+    "batch56": "PASS_PENDING_LOCAL with R56-S01/S02",
+    "batch08": "SR08-01/02 bounded documentary resolution; US-01 original status unchanged",
+    "batch07": "PASS_PENDING_LOCAL, UB-01 status unchanged",
+    "batch58": "B25 prior mainline mistaken allegation withdrawn per R58C-S01"
+  },
+  "new_findings": [
+    {
+      "id": "WV62-F01",
+      "topic": "A",
+      "kind": "unimported_vector_array_directly_consumed",
+      "claim": "writev的有效fd路径直接将用户vec交给vfs_writev并在循环读取vec[i].iov_base/len；import_iovec、UIO_MAXIOV、tot_len和用户vec容量检查都未处于活动控制路径。对vlen大于真实可读数组项数，最早不合法的是相应iovec字段求值，而非安全EINVAL。",
+      "premises": [
+        "f.file/file.f_mode有效且FMODE_WRITE成立",
+        "vlen>0并使循环抵达相应元素",
+        "若要讨论回调，vec[i]及write方法先须有效"
+      ],
+      "counterexample": "vlen=0时不读vec元素，即便vec=NULL；FMODE_WRITE缺失可在循环前-EBADF",
+      "earliest_stop": "invalid vec[i] field access; base和len两个实参的求值次序不指定，不能把其中一个固定称先读",
+      "anchors": [
+        "A03",
+        "A10",
+        "A11",
+        "A14",
+        "A15",
+        "A17",
+        "B04",
+        "B10"
+      ],
+      "prior": [
+        "CORE-USER-BOUNDARIES-07::UB-01"
+      ],
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F01",
+      "status": "needs_evidence",
+      "evidence_class": "bounded_source_conditional",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separately authorizes focused tracing or runtime",
+        "source and prior IDs reverified at future pin"
+      ]
+    },
+    {
+      "id": "WV62-F02",
+      "topic": "A/B",
+      "kind": "writev_requires_write_even_when_write_iter_exists",
+      "claim": "vfs_writev只有FMODE_WRITE活动门，直接无条件选择file->f_op->write回调；只提供write_iter而write为NULL时，只要vlen>=1便尝试空方法，不能借标量vfs_write的write_iter回退或CAN_WRITE/access_ok门证明安全。",
+      "premises": [
+        "合法file/f_op、vec元素且vlen>=1",
+        "file.f_mode含FMODE_WRITE，方法write为NULL但write_iter存在"
+      ],
+      "counterexample": "vlen=0不会执行方法读取；标量vfs_write活动地先检查CAN_WRITE/access_ok并可调用new_sync_write",
+      "earliest_stop": "file->f_op为NULL则先在f_op->write成员访问失效；f_op有效但write NULL则在间接调用处止步",
+      "anchors": [
+        "A10",
+        "A13",
+        "A14",
+        "A26",
+        "A28",
+        "B10",
+        "B16"
+      ],
+      "prior": [
+        "CORE-USER-BOUNDARIES-07::UB-01"
+      ],
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F02",
+      "status": "needs_evidence",
+      "evidence_class": "bounded_source_conditional",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separately authorizes focused tracing or runtime",
+        "source and prior IDs reverified at future pin"
+      ]
+    },
+    {
+      "id": "WV62-F03",
+      "topic": "B",
+      "kind": "continue_after_error_or_short_return",
+      "claim": "逐段for循环唯一活动正文是ret += write返回，未根据负结果、0或短写break。多段有界回调模型中[3,-5,4]合计2，[3,0,4]合计7，短写后仍请求下一段；这属于08旧直接累加观察的序列消费者，不重报根因。",
+      "premises": [
+        "每个被列回调正常返回且用户数组/方法有效",
+        "所有累加处在ssize_t可表示范围",
+        "是否实际写入字节与回调数值独立"
+      ],
+      "counterexample": "首个非法向量/方法或回调不返回时不能推下一项已调用；vlen=0为零回调",
+      "earliest_stop": "任一回调不返回、坏地址或有符号累加溢出时，不推更后回调/汇总",
+      "anchors": [
+        "B01",
+        "B02",
+        "B10",
+        "B11",
+        "A14"
+      ],
+      "prior": [
+        "CORE-USER-BOUNDARIES-07::UB-01"
+      ],
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F03",
+      "status": "needs_evidence",
+      "evidence_class": "bounded_source_conditional",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separately authorizes focused tracing or runtime",
+        "source and prior IDs reverified at future pin"
+      ]
+    },
+    {
+      "id": "WV62-F04",
+      "topic": "B/C",
+      "kind": "aggregate_sign_controls_fpos_but_not_callback_side_effects",
+      "claim": "do_writev仅在汇总ret>=0且ppos非NULL时提交局部pos。示例合法回调[3,-5]合计-2使先前pos增量不经本外层提交，但[5,-5]合计0却会提交可能非零的pos；之前的文件/介质/元数据调用请求不会由合计错误自动回滚。",
+      "premises": [
+        "FMODE_STREAM未设置，file_ppos返回有效f_pos地址",
+        "回调按显式模型以合法position指针增量并正常返回",
+        "无其它写者或直接f_pos变更，算术无溢出"
+      ],
+      "counterexample": "某些错误回调未推进局部位置，且下层I/O可能失败无效果；不是所有负汇总都导致盘面变化",
+      "earliest_stop": "非法position、FAT对象或回调不返回时不宣称外层按ret提交或保留具体值",
+      "anchors": [
+        "C01",
+        "C03",
+        "C04",
+        "C05",
+        "C24",
+        "C32",
+        "C38"
+      ],
+      "prior": [
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F01"
+      ],
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F04",
+      "status": "needs_evidence",
+      "evidence_class": "bounded_source_conditional",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separately authorizes focused tracing or runtime",
+        "source and prior IDs reverified at future pin"
+      ]
+    },
+    {
+      "id": "WV62-F05",
+      "topic": "C",
+      "kind": "stream_null_position_consumer_of_FAT",
+      "claim": "file_ppos在FMODE_STREAM时返回NULL，do_writev将其作为position实参传给每段write。若实际写方法选择FAT32_write、vlen>=1且前序对象字段有效，该方法在读*position计算index/offset时不具合法指针，不能从之后返回得到安全结果。",
+      "premises": [
+        "file有效且FMODE_STREAM与FMODE_WRITE同时满足",
+        "选定file.f_op->write确实为FAT32_write且有至少一个有效iovec",
+        "filp内私有对象先行字段都合法"
+      ],
+      "counterexample": "vlen=0完全不调用FAT；非stream使用合法局部pos，其他write方法可能允许NULL位置",
+      "earliest_stop": "FAT32_write可能更早在inode/private字段访问处失效；在这些合法前提下才是*position",
+      "anchors": [
+        "C01",
+        "C03",
+        "C15",
+        "C17",
+        "C18"
+      ],
+      "prior": [],
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F05",
+      "status": "needs_evidence",
+      "evidence_class": "bounded_source_conditional",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separately authorizes focused tracing or runtime",
+        "source and prior IDs reverified at future pin"
+      ]
+    },
+    {
+      "id": "WV62-F06",
+      "topic": "C",
+      "kind": "zero_length_vector_element_still_invokes_FAT_write",
+      "claim": "vlen=1、iov_len=0并不跳过->write，FAT32_write的有效前缀中index=count成为0但仍进入do...while一次；已有簇可发块READ/WRITE请求，新文件flags1还可能请求first_cluster、write_inode/FAT标记并用初值sector0发WRITE。返回0不证明零副作用。",
+      "premises": [
+        "有效fd/file/FAT inode/private与几何bytes_per_cluster>0、buffer成功分配",
+        "底层相关opaque调用正常返回；所选可读取名/指针条件成立",
+        "index0及length0在明确整数模型中可表示"
+      ],
+      "counterexample": "vlen0没有回调；簇分配返回0可在do-loop前-ENOSPC；块读取或对象无效可能先中止",
+      "earliest_stop": "除数零、kmalloc NULL、簇/块返回或指针失效可先于后段WRITE停止",
+      "anchors": [
+        "B10",
+        "C15",
+        "C19",
+        "C22",
+        "C24",
+        "C25",
+        "C30",
+        "C39"
+      ],
+      "prior": [
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F01",
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F02"
+      ],
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F06",
+      "status": "needs_evidence",
+      "evidence_class": "bounded_source_conditional",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separately authorizes focused tracing or runtime",
+        "source and prior IDs reverified at future pin"
+      ]
+    },
+    {
+      "id": "WV62-F07",
+      "topic": "C",
+      "kind": "FAT_partial_progress_error_and_copy_residue_cross_vector",
+      "claim": "FAT32_write的cplen接收copy_from_user剩余量后不在本体参与分支；成功块WRITE后*position += length。后续块错误可令回调返回负码而先前position或inode大小/写回请求已发生，且index=0时尾部return count会覆盖局部-EIO。跨向量累计结果不能当真实已复制字节。",
+      "premises": [
+        "有效FAT对象、非空position及正数几何，所有必需callee正常返回",
+        "若讨论先推进再报错，至少一轮length>0且后续存在负返回生产者",
+        "写入介质效果不是由返回码直接认证"
+      ],
+      "counterexample": "首轮WRITE在前进位置之前失败且index>0可保留-EIO、局部position不推进；某些回调返回数值恰与复制长度一致",
+      "earliest_stop": "复制/块/数组/符号算术更早失效时不推任何后继大小写回或汇总",
+      "anchors": [
+        "C28",
+        "C29",
+        "C30",
+        "C32",
+        "C37",
+        "C38",
+        "C39",
+        "C40"
+      ],
+      "prior": [
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F01",
+        "CORE-USER-FAT-ALLOCATION-GEOMETRY-56::AG56-F01"
+      ],
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F07",
+      "status": "needs_evidence",
+      "evidence_class": "bounded_source_conditional",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separately authorizes focused tracing or runtime",
+        "source and prior IDs reverified at future pin"
+      ]
+    },
+    {
+      "id": "WV62-F08",
+      "topic": "B",
+      "kind": "int_index_vs_ulong_vlen_and_ssize_sum_boundaries",
+      "claim": "vfs_writev的int i与ulong vlen比较，且ssize_t ret对每回调结果直接有符号相加。对极大vlen，必须先保证每项有效并讨论i++能否表示；对巨大正负返回组合，如果ret+next超ssize_t域，则后置符号判断无可认证输入。",
+      "premises": [
+        "LP64/int32/ssize_t64为显式有限模型，未运行编译器",
+        "真实前序访问与回调均正常并使控制抵达边界",
+        "没有别的更早失败"
+      ],
+      "counterexample": "vlen0/小范围及合理返回序列可以安全算出汇总值；这不说明真实用户可提交亿级iov数组",
+      "earliest_stop": "第一个越界向量访问、非法方法或有符号i/ret运算（按最早实际发生者）",
+      "anchors": [
+        "B01",
+        "B02",
+        "B10",
+        "B11",
+        "A35"
+      ],
+      "prior": [],
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F08",
+      "status": "needs_evidence",
+      "evidence_class": "bounded_source_conditional",
+      "runtime_reproduced": false,
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "Owner separately authorizes focused tracing or runtime",
+        "source and prior IDs reverified at future pin"
+      ]
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "WV62-U01",
+      "topic": "A",
+      "kind": "actual_iovec_user_memory",
+      "detail": "Array address, element count, iov_base target and read faults not tested; no usercopy vector import in active selected body.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U01",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "WV62-U02",
+      "topic": "A/B",
+      "kind": "callback_table_validity",
+      "detail": "Selected f_op/write presence and actual console/char/FAT binding not proven for every file; stream flag may be set in other producers.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U02",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "WV62-U03",
+      "topic": "B",
+      "kind": "callback_result_production",
+      "detail": "Hypothetical positive/zero/negative/short sequences are not actual FAT or TTY results; no kernel or user tests.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U03",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "WV62-U04",
+      "topic": "B",
+      "kind": "type_abi_and_limits",
+      "detail": "ssize_t width, int vs ulong loop bound, size_t length and signed-overflow boundaries are explicit models; macros/ABI not compiled.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U04",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "WV62-U05",
+      "topic": "C",
+      "kind": "position_and_stream_ownership",
+      "detail": "Actual file_ppos pointer, local position, direct callback edits and concurrent aliases/f_pos locks untested.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U05",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "WV62-U06",
+      "topic": "C",
+      "kind": "FAT_buffers_geometry",
+      "detail": "bytes_per_cluster, first_cluster, flags, sector, kmalloc and file inode/i_size actual live validity out of scope; R55/56 remain.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U06",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "WV62-U07",
+      "topic": "C",
+      "kind": "FAT_usercopy_block_effects",
+      "detail": "copy_from_user residue, ROOTBLK read/write, FAT setters and write_inode actual physical effects unobserved.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U07",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "WV62-U08",
+      "topic": "C",
+      "kind": "FD_ref_and_lifetime",
+      "detail": "fdget_pos flags3 and fdput_pos fput event from US-01; successful return does not authenticate file still alive or balanced ownership.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U08",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "WV62-U09",
+      "topic": "A/B/C",
+      "kind": "real_user_program_POSIX",
+      "detail": "External libc writev ABI, origin of vector data, total write semantics and actual hardware are NOT_RUN; contract excludes full compliance.",
+      "qualified_id": "CORE-USER-WRITEV-CONSUMPTION-62::WV62-U09",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    }
+  ],
+  "candidate_count": 8,
+  "gap_count": 9,
+  "runtime_confirmed_fault_count": 0,
+  "existing_roots_not_renumbered": [
+    "CORE-USER-BOUNDARIES-07::UB-01",
+    "CORE-USER-SYSCALL-STDIO-08::US-01",
+    "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F01",
+    "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F02",
+    "CORE-USER-FAT-ALLOCATION-GEOMETRY-56::AG56-F01"
+  ],
+  "not_authorized": [
+    "modify kernel",
+    "run repository code/tests/compiler",
+    "modify old findings",
+    "make acceptance decision",
+    "start63",
+    "merge/force push/new branch or PR"
+  ]
+}

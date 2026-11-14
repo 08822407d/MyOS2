@@ -1,0 +1,700 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXIT-REAP-73",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "produced_by": "GPT-6 (model self-reported)",
+  "model_per_owner": "GPT-6 + Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "source_pin_short12": "a039d9803ade",
+  "contract_commit_short12": "e482eb76bbba",
+  "execution_parent_short12": "4cd92f424986",
+  "read_channel": "connector",
+  "D00": "NOT_APPLICABLE",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_ledger": [
+    {
+      "path": "mykernel/sched/syscall.c",
+      "source_sha_short12": "9ca3b8355003",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exit.c",
+      "source_sha_short12": "ceede39ca88a",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "source_sha_short12": "87518a05fa49",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/task/pid.c",
+      "source_sha_short12": "2e6b8a1510d7",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/task/pid_const.h",
+      "source_sha_short12": "5be8a2042d12",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "source_sha_short12": "6e3e1aa8e724",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/fs/vfs/file.c",
+      "source_sha_short12": "0dd75836ead2",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/misc/fs_struct.c",
+      "source_sha_short12": "67e13be24066",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "source_sha_short12": "4431545af5fb",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "source_sha_short12": "a210c885bc4f",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler.h",
+      "source_sha_short12": "436df1335aa0",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+      "source_sha_short12": "a21461322a9f",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h",
+      "source_sha_short12": "4224440c2c48",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/syscalls.h",
+      "source_sha_short12": "6cc2f85fec90",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+      "source_sha_short12": "source_context_directly_read",
+      "read_channel": "connector",
+      "ref": "time@a039d9803ade"
+    }
+  ],
+  "exit_entry_status_matrix": [
+    {
+      "entry": "sys_exit",
+      "input": "int error_code",
+      "operation": "do_exit(error_code) without shift",
+      "observable_source_field": "tsk.exit_code=long code",
+      "anchors": [
+        "A01",
+        "A02",
+        "A06",
+        "A08"
+      ],
+      "limit": "later group_dead undefined; cannot promise runtime completion"
+    },
+    {
+      "entry": "sys_exit_group",
+      "input": "int error_code",
+      "operation": "do_group_exit((error_code & 0xff)<<8) then do_exit(current)",
+      "observable_source_field": "tsk.exit_code=transformed code only on defined path",
+      "anchors": [
+        "A03",
+        "A04",
+        "A10",
+        "A11",
+        "A12",
+        "A08"
+      ],
+      "limit": "other-thread shutdown/flags are comments"
+    },
+    {
+      "entry": "sys_wait4",
+      "input": "pid_t pid, int* start_addr, int options, void* rusage",
+      "operation": "nonvoid empty body",
+      "observable_source_field": "none",
+      "anchors": [
+        "A05",
+        "A13",
+        "A14"
+      ],
+      "limit": "no defined return, errno or status output, no reap"
+    },
+    {
+      "entry": "do_exit",
+      "input": "long code",
+      "operation": "tsk.exit_code write; group_dead declared and only assignment commented",
+      "observable_source_field": "exit_code only",
+      "anchors": [
+        "A06",
+        "A07",
+        "A08",
+        "A09"
+      ],
+      "limit": "indeterminate group_dead actual arg before exit_notify"
+    }
+  ],
+  "notification_parent_matrix": [
+    {
+      "case": "children.count=0",
+      "active": "loop skipped",
+      "comment_only": "ZOMBIE, notify_parent, release_task",
+      "anchors": [
+        "B01",
+        "B02",
+        "B05",
+        "B06",
+        "B07"
+      ],
+      "stop": "no parent notice proof"
+    },
+    {
+      "case": "nonzero count, valid node/list",
+      "active": "remove_head: detach node/count--; if NULL empty-body loop",
+      "comment_only": "forget_original_parent/tasklist_lock",
+      "anchors": [
+        "B02",
+        "B03",
+        "B11"
+      ],
+      "stop": "corrupt list or null node"
+    },
+    {
+      "case": "find target",
+      "active": "find_task_by_pid_ns(1,PIDTYPE_PID) -> find_pid_ns -> idr_find(&ns->idr,1)",
+      "comment_only": "none",
+      "anchors": [
+        "B04",
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "stop": "second argument expected pid_ns_s*, passed enum first value zero"
+    },
+    {
+      "case": "hypothetically valid target",
+      "active": "add_to_tail: link/count++; no parent/real_parent write",
+      "comment_only": "do_notify_parent/EXIT_ZOMBIE/EXIT_DEAD",
+      "anchors": [
+        "B04",
+        "B12",
+        "B13",
+        "B14",
+        "B15"
+      ],
+      "stop": "link identity not child.parent identity"
+    },
+    {
+      "case": "wait4",
+      "active": "empty body, no result statement",
+      "comment_only": "not applicable",
+      "anchors": [
+        "A05",
+        "B05",
+        "B06"
+      ],
+      "stop": "invalid/nonexistent wait result"
+    }
+  ],
+  "cleanup_ownership_matrix": [
+    {
+      "object": "task.mm",
+      "active": "no exit_mm call in selected do_exit",
+      "comment_only": "exit_mm()",
+      "anchors": [
+        "C02"
+      ],
+      "stop": "MM object cleanup/physical release not proved; R15"
+    },
+    {
+      "object": "signal_s/sighand_s",
+      "active": "task.exit_code assignment; no selected signal refcount put",
+      "comment_only": "exit_signals and group flags/zap",
+      "anchors": [
+        "A08",
+        "C01",
+        "A11"
+      ],
+      "stop": "CG72-F02/U05 remain open; no proof of final owner"
+    },
+    {
+      "object": "files_struct",
+      "active": "exit_files conditional clear; put_files_struct dec; if zero filp_close and free request",
+      "comment_only": "fdtable-specific other work",
+      "anchors": [
+        "C03",
+        "C08",
+        "C09",
+        "C10",
+        "C11"
+      ],
+      "stop": "valid slots and refcount, old UV-09/44; not physical release"
+    },
+    {
+      "object": "taskfs_s",
+      "active": "exit_fs conditional clear; --users; if zero path_put root/pwd and cache free",
+      "comment_only": "none in exit_fs",
+      "anchors": [
+        "C03",
+        "C12",
+        "C13",
+        "C14",
+        "C15"
+      ],
+      "stop": "int users != files atomic refcount; old R45"
+    },
+    {
+      "object": "arch_thread",
+      "active": "call exit_thread; empty active helper",
+      "comment_only": "io_bitmap, vm86 and fpu drop",
+      "anchors": [
+        "C05",
+        "C16",
+        "C17"
+      ],
+      "stop": "no active arch resource release in selected helper"
+    },
+    {
+      "object": "task_stack_and_pid",
+      "active": "TASK_DEAD/__schedule request",
+      "comment_only": "exit_task_stack_account, finish TASK_DEAD put, release_task",
+      "anchors": [
+        "C06",
+        "C07",
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23"
+      ],
+      "stop": "no selected physical stack/task free or PID detach"
+    }
+  ],
+  "dead_task_handoff_matrix": [
+    {
+      "order": 1,
+      "operation": "do_exit calls do_task_dead after earlier source statements",
+      "anchors": [
+        "A09",
+        "C07"
+      ],
+      "limit": "earlier UB or invalid objects prevent further certified execution"
+    },
+    {
+      "order": 2,
+      "operation": "do_task_dead sets TASK_DEAD, __schedule(SM_NONE), BUG if returns",
+      "anchors": [
+        "C18",
+        "C19"
+      ],
+      "limit": "not proof of never rescheduled; historical SF-C3-37"
+    },
+    {
+      "order": 3,
+      "operation": "context_switch switch_to followed by return finish_task_switch(prev)",
+      "anchors": [
+        "C24"
+      ],
+      "limit": "only if actual resumed C path, R15-S02"
+    },
+    {
+      "order": 4,
+      "operation": "finish_task_switch rq.prev_mm=NULL but prev_state/dead cleanup comments",
+      "anchors": [
+        "C20",
+        "C21",
+        "C22",
+        "C23"
+      ],
+      "limit": "no chosen-path task/stack put"
+    },
+    {
+      "order": 5,
+      "operation": "schedule_tail finish_task_switch call comment",
+      "anchors": [
+        "C25"
+      ],
+      "limit": "new task first-run return not assumed"
+    }
+  ],
+  "wait_result_matrix": [
+    {
+      "case": "exit",
+      "source_fact": "raw status forwarding",
+      "not_proved": "parent signal, zombie, wait status or reap",
+      "anchors": [
+        "A02",
+        "A05"
+      ]
+    },
+    {
+      "case": "exit_group",
+      "source_fact": "shift low byte then current do_exit",
+      "not_proved": "all threads exited, shared group exit signal or status",
+      "anchors": [
+        "A04",
+        "A11",
+        "A12"
+      ]
+    },
+    {
+      "case": "parent notify",
+      "source_fact": "conditional list relink with invalid namespace source",
+      "not_proved": "parent/real_parent update, do_notify_parent or release_task",
+      "anchors": [
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B13"
+      ]
+    },
+    {
+      "case": "wait4",
+      "source_fact": "empty nonvoid macro-created function",
+      "not_proved": "PID result, 0/-ECHILD/errno, status pointer, child freeing",
+      "anchors": [
+        "A05",
+        "A14"
+      ]
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "id": "ER73-M01",
+      "type": "exit_raw_int",
+      "input": -1,
+      "result": -1,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M02",
+      "type": "exit_group_low_byte_shift",
+      "input": -1,
+      "result": 65280,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M03",
+      "type": "exit_raw_int",
+      "input": 0,
+      "result": 0,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M04",
+      "type": "exit_group_low_byte_shift",
+      "input": 0,
+      "result": 0,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M05",
+      "type": "exit_raw_int",
+      "input": 1,
+      "result": 1,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M06",
+      "type": "exit_group_low_byte_shift",
+      "input": 1,
+      "result": 256,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M07",
+      "type": "exit_raw_int",
+      "input": 127,
+      "result": 127,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M08",
+      "type": "exit_group_low_byte_shift",
+      "input": 127,
+      "result": 32512,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M09",
+      "type": "exit_raw_int",
+      "input": 255,
+      "result": 255,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M10",
+      "type": "exit_group_low_byte_shift",
+      "input": 255,
+      "result": 65280,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M11",
+      "type": "exit_raw_int",
+      "input": 256,
+      "result": 256,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M12",
+      "type": "exit_group_low_byte_shift",
+      "input": 256,
+      "result": 0,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M13",
+      "type": "exit_raw_int",
+      "input": 300,
+      "result": 300,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M14",
+      "type": "exit_group_low_byte_shift",
+      "input": 300,
+      "result": 11264,
+      "limits": "source-defined path only; no compiled/runtime ABI test"
+    },
+    {
+      "id": "ER73-M15",
+      "type": "children_loop",
+      "input": 0,
+      "result": "skip loop; no target lookup",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M16",
+      "type": "children_loop",
+      "input": 1,
+      "result": "one attempt at remove_head if valid",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M17",
+      "type": "children_loop",
+      "input": 2,
+      "result": "two attempts if each prior iteration valid and terminates",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M18",
+      "type": "remove_head_null",
+      "input": "children.count>0 and child_lp=NULL",
+      "result": "while(child_lp==0) loops; ANALYSIS_STOP",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M19",
+      "type": "invalid_namespace",
+      "input": "PIDTYPE_PID=0",
+      "result": "not a valid pid_ns_s*; idr_find ns->idr STOP",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M20",
+      "type": "list_move",
+      "input": "valid source/target/child",
+      "result": "counts -1/+1; no field write to child.parent/real_parent",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M21",
+      "type": "file_refs",
+      "input": "valid refcount 1",
+      "result": "dec->0; per-slot close request and cache free request",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M22",
+      "type": "file_refs",
+      "input": "valid refcount 2",
+      "result": "dec->1; no per-slot close in this call",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M23",
+      "type": "fs_users",
+      "input": "valid users=1",
+      "result": "--users=0; free_fs_struct request",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M24",
+      "type": "fs_users",
+      "input": "valid users=2",
+      "result": "--users=1; no free in this call",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M25",
+      "type": "fs_users",
+      "input": "invalid owner users=0",
+      "result": "--users=-1 if representable; not an ownership proof",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M26",
+      "type": "wait4",
+      "input": "empty nonvoid body",
+      "result": "no stable return/status value",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M27",
+      "type": "do_exit_group_dead",
+      "input": "declared local with commented assignment",
+      "result": "indeterminate argument; certification STOP",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    },
+    {
+      "id": "ER73-M28",
+      "type": "dead_finish_switch",
+      "input": "prev_state TASK_DEAD",
+      "result": "source put_task_stack/put_task_struct statements all comments",
+      "limits": "finite source/JS text model only, with valid-object and normal-return premises"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-15",
+      "status": "deferred_owner_not_ready",
+      "role": "existing exit/reap root; reparent/notify/wait/mm/task cleanup details, not renumbered",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-14",
+      "status": "needs_evidence",
+      "role": "fork failure inherited sighand cleanup distinct from successful exit",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-16",
+      "status": "deferred_owner_not_ready",
+      "role": "dup_task_struct NUMA path latent; no exit re-opening",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-09",
+      "status": "needs_evidence",
+      "role": "file table shallow copy/cache/f_count invalid-final-owner caveat",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-PID-LIFETIME-11-REVIEW-001",
+      "status": "review_§3",
+      "role": "PID ns=enum zero, group_dead, detach/release limitations",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-FORK-FILES-ROLLBACK-44-REVIEW-001",
+      "status": "review_§2-4",
+      "role": "fork cleanup labels and success-exit separation",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45-REVIEW-001",
+      "status": "review_§2-3",
+      "role": "taskfs_s.users vs files.refcount and path_put effects",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-MM-CONTEXT-15-REVIEW-001",
+      "status": "review_§2-4",
+      "role": "MM and conditional finish_task_switch consumption",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-SCHED-INTEGRATION-03::SF-C3-37",
+      "status": "historical_unreopened",
+      "role": "TASK_DEAD schedule/BUG and conditional pick; no new scheduler review",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-F02",
+      "status": "needs_evidence",
+      "role": "non-thread signal allocation failure local cleanup, not successful do_exit",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-U05",
+      "status": "needs_evidence",
+      "role": "signal/sighand end-of-life unknown",
+      "preserved_unmodified": true
+    },
+    {
+      "qualified_id": "CORE-USER-CLONE-GROUP-72::CG72-F01",
+      "status": "needs_evidence",
+      "role": "thread_group_leader predicate differences not fixed by do_group_exit",
+      "preserved_unmodified": true
+    }
+  ],
+  "new_conditional_findings": [
+    "ER73-F01"
+  ],
+  "new_evidence_gaps": [
+    "ER73-U01",
+    "ER73-U02",
+    "ER73-U03",
+    "ER73-U04",
+    "ER73-U05",
+    "ER73-U06",
+    "ER73-U07",
+    "ER73-U08",
+    "ER73-U09"
+  ],
+  "P9_text_subchecks": {
+    "anchors": 56,
+    "quotes_reconfirmed": 56,
+    "downgraded_to_inferred": 0,
+    "graph_nodes": 46,
+    "graph_edges": 47,
+    "undefined_endpoints": 0,
+    "verified_prefix_count": 56,
+    "full_40_hex_sha_strings": 0,
+    "full_local_P9": "NOT_RUN",
+    "graphviz": "NOT_RUN"
+  },
+  "source_budget": {
+    "count": 15,
+    "soft_limit": 14,
+    "exception": "one mandatory extra nearest type/wrapper definition for PIDTYPE_PID=0 and x64 long wrapper; no broad corpus search"
+  },
+  "methods": {
+    "fixed_source": "GitHub connector pinned time",
+    "quotes": "56 direct pinned literal source extracts, separately re-read and found 56/56",
+    "finite_models": "pure JS values + bounded booleans only",
+    "kernel_build": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "repository_script": "NOT_RUN"
+  }
+}

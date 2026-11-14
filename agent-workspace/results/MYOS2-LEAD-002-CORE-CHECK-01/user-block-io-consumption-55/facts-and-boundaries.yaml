@@ -1,0 +1,394 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55",
+  "source_pin_short12": "a039d9803ade",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "canonical_history": {
+    "R53_01": {
+      "canonical_status": "CLOSED_DOCUMENTATION_ONLY",
+      "origin": "C04 independent closure; false A03/B03 reviewer concerns withdrawn"
+    },
+    "batch53": {
+      "canonical_status": "PASS_PENDING_LOCAL"
+    },
+    "batch54": {
+      "canonical_status": "PASS_PENDING_LOCAL",
+      "mandatory": [
+        "R54-S01",
+        "R54-S02"
+      ]
+    },
+    "CA_03": {
+      "canonical_status": "SUPPORTED_IN_SCOPE"
+    },
+    "CA_04": {
+      "canonical_status": "SUPPORTED_IN_SCOPE"
+    },
+    "UV_01": {
+      "canonical_status": "deferred_owner_not_ready"
+    },
+    "IT35": {
+      "canonical_status": "prior_conditional_candidate_group",
+      "origin": "R35-S01/S02, not modified"
+    },
+    "SB38": {
+      "canonical_status": "prior_conditional_candidate_group",
+      "origin": "R38-S01/S02, not modified"
+    },
+    "RH54_F02": {
+      "canonical_status": "prior_source_only_candidate",
+      "origin": "fixed driver returns, not closed"
+    }
+  },
+  "source_ledger": [
+    {
+      "key": "m",
+      "path": "mykernel/arch/x86_64/include/obsolete/device.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "a97a1162420f",
+      "line_count": 63,
+      "newline": "LF",
+      "read_scope": "complete_file"
+    },
+    {
+      "key": "f",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "447307aaa4b1",
+      "line_count": 510,
+      "newline": "CRLF",
+      "read_scope": "complete_file"
+    },
+    {
+      "key": "i",
+      "path": "mykernel/fs/fat/myos_fat32_iobuf.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "f577b7f65786",
+      "line_count": 269,
+      "newline": "LF",
+      "read_scope": "complete_file"
+    },
+    {
+      "key": "t",
+      "path": "mykernel/include/linux/fs/fat32.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "f03f3c0c1ec7",
+      "line_count": 181,
+      "newline": "CRLF",
+      "read_scope": "complete_file"
+    },
+    {
+      "key": "u",
+      "path": "mykernel/include/linux/kernel/uaccess.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "ab39e43ad2f7",
+      "line_count": 458,
+      "newline": "LF",
+      "read_scope": "complete_file"
+    },
+    {
+      "key": "d",
+      "path": "mykernel/fs/fat/myos_dir.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "a6ef65d326d2",
+      "line_count": 207,
+      "newline": "LF",
+      "read_scope": "complete_file"
+    },
+    {
+      "key": "s",
+      "path": "mykernel/include/uapi/linux/msdos_fs.h",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "bab4f2fcbc97",
+      "line_count": 216,
+      "newline": "LF",
+      "read_scope": "complete_file"
+    },
+    {
+      "key": "o",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "6019436417ad",
+      "line_count": 85,
+      "newline": "LF",
+      "read_scope": "complete_file"
+    },
+    {
+      "key": "p",
+      "path": "mykernel/debug/panic.c",
+      "source_ref": "time@a039d9803ade",
+      "blob_short12": "2e9d5b195559",
+      "line_count": 214,
+      "newline": "LF",
+      "read_scope": "complete_file"
+    }
+  ],
+  "evidence_count": 105,
+  "by_topic": {
+    "A": 40,
+    "B": 39,
+    "C": 26
+  },
+  "interface_matrix": [
+    {
+      "entry": "ROOTBLK conditional macro",
+      "lower_result": "long callback",
+      "handling": "pass-through",
+      "upper_result": "return long, no validity verification"
+    },
+    {
+      "entry": "FAT32_read",
+      "lower_result": "long CMD_READ",
+      "handling": "nonzero -> -EIO",
+      "upper_result": "ssize_t count/error; usercopy residue unused"
+    },
+    {
+      "entry": "FAT32_write",
+      "lower_result": "long READ/WRITE",
+      "handling": "nonzero -> -EIO",
+      "upper_result": "ssize_t count/error; new cluster sector0 possible"
+    },
+    {
+      "entry": "iobuf_readent",
+      "lower_result": "long CMD_READ",
+      "handling": "discarded",
+      "upper_result": "entry pointer to buffer"
+    },
+    {
+      "entry": "iobuf_write",
+      "lower_result": "long CMD_READ",
+      "handling": "discarded",
+      "upper_result": "int -ENOERR or bounds/alloc error"
+    },
+    {
+      "entry": "iobuf_release",
+      "lower_result": "long CMD_WRITE and u64 setter",
+      "handling": "discarded",
+      "upper_result": "void cleanup"
+    },
+    {
+      "entry": "FAT getter",
+      "lower_result": "long CMD_READ",
+      "handling": "discarded",
+      "upper_result": "u32 masked FAT entry"
+    },
+    {
+      "entry": "FAT find",
+      "lower_result": "long CMD_READ",
+      "handling": "discarded",
+      "upper_result": "u32 free candidate or0"
+    },
+    {
+      "entry": "FAT setter",
+      "lower_result": "long READ plus NumFATs writes",
+      "handling": "discarded",
+      "upper_result": "u64 fixed1"
+    },
+    {
+      "entry": "directory direct callers",
+      "lower_result": "int iobuf_write and u64 FAT setter",
+      "handling": "discarded",
+      "upper_result": "u32 cluster/int0"
+    }
+  ],
+  "finite_models": [
+    {
+      "id": "A01",
+      "if_source_premise": "read zero count with valid objects",
+      "local_effect": "do-while can still issue one block read",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "A02",
+      "if_source_premise": "read injected first nonzero block return",
+      "local_effect": "-EIO before copy",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "A03",
+      "if_source_premise": "read copy_to_user residue nonzero",
+      "local_effect": "cplen ignored and position/full count advanced",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "A04",
+      "if_source_premise": "read first segment success, second block nonzero",
+      "local_effect": "position partly moved but final -EIO",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "A05",
+      "if_source_premise": "write new cluster flags1 and valid earlier calls",
+      "local_effect": "sector remains initial0 for first CMD_WRITE",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "A06",
+      "if_source_premise": "write copy_from_user residue nonzero, block returns0",
+      "local_effect": "copy residue ignored; count/position advanced",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "A07",
+      "if_source_premise": "write zero count valid input",
+      "local_effect": "do-while may initiate write",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "B01",
+      "if_source_premise": "readent miss read return nonzero, buffer unchanged",
+      "local_effect": "cache pointer published despite no proven fill",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "B02",
+      "if_source_premise": "readent hit",
+      "local_effect": "skips ROOTBLK read, returns cached pointer",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "B03",
+      "if_source_premise": "iobuf_write size exceeds bufsize-bufoff",
+      "local_effect": "first invalid indexed store STOP",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "B04",
+      "if_source_premise": "release flags==1",
+      "local_effect": "requests data write, ignores return",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "B05",
+      "if_source_premise": "release flags==2",
+      "local_effect": "requests FAT_FREE; subsequent EOF gate false",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "B06",
+      "if_source_premise": "release flags==3",
+      "local_effect": "neither equality gate for 1/2 triggers",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "B07",
+      "if_source_premise": "release data write returns nonzero normally",
+      "local_effect": "void cleanup continues, no status reported",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "B08",
+      "if_source_premise": "iobuf_init bufsize0",
+      "local_effect": "first division undefined, old R35 scope",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "C01",
+      "if_source_premise": "FAT getter injected read error leaves memset data0",
+      "local_effect": "returns u32 zero not -EIO",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "C02",
+      "if_source_premise": "FAT free finder i0 read error leaves first512 zero",
+      "local_effect": "candidate0",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "C03",
+      "if_source_premise": "FAT free finder i1 read error leaves first512 zero",
+      "local_effect": "candidate128",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "C04",
+      "if_source_premise": "FAT setter NumFATs=0",
+      "local_effect": "no write but returns1",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "C05",
+      "if_source_premise": "FAT setter NumFATs=2, one injected nonzero WRITE",
+      "local_effect": "both requested and returns1",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "C06",
+      "if_source_premise": "get_cluster_chain getter returns BAD",
+      "local_effect": "ERR_PTR(-EIO) conditional",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "C07",
+      "if_source_premise": "fat_add_entries iobuf_write returns error",
+      "local_effect": "value ignored, release then return0",
+      "scope": "abstract source-level conditional model, not runtime test"
+    },
+    {
+      "id": "C08",
+      "if_source_premise": "newdir FAT setter result invalid",
+      "local_effect": "direct block success may still lead cluster return",
+      "scope": "abstract source-level conditional model, not runtime test"
+    }
+  ],
+  "candidate_findings": [
+    {
+      "id": "BI55-F01",
+      "topic": "A",
+      "disposition": "source_only_conditional",
+      "source": "FAT usercopy residue and partial progress obscured",
+      "prior_distinction": "RH54-F02 upstream driver return, not FAT copy contract",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BI55-F02",
+      "topic": "A",
+      "disposition": "source_only_conditional",
+      "source": "new cluster flags1 skips sector computation and can pass 0",
+      "prior_distinction": "different from RH54 driver fixed0",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BI55-F03",
+      "topic": "B",
+      "disposition": "source_only_conditional",
+      "source": "iobuf lazy result discarded and write size lacks single-buffer bound",
+      "prior_distinction": "clusters[0] and iterator R35 already recorded, not renumbered",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BI55-F04",
+      "topic": "B",
+      "disposition": "source_only_conditional",
+      "source": "flags3 equality, per-iteration reset, buffers pointer-array lacking local free",
+      "prior_distinction": "not the old R35 iterator proof",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BI55-F05",
+      "topic": "C",
+      "disposition": "source_only_conditional",
+      "source": "FAT values decouple from block return and NumFATs fixed1",
+      "prior_distinction": "RH54-F02 upstream, R35 chain ERR_PTR identity retained",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "scope_limiter": {
+    "A": "No real ROOTBLK compiled selection or uaccess/page fault verification; signed/unsigned arithmetic and invalid buffer first STOP",
+    "B": "No true cache payload/persistence; R35 cluster[0]/ERR_PTR retained",
+    "C": "No actual FAT error injection/media content; direct named consumers only"
+  },
+  "not_run": [
+    "kernel C/ASM/scripts",
+    "preprocess/compile/link",
+    "QEMU/hardware",
+    "Graphviz/full local P9",
+    "real usercopy and disk"
+  ]
+}

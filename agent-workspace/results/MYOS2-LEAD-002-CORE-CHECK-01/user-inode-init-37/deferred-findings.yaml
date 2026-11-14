@@ -1,0 +1,222 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-INODE-INIT-37",
+  "record_type": "bounded_conditional_inode_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-04",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "3c02d6c020e3",
+  "read_channel": "connector",
+  "mainline_acceptance": "PENDING",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "prior_return_items": [
+    {
+      "id": "R36-01",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "closure": "PENDING_C04_REVIEW",
+      "kind": "DOCUMENTATION_ONLY"
+    },
+    {
+      "id": "R36-02",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "closure": "PENDING_C04_REVIEW",
+      "kind": "DOCUMENTATION_ONLY"
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "NI37-F01",
+      "kind": "mapping_page_array_and_nrpages_per_allocation_first_value",
+      "fact": "inode_init_always sets mapping host/a_ops/flags/private data and i_mapping=&i_data but does not directly assign embedded mapping.nrpages or mapping.page_array. FAT selected outer kmalloc is not tied to inode_init_once/address_space_init_once, whose definitions zero memory but actual invocation is not proven. __lookup_slow later writes nrpages, allocating page_array only when nrpages>0.",
+      "premises": [
+        "selected FAT s_op and valid embedded inode",
+        "kmalloc memory contents/constructor not otherwise established",
+        "a consumer reads page_array before a separate proven write, or nrpages state before __lookup_slow"
+      ],
+      "counterevidence": [
+        "valid __lookup_slow writes nrpages before the shown conditional page-array allocation",
+        "the allocator may return zero-filled storage through mechanisms not examined",
+        "a one-time initializer exists and would zero the fields if separately proven invoked",
+        "no actual invalid page_array dereference demonstrated"
+      ],
+      "anchors": [
+        "NI37-A008",
+        "NI37-A009",
+        "NI37-A031",
+        "NI37-A035",
+        "NI37-A041",
+        "NI37-A055"
+      ],
+      "possible_impact": "first-value provenance gap for mapping fields, not a measured memory fault",
+      "resume_conditions": [
+        "trace exact kmalloc allocator guarantees or constructor binding",
+        "identify an actual consumer of page_array before assignment"
+      ],
+      "status": "needs_evidence",
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F01",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NI37-F02",
+      "kind": "one_time_inode_and_device_list_init_not_bound_to_FAT_kmalloc",
+      "fact": "inode_init_once uses memset(inode,0,sizeof(inode_s)), INIT_LIST_HEADER_S(i_devices), and __address_space_init_once; the selected fat_alloc_inode uses kmalloc of msdos_inode_info_s and returns &vfs_inode, while inode_init registers generic cache with NULL constructor. No selected function calls inode_init_once in this FAT path.",
+      "premises": [
+        "FAT sb binds fat_sops and uses fat_alloc_inode",
+        "allocator does not separately establish these once-only fields",
+        "future code would rely on initialized i_devices or mapping rwsem"
+      ],
+      "counterevidence": [
+        "inode_init_once and address_space_init_once are real defined helpers, but definition alone proves no execution",
+        "slab/allocator deeper semantics were intentionally not audited",
+        "no actual i_devices or rwsem consumer fault traced"
+      ],
+      "anchors": [
+        "NI37-A017",
+        "NI37-A018",
+        "NI37-A019",
+        "NI37-A040",
+        "NI37-A041",
+        "NI37-A042",
+        "NI37-A043"
+      ],
+      "possible_impact": "initialization provenance gap in FAT external allocation, not assertion of whole-system absence",
+      "resume_conditions": [
+        "bounded audit of allocator/constructor and actual i_devices use if separately authorized"
+      ],
+      "status": "needs_evidence",
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F02",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NI37-F03",
+      "kind": "private_idx_info_pointer_before_specific_FAT32_assignment",
+      "fact": "inode_s contains private_idx_info, and selected inode_init_always/fat_alloc_inode do not write it. On selected later FAT32_lookup success prefix a distinct kzalloc result is assigned to p->private_idx_info; the outer msdos_inode_info_s backing object must not be confused with that buffer.",
+      "premises": [
+        "selected FAT kmalloc path and no extra unexamined initialization",
+        "some consumer reads private_idx_info before its specific assignment or assignment result is NULL",
+        "actual downstream use must be established separately"
+      ],
+      "counterevidence": [
+        "FAT32_lookup explicitly writes private_idx_info before its finode data writes on its normal path",
+        "no consumer-before-write demonstrated within this batch",
+        "allocator may initialize memory by unexamined behavior, so initial bit pattern not attested"
+      ],
+      "anchors": [
+        "NI37-A003",
+        "NI37-A018",
+        "NI37-A031",
+        "NI37-A057"
+      ],
+      "possible_impact": "conditional first-value/ownership misunderstanding, no demonstrated stale pointer dereference",
+      "resume_conditions": [
+        "trace concrete consumer order of private_idx_info and allocation failure, not owner repair decision"
+      ],
+      "status": "needs_evidence",
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F03",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NI37-F04",
+      "kind": "FAT_mode_zero_and_directory_default_mapping_a_ops",
+      "fact": "inode_init_always writes i_size=0 and mapping.a_ops=&empty_aops, while fat_fill_inode sets i_mode=0 and directory arm only writes i_op/i_fop; non-directory branch sets i_size from de and mapping.a_ops=&fat_aops. Therefore under this completed path directory i_size=0 and a_ops remains empty, without an active positive file-type mode assignment.",
+      "premises": [
+        "fat_fill_inode completes on valid directory entry",
+        "no unexamined later writer changes mode/size/a_ops",
+        "downstream consumer requires particular mode or mapping behavior"
+      ],
+      "counterevidence": [
+        "zero size and empty_aops are now proven assignments, narrowing CB34-F05",
+        "mode/size and methods may be intentionally simplified in an experimental OS",
+        "no concrete permission or directory operation failure demonstrated"
+      ],
+      "anchors": [
+        "NI37-A034",
+        "NI37-A035",
+        "NI37-A048",
+        "NI37-A050",
+        "NI37-A051",
+        "NI37-A052"
+      ],
+      "possible_impact": "conditional semantics gap, not kernel correctness verdict or permissions audit",
+      "resume_conditions": [
+        "specific permitted consumer or runtime behavior under future scope"
+      ],
+      "status": "needs_evidence",
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F04",
+      "owner_action_now": "none"
+    }
+  ],
+  "historical_links": [
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F05",
+      "disposition": "SOURCE_NARROWED_NOT_CLOSED",
+      "note": "valid new_inode path explicitly zeroes i_size and sets mapping/host/empty_aops; page_array/nrpages and once-only initialization provenance remain unresolved"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F04",
+      "disposition": "RETAINED",
+      "note": "FAT32 private allocation result not checked in callback remains independent"
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F02",
+      "disposition": "RETAINED",
+      "note": "new_inode NULL to -ENOMEM and callback NULL to upstream ENOENT still conditional"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F02",
+      "disposition": "RETAINED_WITH_RETURN_OPEN",
+      "note": "name byte projection observation unchanged but old F02 citation A038/A039 must use correction N36C slot facts"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F03",
+      "disposition": "DOC_CORRECTION_NOT_CLOSED",
+      "note": "invalid first store vs zero-store NULL output return are mutually exclusive execution prefixes"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F07",
+      "disposition": "RETAINED_WITH_RETURN_OPEN",
+      "note": "name slots use new N36C-A004..A007 and parser body, not short-dirent old A038/A039"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-NAME-PARSE-36::NP36-F08",
+      "disposition": "RETAINED",
+      "note": "embedded NUL still limited byte model, no real file opening"
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F01",
+      "disposition": "RETAINED",
+      "note": "prior getter error pointer deref remains separate from inode initialization"
+    },
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F02",
+      "disposition": "RETAINED",
+      "note": "original dentry callback contract depends on valid inode/mapping"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+      "disposition": "RETAINED",
+      "note": "__lookup_slow no defined normal NULL exit; no new path verdict"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "disposition": "RETAINED",
+      "note": "do_open unresolved return not examined"
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "disposition": "RETAINED_WITH_DOC_FIX",
+      "note": "no new permission/flag claim"
+    }
+  ],
+  "not_confirmed_vulnerabilities": true,
+  "independence_note": "N00 report correction does not prove or depend on NI37 new source findings; overlapping NI37-F01/F02/F03 premises not counted as independent defects",
+  "owner_actions_requested_now": [],
+  "limitations": [
+    "full runtime QEMU/compilation/P9 NOT_RUN",
+    "no slab or allocator deep audit; no permission or mount assessment",
+    "prior 36 RETURN may be closed only by C04 after review",
+    "historical artifacts/comments unchanged"
+  ]
+}
