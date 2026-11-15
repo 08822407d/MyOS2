@@ -1,0 +1,3361 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89",
+  "record_type": "worker_pool_bootstrap_worker_creation_and_manager_static_facts",
+  "produced_by": "GPT-6（当前会话模型系列；后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner执行选择）",
+  "date": "2026-11-15",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_PACKAGE_READY_AFTER_G04_PUBLICATION",
+  "mainline_acceptance": "PENDING",
+  "source_pin_short12": "a039d9803ade",
+  "lead_fixed_short12": "ed9cd00830d9",
+  "exec_parent_short12": "e9f1ad989ea9",
+  "phase": 2,
+  "runtime_evidence": "NOT_RUN",
+  "open_questions": [
+    "WQP89-U01",
+    "WQP89-U02",
+    "WQP89-U03",
+    "WQP89-U04",
+    "WQP89-U05",
+    "WQP89-U06",
+    "WQP89-U07",
+    "WQP89-U08",
+    "WQP89-U09"
+  ],
+  "G00": {
+    "pass": true,
+    "new_required_full_reads": [
+      "126 contract",
+      "110 Owner continuity",
+      "124 model split",
+      "88 independent review incl R88-01 and S01-S03",
+      "2026-11-15 checkpoint",
+      "63 write retry",
+      "79 work package",
+      "protocol v2 P1-P13",
+      "88 formal PR17 comment6889090097"
+    ],
+    "lead_direct": "ed9cd00830d9",
+    "exec_direct": "e9f1ad989ea9",
+    "master_direct": "e8e60cd19540",
+    "time_direct": "a039d9803ade",
+    "PR16": "OPEN_UNMERGED",
+    "PR17": "OPEN_DRAFT_UNMERGED",
+    "new89_dir": "EXPECTED_404",
+    "new89_marker_preflight": 0,
+    "preG00_writes": "NONE",
+    "time_and_master_options_full": "NEW_READ",
+    "panic_quotes": "NEW_READ",
+    "convention_quote": "NEW_READ"
+  },
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "old_review": "R88-01 RETURN DOCUMENTATION ONLY",
+    "old_source_commit_short12": "e9f1ad989ea9",
+    "old_original_author_self_check": [
+      103,
+      103,
+      0
+    ],
+    "old_six_raw_prefixes": 103,
+    "old_files_unchanged": true,
+    "old_comment_unchanged": true,
+    "old_claim_retracted": "RETRACTED: 103 literal original labels being present did not prove that all 103 were anchored in their named single definitions. E011 spans multiple declarations, E039 names an absent pool_flags enum.",
+    "replacements": [
+      {
+        "old_id": "WQ88-E011",
+        "old_issue": "work_func_t anchor included preceding struct work_struct declaration and work_s typedef; definition boundary spans 3 distinct declarations",
+        "new_id": "WQP89-E002",
+        "new_symbol": "work_func_t",
+        "new_exact_source": "    typedef void (*work_func_t)(work_s *work);",
+        "additional_independent_alias_id": "WQP89-E001",
+        "new_alias_symbol": "work_s",
+        "affected_old_fact_paths": [
+          "source_ledger[mykernel/kactive/kactive_type_declaration.h]",
+          "evidence_anchor_ledger[WQ88-E011]"
+        ],
+        "affected_old_matrices": [
+          "WQ88-A-D01",
+          "WQ88-A-D05"
+        ],
+        "affected_old_models": [],
+        "affected_old_candidates": [],
+        "affected_old_gaps": [
+          "WQ88-U01"
+        ],
+        "report_consumers": [
+          "work->func declared function pointer in work_struct",
+          "worker->current_func callback signature"
+        ],
+        "correction_scope": "new 89 evidence alone; old WQ88-E011 persists as invalid historical anchor"
+      },
+      {
+        "old_id": "WQ88-E039",
+        "old_issue": "a real four-line enumerator fragment was mislabeled pool_flags; outer enum actual name worker_pool_flags",
+        "new_id": "WQP89-E003",
+        "new_symbol": "worker_pool_flags",
+        "new_exact_source": "four consecutive enumerators POOL_BH, POOL_MANAGER_ACTIVE, POOL_DISASSOCIATED, POOL_BH_DRAINING in real enum",
+        "additional_independent_alias_id": null,
+        "affected_old_fact_paths": [
+          "source_ledger[mykernel/kactive/workqueue/workqueue_const.h]",
+          "evidence_anchor_ledger[WQ88-E039]",
+          "fact_to_evidence_ids.kick_decision"
+        ],
+        "affected_old_matrices": [
+          "WQ88-B-Q06",
+          "WQ88-B-K05"
+        ],
+        "affected_old_models": [
+          "WQ88-M12"
+        ],
+        "affected_old_candidates": [
+          "WQ88-F03"
+        ],
+        "affected_old_gaps": [
+          "WQ88-U05"
+        ],
+        "report_consumers": [
+          "BH kick conditional branch",
+          "manager/disassociated pool flag interpretation"
+        ],
+        "correction_scope": "new89 E003 replaces semantic citation only; no legacy edit or root reclassification"
+      }
+    ],
+    "additional_constraints": [
+      "No pretending 88 mechanical P9 was ever rerun",
+      "Old 103/103/0 is frozen original raw-label audit, not silently relabeled 101",
+      "R88-S01/S02/S03 continues as independent mainline supplemental consumption",
+      "Do not merge this documentary item into new kernel findings",
+      "Only C06 Pro can close R88-01"
+    ]
+  },
+  "reading_account": {
+    "NEW_READ_THIS_89": [
+      "agent-workspace/lead/MYOS2-LEAD-002/126-user-workqueue-pool-bootstrap-contract.md@ed9cd00830d9",
+      "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-WORKQUEUE-WORK-LIFECYCLE-88-review.md@ed9cd00830d9",
+      "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-11-15-workqueue88-reviewed-pool89-ready.md@ed9cd00830d9",
+      "agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md@ed9cd00830d9",
+      "agent-workspace/lead/MYOS2-LEAD-002/124-model-routing-and-pro-message-budget.md@ed9cd00830d9",
+      "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md@ed9cd00830d9",
+      "agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md@ed9cd00830d9",
+      "agent-workspace/tasks/00-gpt-task-protocol-v2.md@ed9cd00830d9",
+      "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-workqueue-work-lifecycle-88/{six original distinct files}@e9f1ad989ea9",
+      "PR17 historical formal comment 6889090097",
+      "agent-workspace/conventions.md (one required exact sentence, not represented as a fresh full file)",
+      "time/master mykernel/scripts/options_flags.cmake FULL",
+      "time/master mykernel/debug/panic.c (actual canary line from fetched file)",
+      "mykernel/kactive/kactive_type_declaration.h@a039d9803ade",
+      "mykernel/kactive/workqueue/workqueue_const.h@a039d9803ade",
+      "mykernel/arch/x86_64/smp/percpu_area.c@a039d9803ade",
+      "mykernel/kactive/workqueue/workqueue_macro.h@a039d9803ade",
+      "mykernel/include/linux/kernel/cpumask.h@a039d9803ade",
+      "mykernel/kactive/workqueue/workqueue_types.h@a039d9803ade",
+      "mykernel/kactive/workqueue/workqueue.c@a039d9803ade",
+      "mykernel/lib/idr/idr.h@a039d9803ade",
+      "mykernel/lib/idr/idr.c@a039d9803ade",
+      "mykernel/include/linux/kernel/asm-generic/bug.h@a039d9803ade",
+      "mykernel/lib/list/double_list.h@a039d9803ade",
+      "mykernel/init/main.c@a039d9803ade",
+      "mykernel/lib/idr/idr_const.h@a039d9803ade",
+      "mykernel/lib/idr/idr_types.h@a039d9803ade",
+      "mykernel/mm/kmalloc/slub_macro.h@a039d9803ade",
+      "mykernel/include/linux/kernel/err.h@a039d9803ade",
+      "mykernel/sched/forkexec/kthread.c@a039d9803ade",
+      "mykernel/sched/scheduler/scheduler_core.c@a039d9803ade",
+      "mykernel/kactive/workqueue/workqueue.h@a039d9803ade",
+      "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h@a039d9803ade"
+    ],
+    "SAME_ACTIVE_C06b_CONVERSATION_REUSED": [
+      "Earlier nine MyOS2 constraints and 119 receiver plus Mnemosyne guidance actually read in original active C06b/11, not newly loaded in this turn",
+      "Earlier 86,87,88 files and prior mainline review interpretations actually fetched in this same author chat at frozen objects; specifically R87-S01/S02/S03 and R86-S01/S02/S03",
+      "Earlier PA87-F05/U06 perCPU numeric/object legality and WQ88-F03 BH kick conditions remain historical IDs, do not import prior reviewer tool logs"
+    ],
+    "NOT_READ_OR_NOT_PROVEN": [
+      "Any unlisted MyOS2 historic result/ref beyond bounded scope",
+      "All external or dynamically changing workqueue callers",
+      "Complete IDR/IDA semantics across all public APIs, concurrency and destruction",
+      "Full lower slab/buddy/memblock allocation code or true zeroing in hardware",
+      "Full kthread scheduler and wake-up algorithm including actual task execution",
+      "Full SMP/AP boot/GS register/runtime perCPU mapping",
+      "All work item initializer producers and real callback execution",
+      "All nine rules reloaded this turn, as distinct from same-chat historic qualifications",
+      "Complete local P9, compiler, linker, repository scripts, Graphviz, QEMU, real machine, concurrent experiments"
+    ],
+    "model_source": "Owner asks GPT-6＋Extra for execution; no backend identity attested"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/kactive/kactive_type_declaration.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E001",
+        "WQP89-E002"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E003",
+        "WQP89-E008",
+        "WQP89-E009"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/arch/x86_64/smp/percpu_area.c",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E004",
+        "WQP89-E005"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_macro.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E006",
+        "WQP89-E007"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/cpumask.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E010"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E011",
+        "WQP89-E012",
+        "WQP89-E013",
+        "WQP89-E014",
+        "WQP89-E015",
+        "WQP89-E016",
+        "WQP89-E017",
+        "WQP89-E018",
+        "WQP89-E019"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E020",
+        "WQP89-E021",
+        "WQP89-E031",
+        "WQP89-E032",
+        "WQP89-E033",
+        "WQP89-E034",
+        "WQP89-E035",
+        "WQP89-E036",
+        "WQP89-E037",
+        "WQP89-E038",
+        "WQP89-E039",
+        "WQP89-E040",
+        "WQP89-E041",
+        "WQP89-E042",
+        "WQP89-E043",
+        "WQP89-E044",
+        "WQP89-E045",
+        "WQP89-E046",
+        "WQP89-E047",
+        "WQP89-E048",
+        "WQP89-E049",
+        "WQP89-E053",
+        "WQP89-E054",
+        "WQP89-E055",
+        "WQP89-E056",
+        "WQP89-E057",
+        "WQP89-E058",
+        "WQP89-E059",
+        "WQP89-E060",
+        "WQP89-E061",
+        "WQP89-E062",
+        "WQP89-E063",
+        "WQP89-E064",
+        "WQP89-E065",
+        "WQP89-E066",
+        "WQP89-E067",
+        "WQP89-E068",
+        "WQP89-E069",
+        "WQP89-E070",
+        "WQP89-E071",
+        "WQP89-E072",
+        "WQP89-E073",
+        "WQP89-E074",
+        "WQP89-E075",
+        "WQP89-E076",
+        "WQP89-E106",
+        "WQP89-E107",
+        "WQP89-E108",
+        "WQP89-E109",
+        "WQP89-E110",
+        "WQP89-E111",
+        "WQP89-E112",
+        "WQP89-E113",
+        "WQP89-E114",
+        "WQP89-E115",
+        "WQP89-E116"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/lib/idr/idr.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E022",
+        "WQP89-E023",
+        "WQP89-E024",
+        "WQP89-E052",
+        "WQP89-E077"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/lib/idr/idr.c",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E025",
+        "WQP89-E026",
+        "WQP89-E027",
+        "WQP89-E078",
+        "WQP89-E079",
+        "WQP89-E080",
+        "WQP89-E081"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E028"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E029",
+        "WQP89-E030",
+        "WQP89-E102"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E050",
+        "WQP89-E051"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/lib/idr/idr_const.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E082",
+        "WQP89-E083"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/lib/idr/idr_types.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E084"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub_macro.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E085",
+        "WQP89-E086"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/err.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E087",
+        "WQP89-E088",
+        "WQP89-E089"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E090",
+        "WQP89-E091",
+        "WQP89-E092",
+        "WQP89-E093",
+        "WQP89-E094",
+        "WQP89-E095",
+        "WQP89-E096",
+        "WQP89-E097"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E098"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E099",
+        "WQP89-E100",
+        "WQP89-E101",
+        "WQP89-E103",
+        "WQP89-E104",
+        "WQP89-E105",
+        "WQP89-E119",
+        "WQP89-E120"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    },
+    {
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "ref": "time",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "read_class": "THIS_89_FIXED_SOURCE_READ_NOT_ALL_FUNCTIONS",
+      "evidence_ids": [
+        "WQP89-E117",
+        "WQP89-E118"
+      ],
+      "extent": "source definition and adjacent needed context fetched at fixed time; label spans individually bounded in evidence"
+    }
+  ],
+  "source_scope": {
+    "anchored_fixed_time_paths": 20,
+    "soft_limit": 24,
+    "overage": 0,
+    "rationale": "Only nearest 20 fixed-time files required; original perCPU and callback files from same valid conversation retained as qualified prior context. No full-repo reconnaissance.",
+    "canary_not_counted": true
+  },
+  "evidence_anchor_ledger": [
+    {
+      "id": "WQP89-E001",
+      "path": "mykernel/kactive/kactive_type_declaration.h",
+      "symbol": "work_s",
+      "start": 19,
+      "end": 19,
+      "purpose": "D00 original E011 work_s typedef itself",
+      "topic": "D00"
+    },
+    {
+      "id": "WQP89-E002",
+      "path": "mykernel/kactive/kactive_type_declaration.h",
+      "symbol": "work_func_t",
+      "start": 20,
+      "end": 20,
+      "purpose": "D00 replacement for WQ88-E011, one typedef only",
+      "topic": "D00"
+    },
+    {
+      "id": "WQP89-E003",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "worker_pool_flags",
+      "start": 29,
+      "end": 32,
+      "purpose": "D00 replacement WQ88-E039: real enum identity and four flags",
+      "topic": "D00"
+    },
+    {
+      "id": "WQP89-E004",
+      "path": "mykernel/arch/x86_64/smp/percpu_area.c",
+      "symbol": "bh_worker_pools",
+      "start": 77,
+      "end": 78,
+      "purpose": "percpu static BH pool array declaration",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E005",
+      "path": "mykernel/arch/x86_64/smp/percpu_area.c",
+      "symbol": "cpu_worker_pools",
+      "start": 81,
+      "end": 82,
+      "purpose": "percpu static normal pool array declaration",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E006",
+      "path": "mykernel/kactive/workqueue/workqueue_macro.h",
+      "symbol": "for_each_bh_worker_pool",
+      "start": 11,
+      "end": 14,
+      "purpose": "BH perCPU pool array enumeration",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E007",
+      "path": "mykernel/kactive/workqueue/workqueue_macro.h",
+      "symbol": "for_each_cpu_worker_pool",
+      "start": 16,
+      "end": 20,
+      "purpose": "normal perCPU pool enumeration",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E008",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "wq_internal_consts",
+      "start": 53,
+      "end": 54,
+      "purpose": "two standard pools per CPU",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E009",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "wq_internal_consts",
+      "start": 72,
+      "end": 76,
+      "purpose": "HIGHPRI nice/worker ID buffer constants",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E010",
+      "path": "mykernel/include/linux/kernel/cpumask.h",
+      "symbol": "for_each_possible_cpu",
+      "start": 22,
+      "end": 23,
+      "purpose": "possible and online loops same dense implementation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E011",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 178,
+      "end": 182,
+      "purpose": "pool scalar and lock layout",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E012",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 183,
+      "end": 183,
+      "purpose": "pool scalar and lock layout continuation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E013",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 194,
+      "end": 198,
+      "purpose": "nr_running/nr_workers and list counts",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E014",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 199,
+      "end": 201,
+      "purpose": "nr_running/nr_workers and list counts continuation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E015",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 211,
+      "end": 215,
+      "purpose": "manager, workers list, IDA, attributes storage",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E016",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker_pool",
+      "start": 216,
+      "end": 216,
+      "purpose": "manager, workers list, IDA, attributes storage continuation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E017",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "workqueue_attrs",
+      "start": 69,
+      "end": 73,
+      "purpose": "nice metadata field",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E018",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker",
+      "start": 41,
+      "end": 45,
+      "purpose": "worker scheduled/task/pool/node",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E019",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "worker",
+      "start": 46,
+      "end": 46,
+      "purpose": "worker scheduled/task/pool/node continuation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E020",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "worker_pool_assign_id",
+      "start": 93,
+      "end": 97,
+      "purpose": "IDR request range and identity",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E021",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "worker_pool_assign_id",
+      "start": 98,
+      "end": 102,
+      "purpose": "IDR success writes pool ID and returns0",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E022",
+      "path": "mykernel/lib/idr/idr.h",
+      "symbol": "idr_init_base",
+      "start": 50,
+      "end": 52,
+      "purpose": "IDR backing allocation request",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E023",
+      "path": "mykernel/lib/idr/idr.h",
+      "symbol": "idr_init_base",
+      "start": 53,
+      "end": 56,
+      "purpose": "IDR fields set without result test",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E024",
+      "path": "mykernel/lib/idr/idr.h",
+      "symbol": "idr_init",
+      "start": 68,
+      "end": 70,
+      "purpose": "IDR init wrapper",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E025",
+      "path": "mykernel/lib/idr/idr.c",
+      "symbol": "idr_alloc",
+      "start": 94,
+      "end": 98,
+      "purpose": "IDR input validation and range",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E026",
+      "path": "mykernel/lib/idr/idr.c",
+      "symbol": "idr_alloc",
+      "start": 97,
+      "end": 101,
+      "purpose": "IDR returns allocated id or failure",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E027",
+      "path": "mykernel/lib/idr/idr.c",
+      "symbol": "idr_alloc",
+      "start": 102,
+      "end": 102,
+      "purpose": "IDR returns allocated id or failure continuation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E028",
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "symbol": "BUG_ON",
+      "start": 66,
+      "end": 66,
+      "purpose": "BUG_ON evaluates and may invoke BUG",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E029",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "INIT_LIST_HEADER_S",
+      "start": 153,
+      "end": 157,
+      "purpose": "list anchor and count initialization",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E030",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_is_empty",
+      "start": 630,
+      "end": 632,
+      "purpose": "header emptiness is count==0, not an anchor-only check",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E031",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_worker_pool",
+      "start": 761,
+      "end": 765,
+      "purpose": "pool lock/IDs and flag OR",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E032",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_worker_pool",
+      "start": 766,
+      "end": 766,
+      "purpose": "pool lock/IDs and flag OR continuation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E033",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_worker_pool",
+      "start": 767,
+      "end": 770,
+      "purpose": "pool work and idle list init",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E034",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_worker_pool",
+      "start": 775,
+      "end": 779,
+      "purpose": "pool workers list and IDA init",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E035",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_worker_pool",
+      "start": 783,
+      "end": 787,
+      "purpose": "pool attrs allocation and -ENOMEM check",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E036",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_worker_pool",
+      "start": 789,
+      "end": 791,
+      "purpose": "pool normal return",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E037",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_cpu_worker_pool",
+      "start": 922,
+      "end": 925,
+      "purpose": "init helper BUG_ON and CPU ID assignment",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E038",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_cpu_worker_pool",
+      "start": 926,
+      "end": 930,
+      "purpose": "perCPU attributes nice and node assignment",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E039",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "init_cpu_worker_pool",
+      "start": 932,
+      "end": 935,
+      "purpose": "pool ID assignment under BUG_ON",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E040",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 948,
+      "end": 952,
+      "purpose": "cache and IDR init source order",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E041",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 953,
+      "end": 954,
+      "purpose": "cache and IDR init source order continuation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E042",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 956,
+      "end": 960,
+      "purpose": "early BH perCPU outer + init and pool BH flag",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E043",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 961,
+      "end": 963,
+      "purpose": "early BH perCPU outer + init and pool BH flag continuation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E044",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 961,
+      "end": 965,
+      "purpose": "BH array init and active BH mark",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E045",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 968,
+      "end": 972,
+      "purpose": "normal pool iterator init",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E046",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 975,
+      "end": 976,
+      "purpose": "ordinary events workqueue construction",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E047",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 983,
+      "end": 984,
+      "purpose": "BH events workqueue construction",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E048",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init",
+      "start": 1039,
+      "end": 1041,
+      "purpose": "later BH pool worker creation and BUG_ON",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E049",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init",
+      "start": 1043,
+      "end": 1047,
+      "purpose": "online alias loop worker creation",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E050",
+      "path": "mykernel/init/main.c",
+      "symbol": "start_kernel",
+      "start": 160,
+      "end": 160,
+      "purpose": "boot early call commented at fixed-time site",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E051",
+      "path": "mykernel/init/main.c",
+      "symbol": "kernel_init_freeable",
+      "start": 325,
+      "end": 325,
+      "purpose": "boot late call commented at fixed-time site",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E052",
+      "path": "mykernel/lib/idr/idr.h",
+      "symbol": "ida_init",
+      "start": 159,
+      "end": 163,
+      "purpose": "IDA bitmap allocation and initiated flag without NULL guard",
+      "topic": "A"
+    },
+    {
+      "id": "WQP89-E053",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "alloc_worker",
+      "start": 174,
+      "end": 178,
+      "purpose": "worker allocation request and conditional init",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E054",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "alloc_worker",
+      "start": 179,
+      "end": 183,
+      "purpose": "entry/scheduled/node and PREP initialization",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E055",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "alloc_worker",
+      "start": 184,
+      "end": 186,
+      "purpose": "conditional resource return",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E056",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "format_worker_id",
+      "start": 653,
+      "end": 657,
+      "purpose": "formatter pool/cpu branch",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E057",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "format_worker_id",
+      "start": 657,
+      "end": 661,
+      "purpose": "formatter cpu and unbound names",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E058",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "format_worker_id",
+      "start": 662,
+      "end": 663,
+      "purpose": "formatter cpu and unbound names continuation",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E059",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "format_worker_id",
+      "start": 664,
+      "end": 667,
+      "purpose": "formatter fallback",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E060",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 682,
+      "end": 686,
+      "purpose": "worker IDA entry",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E061",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 687,
+      "end": 687,
+      "purpose": "worker IDA entry continuation",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E062",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 688,
+      "end": 692,
+      "purpose": "negative ID error before object",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E063",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 694,
+      "end": 698,
+      "purpose": "worker object failure jumps cleanup",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E064",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 700,
+      "end": 703,
+      "purpose": "ID assignment and BH conditional",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E065",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 705,
+      "end": 708,
+      "purpose": "thread creation request and immediate error test",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E066",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 708,
+      "end": 712,
+      "purpose": "ERR_PTR and EINTR subtype",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E067",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 713,
+      "end": 717,
+      "purpose": "non-EINTR report and cleanup goto",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E068",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 719,
+      "end": 721,
+      "purpose": "nice-setting and commented CPU binding",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E069",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 723,
+      "end": 727,
+      "purpose": "attach then take pool lock",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E070",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 729,
+      "end": 730,
+      "purpose": "worker count and idle entry",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E071",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 737,
+      "end": 741,
+      "purpose": "conditional worker wake and normal return",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E072",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "create_worker",
+      "start": 743,
+      "end": 746,
+      "purpose": "failure release ID/object",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E073",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "worker_attach_to_pool",
+      "start": 198,
+      "end": 200,
+      "purpose": "attach guard/commented mutex",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E074",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "worker_attach_to_pool",
+      "start": 206,
+      "end": 209,
+      "purpose": "DISASSOCIATED-to-UNBOUND worker flag",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E075",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "worker_attach_to_pool",
+      "start": 209,
+      "end": 211,
+      "purpose": "associated branch WARN and commented affinity",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E076",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "worker_attach_to_pool",
+      "start": 216,
+      "end": 219,
+      "purpose": "pool workers list insert before pool assignment",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E077",
+      "path": "mykernel/lib/idr/idr.h",
+      "symbol": "ida_alloc",
+      "start": 113,
+      "end": 116,
+      "purpose": "IDA allocation macro forwards to range",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E078",
+      "path": "mykernel/lib/idr/idr.c",
+      "symbol": "ida_alloc_range",
+      "start": 402,
+      "end": 406,
+      "purpose": "IDA bitmap scan start and read",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E079",
+      "path": "mykernel/lib/idr/idr.c",
+      "symbol": "ida_alloc_range",
+      "start": 407,
+      "end": 410,
+      "purpose": "IDA zero-bit selection returns ID without set",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E080",
+      "path": "mykernel/lib/idr/idr.c",
+      "symbol": "ida_alloc_range",
+      "start": 413,
+      "end": 414,
+      "purpose": "IDA exhaustion return -1",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E081",
+      "path": "mykernel/lib/idr/idr.c",
+      "symbol": "ida_free",
+      "start": 425,
+      "end": 428,
+      "purpose": "IDA release uses AND bit mask",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E082",
+      "path": "mykernel/lib/idr/idr_const.h",
+      "symbol": "IDA_CHUNK_SIZE",
+      "start": 12,
+      "end": 12,
+      "purpose": "IDA chunk backing size constant",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E083",
+      "path": "mykernel/lib/idr/idr_const.h",
+      "symbol": "IDA_BITMAP_LONGS",
+      "start": 13,
+      "end": 13,
+      "purpose": "IDA number of long slots derived from chunk bytes",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E084",
+      "path": "mykernel/lib/idr/idr_types.h",
+      "symbol": "ida",
+      "start": 17,
+      "end": 21,
+      "purpose": "full ida type fields bitmap pointer and initiated bool",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E085",
+      "path": "mykernel/mm/kmalloc/slub_macro.h",
+      "symbol": "kmalloc_node",
+      "start": 95,
+      "end": 96,
+      "purpose": "node parameter ignored in kmalloc_node macro",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E086",
+      "path": "mykernel/mm/kmalloc/slub_macro.h",
+      "symbol": "kzalloc_node",
+      "start": 98,
+      "end": 99,
+      "purpose": "kzalloc_node adds ZERO and forwards to kmalloc_node",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E087",
+      "path": "mykernel/include/linux/kernel/err.h",
+      "symbol": "ERR_PTR",
+      "start": 26,
+      "end": 29,
+      "purpose": "error-to-pointer cast",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E088",
+      "path": "mykernel/include/linux/kernel/err.h",
+      "symbol": "PTR_ERR",
+      "start": 31,
+      "end": 34,
+      "purpose": "pointer-to-error cast",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E089",
+      "path": "mykernel/include/linux/kernel/err.h",
+      "symbol": "IS_ERR",
+      "start": 36,
+      "end": 39,
+      "purpose": "pointer error classification",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E090",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "kthread_create_on_node",
+      "start": 313,
+      "end": 317,
+      "purpose": "thread public wrapper and varargs",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E091",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "kthread_create_on_node",
+      "start": 318,
+      "end": 320,
+      "purpose": "thread public wrapper and varargs continuation",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E092",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "kthread_create_on_node",
+      "start": 320,
+      "end": 324,
+      "purpose": "thread return after delegated creation",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E093",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "__kthread_create_on_node",
+      "start": 243,
+      "end": 247,
+      "purpose": "thread create info allocation error",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E094",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "__kthread_create_on_node",
+      "start": 248,
+      "end": 248,
+      "purpose": "thread create info allocation error continuation",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E095",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "__kthread_create_on_node",
+      "start": 260,
+      "end": 264,
+      "purpose": "kthreadd queue and wake request",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E096",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "__kthread_create_on_node",
+      "start": 282,
+      "end": 286,
+      "purpose": "completion and result/error handoff",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E097",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "symbol": "__kthread_create_on_node",
+      "start": 287,
+      "end": 287,
+      "purpose": "completion and result/error handoff continuation",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E098",
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "wake_up_process",
+      "start": 556,
+      "end": 559,
+      "purpose": "wake request delegates to scheduler",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E099",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_enter_idle",
+      "start": 212,
+      "end": 216,
+      "purpose": "idle flag/time/list append",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E100",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_enter_idle",
+      "start": 217,
+      "end": 217,
+      "purpose": "idle flag/time/list append continuation",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E101",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_enter_idle",
+      "start": 222,
+      "end": 225,
+      "purpose": "idle count and nr_running warning",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E102",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_add_to_tail",
+      "start": 663,
+      "end": 667,
+      "purpose": "list header publication/count increment",
+      "topic": "B"
+    },
+    {
+      "id": "WQP89-E103",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "need_more_worker",
+      "start": 92,
+      "end": 95,
+      "purpose": "policy requires nonempty list and nr_running=0",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E104",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "may_start_working",
+      "start": 99,
+      "end": 102,
+      "purpose": "idle count is readiness gate",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E105",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "need_to_create_worker",
+      "start": 114,
+      "end": 118,
+      "purpose": "create need is pending and no idle",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E106",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "manage_workers",
+      "start": 380,
+      "end": 384,
+      "purpose": "manager already active short-circuit",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E107",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "manage_workers",
+      "start": 386,
+      "end": 389,
+      "purpose": "claim manager bit and pointer, then call creation",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E108",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "manage_workers",
+      "start": 389,
+      "end": 392,
+      "purpose": "manager returns then clears ownership",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E109",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "manage_workers",
+      "start": 393,
+      "end": 395,
+      "purpose": "manager returns true after cleanup",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E110",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "maybe_create_worker",
+      "start": 331,
+      "end": 335,
+      "purpose": "outer do releases lock before attempting new worker",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E111",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "maybe_create_worker",
+      "start": 337,
+      "end": 339,
+      "purpose": "inner retry accepts create success or no more demand",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E112",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "maybe_create_worker",
+      "start": 341,
+      "end": 344,
+      "purpose": "cooldown commented and second demand check",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E113",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "maybe_create_worker",
+      "start": 347,
+      "end": 348,
+      "purpose": "timer cleanup comment and lock reacquire",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E114",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "maybe_create_worker",
+      "start": 354,
+      "end": 355,
+      "purpose": "outer loop repeats on renewed demand",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E115",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 603,
+      "end": 607,
+      "purpose": "worker thread checks pending demand",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E116",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_worker_thread",
+      "start": 609,
+      "end": 611,
+      "purpose": "worker thread manager result directs recheck",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E117",
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "symbol": "spin_lock_irq",
+      "start": 148,
+      "end": 149,
+      "purpose": "spin_lock_irq maps to raw implementation",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E118",
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "symbol": "spin_unlock_irq",
+      "start": 166,
+      "end": 167,
+      "purpose": "spin_unlock_irq maps to raw implementation",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E119",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_clr_flags",
+      "start": 178,
+      "end": 180,
+      "purpose": "nr_running increased on last NOT_RUNNING clear",
+      "topic": "C"
+    },
+    {
+      "id": "WQP89-E120",
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "symbol": "worker_set_flags",
+      "start": 148,
+      "end": 151,
+      "purpose": "nr_running decreased on first NOT_RUNNING enter",
+      "topic": "C"
+    }
+  ],
+  "evidence_anchor_total": 120,
+  "fact_to_evidence_ids": {
+    "D00_callback_typedef": [
+      "WQP89-E001",
+      "WQP89-E002"
+    ],
+    "D00_pool_flags_enum": [
+      "WQP89-E003"
+    ],
+    "pool_storage": [
+      "WQP89-E004",
+      "WQP89-E005",
+      "WQP89-E006",
+      "WQP89-E007",
+      "WQP89-E008"
+    ],
+    "pool_partial_initialization": [
+      "WQP89-E011",
+      "WQP89-E013",
+      "WQP89-E015",
+      "WQP89-E031",
+      "WQP89-E032",
+      "WQP89-E033",
+      "WQP89-E034",
+      "WQP89-E035"
+    ],
+    "pool_id_assignment": [
+      "WQP89-E020",
+      "WQP89-E021",
+      "WQP89-E022",
+      "WQP89-E023",
+      "WQP89-E025",
+      "WQP89-E026",
+      "WQP89-E039"
+    ],
+    "startup_entry_boundary": [
+      "WQP89-E050",
+      "WQP89-E051",
+      "WQP89-E040",
+      "WQP89-E048"
+    ],
+    "worker_ida": [
+      "WQP89-E052",
+      "WQP89-E077",
+      "WQP89-E078",
+      "WQP89-E079",
+      "WQP89-E081",
+      "WQP89-E083",
+      "WQP89-E084"
+    ],
+    "worker_acquisition": [
+      "WQP89-E053",
+      "WQP89-E054",
+      "WQP89-E060",
+      "WQP89-E061",
+      "WQP89-E063",
+      "WQP89-E065",
+      "WQP89-E066",
+      "WQP89-E072"
+    ],
+    "worker_publication": [
+      "WQP89-E069",
+      "WQP89-E070",
+      "WQP89-E071",
+      "WQP89-E076",
+      "WQP89-E099",
+      "WQP89-E100",
+      "WQP89-E102"
+    ],
+    "manager_progress": [
+      "WQP89-E103",
+      "WQP89-E104",
+      "WQP89-E105",
+      "WQP89-E106",
+      "WQP89-E107",
+      "WQP89-E108",
+      "WQP89-E109",
+      "WQP89-E110",
+      "WQP89-E111",
+      "WQP89-E112",
+      "WQP89-E113",
+      "WQP89-E114"
+    ],
+    "no_actual_execution_claim": [
+      "WQP89-E050",
+      "WQP89-E051",
+      "WQP89-E071",
+      "WQP89-E095",
+      "WQP89-E098"
+    ]
+  },
+  "matrices": {
+    "pool_storage_and_initialization_matrix": [
+      {
+        "id": "WQP89-A-ST01",
+        "scenario": "每CPU静态池",
+        "precondition": "time链接对象和perCPU存储有效",
+        "source_operation": "bh_worker_pools/cpu_worker_pools各[NR_STD_WORKER_POOLS]",
+        "conditional_result": "每CPU模板各2个pool对象，BH/normal合计4个；不等于运行实例已初始化",
+        "first_stop_gate": "86/87的模板副本、偏移及映射合法性",
+        "evidence_ids": [
+          "WQP89-E004",
+          "WQP89-E005",
+          "WQP89-E008"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ST02",
+        "scenario": "possible枚举",
+        "precondition": "N=nr_cpu_ids非负，int循环可表示",
+        "source_operation": "for_each_possible_cpu(cpu) -> for_each_cpu",
+        "conditional_result": "所读宏枚举整数0..N-1，不测试独立possible位图",
+        "first_stop_gate": "N与NR_CPUS/地址界限",
+        "evidence_ids": [
+          "WQP89-E010"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ST03",
+        "scenario": "BH内部索引",
+        "precondition": "给定有效每CPU数组、N>0",
+        "source_operation": "for_each_bh_worker_pool从元素0遍历到索引2之前",
+        "conditional_result": "每CPU两个BH pool，各依次取得i=0/1",
+        "first_stop_gate": "per_cpu展开与内存映射",
+        "evidence_ids": [
+          "WQP89-E006",
+          "WQP89-E008",
+          "WQP89-E043",
+          "WQP89-E044"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ST04",
+        "scenario": "普通内部索引",
+        "precondition": "给定有效每CPU数组、N>0",
+        "source_operation": "for_each_cpu_worker_pool遍历两个元素",
+        "conditional_result": "每CPU两个普通pool，各依次取得i=0/1",
+        "first_stop_gate": "per_cpu实例可写",
+        "evidence_ids": [
+          "WQP89-E007",
+          "WQP89-E008",
+          "WQP89-E045"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ST05",
+        "scenario": "pool部分赋值",
+        "precondition": "有效pool对象但未知旧字段",
+        "source_operation": "init_worker_pool写id/cpu/node、flags|=DISASSOCIATED、三表和IDA",
+        "conditional_result": "未明确写nr_running/nr_workers/manager为0；其值依赖原对象来源",
+        "first_stop_gate": "不能拿函数注释的新清零对象假定所有输入均清零",
+        "evidence_ids": [
+          "WQP89-E011",
+          "WQP89-E012",
+          "WQP89-E013",
+          "WQP89-E014",
+          "WQP89-E015",
+          "WQP89-E016",
+          "WQP89-E031",
+          "WQP89-E032",
+          "WQP89-E033",
+          "WQP89-E034"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ST06",
+        "scenario": "归属/管理字段",
+        "precondition": "有效pool对象",
+        "source_operation": "worker_pool字段包含nr_running、nr_workers、manager、workers、attrs",
+        "conditional_result": "三种状态字段的生产者不等同于pool初始化中显式写入",
+        "first_stop_gate": "先验证对象存储和初始化先序",
+        "evidence_ids": [
+          "WQP89-E013",
+          "WQP89-E014",
+          "WQP89-E015",
+          "WQP89-E016",
+          "WQP89-E031",
+          "WQP89-E035"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "pool_id_attributes_and_failure_matrix": [
+      {
+        "id": "WQP89-A-ID01",
+        "scenario": "普通分配前置",
+        "precondition": "池地址合法",
+        "source_operation": "init_worker_pool先调用ida_init再kzalloc(attrs)",
+        "conditional_result": "IDA bitmap请求不检查NULL，attrs单独检查NULL",
+        "first_stop_gate": "bitmap kzalloc是否成功、后台供应器未审",
+        "evidence_ids": [
+          "WQP89-E034",
+          "WQP89-E035",
+          "WQP89-E052"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ID02",
+        "scenario": "attrs失败",
+        "precondition": "attrs分配NULL，前序列表/IDA调用返回",
+        "source_operation": "if (!pool->attrs) return -ENOMEM",
+        "conditional_result": "pool对象已经发生部分元数据写入；不进入该函数正常末尾",
+        "first_stop_gate": "BITMAP分配结果、调用者BUG_ON可能不返回",
+        "evidence_ids": [
+          "WQP89-E031",
+          "WQP89-E032",
+          "WQP89-E033",
+          "WQP89-E034",
+          "WQP89-E035",
+          "WQP89-E028",
+          "WQP89-E037"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ID03",
+        "scenario": "IDR初始化",
+        "precondition": "early代码行实际调用成立",
+        "source_operation": "idr_init(&worker_pool_idr) -> idr_init_base -> kzalloc",
+        "conditional_result": "赋值initiated=true不构成底层缓冲分配成功的证书",
+        "first_stop_gate": "失败后调用idr_alloc可能先在NULL解引用停证",
+        "evidence_ids": [
+          "WQP89-E041",
+          "WQP89-E022",
+          "WQP89-E023",
+          "WQP89-E024"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ID04",
+        "scenario": "池ID成功",
+        "precondition": "idr_alloc返回非负id",
+        "source_operation": "worker_pool_assign_id写pool->id=id，返回0",
+        "conditional_result": "正常调用者BUG_ON条件为false，池ID赋值有条件成立",
+        "first_stop_gate": "IDR存储缓冲正确、ID不冲突",
+        "evidence_ids": [
+          "WQP89-E020",
+          "WQP89-E021",
+          "WQP89-E039",
+          "WQP89-E025",
+          "WQP89-E026"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-ID05",
+        "scenario": "池ID失败",
+        "precondition": "idr_alloc返回负值，前序attrs成功",
+        "source_operation": "worker_pool_assign_id转送负值至BUG_ON",
+        "conditional_result": "初始化路径要求BUG条件分支，不能继续声称后续池初始化成功",
+        "first_stop_gate": "BUG宏panic是否返回未证，按正常成功证明停止",
+        "evidence_ids": [
+          "WQP89-E020",
+          "WQP89-E021",
+          "WQP89-E028",
+          "WQP89-E039"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "bootstrap_entry_and_online_matrix": [
+      {
+        "id": "WQP89-A-BOOT01",
+        "scenario": "固定主启动入口",
+        "precondition": "读取time固定main.c对应函数体",
+        "source_operation": "start_kernel中的workqueue_init_early语句注释",
+        "conditional_result": "该位置没有活动调用，不能推全树不存在调用",
+        "first_stop_gate": "其他调用者未穷尽、真实启动未跑",
+        "evidence_ids": [
+          "WQP89-E050"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-BOOT02",
+        "scenario": "固定后启动入口",
+        "precondition": "time固定main.c kernel_init_freeable",
+        "source_operation": "workqueue_init语句注释",
+        "conditional_result": "该位置没有活动调用；局部函数定义可单独静态分析",
+        "first_stop_gate": "不得宣称整个内核永不创建worker",
+        "evidence_ids": [
+          "WQP89-E051"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-BOOT03",
+        "scenario": "早期系统队列",
+        "precondition": "workqueue_init_early被外部合法调用",
+        "source_operation": "先pwq_cache/idr_init，再两类pool，后events和events_bh",
+        "conditional_result": "源码内先后关系成立，不保证slab/IDR/PWQ构造成功",
+        "first_stop_gate": "PA87构造错误传播条件未关闭",
+        "evidence_ids": [
+          "WQP89-E040",
+          "WQP89-E041",
+          "WQP89-E042",
+          "WQP89-E043",
+          "WQP89-E045",
+          "WQP89-E046",
+          "WQP89-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-BOOT04",
+        "scenario": "后期BH工作线程",
+        "precondition": "workqueue_init被合法调用且早期池已初始化",
+        "source_operation": "for_each_possible_cpu -> for_each_bh_worker_pool -> BUG_ON(!create_worker)",
+        "conditional_result": "每遍历一个BH pool就请求一个worker对象，不等于有真实kthread",
+        "first_stop_gate": "create_worker和BUG_ON先行返回",
+        "evidence_ids": [
+          "WQP89-E048",
+          "WQP89-E006",
+          "WQP89-E028"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-A-BOOT05",
+        "scenario": "后期普通工作线程",
+        "precondition": "early合法且workqueue_init合法启动",
+        "source_operation": "for_each_online_cpu -> normal pool: clear DISASSOCIATED, BUG_ON(!create_worker)",
+        "conditional_result": "所读online同dense遍历；普通池标记清位先于创建请求",
+        "first_stop_gate": "配置/CPU存在性、池对象和线程对象合法性",
+        "evidence_ids": [
+          "WQP89-E049",
+          "WQP89-E010",
+          "WQP89-E003"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "worker_resource_acquisition_matrix": [
+      {
+        "id": "WQP89-B-RES01",
+        "scenario": "IDA成功编号",
+        "precondition": "worker_ida bitmap有效、某位0且扫描返回非负",
+        "source_operation": "ida_alloc->ida_alloc_range返回word_index*sizeof(long)+bit_index",
+        "conditional_result": "所读分配实现不设置对应bit；连续相同无外部修改时可返回同号",
+        "first_stop_gate": "不等于真实多线程运行或用户程序创建成功",
+        "evidence_ids": [
+          "WQP89-E061",
+          "WQP89-E077",
+          "WQP89-E078",
+          "WQP89-E079",
+          "WQP89-E082",
+          "WQP89-E083",
+          "WQP89-E084"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-RES02",
+        "scenario": "IDA失败编号",
+        "precondition": "ida_alloc返回负值",
+        "source_operation": "create_worker id<0 -> return NULL",
+        "conditional_result": "没有worker对象申请和attach，失误打印可有外部影响",
+        "first_stop_gate": "ida_alloc_range实际返回值前提",
+        "evidence_ids": [
+          "WQP89-E060",
+          "WQP89-E061",
+          "WQP89-E062",
+          "WQP89-E077",
+          "WQP89-E080"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-RES03",
+        "scenario": "worker对象初始化",
+        "precondition": "IDA成功且kzalloc_node返回合法清零对象",
+        "source_operation": "INIT_LIST_HEAD(entry/node), INIT_LIST_HEADER_S(scheduled), flags=PREP",
+        "conditional_result": "对象有三个本地显式初始化，task/current字段来源依赖清零",
+        "first_stop_gate": "kzalloc_node只传ZERO，低层清零有效未全面验证",
+        "evidence_ids": [
+          "WQP89-E053",
+          "WQP89-E054",
+          "WQP89-E055",
+          "WQP89-E085",
+          "WQP89-E086"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-RES04",
+        "scenario": "普通线程申请",
+        "precondition": "非BH且valid worker/pool/attrs",
+        "source_operation": "format_worker_id; kthread_create_on_node; IS_ERR(task)",
+        "conditional_result": "检查错误指针且设置nice；不是直接启动回调",
+        "first_stop_gate": "kthread等待completion可能不返回、NULL非ERR_PTR",
+        "evidence_ids": [
+          "WQP89-E056",
+          "WQP89-E057",
+          "WQP89-E058",
+          "WQP89-E065",
+          "WQP89-E066",
+          "WQP89-E067",
+          "WQP89-E068",
+          "WQP89-E089",
+          "WQP89-E090",
+          "WQP89-E091",
+          "WQP89-E092"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-RES05",
+        "scenario": "BH伪worker",
+        "precondition": "pool.flags含POOL_BH",
+        "source_operation": "if(!(flags&POOL_BH))整个线程创建分支跳过",
+        "conditional_result": "BH局部成功并不要求真实task产生；清零前提下task保持NULL",
+        "first_stop_gate": "是否在其它处模拟BH执行，已排除",
+        "evidence_ids": [
+          "WQP89-E064",
+          "WQP89-E068",
+          "WQP89-E071",
+          "WQP89-E074"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-RES06",
+        "scenario": "IDA释放行为",
+        "precondition": "有效bitmap和id",
+        "source_operation": "ida_free执行bitmap[word] &= (1 << bit)",
+        "conditional_result": "此表达不同于清除所选位；不能凭函数名宣称已解除编号占用",
+        "first_stop_gate": "Bitmap状态/编号分配协议需分层审核",
+        "evidence_ids": [
+          "WQP89-E081",
+          "WQP89-E084"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "worker_attachment_publication_matrix": [
+      {
+        "id": "WQP89-B-PUB01",
+        "scenario": "分离池附着",
+        "precondition": "POOL_DISASSOCIATED=4 and valid worker",
+        "source_operation": "worker->flags |= WORKER_UNBOUND",
+        "conditional_result": "普通早期或BH均可能进入分离逻辑",
+        "first_stop_gate": "标志实际生产者及无并发修改条件",
+        "evidence_ids": [
+          "WQP89-E074",
+          "WQP89-E003",
+          "WQP89-E032",
+          "WQP89-E044"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-PUB02",
+        "scenario": "关联池附着",
+        "precondition": "POOL_DISASSOCIATED=0 and POOL_BH=0",
+        "source_operation": "WARN_ON_ONCE(false), affinity set line commented",
+        "conditional_result": "所读路径没有该位置实际CPU绑定调用",
+        "first_stop_gate": "真实调度、其它绑定入口未审",
+        "evidence_ids": [
+          "WQP89-E075",
+          "WQP89-E049"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-PUB03",
+        "scenario": "workers表插入",
+        "precondition": "pool workers链及worker node均合法",
+        "source_operation": "list_header_add_to_tail(&pool->workers,&worker->node) 然后worker->pool=pool",
+        "conditional_result": "链表发布先于pool指针赋值，必须保留先行返回/同步门",
+        "first_stop_gate": "list校验/锁状态与并发未全面验证",
+        "evidence_ids": [
+          "WQP89-E076",
+          "WQP89-E102",
+          "WQP89-E073"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-PUB04",
+        "scenario": "pool计数/idle",
+        "precondition": "attach返回且可加锁，nr_workers加法有效",
+        "source_operation": "nr_workers++; worker_enter_idle -> flags|=IDLE, idle_list.count++",
+        "conditional_result": "计数和idle表发布发生在worker线程唤醒请求之前",
+        "first_stop_gate": "池表一致性，WARN前置校验和低层lock操作",
+        "evidence_ids": [
+          "WQP89-E069",
+          "WQP89-E070",
+          "WQP89-E099",
+          "WQP89-E100",
+          "WQP89-E101",
+          "WQP89-E102"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-PUB05",
+        "scenario": "task唤醒条件",
+        "precondition": "有效task，nr_workers和idle发布正常返回",
+        "source_operation": "if(worker->task) wake_up_process(worker->task)",
+        "conditional_result": "记录的是唤醒请求/返回，不等于被调度或回调执行",
+        "first_stop_gate": "wake_up_process下级调度路径未审",
+        "evidence_ids": [
+          "WQP89-E071",
+          "WQP89-E098"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "worker_failure_and_cleanup_matrix": [
+      {
+        "id": "WQP89-B-FAIL01",
+        "scenario": "ID返回负数",
+        "precondition": "IDA失败",
+        "source_operation": "create_worker在对象前直接NULL",
+        "conditional_result": "无本函数新对象需kfree/ida_free",
+        "first_stop_gate": "尚未分配worker ID成功",
+        "evidence_ids": [
+          "WQP89-E062",
+          "WQP89-E077",
+          "WQP89-E080"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-FAIL02",
+        "scenario": "对象NULL",
+        "precondition": "IDA id>=0，alloc_worker NULL",
+        "source_operation": "goto fail; ida_free(id); kfree(worker=NULL); return NULL",
+        "conditional_result": "worker尚未挂接，不代表IDA位图正确回收",
+        "first_stop_gate": "ida_free自身掩码语义与kfree NULL条件",
+        "evidence_ids": [
+          "WQP89-E063",
+          "WQP89-E072",
+          "WQP89-E081"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-FAIL03",
+        "scenario": "kthread ERR_PTR",
+        "precondition": "已得ID/worker，普通分支，kthread返回ERR_PTR负错",
+        "source_operation": "IS_ERR true -> goto fail -> ida_free/kfree",
+        "conditional_result": "创建路径在attach前退出；下级线程资源释放未全面审",
+        "first_stop_gate": "kthread_create_on_node错误/结果格式前提",
+        "evidence_ids": [
+          "WQP89-E065",
+          "WQP89-E066",
+          "WQP89-E067",
+          "WQP89-E072",
+          "WQP89-E087",
+          "WQP89-E088",
+          "WQP89-E089"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-FAIL04",
+        "scenario": "kthread NULL",
+        "precondition": "假设kthread返回NULL（非error pointer）",
+        "source_operation": "IS_ERR(NULL)=false -> set_user_nice(worker->task,...)",
+        "conditional_result": "正常路径在NULL任务有效性门停止证明；不声称实际返回NULL",
+        "first_stop_gate": "真实callee是否可返回NULL未确立",
+        "evidence_ids": [
+          "WQP89-E065",
+          "WQP89-E068",
+          "WQP89-E089"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-FAIL05",
+        "scenario": "attach/idle不返回",
+        "precondition": "链表或锁无效、callee不正常返回",
+        "source_operation": "worker_attach_to_pool or spin_lock_irq or worker_enter_idle",
+        "conditional_result": "不能沿正常返回行推算nr_workers/wakeup",
+        "first_stop_gate": "前序有效对象、列表与锁门",
+        "evidence_ids": [
+          "WQP89-E069",
+          "WQP89-E070",
+          "WQP89-E076",
+          "WQP89-E099",
+          "WQP89-E102",
+          "WQP89-E117"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-B-FAIL06",
+        "scenario": "线程已创建但后续异常",
+        "precondition": "普通worker task有效, later attach or lock fails",
+        "source_operation": "create_worker没有在这段增加专用失败处理分支",
+        "conditional_result": "不代表实测泄漏，存储/线程所有权全链未核",
+        "first_stop_gate": "下游不可证返回先停证",
+        "evidence_ids": [
+          "WQP89-E069",
+          "WQP89-E071",
+          "WQP89-E072",
+          "WQP89-E090",
+          "WQP89-E097"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "manager_ownership_and_return_matrix": [
+      {
+        "id": "WQP89-C-MGR01",
+        "scenario": "已有manager",
+        "precondition": "pool.flags含POOL_MANAGER_ACTIVE",
+        "source_operation": "manage_workers returns false before write manager",
+        "conditional_result": "该分支没有调用maybe_create_worker, false不是worker可运行的证书",
+        "first_stop_gate": "真实线程外部状态与锁所有权",
+        "evidence_ids": [
+          "WQP89-E106",
+          "WQP89-E003"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-MGR02",
+        "scenario": "取得manager",
+        "precondition": "标志未置位，有效worker.pool",
+        "source_operation": "set POOL_MANAGER_ACTIVE, pool.manager=worker",
+        "conditional_result": "有条件建立单个本地manager身份，不代表全系统互斥",
+        "first_stop_gate": "所读函数外部并发/锁假设",
+        "evidence_ids": [
+          "WQP89-E107",
+          "WQP89-E015"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-MGR03",
+        "scenario": "管理成功回返",
+        "precondition": "maybe_create_worker正常返回且pool仍可写",
+        "source_operation": "pool.manager=NULL; flags &=~POOL_MANAGER_ACTIVE; return true",
+        "conditional_result": "true意为执行管理并可让调用者recheck，不等于已有可运行worker",
+        "first_stop_gate": "后续重新检查需求可能变化",
+        "evidence_ids": [
+          "WQP89-E108",
+          "WQP89-E109",
+          "WQP89-E116"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-MGR04",
+        "scenario": "manager不返回",
+        "precondition": "maybe_create_worker卡在等待/循环/错误操作",
+        "source_operation": "管理清理行没有执行前序保证",
+        "conditional_result": "不能断言manager标志已清除",
+        "first_stop_gate": "create/锁/列表与调度接口返回缺口",
+        "evidence_ids": [
+          "WQP89-E107",
+          "WQP89-E108",
+          "WQP89-E110",
+          "WQP89-E111",
+          "WQP89-E114"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "retry_lock_and_progress_matrix": [
+      {
+        "id": "WQP89-C-TRY01",
+        "scenario": "进入重试",
+        "precondition": "合法pool锁与manager身份",
+        "source_operation": "do{spin_unlock_irq(&pool.lock); while(true){...}}",
+        "conditional_result": "创建发生在源内释放锁请求之后",
+        "first_stop_gate": "其它写者是否改变worklist/idle未知",
+        "evidence_ids": [
+          "WQP89-E110",
+          "WQP89-E117",
+          "WQP89-E118"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-TRY02",
+        "scenario": "创建成功",
+        "precondition": "create_worker返回非NULL",
+        "source_operation": "if(create_worker(pool)|| !need_to_create_worker(pool)) break",
+        "conditional_result": "本次内循环退出，即使重新取锁后又发现需增建也可能重启外循环",
+        "first_stop_gate": "合法创建对象/idle发布才是可用资源前提",
+        "evidence_ids": [
+          "WQP89-E111",
+          "WQP89-E069",
+          "WQP89-E070",
+          "WQP89-E114"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-TRY03",
+        "scenario": "创建失败且需求消失",
+        "precondition": "create_worker NULL，后测need_to_create false",
+        "source_operation": "短路与第二个need检查退出内while",
+        "conditional_result": "外层还须重锁后再次评估",
+        "first_stop_gate": "need_more/idle字段与并发变化",
+        "evidence_ids": [
+          "WQP89-E111",
+          "WQP89-E112",
+          "WQP89-E103",
+          "WQP89-E104",
+          "WQP89-E105"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-TRY04",
+        "scenario": "失败且需求持续",
+        "precondition": "create_worker NULL，两次need都true，timer/cooldown只注释",
+        "source_operation": "inner while再次调用create_worker，无活动冷却调用",
+        "conditional_result": "在无限条件成功返回的失败序列中无法证有限结束",
+        "first_stop_gate": "不宣称物理机已出现死循环",
+        "evidence_ids": [
+          "WQP89-E111",
+          "WQP89-E112",
+          "WQP89-E105"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-TRY05",
+        "scenario": "重锁后需求又生",
+        "precondition": "内while停止且spin_lock_irq正常返回",
+        "source_operation": "do-while(need_to_create_worker(pool))",
+        "conditional_result": "再次申请资源；一次成功不承诺整个管理函数返回",
+        "first_stop_gate": "锁外状态可能变化，真实并发未审",
+        "evidence_ids": [
+          "WQP89-E113",
+          "WQP89-E114",
+          "WQP89-E105"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-TRY06",
+        "scenario": "先行callee不返回",
+        "precondition": "spin_unlock_irq /create_worker /spin_lock_irq不正常返回",
+        "source_operation": "后续manager清理和worker_thread recheck不可获得",
+        "conditional_result": "停止前序证明，不伪造下一状态",
+        "first_stop_gate": "线程创建等待及底层锁机制",
+        "evidence_ids": [
+          "WQP89-E110",
+          "WQP89-E111",
+          "WQP89-E113",
+          "WQP89-E108",
+          "WQP89-E116"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "bootstrap_to_worker_readiness_matrix": [
+      {
+        "id": "WQP89-C-RDY01",
+        "scenario": "worklist/idle政策",
+        "precondition": "worklist.count>0,nr_running=0,idle.count=0,表头合法",
+        "source_operation": "need_more_worker=true; may_start_working=false; need_to_create_worker=true",
+        "conditional_result": "可能进入manager新建流程而非立即处理回调",
+        "first_stop_gate": "完整worklist内容和PWQ有效性",
+        "evidence_ids": [
+          "WQP89-E103",
+          "WQP89-E104",
+          "WQP89-E105",
+          "WQP89-E030"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-RDY02",
+        "scenario": "已有idle worker",
+        "precondition": "worklist.count>0,nr_running=0,idle.count=1",
+        "source_operation": "may_start_working=true, need_to_create_worker=false",
+        "conditional_result": "创建器不必因这个状态新增worker",
+        "first_stop_gate": "实际可运行task/worker flag仍未证",
+        "evidence_ids": [
+          "WQP89-E103",
+          "WQP89-E104",
+          "WQP89-E105"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-RDY03",
+        "scenario": "已有running计数",
+        "precondition": "worklist.count>0,nr_running=1,idle.count=0",
+        "source_operation": "need_more_worker=false, need_to_create_worker=false",
+        "conditional_result": "管理不是该局部条件必需；不证明已有worker真的在CPU运行",
+        "first_stop_gate": "计数来源和运行事件未观测",
+        "evidence_ids": [
+          "WQP89-E103",
+          "WQP89-E105",
+          "WQP89-E013"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-RDY04",
+        "scenario": "普通online清位",
+        "precondition": "普通pool early flags=DISASSOCIATED且后段到达",
+        "source_operation": "flags &=~DISASSOCIATED; BUG_ON(!create_worker)",
+        "conditional_result": "关联普通pool新建可有task/wake请求；不证明task已经执行回调",
+        "first_stop_gate": "late调用入口注释与kthread未审",
+        "evidence_ids": [
+          "WQP89-E049",
+          "WQP89-E050",
+          "WQP89-E051",
+          "WQP89-E068",
+          "WQP89-E071"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-C-RDY05",
+        "scenario": "BH池建立",
+        "precondition": "early BH flags DISASSOCIATED|BH, later BH create",
+        "source_operation": "跳过kthread, nr_workers++/idle_count++, task假定NULL",
+        "conditional_result": "记录伪worker资源但不证明BH kick执行（88已记录相关门）",
+        "first_stop_gate": "88 WQ88-F03身份保留，不重新计根因",
+        "evidence_ids": [
+          "WQP89-E044",
+          "WQP89-E048",
+          "WQP89-E064",
+          "WQP89-E070",
+          "WQP89-E071"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "WQP89-ABC01",
+        "scenario": "四池来源到worker",
+        "precondition": "N个CPU，两个数组每个2项，指针/源生命周期有效",
+        "source_operation": "perCPU定位→early init→late create_worker",
+        "conditional_result": "理论每CPU4个池需分辨BH两个与普通两个的资源初态",
+        "first_stop_gate": "86/87合法perCPU对象，88有效worklist输入",
+        "evidence_ids": [
+          "WQP89-E004",
+          "WQP89-E005",
+          "WQP89-E006",
+          "WQP89-E007",
+          "WQP89-E008",
+          "WQP89-E044",
+          "WQP89-E045",
+          "WQP89-E048",
+          "WQP89-E049"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-ABC02",
+        "scenario": "pool初始化→标志",
+        "precondition": "pool清零输入且early函数正常返回",
+        "source_operation": "init_worker_pool DISASSOCIATED, BH再加BH, normal保持DISASSOCIATED",
+        "conditional_result": "later normal清DISASSOCIATED, BH仍DISASSOCIATED",
+        "first_stop_gate": "不是实际启动到达证明",
+        "evidence_ids": [
+          "WQP89-E031",
+          "WQP89-E032",
+          "WQP89-E044",
+          "WQP89-E045",
+          "WQP89-E049"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-ABC03",
+        "scenario": "IDA到线程身份",
+        "precondition": "两次create_worker使用同池IDA位图且无其它修改",
+        "source_operation": "ida_alloc_range返回ID未置位，format_worker_id按id建名",
+        "conditional_result": "同一数字ID可能复用，命名无法由函数名保证唯一",
+        "first_stop_gate": "不推断两个线程均真实创建",
+        "evidence_ids": [
+          "WQP89-E077",
+          "WQP89-E079",
+          "WQP89-E056",
+          "WQP89-E060",
+          "WQP89-E061"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-ABC04",
+        "scenario": "创建发布层级",
+        "precondition": "ID/worker/kthread/attach/lock均正常返回",
+        "source_operation": "workers链→nr_workers→idle链→wake请求",
+        "conditional_result": "这不是实际获得CPU或回调运行，且BH无任务请求",
+        "first_stop_gate": "对88的提交/回调门保持",
+        "evidence_ids": [
+          "WQP89-E069",
+          "WQP89-E070",
+          "WQP89-E071",
+          "WQP89-E076",
+          "WQP89-E099",
+          "WQP89-E100"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-ABC05",
+        "scenario": "空闲资源推动管理",
+        "precondition": "worklist非空,nr_running0,idle0，资源供应成功",
+        "source_operation": "manager claim→maybe_create_worker→重锁→清manager",
+        "conditional_result": "返回true之后worker_thread recheck，重新求值而非成功运行",
+        "first_stop_gate": "资源真实到位/先行返回条件",
+        "evidence_ids": [
+          "WQP89-E103",
+          "WQP89-E105",
+          "WQP89-E107",
+          "WQP89-E111",
+          "WQP89-E113",
+          "WQP89-E114",
+          "WQP89-E108",
+          "WQP89-E109",
+          "WQP89-E116"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "WQP89-ABC06",
+        "scenario": "文档补正与技术分层",
+        "precondition": "88仍RETURN仅R88-01，技术主干保留",
+        "source_operation": "89 D00新单定义锚代替88 E011/E039的消费",
+        "conditional_result": "旧103标签数不变，89新120独立计数，C06待审",
+        "first_stop_gate": "未修任何内核或旧成果",
+        "evidence_ids": [
+          "WQP89-E001",
+          "WQP89-E002",
+          "WQP89-E003"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_group_count": 10,
+  "matrix_rows": 54,
+  "finite_models": [
+    {
+      "id": "WQP89-M01",
+      "topic": "A",
+      "scenario": "零CPU枚举",
+      "input": "N=0",
+      "preconditions": "nr_cpu_ids=0, no signed loop overflow, early function hypothetically invoked",
+      "intermediate_state": [
+        "possible CPU for condition 0<0 false",
+        "BH init calls=0; normal init calls=0",
+        "system workqueue allocations are later source statements"
+      ],
+      "conditional_result": "0 pool init requests from dense loop; not proof system queue successfully built",
+      "first_unproved_gate": "cache and IDR calls, later WQ allocations may fail or not return",
+      "evidence_ids": [
+        "WQP89-E010",
+        "WQP89-E042",
+        "WQP89-E046",
+        "WQP89-E047"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M02",
+      "topic": "A",
+      "scenario": "单CPU清零模板",
+      "input": "N=1, perCPU pool instances zeroed",
+      "preconditions": "CPU0 memory points to four distinct valid pools, all callees return",
+      "intermediate_state": [
+        "BH indices0/1, normal indices0/1",
+        "each init flags=DISASSOCIATED(4)",
+        "BH additional POOL_BH(1) => flags5; normal flags4"
+      ],
+      "conditional_result": "four init_cpu_worker_pool calls; nice values 0/HIGHPRI_NICE_LEVEL per array",
+      "first_unproved_gate": "not proof template/all CPU perCPU storage is fully copied",
+      "evidence_ids": [
+        "WQP89-E004",
+        "WQP89-E005",
+        "WQP89-E006",
+        "WQP89-E007",
+        "WQP89-E008",
+        "WQP89-E031",
+        "WQP89-E032",
+        "WQP89-E044",
+        "WQP89-E045"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M03",
+      "topic": "A",
+      "scenario": "双CPU静态池",
+      "input": "N=2",
+      "preconditions": "valid perCPU arrays and for_each int bounds",
+      "intermediate_state": [
+        "CPU0 BH2+normal2",
+        "CPU1 BH2+normal2",
+        "count=8 init attempts"
+      ],
+      "conditional_result": "eight local early pool initialization calls if all prior returns allow continuation",
+      "first_unproved_gate": "not proof eight unique physical objects initialized or workers created",
+      "evidence_ids": [
+        "WQP89-E004",
+        "WQP89-E005",
+        "WQP89-E006",
+        "WQP89-E007",
+        "WQP89-E008",
+        "WQP89-E010",
+        "WQP89-E042",
+        "WQP89-E044",
+        "WQP89-E045"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M04",
+      "topic": "A",
+      "scenario": "复用非零pool",
+      "input": "pool.flags=2; nr_running=3; nr_workers=7; manager=nonNULL",
+      "preconditions": "valid object, all list/IDA/attrs helpers return; no outside writes",
+      "intermediate_state": [
+        "flags |= DISASSOCIATED(4) ->6",
+        "id/cpu/node=-1; list headers reset",
+        "nr_running=3, nr_workers=7, manager retains prior pointer"
+      ],
+      "conditional_result": "the selected init function does not independently normalize all pool state",
+      "first_unproved_gate": "this nonzero input is hypothetical, static template startup object may be zero",
+      "evidence_ids": [
+        "WQP89-E013",
+        "WQP89-E014",
+        "WQP89-E015",
+        "WQP89-E031",
+        "WQP89-E032",
+        "WQP89-E033",
+        "WQP89-E034"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M05",
+      "topic": "A",
+      "scenario": "attrs申请失败",
+      "input": "pool valid, attrs kzalloc=NULL",
+      "preconditions": "spinlock/list/IDA init all return, ERROR=-ENOMEM",
+      "intermediate_state": [
+        "id=-1, cpu=-1,node=NUMA_NO_NODE, flags OR DISASSOCIATED",
+        "three headers reset; ida_init attempted",
+        "attrs=NULL -> init_worker_pool returns -ENOMEM"
+      ],
+      "conditional_result": "init_cpu_worker_pool evaluates BUG_ON(nonzero); stop normal-success proof at BUG",
+      "first_unproved_gate": "BUG/panic may not return, no actual kernel trap observed",
+      "evidence_ids": [
+        "WQP89-E031",
+        "WQP89-E032",
+        "WQP89-E033",
+        "WQP89-E034",
+        "WQP89-E035",
+        "WQP89-E037",
+        "WQP89-E028"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M06",
+      "topic": "A",
+      "scenario": "IDR取得ID",
+      "input": "idr_alloc returns id=7",
+      "preconditions": "idr buffer valid, ret>=0",
+      "intermediate_state": [
+        "pool initially id=-1",
+        "worker_pool_assign_id ret=7",
+        "pool.id=7; helper returns0; BUG_ON(0) false"
+      ],
+      "conditional_result": "pool ID locally assigned conditionally",
+      "first_unproved_gate": "IDR allocation consistency and complete cache preparation untested",
+      "evidence_ids": [
+        "WQP89-E020",
+        "WQP89-E021",
+        "WQP89-E025",
+        "WQP89-E026",
+        "WQP89-E039"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M07",
+      "topic": "A",
+      "scenario": "IDR拒绝",
+      "input": "idr_alloc returns -ENOSPC",
+      "preconditions": "attrs allocated and pool initialized through ID step",
+      "intermediate_state": [
+        "pool.id=-1 remains",
+        "worker_pool_assign_id returns negative",
+        "BUG_ON(negative) evaluates true"
+      ],
+      "conditional_result": "cannot certify init_cpu_worker_pool returned normally or next pool started",
+      "first_unproved_gate": "panic handler and full failure cleanup not audited",
+      "evidence_ids": [
+        "WQP89-E020",
+        "WQP89-E021",
+        "WQP89-E028",
+        "WQP89-E039"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M08",
+      "topic": "A",
+      "scenario": "late普通与BH pool标志",
+      "input": "early zero-init: BH flags5, normal flags4; N=1",
+      "preconditions": "early and later functions hypothetically invoked, all first calls return",
+      "intermediate_state": [
+        "BH loop invokes create_worker twice without clearing DISASSOCIATED",
+        "normal loop flags&=~4 ->0 for each of two pools",
+        "each create_worker result tested with BUG_ON(!ptr)"
+      ],
+      "conditional_result": "BH/normal show distinct flag setup, not actual worker thread execution",
+      "first_unproved_gate": "main.c both call sites commented; zero-template/perCPU addresses unresolved",
+      "evidence_ids": [
+        "WQP89-E044",
+        "WQP89-E045",
+        "WQP89-E048",
+        "WQP89-E049",
+        "WQP89-E050",
+        "WQP89-E051"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M09",
+      "topic": "B",
+      "scenario": "IDA重复编号",
+      "input": "IDA bitmap[0]=0, sizeof(long)=8, min0",
+      "preconditions": "valid allocated array, two serial ida_alloc calls with no other writes",
+      "intermediate_state": [
+        "first slot=0, bit_idx=0 -> return id0",
+        "source has no bitmap set, bitmap[0] remains0",
+        "second slot=0, bit_idx=0 -> returns id0"
+      ],
+      "conditional_result": "possible duplicate ID returned under stable no-writer conditions",
+      "first_unproved_gate": "not two actual kernel threads; call-site success and lower allocation unknown",
+      "evidence_ids": [
+        "WQP89-E077",
+        "WQP89-E078",
+        "WQP89-E079",
+        "WQP89-E083",
+        "WQP89-E084"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M10",
+      "topic": "B",
+      "scenario": "IDA内存申请NULL",
+      "input": "ida_init kzalloc returns NULL",
+      "preconditions": "ida_s object valid, no external writes",
+      "intermediate_state": [
+        "ida.bitmap=NULL; ida.initiated=true",
+        "subsequent ida_alloc_range enters loop",
+        "first ida->bitmap[0] read requires valid pointer"
+      ],
+      "conditional_result": "stop proof at invalid bitmap dereference; initiated flag not allocation success evidence",
+      "first_unproved_gate": "actual allocator failure/CPU fault not observed",
+      "evidence_ids": [
+        "WQP89-E052",
+        "WQP89-E078",
+        "WQP89-E084"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M11",
+      "topic": "B",
+      "scenario": "IDA所有低位占用",
+      "input": "on selected LP64 each bitmap word low 8 bits set (e.g. 0xff), all 4096 words valid",
+      "preconditions": "for loop does not find an unset bit among bit_idx 0..7",
+      "intermediate_state": [
+        "for slot_idx 0..4095",
+        "for bit_idx 0..7 tests all fail",
+        "return -1 after loop"
+      ],
+      "conditional_result": "create_worker id<0 -> return NULL before alloc_worker",
+      "first_unproved_gate": "no actual exhaustion or busy state measured",
+      "evidence_ids": [
+        "WQP89-E079",
+        "WQP89-E080",
+        "WQP89-E082",
+        "WQP89-E083",
+        "WQP89-E062"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M12",
+      "topic": "B",
+      "scenario": "IDA释放掩码",
+      "input": "valid bitmap word=0b1011; id=1",
+      "preconditions": "LP64 int shift valid, ida_free executes",
+      "intermediate_state": [
+        "word_before=11",
+        "mask=2",
+        "word_after=11 & 2 = 2"
+      ],
+      "conditional_result": "this expression retains bit1 and clears other set bits; not single-bit clear semantics",
+      "first_unproved_gate": "intended IDA contract and real callers not fully audited",
+      "evidence_ids": [
+        "WQP89-E081",
+        "WQP89-E084"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M13",
+      "topic": "B",
+      "scenario": "worker元数据NULL",
+      "input": "ida_alloc gives id3, kzalloc_node returns NULL",
+      "preconditions": "pool valid, ida_free and kfree(NULL) return",
+      "intermediate_state": [
+        "id=3 granted",
+        "alloc_worker returnsNULL; create goto fail",
+        "ida_free(3) and kfree(NULL); return NULL"
+      ],
+      "conditional_result": "no worker attach, IDA bit release effect cannot be assumed correct",
+      "first_unproved_gate": "IDA bitmap semantics; lower kmalloc not executed",
+      "evidence_ids": [
+        "WQP89-E063",
+        "WQP89-E072",
+        "WQP89-E081",
+        "WQP89-E086"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M14",
+      "topic": "B",
+      "scenario": "kthread error pointer",
+      "input": "id3 valid, worker allocated, ordinary pool, kthread returns ERR_PTR(-ENOMEM)",
+      "preconditions": "valid pool.attrs/task representation, formatter returns",
+      "intermediate_state": [
+        "worker.id=3",
+        "IS_ERR(errorPtr) true",
+        "goto fail; ida_free(3),kfree(worker),returnNULL"
+      ],
+      "conditional_result": "no attach/worker count increment in this selected flow",
+      "first_unproved_gate": "thread resource ownership below kthread wrapper not fully audited",
+      "evidence_ids": [
+        "WQP89-E065",
+        "WQP89-E066",
+        "WQP89-E067",
+        "WQP89-E072",
+        "WQP89-E087",
+        "WQP89-E088",
+        "WQP89-E089",
+        "WQP89-E090"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M15",
+      "topic": "B",
+      "scenario": "kthread非ERR NULL",
+      "input": "id3 valid, worker allocated, ordinary pool, kthread returns NULL",
+      "preconditions": "IS_ERR(NULL) false in chosen pointer representation",
+      "intermediate_state": [
+        "IS_ERR(worker.task=NULL) -> false",
+        "set_user_nice(worker.task=NULL,pool.attrs.nice)",
+        "normal proof stops on invalid task argument"
+      ],
+      "conditional_result": "source does not have a separate nonNULL check here",
+      "first_unproved_gate": "not demonstrated kthread returns NULL; cannot continue to attach",
+      "evidence_ids": [
+        "WQP89-E065",
+        "WQP89-E068",
+        "WQP89-E089"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M16",
+      "topic": "B",
+      "scenario": "普通worker顺序成功",
+      "input": "pool.flags=0; nr_workers0; idle_list.count0; valid ordinary task nonNULL; id3",
+      "preconditions": "all allocations, list additions, locks, wake request return; no other writers",
+      "intermediate_state": [
+        "alloc_worker flags=WORKER_PREP=8",
+        "attach worker.node to pool.workers; worker.pool=pool",
+        "nr_workers=1, worker.flags becomes 8|WORKER_IDLE(4)=12",
+        "idle_list.count=1, wake_up_process(task) requested"
+      ],
+      "conditional_result": "create_worker returns nonNULL; task actually scheduled/ran NOT_PROVEN",
+      "first_unproved_gate": "pointer/list/lock and caller initialization plus lower scheduler are conditional",
+      "evidence_ids": [
+        "WQP89-E054",
+        "WQP89-E064",
+        "WQP89-E069",
+        "WQP89-E070",
+        "WQP89-E071",
+        "WQP89-E074",
+        "WQP89-E076",
+        "WQP89-E099",
+        "WQP89-E100",
+        "WQP89-E101",
+        "WQP89-E098"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M17",
+      "topic": "B",
+      "scenario": "BH伪worker顺序成功",
+      "input": "pool.flags=POOL_BH|POOL_DISASSOCIATED=5, nr_workers0, idle0; worker.task initially NULL",
+      "preconditions": "valid zeroed allocation, IDA accepted, lists/locks normal",
+      "intermediate_state": [
+        "normal kthread branch skipped",
+        "attach adds WORKER_UNBOUND(128) to PREP8 ->136",
+        "nr_workers=1; worker_enter_idle sets WORKER_IDLE(4) -> flags140",
+        "idle_list.count1; if(worker.task) false, no wake request"
+      ],
+      "conditional_result": "returns worker object with NULL task, NOT a runnable thread",
+      "first_unproved_gate": "not proof BH pseudo-worker actually runs/88 kick nonreturn resolved",
+      "evidence_ids": [
+        "WQP89-E064",
+        "WQP89-E074",
+        "WQP89-E069",
+        "WQP89-E070",
+        "WQP89-E071",
+        "WQP89-E003"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M18",
+      "topic": "C",
+      "scenario": "manager已有其他持有者",
+      "input": "pool.flags includes POOL_MANAGER_ACTIVE, idle_count0, demand=true",
+      "preconditions": "valid pool and worker, required lock context",
+      "intermediate_state": [
+        "manage_workers sees active bit",
+        "returns false before setting pool.manager"
+      ],
+      "conditional_result": "this invocation did not attempt create_worker; no guarantee a worker runs",
+      "first_unproved_gate": "existing manager actually progresses is outside function proof",
+      "evidence_ids": [
+        "WQP89-E106",
+        "WQP89-E105",
+        "WQP89-E115",
+        "WQP89-E116"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M19",
+      "topic": "C",
+      "scenario": "单次创建使需求消失",
+      "input": "worklist.count1,nr_running0,idle_count0; manager flag0",
+      "preconditions": "valid list/fields; create_worker returns valid object, idle_count becomes1 and all locks return",
+      "intermediate_state": [
+        "need_more=true; may_start=false; need_to_create=true",
+        "manager=worker and active bit set",
+        "inner create success -> break; re-lock",
+        "outer need_to_create false; manager=NULL, active bit clear; return true"
+      ],
+      "conditional_result": "caller simple_worker_thread uses true to goto recheck; not callback executed",
+      "first_unproved_gate": "worker must actually become idle under all valid list/return preconditions",
+      "evidence_ids": [
+        "WQP89-E103",
+        "WQP89-E104",
+        "WQP89-E105",
+        "WQP89-E107",
+        "WQP89-E111",
+        "WQP89-E113",
+        "WQP89-E114",
+        "WQP89-E108",
+        "WQP89-E109",
+        "WQP89-E116"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M20",
+      "topic": "C",
+      "scenario": "反复失败且需求恒定",
+      "input": "worklist.count1,nr_running0,idle_count0 stays fixed",
+      "preconditions": "each create_worker returns NULL promptly; lock release normal; external state never changes",
+      "intermediate_state": [
+        "need_to_create repeatedly true",
+        "both checks true after failed create",
+        "cooldown line commented; loop retries"
+      ],
+      "conditional_result": "no finite termination shown in this isolated persistent-failure model",
+      "first_unproved_gate": "not real infinite execution; real resource outcome/concurrency unknown",
+      "evidence_ids": [
+        "WQP89-E105",
+        "WQP89-E110",
+        "WQP89-E111",
+        "WQP89-E112"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M21",
+      "topic": "C",
+      "scenario": "失败后需求消失",
+      "input": "worklist.count1/nr_running0/idle0 initially; create_worker returns NULL",
+      "preconditions": "external change makes worklist.count0 before need_to_create second check",
+      "intermediate_state": [
+        "first create returnNULL",
+        "need_to_create observes false and breaks inner loop",
+        "spin_lock_irq returns, outer need_to_create false",
+        "manager reset and true return"
+      ],
+      "conditional_result": "finite conditional exit despite unsuccessful resource creation",
+      "first_unproved_gate": "external state transition and lock semantics not observed",
+      "evidence_ids": [
+        "WQP89-E110",
+        "WQP89-E111",
+        "WQP89-E112",
+        "WQP89-E113",
+        "WQP89-E114",
+        "WQP89-E108",
+        "WQP89-E109"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M22",
+      "topic": "C",
+      "scenario": "成功后被其它线程消耗",
+      "input": "first create_worker succeeds and idle_list goes 0->1, then becomes0 before relock; demand stays true",
+      "preconditions": "pool/workers and all source lock/calculations valid",
+      "intermediate_state": [
+        "inner loop exits on create success",
+        "re-lock then need_to_create returns true",
+        "outer do/while repeats unlock and create"
+      ],
+      "conditional_result": "one successful creation does not guarantee manager returns after that iteration",
+      "first_unproved_gate": "concurrent state changes assumed, not measured",
+      "evidence_ids": [
+        "WQP89-E111",
+        "WQP89-E113",
+        "WQP89-E114",
+        "WQP89-E103",
+        "WQP89-E104",
+        "WQP89-E105"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M23",
+      "topic": "C",
+      "scenario": "kthread等待不返回",
+      "input": "ordinary create_worker enters __kthread_create_on_node, wait_for_completion never returns",
+      "preconditions": "prior allocations and completion setup valid",
+      "intermediate_state": [
+        "create_worker callee pending",
+        "maybe_create_worker remains in inner call",
+        "manager owns flags while no return"
+      ],
+      "conditional_result": "cannot assign later manager clear or worker_thread recheck",
+      "first_unproved_gate": "this is stop-of-proof, not evidence of actual deadlock",
+      "evidence_ids": [
+        "WQP89-E065",
+        "WQP89-E090",
+        "WQP89-E093",
+        "WQP89-E094",
+        "WQP89-E096",
+        "WQP89-E107",
+        "WQP89-E108",
+        "WQP89-E111"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M24",
+      "topic": "C",
+      "scenario": "nr_running使管理不触发",
+      "input": "worklist.count1; nr_running1; idle_count0",
+      "preconditions": "worklist valid, no concurrent changes",
+      "intermediate_state": [
+        "need_more_worker = (true && false)=false",
+        "need_to_create_worker=false"
+      ],
+      "conditional_result": "no new worker required by this local predicate",
+      "first_unproved_gate": "counter may not reflect actual thread execution",
+      "evidence_ids": [
+        "WQP89-E103",
+        "WQP89-E104",
+        "WQP89-E105",
+        "WQP89-E013"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M25",
+      "topic": "C",
+      "scenario": "idle worker绕过manager",
+      "input": "worklist.count1; nr_running0; idle_count1",
+      "preconditions": "valid worker/pool and current worker in simple_worker_thread",
+      "intermediate_state": [
+        "may_start_working=true",
+        "!may_start false, manage_workers not called in short-circuit",
+        "worker proceeds to subsequent scheduled/flag code"
+      ],
+      "conditional_result": "not proof work callback runs, pending->scheduled and PWQ still unverified",
+      "first_unproved_gate": "88 data/PWQ and callback returns remain open",
+      "evidence_ids": [
+        "WQP89-E104",
+        "WQP89-E115",
+        "WQP89-E116",
+        "WQP89-E119"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "WQP89-M26",
+      "topic": "C",
+      "scenario": "manager-active但idle=0",
+      "input": "worklist.count1,nr_running0,idle0, flag active and worker_thread proceeds",
+      "preconditions": "valid manager ref and worker/pool",
+      "intermediate_state": [
+        "worker_thread !may_start true",
+        "manage_workers returns false (already active)",
+        "if(condition && false) goto recheck not taken"
+      ],
+      "conditional_result": "policy may continue next source statements without own new creation",
+      "first_unproved_gate": "existing manager and actual worklist validity unknown",
+      "evidence_ids": [
+        "WQP89-E103",
+        "WQP89-E104",
+        "WQP89-E106",
+        "WQP89-E115",
+        "WQP89-E116"
+      ],
+      "execution": "PURE_STATIC_CONDITIONAL_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 26,
+  "model_topics": {
+    "A": 8,
+    "B": 9,
+    "C": 9
+  },
+  "prior_findings_links": [
+    {
+      "prior": "R88-01",
+      "state": "RETURN_DOCUMENTATION_ONLY",
+      "action": "89 new D00 evidence replaces old WQ88-E011 and WQ88-E039 only for consumers; old artifacts frozen; C06 closure PENDING"
+    },
+    {
+      "prior": "R88-S01/S02/S03",
+      "state": "RETAINED_CONSUMPTION",
+      "action": "return true/list/kick/callback distinct; source order and CPU/PWQ gates; fixed main.c comments"
+    },
+    {
+      "prior": "R87-S01/S02/S03",
+      "state": "PASS_PENDING_LOCAL_QUALIFIED",
+      "action": "perCPU integer metadata write, pointer decode, backing zeroing and error flow limits preserved"
+    },
+    {
+      "prior": "R86-S01/S02/S03",
+      "state": "PASS_PENDING_LOCAL_QUALIFIED",
+      "action": "no unsigned wrap error invention; actual memory object and boot initialization unproved"
+    },
+    {
+      "prior": "R86-01",
+      "state": "CLOSED_DOCUMENTATION_ONLY",
+      "action": "do not reopen"
+    },
+    {
+      "prior": "WQ88-F03",
+      "state": "HISTORIC_CONDITIONAL_SOURCE_CANDIDATE",
+      "action": "BH kick while(1) remains WQ88 identity; 89 BH pseudo-worker is producer condition, not new reproduction"
+    },
+    {
+      "prior": "PA87-F05/PA87-U06",
+      "state": "HISTORIC_CONDITIONAL_ADDRESS_GATE",
+      "action": "perCPU pointers must be legal before pool/worker dereference; no fake closure"
+    }
+  ],
+  "state_proof_gates": [
+    {
+      "layer": "static object definition",
+      "supported_by": [
+        "WQP89-E004",
+        "WQP89-E005"
+      ],
+      "not_equivalent": "runtime valid perCPU instance"
+    },
+    {
+      "layer": "early pool partial initialization",
+      "supported_by": [
+        "WQP89-E031",
+        "WQP89-E033",
+        "WQP89-E034",
+        "WQP89-E035"
+      ],
+      "not_equivalent": "all fields zeroed/all CPU pools ready"
+    },
+    {
+      "layer": "worker ID/object acquisition",
+      "supported_by": [
+        "WQP89-E061",
+        "WQP89-E063",
+        "WQP89-E077",
+        "WQP89-E079"
+      ],
+      "not_equivalent": "unique ID or task created"
+    },
+    {
+      "layer": "worker task/attach",
+      "supported_by": [
+        "WQP89-E065",
+        "WQP89-E069",
+        "WQP89-E076"
+      ],
+      "not_equivalent": "task woke and ran"
+    },
+    {
+      "layer": "pool worker counter/idle/wake request",
+      "supported_by": [
+        "WQP89-E070",
+        "WQP89-E071",
+        "WQP89-E099",
+        "WQP89-E100"
+      ],
+      "not_equivalent": "worker in CPU or callback executed"
+    },
+    {
+      "layer": "manager retry/source return",
+      "supported_by": [
+        "WQP89-E103",
+        "WQP89-E105",
+        "WQP89-E107",
+        "WQP89-E111",
+        "WQP89-E114"
+      ],
+      "not_equivalent": "manager always makes progress"
+    },
+    {
+      "layer": "boot call sites",
+      "supported_by": [
+        "WQP89-E050",
+        "WQP89-E051"
+      ],
+      "not_equivalent": "workqueue_init functions started on real machine"
+    }
+  ],
+  "failure_prefixes": [
+    {
+      "id": "WQP89-FP01",
+      "condition": "kzalloc(attrs)=NULL after ida_init",
+      "observed_text": "init_worker_pool returns -ENOMEM, caller BUG_ON",
+      "stop": "BUG/panic semantics and actual call not measured",
+      "evidence_ids": [
+        "WQP89-E034",
+        "WQP89-E035",
+        "WQP89-E037",
+        "WQP89-E028"
+      ]
+    },
+    {
+      "id": "WQP89-FP02",
+      "condition": "worker ID negative",
+      "observed_text": "create_worker returns NULL before alloc_worker",
+      "stop": "actual IDA range/allocation outcome unknown",
+      "evidence_ids": [
+        "WQP89-E061",
+        "WQP89-E062"
+      ]
+    },
+    {
+      "id": "WQP89-FP03",
+      "condition": "worker object NULL after allocated ID",
+      "observed_text": "fail: ida_free(id); kfree(worker); return NULL",
+      "stop": "ida_free does not prove a successful clear-bit invariant",
+      "evidence_ids": [
+        "WQP89-E063",
+        "WQP89-E072",
+        "WQP89-E081"
+      ]
+    },
+    {
+      "id": "WQP89-FP04",
+      "condition": "kthread ERR_PTR",
+      "observed_text": "IS_ERR -> goto fail; resources release branch",
+      "stop": "full task creation and external cleanup not audited",
+      "evidence_ids": [
+        "WQP89-E065",
+        "WQP89-E066",
+        "WQP89-E067",
+        "WQP89-E072"
+      ]
+    },
+    {
+      "id": "WQP89-FP05",
+      "condition": "worker task valid and attach returns",
+      "observed_text": "workers list, worker.pool, nr_workers++, idle list, conditional wake",
+      "stop": "each layer requires valid list/lock/stack and actual scheduler response",
+      "evidence_ids": [
+        "WQP89-E076",
+        "WQP89-E069",
+        "WQP89-E070",
+        "WQP89-E071"
+      ]
+    },
+    {
+      "id": "WQP89-FP06",
+      "condition": "manager create never returns",
+      "observed_text": "manager-clearing tail not reached",
+      "stop": "no inferred trap/deadlock or continuing cleanup",
+      "evidence_ids": [
+        "WQP89-E107",
+        "WQP89-E108",
+        "WQP89-E110",
+        "WQP89-E111"
+      ]
+    }
+  ],
+  "checks_before_publish": {
+    "new_anchor_count": 120,
+    "raw_prefix_expected": 120,
+    "downgraded": 0,
+    "quotes_reconfirmed": "DONE_BY_INDEPENDENT_FIXED_TIME_SOURCE_SECOND_READ_IN_THREE_BOUNDED_BATCHES: 75+21+24=120/120 EXACT; NAME_AND_BOUNDARY_MANUALLY_GATED; full local P9 not run",
+    "old88_raw_count": 103,
+    "old88_author_triplet": [
+      103,
+      103,
+      0
+    ],
+    "D00_new_anchor_count": 3,
+    "old88_originals_modified": false,
+    "full_local_P9": "NOT_RUN",
+    "actual_build": "NOT_RUN",
+    "kernel_hardware": "NOT_RUN",
+    "verified_claims": 120,
+    "second_readback_errors": 0,
+    "backend_compilation": "NOT_RUN"
+  },
+  "execution_permissions": {
+    "actor": "MYOS2-LEAD-002-CHAT-EXEC-11",
+    "conversation": "MYOS2-A-C06b 代码分析执行",
+    "pr": 17,
+    "branch": "claude/dazzling-cori-q0dnyt",
+    "allowed_write": "exact six files in 89 new directory plus one top-level PR17 formal comment",
+    "pro_independent_reviewer": "MYOS2-A-C06",
+    "pro_independent_review": "PENDING",
+    "denied": [
+      "older files or comments",
+      "PR metadata",
+      "kernel and loader modifications",
+      "new PRs/branches",
+      "build/repo scripts/kernel execution",
+      "extra models/subagents/paid API",
+      "merge,force-push,stage3"
+    ]
+  }
+}

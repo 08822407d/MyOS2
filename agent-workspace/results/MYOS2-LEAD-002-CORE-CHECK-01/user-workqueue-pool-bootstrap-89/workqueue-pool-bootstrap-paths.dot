@@ -1,0 +1,121 @@
+// MYOS2-LEAD-002-CORE-CHECK-01 | CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89
+// Fixed source time@a039d9803ade; CHAT-EXEC-11; status STATIC_ONLY; no Graphviz/runtime.
+// Color/styling semantics: blue solid = actual C callee edge inside scoped source;
+// black solid = data/macro dependency only; dotted = source order within same caller;
+// dashed = conditional branch, hypothesis, or commented/non-call boundary.
+// Shared function nodes can be invoked in multiple distinct frames, not same worker object.
+digraph WQP89_Pool_Bootstrap {
+ graph [rankdir=LR,labelloc=t,label="89: perCPU pool bootstrap / worker acquisition / manager progress (STATIC ONLY)"];
+ node [shape=box,fontsize=10];
+ edge [fontsize=9];
+
+ subgraph cluster_D00 {
+  label="D00 / R88-01 (documentation correction only)";
+  old11 [label="WQ88-E011\nold range mixes 3 declarations",shape=note];
+  new11 [label="WQP89-E002 work_func_t one-line typedef\nWQP89-E001 separate work_s alias",shape=note];
+  old39 [label="WQ88-E039\nwrong pool_flags enum label",shape=note];
+  new39 [label="WQP89-E003\nreal enum worker_pool_flags",shape=note];
+  review [label="C06 Pro reviews correction\nnot closed by author",shape=note];
+  old11 -> new11 [style=dotted,label="new citation replaces consumer proof"];
+  old39 -> new39 [style=dotted,label="new citation replaces consumer proof"];
+  new11 -> review [style=dashed,label="pending"];
+  new39 -> review [style=dashed,label="pending"];
+ }
+
+ subgraph cluster_A {
+  label="A / static pool storage and early/late init";
+  staticbh [label="DEFINE_PER_CPU_SHARED_ALIGNED\nbh_worker_pools[2]"];
+  staticcpu [label="DEFINE_PER_CPU_SHARED_ALIGNED\ncpu_worker_pools[2]"];
+  possible [label="for_each_possible_cpu\ndense 0..N-1 macro"];
+  bhiter [label="for_each_bh_worker_pool\nindices [0,1]"];
+  cpuIter [label="for_each_cpu_worker_pool\nindices [0,1]"];
+  early [label="workqueue_init_early\ncache/idr; BH then ordinary loops"];
+  initcpu [label="init_cpu_worker_pool"];
+  initpool [label="init_worker_pool\nid/cpu/node, flags OR, 3 headers\nida_init; attrs kzalloc"];
+  assignid [label="worker_pool_assign_id"];
+  idr [label="idr_alloc\nreturns int ID or negative"];
+  badattr [label="attrs NULL -> -ENOMEM\ncaller BUG_ON",shape=note];
+  late [label="workqueue_init\nBH possible then normal online"];
+  main1 [label="start_kernel\nworkqueue_init_early() commented"];
+  main2 [label="kernel_init_freeable\nworkqueue_init() commented"];
+  possible -> early [label="macro guard"];
+  staticbh -> bhiter [label="array origin"];
+  staticcpu -> cpuIter [label="array origin"];
+  bhiter -> early [label="macro supplies BH iteration"];
+  cpuIter -> early [label="macro supplies ordinary iteration"];
+  early -> initcpu [color=blue,label="inside each loop"];
+  initcpu -> initpool [color=blue,label="BUG_ON evaluates callee"];
+  initcpu -> assignid [color=blue,label="after attrs/nice/node"];
+  assignid -> idr [color=blue,label="direct call"];
+  initpool -> badattr [style=dashed,label="if kzalloc returns NULL"];
+  main1 -> early [style=dashed,label="not an active call here"];
+  main2 -> late [style=dashed,label="not an active call here"];
+ }
+
+ subgraph cluster_B {
+  label="B / worker resources, task, lists, idle/wake";
+  create [label="create_worker(pool)"];
+  ida [label="ida_alloc -> ida_alloc_range\nsource returns a zero-bit ID without marking it"];
+  alloc [label="alloc_worker -> kzalloc_node\nentry/scheduled/node init; PREP"];
+  formatter [label="format_worker_id\ncpu/name and attrs.nice"];
+  thread [label="kthread_create_on_node\n__kthread_create_on_node\nqueue/wait completion"];
+  err [label="IS_ERR(task) -> fail\nida_free, kfree, NULL"];
+  BH [label="POOL_BH -> skip kthread\ntask initially NULL conditional"];
+  attach [label="worker_attach_to_pool\nflags and pool.workers list, then worker.pool"];
+  locked [label="spin_lock_irq(pool.lock)"];
+  number [label="nr_workers++"];
+  idle [label="worker_enter_idle\nIDLE flag, idle_list count++"];
+  wake [label="if(worker.task) wake_up_process(task)"];
+  ret [label="return worker* (conditional)"];
+  late -> create [color=blue,label="BH/normal per pool via BUG_ON"];
+  ida -> create [label="ID source"];
+  create -> ida [color=blue,label="direct ID request"];
+  create -> alloc [color=blue,label="if id>=0"];
+  create -> formatter [color=blue,label="nonBH if worker nonNULL"];
+  create -> thread [color=blue,label="nonBH kthread request"];
+  create -> BH [style=dashed,label="if pool flags BH"];
+  create -> err [style=dashed,label="id failure or task ERR_PTR or alloc NULL"];
+  create -> attach [color=blue,label="if successful prior stages"];
+  attach -> locked [style=dotted,label="callee return; same caller next"];
+  locked -> number [style=dotted,label="within create_worker"];
+  number -> idle [color=blue,label="worker_enter_idle"];
+  idle -> wake [style=dotted,label="within create_worker after return"];
+  wake -> ret [style=dotted,label="after lock release"];
+ }
+
+ subgraph cluster_C {
+  label="C / manager ownership and create retry";
+  workerthread [label="simple_worker_thread\n!may_start && manage_workers -> recheck"];
+  need [label="need_more_worker = (worklist.count != 0) && nr_running == 0"];
+  idlecount [label="may_start_working = (idle_list.count != 0)"];
+  needcreate [label="need_to_create_worker = need_more && !may_start"];
+  manager [label="manage_workers"];
+  busy [label="POOL_MANAGER_ACTIVE already set\nreturn false"];
+  own [label="flags|=MANAGER_ACTIVE\nmanager=worker"];
+  maybe [label="maybe_create_worker"];
+  unlock [label="do: spin_unlock_irq"];
+  retry [label="while(true): create_worker || !need_to_create"];
+  cool [label="timer/cooldown statements commented",shape=note];
+  relock [label="spin_lock_irq"];
+  outer [label="while need_to_create\nif true repeat; else manager clears owner"];
+  done [label="manager=NULL; flags clear; return true\ncaller recheck (not callback)"];
+  workerthread -> need [label="policy evaluation"];
+  workerthread -> idlecount [label="policy evaluation"];
+  workerthread -> manager [color=blue,label="conditional call"];
+  manager -> busy [style=dashed,label="active branch"];
+  manager -> own [style=dotted,label="if no manager"];
+  own -> maybe [color=blue,label="direct C call"];
+  maybe -> unlock [style=dotted,label="first statement in do"];
+  unlock -> retry [style=dotted,label="after unlock returns"];
+  retry -> create [color=blue,label="each attempt; different worker instances"];
+  retry -> needcreate [label="short-circuit and second check"];
+  need -> needcreate [label="boolean"];
+  idlecount -> needcreate [label="boolean"];
+  retry -> cool [style=dashed,label="comments are not calls"];
+  retry -> relock [style=dotted,label="if inner break"];
+  relock -> outer [style=dotted,label="source condition after relock"];
+  outer -> unlock [style=dashed,label="only when demand remains"];
+  outer -> done [style=dotted,label="if condition false, maybe returns"];
+  done -> workerthread [style=dashed,label="return consumed by caller, conditional recheck"];
+ }
+}
