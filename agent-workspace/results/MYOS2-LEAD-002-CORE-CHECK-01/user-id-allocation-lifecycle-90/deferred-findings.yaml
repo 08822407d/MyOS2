@@ -1,0 +1,464 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90",
+  "record_type": "incremental_static_candidates_and_proof_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "ChatGPT GPT-6 family; backend identity UNATTESTED",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-15",
+  "base_snapshot": "time@a039d9803ade",
+  "read_channel": "GitHub_connector",
+  "status": "AUTHOR_FINDINGS_PENDING_INDEPENDENT_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "old_verdicts": {
+    "batch88": "PASS_PENDING_LOCAL_R88_01_CLOSED",
+    "batch89": "RETURN_ONLY_R89_01_AND_R89_02",
+    "batch90": "PENDING",
+    "R89_01": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "R89_02": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "R89_S01_S02_S03": "RETAINED"
+  },
+  "new_candidates": [
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F01",
+      "id": "IDA90-F01",
+      "topic": "IDA minimum request coordinate mismatch",
+      "classification": "STATIC_CONDITIONAL_CANDIDATE_NOT_RUNTIME_BUG",
+      "claim": "ida_alloc_range's min is used as the first word index rather than the first integer ID; on LP64 min=5 with word5 empty returns40, skipping available ID5.",
+      "preconditions": [
+        "LP64 sizeof(long)=8",
+        "valid bitmap",
+        "no concurrent write"
+      ],
+      "evidence_ids": [
+        "IDA90-E016",
+        "IDA90-E018",
+        "IDA90-E020"
+      ],
+      "first_proof_gate": "requested minimum fits valid word count and allocator objects are initialized",
+      "distinct_from_prior": "Different from old WQP89-F01: requested range interpretation, not missing occupied-bit update",
+      "owner_action_now": "none",
+      "fix_or_repair_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F02",
+      "id": "IDA90-F02",
+      "topic": "IDA max ignored",
+      "classification": "STATIC_CONDITIONAL_CANDIDATE_NOT_RUNTIME_BUG",
+      "claim": "ida_alloc_range accepts max but active body never reads it; max=0, bitmap bit0 set, bit1 empty permits returning 1.",
+      "preconditions": [
+        "valid bitmap",
+        "bounded integer example"
+      ],
+      "evidence_ids": [
+        "IDA90-E017",
+        "IDA90-E018",
+        "IDA90-E019",
+        "IDA90-E020"
+      ],
+      "first_proof_gate": "caller range policy vs actual function body; no runtime claim",
+      "distinct_from_prior": "Different from old WQP89-F01/F02: absence of upper bound enforcement rather than reservation or free mask",
+      "owner_action_now": "none",
+      "fix_or_repair_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F03",
+      "id": "IDA90-F03",
+      "topic": "IDA equality guard skips an available bit",
+      "classification": "STATIC_CONDITIONAL_CANDIDATE_NOT_RUNTIME_BUG",
+      "claim": "Under LP64 word value ~1ULL (0xfffffffffffffffe) contains an empty bit0, yet slot!=~1ULL is false so the code skips scanning that entire word.",
+      "preconditions": [
+        "64-bit ulong and unsigned long long",
+        "valid adjacent bitmap words"
+      ],
+      "evidence_ids": [
+        "IDA90-E019",
+        "IDA90-E020"
+      ],
+      "first_proof_gate": "do not extrapolate from a single word to full-system allocation success",
+      "distinct_from_prior": "Not the same as existing WQP89-F01: selection guard suppresses a candidate before bit scan",
+      "owner_action_now": "none",
+      "fix_or_repair_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F04",
+      "id": "IDA90-F04",
+      "topic": "IDA sizeof-long bit-count conflation",
+      "classification": "STATIC_CONDITIONAL_CANDIDATE_NOT_RUNTIME_BUG",
+      "claim": "Bitmap capacity macro counts 32768*8 bits but ida_alloc_range iterates bit_idx < sizeof(long) (8 for LP64) instead of all 64 bits of a ulong, scanning at most 32768 returned integers under the LP64 model.",
+      "preconditions": [
+        "LP64",
+        "IDA_BITMAP_LONGS=4096",
+        "valid bitmap"
+      ],
+      "evidence_ids": [
+        "IDA90-E011",
+        "IDA90-E013",
+        "IDA90-E018",
+        "IDA90-E019",
+        "IDA90-E020"
+      ],
+      "first_proof_gate": "configuration and higher-order allocator semantics not tested",
+      "distinct_from_prior": "Independent coverage/unit mismatch, not missing bit set or erroneous free mask",
+      "owner_action_now": "none",
+      "fix_or_repair_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F05",
+      "id": "IDA90-F05",
+      "topic": "IDR requested end/max unenforced",
+      "classification": "STATIC_CONDITIONAL_CANDIDATE_NOT_RUNTIME_BUG",
+      "claim": "idr_alloc_u32 scans to MYOS_IDR_BUF_SIZE and ignores its max parameter; idr_alloc(start=5,end=6) with slot5 occupied and slot6 free can return 6 outside the exclusive end. Reversed/equal ranges have no local rejection.",
+      "preconditions": [
+        "valid IDR array",
+        "slot values as stated",
+        "no simultaneous writer"
+      ],
+      "evidence_ids": [
+        "IDA90-E029",
+        "IDA90-E030",
+        "IDA90-E033",
+        "IDA90-E034"
+      ],
+      "first_proof_gate": "caller may impose more restrictive conditions; only local implementation analyzed",
+      "distinct_from_prior": "Not new PID11-F01 null-reservation root: this holds even with nonnull payloads",
+      "owner_action_now": "none",
+      "fix_or_repair_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F06",
+      "id": "IDA90-F06",
+      "topic": "IDR base offset omitted",
+      "classification": "STATIC_CONDITIONAL_CANDIDATE_NOT_RUNTIME_BUG",
+      "claim": "idr_init_base stores idr_base, but idr_alloc_u32 and direct find/replace/remove index rt by provided number without an active subtraction; e.g. base500 and empty slot0 can allocate/return0.",
+      "preconditions": [
+        "valid idr_rt storage",
+        "base=500",
+        "nextid=0",
+        "slot0=NULL"
+      ],
+      "evidence_ids": [
+        "IDA90-E023",
+        "IDA90-E025",
+        "IDA90-E028",
+        "IDA90-E029",
+        "IDA90-E030",
+        "IDA90-E038",
+        "IDA90-E039",
+        "IDA90-E040"
+      ],
+      "first_proof_gate": "no outside base-aware consumer contract proven",
+      "distinct_from_prior": "Different from PID11-F02 bounds (same direct indexing used as evidence, but base translation is a separate invariant)",
+      "owner_action_now": "none",
+      "fix_or_repair_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F07",
+      "id": "IDA90-F07",
+      "topic": "idr_for_each performs no active traversal",
+      "classification": "STATIC_CONDITIONAL_CANDIDATE_NOT_RUNTIME_BUG",
+      "claim": "The only active return path of idr_for_each returns 0 without invoking fn; the original radix tree loop is commented, so even nonempty test table yields callback count 0.",
+      "preconditions": [
+        "valid input",
+        "callback supplied",
+        "nonempty entry hypothesis"
+      ],
+      "evidence_ids": [
+        "IDA90-E041"
+      ],
+      "first_proof_gate": "all users of callback not surveyed; static function body only",
+      "distinct_from_prior": "Not previously recorded under PID11-F01/F02 or worker IDA findings",
+      "owner_action_now": "none",
+      "fix_or_repair_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-F08",
+      "id": "IDA90-F08",
+      "topic": "idr_get_next_ul/get_next do not advance",
+      "classification": "STATIC_CONDITIONAL_CANDIDATE_NOT_RUNTIME_BUG",
+      "claim": "idr_get_next_ul sets entry=NULL and returns it without an active search or nextid update; idr_get_next therefore normally returns NULL and leaves a representable nonnegative nextid unchanged.",
+      "preconditions": [
+        "valid pointer",
+        "nonnegative representable nextid",
+        "entries may be nonempty"
+      ],
+      "evidence_ids": [
+        "IDA90-E042",
+        "IDA90-E043",
+        "IDA90-E044",
+        "IDA90-E045"
+      ],
+      "first_proof_gate": "negative nextid WARN branch and full external callers require separate analysis",
+      "distinct_from_prior": "Independent of F07: separate iteration API and output-parameter contract",
+      "owner_action_now": "none",
+      "fix_or_repair_authorized": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "IDA90-U01",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U01",
+      "label": "actual C ABI and definition config",
+      "evidence_missing": "LP64 model explicitly assumed; compiler layouts, uint/int conversion and generated macro selection not executed",
+      "first_proof_gate": "Do not claim real sizeof long or exact signed conversion path",
+      "evidence_ids": [
+        "IDA90-E013",
+        "IDA90-E018",
+        "IDA90-E028",
+        "IDA90-E029"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U02",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U02",
+      "label": "IDA/IDR init success",
+      "evidence_missing": "kzalloc and zeroing lower layers not audited; initiated flags not certificates",
+      "first_proof_gate": "Stop upon returned NULL or invalid storage",
+      "evidence_ids": [
+        "IDA90-E011",
+        "IDA90-E023"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U03",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U03",
+      "label": "legacy Linux semantics cannot be imported",
+      "evidence_missing": "radix/XArray source algorithm in comment and API doc claims not the active implementation",
+      "first_proof_gate": "Use only current active code evidence",
+      "evidence_ids": [
+        "IDA90-E019",
+        "IDA90-E029",
+        "IDA90-E041",
+        "IDA90-E042"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U04",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U04",
+      "label": "locks and exclusive registry ownership",
+      "evidence_missing": "PID pidmap_lock and worker path locks observed only locally, no complete schedule/locking proof",
+      "first_proof_gate": "No real concurrent registration guarantee",
+      "evidence_ids": [
+        "IDA90-E030",
+        "IDA90-E039",
+        "IDA90-E050",
+        "IDA90-E052"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U05",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U05",
+      "label": "IDA bit ownership and allocator contracts",
+      "evidence_missing": "Existing WQP89-F01/F02 have missing bit set/free mask; whether any other writer updates bits is out of scope",
+      "first_proof_gate": "Retain original old issue IDs without closing or duplicating",
+      "evidence_ids": [
+        "IDA90-E020",
+        "IDA90-E022",
+        "IDA90-E048",
+        "IDA90-E049"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U06",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U06",
+      "label": "IDR base-aware external use",
+      "evidence_missing": "No full survey of callers that set nonzero bases; local base omission is demonstrable",
+      "first_proof_gate": "Do not claim real nonzero-base production incident",
+      "evidence_ids": [
+        "IDA90-E023",
+        "IDA90-E028",
+        "IDA90-E038",
+        "IDA90-E039"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U07",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U07",
+      "label": "iteration API concrete consumers",
+      "evidence_missing": "No exhaustive code search of idr_for_each/get_next callers or system-level reliance",
+      "first_proof_gate": "Static no-op function body, unknown actual reachability",
+      "evidence_ids": [
+        "IDA90-E041",
+        "IDA90-E042",
+        "IDA90-E043",
+        "IDA90-E044",
+        "IDA90-E045"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U08",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U08",
+      "label": "PID namespace/fork/exit whole lifetime",
+      "evidence_missing": "Only alloc_pid reservation and publish, bounded free/find; no re-review of complete fork/exit or task reference safety",
+      "first_proof_gate": "PID11-F01/F02 and old return retain authority",
+      "evidence_ids": [
+        "IDA90-E050",
+        "IDA90-E051",
+        "IDA90-E052",
+        "IDA90-E053",
+        "IDA90-E054",
+        "IDA90-E055"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U09",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U09",
+      "label": "worker thread provenance and R89-02 actual NULL",
+      "evidence_missing": "No proof that kthread_create_on_node returns NULL; valid worker/pool/attrs/list/lock prerequisite not observed in real scheduler",
+      "first_proof_gate": "The corrected M15 is an isolated conditional trace only",
+      "evidence_ids": [
+        "IDA90-E004",
+        "IDA90-E005",
+        "IDA90-E006",
+        "IDA90-E007",
+        "IDA90-E008",
+        "IDA90-E009",
+        "IDA90-E010",
+        "IDA90-E059"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "IDA90-U10",
+      "qualified_id": "CORE-USER-ID-ALLOCATION-LIFECYCLE-90::IDA90-U10",
+      "label": "execution and verification",
+      "evidence_missing": "Full P9 local scripts, runtime compilation, Graphviz, QEMU, real hardware or concurrency not performed",
+      "first_proof_gate": "No mechanical PASS or runtime bug assertions",
+      "evidence_ids": [
+        "IDA90-E018",
+        "IDA90-E029",
+        "IDA90-E038",
+        "IDA90-E041"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F01",
+      "topic": "IDA found-bit not set",
+      "status": "PRESERVED",
+      "extension": [
+        "IDA90-A-SCAN01",
+        "IDA90-M10"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F02",
+      "topic": "IDA release AND mask",
+      "status": "PRESERVED",
+      "extension": [
+        "IDA90-A-REL01",
+        "IDA90-M11"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F03",
+      "topic": "IDA/IDR allocation unchecked",
+      "status": "PRESERVED",
+      "extension": [
+        "IDA90-A-REL03",
+        "IDA90-U02"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F05",
+      "topic": "NULL task is not rejected",
+      "status": "PRESERVED_BUT_R89_02_STOP_LOCATION_CORRECTED",
+      "extension": [
+        "IDA90-M30",
+        "IDA90-U09"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-U08",
+      "topic": "set_user_nice/CPU binding unknown",
+      "status": "PRESERVED",
+      "extension": [
+        "IDA90-M30"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "CORE-USER-PID-LIFETIME-11::PID11-F01",
+      "topic": "NULL IDR reservation not exclusive",
+      "status": "PRESERVED",
+      "extension": [
+        "IDA90-B-PUB01",
+        "IDA90-C-CON03",
+        "IDA90-C-CON04",
+        "IDA90-M17",
+        "IDA90-M29"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "CORE-USER-PID-LIFETIME-11::PID11-F02",
+      "topic": "idr_find array access unbounded",
+      "status": "PRESERVED",
+      "extension": [
+        "IDA90-C-LRR02",
+        "IDA90-C-LRR05",
+        "IDA90-M26"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R89-01",
+      "topic": "WQP89-E010 combines independent macros",
+      "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+      "extension": [
+        "IDA90-E001",
+        "IDA90-E002",
+        "IDA90-E003"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R89-02",
+      "topic": "incorrect stop at set_user_nice(NULL)",
+      "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+      "extension": [
+        "IDA90-E004",
+        "IDA90-E005",
+        "IDA90-M30"
+      ],
+      "no_new_root": true
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R88-01",
+      "topic": "old 88 documentary defect",
+      "status": "CLOSED_DO_NOT_REOPEN",
+      "extension": [],
+      "no_new_root": true
+    }
+  ],
+  "tallies": {
+    "new_conditional_candidates": 8,
+    "new_evidence_gaps": 10,
+    "actual_runtime_confirmed_bugs": 0,
+    "patches_or_repairs": 0,
+    "old_issues_closed_by_author": 0,
+    "owner_immediate_technical_actions": 0
+  },
+  "scope_exclusions": [
+    "old 89 or 11 files/markers unchanged",
+    "no whole-fork/exit/namespace/scheduler/kthread or kernel program execution",
+    "no fixed source edits, no PR merge, no next batch",
+    "no unaudited external Linux API assumptions"
+  ]
+}
