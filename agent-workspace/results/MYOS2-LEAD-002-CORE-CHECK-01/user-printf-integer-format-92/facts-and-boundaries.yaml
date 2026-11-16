@@ -1,0 +1,1980 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92",
+  "record_type": "bounded_integer_format_parser_generator_output_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "GPT-6 (visible family; backend UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-16",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "phase": 2,
+  "status": "STATIC_AUTHOR_PRE_DELIVERY_PENDING_INDEPENDENT_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "6991d125d3d8",
+  "exec_parent_short12": "474a2c0363f0",
+  "G00": {
+    "result": "PASS_READ_ONLY_PREWRITE",
+    "lead": "6991d125d3d8",
+    "exec": "474a2c0363f0",
+    "master": "e8e60cd19540",
+    "time": "a039d9803ade",
+    "PR16": "OPEN",
+    "PR17": "OPEN_DRAFT",
+    "open_pr_count": 2,
+    "results_dir": "ABSENT",
+    "formal_comment92": "ABSENT",
+    "branch_canary": "TIME_DISTINCT_FROM_MASTER",
+    "permission": "SIX_NEW_FILES_PLUS_ONE_COMMENT",
+    "full_P9": "NOT_RUN"
+  },
+  "D00": "NOT_REQUIRED",
+  "historical_status": {
+    "batch90": "PASS_PENDING_LOCAL_R90_01_R90_02_CLOSED",
+    "batch91": "PASS_PENDING_LOCAL_WITH_R91_S01_S02_S03",
+    "R90C_S01": "DIRECT_VS_INDIRECT_CAPACITY_MACRO_CONSUMER_DISTINCTION_PRESERVED",
+    "R91_S01": "EARLY_ZERO_RETURN_NO_NUL_AND_C_POINTER_GATES",
+    "R91_S02": "FINAL_STRING_DIFFERS_FROM_VISIT_TRACE",
+    "R91_S03": "SHORT_ANCHORS_REQUIRING_COMPLEMENT_AND_CANONICAL_IDS",
+    "batch92": "PENDING_AUTHOR_DELIVERY"
+  },
+  "reading_account": {
+    "fresh_this_turn": [
+      "130 fixed contract full",
+      "110 Owner continuity full",
+      "124 model routing full",
+      "91 independent review full",
+      "90 documentary closure full",
+      "92 checkpoint full",
+      "comment6905875456 full",
+      "comment6907252863 full including kactive path erratum",
+      "63 safe retry full",
+      "79 sizing full",
+      "protocol v2 P1–P13 full",
+      "time options_flags full and master/time panic/options canaries",
+      "11 source files from time, direct helper includes and definitions"
+    ],
+    "same_effective_EXEC12_conversation_reuse": [
+      "nine other MyOS2 rules at original fixed objects with fresh current conventions quote",
+      "old128 Mnemosyne receive and guidance, not refreshed again",
+      "batch91 six files and comment independently authored/read in previous effective C06c, unchanged pin",
+      "batch90 six files and original review within same effective C06c earlier"
+    ],
+    "not_read": [
+      "entire external printf standards and complete %p/float/binary/scanf path",
+      "entire fork/scheduler/real libc",
+      "53/68 entire original seven/six source packages",
+      "full local P9 machinery"
+    ],
+    "source_navigation_correction": "mainline comment6907252863 confirms workqueue_const.h and workqueue_types.h under mykernel/kactive/workqueue/ not mykernel/workqueue; not reused false path"
+  },
+  "source_scope": {
+    "source_files_for_new_evidence": 10,
+    "unique_source_objects_actually_read_including_include_route": 17,
+    "source_soft_limit": 24,
+    "source_overage": 0,
+    "allowed_token_sets": [
+      "literal",
+      "%%",
+      "d",
+      "i",
+      "u",
+      "o",
+      "x",
+      "X",
+      "hh",
+      "h",
+      "l",
+      "ll",
+      "z",
+      "t",
+      "star width/precision"
+    ],
+    "excluded": [
+      "%p",
+      "float",
+      "binary printf",
+      "scanf",
+      "complete printk",
+      "real fork and scheduling"
+    ],
+    "source_only": "time@a039d9803ade"
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/lib/printf/vsprintf.c",
+      "evidence_ids": [
+        "PF92-E001",
+        "PF92-E002",
+        "PF92-E003",
+        "PF92-E004",
+        "PF92-E005",
+        "PF92-E006",
+        "PF92-E007",
+        "PF92-E008",
+        "PF92-E009",
+        "PF92-E010",
+        "PF92-E011",
+        "PF92-E012",
+        "PF92-E013",
+        "PF92-E014",
+        "PF92-E017",
+        "PF92-E018",
+        "PF92-E019",
+        "PF92-E020",
+        "PF92-E021",
+        "PF92-E022",
+        "PF92-E023",
+        "PF92-E024",
+        "PF92-E025",
+        "PF92-E026",
+        "PF92-E027",
+        "PF92-E028",
+        "PF92-E029",
+        "PF92-E030",
+        "PF92-E031",
+        "PF92-E032",
+        "PF92-E033",
+        "PF92-E034",
+        "PF92-E035",
+        "PF92-E036",
+        "PF92-E037",
+        "PF92-E038",
+        "PF92-E039",
+        "PF92-E040",
+        "PF92-E041",
+        "PF92-E045",
+        "PF92-E046",
+        "PF92-E047",
+        "PF92-E048",
+        "PF92-E049",
+        "PF92-E050",
+        "PF92-E051",
+        "PF92-E052",
+        "PF92-E053",
+        "PF92-E054",
+        "PF92-E055",
+        "PF92-E056",
+        "PF92-E057",
+        "PF92-E058",
+        "PF92-E059",
+        "PF92-E060",
+        "PF92-E061",
+        "PF92-E062",
+        "PF92-E063",
+        "PF92-E064",
+        "PF92-E065",
+        "PF92-E066",
+        "PF92-E067",
+        "PF92-E071",
+        "PF92-E072",
+        "PF92-E073",
+        "PF92-E074",
+        "PF92-E075",
+        "PF92-E076",
+        "PF92-E077",
+        "PF92-E078",
+        "PF92-E079",
+        "PF92-E080",
+        "PF92-E081",
+        "PF92-E084",
+        "PF92-E085",
+        "PF92-E086",
+        "PF92-E087",
+        "PF92-E088",
+        "PF92-E089",
+        "PF92-E090",
+        "PF92-E091",
+        "PF92-E092",
+        "PF92-E093",
+        "PF92-E094",
+        "PF92-E095",
+        "PF92-E096",
+        "PF92-E097",
+        "PF92-E098",
+        "PF92-E099",
+        "PF92-E100",
+        "PF92-E101",
+        "PF92-E102",
+        "PF92-E103",
+        "PF92-E104",
+        "PF92-E105",
+        "PF92-E106",
+        "PF92-E107",
+        "PF92-E108"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/ctype.h",
+      "evidence_ids": [
+        "PF92-E015",
+        "PF92-E016"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "evidence_ids": [
+        "PF92-E042"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "evidence_ids": [
+        "PF92-E043"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/include/linux/lib/stdarg.h",
+      "evidence_ids": [
+        "PF92-E044"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/byteorder/generic.h",
+      "evidence_ids": [
+        "PF92-E068"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/byteorder/little_endian.h",
+      "evidence_ids": [
+        "PF92-E069"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/lib/digit/hexdump.c",
+      "evidence_ids": [
+        "PF92-E070"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/div64.h",
+      "evidence_ids": [
+        "PF92-E082",
+        "PF92-E083"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "evidence_ids": [
+        "PF92-E109",
+        "PF92-E110"
+      ],
+      "method": "connector fixed time source; reread later for P6"
+    }
+  ],
+  "fact_to_evidence_ids": {
+    "flags": [
+      "PF92-E001",
+      "PF92-E002",
+      "PF92-E003",
+      "PF92-E004",
+      "PF92-E005",
+      "PF92-E006",
+      "PF92-E007"
+    ],
+    "type_storage": [
+      "PF92-E008",
+      "PF92-E009",
+      "PF92-E010",
+      "PF92-E011",
+      "PF92-E012",
+      "PF92-E013"
+    ],
+    "parser": [
+      "PF92-E014",
+      "PF92-E015",
+      "PF92-E016",
+      "PF92-E017",
+      "PF92-E018",
+      "PF92-E019",
+      "PF92-E020",
+      "PF92-E021",
+      "PF92-E022",
+      "PF92-E023",
+      "PF92-E024",
+      "PF92-E025",
+      "PF92-E026",
+      "PF92-E027",
+      "PF92-E028",
+      "PF92-E029",
+      "PF92-E030",
+      "PF92-E031",
+      "PF92-E032",
+      "PF92-E033",
+      "PF92-E034",
+      "PF92-E035",
+      "PF92-E036",
+      "PF92-E037",
+      "PF92-E038",
+      "PF92-E039"
+    ],
+    "width_precision": [
+      "PF92-E012",
+      "PF92-E013",
+      "PF92-E017",
+      "PF92-E019",
+      "PF92-E025",
+      "PF92-E027",
+      "PF92-E040",
+      "PF92-E041",
+      "PF92-E042",
+      "PF92-E043",
+      "PF92-E050",
+      "PF92-E051"
+    ],
+    "va_arg_dispatch": [
+      "PF92-E044",
+      "PF92-E055",
+      "PF92-E056",
+      "PF92-E057",
+      "PF92-E058",
+      "PF92-E059",
+      "PF92-E060",
+      "PF92-E061"
+    ],
+    "digit_pair": [
+      "PF92-E065",
+      "PF92-E066",
+      "PF92-E067",
+      "PF92-E068",
+      "PF92-E069",
+      "PF92-E070",
+      "PF92-E071",
+      "PF92-E072",
+      "PF92-E073",
+      "PF92-E074",
+      "PF92-E075",
+      "PF92-E076",
+      "PF92-E077",
+      "PF92-E078"
+    ],
+    "div_chunks": [
+      "PF92-E079",
+      "PF92-E080",
+      "PF92-E081",
+      "PF92-E082",
+      "PF92-E083"
+    ],
+    "num_to_str": [
+      "PF92-E101",
+      "PF92-E102",
+      "PF92-E103",
+      "PF92-E104",
+      "PF92-E105"
+    ],
+    "number_sign_prefix_pad": [
+      "PF92-E084",
+      "PF92-E085",
+      "PF92-E086",
+      "PF92-E087",
+      "PF92-E088",
+      "PF92-E089",
+      "PF92-E090",
+      "PF92-E091",
+      "PF92-E092",
+      "PF92-E093",
+      "PF92-E094",
+      "PF92-E095",
+      "PF92-E096",
+      "PF92-E097",
+      "PF92-E098",
+      "PF92-E099",
+      "PF92-E100"
+    ],
+    "vsnprintf_capacity": [
+      "PF92-E045",
+      "PF92-E046",
+      "PF92-E047",
+      "PF92-E048",
+      "PF92-E049",
+      "PF92-E062",
+      "PF92-E063",
+      "PF92-E064"
+    ],
+    "printf_wrappers": [
+      "PF92-E106",
+      "PF92-E107",
+      "PF92-E108"
+    ],
+    "actual_worker_consumer": [
+      "PF92-E109",
+      "PF92-E110"
+    ]
+  },
+  "matrices": {
+    "parser_state_transition_matrix": [
+      {
+        "id": "A-PS01",
+        "scenario": "连续字面与百分号",
+        "input": "fmt='A%%B'，有效存储",
+        "source_operation": "format_decode对A走NONE后直接返回read；对%%走PERCENT_CHAR；再对B走NONE",
+        "conditional_result": "目标抽象字符为A%B，%%本身不消耗va_arg",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E020",
+          "PF92-E021",
+          "PF92-E047",
+          "PF92-E048",
+          "PF92-E049",
+          "PF92-E052"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-PS02",
+        "scenario": "标志重复及base",
+        "input": "fmt='%--++#0x'且提供unsigned int",
+        "source_operation": "每次重新flags=0，多次OR同一位，x置SMALL/base16",
+        "conditional_result": "flags可并存；不假定当前实现自动拒绝无意义组合",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E001",
+          "PF92-E002",
+          "PF92-E003",
+          "PF92-E004",
+          "PF92-E005",
+          "PF92-E006",
+          "PF92-E007",
+          "PF92-E022",
+          "PF92-E023",
+          "PF92-E024",
+          "PF92-E033"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-PS03",
+        "scenario": "动态width两阶段",
+        "input": "fmt='%*d',width=6,val=42",
+        "source_operation": "第一次解析WIDTH提前返回;vsnprintf取int并set_field_width;再次解析自precision恢复",
+        "conditional_result": "保留原flags/width，最终INT转换取数",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E017",
+          "PF92-E018",
+          "PF92-E026",
+          "PF92-E040",
+          "PF92-E047",
+          "PF92-E050",
+          "PF92-E061"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-PS04",
+        "scenario": "动态precision两阶段",
+        "input": "fmt='%.*d',prec=3,val=42",
+        "source_operation": "PRECISION提前返回;外层int取参,set_precision;再次直接去qualifier",
+        "conditional_result": "保留此前width/flags而非重置",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E019",
+          "PF92-E027",
+          "PF92-E028",
+          "PF92-E041",
+          "PF92-E051"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-PS05",
+        "scenario": "宽度精度连星号",
+        "input": "fmt='%*.*d',width=-6,prec=-2,val=42",
+        "source_operation": "WIDTH恢复负数取绝对值并OR LEFT，PRECISION恢复负数变0",
+        "conditional_result": "给定可表示字段条件,最后d为signed INT,输出模型另见M03",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E017",
+          "PF92-E018",
+          "PF92-E019",
+          "PF92-E026",
+          "PF92-E028",
+          "PF92-E040",
+          "PF92-E041",
+          "PF92-E050",
+          "PF92-E051",
+          "PF92-E061"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-PS06",
+        "scenario": "字面width与precision",
+        "input": "fmt='%08.3d',val=42",
+        "source_operation": "skip_atoi分别收集8和3，ZERO标志保留;外层只消费数字参数",
+        "conditional_result": "与星号先取附加int的状态分支严格分开",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E014",
+          "PF92-E015",
+          "PF92-E024",
+          "PF92-E025",
+          "PF92-E027",
+          "PF92-E033",
+          "PF92-E034",
+          "PF92-E061"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-PS07",
+        "scenario": "缺失转换或无效",
+        "input": "fmt='%q'或尾随%",
+        "source_operation": "default将spec.type设INVALID，vsnprintf goto out",
+        "conditional_result": "不能用后续任何val消费证明完整字符串格式输出",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E020",
+          "PF92-E021",
+          "PF92-E035",
+          "PF92-E047",
+          "PF92-E053",
+          "PF92-E054"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-PS08",
+        "scenario": "宽度数位溢出止证",
+        "input": "fmt='%999999999999999999d'，有合法字面",
+        "source_operation": "skip_atoi用signed int反复i*10+digit，无本地溢出拒绝",
+        "conditional_result": "INT范围外先停C整数语义，不把任意精度数字送位域",
+        "first_unproved_gate": "signed int溢出之前的结果不能延伸到位域/输出",
+        "evidence_ids": [
+          "PF92-E014",
+          "PF92-E025"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      }
+    ],
+    "format_argument_type_matrix": [
+      {
+        "id": "A-TY01",
+        "scenario": "d/i vs u",
+        "input": "%d或%i; %u；调用者分别传匹配int/unsigned int",
+        "source_operation": "SIGN决定FORMAT_TYPE_INT或UINT，分别va_arg(int)与unsigned int",
+        "conditional_result": "先分读实参类型再存num为unsigned long long",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E001",
+          "PF92-E009",
+          "PF92-E034",
+          "PF92-E039",
+          "PF92-E044",
+          "PF92-E061"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-TY02",
+        "scenario": "o/x/X",
+        "input": "%o %x %X匹配unsigned int",
+        "source_operation": "base=8或16, x再置SMALL；默认UINT va_arg",
+        "conditional_result": "由同样位模式选择不同的数字表和大小写",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E006",
+          "PF92-E032",
+          "PF92-E033",
+          "PF92-E039",
+          "PF92-E061",
+          "PF92-E089",
+          "PF92-E090"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-TY03",
+        "scenario": "hh限定",
+        "input": "%hhd -1, %hhu 255；实参适当提升",
+        "source_operation": "分别(int)va_arg再转signed/unsigned char",
+        "conditional_result": "应按实际提升与窄化路径，不直接执行va_arg(char)",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E029",
+          "PF92-E038",
+          "PF92-E044",
+          "PF92-E059"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-TY04",
+        "scenario": "h限定",
+        "input": "%hd -1,%hu65535；匹配提升类型",
+        "source_operation": "va_arg(args,int)再转(short)/(unsigned short)",
+        "conditional_result": "对unsigned short推广为int的值域须满足模型条件",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E029",
+          "PF92-E038",
+          "PF92-E060"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-TY05",
+        "scenario": "l限定",
+        "input": "%ld / %lu匹配signed/unsigned long",
+        "source_operation": "FORMAT_TYPE_LONG/ULONG分别va_arg(long)/(unsigned long)",
+        "conditional_result": "取参和存储num的转换是分开的阶段",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E029",
+          "PF92-E036",
+          "PF92-E055",
+          "PF92-E056"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-TY06",
+        "scenario": "ll限定",
+        "input": "%lld和%llu分别由qualifier L映射同一LONG_LONG",
+        "source_operation": "vsnprintf FORMAT_TYPE_LONG_LONG无论SIGN都va_arg(args,long long)",
+        "conditional_result": "对于%llu且传入unsigned long long，需另证变参类型契约，不能直接认定定义良好",
+        "first_unproved_gate": "无外部ABI或类型例外结论；PF92-F01",
+        "evidence_ids": [
+          "PF92-E030",
+          "PF92-E036",
+          "PF92-E055"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-TY07",
+        "scenario": "z限定",
+        "input": "%zd/%zu分别有效地匹配ssize_t/size_t",
+        "source_operation": "SIZE_T分支按SIGN决定va_arg(ssize_t)/size_t",
+        "conditional_result": "不把z当作普通int或unsigned long通用承诺",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E037",
+          "PF92-E057"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-TY08",
+        "scenario": "t限定",
+        "input": "%td或%tu都有相同PTRDIFF类型",
+        "source_operation": "PTRDIFF分支总是va_arg(ptrdiff_t)，未按SIGN改取参",
+        "conditional_result": "非SIGN的%tu实际参数类型适配需保留独立前提",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E037",
+          "PF92-E058"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      }
+    ],
+    "width_precision_input_matrix": [
+      {
+        "id": "A-WP01",
+        "scenario": "动态宽度超位域",
+        "input": "width超出signed24位可表示范围",
+        "source_operation": "set_field_width先写signed24位域，再WARN_ONCE比较是否改变，后尝试clamp",
+        "conditional_result": "WARN_ONCE实际等于条件表达式；无日志保证；取舍仍受转换/类型有效性",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E010",
+          "PF92-E012",
+          "PF92-E040",
+          "PF92-E042",
+          "PF92-E043"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-WP02",
+        "scenario": "动态精度超位域",
+        "input": "prec=40000且匹配int",
+        "source_operation": "set_precision写signed16字段再比较并clamp到[0,32767]动作",
+        "conditional_result": "只有所读宏及目标类型具定义时才算出最终字段，不能从函数名字推断log或可靠限幅",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E011",
+          "PF92-E013",
+          "PF92-E041",
+          "PF92-E042",
+          "PF92-E043"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-WP03",
+        "scenario": "负动态宽度",
+        "input": "width=-6,precision不指定",
+        "source_operation": "WIDTH恢复若字段负则取负并置LEFT",
+        "conditional_result": "成功时左对齐，之前没有省略读取int这一步",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E017",
+          "PF92-E018",
+          "PF92-E040",
+          "PF92-E050"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-WP04",
+        "scenario": "负动态精度",
+        "input": "prec=-2,幅度可表示",
+        "source_operation": "PRECISION恢复若字段负则置0",
+        "conditional_result": "当前实现是0，不自动采用外部C99语义来重写",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E019",
+          "PF92-E041",
+          "PF92-E051"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-WP05",
+        "scenario": "字面数字过长",
+        "input": "连续数字令skip_atoi i*10+digit越int",
+        "source_operation": "即使格式串合法存储，整数累加无先行范围门",
+        "conditional_result": "最早的有符号溢出处停证",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E014",
+          "PF92-E015",
+          "PF92-E025",
+          "PF92-E027"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "A-WP06",
+        "scenario": "0精度及0值",
+        "input": "%.0d值0，num真实有效",
+        "source_operation": "number生成tmp一个0，再以i>precision设precision=i",
+        "conditional_result": "该本地条件模型输出字符'0'，不自行引用未查外部标准判错误",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E089",
+          "PF92-E091",
+          "PF92-E092",
+          "PF92-E097"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      }
+    ],
+    "integer_sign_magnitude_matrix": [
+      {
+        "id": "B-SIGN01",
+        "scenario": "32位-1",
+        "input": "%d，实际int=-1，二补数有限模型",
+        "source_operation": "va_arg(int)后到uint64 num，number有SIGN并将可恢复signed值取负",
+        "conditional_result": "输出负号及1，需有相应目标转换语义",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E055",
+          "PF92-E061",
+          "PF92-E085",
+          "PF92-E086",
+          "PF92-E087"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-SIGN02",
+        "scenario": "int32最小值",
+        "input": "%d,int=-2147483648,按二补数目标且long long可表示",
+        "source_operation": "num提升到64位无符号，cast回long long得到-2147483648，负号+2147483648",
+        "conditional_result": "在long long可表示范围内，与-2^63边界不同",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E055",
+          "PF92-E061",
+          "PF92-E086",
+          "PF92-E091"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-SIGN03",
+        "scenario": "long long最小值",
+        "input": "%lld,value=LLONG_MIN,二补数目标模型",
+        "source_operation": "signed long long负值经num转换后再cast且执行一元负号",
+        "conditional_result": "对最小long long做负号超该signed类型可表示范围，停证；不得宣称正确得到9223372036854775808",
+        "first_unproved_gate": "有符号溢出前止证，不用数学整数强行替代",
+        "evidence_ids": [
+          "PF92-E055",
+          "PF92-E086"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-SIGN04",
+        "scenario": "正数PLUS和SPACE优先级",
+        "input": "%+d, % d 值42",
+        "source_operation": "SIGN成立且num非负时先查PLUS再查SPACE",
+        "conditional_result": "优先+，否则空格，不能在两标志并存时输出双前缀",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E001",
+          "PF92-E003",
+          "PF92-E004",
+          "PF92-E087",
+          "PF92-E093"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-SIGN05",
+        "scenario": "LEFT/ZERO并存",
+        "input": "%-05d,42",
+        "source_operation": "LEFT清ZEROPAD后按前导/尾随空间分支",
+        "conditional_result": "给出左对齐 '42   ' 的有条件源级输出",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E002",
+          "PF92-E005",
+          "PF92-E085",
+          "PF92-E092",
+          "PF92-E096",
+          "PF92-E099"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-SIGN06",
+        "scenario": "非十进制位移",
+        "input": "%#x 0x2a, %o 9",
+        "source_operation": "mask=base-1; shift3或4;通过HEX大写表和SMALL",
+        "conditional_result": "按位移生成倒序数位，大小写取自SMALL位",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E006",
+          "PF92-E007",
+          "PF92-E070",
+          "PF92-E089",
+          "PF92-E090"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      }
+    ],
+    "digit_chunk_and_temporary_storage_matrix": [
+      {
+        "id": "B-DIG01",
+        "scenario": "数字对表实际字节布局",
+        "input": "固定x86_64小端路径且u16为16位",
+        "source_operation": "_宏按x%10和x/10组合两ASCII，cpu_to_le16经小端别名",
+        "conditional_result": "每pair意图写低位十进制字符在前，需正确对齐/合法u16写存",
+        "first_unproved_gate": "小端内存模型、编译器类型和对象对齐未运行",
+        "evidence_ids": [
+          "PF92-E065",
+          "PF92-E066",
+          "PF92-E067",
+          "PF92-E068",
+          "PF92-E069"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-DIG02",
+        "scenario": "trunc8低于100",
+        "input": "r=9或99,调用缓冲至少2字节可写",
+        "source_operation": "goto out_r后总写一个u16 decpair[r]；r<10时逻辑buf仅+1",
+        "conditional_result": "r9物理写'90'两字节（低十进制位在前）但逻辑长度1；99写'99'两字节逻辑长2",
+        "first_unproved_gate": "未将逻辑长度当实际存储触碰字节数",
+        "evidence_ids": [
+          "PF92-E071",
+          "PF92-E075"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-DIG03",
+        "scenario": "100分段",
+        "input": "r=100",
+        "source_operation": "近似商q1；先写低pair'00'并+2，再out_q令r=1写'01'但仅+1",
+        "conditional_result": "物理字节与逻辑指针分开，最终有效倒序前3字节为'001'",
+        "first_unproved_gate": "q近似公式仅在该有限输入核算",
+        "evidence_ids": [
+          "PF92-E072",
+          "PF92-E075"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-DIG04",
+        "scenario": "100乘法近似",
+        "input": "r=9999位于对应小商公式域",
+        "source_operation": "trunc8使用0x147b和>>19计算q",
+        "conditional_result": "有条件得到q=99；不把这个等式扩为全整数域或任意r",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E074"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-DIG05",
+        "scenario": "full8恒8字符",
+        "input": "0<=r<100000000且各级商/表索引合法",
+        "source_operation": "连续四次u16 decpair写，每次buf+=2",
+        "conditional_result": "8个逻辑字符，并实写8字节",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E076",
+          "PF92-E077",
+          "PF92-E078"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-DIG06",
+        "scenario": "1e8分段",
+        "input": "n=100000000",
+        "source_operation": "do_div回余0并将n改成1，put_dec_full8写8个0，残n1给trunc8",
+        "conditional_result": "倒序尾部加'1'，逻辑长度9，逆序数字为100000000",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E079",
+          "PF92-E081",
+          "PF92-E082",
+          "PF92-E083"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-DIG07",
+        "scenario": "1e16分段",
+        "input": "n=10000000000000000",
+        "source_operation": "第一次n变1e8且rem0；第二次n变1且rem0；两个full8再trunc8",
+        "conditional_result": "共17位，不能把do_div视作仅返回商或只运行一次",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E079",
+          "PF92-E080",
+          "PF92-E081",
+          "PF92-E082",
+          "PF92-E083"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-DIG08",
+        "scenario": "ulong long最大无符号范围",
+        "input": "n=18446744073709551615数学模型",
+        "source_operation": "首余9551615、次余67440737，残商1844",
+        "conditional_result": "两个8位固定块+4位残块=20有效数字；tmp[24]在这类模型中有4字节余裕",
+        "first_unproved_gate": "没有检查全部0..UINT64_MAX运行态，仅代数/局部整数演算",
+        "evidence_ids": [
+          "PF92-E079",
+          "PF92-E080",
+          "PF92-E081",
+          "PF92-E084"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "B-DIG09",
+        "scenario": "对齐与多写临时空间",
+        "input": "tmp[3*sizeof(num)]且num为unsigned long long,示例sizeof=8",
+        "source_operation": "tmp为24字节并声明2字节对齐；trunc8即使返回1也写2字节",
+        "conditional_result": "返回游标差不等于总store footprint；是否编译器允许u16别名/无硬件异常仍未认证",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E069",
+          "PF92-E071",
+          "PF92-E075",
+          "PF92-E084",
+          "PF92-E101"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      }
+    ],
+    "prefix_padding_and_emission_matrix": [
+      {
+        "id": "C-PFX01",
+        "scenario": "十六进制前缀",
+        "input": "%#08x,value42,width8",
+        "source_operation": "SPECIAL使need_pfx；field_width预扣2，先发0x再补zero，最后发2a",
+        "conditional_result": "在目标和整数格式前提下生成'0x00002a'，不是先写完整数字再插前缀",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E007",
+          "PF92-E084",
+          "PF92-E088",
+          "PF92-E094",
+          "PF92-E095",
+          "PF92-E096",
+          "PF92-E098"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-PFX02",
+        "scenario": "十六进制零值",
+        "input": "%#x,value0",
+        "source_operation": "need_pfx且base16，即使is_zero仍能发0x；num=0走单digit 0",
+        "conditional_result": "当前实现有条件结果'0x0'，不作外部标准对照",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E007",
+          "PF92-E084",
+          "PF92-E089",
+          "PF92-E094",
+          "PF92-E098"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-PFX03",
+        "scenario": "octal零值",
+        "input": "%#o,value0",
+        "source_operation": "need_pfx且base8但is_zero跳过额外前缀；num=0仍有digit0",
+        "conditional_result": "可见字符为'0'，不能按0x规则一概处理",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E007",
+          "PF92-E084",
+          "PF92-E089",
+          "PF92-E094"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-PFX04",
+        "scenario": "正号优先于前补零",
+        "input": "%+06d,value42",
+        "source_operation": "sign+使field_width先-1；ZEROPAD剩余宽度补zero；之后sign已先发",
+        "conditional_result": "当前源码给'+00042'，写序是sign→0→digits",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E001",
+          "PF92-E003",
+          "PF92-E005",
+          "PF92-E087",
+          "PF92-E092",
+          "PF92-E093",
+          "PF92-E096",
+          "PF92-E098"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-PFX05",
+        "scenario": "精度与ZEROPAD并存",
+        "input": "%08.3d,value42",
+        "source_operation": "零flag未因精度存在而被主动清除；width8减precision3，预补5个0，再precision补1个0",
+        "conditional_result": "本实现输出'00000042'，不能擅用外部printf规则替换",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E005",
+          "PF92-E092",
+          "PF92-E096",
+          "PF92-E097",
+          "PF92-E098"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-PFX06",
+        "scenario": "LEFT和精度",
+        "input": "%-6.3d,value42",
+        "source_operation": "LEFT清ZEROPAD，先写一个精度0和数字，再尾随3空格",
+        "conditional_result": "结果'042   '，末尾空格来自独立循环",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E002",
+          "PF92-E085",
+          "PF92-E092",
+          "PF92-E097",
+          "PF92-E098",
+          "PF92-E099"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-PFX07",
+        "scenario": "数字生成的实际写序",
+        "input": "width6,precision3,有SIGN和正数plus",
+        "source_operation": "先测数字->计算空间->前导空格->sign->prefix->ZEROPAD/空格->precision0->逆序数字->尾空格",
+        "conditional_result": "该顺序不等于跨线程可观察顺序，也不证明越界后的指针算术有效",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E084",
+          "PF92-E087",
+          "PF92-E088",
+          "PF92-E089",
+          "PF92-E091",
+          "PF92-E092",
+          "PF92-E093",
+          "PF92-E094",
+          "PF92-E096",
+          "PF92-E097",
+          "PF92-E098",
+          "PF92-E099"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      }
+    ],
+    "return_capacity_and_consumer_matrix": [
+      {
+        "id": "C-RET01",
+        "scenario": "容量拒绝前置",
+        "input": "size>INT_MAX,任何有效fmt参数",
+        "source_operation": "vsnprintf先WARN_ON_ONCE条件真时返回0，跳过NUL尾处理",
+        "conditional_result": "返回0不代表空串或写了NUL；沿R91-S01",
+        "first_unproved_gate": "不能把此分支误记为普通需求长度",
+        "evidence_ids": [
+          "PF92-E042",
+          "PF92-E045",
+          "PF92-E063"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-RET02",
+        "scenario": "容量0/1/刚够",
+        "input": "合法同对象的指针运算假设及需求D=2",
+        "source_operation": "size0数学写入0但C NULL指针轨迹未证；size1写NUL；size3写2+NUL",
+        "conditional_result": "正常分支vsnprintf返回需求2, vscnprintf返回0/0/2（size0模型还需指针定义）",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E045",
+          "PF92-E046",
+          "PF92-E063",
+          "PF92-E064",
+          "PF92-E106"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-RET03",
+        "scenario": "容量不足",
+        "input": "合法buf,需求2,size2",
+        "source_operation": "vsnprintf条件写1字符及NUL；逻辑str可推进到end或其外",
+        "conditional_result": "vsnprintf返回需求2，vscnprintf返回1；不能据此认证buf比较和str-buf合法",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E048",
+          "PF92-E049",
+          "PF92-E063",
+          "PF92-E064",
+          "PF92-E106"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-RET04",
+        "scenario": "百分号宽度",
+        "input": "fmt='%%'有效目标",
+        "source_operation": "PERCENT_CHAR分支写单个%并增逻辑str",
+        "conditional_result": "此处没有调用number或对百分号做整数宽度补齐",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E031",
+          "PF92-E052"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-RET05",
+        "scenario": "num_to_str短接口",
+        "input": "num=12,width5,size5,目的5有效",
+        "source_operation": "tmp按十进制倒序，再写3空格和2字节数字，return5",
+        "conditional_result": "该函数局部没有尾写NUL；结果为5个字节'   12'而不是可自动视作C字符串",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E101",
+          "PF92-E102",
+          "PF92-E103",
+          "PF92-E104",
+          "PF92-E105"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-RET06",
+        "scenario": "num_to_str失容量",
+        "input": "num=12,size1,width5",
+        "source_operation": "len=2>size，立即return0",
+        "conditional_result": "不会正常写输出；不凭返回0推断别处清零",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E101",
+          "PF92-E103"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "C-RET07",
+        "scenario": "workqueue实际消费者",
+        "input": "有效worker/pool及size42",
+        "source_operation": "format_worker_id调用scnprintf，create_worker忽略其返回后把id_buf经%s传下层",
+        "conditional_result": "需结合R91的名字寿命和INT32模型；不能将忽略返回直接断言真实截断或调度异常",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E108",
+          "PF92-E109",
+          "PF92-E110"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC01",
+        "scenario": "两次解析器resume到数字",
+        "input": "fmt='%*.*d',width6,prec3,val42",
+        "source_operation": "WIDTH早退/再入→PRECISION早退/再入→FORMAT_TYPE_INT→number",
+        "conditional_result": "每个star都耗独立int，最终6列输出但中间有两次恢复",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E017",
+          "PF92-E019",
+          "PF92-E026",
+          "PF92-E028",
+          "PF92-E050",
+          "PF92-E051",
+          "PF92-E061",
+          "PF92-E062"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "ABC02",
+        "scenario": "参数类型到有符号幅度",
+        "input": "fmt='%lld',signed long long值在可恢复范围",
+        "source_operation": "qualifier L→va_arg(long long)→uint64 num→number检查SIGN并处理负值",
+        "conditional_result": "LLONG_MIN属于专门未证门；不能从int32负数例推广",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E030",
+          "PF92-E036",
+          "PF92-E055",
+          "PF92-E086"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "ABC03",
+        "scenario": "do_div到发射和NUL",
+        "input": "format='%u',num=100000000,width默认，目的11字节",
+        "source_operation": "put_dec分段→tmp倒序→number前补/逆序写→vsnprintf末尾NUL",
+        "conditional_result": "需求9、buf≥10含NUL时才有可见9位数字；实际中间u16存储另计",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E079",
+          "PF92-E081",
+          "PF92-E082",
+          "PF92-E091",
+          "PF92-E098",
+          "PF92-E063",
+          "PF92-E064"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      },
+      {
+        "id": "ABC04",
+        "scenario": "模型答案与运行门",
+        "input": "格式字面、整数、buffer都满足各自条件",
+        "source_operation": "纯数学模型只给期望字符，实际源码依对象、类型、指针、警告宏和callee",
+        "conditional_result": "不将模型、返回值、名字打印成功升级为编译器或内核实测证据",
+        "first_unproved_gate": "只在所列输入对象/数值可表示且下级调用正常返回时推导；运行NOT_RUN",
+        "evidence_ids": [
+          "PF92-E042",
+          "PF92-E046",
+          "PF92-E049",
+          "PF92-E063",
+          "PF92-E064",
+          "PF92-E109",
+          "PF92-E110"
+        ],
+        "execution": "STATIC_CONDITIONAL_NOT_RUN"
+      }
+    ]
+  },
+  "matrix_group_count": 8,
+  "matrix_row_count": 55,
+  "finite_models": [
+    {
+      "id": "PF92-M01",
+      "topic": "A",
+      "scenario": "解析普通格式",
+      "input": "fmt='A%%B'",
+      "intermediate_state": [
+        "字面A: NONE, read1",
+        "%%: PERCENT_CHAR, read2, 写%",
+        "字面B: NONE, read1"
+      ],
+      "conditional_result": "最终数学字符串A%B",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E020",
+        "PF92-E021",
+        "PF92-E047",
+        "PF92-E052"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M02",
+      "topic": "A",
+      "scenario": "先宽度再精度",
+      "input": "fmt='%*.*d', width6, precision3, value42",
+      "intermediate_state": [
+        "第一次WIDTH消耗int6",
+        "恢复去precision",
+        "第二次PRECISION消耗int3",
+        "恢复去qualifier，再读INT42"
+      ],
+      "conditional_result": "spec.flags=SIGN,width6,precision3,base10",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E017",
+        "PF92-E019",
+        "PF92-E026",
+        "PF92-E028",
+        "PF92-E050",
+        "PF92-E051",
+        "PF92-E061"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M03",
+      "topic": "A+C",
+      "scenario": "两次星号负值",
+      "input": "fmt='%*.*d', width=-6, precision=-2, value42",
+      "intermediate_state": [
+        "WIDTH字段-6,恢复取绝对值6并置LEFT",
+        "PRECISION字段-2,恢复置0",
+        "number把precision抬至digit2",
+        "先发42，再尾补4空格"
+      ],
+      "conditional_result": "42后面4空格（宽度6）",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E017",
+        "PF92-E019",
+        "PF92-E026",
+        "PF92-E028",
+        "PF92-E040",
+        "PF92-E041",
+        "PF92-E092",
+        "PF92-E099"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M04",
+      "topic": "A",
+      "scenario": "不足转换字母",
+      "input": "fmt='%q'",
+      "intermediate_state": [
+        "flags清零,precision默认",
+        "q无受支持case，INVALID",
+        "vsnprintf goto out"
+      ],
+      "conditional_result": "停在格式无效处，不擅取任何参数",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E035",
+        "PF92-E047",
+        "PF92-E053",
+        "PF92-E054"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M05",
+      "topic": "A",
+      "scenario": "字面数字过长",
+      "input": "fmt='%999999999999999999d'",
+      "intermediate_state": [
+        "skip_atoi逐字符i*10+digit",
+        "超出int表示域",
+        "停止正常整数推导"
+      ],
+      "conditional_result": "不能认定clamp或输出宽度完成",
+      "first_unproved_gate": "C signed overflow not modeled as arbitrary-precision continuation",
+      "evidence_ids": [
+        "PF92-E014",
+        "PF92-E015",
+        "PF92-E025"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M06",
+      "topic": "A+B",
+      "scenario": "小整型hhd",
+      "input": "fmt='%hhd', int参数-1, 32-bit int/8-bit char/twos-complement",
+      "intermediate_state": [
+        "FORMAT_TYPE_BYTE",
+        "va_arg(int)=-1",
+        "cast signed char=-1",
+        "num转换后number含SIGN"
+      ],
+      "conditional_result": "抽象输出-1（受有符号回转条件）",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E038",
+        "PF92-E059",
+        "PF92-E085",
+        "PF92-E086"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M07",
+      "topic": "A",
+      "scenario": "llu类型止证",
+      "input": "fmt='%llu', actual unsigned long long argument=2^64-1",
+      "intermediate_state": [
+        "qualifier LL -> FORMAT_TYPE_LONG_LONG",
+        "vsnprintf的va_arg却读取long long",
+        "实际参数类型与读取类型不一致，停止语义认证"
+      ],
+      "conditional_result": "不把数学上的18446744073709551615当此调用定义良好的必然输出",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E030",
+        "PF92-E036",
+        "PF92-E055"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M08",
+      "topic": "B",
+      "scenario": "小数字对9",
+      "input": "r=9, put_dec_trunc8, valid aligned writable 2B",
+      "intermediate_state": [
+        "goto out_r",
+        "写入decpair[9]的u16两字节90（ones位在前）",
+        "逻辑指针仅推进1"
+      ],
+      "conditional_result": "有效倒序字符'9'，实写两字节",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E065",
+        "PF92-E066",
+        "PF92-E069",
+        "PF92-E071",
+        "PF92-E075"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M09",
+      "topic": "B",
+      "scenario": "99双字节",
+      "input": "r=99,valid 2B",
+      "intermediate_state": [
+        "r<100 goto out_r",
+        "存pair[99]两个'9'",
+        "buf +=2"
+      ],
+      "conditional_result": "有效倒序'99'，实写两字节",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E071",
+        "PF92-E075"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M10",
+      "topic": "B",
+      "scenario": "100与倒序",
+      "input": "r=100,valid 4B temporary",
+      "intermediate_state": [
+        "q=floor(100/100)=1",
+        "decpair[0]物理'00'并游标+2",
+        "out_q后r1；写pair[1]物理'10'? little-endian pair[1]是'10' (ones first)",
+        "最终逻辑游标+1"
+      ],
+      "conditional_result": "有效倒序临时[0,0,1]，反转后'100'",
+      "first_unproved_gate": "pair[1] raw source byte order under little-endian model",
+      "evidence_ids": [
+        "PF92-E066",
+        "PF92-E072",
+        "PF92-E075"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M11",
+      "topic": "B",
+      "scenario": "近似商定点",
+      "input": "r=9999, fixed multiplication",
+      "intermediate_state": [
+        "q=(9999*0x147b)>>19=99",
+        "高商公式对r=99999999得999999",
+        "分别落在各自受限域"
+      ],
+      "conditional_result": "仅验证两个有限点，不证明所有可能值",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E072",
+        "PF92-E074"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M12",
+      "topic": "B",
+      "scenario": "完整8位分段",
+      "input": "n=100000000",
+      "intermediate_state": [
+        "do_div余数0，n被改为1",
+        "put_dec_full8写8个0",
+        "trunc8写1的pair但逻辑+1"
+      ],
+      "conditional_result": "倒序有效9字节,反转为100000000",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E078",
+        "PF92-E079",
+        "PF92-E081",
+        "PF92-E082"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M13",
+      "topic": "B",
+      "scenario": "16次幂二分段",
+      "input": "n=10000000000000000",
+      "intermediate_state": [
+        "第一次rem0，n变1e8",
+        "第二次rem0，n变1",
+        "写2个8位块+1位残值"
+      ],
+      "conditional_result": "17位，tmp[24]有限模型内满足临时写宽度",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E079",
+        "PF92-E080",
+        "PF92-E081",
+        "PF92-E082",
+        "PF92-E084"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M14",
+      "topic": "B",
+      "scenario": "最大unsigned long long分段",
+      "input": "n=18446744073709551615",
+      "intermediate_state": [
+        "第一余数9551615，商184467440737",
+        "第二余数67440737，商1844",
+        "两个满8位块+4位残值"
+      ],
+      "conditional_result": "20位输出数学期望；取出源步骤的移位/对象语义仍有门",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E076",
+        "PF92-E078",
+        "PF92-E079",
+        "PF92-E080",
+        "PF92-E082",
+        "PF92-E084"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M15",
+      "topic": "B",
+      "scenario": "LLONG_MIN负值止证",
+      "input": "fmt='%lld', arg=LLONG_MIN",
+      "intermediate_state": [
+        "长整型可读取得有符号值",
+        "再转num并按目标实现cast回signed long long",
+        "执行signed一元负号遇最低值不可表示"
+      ],
+      "conditional_result": "不推断定义良好的正幅度或最终数字",
+      "first_unproved_gate": "at signed unary minus stop",
+      "evidence_ids": [
+        "PF92-E055",
+        "PF92-E086"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M16",
+      "topic": "C",
+      "scenario": "十六进制前缀与零补",
+      "input": "fmt='%#08x', value=42, buffer valid",
+      "intermediate_state": [
+        "flag SPECIAL/SMALL/ZEROPAD; width8",
+        "prefix2,digits2,width remaining4",
+        "先发0x再补4个0再发2a"
+      ],
+      "conditional_result": "数学字符串0x00002a,需求8",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E007",
+        "PF92-E033",
+        "PF92-E088",
+        "PF92-E094",
+        "PF92-E095",
+        "PF92-E096",
+        "PF92-E098"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M17",
+      "topic": "C",
+      "scenario": "精度未清零补flag",
+      "input": "fmt='%08.3d', value=42, valid buffer",
+      "intermediate_state": [
+        "width8,precision3, ZERO保留",
+        "digits2, field_width减precision余5",
+        "先补5个0、精度再补1个0、最后42"
+      ],
+      "conditional_result": "00000042（本源码条件输出，不作标准对照）",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E005",
+        "PF92-E025",
+        "PF92-E027",
+        "PF92-E092",
+        "PF92-E096",
+        "PF92-E097",
+        "PF92-E098"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M18",
+      "topic": "C",
+      "scenario": "左对齐精度",
+      "input": "fmt='%-6.3d', value42",
+      "intermediate_state": [
+        "LEFT清ZEROPAD",
+        "precision3-digits2=1个零",
+        "写042，宽度剩3再尾随空格"
+      ],
+      "conditional_result": "042后面3空格",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E002",
+        "PF92-E085",
+        "PF92-E092",
+        "PF92-E097",
+        "PF92-E098",
+        "PF92-E099"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M19",
+      "topic": "C",
+      "scenario": "零值特殊前缀",
+      "input": "fmt='%#x',value0",
+      "intermediate_state": [
+        "hex SPECIAL保留前缀2",
+        "is_zero但hex仍写0x",
+        "num0生出单独0"
+      ],
+      "conditional_result": "0x0（当前源码局部）",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E007",
+        "PF92-E089",
+        "PF92-E094",
+        "PF92-E095",
+        "PF92-E098"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M20",
+      "topic": "C",
+      "scenario": "num_to_str接口无NUL",
+      "input": "num=12,size5,width5, 5 bytes valid",
+      "intermediate_state": [
+        "num_to_str tmp有效digits2",
+        "先写3 spaces",
+        "拷贝2个数字，返回5",
+        "本函数未追加NUL"
+      ],
+      "conditional_result": "实际五字节为'   12'，不能自动当成以NUL终止的字符串",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E101",
+        "PF92-E103",
+        "PF92-E104",
+        "PF92-E105"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M21",
+      "topic": "C",
+      "scenario": "容量为2截断",
+      "input": "fmt='%d',num42,size2,valid 2byte dest",
+      "intermediate_state": [
+        "逻辑需求2",
+        "物理先写'4'和部分数字受end门",
+        "结尾end[-1]='\\0'覆盖最后已写字节",
+        "vsnprintf返回2,vscnprintf返回1"
+      ],
+      "conditional_result": "最终'4\\0'；最终像不是全部访存轨迹",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E045",
+        "PF92-E046",
+        "PF92-E063",
+        "PF92-E064",
+        "PF92-E106"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    },
+    {
+      "id": "PF92-M22",
+      "topic": "C",
+      "scenario": "size超上限拒绝",
+      "input": "size > INT_MAX",
+      "intermediate_state": [
+        "WARN_ON_ONCE条件为真按所读宏返回条件",
+        "vsnprintf在out/写NUL之前return0",
+        "vscnprintf若跟随收到0不能推出有NUL"
+      ],
+      "conditional_result": "返回0但不保证空字符串",
+      "first_unproved_gate": "仅对有限类型/缓冲/转换和可读对象前提做文字演算；不执行仓库函数",
+      "evidence_ids": [
+        "PF92-E042",
+        "PF92-E045",
+        "PF92-E063",
+        "PF92-E106"
+      ],
+      "execution": "FINITE_PURE_MATH_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 22,
+  "historical_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U02",
+      "disposition": "EXTENDED_INTEGER_FORMAT_CONSUMER",
+      "scope": "this batch adds parser/number/put_dec; earlier unknown full integer helper no longer blanket for these selected definitions"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "disposition": "RETAINED",
+      "scope": "buffer pointers and logical str movement remain unproven even with arithmetic final string"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F01",
+      "disposition": "UNMODIFIED",
+      "scope": "kvasprintf two-pass mismatch distinct from integer number generator"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F02",
+      "disposition": "UNMODIFIED",
+      "scope": "first+1 unsigned count distinct from skip_atoi signed overflow"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F03",
+      "disposition": "UNMODIFIED",
+      "scope": "full_name readback state not returned, unrelated to vsnprintf integer math"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F04",
+      "disposition": "UNMODIFIED",
+      "scope": "task.comm truncation, no new root"
+    },
+    {
+      "qualified_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89::WQP89-F05",
+      "disposition": "UNCHANGED",
+      "scope": "kthread NULL provenance unrelated to integer rendering"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-F02",
+      "disposition": "UNCHANGED",
+      "scope": "business callback nonnull not in scope"
+    },
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::CO53-F01",
+      "disposition": "UNCHANGED",
+      "scope": "old completion lifetime, 53 closed documentation objection remains"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-01",
+      "disposition": "CLOSED_DO_NOT_REOPEN",
+      "scope": "no D00"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-02",
+      "disposition": "CLOSED_DO_NOT_REOPEN",
+      "scope": "no D00"
+    }
+  ],
+  "verification_limits": {
+    "source_anchor_label_count": 110,
+    "original_91_static_quotes": 81,
+    "full_local_P9": "NOT_RUN",
+    "git_branch_update": "PENDING_G04",
+    "script_program_repo_execution": "NOT_RUN",
+    "compile_QEMU_hardware_real_concurrency": "NOT_RUN",
+    "pro_independent_review": "PENDING",
+    "static_math": "finite numbers only, does not execute actual C logic"
+  },
+  "graph_alignment": {
+    "graph_file": "printf-integer-format-paths.dot",
+    "node_to_fact_rows": {
+      "fmt": [
+        "A-PS01",
+        "A-PS06"
+      ],
+      "spec": [
+        "A-PS03",
+        "A-WP01"
+      ],
+      "parse": [
+        "A-PS02",
+        "A-PS07"
+      ],
+      "width": [
+        "A-PS03",
+        "A-WP03"
+      ],
+      "wr": [
+        "A-PS05"
+      ],
+      "prec": [
+        "A-PS04"
+      ],
+      "pr": [
+        "A-PS05"
+      ],
+      "qual": [
+        "A-TY01",
+        "A-TY02"
+      ],
+      "arg": [
+        "A-TY06",
+        "A-TY07"
+      ],
+      "inval": [
+        "A-PS07"
+      ],
+      "warns": [
+        "A-WP01",
+        "A-WP05"
+      ],
+      "number": [
+        "B-SIGN01",
+        "C-PFX07"
+      ],
+      "sign": [
+        "B-SIGN02",
+        "B-SIGN03"
+      ],
+      "hex": [
+        "B-SIGN06"
+      ],
+      "dec": [
+        "B-DIG06"
+      ],
+      "table": [
+        "B-DIG01"
+      ],
+      "trunc": [
+        "B-DIG02",
+        "B-DIG03"
+      ],
+      "full": [
+        "B-DIG05"
+      ],
+      "div": [
+        "B-DIG06",
+        "B-DIG07"
+      ],
+      "tmp": [
+        "B-DIG09"
+      ],
+      "ext": [
+        "B-DIG08"
+      ],
+      "widthCalc": [
+        "C-PFX07"
+      ],
+      "leading": [
+        "C-PFX07"
+      ],
+      "signemit": [
+        "C-PFX04"
+      ],
+      "prefix": [
+        "C-PFX01",
+        "C-PFX03"
+      ],
+      "zeropad": [
+        "C-PFX05"
+      ],
+      "precision": [
+        "C-PFX06"
+      ],
+      "reverse": [
+        "C-PFX07"
+      ],
+      "trailing": [
+        "C-PFX06"
+      ],
+      "end": [
+        "C-RET02",
+        "C-RET03"
+      ],
+      "early": [
+        "C-RET01"
+      ],
+      "actual": [
+        "C-RET03"
+      ],
+      "vsc": [
+        "C-RET02"
+      ],
+      "sn": [
+        "C-RET02"
+      ],
+      "sc": [
+        "C-RET07"
+      ],
+      "worker": [
+        "C-RET07"
+      ],
+      "numstr": [
+        "C-RET05"
+      ],
+      "guard": [
+        "ABC04"
+      ]
+    },
+    "edge_kinds": {
+      "blue_solid": "active direct function call",
+      "black_solid": "data or macro dependency; not guaranteed callable action",
+      "dotted": "local source order, not cross-thread global atomic order",
+      "dashed": "conditional, comparison or review-only mapping; not a direct call edge"
+    },
+    "source_version": "time@a039d9803ade",
+    "verified_graph_node_count": 38,
+    "static_edge_count": 46,
+    "full_CFG_certified": false,
+    "Graphviz": "NOT_RUN"
+  }
+}
