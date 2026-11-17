@@ -1,0 +1,547 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOTINFO-TAG-BUILD-97",
+  "record_type": "batch97_source_candidates_gaps_and_R96_D00_append_correction",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "produced_by": "GPT-6（visible; backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-17",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "D00_R96_01_02": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "old96_MANIFEST_110_110_0": "UNCHANGED_HISTORICAL_NOT_ALL_P2_CLEARED",
+    "R96_01": {
+      "original": "FM96-E036",
+      "corrected_new_source_ids": [
+        "BT97-E001",
+        "BT97-E002"
+      ],
+      "struct_field": "BT97-E001",
+      "distinct_typedef": "BT97-E002",
+      "affected_consumers": [
+        "96 A-P06",
+        "FM96-M11",
+        "FM96-F04",
+        "96 producer type/source_quote_index",
+        "96 source_quote_recheck and summary assertion"
+      ],
+      "correction": "one-definition boundary now explicit; universal 110-definitions true assertion retracted without rewriting old"
+    },
+    "R96_02": {
+      "old_qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F05",
+      "repaired_distinct_root": "Kernel PixperScanline分母bpp/8在bpp=0..7的独立输入域，区别于旧CN95扫描行距/像素布局根因",
+      "repaired_evidence_ids": [
+        "FM96-E035",
+        "FM96-E041",
+        "FM96-E044"
+      ],
+      "new_corrob": [
+        "BT97-E003",
+        "BT97-E004",
+        "BT97-E005"
+      ],
+      "repaired_prior_related_qualified_ids": [
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05"
+      ],
+      "old_invalid_evidence_not_carried": "FM96-ECORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05",
+      "other96_candidates_preserved": [
+        "FM96-F01",
+        "FM96-F02",
+        "FM96-F03",
+        "FM96-F04"
+      ],
+      "other96_gaps_preserved": [
+        "FM96-U01",
+        "FM96-U02",
+        "FM96-U03",
+        "FM96-U04",
+        "FM96-U05",
+        "FM96-U06",
+        "FM96-U07",
+        "FM96-U08",
+        "FM96-U09"
+      ]
+    },
+    "R96_S01_S02_S03": "RETAIN_NOT_REDONE",
+    "R95_01_02": "CLOSED_BY_MAINLINE",
+    "batch95": "PASS_PENDING_LOCAL",
+    "R96_01_02_closed_by_executor": false
+  },
+  "new_candidates": [
+    {
+      "id": "BT97-F01",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F01",
+      "topic": "A / 共享arena容量",
+      "kind": "STATIC_CONDITIONAL_PRODUCER_OR_CONSUMER_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "生产者按游标签发不传递剩余空间或最大tag字节数",
+      "statement": "UefiMain分配并尝试清零名义32×4096字节，四个fill把size和cursor按各自记录数推进；未见针对同一arena剩余容量的逐次范围校验。",
+      "preconditions": "AllocatePages成功且实际页连续可写；每一个C结构和写操作满足对象边界",
+      "first_proof_gate": "真实分页分配和MMAP/CPU条目规模不明，不能签已经越界",
+      "evidence_ids": [
+        "BT97-E008",
+        "BT97-E009",
+        "BT97-E010",
+        "BT97-E012",
+        "BT97-E015",
+        "BT97-E043",
+        "BT97-E067"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-F02",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F02",
+      "topic": "A / tag.size与cursor前进",
+      "kind": "STATIC_CONDITIONAL_PRODUCER_OR_CONSUMER_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "loader端32位大小对齐运算与写入前进性",
+      "statement": "next_info_tag_addr对uint32 size做(size+7)&~7，没有本地size>=8/溢出/非零步长/32页范围断言；数学上size=0或近UINT32_MAX可得到不前进。",
+      "preconditions": "该size在本次实际生产中可产生、tag对象可读、C计算目标ABI符合定义",
+      "first_proof_gate": "不可从离散边界样本推出当前tag真实为无效大小；内核BM80-F01属另一端消费者",
+      "evidence_ids": [
+        "BT97-E015",
+        "BT97-E016",
+        "BT97-E017",
+        "BT97-E019",
+        "BT97-E083"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F01"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-F03",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F03",
+      "topic": "B / descriptor合并与排序",
+      "kind": "STATIC_CONDITIONAL_PRODUCER_OR_CONSUMER_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "loader先依据未排序输入相邻关系合并、再按地址排序且无二次合并",
+      "statement": "相同类型的物理相邻描述符若输入不相邻不会在第一轮并入；地址排序后仍保留多个项。",
+      "preconditions": "输入描述符合法且确实存在该类顺序和区间，写入和int计数未越界",
+      "first_proof_gate": "不宣称固件真的无序或造成下游故障；沿BM80-U07查实物理排序和重叠",
+      "evidence_ids": [
+        "BT97-E036",
+        "BT97-E038",
+        "BT97-E039",
+        "BT97-E040",
+        "BT97-E041",
+        "BT97-E042"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U07"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-F04",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F04",
+      "topic": "B / MMAP尾哨兵和schema字段",
+      "kind": "STATIC_CONDITIONAL_PRODUCER_OR_CONSUMER_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "生产者预留额外entry但未在fill_mmap_info显式初始化终止字段/entry_version",
+      "statement": "MMAP size含(e820_nr+1)项，实际新增记录只给addr/len/type，未明确写尾slot len/type为0或header entry_version；依赖先前共享区SetMem成功且未被覆盖。",
+      "preconditions": "有效初始清零、连续可写区域、ABI布局、没有前序别名覆盖",
+      "first_proof_gate": "核侧e820按len/type零结束和本地sizeof步长，保留BM80-F04/U05而非重复其根因",
+      "evidence_ids": [
+        "BT97-E010",
+        "BT97-E038",
+        "BT97-E039",
+        "BT97-E043",
+        "BT97-E044",
+        "BT97-E045",
+        "BT97-E046",
+        "BT97-E047",
+        "BT97-E048",
+        "BT97-E049",
+        "BT97-E050"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F04",
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U05"
+      ],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-F05",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F05",
+      "topic": "B / MemoryMap及EFI调用返回",
+      "kind": "STATIC_CONDITIONAL_PRODUCER_OR_CONSUMER_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "第一轮GetMemoryMap、AllocatePool、SetMem及ExitBootServices的返回状态未就地确认",
+      "statement": "fill_mmap_info仅对第二轮GetMemoryMap显式EFI_ERROR检查，其余关键EFI服务调用返回未作对应状态分支；DescriptorSize=0会在循环计算前触及除数零。",
+      "preconditions": "EFI确返回异常或零DescriptorSize、且先行对象读取合法",
+      "first_proof_gate": "实际EFI服务返回值和初次调用语义未观测；不能称已发生崩溃/运行失败",
+      "evidence_ids": [
+        "BT97-E023",
+        "BT97-E026",
+        "BT97-E027",
+        "BT97-E028",
+        "BT97-E043",
+        "BT97-E075"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-F06",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F06",
+      "topic": "C / ACPI_NEW生产者保证",
+      "kind": "STATIC_CONDITIONAL_PRODUCER_OR_CONSUMER_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "ACPI查找成功与ACPI_NEW标签无条件发布之间缺少状态门",
+      "statement": "即使未命中GUID+签名+revision，函数仍设置type ACPI_NEW和定长size；复制仅在命中分支。",
+      "preconditions": "配置表和所有此前指针有效、正常可达后部无条件赋值",
+      "first_proof_gate": "真实EFI GUID/CompareGuid返回和Root内容、核侧下游完整消费者未知",
+      "evidence_ids": [
+        "BT97-E056",
+        "BT97-E057",
+        "BT97-E058",
+        "BT97-E059",
+        "BT97-E060",
+        "BT97-E061",
+        "BT97-E062",
+        "BT97-E074"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-F07",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F07",
+      "topic": "C / CPU标签计数与伸缩数组",
+      "kind": "STATIC_CONDITIONAL_PRODUCER_OR_CONSUMER_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "CPU条目按nCores逐项写入，却不验证arena剩余容量、EFI服务返回或u32窄化",
+      "statement": "GetNumberOfProcessors和每项GetProcessorInfo返回未被检查；UINTN个数写u32 core_num及size，循环根据原nCores写cpus[i]。",
+      "preconditions": "MP Services有效、nCores/UINTN ABI真实且每个写入对象在32页区内",
+      "first_proof_gate": "不把超大nCores数学模型当真机值，不断言已有内存破坏",
+      "evidence_ids": [
+        "BT97-E063",
+        "BT97-E064",
+        "BT97-E065",
+        "BT97-E066",
+        "BT97-E067",
+        "BT97-E068",
+        "BT97-E069",
+        "BT97-E070",
+        "BT97-E071"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-F08",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F08",
+      "topic": "C / 服务阶段先后",
+      "kind": "STATIC_CONDITIONAL_PRODUCER_OR_CONSUMER_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "loader的ExitBootServices调用先于构造ACPI和CPU标签及后续gBS/Print",
+      "statement": "按固定源UefiMain顺序，fill_mmap_info内部调用ExitBootServices后返回，再在UefiMain调用ACPI/MP功能及后续Print/Close。",
+      "preconditions": "前序ExitBootServices是否成功、BootServices可用阶段由实际EFI规范和响应确认",
+      "first_proof_gate": "仅证明相位和潜在接口契约冲突，不称已发生EFI服务违约或故障",
+      "evidence_ids": [
+        "BT97-E012",
+        "BT97-E043",
+        "BT97-E056",
+        "BT97-E063",
+        "BT97-E064",
+        "BT97-E075",
+        "BT97-E076",
+        "BT97-E077"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "BT97-U01",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U01",
+      "topic": "A",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "AllocatePages/SetMem的实际返回，32页是否真被分配且完整连续可写，以及起点对齐与范围",
+      "first_proof_gate": "首个写入前必须确认服务状态/对象；32×4096是数学预算不是实测",
+      "evidence_ids": [
+        "BT97-E008",
+        "BT97-E009",
+        "BT97-E010",
+        "BT97-E011"
+      ],
+      "prior_related_qualified_ids": [],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-U02",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U02",
+      "topic": "A",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "四种tag的实际sizeof、ABI/对齐、可表示的u32 size与累积游标，不含内存覆盖",
+      "first_proof_gate": "任一转换/size+7溢出或cursor越过arena即停止；无法借独立typedef证明外部协议",
+      "evidence_ids": [
+        "BT97-E015",
+        "BT97-E017",
+        "BT97-E018",
+        "BT97-E019",
+        "BT97-E045",
+        "BT97-E046",
+        "BT97-E061",
+        "BT97-E062",
+        "BT97-E070",
+        "BT97-E071",
+        "BT97-E083"
+      ],
+      "prior_related_qualified_ids": [],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-U03",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U03",
+      "topic": "A/ABC",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "实际MBI完整总长度、END有效、kernel原始MBI地址/可读extent、BM80早期固定搬运链",
+      "first_proof_gate": "BM80-F01/F02/U02/U03先门；本批不转为旧137寄存器与BSS专题",
+      "evidence_ids": [
+        "BT97-E013",
+        "BT97-E016",
+        "BT97-E017",
+        "BT97-E079"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02",
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U03"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-U04",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U04",
+      "topic": "B",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "EFI_MEMORY_DESCRIPTOR真实DescriptorSize>0、MemMapSize、GetMemoryMap协议状态、MapKey及枚举Type/NumberOfPages有效值",
+      "first_proof_gate": "尚无真实EFI服务或协议核验；不把局部类型名当硬件可用证据",
+      "evidence_ids": [
+        "BT97-E023",
+        "BT97-E026",
+        "BT97-E027",
+        "BT97-E028",
+        "BT97-E029",
+        "BT97-E030",
+        "BT97-E031",
+        "BT97-E032",
+        "BT97-E033",
+        "BT97-E034"
+      ],
+      "prior_related_qualified_ids": [],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-U05",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U05",
+      "topic": "B",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "MMAP尾slot和entry_version的真实对象全零、有效跨度以及消费者本地stride/版本合同",
+      "first_proof_gate": "必须确认SetMem成功、未被覆盖、最后一个slot可读；旧BM80-F04/U05保持",
+      "evidence_ids": [
+        "BT97-E010",
+        "BT97-E039",
+        "BT97-E044",
+        "BT97-E045",
+        "BT97-E046",
+        "BT97-E049",
+        "BT97-E050"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U05"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-U06",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U06",
+      "topic": "B",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "排序/相邻类型/重叠在真实描述符输入的分布、输出记录数、e820_nr整数和128目标容量",
+      "first_proof_gate": "若129个有效源记录，沿旧BM80-F03最早目标数组门停止，不在本批重新编号",
+      "evidence_ids": [
+        "BT97-E036",
+        "BT97-E038",
+        "BT97-E039",
+        "BT97-E040",
+        "BT97-E041",
+        "BT97-E042",
+        "BT97-E050",
+        "BT97-E053",
+        "BT97-E054"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F03",
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U06",
+        "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U07"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-U07",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U07",
+      "topic": "C",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "外部ACPI配置表、CompareGuid==0的实际语义、Root签名与Revision、RSDP对象有效长度及消费者完整用法",
+      "first_proof_gate": "无实际EFI/ACPI标准证据或运行；只能确认固定源码条件和拷贝语句",
+      "evidence_ids": [
+        "BT97-E056",
+        "BT97-E057",
+        "BT97-E058",
+        "BT97-E059",
+        "BT97-E060",
+        "BT97-E061",
+        "BT97-E074"
+      ],
+      "prior_related_qualified_ids": [],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-U08",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U08",
+      "topic": "C",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "EFI MP Services服务指针/返回、nCores和nRunning真实个数、每条ProcessorInfo初始化与16/24字节布局假设",
+      "first_proof_gate": "本批不运行UEFI、不审所有SMP生命周期；实数及ABI模型均待证",
+      "evidence_ids": [
+        "BT97-E063",
+        "BT97-E064",
+        "BT97-E065",
+        "BT97-E066",
+        "BT97-E067",
+        "BT97-E068",
+        "BT97-E069",
+        "BT97-E070",
+        "BT97-E071",
+        "BT97-E072",
+        "BT97-E073"
+      ],
+      "prior_related_qualified_ids": [],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "BT97-U09",
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09",
+      "topic": "C/ABC",
+      "kind": "STATIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "ExitBootServices的返回/服务期限和后续gBS调用合法性，实际loader交给kernel的tag字节、CPU拓扑消费者延伸",
+      "first_proof_gate": "只能证明源代码相位；不宣称已真正退出服务或正常进入kernel",
+      "evidence_ids": [
+        "BT97-E012",
+        "BT97-E075",
+        "BT97-E076",
+        "BT97-E077",
+        "BT97-E078",
+        "BT97-E079"
+      ],
+      "prior_related_qualified_ids": [],
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F01",
+      "disposition": "retain kernel tag unbounded scan"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F02",
+      "disposition": "retain MBI copy and ram_map provenance"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F03",
+      "disposition": "retain e820 fixed 128 target"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F04",
+      "disposition": "retain entry_size and sentinel consumer mismatch"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02",
+      "disposition": "actual boot MBI bytes and extent unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U03",
+      "disposition": "actual END/total size unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U05",
+      "disposition": "entry stride and zero sentinel unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U06",
+      "disposition": "record input count bound unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U07",
+      "disposition": "actual order, overlap and types unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F04",
+      "disposition": "retain old pixel format semantic candidate; correct E036 boundary"
+    },
+    {
+      "qualified_id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F05",
+      "disposition": "retain original bpp 0..7 consumer condition; correct fields only"
+    },
+    {
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05",
+      "disposition": "prior only for F05; never concatenate into evidence"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 8,
+    "new_gaps": 9,
+    "verified_actual_runtime_bugs": 0,
+    "confirmed_code_fixes": 0,
+    "patches_created": 0,
+    "source_modified": 0,
+    "owner_manual_technical_operations": 0
+  },
+  "limitations": [
+    "只读固定time静态程序文本；没有UEFI服务状态、返回值、ABI/sizeof运行认证",
+    "没运行编译器/预处理/链接器/仓库任何代码、脚本、Graphviz、QEMU或实机",
+    "R96只是提交补正，96正式RETURN只有原C06可判闭合",
+    "旧137合同寄存器传输与BSS本轮禁止；BM80主体不可重做"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "owner_decisions_requested_now": []
+}
