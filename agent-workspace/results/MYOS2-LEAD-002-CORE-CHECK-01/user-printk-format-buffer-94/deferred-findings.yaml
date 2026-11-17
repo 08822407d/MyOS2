@@ -1,0 +1,405 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94",
+  "record_type": "incremental_bounded_static_candidates_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "GPT-6 (visible consumer family; backend UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-16",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_PENDING_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "D00": "NOT_REQUIRED",
+  "new_candidates": [
+    {
+      "id": "PK94-F01",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F01",
+      "topic": "前缀多数字形状筛查与零位接受",
+      "kind": "STATIC_CONDITIONAL_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "statement": "log_prefix的if(p[1]<'0' && p[1]>'9')不可能成立；有效线性输入'<>A'进入多数字分支，simple_strtoul取零位却让endp停在'>'，因此通过闭合检查并设level0/返回plen2，误把空数位视为数字前缀。",
+      "preconditions": [
+        "输入指向至少4字节有效对象",
+        "字符串内容为<>A后接NUL",
+        "实际使用固定base10简单整数解析"
+      ],
+      "evidence_ids": [
+        "PK94-E050",
+        "PK94-E051",
+        "PK94-E053",
+        "PK94-E054",
+        "PK94-E058",
+        "PK94-E059",
+        "PK94-E060",
+        "PK94-E063",
+        "PK94-E065",
+        "PK94-E066",
+        "PK94-E068"
+      ],
+      "distinct_root": "区别于93的%p返回问题，此处是log_prefix在正常文本上做输入分类与out参数更新",
+      "first_proof_gate": "需有相应接口约定与真实格式生产者才能裁定对调用者的实际影响",
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-F02",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F02",
+      "topic": "已识别原标签的返回计数再次计入",
+      "kind": "STATIC_CONDITIONAL_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "statement": "vprintk的vscnprintf返回字符数已包含原'<3>'，随后扫描每一行时又把同一plen计入printed_len；在'<3>A\\n'且tlen15条件模型中，环写20而printk返回23。",
+      "preconditions": [
+        "原字符串确实被完整格式化",
+        "日志行首状态1",
+        "相关timestamp的C前提成立"
+      ],
+      "evidence_ids": [
+        "PK94-E017",
+        "PK94-E018",
+        "PK94-E022",
+        "PK94-E023",
+        "PK94-E025",
+        "PK94-E026",
+        "PK94-E027",
+        "PK94-E031",
+        "PK94-E050",
+        "PK94-E051",
+        "PK94-E057"
+      ],
+      "distinct_root": "新增日志返回计数域不变量，不是KN91读回截断返回值或92整数位数的问题",
+      "first_proof_gate": "缺少printk返回值合同/调用者消费需求，不能直接判为已运行API缺陷",
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-F03",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F03",
+      "topic": "格式串内嵌NUL与后续正文分流",
+      "kind": "STATIC_CONDITIONAL_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "statement": "vscnprintf可在%c实参0时保存内嵌NUL及其后面的格式输出并返回总字符数；vprintk却以for(;*p;p++)止于首NUL，丢弃其后的B及LF，因而数学返回计数、环写字节、控制台回调区分。",
+      "preconditions": [
+        "普通受支持%c格式",
+        "int0,合法临时对象,无先行未证格式分支",
+        "新行且timestamp有定义的额外前提"
+      ],
+      "evidence_ids": [
+        "PK94-E017",
+        "PK94-E021",
+        "PK94-E024",
+        "PK94-E027",
+        "PK94-E029",
+        "PK94-E031",
+        "PK94-E098",
+        "PK94-E100"
+      ],
+      "distinct_root": "实际日志扫描语义而非SP93字符单元输出本身；保留SP93内嵌NUL的旧证据身份",
+      "first_proof_gate": "未认证接口是否承诺保留内嵌NUL后的字节或屏幕输出合同",
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-F04",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F04",
+      "topic": "无换行尾段没有控制台回调但游标先推进",
+      "kind": "STATIC_CONDITIONAL_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "statement": "console_unlock先把con_start推进到log_end，call_console_drivers只有在遇到LF时才调用_call_console_drivers，尾段flush为注释；若唯一消息为'X'且立即进入console_unlock，当前回调0次且旧X不在下次待送范围。",
+      "preconditions": [
+        "存在有效console及write",
+        "进入console_unlock且其它队列状态不干扰",
+        "待移交区间没有LF"
+      ],
+      "evidence_ids": [
+        "PK94-E021",
+        "PK94-E030",
+        "PK94-E076",
+        "PK94-E077",
+        "PK94-E078",
+        "PK94-E079",
+        "PK94-E081",
+        "PK94-E082",
+        "PK94-E084",
+        "PK94-E086",
+        "PK94-E087",
+        "PK94-E088"
+      ],
+      "distinct_root": "独立的控制台完成行/游标生命周期问题，不是某一个读指针的合法性问题",
+      "first_proof_gate": "其他syslog或注册路径未全审；不宣称用户永远无法在任何出口看到X",
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-F05",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F05",
+      "topic": "等mask整圈不拆导致物理回调区间过长",
+      "kind": "STATIC_CONDITIONAL_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "statement": "_call_console_drivers只比较掩码端点是否start_mask>end_mask。若N=8、逻辑start3/end11完整一圈，两端mask同3，走else并向con->write交&buf[3],count8，但从物理index3到数组尾只剩5字节。",
+      "preconditions": [
+        "示例是明确标注N8的教学环条件；真实环为2^23",
+        "需要一个连续未分隔的LF结尾区间及有效回调",
+        "真实C对象存在并允许读范围的门未通过"
+      ],
+      "evidence_ids": [
+        "PK94-E039",
+        "PK94-E040",
+        "PK94-E048",
+        "PK94-E049",
+        "PK94-E089",
+        "PK94-E090",
+        "PK94-E091",
+        "PK94-E092",
+        "PK94-E093"
+      ],
+      "distinct_root": "与prefix的线性读不同：此处是传递给con->write的范围切分判据",
+      "first_proof_gate": "未经真实大容量形成该状态的运行/注册证明，不能说已经发生越界",
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-F06",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F06",
+      "topic": "跨环读取prefix以线性字符串指针解释",
+      "kind": "STATIC_CONDITIONAL_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "statement": "call_console_drivers按掩码获取&LOG_BUF(cur_index)，但把此指针直接交log_prefix，并用p[1]/p[2]访问；若N=8、起点物理7、逻辑字节跨尾为'<3>\\n'，逻辑长度4却只有1字节物理连续空间，首先读取p[1]即越过该物理数组对象。",
+      "preconditions": [
+        "msg_level<0",
+        "end-cur_index>2",
+        "逻辑环内prefix确实从尾槽开始",
+        "真实物理数组不是双映射连续区"
+      ],
+      "evidence_ids": [
+        "PK94-E049",
+        "PK94-E050",
+        "PK94-E051",
+        "PK94-E084",
+        "PK94-E085"
+      ],
+      "distinct_root": "不同于PK94-F05的回调移交区间：此处是调用log_prefix之前的连续源内存输入前提",
+      "first_proof_gate": "需有真实可达环状态与具体内存对象/布局才可升级运行结论",
+      "actual_runtime_confirmed": false,
+      "patch_authorized": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "PK94-U01",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U01",
+      "topic": "旧%p返回契约门",
+      "missing_evidence": "从pr_err_once已能源级追到vscnprintf/vsnprintf，但含%pe到pointer后没有可认证活动返回；真实控制台输出未知",
+      "first_proof_gate": "必须沿CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01停止，不能自称已修复",
+      "evidence_ids": [
+        "PK94-E004",
+        "PK94-E009",
+        "PK94-E011",
+        "PK94-E017",
+        "PK94-E098"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-U02",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U02",
+      "topic": "数学时间戳与实际50字节对象",
+      "missing_evidence": "tbuf固定50，sprintf调用vsnprintf(buf,INT_MAX)而非传50；没有预处理/ABI/C指针合法性认证",
+      "first_proof_gate": "本批所有tlen15/21及后续环回调都仅有额外前提的数学模型",
+      "evidence_ids": [
+        "PK94-E025",
+        "PK94-E026",
+        "PK94-E027",
+        "PK94-E096",
+        "PK94-E097",
+        "PK94-E101"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-U03",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U03",
+      "topic": "console注册器与可选write",
+      "missing_evidence": "console_s::write是函数指针，活动__call调用前原非NULL/flag过滤注释；未审真实注册函数是否能产生NULL write或其状态变化",
+      "first_proof_gate": "假设write有效才可审回调长度；不宣布已发生NULL调用",
+      "evidence_ids": [
+        "PK94-E073",
+        "PK94-E076",
+        "PK94-E092",
+        "PK94-E093",
+        "PK94-E094",
+        "PK94-E095"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-U04",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U04",
+      "topic": "日志共享缓冲/once/console锁并发",
+      "missing_evidence": "printk_buf与日志全局游标是共享状态；实际vprintk锁和console_trylock/semaphore操作有注释；没有真实多核执行或全部锁层证明",
+      "first_proof_gate": "不能从名字和注释推定锁已持有/once原子，也不能断言已发生竞态",
+      "evidence_ids": [
+        "PK94-E005",
+        "PK94-E006",
+        "PK94-E015",
+        "PK94-E035",
+        "PK94-E045",
+        "PK94-E046",
+        "PK94-E074",
+        "PK94-E077",
+        "PK94-E078",
+        "PK94-E080",
+        "PK94-E082"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-U05",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U05",
+      "topic": "环形日志的真实可达状态",
+      "missing_evidence": "N8仅为假设而非当前CONFIG_LOG_BUF_SHIFT23；特定起止mask及无LF残留需有真实调用序列才可证实",
+      "first_proof_gate": "区分纯数学区间失配和当前实际8MiB运行故障",
+      "evidence_ids": [
+        "PK94-E039",
+        "PK94-E040",
+        "PK94-E041",
+        "PK94-E043",
+        "PK94-E045",
+        "PK94-E046",
+        "PK94-E048",
+        "PK94-E049",
+        "PK94-E070",
+        "PK94-E071",
+        "PK94-E089",
+        "PK94-E091"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-U06",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U06",
+      "topic": "log_prefix的无界/异常整数及连续源对象",
+      "missing_evidence": "simple_strntoull与_parse_integer_limit存在溢出、最大读取范围和endp前提；log_prefix在环地址附近可能没有物理连续可读字节",
+      "first_proof_gate": "解析器首次实际对象越界/算术或无正确endp处止证",
+      "evidence_ids": [
+        "PK94-E050",
+        "PK94-E053",
+        "PK94-E054",
+        "PK94-E058",
+        "PK94-E059",
+        "PK94-E060",
+        "PK94-E065",
+        "PK94-E066",
+        "PK94-E067",
+        "PK94-E068",
+        "PK94-E069",
+        "PK94-E085"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-U07",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U07",
+      "topic": "实际控制台回调及屏幕显示",
+      "missing_evidence": "__call_console_drivers可把指针和count交con->write，但未审各驱动实现、缓冲可读性、真实设备或注册时序",
+      "first_proof_gate": "只认证回调前源级参数，不将已调用等同设备显示成功",
+      "evidence_ids": [
+        "PK94-E073",
+        "PK94-E084",
+        "PK94-E087",
+        "PK94-E089",
+        "PK94-E090",
+        "PK94-E091",
+        "PK94-E092",
+        "PK94-E093",
+        "PK94-E094",
+        "PK94-E095"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "PK94-U08",
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U08",
+      "topic": "五个长度计量与消费者约定",
+      "missing_evidence": "vscnprintf保留长度、for首NUL实际扫长、emit次数、console移交数和printk返回不同；未读取所有日志消费者是否要求一致",
+      "first_proof_gate": "不能仅以不相等裁定全部返回API错误；保留明确输入的条件不变量",
+      "evidence_ids": [
+        "PK94-E012",
+        "PK94-E017",
+        "PK94-E021",
+        "PK94-E022",
+        "PK94-E023",
+        "PK94-E027",
+        "PK94-E029",
+        "PK94-E031",
+        "PK94-E070",
+        "PK94-E087",
+        "PK94-E093"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01",
+      "disposition": "RETAIN_AS_FIRST_STOP",
+      "note": "%pe经新日志链到vsnprintf PTR仍不能正常返回，本批没有修复/关闭"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U07",
+      "disposition": "SOURCE_CALL_CHAIN_PARTIALLY_FILLED",
+      "note": "已核pr_err_once→printk→vprintk→vscnprintf，但日志正常完成仍受旧F01"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "disposition": "RETAINED",
+      "note": "C指针范围与逻辑游标约束，日志tbuf/sprintf继续有同类证明门"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U06",
+      "disposition": "ALIAS_OF_KN91_U01_RETAINED",
+      "note": "数学字符串不能证明真实C指针合法；不另登记同根因"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-U05",
+      "disposition": "RETAINED",
+      "note": "C指针对象边界，独立于日志环分段不变量"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F02",
+      "disposition": "NEEDS_EVIDENCE_INPUT_PRECONDITION",
+      "note": "无任意非法指针容错合同；不当运行bug"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U03",
+      "disposition": "MATH_NARROWED_BY_C06",
+      "note": "已收窄的除100算法证明不证明本批time/callback物理访问"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-01/R90-02",
+      "disposition": "CLOSED",
+      "note": "本94没有D00、不重开"
+    },
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::CO53-F01",
+      "disposition": "HISTORIC_SOURCE_NOT_CLOSED",
+      "note": "旧53两处空行误判已撤回，不把文档关闭当源码候选关闭"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 6,
+    "new_gaps": 8,
+    "confirmed_runtime_bugs": 0,
+    "old_qualified_roots_reissued": 0,
+    "kernel_changes": 0,
+    "owner_manual_actions_now": 0
+  },
+  "boundaries": [
+    "No complete printk or console driver audit",
+    "No C ABI/preprocessor/build/QEMU/hardware/true concurrency",
+    "No independently signed 94 acceptance",
+    "Only six new report files and one formal PR17 top-level comment"
+  ]
+}
