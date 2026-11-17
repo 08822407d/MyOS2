@@ -1,0 +1,2893 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FRAMEBUFFER-MAPPING-96",
+  "record_type": "batch96_immutable_fixed_time_D00_and_framebuffer_mapping_condition_tables",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-13",
+  "produced_by": "GPT-6（current chat family; backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-17",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "prior_batch95": "RETURN_R95_01_R95_02_CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+  "runtime_evidence": "NOT_RUN",
+  "D00": "REQUIRED_APPEND_ONLY_DONE_PENDING_C06",
+  "pins_short12": {
+    "lead": "fda0f3d1cb60",
+    "exec_parent": "be83c6095eb1",
+    "source": "a039d9803ade",
+    "master": "e8e60cd19540",
+    "history80": "0e9e9e89c4be",
+    "history81": "05fe580c12a3",
+    "history82": "3f41eb242040",
+    "history83": "18047d54b0a2"
+  },
+  "read_account": {
+    "fresh_this_turn": [
+      "contract135_full",
+      "Owner_110_124_full",
+      "95_review_R95_01_02_S01_S02_S03",
+      "95_checkpoint",
+      "PR17_95_author_6937736735",
+      "PR17_96_release_6938385614",
+      "63_79_and_protocol_v2_P1_P13_full",
+      "80_81_82_83_formal_mainline_reviews_full",
+      "80_81_82_83_MANIFEST_deferred_full",
+      "80_81_82_83_facts_target_scoped",
+      "95_C06d_own_original6_for_D00_scoped_again",
+      "time_and_master_options_flags_panic_full",
+      "fixed_time_22_source_quote_files_110_quote_second_read"
+    ],
+    "same_effective_EXEC13_reuse": [
+      "nine_MyOS2_project_constraints_first_independent_full_read_during_batch95",
+      "134_Mnemosyne_receive_record_and_task_local_guidance_loaded_by_this_same_13_during_batch95",
+      "94_six_R94_S01_S03_and_91_92_93_original_reviews_from_same_EXEC13_batch95"
+    ],
+    "not_read_or_not_run": [
+      "entire_EFI_sdk_external_headers_and_actual_UEFI_services",
+      "all_GPU_drivers_graphics_modes_and_real_display",
+      "full_page_table_tree_as_runtime_artifact_and_actual_active_CR3",
+      "actual_cpp_preprocess_compiler_linker_scripts_Graphviz_QEMU_hardware_or_real_concurrency"
+    ]
+  },
+  "source_files_with_new_anchors": [
+    "mykernel/printk/printk.c",
+    "mykernel/include/linux/device/console.h",
+    "mykernel/lib/list/double_list_macro.h",
+    "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+    "mykernel/klib/font.c",
+    "myloader/uefi/bootloader.c",
+    "myloader/uefi/multiboot2.h",
+    "mykernel/include/obsolete/ktypes.h",
+    "mykernel/arch/x86_64/myos/pre_init.c",
+    "mykernel/drivers/char/tty_io.c",
+    "mykernel/arch/x86_64/mm/init.c",
+    "mykernel/arch/x86_64/kernel/setup.c",
+    "mykernel/init/main.c",
+    "mykernel/mm/highmem/highmem_macro.h",
+    "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+    "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+    "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+    "mykernel/arch/x86_64/mm/mmu/mmu_arch.c",
+    "mykernel/arch/x86_64/insns/io_arch.h",
+    "mykernel/arch/x86_64/kernel/hpet.c",
+    "mykernel/arch/x86_64/insns/special_insns_arch.h",
+    "mykernel/mm/fault/pgtable.h"
+  ],
+  "source_files_with_anchors": 22,
+  "read_extra_direct_helpers": [
+    "mykernel/include/klib/font.h",
+    "mykernel/mm/misc/mm_misc_api.h",
+    "mykernel/include/linux/kernel/types.h",
+    "mykernel/arch/x86_64/mm/pgtable/pgtable_types_arch.h",
+    "mykernel/arch/x86_64/mm/mm_const_arch.h"
+  ],
+  "source_count_main_plus_aux": 27,
+  "source_soft_limit": 24,
+  "source_soft_limit_note": "额外3件均为D00声明身份和新B/C直接类型/返回助手定位；未漫游其它页表或设备。实际新锚仅22份源码，另5份作为直接辅助。time/master两金丝雀文件另计。",
+  "source_quote_index": [
+    {
+      "id": "FM96-E001",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "register_console",
+      "line_start": 607,
+      "line_end": 610
+    },
+    {
+      "id": "FM96-E002",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "register_console",
+      "line_start": 718,
+      "line_end": 721
+    },
+    {
+      "id": "FM96-E003",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "register_console",
+      "line_start": 705,
+      "line_end": 709
+    },
+    {
+      "id": "FM96-E004",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_unlock",
+      "line_start": 554,
+      "line_end": 557
+    },
+    {
+      "id": "FM96-E005",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_unlock",
+      "line_start": 558,
+      "line_end": 560
+    },
+    {
+      "id": "FM96-E006",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_unlock",
+      "line_start": 561,
+      "line_end": 563
+    },
+    {
+      "id": "FM96-E007",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "__call_console_drivers",
+      "line_start": 125,
+      "line_end": 128
+    },
+    {
+      "id": "FM96-E008",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "__call_console_drivers",
+      "line_start": 129,
+      "line_end": 132
+    },
+    {
+      "id": "FM96-E009",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "call_console_drivers",
+      "line_start": 243,
+      "line_end": 245
+    },
+    {
+      "id": "FM96-E010",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "call_console_drivers",
+      "line_start": 252,
+      "line_end": 256
+    },
+    {
+      "id": "FM96-E011",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "console_init",
+      "line_start": 794,
+      "line_end": 796
+    },
+    {
+      "id": "FM96-E012",
+      "source_path": "mykernel/printk/printk.c",
+      "definition": "myos_tempcon",
+      "line_start": 835,
+      "line_end": 839
+    },
+    {
+      "id": "FM96-E013",
+      "source_path": "mykernel/include/linux/device/console.h",
+      "definition": "for_each_console",
+      "line_start": 337,
+      "line_end": 340
+    },
+    {
+      "id": "FM96-E014",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "definition": "list_header_for_each_container",
+      "line_start": 346,
+      "line_end": 347
+    },
+    {
+      "id": "FM96-E015",
+      "source_path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "definition": "PAGE_SHIFT",
+      "line_start": 9,
+      "line_end": 9
+    },
+    {
+      "id": "FM96-E016",
+      "source_path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "definition": "PAGE_SIZE",
+      "line_start": 10,
+      "line_end": 10
+    },
+    {
+      "id": "FM96-E017",
+      "source_path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "definition": "PAGE_MASK",
+      "line_start": 11,
+      "line_end": 11
+    },
+    {
+      "id": "FM96-E018",
+      "source_path": "mykernel/klib/font.c",
+      "definition": "font_ascii",
+      "line_start": 3,
+      "line_end": 6
+    },
+    {
+      "id": "FM96-E019",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 38,
+      "line_end": 39
+    },
+    {
+      "id": "FM96-E020",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 45,
+      "line_end": 48
+    },
+    {
+      "id": "FM96-E021",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "UefiMain",
+      "line_start": 51,
+      "line_end": 53
+    },
+    {
+      "id": "FM96-E022",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "set_video_mode",
+      "line_start": 106,
+      "line_end": 109
+    },
+    {
+      "id": "FM96-E023",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "set_video_mode",
+      "line_start": 111,
+      "line_end": 115
+    },
+    {
+      "id": "FM96-E024",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "set_video_mode",
+      "line_start": 123,
+      "line_end": 125
+    },
+    {
+      "id": "FM96-E025",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_framebuffer_info",
+      "line_start": 139,
+      "line_end": 143
+    },
+    {
+      "id": "FM96-E026",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_framebuffer_info",
+      "line_start": 146,
+      "line_end": 147
+    },
+    {
+      "id": "FM96-E027",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_framebuffer_info",
+      "line_start": 149,
+      "line_end": 151
+    },
+    {
+      "id": "FM96-E028",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_framebuffer_info",
+      "line_start": 152,
+      "line_end": 155
+    },
+    {
+      "id": "FM96-E029",
+      "source_path": "myloader/uefi/bootloader.c",
+      "definition": "fill_framebuffer_info",
+      "line_start": 160,
+      "line_end": 162
+    },
+    {
+      "id": "FM96-E030",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_uint8_t",
+      "line_start": 97,
+      "line_end": 97
+    },
+    {
+      "id": "FM96-E031",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_uint32_t",
+      "line_start": 99,
+      "line_end": 99
+    },
+    {
+      "id": "FM96-E032",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_uint64_t",
+      "line_start": 100,
+      "line_end": 100
+    },
+    {
+      "id": "FM96-E033",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer_common",
+      "line_start": 306,
+      "line_end": 309
+    },
+    {
+      "id": "FM96-E034",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer_common",
+      "line_start": 311,
+      "line_end": 315
+    },
+    {
+      "id": "FM96-E035",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer_common",
+      "line_start": 316,
+      "line_end": 316
+    },
+    {
+      "id": "FM96-E036",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer_common",
+      "line_start": 320,
+      "line_end": 323
+    },
+    {
+      "id": "FM96-E037",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer",
+      "line_start": 325,
+      "line_end": 327
+    },
+    {
+      "id": "FM96-E038",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer",
+      "line_start": 338,
+      "line_end": 341
+    },
+    {
+      "id": "FM96-E039",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "definition": "multiboot_tag_framebuffer",
+      "line_start": 342,
+      "line_end": 346
+    },
+    {
+      "id": "FM96-E040",
+      "source_path": "mykernel/include/obsolete/ktypes.h",
+      "definition": "framebuffer_s",
+      "line_start": 22,
+      "line_end": 26
+    },
+    {
+      "id": "FM96-E041",
+      "source_path": "mykernel/include/obsolete/ktypes.h",
+      "definition": "framebuffer_s",
+      "line_start": 28,
+      "line_end": 31
+    },
+    {
+      "id": "FM96-E042",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "framebuffer",
+      "line_start": 18,
+      "line_end": 18
+    },
+    {
+      "id": "FM96-E043",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "get_framebuffer_info",
+      "line_start": 29,
+      "line_end": 33
+    },
+    {
+      "id": "FM96-E044",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "get_framebuffer_info",
+      "line_start": 34,
+      "line_end": 37
+    },
+    {
+      "id": "FM96-E045",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "myos_early_init_system",
+      "line_start": 47,
+      "line_end": 47
+    },
+    {
+      "id": "FM96-E046",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "definition": "parse_tag",
+      "line_start": 96,
+      "line_end": 99
+    },
+    {
+      "id": "FM96-E047",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_video",
+      "line_start": 195,
+      "line_end": 198
+    },
+    {
+      "id": "FM96-E048",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_video",
+      "line_start": 208,
+      "line_end": 212
+    },
+    {
+      "id": "FM96-E049",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_VBE_mapping",
+      "line_start": 221,
+      "line_end": 225
+    },
+    {
+      "id": "FM96-E050",
+      "source_path": "mykernel/drivers/char/tty_io.c",
+      "definition": "myos_init_VBE_mapping",
+      "line_start": 225,
+      "line_end": 227
+    },
+    {
+      "id": "FM96-E051",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "myos_memory_map",
+      "line_start": 250,
+      "line_end": 252
+    },
+    {
+      "id": "FM96-E052",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "init_mem_mapping",
+      "line_start": 487,
+      "line_end": 491
+    },
+    {
+      "id": "FM96-E053",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "init_mem_mapping",
+      "line_start": 517,
+      "line_end": 520
+    },
+    {
+      "id": "FM96-E054",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "init_mem_mapping",
+      "line_start": 522,
+      "line_end": 522
+    },
+    {
+      "id": "FM96-E055",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "init_mem_mapping",
+      "line_start": 529,
+      "line_end": 530
+    },
+    {
+      "id": "FM96-E056",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pte_init",
+      "line_start": 623,
+      "line_end": 627
+    },
+    {
+      "id": "FM96-E057",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pte_init",
+      "line_start": 631,
+      "line_end": 635
+    },
+    {
+      "id": "FM96-E058",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pte_init",
+      "line_start": 645,
+      "line_end": 649
+    },
+    {
+      "id": "FM96-E059",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pte_init",
+      "line_start": 654,
+      "line_end": 658
+    },
+    {
+      "id": "FM96-E060",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pmd_init",
+      "line_start": 685,
+      "line_end": 689
+    },
+    {
+      "id": "FM96-E061",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pmd_init",
+      "line_start": 707,
+      "line_end": 711
+    },
+    {
+      "id": "FM96-E062",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pmd_init",
+      "line_start": 713,
+      "line_end": 717
+    },
+    {
+      "id": "FM96-E063",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pmd_init",
+      "line_start": 727,
+      "line_end": 731
+    },
+    {
+      "id": "FM96-E064",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pud_init",
+      "line_start": 767,
+      "line_end": 771
+    },
+    {
+      "id": "FM96-E065",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pud_init",
+      "line_start": 786,
+      "line_end": 790
+    },
+    {
+      "id": "FM96-E066",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pud_init",
+      "line_start": 795,
+      "line_end": 799
+    },
+    {
+      "id": "FM96-E067",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_pud_init",
+      "line_start": 806,
+      "line_end": 810
+    },
+    {
+      "id": "FM96-E068",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "phys_p4d_init",
+      "line_start": 818,
+      "line_end": 821
+    },
+    {
+      "id": "FM96-E069",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__kernel_physical_mapping_init",
+      "line_start": 823,
+      "line_end": 826
+    },
+    {
+      "id": "FM96-E070",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__kernel_physical_mapping_init",
+      "line_start": 831,
+      "line_end": 834
+    },
+    {
+      "id": "FM96-E071",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__kernel_physical_mapping_init",
+      "line_start": 836,
+      "line_end": 840
+    },
+    {
+      "id": "FM96-E072",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__kernel_physical_mapping_init",
+      "line_start": 842,
+      "line_end": 846
+    },
+    {
+      "id": "FM96-E073",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__kernel_physical_mapping_init",
+      "line_start": 850,
+      "line_end": 853
+    },
+    {
+      "id": "FM96-E074",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__kernel_physical_mapping_init",
+      "line_start": 854,
+      "line_end": 857
+    },
+    {
+      "id": "FM96-E075",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__kernel_physical_mapping_init",
+      "line_start": 861,
+      "line_end": 863
+    },
+    {
+      "id": "FM96-E076",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__supported_pte_mask",
+      "line_start": 873,
+      "line_end": 873
+    },
+    {
+      "id": "FM96-E077",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__default_kernel_pte_mask",
+      "line_start": 875,
+      "line_end": 875
+    },
+    {
+      "id": "FM96-E078",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "myos_ioremap",
+      "line_start": 877,
+      "line_end": 881
+    },
+    {
+      "id": "FM96-E079",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "myos_ioremap",
+      "line_start": 882,
+      "line_end": 885
+    },
+    {
+      "id": "FM96-E080",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "iounmap",
+      "line_start": 886,
+      "line_end": 889
+    },
+    {
+      "id": "FM96-E081",
+      "source_path": "mykernel/arch/x86_64/kernel/setup.c",
+      "definition": "setup_arch",
+      "line_start": 249,
+      "line_end": 249
+    },
+    {
+      "id": "FM96-E082",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "line_start": 138,
+      "line_end": 138
+    },
+    {
+      "id": "FM96-E083",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "line_start": 174,
+      "line_end": 174
+    },
+    {
+      "id": "FM96-E084",
+      "source_path": "mykernel/mm/highmem/highmem_macro.h",
+      "definition": "PFN_UP",
+      "line_start": 7,
+      "line_end": 7
+    },
+    {
+      "id": "FM96-E085",
+      "source_path": "mykernel/mm/highmem/highmem_macro.h",
+      "definition": "PFN_DOWN",
+      "line_start": 8,
+      "line_end": 8
+    },
+    {
+      "id": "FM96-E086",
+      "source_path": "mykernel/mm/highmem/highmem_macro.h",
+      "definition": "PFN_PHYS",
+      "line_start": 9,
+      "line_end": 9
+    },
+    {
+      "id": "FM96-E087",
+      "source_path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "definition": "__va",
+      "line_start": 25,
+      "line_end": 25
+    },
+    {
+      "id": "FM96-E088",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "pg_level",
+      "line_start": 8,
+      "line_end": 12
+    },
+    {
+      "id": "FM96-E089",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "_PAGE_PWT",
+      "line_start": 53,
+      "line_end": 53
+    },
+    {
+      "id": "FM96-E090",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "_PAGE_PCD",
+      "line_start": 54,
+      "line_end": 54
+    },
+    {
+      "id": "FM96-E091",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "_PAGE_ENC",
+      "line_start": 157,
+      "line_end": 157
+    },
+    {
+      "id": "FM96-E092",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "_PAGE_NOCACHE",
+      "line_start": 161,
+      "line_end": 161
+    },
+    {
+      "id": "FM96-E093",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "__PAGE_KERNEL",
+      "line_start": 189,
+      "line_end": 189
+    },
+    {
+      "id": "FM96-E094",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "__PAGE_KERNEL_NOCACHE",
+      "line_start": 198,
+      "line_end": 198
+    },
+    {
+      "id": "FM96-E095",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "__pgprot_mask",
+      "line_start": 212,
+      "line_end": 212
+    },
+    {
+      "id": "FM96-E096",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "PAGE_KERNEL_NOENC",
+      "line_start": 215,
+      "line_end": 215
+    },
+    {
+      "id": "FM96-E097",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "definition": "PAGE_KERNEL_NOCACHE",
+      "line_start": 220,
+      "line_end": 220
+    },
+    {
+      "id": "FM96-E098",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "definition": "pfn_pte",
+      "line_start": 650,
+      "line_end": 654
+    },
+    {
+      "id": "FM96-E099",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "definition": "massage_pgprot",
+      "line_start": 686,
+      "line_end": 690
+    },
+    {
+      "id": "FM96-E100",
+      "source_path": "mykernel/arch/x86_64/mm/pgtable/pgtable_arch.h",
+      "definition": "set_pte_init",
+      "line_start": 739,
+      "line_end": 743
+    },
+    {
+      "id": "FM96-E101",
+      "source_path": "mykernel/arch/x86_64/mm/mmu/mmu_arch.c",
+      "definition": "flush_tlb_local",
+      "line_start": 233,
+      "line_end": 235
+    },
+    {
+      "id": "FM96-E102",
+      "source_path": "mykernel/arch/x86_64/mm/mmu/mmu_arch.c",
+      "definition": "flush_tlb_local",
+      "line_start": 242,
+      "line_end": 246
+    },
+    {
+      "id": "FM96-E103",
+      "source_path": "mykernel/arch/x86_64/mm/mmu/mmu_arch.c",
+      "definition": "__flush_tlb_all",
+      "line_start": 263,
+      "line_end": 266
+    },
+    {
+      "id": "FM96-E104",
+      "source_path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "definition": "phys_to_virt",
+      "line_start": 57,
+      "line_end": 60
+    },
+    {
+      "id": "FM96-E105",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_set_mapping",
+      "line_start": 78,
+      "line_end": 82
+    },
+    {
+      "id": "FM96-E106",
+      "source_path": "mykernel/arch/x86_64/insns/special_insns_arch.h",
+      "definition": "write_cr3",
+      "line_start": 125,
+      "line_end": 129
+    },
+    {
+      "id": "FM96-E107",
+      "source_path": "mykernel/arch/x86_64/insns/special_insns_arch.h",
+      "definition": "load_cr3",
+      "line_start": 145,
+      "line_end": 147
+    },
+    {
+      "id": "FM96-E108",
+      "source_path": "mykernel/mm/fault/pgtable.h",
+      "definition": "p4d_populate_init",
+      "line_start": 493,
+      "line_end": 497
+    },
+    {
+      "id": "FM96-E109",
+      "source_path": "mykernel/mm/fault/pgtable.h",
+      "definition": "pud_populate_init",
+      "line_start": 501,
+      "line_end": 505
+    },
+    {
+      "id": "FM96-E110",
+      "source_path": "mykernel/mm/fault/pgtable.h",
+      "definition": "pmd_populate_kernel_init",
+      "line_start": 509,
+      "line_end": 513
+    }
+  ],
+  "source_quote_recheck": {
+    "genuine_reopen_rounds": 2,
+    "first_half": 50,
+    "second_half": 60,
+    "all_110_literal_and_single_definition_1_to_5": true,
+    "raw_historical95_count_unchanged": 70
+  },
+  "fact_to_evidence_id_index": {
+    "D00_R95_01_02_consumer_repair_matrix": [
+      "FM96-E001",
+      "FM96-E002",
+      "FM96-E004",
+      "FM96-E005",
+      "FM96-E006",
+      "FM96-E007",
+      "FM96-E008",
+      "FM96-E009",
+      "FM96-E010",
+      "FM96-E012",
+      "FM96-E013",
+      "FM96-E011",
+      "FM96-E015",
+      "FM96-E016",
+      "FM96-E017",
+      "FM96-E014",
+      "FM96-E018"
+    ],
+    "framebuffer_producer_type_and_unit_matrix": [
+      "FM96-E019",
+      "FM96-E022",
+      "FM96-E023",
+      "FM96-E024",
+      "FM96-E027",
+      "FM96-E032",
+      "FM96-E034",
+      "FM96-E040",
+      "FM96-E043",
+      "FM96-E031",
+      "FM96-E041",
+      "FM96-E044",
+      "FM96-E028",
+      "FM96-E030",
+      "FM96-E035",
+      "FM96-E036",
+      "FM96-E025",
+      "FM96-E029",
+      "FM96-E033",
+      "FM96-E037",
+      "FM96-E038",
+      "FM96-E039",
+      "FM96-E042",
+      "FM96-E046"
+    ],
+    "metadata_to_kernel_extent_matrix": [
+      "FM96-E045",
+      "FM96-E046",
+      "FM96-E031",
+      "FM96-E035",
+      "FM96-E040",
+      "FM96-E044",
+      "FM96-E041",
+      "FM96-E028",
+      "FM96-E047",
+      "FM96-E043",
+      "FM96-E042",
+      "FM96-E049"
+    ],
+    "boot_mapping_activation_matrix": [
+      "FM96-E081",
+      "FM96-E082",
+      "FM96-E083",
+      "FM96-E052",
+      "FM96-E051",
+      "FM96-E054",
+      "FM96-E049",
+      "FM96-E050",
+      "FM96-E101",
+      "FM96-E102",
+      "FM96-E055",
+      "FM96-E103"
+    ],
+    "framebuffer_page_offset_and_extent_matrix": [
+      "FM96-E015",
+      "FM96-E016",
+      "FM96-E049",
+      "FM96-E050",
+      "FM96-E084",
+      "FM96-E085",
+      "FM96-E086",
+      "FM96-E079",
+      "FM96-E070",
+      "FM96-E087"
+    ],
+    "ioremap_parameter_return_and_attribute_matrix": [
+      "FM96-E078",
+      "FM96-E079",
+      "FM96-E088",
+      "FM96-E096",
+      "FM96-E093",
+      "FM96-E094",
+      "FM96-E097",
+      "FM96-E061",
+      "FM96-E065",
+      "FM96-E066",
+      "FM96-E089",
+      "FM96-E090",
+      "FM96-E091",
+      "FM96-E092",
+      "FM96-E095",
+      "FM96-E056",
+      "FM96-E057",
+      "FM96-E058",
+      "FM96-E060",
+      "FM96-E062",
+      "FM96-E063",
+      "FM96-E064",
+      "FM96-E067",
+      "FM96-E068",
+      "FM96-E071",
+      "FM96-E072",
+      "FM96-E073",
+      "FM96-E074",
+      "FM96-E059",
+      "FM96-E069",
+      "FM96-E070",
+      "FM96-E075",
+      "FM96-E105",
+      "FM96-E049",
+      "FM96-E050",
+      "FM96-E080"
+    ],
+    "mapping_publication_and_flush_matrix": [
+      "FM96-E068",
+      "FM96-E069",
+      "FM96-E070",
+      "FM96-E071",
+      "FM96-E072",
+      "FM96-E073",
+      "FM96-E087",
+      "FM96-E056",
+      "FM96-E057",
+      "FM96-E058",
+      "FM96-E059",
+      "FM96-E098",
+      "FM96-E100",
+      "FM96-E060",
+      "FM96-E061",
+      "FM96-E062",
+      "FM96-E063",
+      "FM96-E064",
+      "FM96-E065",
+      "FM96-E066",
+      "FM96-E067",
+      "FM96-E076",
+      "FM96-E077",
+      "FM96-E095",
+      "FM96-E099",
+      "FM96-E074",
+      "FM96-E108",
+      "FM96-E109",
+      "FM96-E110",
+      "FM96-E050",
+      "FM96-E101",
+      "FM96-E102",
+      "FM96-E106",
+      "FM96-E107",
+      "FM96-E055",
+      "FM96-E103"
+    ],
+    "ABC_join_matrix": [
+      "FM96-E021",
+      "FM96-E025",
+      "FM96-E028",
+      "FM96-E029",
+      "FM96-E037",
+      "FM96-E043",
+      "FM96-E044",
+      "FM96-E046",
+      "FM96-E049",
+      "FM96-E050",
+      "FM96-E079",
+      "FM96-E084",
+      "FM96-E085",
+      "FM96-E086",
+      "FM96-E047",
+      "FM96-E055",
+      "FM96-E087",
+      "FM96-E104",
+      "FM96-E001",
+      "FM96-E002",
+      "FM96-E004",
+      "FM96-E005",
+      "FM96-E006",
+      "FM96-E007",
+      "FM96-E008",
+      "FM96-E010",
+      "FM96-E011",
+      "FM96-E012"
+    ]
+  },
+  "D00_original95_correction_map": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "historical_95_label_count": {
+      "verified_claims": 70,
+      "quotes_reconfirmed": 70,
+      "downgraded_to_inferred": 0
+    },
+    "original_95_evidence_not_modified": true,
+    "R95_01": {
+      "wrong_overbroad_phrase": "register只入链/console_unlock也被注释/注册未触发输出",
+      "replacement": "register节点去重后活动console_unlock且可能在返回前触发先前LF记录输出；重复节点return在前；旧CON_PRINTBUFFER回放全部注释",
+      "old_matrix_ids": [
+        "A-REG01",
+        "A-REG03",
+        "A-REG04",
+        "A-REG05",
+        "A-REG06",
+        "A-LIST04",
+        "C-BOOT05",
+        "C-BOOT06",
+        "ABC-01",
+        "ABC-02",
+        "ABC-04"
+      ],
+      "old_models": [
+        "CN95-M01",
+        "CN95-M03",
+        "CN95-M04"
+      ],
+      "unchanged_valid_branch": [
+        "A-REG02",
+        "CN95-M02"
+      ],
+      "old_deferred": [
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U02",
+        "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U07",
+        "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U03",
+        "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-U07"
+      ],
+      "graph_edge_added": "register -> console_unlock CALL; console_unlock -> call_console_drivers CALL; call -> _call on LF; _call -> __call; __call -> con->write INDIRECT_CALL",
+      "evidence_ids": [
+        "FM96-E001",
+        "FM96-E002",
+        "FM96-E003",
+        "FM96-E004",
+        "FM96-E005",
+        "FM96-E006",
+        "FM96-E007",
+        "FM96-E008",
+        "FM96-E009",
+        "FM96-E010",
+        "FM96-E011",
+        "FM96-E012",
+        "FM96-E013",
+        "FM96-E014"
+      ]
+    },
+    "R95_02": [
+      {
+        "old_anchor": "CN95-E045",
+        "problem": "mixed PAGE_SHIFT/PAGE_SIZE/PAGE_MASK separate macros and preceding commentary",
+        "fix": "now E015/E016/E017 each one macro",
+        "old_consumers": [
+          "B-FMT02",
+          "B-FMT03",
+          "B-FMT04",
+          "B-FMT05",
+          "CN95-M14",
+          "CN95-M15",
+          "CN95-F04",
+          "CN95-U04"
+        ],
+        "evidence_ids": [
+          "FM96-E015",
+          "FM96-E016",
+          "FM96-E017"
+        ]
+      },
+      {
+        "old_anchor": "CN95-E064",
+        "problem": "for_each_console description comments outside actual definition",
+        "fix": "now E013 actual for_each_console and E014 expansion target",
+        "old_consumers": [
+          "A-LIST04",
+          "A-LIST07",
+          "ABC-02",
+          "CN95-U03"
+        ],
+        "evidence_ids": [
+          "FM96-E013",
+          "FM96-E014"
+        ]
+      },
+      {
+        "old_anchor": "CN95-E050",
+        "problem": "extern declaration not actual font_ascii storage definition",
+        "fix": "now E018 actual font.c real object; old E051 was valid object",
+        "old_consumers": [
+          "B-BYTE02",
+          "C-GLYPH01",
+          "CN95-M07",
+          "CN95-U06"
+        ],
+        "evidence_ids": [
+          "FM96-E018"
+        ]
+      }
+    ],
+    "historical_manifest_claim_retracted": "original 70/70/0 was literal tag/recheck accounting, not a successful all-definition P2/P9 judgment",
+    "known_non_error": "CN95-E023 whitespace only, not a defect; historical 53 empty-line complaint withdrawn"
+  },
+  "matrices": {
+    "D00_R95_01_02_consumer_repair_matrix": [
+      {
+        "id": "D95-R01-REG-NEW",
+        "scenario": "新对象尾插与活动flush",
+        "preconditions": "node首次有效插入；可用console_list",
+        "source_trace": "register先contains→add尾；后越过注释区调用console_unlock",
+        "conditional_result": "即使没有新printk，也会试图冲刷原con_start与log_end；实际是否有回调另判",
+        "first_stop_gate": "历史95误写成注册只入链/flush被注释，修正该结论",
+        "evidence_ids": [
+          "FM96-E001",
+          "FM96-E002",
+          "FM96-E004",
+          "FM96-E005",
+          "FM96-E006"
+        ],
+        "graph_nodes": [
+          "reg",
+          "list",
+          "console_unlock"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R01-REG-REPEAT",
+        "scenario": "重复node提前返回",
+        "preconditions": "同一有效已链接node且contains为真",
+        "source_trace": "register在return处退出",
+        "conditional_result": "不执行该注册调用后部的活动console_unlock；95-M02主结论保留",
+        "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+        "evidence_ids": [
+          "FM96-E001",
+          "FM96-E002"
+        ],
+        "graph_nodes": [
+          "reg",
+          "list"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R01-LF",
+        "scenario": "积压完整LF记录",
+        "preconditions": "新增节点，con_start!=log_end，环数据合法，有LF和有效回调",
+        "source_trace": "register→console_unlock→call_console_drivers→_call→__call→con->write",
+        "conditional_result": "注册返回前可能触达回调，不等同显示成功",
+        "first_stop_gate": "PK94-F05/F06、合法源对象及可达回调为先门",
+        "evidence_ids": [
+          "FM96-E002",
+          "FM96-E004",
+          "FM96-E005",
+          "FM96-E006",
+          "FM96-E007",
+          "FM96-E008",
+          "FM96-E009",
+          "FM96-E010",
+          "FM96-E012",
+          "FM96-E013"
+        ],
+        "graph_nodes": [
+          "console_unlock",
+          "ring_scan",
+          "dispatch",
+          "callback",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R01-NOLF",
+        "scenario": "积压无LF记录",
+        "preconditions": "合法环，积压只有X，无LF",
+        "source_trace": "console_unlock先推进con_start，call_console_drivers尾部flush注释",
+        "conditional_result": "在该路径无write；不是注册必然输出",
+        "first_stop_gate": "沿CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F04，不重复编号",
+        "evidence_ids": [
+          "FM96-E004",
+          "FM96-E005",
+          "FM96-E006",
+          "FM96-E009",
+          "FM96-E010"
+        ],
+        "graph_nodes": [
+          "console_unlock",
+          "ring_scan",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R01-NULL",
+        "scenario": "假设注册的另一个console.write为空",
+        "preconditions": "非内置任意有效节点且write=NULL，积压有LF",
+        "source_trace": "注册器不筛write；__call中旧非空筛选注释，仍用间接函数指针",
+        "conditional_result": "不能认证正常到达或动态故障；实际myos_tempcon.write非NULL",
+        "first_stop_gate": "与具体内置对象作身份分离；旧CN95-U02,U07继续部分未证",
+        "evidence_ids": [
+          "FM96-E007",
+          "FM96-E008",
+          "FM96-E012"
+        ],
+        "graph_nodes": [
+          "reg",
+          "dispatch",
+          "callback",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R01-BOOT",
+        "scenario": "视频pr_info与首次移交时序",
+        "preconditions": "视频函数及格式入口先通过；注册前已有日志",
+        "source_trace": "console_init先video(pr_info)后INIT node/register；register本身活动flush",
+        "conditional_result": "早期视频消息可在register内被尝试移交，不必等注册后的第二条pr_info；仍不保证可显示",
+        "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+        "evidence_ids": [
+          "FM96-E002",
+          "FM96-E004",
+          "FM96-E005",
+          "FM96-E006",
+          "FM96-E011",
+          "FM96-E012"
+        ],
+        "graph_nodes": [
+          "video",
+          "reg",
+          "console_unlock"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R02-E045",
+        "scenario": "旧E045跨三宏误归属",
+        "preconditions": "旧95标签原样冻结",
+        "source_trace": "三个真实定义各独立PAGE_SHIFT/PAGE_SIZE/PAGE_MASK宏，不把注释或相邻宏编作PAGE_SIZE body",
+        "conditional_result": "替代95 B-FMT02–05及M14/M15、CN95-F04/U04的源门",
+        "first_stop_gate": "承认旧95总括70/70/0没有真实覆盖所有P2定义边界",
+        "evidence_ids": [
+          "FM96-E015",
+          "FM96-E016",
+          "FM96-E017"
+        ],
+        "graph_nodes": [
+          "old_e045",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R02-E064",
+        "scenario": "旧E064引的是for_each_console宏前说明",
+        "preconditions": "旧95原片段确在宏前注释区",
+        "source_trace": "真正for_each_console定义在console.h，下一层宏在double_list_macro.h",
+        "conditional_result": "替代A-LIST04/A-LIST07、ABC-02及CN95-U03图遍历证据；注释的锁需求不是真实加锁",
+        "first_stop_gate": "不能把宏说明当执行定义，也不把列表遍历当自动线程安全",
+        "evidence_ids": [
+          "FM96-E013",
+          "FM96-E014"
+        ],
+        "graph_nodes": [
+          "old_e064",
+          "dispatch"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R02-E050",
+        "scenario": "旧E050是font_ascii的extern声明",
+        "preconditions": "旧头声明不含对象存储定义",
+        "source_trace": "此处重新打开font.c实际unsigned char font_ascii[256][16]对象定义，E051已是该对象的真实旧锚",
+        "conditional_result": "替代B-BYTE02、C-GLYPH01、M07、CN95-U06；旧extern仅用于声明身份",
+        "first_stop_gate": "真实字体是定义对象，当前代码只读取该表，不按常量只读对象夸大",
+        "evidence_ids": [
+          "FM96-E018"
+        ],
+        "graph_nodes": [
+          "old_e050",
+          "font",
+          "glyph"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "D95-R02-LEDGER",
+        "scenario": "旧95自检总括与白行定位",
+        "preconditions": "旧95原件、评论和70/70/0均冻结",
+        "source_trace": "新96维护original_tag_count70与三个新D00分类；新source_fact_quote_index和新GRAPH连接",
+        "conditional_result": "撤回旧95『全部70条单一定义内都通过』的语义总括；R95-01/02仅为补正提交待主线复核",
+        "first_stop_gate": "E023尾空白不是错误；53撤回的空行误判不得复活",
+        "evidence_ids": [
+          "FM96-E002",
+          "FM96-E013",
+          "FM96-E015",
+          "FM96-E016",
+          "FM96-E017",
+          "FM96-E018"
+        ],
+        "graph_nodes": [
+          "old_e045",
+          "old_e064",
+          "old_e050",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "framebuffer_producer_type_and_unit_matrix": [
+      {
+        "id": "A-P01",
+        "scenario": "loader mode准备",
+        "preconditions": "UEFI服务返回及对象假定有效",
+        "source_trace": "UefiMain调用set_video_mode(-1)，其按条件QueryMode/SetMode，随后fill_framebuffer_info",
+        "conditional_result": "不是全部模式必为PixelFormat1，也不证SetMode调用成功",
+        "first_stop_gate": "UEFI协议、响应状态与真实Mode元数据未认证",
+        "evidence_ids": [
+          "FM96-E019",
+          "FM96-E022",
+          "FM96-E023",
+          "FM96-E024"
+        ],
+        "graph_nodes": [
+          "uefi_entry",
+          "mode"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-P02",
+        "scenario": "framebuffer_addr生产",
+        "preconditions": "有可读GOP Mode对象",
+        "source_trace": "Mode->FrameBufferBase写到common->framebuffer_addr(u64)",
+        "conditional_result": "物理基址来自loader，内核可赋给phys_addr_t；位宽按别名和构建条件认证",
+        "first_stop_gate": "Mode->FrameBufferBase真实类型/物理值/可用性未认证",
+        "evidence_ids": [
+          "FM96-E027",
+          "FM96-E032",
+          "FM96-E034",
+          "FM96-E040",
+          "FM96-E043"
+        ],
+        "graph_nodes": [
+          "mode",
+          "mb_tag",
+          "kernel_fb"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-P03",
+        "scenario": "width/height",
+        "preconditions": "Mode->Info可读",
+        "source_trace": "Horizontal/VerticalResolution先写common u32，再在kernel赋uint32 X/Y",
+        "conditional_result": "宽高目标是32位字段，图像实际可显示仍未证",
+        "first_stop_gate": "中间乘积与目标转换是另一独立门",
+        "evidence_ids": [
+          "FM96-E027",
+          "FM96-E031",
+          "FM96-E034",
+          "FM96-E041",
+          "FM96-E043",
+          "FM96-E044"
+        ],
+        "graph_nodes": [
+          "mode",
+          "mb_tag",
+          "kernel_fb",
+          "stop_type"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-P04",
+        "scenario": "loader bpp表达式",
+        "preconditions": "Mode->FrameBufferSize与width,height有效且乘积非零",
+        "source_trace": "FrameBufferSize*8 / (common.width*common.height) → common.framebuffer_bpp(u8)",
+        "conditional_result": "分母u32乘积可回绕；bpp目标u8窄化；UEFI UINTN真实位宽本包未运行",
+        "first_stop_gate": "中间类型/除零优先于结果布局推断",
+        "evidence_ids": [
+          "FM96-E028",
+          "FM96-E030",
+          "FM96-E031",
+          "FM96-E035"
+        ],
+        "graph_nodes": [
+          "mode",
+          "mb_tag",
+          "stop_type"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-P05",
+        "scenario": "pitch标签的实际字节计算",
+        "preconditions": "PixelsPerScanLine与bpp已有值",
+        "source_trace": "PixelsPerScanLine*framebuffer_bpp /8 写common.pitch(u32)",
+        "conditional_result": "若bpp为8的整倍数且乘积无溢出，可代表字节每行；注释'保存scanline'不证明像素单位",
+        "first_stop_gate": "u32乘法/截断和bpp非整数字节模式未知",
+        "evidence_ids": [
+          "FM96-E028",
+          "FM96-E034",
+          "FM96-E035"
+        ],
+        "graph_nodes": [
+          "mode",
+          "mb_tag",
+          "stop_type"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-P06",
+        "scenario": "framebuffer_type用途",
+        "preconditions": "Mode->Mode为有效数值",
+        "source_trace": "写common.framebuffer_type(u8)，另有#define RGB=1",
+        "conditional_result": "不是写Mode->Info->PixelFormat；模式序号与type枚举的契约不能默认为相同",
+        "first_stop_gate": "没有固定外部GOP值语义或本核type消费保证",
+        "evidence_ids": [
+          "FM96-E023",
+          "FM96-E024",
+          "FM96-E028",
+          "FM96-E036"
+        ],
+        "graph_nodes": [
+          "mode",
+          "mb_tag",
+          "stop_type"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-P07",
+        "scenario": "tag大小及真实payload",
+        "preconditions": "loader顺利构造标签",
+        "source_trace": "common.type=FRAMEBUFFER, size=sizeof(mbi_framebuffer_s), 内有union分支字段",
+        "conditional_result": "可见构造函数只赋common子集，未见填RGB union或验证layout；tag总长有效性另证",
+        "first_stop_gate": "BM80-U02/U03底层tag可读extent先门",
+        "evidence_ids": [
+          "FM96-E025",
+          "FM96-E029",
+          "FM96-E033",
+          "FM96-E037",
+          "FM96-E038",
+          "FM96-E039"
+        ],
+        "graph_nodes": [
+          "mb_tag",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-P08",
+        "scenario": "kernel字段目标宽度",
+        "preconditions": "FRAMEBUFFER tag在parse_tag被识别且可读",
+        "source_trace": "get_framebuffer_info从common填FB_phybase/FB_virbase/FB_size/PixperScanline/宽高",
+        "conditional_result": "FB_size目标64bit、X/Y/PixperScanline32bit；目标宽不自动扩宽计算",
+        "first_stop_gate": "标签和结构体构建布局与地址可访问先门",
+        "evidence_ids": [
+          "FM96-E040",
+          "FM96-E041",
+          "FM96-E042",
+          "FM96-E043",
+          "FM96-E044",
+          "FM96-E046"
+        ],
+        "graph_nodes": [
+          "parse_tag",
+          "kernel_fb",
+          "stop_type"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "metadata_to_kernel_extent_matrix": [
+      {
+        "id": "A-K01",
+        "scenario": "FRAMEBUFFER tag被消费的门",
+        "preconditions": "myos_early_init_system走实际parse_tag入口，magic匹配、tag有效",
+        "source_trace": "parse_tag仅在对应switch case调用get_framebuffer_info",
+        "conditional_result": "没有此case不能说framebuffer字段已由该路径写入",
+        "first_stop_gate": "BM80::tag extent/total_size边界保留",
+        "evidence_ids": [
+          "FM96-E045",
+          "FM96-E046"
+        ],
+        "graph_nodes": [
+          "parse_tag",
+          "mb_tag",
+          "kernel_fb"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-K02",
+        "scenario": "FB_size中间计算",
+        "preconditions": "核侧common.width,height为uint32，bpp为uint8",
+        "source_trace": "width*height*bpp/8后写uint64 FB_size",
+        "conditional_result": "在32位unsigned int目标模型，乘积先按uint32回绕，64位目标只扩展结果",
+        "first_stop_gate": "具体C integer promotions/构建未预处理核证",
+        "evidence_ids": [
+          "FM96-E031",
+          "FM96-E035",
+          "FM96-E040",
+          "FM96-E044"
+        ],
+        "graph_nodes": [
+          "kernel_fb",
+          "stop_type"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-K03",
+        "scenario": "扫描行步长转换",
+        "preconditions": "bpp>=8且除数非0，pitch来自loader可读",
+        "source_trace": "PixperScanline=framebuffer_pitch/(framebuffer_bpp/8)",
+        "conditional_result": "若bpp可整除8、无算术异常，该值是每行像素而非实际总字节大小",
+        "first_stop_gate": "当bpp<8，除数为0，先停；不据此声称实际运行触发",
+        "evidence_ids": [
+          "FM96-E035",
+          "FM96-E041",
+          "FM96-E044"
+        ],
+        "graph_nodes": [
+          "kernel_fb",
+          "stop_type"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-K04",
+        "scenario": "紧凑布局和padding",
+        "preconditions": "width=800,height600,bpp32,pixelsPerScanLine832的独立模型",
+        "source_trace": "pitch=832*4=3328B/行，kernel PixperScanline=832",
+        "conditional_result": "kernel FB_size若按width800算=1,920,000B，不等于每行pitch*height=1,996,800B",
+        "first_stop_gate": "真实GOP FrameBufferSize/映射extent及每行访问索引另证",
+        "evidence_ids": [
+          "FM96-E028",
+          "FM96-E041",
+          "FM96-E044",
+          "FM96-E047"
+        ],
+        "graph_nodes": [
+          "kernel_fb",
+          "video",
+          "glyph"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-K05",
+        "scenario": "FB_addr 与最终Glyph",
+        "preconditions": "FB_virbase仍为phys_to_virt计算结果，video将其转unsigned int*",
+        "source_trace": "Pos.FB_addr用于旧95 kputchar以XResolution行步长",
+        "conditional_result": "不能用虚拟地址存在与FB_length已赋值证明已映射、且glyph不读PixperScanline",
+        "first_stop_gate": "沿旧CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F05/U05/U06，不重造同行距根因",
+        "evidence_ids": [
+          "FM96-E043",
+          "FM96-E044",
+          "FM96-E047"
+        ],
+        "graph_nodes": [
+          "kernel_fb",
+          "pos",
+          "glyph",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-K06",
+        "scenario": "无tag或缺前置",
+        "preconditions": "没有有效FRAMEBUFFER标记或parse_tag提前return",
+        "source_trace": "静态framebuffer对象可能保留默认零值，后续video/VBE缺尺寸与地址",
+        "conditional_result": "不保证真正调用了GOP构造或初始化，不能替代启动观测",
+        "first_stop_gate": "BM80-U01/U02/U03预先成立才续推",
+        "evidence_ids": [
+          "FM96-E042",
+          "FM96-E045",
+          "FM96-E046",
+          "FM96-E049"
+        ],
+        "graph_nodes": [
+          "parse_tag",
+          "kernel_fb",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "boot_mapping_activation_matrix": [
+      {
+        "id": "B-ACT01",
+        "scenario": "启动主干顺序",
+        "preconditions": "固定time中的start_kernel路径正常进入",
+        "source_trace": "start_kernel调用setup_arch；setup_arch调用init_mem_mapping",
+        "conditional_result": "优先发生在后续console_init之前，不证明真实启动模式",
+        "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+        "evidence_ids": [
+          "FM96-E081",
+          "FM96-E082",
+          "FM96-E083"
+        ],
+        "graph_nodes": [
+          "setup",
+          "init_map",
+          "video"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-ACT02",
+        "scenario": "内存页表阶段",
+        "preconditions": "e820/memblock前序满足",
+        "source_trace": "setup_arch在reserve_brk/early directmap与memblock之后调用init_mem_mapping",
+        "conditional_result": "早期页分配、预设根与物理范围沿80–83有条件消费",
+        "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+        "evidence_ids": [
+          "FM96-E081",
+          "FM96-E052"
+        ],
+        "graph_nodes": [
+          "setup",
+          "init_map",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-ACT03",
+        "scenario": "myos_memory_map实际入口",
+        "preconditions": "init_mem_mapping顺序走到此行",
+        "source_trace": "init_mem_mapping调用myos_memory_map，后者调用myos_init_VBE_mapping",
+        "conditional_result": "不是孤立未调用helper；VBE参与映射启动阶段",
+        "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+        "evidence_ids": [
+          "FM96-E051",
+          "FM96-E054"
+        ],
+        "graph_nodes": [
+          "init_map",
+          "memory_map",
+          "vbe"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-ACT04",
+        "scenario": "VBE请求与刷新先后",
+        "preconditions": "有效framebuffer数值与相关映射函数已可调用",
+        "source_trace": "myos_init_VBE_mapping先PFN_ALIGN后的myos_ioremap，随后flush_tlb_local",
+        "conditional_result": "局部刷新发生于i/o请求之后；VBE未消费映射返回值",
+        "first_stop_gate": "映射真实生效/刷新根/TLB前提仍未证",
+        "evidence_ids": [
+          "FM96-E049",
+          "FM96-E050",
+          "FM96-E101",
+          "FM96-E102"
+        ],
+        "graph_nodes": [
+          "vbe",
+          "ioremap",
+          "tlb_local",
+          "stop_tlb"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-ACT05",
+        "scenario": "最终根与console使用时点",
+        "preconditions": "init_mem_mapping返回前路径正常",
+        "source_trace": "myos_memory_map之后才load_cr3(swapper_pg_dir)及__flush_tlb_all；start_kernel稍后console_init→video",
+        "conditional_result": "当前TLB reload与其后换根是不同事件；不能宣称已在video屏幕写成功",
+        "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+        "evidence_ids": [
+          "FM96-E055",
+          "FM96-E083",
+          "FM96-E103"
+        ],
+        "graph_nodes": [
+          "cr3",
+          "init_map",
+          "video",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "framebuffer_page_offset_and_extent_matrix": [
+      {
+        "id": "B-EXT01",
+        "scenario": "输入量与对齐",
+        "preconditions": "A为物理byte基址，L为uint64 FB_size，P=4096",
+        "source_trace": "B=PFN_PHYS(PFN_DOWN(A))；S=PFN_PHYS(PFN_UP(L))",
+        "conditional_result": "整数无溢出且合法时B=floor(A/P)P，S=ceil(L/P)P",
+        "first_stop_gate": "start与size分开输入，未对齐原址偏移o=A-B被丢失",
+        "evidence_ids": [
+          "FM96-E015",
+          "FM96-E016",
+          "FM96-E049",
+          "FM96-E050",
+          "FM96-E084",
+          "FM96-E085",
+          "FM96-E086"
+        ],
+        "graph_nodes": [
+          "vbe",
+          "stop_offset"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-EXT02",
+        "scenario": "ioremap二次取整",
+        "preconditions": "B,S可表示且已页对齐",
+        "source_trace": "myos_ioremap算paddr_start+size，PFN_UP后转P字节终点",
+        "conditional_result": "end=B+S，底层请求[B,B+S)；不是希望的[A,A+L)",
+        "first_stop_gate": "地址空间转换__va与算术overflow必须分开",
+        "evidence_ids": [
+          "FM96-E079",
+          "FM96-E084",
+          "FM96-E086"
+        ],
+        "graph_nodes": [
+          "ioremap",
+          "mapping_root",
+          "stop_offset"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-EXT03",
+        "scenario": "对齐正长度",
+        "preconditions": "A mod P=0且L>0、算术安全",
+        "source_trace": "B=A；S向上取整L",
+        "conditional_result": "请求区间包住希望区间，仍只证明请求覆盖",
+        "first_stop_gate": "未证页表写入、属性和设备",
+        "evidence_ids": [
+          "FM96-E049",
+          "FM96-E050",
+          "FM96-E079"
+        ],
+        "graph_nodes": [
+          "vbe",
+          "ioremap"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-EXT04",
+        "scenario": "不对齐整页长度",
+        "preconditions": "A=0x1003, L=4096",
+        "source_trace": "B=0x1000,S=4096；请求到0x2000，希望到0x2003",
+        "conditional_result": "数学上缺尾3字节；不是硬件越界观测",
+        "first_stop_gate": "若已有其它映射可能有覆盖，不能说本请求保证整个FB",
+        "evidence_ids": [
+          "FM96-E049",
+          "FM96-E050",
+          "FM96-E084",
+          "FM96-E085",
+          "FM96-E086"
+        ],
+        "graph_nodes": [
+          "stop_offset",
+          "ioremap"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-EXT05",
+        "scenario": "存在页内余量",
+        "preconditions": "A=0x1003,L=100或A=0x1fff,L=2",
+        "source_trace": "按上述源码B与S逐项计算",
+        "conditional_result": "长度100留有余量而覆盖；0x1fff/2将跨边界少1字节",
+        "first_stop_gate": "不同输入下不应一概宣称非对齐必缺页",
+        "evidence_ids": [
+          "FM96-E049",
+          "FM96-E050",
+          "FM96-E079",
+          "FM96-E084"
+        ],
+        "graph_nodes": [
+          "stop_offset"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-EXT06",
+        "scenario": "零长度",
+        "preconditions": "L=0，A可以非对齐",
+        "source_trace": "S=0，传[B,0]，myos_ioremap请求空或反向域",
+        "conditional_result": "即使已发flush，也不证明新增帧缓冲映射或有效显存",
+        "first_stop_gate": "域端点、旧根和代码控制流先门",
+        "evidence_ids": [
+          "FM96-E049",
+          "FM96-E050",
+          "FM96-E079",
+          "FM96-E070"
+        ],
+        "graph_nodes": [
+          "vbe",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-EXT07",
+        "scenario": "高地址/算术回绕",
+        "preconditions": "按64位ulong/size_t模型B+S接近2^64",
+        "source_trace": "paddr_start+size以及PFN_UP(x)里的+P-1可先回绕",
+        "conditional_result": "不能用无限精度E公式声称真实物理上界或有效映射",
+        "first_stop_gate": "最早在整数回绕、__va地址和后续根循环分条件停止",
+        "evidence_ids": [
+          "FM96-E049",
+          "FM96-E079",
+          "FM96-E084",
+          "FM96-E087",
+          "FM96-E070"
+        ],
+        "graph_nodes": [
+          "stop_offset",
+          "mapping_root",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ioremap_parameter_return_and_attribute_matrix": [
+      {
+        "id": "C-IO01",
+        "scenario": "wrapper固定形参与实际返回",
+        "preconditions": "myos_ioremap(paddr_start,size)，类型契约匹配",
+        "source_trace": "return (void*)__kernel_physical_mapping_init(start,PFN_UP(start+size)*P,1<<PG_LEVEL_4K,PAGE_KERNEL_NOENC,true)",
+        "conditional_result": "参数是物理字节端点/4K mask/属性对象/初始化布尔；并非传入virtual_start",
+        "first_stop_gate": "入口声明void __iomem*，返回转换不构成合法虚拟地址",
+        "evidence_ids": [
+          "FM96-E078",
+          "FM96-E079",
+          "FM96-E088",
+          "FM96-E096"
+        ],
+        "graph_nodes": [
+          "ioremap",
+          "mapping_root",
+          "prot",
+          "stop_return"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IO02",
+        "scenario": "NOCACHE旧方案的非活动性",
+        "preconditions": "固定time而非GitHub默认分支源码",
+        "source_trace": "旧return行在//注释；当前活跃的是PAGE_KERNEL_NOENC",
+        "conditional_result": "不能以NOCACHE函数名或注释推定本次调用设置PCD/PWT",
+        "first_stop_gate": "最终pte保护位还要经mask/已有PTE路径",
+        "evidence_ids": [
+          "FM96-E078",
+          "FM96-E079",
+          "FM96-E093",
+          "FM96-E094",
+          "FM96-E096",
+          "FM96-E097"
+        ],
+        "graph_nodes": [
+          "ioremap",
+          "prot"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IO03",
+        "scenario": "页尺寸mask候选",
+        "preconditions": "pg_level枚举固定顺序且4K位1",
+        "source_trace": "1<<PG_LEVEL_4K仅含4K mask，无法选新2M/1G叶创建条件",
+        "conditional_result": "旧大页必须按旧83的复用/拆分分支考虑，不是完整全4K实际最终页表",
+        "first_stop_gate": "PAGE_KERNEL_NOENC与实际PTE写入依赖分支条件",
+        "evidence_ids": [
+          "FM96-E079",
+          "FM96-E088",
+          "FM96-E061",
+          "FM96-E065",
+          "FM96-E066"
+        ],
+        "graph_nodes": [
+          "ioremap",
+          "pud",
+          "pmd",
+          "pte"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IO04",
+        "scenario": "默认保护位编码",
+        "preconditions": "__PAGE_KERNEL基础保护位有P/RW/A/NX/D/G；NOENC不加入PWT/PCD",
+        "source_trace": "PAGE_KERNEL_NOENC通过__pgprot_mask及默认掩码",
+        "conditional_result": "源码选用编码不是硬件cacheability结论；NOCACHE是另一明确常量",
+        "first_stop_gate": "当前/历史页表页特性与PGE PAT MTRR未证",
+        "evidence_ids": [
+          "FM96-E089",
+          "FM96-E090",
+          "FM96-E091",
+          "FM96-E092",
+          "FM96-E093",
+          "FM96-E094",
+          "FM96-E095",
+          "FM96-E096",
+          "FM96-E097"
+        ],
+        "graph_nodes": [
+          "prot",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IO05",
+        "scenario": "下级已有项和新项",
+        "preconditions": "运行到固定递归路径",
+        "source_trace": "pgd非0复用/否则分配；PUD/PMD如果已有非叶下探、已有叶条件允许复用，否则拆分；PTE非none不写新项",
+        "conditional_result": "当前4K候选不能自动替换所有已有属性；页面数不是覆盖字节保证",
+        "first_stop_gate": "沿TI83-S01/S02互斥分支及PT81分配缺口",
+        "evidence_ids": [
+          "FM96-E056",
+          "FM96-E057",
+          "FM96-E058",
+          "FM96-E060",
+          "FM96-E061",
+          "FM96-E062",
+          "FM96-E063",
+          "FM96-E064",
+          "FM96-E065",
+          "FM96-E066",
+          "FM96-E067",
+          "FM96-E068",
+          "FM96-E071",
+          "FM96-E072",
+          "FM96-E073",
+          "FM96-E074"
+        ],
+        "graph_nodes": [
+          "mapping_root",
+          "pud",
+          "pmd",
+          "pte",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IO06",
+        "scenario": "返回的真实单位",
+        "preconditions": "底层ulong paddr_last初始化paddr_end，分支中按物理端点改写后return",
+        "source_trace": "myos_ioremap直接把该整数cast成void*",
+        "conditional_result": "不是用__va转换过的I/O虚拟起点，也非已成功字节数；旧83-S03不等于全区间覆盖",
+        "first_stop_gate": "VBE忽略该返回；另一hpet consumer保存值仅供一处对照",
+        "evidence_ids": [
+          "FM96-E059",
+          "FM96-E069",
+          "FM96-E070",
+          "FM96-E075",
+          "FM96-E078",
+          "FM96-E079",
+          "FM96-E105"
+        ],
+        "graph_nodes": [
+          "mapping_root",
+          "ioremap",
+          "stop_return",
+          "hpet"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IO07",
+        "scenario": "VBE与HPET消费者对照",
+        "preconditions": "只读取一个HPET caller，不审HPET整体",
+        "source_trace": "VBE调用myos_ioremap无赋值/无返回检查，HPET将返回赋hpet_virt_address随后flush",
+        "conditional_result": "有条件提示接口返回语义与HPET虚拟指针用途不等价，不宣称HPET实机故障",
+        "first_stop_gate": "返回实际指针有效性、权限/映射和HPET路径分别未证",
+        "evidence_ids": [
+          "FM96-E049",
+          "FM96-E050",
+          "FM96-E079",
+          "FM96-E105"
+        ],
+        "graph_nodes": [
+          "vbe",
+          "hpet",
+          "stop_return"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-IO08",
+        "scenario": "iounmap活动体",
+        "preconditions": "仅针对该固定声明的释放接口",
+        "source_trace": "iounmap有空函数体；没有解除PTE或TLB写调用",
+        "conditional_result": "函数名不构成撤销映射证据；本包不证明实际调用者消费或泄漏",
+        "first_stop_gate": "不引入全ioremapping或生命周期审计",
+        "evidence_ids": [
+          "FM96-E080"
+        ],
+        "graph_nodes": [
+          "ioremap",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "mapping_publication_and_flush_matrix": [
+      {
+        "id": "C-PUB01",
+        "scenario": "根页表和物理地址空间",
+        "preconditions": "固定__kernel_physical_mapping_init入口参数有效",
+        "source_trace": "vaddr=__va(paddr_start)，vaddr_end=__va(paddr_end)，通过pgd_offset_k等找根，再进入phys_p4d_init宏",
+        "conditional_result": "__va计算预定direct-map虚拟地址而非证明已存在可访问映射",
+        "first_stop_gate": "root对象、pointer/CR3状态与PT81/DM82/TI83停止门",
+        "evidence_ids": [
+          "FM96-E068",
+          "FM96-E069",
+          "FM96-E070",
+          "FM96-E071",
+          "FM96-E072",
+          "FM96-E073",
+          "FM96-E087"
+        ],
+        "graph_nodes": [
+          "mapping_root",
+          "cr3",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PUB02",
+        "scenario": "4K叶与条件写入",
+        "preconditions": "existing PTE为空、页面对象可用",
+        "source_trace": "phys_pte_init先形成pte指针及next，再if paddr>=end；正常4K写set_pte_init(pfn_pte(...))",
+        "conditional_result": "先前存在的PTE无需重写；返回paddr_last有不同前缀含义",
+        "first_stop_gate": "沿TI83-F06/TI83-S03及KN91 C对象合法性概念但不混同根因",
+        "evidence_ids": [
+          "FM96-E056",
+          "FM96-E057",
+          "FM96-E058",
+          "FM96-E059",
+          "FM96-E098",
+          "FM96-E100"
+        ],
+        "graph_nodes": [
+          "pte",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PUB03",
+        "scenario": "原有大页与保护继承",
+        "preconditions": "PUD/PMD旧条目有效且leaf与mask满足不同路径",
+        "source_trace": "1G/2M如果已有叶则条件复用或转小页；拆分可取pte_clrhuge原保护",
+        "conditional_result": "不保证最终每个像素都用NOENC新属性；有一部分保留旧保护",
+        "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+        "evidence_ids": [
+          "FM96-E060",
+          "FM96-E061",
+          "FM96-E062",
+          "FM96-E063",
+          "FM96-E064",
+          "FM96-E065",
+          "FM96-E066",
+          "FM96-E067"
+        ],
+        "graph_nodes": [
+          "pud",
+          "pmd",
+          "prot"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PUB04",
+        "scenario": "表项保护和过滤",
+        "preconditions": "present属性与支持掩码有效",
+        "source_trace": "pfn_pte使用check_pgprot，再massage_pgprot在PRESENT条件下过滤__supported_pte_mask",
+        "conditional_result": "保护编码不是实际硬件cache类型或可访问性证明",
+        "first_stop_gate": "实际CPU允许页表位、初始化层和已有项不确定",
+        "evidence_ids": [
+          "FM96-E076",
+          "FM96-E077",
+          "FM96-E095",
+          "FM96-E098",
+          "FM96-E099",
+          "FM96-E100"
+        ],
+        "graph_nodes": [
+          "pte",
+          "prot",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PUB05",
+        "scenario": "父表发布顺序",
+        "preconditions": "新的p4d/PUD/PMD页成功分配且各级执行路径正常",
+        "source_trace": "下层子表递归填后调用p4d_populate_init/pud_populate_init/pmd_populate_kernel_init，init=true选safe",
+        "conditional_result": "新页分配、清零、旧表状态依赖PT81和TI83既有分析，不等于已生效MMU翻译",
+        "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+        "evidence_ids": [
+          "FM96-E063",
+          "FM96-E067",
+          "FM96-E073",
+          "FM96-E074",
+          "FM96-E108",
+          "FM96-E109",
+          "FM96-E110"
+        ],
+        "graph_nodes": [
+          "mapping_root",
+          "pud",
+          "pmd",
+          "pte",
+          "stop_old"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PUB06",
+        "scenario": "调用者局部TLB刷新",
+        "preconditions": "VBE函数完成对myos_ioremap的调用",
+        "source_trace": "随后flush_tlb_local活动体write_cr3(__read_cr3())",
+        "conditional_result": "这次请求只涉及当时current CPU CR3读取/重写；未证其它CPU、全局项或实际刷新结果",
+        "first_stop_gate": "注释掉的中断/抢占守卫不是活动行为",
+        "evidence_ids": [
+          "FM96-E050",
+          "FM96-E101",
+          "FM96-E102",
+          "FM96-E106",
+          "FM96-E107"
+        ],
+        "graph_nodes": [
+          "vbe",
+          "tlb_local",
+          "cr3",
+          "stop_tlb"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PUB07",
+        "scenario": "后继换根和刷新",
+        "preconditions": "init_mem_mapping退出之前",
+        "source_trace": "VBE mapping本地刷新先于load_cr3(swapper_pg_dir)，之后__flush_tlb_all实际只call local",
+        "conditional_result": "两个时间点和根身份不同；不能从函数名'flush all'推导跨CPU全局屏障",
+        "first_stop_gate": "页表数据是否在换入根、CPU缓存/PGE/PCID另证",
+        "evidence_ids": [
+          "FM96-E055",
+          "FM96-E101",
+          "FM96-E102",
+          "FM96-E103",
+          "FM96-E106",
+          "FM96-E107"
+        ],
+        "graph_nodes": [
+          "init_map",
+          "cr3",
+          "tlb_local",
+          "stop_tlb"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "scenario": "从UEFI元数据到kernel字段",
+        "preconditions": "loader填tag且kernel正确解析tag",
+        "source_trace": "fill_framebuffer_info→parse_tag(get_framebuffer_info)→framebuffer_s",
+        "conditional_result": "是数据生产/消费接合，不代表双方在同一次实机成功执行",
+        "first_stop_gate": "BM80标签与UEFI ABI/乘法先门",
+        "evidence_ids": [
+          "FM96-E021",
+          "FM96-E025",
+          "FM96-E028",
+          "FM96-E029",
+          "FM96-E037",
+          "FM96-E043",
+          "FM96-E044",
+          "FM96-E046"
+        ],
+        "graph_nodes": [
+          "uefi_entry",
+          "mb_tag",
+          "parse_tag",
+          "kernel_fb"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-02",
+        "scenario": "从内核字段到页表请求",
+        "preconditions": "framebuffer在video前有合法来源",
+        "source_trace": "kernel FB_phybase/FB_size→myos_init_VBE_mapping→myos_ioremap",
+        "conditional_result": "大小/页偏移必须独立计算且检查overflow",
+        "first_stop_gate": "CN95-F05/U05/U06布局与物理extent不是已闭合",
+        "evidence_ids": [
+          "FM96-E044",
+          "FM96-E049",
+          "FM96-E050",
+          "FM96-E079",
+          "FM96-E084",
+          "FM96-E085",
+          "FM96-E086"
+        ],
+        "graph_nodes": [
+          "kernel_fb",
+          "vbe",
+          "ioremap",
+          "stop_offset"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-03",
+        "scenario": "从页表到framebuffer消费者",
+        "preconditions": "页表写入成功、active CR3已换、FB虚拟地址/像素布局有效",
+        "source_trace": "ioremap不是把return交视频，video沿独立phys_to_virt产生的FB_virbase赋Pos.FB_addr",
+        "conditional_result": "不能以返回物理端点推导可绘图像；需要实际映射覆盖、像素行步长及硬件能力",
+        "first_stop_gate": "旧95/81/82/83的对象和TLB停止门保留",
+        "evidence_ids": [
+          "FM96-E043",
+          "FM96-E047",
+          "FM96-E055",
+          "FM96-E079",
+          "FM96-E087",
+          "FM96-E104"
+        ],
+        "graph_nodes": [
+          "mapping_root",
+          "video",
+          "pos",
+          "glyph",
+          "stop_return"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-04",
+        "scenario": "D00注册flush后的真正输出终点",
+        "preconditions": "已注册且可遍历的内置console，先前日志有完整LF",
+        "source_trace": "register→console_unlock→call_console_drivers→con->write；但需要video与映射先完成",
+        "conditional_result": "第96 B/C填映射消费者依赖，D00修复95注册触发时机；两者不能反向证明已显示",
+        "first_stop_gate": "旧R95-01/02补正待主线、旧PK94与CN95未证门均保留",
+        "evidence_ids": [
+          "FM96-E001",
+          "FM96-E002",
+          "FM96-E004",
+          "FM96-E005",
+          "FM96-E006",
+          "FM96-E007",
+          "FM96-E008",
+          "FM96-E010",
+          "FM96-E011",
+          "FM96-E012"
+        ],
+        "graph_nodes": [
+          "reg",
+          "console_unlock",
+          "callback",
+          "video",
+          "stop_mapping"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 8,
+  "matrix_rows": 55,
+  "finite_models": [
+    {
+      "id": "FM96-M01",
+      "subject": "D00",
+      "inputs": "空表首次注册、无待flush字节",
+      "operations": "contains false，插入count1；后活动console_unlock，con_start==log_end，循环break",
+      "conditional_result": "调用了flush但未调用console.write；注册完成",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E001",
+        "FM96-E002",
+        "FM96-E004"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M02",
+      "subject": "D00",
+      "inputs": "新node、积压合法完整一行含LF",
+      "operations": "尾插count1→console_unlock推进con_start→LF触发回调",
+      "conditional_result": "注册返回前可能发生write；未认证设备",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E001",
+        "FM96-E002",
+        "FM96-E004",
+        "FM96-E005",
+        "FM96-E010",
+        "FM96-E012"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M03",
+      "subject": "D00",
+      "inputs": "新node、仅一个X无LF",
+      "operations": "flush活动，scan到end但尾部final _call注释",
+      "conditional_result": "本轮无write且con_start已被推进",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E004",
+        "FM96-E005",
+        "FM96-E006",
+        "FM96-E009"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M04",
+      "subject": "D00",
+      "inputs": "同node再次注册",
+      "operations": "contains真直接return",
+      "conditional_result": "不进入此函数内的活动flush；旧95-M02有效",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E001",
+        "FM96-E002"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M05",
+      "subject": "D00",
+      "inputs": "另一个有效console.write=NULL且积压LF",
+      "operations": "注册可插入，活动flush到间接调用前无非空过滤",
+      "conditional_result": "不签真实NULL故障；实际内置temp.write非NULL",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E007",
+        "FM96-E008",
+        "FM96-E012",
+        "FM96-E013"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M06",
+      "subject": "A",
+      "inputs": "800×600,bpp32,紧凑pitch800像素，FrameBufferSize1920000",
+      "operations": "loader按整数公式bpp32、pitch3200字节；kernel FB_size1920000、PixperScanline800",
+      "conditional_result": "两种数学长度一致；外部输入对象、MMIO未证",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E027",
+        "FM96-E028",
+        "FM96-E034",
+        "FM96-E035",
+        "FM96-E041",
+        "FM96-E044"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M07",
+      "subject": "A",
+      "inputs": "800×600,bpp32,PixelsPerScanLine832",
+      "operations": "pitch3328B/行；PixperScanline832；kernel FB_size1920000；pitch*height1996800",
+      "conditional_result": "padding行步长与width*height存储预算不同，旧CN95-F05仍需消费",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E028",
+        "FM96-E035",
+        "FM96-E041",
+        "FM96-E044",
+        "FM96-E047"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M08",
+      "subject": "A",
+      "inputs": "width16384,height8192,bpp32, EFI uintN64模型",
+      "operations": "width*height=134217728；kernel uint32乘32=4294967296→0；写FB_size uint64值0",
+      "conditional_result": "目标uint64不修复源中间uint32回绕；只是假设可编码输入",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E031",
+        "FM96-E035",
+        "FM96-E040",
+        "FM96-E044"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M09",
+      "subject": "A",
+      "inputs": "loader framebuffer_size正确，width0或height0",
+      "operations": "loader bpp分母width*height=0",
+      "conditional_result": "最早停在loader除零，不继续构造合法tag",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E028",
+        "FM96-E031",
+        "FM96-E035"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M10",
+      "subject": "A",
+      "inputs": "kernel tag bpp=7, pitch任意",
+      "operations": "kernel bpp/8=0，赋PixperScanline时分母为0",
+      "conditional_result": "在有效消费前必须停止；不称真实设备采用7bpp",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E035",
+        "FM96-E044"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M11",
+      "subject": "A",
+      "inputs": "Mode->Mode假设258且payload可编码",
+      "operations": "赋uint8 framebuffer_type=2，另Info.PixelFormat变量独立",
+      "conditional_result": "序号与像素格式标签不可直接等同；当前设备实际值未证",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E023",
+        "FM96-E024",
+        "FM96-E028",
+        "FM96-E036"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M12",
+      "subject": "A",
+      "inputs": "bpp字段宽8，数学期望bpp=264",
+      "operations": "若loader结果转u8得到8再算pitch",
+      "conditional_result": "窄化改变下游单位换算，必须单独记中间/目标宽度",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E028",
+        "FM96-E030",
+        "FM96-E035"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M13",
+      "subject": "B",
+      "inputs": "A=0x1000,L=4096,P=4096",
+      "operations": "B=A,S4096,end0x2000",
+      "conditional_result": "请求恰覆盖目标；不证明真正页表写成功",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E049",
+        "FM96-E050",
+        "FM96-E084",
+        "FM96-E085",
+        "FM96-E086"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M14",
+      "subject": "B",
+      "inputs": "A=0x1003,L=4096",
+      "operations": "B0x1000,o3,S4096,end0x2000,desiredEnd0x2003",
+      "conditional_result": "请求漏尾3字节；其它已有映射不能当本请求保证",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E049",
+        "FM96-E050",
+        "FM96-E079",
+        "FM96-E084",
+        "FM96-E085"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M15",
+      "subject": "B",
+      "inputs": "A=0x1003,L=100",
+      "operations": "B0x1000,o3,S4096,end0x2000,desiredEnd0x1067",
+      "conditional_result": "请求能覆盖，但会扩大本次页表候选区",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E049",
+        "FM96-E050",
+        "FM96-E084",
+        "FM96-E085"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M16",
+      "subject": "B",
+      "inputs": "A=0x1fff,L=2",
+      "operations": "B0x1000,o4095,S4096,end0x2000,desiredEnd0x2001",
+      "conditional_result": "最后1字节落在页外；不可由大页对齐推定完整覆盖",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E049",
+        "FM96-E050",
+        "FM96-E084",
+        "FM96-E085"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M17",
+      "subject": "B",
+      "inputs": "A=0x1003,L=0",
+      "operations": "S0，B0x1000，底层start==end",
+      "conditional_result": "没有正长度请求；flush调用仍可能发生，空目标不表明FB真实可用",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E049",
+        "FM96-E050",
+        "FM96-E069",
+        "FM96-E070",
+        "FM96-E079"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M18",
+      "subject": "B",
+      "inputs": "64位ulong B=2^64-4096,S4096",
+      "operations": "paddr_start+size按u64回绕为0；不能用无限整数B+S解释实际参数",
+      "conditional_result": "最早整数回绕/指针形成停止",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E079",
+        "FM96-E084",
+        "FM96-E086",
+        "FM96-E087"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M19",
+      "subject": "C",
+      "inputs": "空页表并且四级页表分配全成功，oldPTE none",
+      "operations": "1<<PG_LEVEL_4K；新PTE尝试pfn_pte并safe set",
+      "conditional_result": "仅源码候选新4K叶；不认证MMU可访问性",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E056",
+        "FM96-E057",
+        "FM96-E058",
+        "FM96-E059",
+        "FM96-E079",
+        "FM96-E088",
+        "FM96-E098",
+        "FM96-E100"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M20",
+      "subject": "C",
+      "inputs": "此前PTE非none",
+      "operations": "phys_pte_init复用旧值continue",
+      "conditional_result": "没有证据要求新prot覆盖旧PTE；paddr_last可保持初值end",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E056",
+        "FM96-E058",
+        "FM96-E070",
+        "FM96-E075"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M21",
+      "subject": "C",
+      "inputs": "一个新的有效4K PTE且paddr_start=4096,end=8192",
+      "operations": "一叶物理终点8192，wrapper转换(void*)8192",
+      "conditional_result": "返回指针数值8192来自物理端点，不是__va(4096)且不是成功字节数",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E059",
+        "FM96-E069",
+        "FM96-E070",
+        "FM96-E075",
+        "FM96-E079",
+        "FM96-E087"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M22",
+      "subject": "C",
+      "inputs": "只看所选保护宏定义",
+      "operations": "PAGE_KERNEL_NOENC=mask(__PAGE_KERNEL|0)，__PAGE_KERNEL不含PCD/PWT，NOCACHE由__NC明确包含PCD|PWT",
+      "conditional_result": "编码候选不同；不能判真实缓存/MTRR/PAT结果",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E089",
+        "FM96-E090",
+        "FM96-E092",
+        "FM96-E093",
+        "FM96-E094",
+        "FM96-E095",
+        "FM96-E096",
+        "FM96-E097"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    },
+    {
+      "id": "FM96-M23",
+      "subject": "C",
+      "inputs": "固定源码顺序与当前核根未知",
+      "operations": "VBE myos_ioremap后flush_tlb_local重写current CR3，init_mem_mapping稍后load_cr3(swapper_pg_dir)再__flush_tlb_all",
+      "conditional_result": "同CPU两次动作与其它CPU可见性不能混合；静态时序不证明全局刷新完成",
+      "first_stop_gate": "对象、实参、构建选择与先行旧qualified_id成立前只作有条件静态消费；不等于硬件或运行证明",
+      "evidence_ids": [
+        "FM96-E050",
+        "FM96-E055",
+        "FM96-E101",
+        "FM96-E102",
+        "FM96-E103",
+        "FM96-E106",
+        "FM96-E107"
+      ],
+      "execution": "PURE_MATHEMATICS_AND_SOURCE_ORDER_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 23,
+  "model_first_proof_policy": "Each independent arithmetic model explicitly isolates all earlier C/UEFI/ABI and static object gates. No repository implementation execution.",
+  "old_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-F05",
+      "disposition": "retain_pixel_pitch_source_provenance_extended_no_new_same_root"
+    },
+    {
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U05",
+      "disposition": "retain_mapping_geometry_and_real_memory_unknown"
+    },
+    {
+      "qualified_id": "CORE-USER-CONSOLE-REGISTRATION-OUTPUT-95::CN95-U06",
+      "disposition": "retain_actual_glyph_memory_and_font_object_contract"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F04",
+      "disposition": "retain_non_LF_registered_flush_case"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F05",
+      "disposition": "retain_ring_equal_mask_linear_span_first_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTK-FORMAT-BUFFER-94::PK94-F06",
+      "disposition": "retain_ring_tail_prefix_first_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U02",
+      "disposition": "retain_tag_real_byte_extent"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-U03",
+      "disposition": "retain_valid_tag_total_size"
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-F05",
+      "disposition": "retain_buffer_allocation_counter_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-EARLY-PGTABLE-STORAGE-81::PT81-U03",
+      "disposition": "retain_real_active_CR3_root"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U05",
+      "disposition": "retain_integer_overflow_and_ABI"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U07",
+      "disposition": "retain_actual_lower_mapping_outcome"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F03",
+      "disposition": "retain_overshoot_physical_endpoint"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F06",
+      "disposition": "retain_PTE_early_pointer_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F08",
+      "disposition": "retain_attribute_page_frame_condition"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-STRING-POINTER-93::SP93-F01",
+      "disposition": "retain_percent_p_prior"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "disposition": "retain_C_pointer_first_gate"
+    }
+  ],
+  "graph_alignment": {
+    "dot_file": "framebuffer-mapping-paths.dot",
+    "node_names": [
+      "uefi_entry",
+      "mode",
+      "mb_tag",
+      "parse_tag",
+      "kernel_fb",
+      "video",
+      "pos",
+      "glyph",
+      "setup",
+      "init_map",
+      "memory_map",
+      "vbe",
+      "ioremap",
+      "mapping_root",
+      "pud",
+      "pmd",
+      "pte",
+      "prot",
+      "tlb_local",
+      "cr3",
+      "hpet",
+      "reg",
+      "list",
+      "console_unlock",
+      "ring_scan",
+      "dispatch",
+      "callback",
+      "font",
+      "stop_type",
+      "stop_offset",
+      "stop_mapping",
+      "stop_return",
+      "stop_tlb",
+      "stop_old",
+      "linebuf",
+      "buffer",
+      "old_e045",
+      "old_e064",
+      "old_e050"
+    ],
+    "CALL_is_direct_only": true,
+    "indirect_and_macro_distinct": true,
+    "graphviz": "NOT_RUN",
+    "full_CFG": false
+  },
+  "full_local_P9": "NOT_RUN",
+  "compiler_preprocess_link": "NOT_RUN",
+  "repository_programs_scripts": "NOT_RUN",
+  "QEMU_hardware_real_concurrency": "NOT_RUN"
+}

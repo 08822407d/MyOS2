@@ -1,0 +1,119 @@
+// Fixed MyOS2 time@a039d9803ade static conditional graph — NOT complete CFG, NEVER executed.
+// CALL is a direct real source-level function call; INDIRECT_CALL is a function pointer invocation.
+// SOURCE_CHAIN indicates intervening functions; not a direct CALL. No Graphviz run.
+digraph FM96_Framebuffer {
+  graph [rankdir=LR,labelloc=t,label="FM96: D00 console correction + framebuffer producer -> physical request -> page tables -> TLB"]
+  node [shape=box,fontsize=10]; edge [fontsize=9];
+  subgraph cluster_0 {
+    label="D00 registry and corrected evidence";
+    reg [label="register_console\ncontains node else add-tail THEN ACTIVE console_unlock",shape=box];
+    list [label="console_list_hdr/contains/add\ncount and iterator; list lock not proven",shape=box];
+    console_unlock [label="console_unlock\nif backlog snapshot & con_start advance",shape=box];
+    ring_scan [label="call_console_drivers\nLF-dependent dispatch; noLF tail call commented",shape=box];
+    dispatch [label="_call_console_drivers -> __call_console_drivers\nfor_each_console; no active write!=NULL check",shape=box];
+    callback [label="myos_tempcon_write -> tty color -> glyph\nINDIRECT only with valid registered object",shape=box];
+    font [label="font_ascii[256][16]\nactual font.c object, NOT extern declaration",shape=box];
+    old_e045 [label="D00 old95 E045\n3 macros falsely grouped -> NEW E015/E016/E017",shape=box];
+    old_e064 [label="D00 old95 E064\ncomment before macro -> NEW E013/E014",shape=box];
+    old_e050 [label="D00 old95 E050\nextern only -> NEW E018 real font object",shape=box];
+  }
+  subgraph cluster_1 {
+    label="A Boot metadata";
+    uefi_entry [label="UefiMain\nset_video_mode(-1), then fill_framebuffer_info",shape=box];
+    mode [label="set_video_mode\nQueryMode / PixelFormat filter / SetMode (status unverified)",shape=box];
+    mb_tag [label="fill_framebuffer_info\ncommon.addr/width/height/bpp/pitch/type",shape=box];
+    parse_tag [label="parse_tag\nswitch FRAMEBUFFER tag after guards",shape=box];
+    kernel_fb [label="get_framebuffer_info\nframebuffer_s global field assignments",shape=box];
+    video [label="myos_init_video\nPos init, color_printk x2, pr_info before register",shape=box];
+    pos [label="position_t Pos\nFB_addr/FB_length/geometry; pixels not certified",shape=box];
+    glyph [label="kputchar\n16x8 u32* writes, real framebuffer unknown",shape=box];
+    linebuf [label="video linebuf[4096]\nold95 boundary; no new audit",shape=box];
+    buffer [label="color_printk[4096]\nold KN91/PF92 first C pointer gate",shape=box];
+  }
+  subgraph cluster_2 {
+    label="B Startup mapping and range";
+    setup [label="setup_arch\ncalled by start_kernel",shape=box];
+    init_map [label="init_mem_mapping\nRAM mapping, myos_memory_map, then load_cr3",shape=box];
+    memory_map [label="myos_memory_map\nCALL VBE then IOAPIC",shape=box];
+    vbe [label="myos_init_VBE_mapping\nB=alignDown(A), S=alignUp(L); ignore return; flush",shape=box];
+    ioremap [label="myos_ioremap(size_t start, ulong size)\n4K mask, PAGE_KERNEL_NOENC, init=true",shape=box];
+  }
+  subgraph cluster_3 {
+    label="C Mapping and attributes";
+    mapping_root [label="__kernel_physical_mapping_init\n__va/direct-map root; return physical paddr_last",shape=box];
+    pud [label="phys_pud_init\nold leaf reuse/demote vs new child",shape=box];
+    pmd [label="phys_pmd_init\nexisting leaf/nonleaf vs new page",shape=box];
+    pte [label="phys_pte_init\nnone->new; nonnone->reuse; physical paddr_last",shape=box];
+    prot [label="PAGE_KERNEL_NOENC\n__PAGE_KERNEL & masks; NOCACHE COMMENT only",shape=box];
+    tlb_local [label="flush_tlb_local\nwrite_cr3(__read_cr3()) on current CPU",shape=box];
+    cr3 [label="init_mem_mapping later load_cr3(swapper_pg_dir)\nand __flush_tlb_all -> local wrapper",shape=box];
+    hpet [label="hpet_set_mapping (one comparator only)\nstores ioremap return in hpet_virt_address",shape=box];
+  }
+  subgraph cluster_4 {
+    label="Proof boundaries";
+    stop_type [label="TYPE_GATE\nu32 intermediates / u8 field / div zero / tag",shape=octagon];
+    stop_offset [label="EXTENT_GATE\nA-o vs ceil(L/P)P; o+L can exceed S",shape=octagon];
+    stop_mapping [label="MAPPING_GATE\nold PTE, alloc, root, FB object not confirmed",shape=octagon];
+    stop_return [label="RETURN_GATE\nphysical paddr_last cast void* not __va(start)",shape=octagon];
+    stop_tlb [label="TLB_GATE\ncurrent CPU and root only; global visibility unknown",shape=octagon];
+    stop_old [label="HISTORY_GATE\nBM80 / PT81 / DM82 / TI83 / PK94 / CN95",shape=octagon];
+  }
+  uefi_entry -> mode [label="CALL: UefiMain -> set_video_mode", color=blue, style=solid];
+  uefi_entry -> mb_tag [label="CALL: UefiMain -> fill_framebuffer_info", color=blue, style=solid];
+  mode -> mb_tag [label="DATA: selected Mode pointer and Info values", color=black, style=solid];
+  mb_tag -> parse_tag [label="DATA_HANDOFF: boot tag bytes; NOT same runtime CALL", color=black, style=dotted];
+  parse_tag -> kernel_fb [label="CALL: FRAMEBUFFER case -> get_framebuffer_info", color=blue, style=solid];
+  kernel_fb -> video [label="DATA: FB_virbase, geometry, length to Pos", color=black, style=solid];
+  kernel_fb -> vbe [label="DATA: FB_phybase + FB_size physical request", color=black, style=solid];
+  setup -> init_map [label="CALL: setup_arch -> init_mem_mapping", color=blue, style=solid];
+  init_map -> memory_map [label="CALL: init_mem_mapping -> myos_memory_map", color=blue, style=solid];
+  memory_map -> vbe [label="CALL: myos_memory_map -> VBE helper", color=blue, style=solid];
+  vbe -> ioremap [label="CALL: myos_ioremap(start,rounded SIZE), return IGNORED", color=blue, style=solid];
+  vbe -> tlb_local [label="CALL: flush_tlb_local after myos_ioremap", color=blue, style=solid];
+  ioremap -> mapping_root [label="CALL: __kernel_physical_mapping_init(start,end,mask,prot,init)", color=blue, style=solid];
+  mapping_root -> pud [label="MACRO_EXPANSION: phys_p4d_init macro expands to phys_pud_init", color=green, style=dashed];
+  pud -> pmd [label="CALL: if child/demotion branch reaches phys_pmd_init", color=blue, style=solid];
+  pmd -> pte [label="CALL: only if 4K child branch reaches phys_pte_init", color=blue, style=solid];
+  mapping_root -> pud [label="DATA: paddr_start/end plus proto/init", color=black, style=solid];
+  pud -> prot [label="DATA: old leaf protection or new supplied prot", color=black, style=solid];
+  pmd -> prot [label="DATA: old leaf demoted may retain earlier attributes", color=black, style=solid];
+  pte -> prot [label="DATA: pfn_pte + check_pgprot on new PTE only", color=black, style=solid];
+  mapping_root -> cr3 [label="SOURCE_ORDER: root edits before later load_cr3 (via init_map)", color=gray, style=dotted];
+  init_map -> cr3 [label="CALL: load_cr3(swapper_pg_dir), then __flush_tlb_all", color=blue, style=solid];
+  cr3 -> tlb_local [label="CALL: __flush_tlb_all active body calls flush_tlb_local", color=blue, style=solid];
+  hpet -> ioremap [label="CALL: other caller hpet_set_mapping", color=blue, style=solid];
+  ioremap -> hpet [label="RETURN_FLOW: returned (void*)physical end stored as hpet_virt_address", color=purple, style=dotted];
+  ioremap -> stop_return [label="CONDITIONAL_STOP: cannot claim virtual mapping base", color=red, style=dashed];
+  vbe -> stop_offset [label="CONDITIONAL_STOP: unaligned A + page-rounded L can miss desired end", color=red, style=dashed];
+  mb_tag -> stop_type [label="CONDITIONAL_STOP: width*height, bpp uint8, pitch, mode index", color=red, style=dashed];
+  kernel_fb -> stop_type [label="CONDITIONAL_STOP: u32 intermediate before u64 FB_size", color=red, style=dashed];
+  mapping_root -> stop_mapping [label="CONDITIONAL_STOP: existing leaf/alloc/parent root validity", color=red, style=dashed];
+  vbe -> stop_tlb [label="CONDITIONAL_STOP: local flush before later root switch", color=red, style=dashed];
+  cr3 -> stop_tlb [label="CONDITIONAL_STOP: cannot infer other CPUs or hardware cache behavior", color=red, style=dashed];
+  kernel_fb -> pos [label="DATA: FB_virbase copied through video", color=black, style=solid];
+  video -> pos [label="DATA: position_t fields and lock initialized", color=black, style=solid];
+  video -> glyph [label="SOURCE_CHAIN: via color_printk -> myos_tty_write_color -> kputchar", color=gray, style=dotted];
+  glyph -> font [label="DATA: glyph byte table read", color=black, style=solid];
+  video -> linebuf [label="DATA: 4096B buffer and source string", color=black, style=solid];
+  video -> buffer [label="SOURCE_CHAIN: direct color_printk formatter", color=gray, style=dotted];
+  video -> reg [label="SOURCE_ORDER: console_init registers after video returns", color=gray, style=dotted];
+  reg -> list [label="CALL: contains and optional add_to_tail helper", color=blue, style=solid];
+  list -> console_unlock [label="SOURCE_ORDER: successful insert returns before flush", color=gray, style=dotted];
+  reg -> console_unlock [label="CALL: ACTIVE console_unlock; not old commented replay", color=blue, style=solid];
+  console_unlock -> ring_scan [label="CALL: if pending con_start != log_end", color=blue, style=solid];
+  ring_scan -> dispatch [label="SOURCE_CHAIN: LF -> _call_console_drivers -> __call_console_drivers", color=gray, style=dotted];
+  list -> dispatch [label="DATA: for_each_console list iteration", color=black, style=solid];
+  dispatch -> callback [label="INDIRECT_CALL: con->write only when this con is valid tempcon", color=purple, style=dashed];
+  callback -> glyph [label="SOURCE_CHAIN: temp_write -> tty -> kputchar", color=gray, style=dotted];
+  reg -> stop_old [label="CONDITIONAL_STOP: PK94 ring span + unknown callback + D00 review pending", color=red, style=dashed];
+  dispatch -> stop_old [label="CONDITIONAL_STOP: PK94-F05/06 no physically linear ring guarantee", color=red, style=dashed];
+  glyph -> stop_mapping [label="CONDITIONAL_STOP: FB pitch, layout, C pointer and MMU unverified", color=red, style=dashed];
+  old_e045 -> prot [label="DOCUMENT_CORRECTION: PAGE_SHIFT/PAGE_SIZE/PAGE_MASK 3 distinct definitions", color=orange, style=dashed];
+  old_e045 -> stop_old [label="DOCUMENT_CORRECTION: old95 70/70/0 retained, overbroad P2 withdrawn", color=orange, style=dashed];
+  old_e064 -> list [label="DOCUMENT_CORRECTION: actual for_each_console / lower macro", color=orange, style=dashed];
+  old_e050 -> font [label="DOCUMENT_CORRECTION: font.h extern is NOT object definition", color=orange, style=dashed];
+  mb_tag -> stop_old [label="CONDITIONAL_STOP: BM80 valid tag/MBI extent", color=red, style=dashed];
+  mapping_root -> stop_old [label="CONDITIONAL_STOP: PT81 DM82 TI83 first gates retained", color=red, style=dashed];
+  linebuf -> stop_old [label="CONDITIONAL_STOP: old95 first format/array gate retained", color=red, style=dashed];
+  buffer -> stop_old [label="CONDITIONAL_STOP: KN91-U01 PF92-U06 retained", color=red, style=dashed];
+}
