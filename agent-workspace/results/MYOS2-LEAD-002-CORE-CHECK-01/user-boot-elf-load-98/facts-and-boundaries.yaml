@@ -1,0 +1,2597 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOT-ELF-LOAD-98",
+  "record_type": "batch98_frozen_source_conditional_facts_and_models",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "produced_by": "GPT-6（visible family; backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-17",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_fixed_short12": "280b7b49a521",
+  "execution_parent_short12": "f2df1e04cea8",
+  "master_direct_short12": "e8e60cd19540",
+  "D00": "NOT_REQUIRED",
+  "batch96": "PASS_PENDING_LOCAL_DOCUMENTATION_CLOSED",
+  "batch97": "PASS_PENDING_LOCAL_WITH_R97_S01_S02_S03",
+  "mainline_acceptance": "PENDING",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "runtime_evidence": "NOT_RUN",
+  "G00": {
+    "status": "PASS_READ_ONLY",
+    "branch_refs": {
+      "lead": "280b7b49a521",
+      "exec": "f2df1e04cea8",
+      "master": "e8e60cd19540",
+      "time": "a039d9803ade"
+    },
+    "PR16": "OPEN",
+    "PR17": "OPEN_DRAFT",
+    "target98_dir": "ABSENT",
+    "formal98_marker_count": 0,
+    "existing_open_pr_count": 2,
+    "canaries": "time_and_master_two_distinct_matching_source_lines"
+  },
+  "source_files_with_new_anchors": [
+    "myloader/uefi/bootloader.c",
+    "myloader/uefi/utils.c",
+    "myloader/uefi/utils.h",
+    "myloader/uefi/ElfLib/ElfLib.c",
+    "myloader/uefi/ElfLib/ElfCommon.h",
+    "myloader/uefi/ElfLib/Elf64.h",
+    "myloader/uefi/ElfLib.h",
+    "myloader/uefi/ElfLib/Elf64Lib.c",
+    "myloader/uefi/ElfLib/ElfLibInternal.h"
+  ],
+  "read_extra_direct_helpers": [
+    "myloader/uefi/bootloader.h"
+  ],
+  "source_count_with_new_anchors": 9,
+  "source_quote_index": [
+    {
+      "id": "BE98-E001",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "category": "CALLER_LOCAL",
+      "topic": "A",
+      "line_start": 29,
+      "line_end": 32
+    },
+    {
+      "id": "BE98-E002",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "category": "BOOT_SERVICE_CALL",
+      "topic": "A",
+      "line_start": 34,
+      "line_end": 34
+    },
+    {
+      "id": "BE98-E003",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "category": "DIRECT_CALL",
+      "topic": "A",
+      "line_start": 38,
+      "line_end": 39
+    },
+    {
+      "id": "BE98-E004",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "FUNCTION_DEFINITION",
+      "topic": "A",
+      "line_start": 3,
+      "line_end": 5
+    },
+    {
+      "id": "BE98-E005",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "LOCAL_DECLARATIONS",
+      "topic": "A",
+      "line_start": 6,
+      "line_end": 9
+    },
+    {
+      "id": "BE98-E006",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "DIRECT_AND_INDIRECT_CALL",
+      "topic": "A",
+      "line_start": 12,
+      "line_end": 15
+    },
+    {
+      "id": "BE98-E007",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "ERROR_BRANCH",
+      "topic": "A",
+      "line_start": 16,
+      "line_end": 20
+    },
+    {
+      "id": "BE98-E008",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "FILE_INFO_REQUEST",
+      "topic": "A",
+      "line_start": 24,
+      "line_end": 27
+    },
+    {
+      "id": "BE98-E009",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "BYTE_COUNT_SELECTED",
+      "topic": "A",
+      "line_start": 29,
+      "line_end": 31
+    },
+    {
+      "id": "BE98-E010",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "LOG_ONLY",
+      "topic": "A",
+      "line_start": 33,
+      "line_end": 34
+    },
+    {
+      "id": "BE98-E011",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "ALLOCATION_AND_READ_REQUEST",
+      "topic": "A",
+      "line_start": 36,
+      "line_end": 40
+    },
+    {
+      "id": "BE98-E012",
+      "path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "category": "RESOURCE_CLOSE_AND_RETURN",
+      "topic": "A",
+      "line_start": 42,
+      "line_end": 46
+    },
+    {
+      "id": "BE98-E013",
+      "path": "myloader/uefi/utils.h",
+      "symbol": "PAGE_SHIFT",
+      "category": "LOADER_MACRO",
+      "topic": "A",
+      "line_start": 14,
+      "line_end": 14
+    },
+    {
+      "id": "BE98-E014",
+      "path": "myloader/uefi/utils.h",
+      "symbol": "PAGE_SIZE",
+      "category": "LOADER_MACRO",
+      "topic": "A",
+      "line_start": 15,
+      "line_end": 15
+    },
+    {
+      "id": "BE98-E015",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "category": "RAW_FILE_CALLER",
+      "topic": "A",
+      "line_start": 334,
+      "line_end": 338
+    },
+    {
+      "id": "BE98-E016",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "category": "FORMAT_GATE",
+      "topic": "A",
+      "line_start": 338,
+      "line_end": 342
+    },
+    {
+      "id": "BE98-E017",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "category": "PARSE_GATE",
+      "topic": "A",
+      "line_start": 345,
+      "line_end": 348
+    },
+    {
+      "id": "BE98-E018",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "FORMAT_PREDICATE",
+      "topic": "B",
+      "line_start": 24,
+      "line_end": 28
+    },
+    {
+      "id": "BE98-E019",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "MAGIC_PREDICATE",
+      "topic": "B",
+      "line_start": 34,
+      "line_end": 38
+    },
+    {
+      "id": "BE98-E020",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "FORMAT_ERROR",
+      "topic": "B",
+      "line_start": 39,
+      "line_end": 41
+    },
+    {
+      "id": "BE98-E021",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "ENDIAN_GATE",
+      "topic": "B",
+      "line_start": 46,
+      "line_end": 48
+    },
+    {
+      "id": "BE98-E022",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "ELF64_SELECTED",
+      "topic": "B",
+      "line_start": 53,
+      "line_end": 55
+    },
+    {
+      "id": "BE98-E023",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "CLASS_BRANCH",
+      "topic": "B",
+      "line_start": 56,
+      "line_end": 60
+    },
+    {
+      "id": "BE98-E024",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "MACHINE_GATE",
+      "topic": "B",
+      "line_start": 66,
+      "line_end": 68
+    },
+    {
+      "id": "BE98-E025",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "TYPE_GATE",
+      "topic": "B",
+      "line_start": 73,
+      "line_end": 75
+    },
+    {
+      "id": "BE98-E026",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "VERSION_GATE",
+      "topic": "B",
+      "line_start": 80,
+      "line_end": 82
+    },
+    {
+      "id": "BE98-E027",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "IsElfFormat",
+      "category": "PREDICATE_SUCCESS",
+      "topic": "B",
+      "line_start": 106,
+      "line_end": 107
+    },
+    {
+      "id": "BE98-E028",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "EI_MAG1",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 63,
+      "line_end": 63
+    },
+    {
+      "id": "BE98-E029",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "EI_MAG2",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 64,
+      "line_end": 64
+    },
+    {
+      "id": "BE98-E030",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "EI_MAG3",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 65,
+      "line_end": 65
+    },
+    {
+      "id": "BE98-E031",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "ELFMAG3",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 79,
+      "line_end": 79
+    },
+    {
+      "id": "BE98-E032",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "ELFDATA2LSB",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 94,
+      "line_end": 94
+    },
+    {
+      "id": "BE98-E033",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "ELFCLASS64",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 90,
+      "line_end": 90
+    },
+    {
+      "id": "BE98-E034",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "EM_X86_64",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 178,
+      "line_end": 178
+    },
+    {
+      "id": "BE98-E035",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "ET_EXEC",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 128,
+      "line_end": 128
+    },
+    {
+      "id": "BE98-E036",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "ET_DYN",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 129,
+      "line_end": 129
+    },
+    {
+      "id": "BE98-E037",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "EV_CURRENT",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 85,
+      "line_end": 85
+    },
+    {
+      "id": "BE98-E038",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "PT_LOAD",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 259,
+      "line_end": 259
+    },
+    {
+      "id": "BE98-E039",
+      "path": "myloader/uefi/ElfLib/Elf64.h",
+      "symbol": "Elf64_Ehdr",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 69,
+      "line_end": 73
+    },
+    {
+      "id": "BE98-E040",
+      "path": "myloader/uefi/ElfLib/Elf64.h",
+      "symbol": "Elf64_Ehdr",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 74,
+      "line_end": 78
+    },
+    {
+      "id": "BE98-E041",
+      "path": "myloader/uefi/ElfLib/Elf64.h",
+      "symbol": "Elf64_Ehdr",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 79,
+      "line_end": 83
+    },
+    {
+      "id": "BE98-E042",
+      "path": "myloader/uefi/ElfLib/Elf64.h",
+      "symbol": "Elf64_Shdr",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 90,
+      "line_end": 94
+    },
+    {
+      "id": "BE98-E043",
+      "path": "myloader/uefi/ElfLib/Elf64.h",
+      "symbol": "Elf64_Shdr",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 95,
+      "line_end": 99
+    },
+    {
+      "id": "BE98-E044",
+      "path": "myloader/uefi/ElfLib/Elf64.h",
+      "symbol": "Elf64_Phdr",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 108,
+      "line_end": 112
+    },
+    {
+      "id": "BE98-E045",
+      "path": "myloader/uefi/ElfLib/Elf64.h",
+      "symbol": "Elf64_Phdr",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 113,
+      "line_end": 117
+    },
+    {
+      "id": "BE98-E046",
+      "path": "myloader/uefi/ElfLib.h",
+      "symbol": "ELF_IMAGE_CONTEXT",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 19,
+      "line_end": 23
+    },
+    {
+      "id": "BE98-E047",
+      "path": "myloader/uefi/ElfLib.h",
+      "symbol": "ELF_IMAGE_CONTEXT",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 24,
+      "line_end": 28
+    },
+    {
+      "id": "BE98-E048",
+      "path": "myloader/uefi/ElfLib.h",
+      "symbol": "ELF_IMAGE_CONTEXT",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 29,
+      "line_end": 33
+    },
+    {
+      "id": "BE98-E049",
+      "path": "myloader/uefi/ElfLib.h",
+      "symbol": "SEGMENT_INFO",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 35,
+      "line_end": 39
+    },
+    {
+      "id": "BE98-E050",
+      "path": "myloader/uefi/ElfLib.h",
+      "symbol": "SEGMENT_INFO",
+      "category": "STRUCT_DEF",
+      "topic": "B",
+      "line_start": 40,
+      "line_end": 42
+    },
+    {
+      "id": "BE98-E051",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "GetElf64SectionByIndex",
+      "category": "INDEX_BOUND",
+      "topic": "B",
+      "line_start": 27,
+      "line_end": 30
+    },
+    {
+      "id": "BE98-E052",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "GetElf64SectionByIndex",
+      "category": "INDEX_POINTER",
+      "topic": "B",
+      "line_start": 32,
+      "line_end": 33
+    },
+    {
+      "id": "BE98-E053",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "GetElf64SegmentByIndex",
+      "category": "INDEX_BOUND",
+      "topic": "B",
+      "line_start": 51,
+      "line_end": 54
+    },
+    {
+      "id": "BE98-E054",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "GetElf64SegmentByIndex",
+      "category": "INDEX_POINTER",
+      "topic": "B",
+      "line_start": 56,
+      "line_end": 57
+    },
+    {
+      "id": "BE98-E055",
+      "path": "myloader/uefi/ElfLib/ElfLibInternal.h",
+      "symbol": "ELF_NEXT_ENTRY",
+      "category": "MACRO",
+      "topic": "B",
+      "line_start": 20,
+      "line_end": 21
+    },
+    {
+      "id": "BE98-E056",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "CONTEXT_INIT",
+      "topic": "B",
+      "line_start": 244,
+      "line_end": 248
+    },
+    {
+      "id": "BE98-E057",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "PARSE_PRECHECK",
+      "topic": "B",
+      "line_start": 250,
+      "line_end": 254
+    },
+    {
+      "id": "BE98-E058",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "FORMAT_STATUS",
+      "topic": "B",
+      "line_start": 254,
+      "line_end": 257
+    },
+    {
+      "id": "BE98-E059",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "CLASS_SET",
+      "topic": "B",
+      "line_start": 259,
+      "line_end": 260
+    },
+    {
+      "id": "BE98-E060",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "ELF64_TYPE_CHECK",
+      "topic": "B",
+      "line_start": 277,
+      "line_end": 280
+    },
+    {
+      "id": "BE98-E061",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "SECTION_NAME_INDEX",
+      "topic": "B",
+      "line_start": 282,
+      "line_end": 285
+    },
+    {
+      "id": "BE98-E062",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "CONTEXT_FIELD_SOURCE",
+      "topic": "B",
+      "line_start": 287,
+      "line_end": 291
+    },
+    {
+      "id": "BE98-E063",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "SEGMENT_RANGE_INIT",
+      "topic": "B",
+      "line_start": 297,
+      "line_end": 301
+    },
+    {
+      "id": "BE98-E064",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "SEGMENT_STATUS_AND_FILTER",
+      "topic": "B",
+      "line_start": 301,
+      "line_end": 305
+    },
+    {
+      "id": "BE98-E065",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "RELOAD_FLAG_CONDITION",
+      "topic": "B",
+      "line_start": 308,
+      "line_end": 312
+    },
+    {
+      "id": "BE98-E066",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "RELOAD_FLAG_WRITE",
+      "topic": "B",
+      "line_start": 311,
+      "line_end": 313
+    },
+    {
+      "id": "BE98-E067",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "IMAGE_BASE_CALC",
+      "topic": "B",
+      "line_start": 315,
+      "line_end": 317
+    },
+    {
+      "id": "BE98-E068",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "IMAGE_END_CALC",
+      "topic": "B",
+      "line_start": 319,
+      "line_end": 321
+    },
+    {
+      "id": "BE98-E069",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "ParseElfImage",
+      "category": "CONTEXT_SIZE_AND_RETURN",
+      "topic": "B",
+      "line_start": 327,
+      "line_end": 331
+    },
+    {
+      "id": "BE98-E070",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "GetElfSegmentInfo",
+      "category": "PROGRAM_HEADER_FIELD_SOURCE",
+      "topic": "B",
+      "line_start": 198,
+      "line_end": 202
+    },
+    {
+      "id": "BE98-E071",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "GetElfSegmentInfo",
+      "category": "PROGRAM_HEADER_FIELD_SOURCE",
+      "topic": "B",
+      "line_start": 203,
+      "line_end": 207
+    },
+    {
+      "id": "BE98-E072",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "CalculateElfFileSize",
+      "category": "SIZE_PRECHECK",
+      "topic": "B",
+      "line_start": 133,
+      "line_end": 135
+    },
+    {
+      "id": "BE98-E073",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "CalculateElfFileSize",
+      "category": "LAST_SECTION_STATUS",
+      "topic": "B",
+      "line_start": 137,
+      "line_end": 141
+    },
+    {
+      "id": "BE98-E074",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "CalculateElfFileSize",
+      "category": "LAST_SECTION_END",
+      "topic": "B",
+      "line_start": 143,
+      "line_end": 143
+    },
+    {
+      "id": "BE98-E075",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "CalculateElfFileSize",
+      "category": "SECTION_TABLE_SIZE",
+      "topic": "B",
+      "line_start": 150,
+      "line_end": 154
+    },
+    {
+      "id": "BE98-E076",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "CalculateElfFileSize",
+      "category": "FINAL_COMPUTED_FILESIZE",
+      "topic": "B",
+      "line_start": 155,
+      "line_end": 157
+    },
+    {
+      "id": "BE98-E077",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "GetElfSectionPos",
+      "category": "SECTION_POS_PRECHECK",
+      "topic": "B",
+      "line_start": 456,
+      "line_end": 460
+    },
+    {
+      "id": "BE98-E078",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "GetElfSectionPos",
+      "category": "SECTION_POS_VALUES",
+      "topic": "B",
+      "line_start": 473,
+      "line_end": 477
+    },
+    {
+      "id": "BE98-E079",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "category": "PARSE_STATUS_CONSUMER",
+      "topic": "C",
+      "line_start": 347,
+      "line_end": 351
+    },
+    {
+      "id": "BE98-E080",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "category": "LOG_ONLY",
+      "topic": "C",
+      "line_start": 353,
+      "line_end": 357
+    },
+    {
+      "id": "BE98-E081",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "category": "ALLOC_TARGET_AND_ENTRY",
+      "topic": "C",
+      "line_start": 361,
+      "line_end": 364
+    },
+    {
+      "id": "BE98-E082",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "category": "ALLOC_LOAD_RETURN",
+      "topic": "C",
+      "line_start": 365,
+      "line_end": 369
+    },
+    {
+      "id": "BE98-E083",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "LoadElfImage",
+      "category": "LOAD_CONTEXT_PRECHECK",
+      "topic": "C",
+      "line_start": 357,
+      "line_end": 361
+    },
+    {
+      "id": "BE98-E084",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "LoadElfImage",
+      "category": "LOAD_ADDR_CHECK",
+      "topic": "C",
+      "line_start": 365,
+      "line_end": 369
+    },
+    {
+      "id": "BE98-E085",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "LoadElfImage",
+      "category": "CLASS_DISPATCH",
+      "topic": "C",
+      "line_start": 370,
+      "line_end": 374
+    },
+    {
+      "id": "BE98-E086",
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "LoadElfImage",
+      "category": "CLASS_STATUS_RETURN",
+      "topic": "C",
+      "line_start": 376,
+      "line_end": 376
+    },
+    {
+      "id": "BE98-E087",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "LoadElf64Image",
+      "category": "LOADER_LOCALS",
+      "topic": "C",
+      "line_start": 443,
+      "line_end": 447
+    },
+    {
+      "id": "BE98-E088",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "LoadElf64Image",
+      "category": "SEGMENT_ITERATION",
+      "topic": "C",
+      "line_start": 453,
+      "line_end": 457
+    },
+    {
+      "id": "BE98-E089",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "LoadElf64Image",
+      "category": "SEGMENT_SELECT",
+      "topic": "C",
+      "line_start": 463,
+      "line_end": 467
+    },
+    {
+      "id": "BE98-E090",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "LoadElf64Image",
+      "category": "SEGMENT_COPY_ZERO",
+      "topic": "C",
+      "line_start": 473,
+      "line_end": 476
+    },
+    {
+      "id": "BE98-E091",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "LoadElf64Image",
+      "category": "RELOCATION_BRANCH",
+      "topic": "C",
+      "line_start": 481,
+      "line_end": 485
+    },
+    {
+      "id": "BE98-E092",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "RelocateElf64Sections",
+      "category": "RELOCATION_INTERFACE_GATE",
+      "topic": "C",
+      "line_start": 369,
+      "line_end": 373
+    },
+    {
+      "id": "BE98-E093",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "RelocateElf64Sections",
+      "category": "RELOCATION_ENTRY_REWRITE",
+      "topic": "C",
+      "line_start": 374,
+      "line_end": 375
+    },
+    {
+      "id": "BE98-E094",
+      "path": "myloader/uefi/ElfLib/Elf64Lib.c",
+      "symbol": "RelocateElf64Sections",
+      "category": "DYNAMIC_BRANCH_STATUS",
+      "topic": "C",
+      "line_start": 380,
+      "line_end": 384
+    },
+    {
+      "id": "BE98-E095",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "category": "CALLER_LOGS",
+      "topic": "C",
+      "line_start": 62,
+      "line_end": 65
+    },
+    {
+      "id": "BE98-E096",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "category": "CALLER_CLOSE",
+      "topic": "C",
+      "line_start": 67,
+      "line_end": 68
+    },
+    {
+      "id": "BE98-E097",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "category": "ENTRY_POINTER",
+      "topic": "C",
+      "line_start": 70,
+      "line_end": 71
+    },
+    {
+      "id": "BE98-E098",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "category": "ENTRY_CALL_PREP",
+      "topic": "C",
+      "line_start": 75,
+      "line_end": 78
+    },
+    {
+      "id": "BE98-E099",
+      "path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "category": "ENTRY_CALL_ARGUMENTS",
+      "topic": "C",
+      "line_start": 79,
+      "line_end": 83
+    },
+    {
+      "id": "BE98-E100",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "EI_MAG0",
+      "line_start": 62,
+      "line_end": 62,
+      "category": "MACRO",
+      "topic": "B"
+    },
+    {
+      "id": "BE98-E101",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "ELFMAG0",
+      "line_start": 76,
+      "line_end": 76,
+      "category": "MACRO",
+      "topic": "B"
+    },
+    {
+      "id": "BE98-E102",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "ELFMAG1",
+      "line_start": 77,
+      "line_end": 77,
+      "category": "MACRO",
+      "topic": "B"
+    },
+    {
+      "id": "BE98-E103",
+      "path": "myloader/uefi/ElfLib/ElfCommon.h",
+      "symbol": "ELFMAG2",
+      "line_start": 78,
+      "line_end": 78,
+      "category": "MACRO",
+      "topic": "B"
+    }
+  ],
+  "source_quote_recheck": {
+    "source_version": "time@a039d9803ade",
+    "extracted_quotes": 103,
+    "definition_and_literal_check": "PASS_103_of_103_FIXED_TIME_LITERAL_AND_ONE_DEFINITION_SCOPE_CHECKED; no repository program execution",
+    "comment_status": "NOT_A_RUNTIME_PROOF",
+    "original97_quote_count_not_mixed": 85,
+    "actual_reopened_fixed_files": 9,
+    "raw_103_labels_counted_only_evidence_md": true,
+    "distinct_p2_macro_definition_checked": true
+  },
+  "fact_to_evidence_id_index": {
+    "file_read_status_and_extent_matrix": [
+      "BE98-E001",
+      "BE98-E002",
+      "BE98-E003",
+      "BE98-E004",
+      "BE98-E005",
+      "BE98-E006",
+      "BE98-E007",
+      "BE98-E008",
+      "BE98-E009",
+      "BE98-E011",
+      "BE98-E013",
+      "BE98-E014",
+      "BE98-E010",
+      "BE98-E012",
+      "BE98-E015",
+      "BE98-E016",
+      "BE98-E017",
+      "BE98-E069",
+      "BE98-E073",
+      "BE98-E074",
+      "BE98-E076",
+      "BE98-E080"
+    ],
+    "file_handle_and_buffer_lifecycle_matrix": [
+      "BE98-E006",
+      "BE98-E007",
+      "BE98-E012",
+      "BE98-E008",
+      "BE98-E009",
+      "BE98-E011",
+      "BE98-E081",
+      "BE98-E082"
+    ],
+    "elf64_validation_and_index_matrix": [
+      "BE98-E019",
+      "BE98-E020",
+      "BE98-E028",
+      "BE98-E029",
+      "BE98-E030",
+      "BE98-E031",
+      "BE98-E021",
+      "BE98-E022",
+      "BE98-E023",
+      "BE98-E032",
+      "BE98-E033",
+      "BE98-E024",
+      "BE98-E025",
+      "BE98-E026",
+      "BE98-E034",
+      "BE98-E035",
+      "BE98-E036",
+      "BE98-E037",
+      "BE98-E039",
+      "BE98-E040",
+      "BE98-E041",
+      "BE98-E051",
+      "BE98-E052",
+      "BE98-E053",
+      "BE98-E054",
+      "BE98-E044",
+      "BE98-E060",
+      "BE98-E061",
+      "BE98-E070",
+      "BE98-E071",
+      "BE98-E045",
+      "BE98-E049",
+      "BE98-E050",
+      "BE98-E063",
+      "BE98-E064",
+      "BE98-E055",
+      "BE98-E088",
+      "BE98-E015",
+      "BE98-E018",
+      "BE98-E069",
+      "BE98-E074",
+      "BE98-E100",
+      "BE98-E101",
+      "BE98-E102",
+      "BE98-E103"
+    ],
+    "elf_context_extent_and_status_matrix": [
+      "BE98-E046",
+      "BE98-E047",
+      "BE98-E048",
+      "BE98-E056",
+      "BE98-E057",
+      "BE98-E058",
+      "BE98-E039",
+      "BE98-E042",
+      "BE98-E043",
+      "BE98-E061",
+      "BE98-E062",
+      "BE98-E063",
+      "BE98-E064",
+      "BE98-E065",
+      "BE98-E066",
+      "BE98-E081",
+      "BE98-E067",
+      "BE98-E068",
+      "BE98-E069",
+      "BE98-E072",
+      "BE98-E073",
+      "BE98-E074",
+      "BE98-E075",
+      "BE98-E076",
+      "BE98-E078",
+      "BE98-E070",
+      "BE98-E071",
+      "BE98-E044",
+      "BE98-E049",
+      "BE98-E051",
+      "BE98-E053",
+      "BE98-E077",
+      "BE98-E052"
+    ],
+    "allocation_destination_and_segment_write_matrix": [
+      "BE98-E015",
+      "BE98-E016",
+      "BE98-E017",
+      "BE98-E058",
+      "BE98-E056",
+      "BE98-E081",
+      "BE98-E082",
+      "BE98-E084",
+      "BE98-E090",
+      "BE98-E083",
+      "BE98-E085",
+      "BE98-E086",
+      "BE98-E038",
+      "BE98-E044",
+      "BE98-E045",
+      "BE98-E055",
+      "BE98-E088",
+      "BE98-E089",
+      "BE98-E091",
+      "BE98-E092",
+      "BE98-E093"
+    ],
+    "entry_publication_and_status_consumption_matrix": [
+      "BE98-E062",
+      "BE98-E079",
+      "BE98-E081",
+      "BE98-E015",
+      "BE98-E082",
+      "BE98-E007",
+      "BE98-E011",
+      "BE98-E012",
+      "BE98-E016",
+      "BE98-E090",
+      "BE98-E091",
+      "BE98-E092",
+      "BE98-E093",
+      "BE98-E094",
+      "BE98-E065",
+      "BE98-E066",
+      "BE98-E080",
+      "BE98-E001",
+      "BE98-E003",
+      "BE98-E095",
+      "BE98-E096",
+      "BE98-E097",
+      "BE98-E098",
+      "BE98-E099",
+      "BE98-E089"
+    ],
+    "ABC_join_matrix": [
+      "BE98-E008",
+      "BE98-E009",
+      "BE98-E011",
+      "BE98-E015",
+      "BE98-E069",
+      "BE98-E073",
+      "BE98-E075",
+      "BE98-E076",
+      "BE98-E017",
+      "BE98-E063",
+      "BE98-E067",
+      "BE98-E068",
+      "BE98-E081",
+      "BE98-E082",
+      "BE98-E090",
+      "BE98-E007",
+      "BE98-E012",
+      "BE98-E064",
+      "BE98-E083",
+      "BE98-E086",
+      "BE98-E091",
+      "BE98-E003",
+      "BE98-E095",
+      "BE98-E096",
+      "BE98-E097",
+      "BE98-E098",
+      "BE98-E099"
+    ]
+  },
+  "matrices": {
+    "file_read_status_and_extent_matrix": [
+      {
+        "id": "A-R01",
+        "node": "uefi",
+        "scenario": "UefiMain加载入口",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "UefiMain先HandleProtocol(LoadedImage)，再load_elf_kernel(...,&k_load_addr)",
+        "conditional_result": "该调用者未消费两次的EFI_STATUS，随后继续MBI生产及入口准备",
+        "first_stop_gate": "LoadedImage的真实服务返回、文件路径对象都未经验证",
+        "evidence_ids": [
+          "BE98-E001",
+          "BE98-E002",
+          "BE98-E003"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R02",
+        "node": "vol",
+        "scenario": "LoadFile卷与根句柄",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadFile通过LoadedImage->DeviceHandle调用HandleProtocol，再OpenVolume",
+        "conditional_result": "这两项的本地返回值在所读函数没有独立status分支",
+        "first_stop_gate": "无效Vol/RootFs前停；只说明函数指针调用，不认证外部服务完成",
+        "evidence_ids": [
+          "BE98-E004",
+          "BE98-E005",
+          "BE98-E006"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R03",
+        "node": "open",
+        "scenario": "文件打开失败",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "RootFs->Open的status保存在本地并被EFI_ERROR检查，失败返回该status",
+        "conditional_result": "Open失败是LoadFile唯一显式向上返回失败状态的分支",
+        "first_stop_gate": "调用RootFs->Open之前的协议/卷必须有效；不能称资源实际泄漏已发生",
+        "evidence_ids": [
+          "BE98-E006",
+          "BE98-E007"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R04",
+        "node": "getinfo",
+        "scenario": "信息取得",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "分配sizeof(EFI_FILE_INFO)+sizeof(CHAR16)*100的池缓冲后GetInfo(...,&bufsize,FileInfo)",
+        "conditional_result": "原函数没有消费AllocatePool/GetInfo的返回结果，GetInfo的bufsize写回随后可被覆写",
+        "first_stop_gate": "FileInfo指针是否有效及文件元信息内容都待服务状态",
+        "evidence_ids": [
+          "BE98-E008"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R05",
+        "node": "filebytes",
+        "scenario": "Read请求字节数",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "把bufsize设为size；size为0才取FileInfo->FileSize",
+        "conditional_result": "显式size形参、FileInfo.FileSize和GetInfo信息缓冲长度是三个来源；Read后bufsize可变",
+        "first_stop_gate": "FileInfo可读性、FileSize向UINTN的转换及外部Read契约未证",
+        "evidence_ids": [
+          "BE98-E008",
+          "BE98-E009"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R06",
+        "node": "filepages",
+        "scenario": "原始文件页请求",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "按(bufsize+PAGE_SIZE-1)/PAGE_SIZE从LoadFile局部addr申请AllocateAddress页面",
+        "conditional_result": "这里页数在loader PAGE_SHIFT12下可按4096隔离推演；没有消费AllocatePages返回或核查out addr",
+        "first_stop_gate": "UINTN加法溢出与实际页分配/目标地址有效性先门",
+        "evidence_ids": [
+          "BE98-E011",
+          "BE98-E013",
+          "BE98-E014"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R07",
+        "node": "read",
+        "scenario": "文件字节实际取得",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "FileHandle->Read(FileHandle,&bufsize,(VOID*)addr)之后没有本地status校验和向上输出实际Read长度",
+        "conditional_result": "不能从返回EFI_SUCCESS、打印字节数或IsElfFormat后续读取推断Read恰好提供请求数",
+        "first_stop_gate": "真实Read状态/短读、raw addr实际空间未知",
+        "evidence_ids": [
+          "BE98-E010",
+          "BE98-E011",
+          "BE98-E012"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R08",
+        "node": "raw",
+        "scenario": "raw_img_addr按值交接",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "load_elf_kernel在固定0x2000000把addr按值传给LoadFile，随后用原raw_img_addr调用IsElfFormat/ParseElfImage",
+        "conditional_result": "即使LoadFile本地&addr发生变化，调用者也仍按原固定值解析；这不是证明AllocateAddress必改变地址",
+        "first_stop_gate": "若文件实际放错地址，最早在固定raw字节读取停止",
+        "evidence_ids": [
+          "BE98-E015",
+          "BE98-E016",
+          "BE98-E017"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R09",
+        "node": "length_split",
+        "scenario": "读长与ELF推算长",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadFile没有输出实测Read字节数；ParseElfImage只有ImageBase和Context指针",
+        "conditional_result": "CalculateElfFileSize产生的FileSize不是对Read输出长度的独立测量",
+        "first_stop_gate": "ELF段表与section字节在raw有效范围内需另外认证",
+        "evidence_ids": [
+          "BE98-E009",
+          "BE98-E011",
+          "BE98-E015",
+          "BE98-E069",
+          "BE98-E073",
+          "BE98-E074",
+          "BE98-E076"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-R10",
+        "node": "filelog",
+        "scenario": "日志不是字节证明",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadFile在实际Read前打印File loaded address/size，load_elf_kernel随后打印ELF context FileSize",
+        "conditional_result": "两组打印值分别为请求参数和ELF字段推算量，均不是Read成功与可读源长度的记录",
+        "first_stop_gate": "服务状态/对象extent先门",
+        "evidence_ids": [
+          "BE98-E010",
+          "BE98-E015",
+          "BE98-E080"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "file_handle_and_buffer_lifecycle_matrix": [
+      {
+        "id": "A-L01",
+        "node": "open",
+        "scenario": "Open失败路径资源",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Open前已取得Vol和RootFs的使用路径，失败分支直接return",
+        "conditional_result": "本地Open失败分支没有执行后部RootFs->Close；不能断言实际句柄生命周期或SDK保证",
+        "first_stop_gate": "必须先证协议/卷调用成功并获得有效RootFs",
+        "evidence_ids": [
+          "BE98-E006",
+          "BE98-E007",
+          "BE98-E012"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-L02",
+        "node": "fileinfo",
+        "scenario": "FileInfo池对象",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "FileInfo指针是未赋初值的局部量，随后通过AllocatePool输出；GetInfo写入同一缓冲",
+        "conditional_result": "先前AllocatePool失败情况下后面的GetInfo/size零路径不可按有效对象继续分析",
+        "first_stop_gate": "池申请的返回/指针和实际可读长度未证",
+        "evidence_ids": [
+          "BE98-E008",
+          "BE98-E009"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-L03",
+        "node": "read",
+        "scenario": "Read前后in/out参数",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "bufsize先用所选请求值，传入Read为&bufsize",
+        "conditional_result": "即使Read更新本地变量，本函数也未将其赋给外部长度输出",
+        "first_stop_gate": "FileHandle->Read真正写入范围和外部调用结果未证",
+        "evidence_ids": [
+          "BE98-E009",
+          "BE98-E011"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-L04",
+        "node": "cleanup",
+        "scenario": "正常后缀资源关闭",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Read之后依次FreePool(FileInfo)、FileHandle->Close和RootFs->Close，再返回EFI_SUCCESS",
+        "conditional_result": "只确认调用次序；没有各个释放/关闭结果的本地状态判定",
+        "first_stop_gate": "只对此前所有句柄有效、正常走到后缀作条件结论",
+        "evidence_ids": [
+          "BE98-E012"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-L05",
+        "node": "filepages",
+        "scenario": "页申请结果与资源",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadFile页申请用&addr局部地址，后没有释放该raw image的代码句段；load_elf_kernel另申请目标pages",
+        "conditional_result": "两次AllocateAddress请求和两类存储用途分开，不能把FileInfo池释放当raw/segment页释放",
+        "first_stop_gate": "不能断言全启动周期是否外部管理释放；本包仅所读路径",
+        "evidence_ids": [
+          "BE98-E011",
+          "BE98-E012",
+          "BE98-E081",
+          "BE98-E082"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "elf64_validation_and_index_matrix": [
+      {
+        "id": "B-V01",
+        "node": "magic",
+        "scenario": "魔数逐字测试",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "IsElfFormat判断EI_MAG0、EI_MAG1两次、EI_MAG2，代码中没检查EI_MAG3；ELFMAG3=F",
+        "conditional_result": "只证明当前函数源级未约束第四字节；可构造其余字段合格但第四字节不是F的隔离形式测试",
+        "first_stop_gate": "读取原始指针/ELF header范围要先合法，不能据此宣称真实固件接受无效文件",
+        "evidence_ids": [
+          "BE98-E019",
+          "BE98-E020",
+          "BE98-E028",
+          "BE98-E029",
+          "BE98-E030",
+          "BE98-E031",
+          "BE98-E100",
+          "BE98-E101",
+          "BE98-E102",
+          "BE98-E103"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V02",
+        "node": "class",
+        "scenario": "编码与class",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "IsElfFormat要求EI_DATA==ELFDATA2LSB；EI_CLASS为ELFCLASS64进入64位分支，否则32位或返回FALSE",
+        "conditional_result": "不是完整ELF合法性证书；也不是本批32位装入审计",
+        "first_stop_gate": "至少有Elf64_Ehdr可读，真实EI_VERSION和EI_MAG3未由这两段验证",
+        "evidence_ids": [
+          "BE98-E021",
+          "BE98-E022",
+          "BE98-E023",
+          "BE98-E032",
+          "BE98-E033"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V03",
+        "node": "machine",
+        "scenario": "64位机器类型版本",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "ELF64要求e_machine==EM_X86_64、e_type为ET_EXEC或ET_DYN、e_version为EV_CURRENT",
+        "conditional_result": "仅源级布尔门，ASSERT和实际可读对象及外部规范适配另证",
+        "first_stop_gate": "是否真实ELFCLASS64来自文件且有效未证",
+        "evidence_ids": [
+          "BE98-E024",
+          "BE98-E025",
+          "BE98-E026",
+          "BE98-E034",
+          "BE98-E035",
+          "BE98-E036",
+          "BE98-E037"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V04",
+        "node": "elf_header",
+        "scenario": "header字段位置",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Elf64_Ehdr定义e_ident、e_type、e_machine、e_entry、e_phoff/e_shoff/e_phnum/e_shnum/e_shstrndx",
+        "conditional_result": "类型只说明字段域，不能在没有有效raw镜像和长度条件下直接解引用",
+        "first_stop_gate": "未经执行编译/ABI布局测试",
+        "evidence_ids": [
+          "BE98-E039",
+          "BE98-E040",
+          "BE98-E041"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V05",
+        "node": "shindex",
+        "scenario": "section索引检查",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "GetElf64SectionByIndex仅检查Index >= e_shnum后，用e_shoff+Index*e_shentsize形成地址",
+        "conditional_result": "索引处于计数内也不能保证真实字节区间或entry步长合法",
+        "first_stop_gate": "header/表边界与整数溢出先门",
+        "evidence_ids": [
+          "BE98-E051",
+          "BE98-E052",
+          "BE98-E039",
+          "BE98-E041"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V06",
+        "node": "phindex",
+        "scenario": "program header索引检查",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "GetElf64SegmentByIndex检查Index >= e_phnum，再用e_phoff+Index*e_phentsize得到指针",
+        "conditional_result": "没有传入已读真实文件长度、总表跨度或是否存在该内存对象",
+        "first_stop_gate": "外部实际Read长度和每个Header布局先门",
+        "evidence_ids": [
+          "BE98-E053",
+          "BE98-E054",
+          "BE98-E040",
+          "BE98-E044"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V07",
+        "node": "shstr",
+        "scenario": "必须访问section-name索引",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "ParseElfImage的ELF64分支以e_shstrndx调用GetElf64SectionByIndex，NULL返回EFI_UNSUPPORTED",
+        "conditional_result": "即使装入逻辑只要求PT_LOAD，此解析前置仍依赖有效section-name指针",
+        "first_stop_gate": "一个未取得的section对象不能据此推导后续成功装载",
+        "evidence_ids": [
+          "BE98-E060",
+          "BE98-E061",
+          "BE98-E051",
+          "BE98-E052"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V08",
+        "node": "seginfo",
+        "scenario": "段字段来源",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "GetElfSegmentInfo的ELF64分支从Elf64_Phdr复制p_type/p_offset/p_filesz/p_memsz/p_paddr/p_align，部分强转UINTN",
+        "conditional_result": "每段信息由文件头表而来，并非已分配内存或已读取文件大小的独立观测",
+        "first_stop_gate": "p_paddr不是p_vaddr，宽度/指针合法性须先证",
+        "evidence_ids": [
+          "BE98-E070",
+          "BE98-E071",
+          "BE98-E044",
+          "BE98-E045",
+          "BE98-E049",
+          "BE98-E050"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V09",
+        "node": "assert",
+        "scenario": "段索引状态消费",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Parse逐索引调用GetElfSegmentInfo后使用ASSERT_EFI_ERROR，随后立即读SegInfo.PtType决定是否PT_LOAD",
+        "conditional_result": "ASSERT不是所读可见的独立if-status-return，不能保证错误时安全继续；实际ASSERT宏行为未取外部定义",
+        "first_stop_gate": "无效段指针/SegmentInfo未填的情况下停止，不推导无效内存状态",
+        "evidence_ids": [
+          "BE98-E063",
+          "BE98-E064",
+          "BE98-E070",
+          "BE98-E071"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V10",
+        "node": "entry_macro",
+        "scenario": "步长宏和物理对象",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "ELF_NEXT_ENTRY仅按EntrySize偏移当前类型指针；LoadElf64Image真实循环使用e_phentsize",
+        "conditional_result": "宏不是“验证步长等于sizeof”或满足文件范围的检查器",
+        "first_stop_gate": "e_phentsize和程序表范围须独立确立",
+        "evidence_ids": [
+          "BE98-E055",
+          "BE98-E088"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-V11",
+        "node": "bounds",
+        "scenario": "实际文件长度证明链",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "IsElfFormat收到ImageBase指针，GetElf64SectionByIndex/GetElf64SegmentByIndex也只收到ImageBase/Index",
+        "conditional_result": "源读取范围与header表/段的任何offset、count乘积均是先行外部对象义务",
+        "first_stop_gate": "不能把CalculateElfFileSize的内部推算替代实际Read长度",
+        "evidence_ids": [
+          "BE98-E015",
+          "BE98-E018",
+          "BE98-E051",
+          "BE98-E053",
+          "BE98-E069",
+          "BE98-E074"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "elf_context_extent_and_status_matrix": [
+      {
+        "id": "B-C01",
+        "node": "context",
+        "scenario": "上下文清零/文件指针",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "ParseElfImage先检查ElfCt，再ZeroMem整个ELF_IMAGE_CONTEXT，检查ImageBase，接着FileBase=ImageBase，IsElfFormat失败赋ParseStatus",
+        "conditional_result": "只有正常调用ZeroMem且对象有效时ImageAddress从初始零派生；真实EFI/库副作用另证",
+        "first_stop_gate": "缺少有效raw镜像最早在IsElfFormat读取停止",
+        "evidence_ids": [
+          "BE98-E046",
+          "BE98-E047",
+          "BE98-E048",
+          "BE98-E056",
+          "BE98-E057",
+          "BE98-E058"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C02",
+        "node": "context",
+        "scenario": "ELF64上下文字段",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "ELF64分支从e_entry/e_shnum/e_phnum读EntryPoint/ShNum/PhNum，从Shdr->sh_size/sh_offset先强转UINT32写ShStrLen/Off",
+        "conditional_result": "字段来自ELF header与section-name表，ShStrLen/Off超过u32可窄化，即使存储UINTN",
+        "first_stop_gate": "有效Shdr/类型/CPU编译ABI是条件",
+        "evidence_ids": [
+          "BE98-E039",
+          "BE98-E042",
+          "BE98-E043",
+          "BE98-E061",
+          "BE98-E062"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C03",
+        "node": "span",
+        "scenario": "Base/End初始化",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Parse设置End=0、Base=MAX_UINT32；仅PT_LOAD参与之后范围更新",
+        "conditional_result": "若无PT_LOAD，两个哨兵值保持并进入ImageSize表达式，不足以宣布有效0大小图像",
+        "first_stop_gate": "只能在此前section索引等全部合法前提下分析",
+        "evidence_ids": [
+          "BE98-E063",
+          "BE98-E064"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C04",
+        "node": "segment",
+        "scenario": "ReloadRequired记录",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "SegInfo.MemLen != SegInfo.Length即设置ReloadRequired=true，没有分辨大于或小于",
+        "conditional_result": "这只是parser的标记，load_elf_kernel实际分配和LoadElf64Image按各自条件执行",
+        "first_stop_gate": "实际SegmentInfo填充与p_memsz/p_filesz合法需先证",
+        "evidence_ids": [
+          "BE98-E065",
+          "BE98-E066",
+          "BE98-E081"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C05",
+        "node": "span",
+        "scenario": "Preferred基址和尾端",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Base只在大于向下mask后的MemAddr时更新；End取ALIGN_VALUE(MemAddr+MemLen, EFI_PAGE_SIZE)-1的较大者",
+        "conditional_result": "须分开UINTN求和、align宏外部计算、末尾减一及实际span有效性",
+        "first_stop_gate": "EFI_PAGE_SIZE/ALIGN_VALUE未用本仓源码证其宏语义，数值模型显式假设",
+        "evidence_ids": [
+          "BE98-E067",
+          "BE98-E068"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C06",
+        "node": "imagesize",
+        "scenario": "ImageSize计算",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "ImageSize = End-Base+1；PreferredImageAddress=(VOID*)Base",
+        "conditional_result": "不因为目标地址类型是指针就证明分配；Base起始MAX_UINT32在大地址/空段情形会形成特殊值",
+        "first_stop_gate": "UINTN位宽、无符号溢出及有效页边界独立",
+        "evidence_ids": [
+          "BE98-E063",
+          "BE98-E067",
+          "BE98-E068",
+          "BE98-E069"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C07",
+        "node": "filesize",
+        "scenario": "section终点计算",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "CalculateElfFileSize取ShNum-1的section Offset+Size，再取e_shoff+e_shentsize*e_shnum，取MAX",
+        "conditional_result": "不是实际FileInfo FileSize或Read已得长度；ShNum==0时减法产生无效大索引",
+        "first_stop_gate": "表头可读、数值未溢出、外部MAX宏前提成立",
+        "evidence_ids": [
+          "BE98-E072",
+          "BE98-E073",
+          "BE98-E074",
+          "BE98-E075",
+          "BE98-E076",
+          "BE98-E078"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C08",
+        "node": "filesize",
+        "scenario": "Calculate状态遮蔽",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "ParseElfImage调用CalculateElfFileSize但不检查其返回，随即赋ParseStatus=EFI_SUCCESS返回",
+        "conditional_result": "仅说明其局部状态通道，不能把FileSize=0/旧值推断成合法完整镜像",
+        "first_stop_gate": "若Calculate错误，Parse仍可能走此正常返回；实际读/分配另门",
+        "evidence_ids": [
+          "BE98-E069",
+          "BE98-E072",
+          "BE98-E073",
+          "BE98-E076"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C09",
+        "node": "types",
+        "scenario": "类型转换发生前后",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Elf64 section sh_size/sh_offset先(UINT32)窄化后存UINTN目标；Elf64 segment offset/filesz/memsz/paddr先(UINTN)转换后存SEGMENT_INFO",
+        "conditional_result": "不能仅以目的UINTN证明原始64位高位保留，或以目标长度证明读取确证",
+        "first_stop_gate": "实际UEFI编译UINTN宽度与不同表达式转换分别注明",
+        "evidence_ids": [
+          "BE98-E062",
+          "BE98-E070",
+          "BE98-E071",
+          "BE98-E042",
+          "BE98-E044",
+          "BE98-E046",
+          "BE98-E049"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C10",
+        "node": "model",
+        "scenario": "不完整加载记录的停门",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "若无LOAD段、超大物理paddr、End加/ALIGN回绕、节名表越界，ImageSize计算仍有表达式",
+        "conditional_result": "只有先行有效header、section表、程序头对象和算术都成立才可评价后续输出",
+        "first_stop_gate": "不能把模型里的巨大size当成已成功AllocatePages/CopyMem",
+        "evidence_ids": [
+          "BE98-E063",
+          "BE98-E064",
+          "BE98-E067",
+          "BE98-E068",
+          "BE98-E069",
+          "BE98-E051",
+          "BE98-E053"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-C11",
+        "node": "sectionpos",
+        "scenario": "GetElfSectionPos返回定义",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "函数检查ElfCt/Offset/Size及ParseStatus，在ELF64路径索引有效时把section sh_offset/sh_size强转UINTN后返回SUCCESS",
+        "conditional_result": "成功仅证明取得字段值，不证明FileBase实际覆盖那个范围",
+        "first_stop_gate": "若Index超界，返回NOT_FOUND；不提升为读取成功",
+        "evidence_ids": [
+          "BE98-E077",
+          "BE98-E078",
+          "BE98-E051",
+          "BE98-E052"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "allocation_destination_and_segment_write_matrix": [
+      {
+        "id": "C-D01",
+        "node": "raw",
+        "scenario": "原始镜像与上下文",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "load_elf_kernel固定raw_img_addr=0x2000000且调用LoadFile(...,raw,0)，IsElfFormat和Parse从raw读",
+        "conditional_result": "raw镜像分配地址和真实文件长度独立于ELF报告出的FileSize",
+        "first_stop_gate": "原始页分配/Read失败先停，即使Parser有格式布尔返回",
+        "evidence_ids": [
+          "BE98-E015",
+          "BE98-E016",
+          "BE98-E017",
+          "BE98-E058"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-D02",
+        "node": "alloc_addr",
+        "scenario": "loaded_addr的初始化来源",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Parse前ZeroMem上下文；load_elf_kernel令loaded_addr=(EFI_PHYSICAL_ADDRESS)ElfCtx.ImageAddress，随后才给ImageAddress=PreferredImageAddress",
+        "conditional_result": "在ZeroMem有效模型中loaded_addr初始0，而申请类型AllocateAddress使用&loaded_addr；语义上不是自动用Preferred作为请求地址",
+        "first_stop_gate": "实际初值/UEFI AllocatePages含义和输出需分别核证",
+        "evidence_ids": [
+          "BE98-E056",
+          "BE98-E081",
+          "BE98-E082"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-D03",
+        "node": "preferred",
+        "scenario": "目标申请与复制地址分叉",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "把ImageAddress设为Preferred；AllocatePages按ImageSize页数使用&loaded_addr，返回值未检查；LoadElfImage按ImageAddress作为目标",
+        "conditional_result": "申请输出参数、上下文宣称目标、实际段写地址是不同对象，不能以成功日志/EFI_SUCCESS把它们等同",
+        "first_stop_gate": "即使AllocatePages成功也须检查分配页是否覆盖Preferred；真实目标写需另证",
+        "evidence_ids": [
+          "BE98-E081",
+          "BE98-E082",
+          "BE98-E084",
+          "BE98-E090"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-D04",
+        "node": "load_dispatch",
+        "scenario": "加载前置判定",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadElfImage检查ElfCt、ParseStatus和ImageAddress非NULL，再依据EiClass调LoadElf64Image，返回该Status",
+        "conditional_result": "本地类分派存在但返回未被load_elf_kernel消费",
+        "first_stop_gate": "对64位路径应先证有效FileBase、Preferred与可写目标",
+        "evidence_ids": [
+          "BE98-E083",
+          "BE98-E084",
+          "BE98-E085",
+          "BE98-E086"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-D05",
+        "node": "loadseg",
+        "scenario": "PT_LOAD筛选",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadElf64Image遍历ProgramHeader，非PT_LOAD或p_memsz为0跳过",
+        "conditional_result": "只有满足两条件的segment进入复制和清零请求",
+        "first_stop_gate": "Index与Phdr指针的真实source extent、合法表步长先门",
+        "evidence_ids": [
+          "BE98-E038",
+          "BE98-E044",
+          "BE98-E045",
+          "BE98-E055",
+          "BE98-E088",
+          "BE98-E089"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-D06",
+        "node": "copy",
+        "scenario": "段复制/清零目的",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Delta=(UINTN)p_paddr-(UINTN)Preferred；CopyMem到ImageAddress+Delta，从FileBase+p_offset复制p_filesz，再ZeroMem零p_memsz-p_filesz",
+        "conditional_result": "服务/库调用的参数清晰，但并不能证明源与目的重叠允许、文件足量、区域已分配或CPU权限",
+        "first_stop_gate": "p_filesz>p_memsz时先出现拷贝越界可能，不能跳过该门宣称已经执行了巨大ZeroMem",
+        "evidence_ids": [
+          "BE98-E081",
+          "BE98-E090",
+          "BE98-E044",
+          "BE98-E045"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-D07",
+        "node": "segment_overlap",
+        "scenario": "多个段对象约束",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "循环对每个符合条件的PT_LOAD按源码顺序发出写入请求，未提供显式段间不重叠判定",
+        "conditional_result": "相邻/重叠/重排的真实byte影响依赖CopyMem及输入合法对象，不自动从p_paddr推断无交叉",
+        "first_stop_gate": "不能在服务状态和任一无效段地址后继续累积写入成功结果",
+        "evidence_ids": [
+          "BE98-E088",
+          "BE98-E089",
+          "BE98-E090"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-D08",
+        "node": "zeroreq",
+        "scenario": "清零宽度独立",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "p_memsz与p_filesz都是Elf64_Xword，ZeroMem尺寸为强转(UINTN)(p_memsz-p_filesz)",
+        "conditional_result": "当filesz>memsz，正常无符号域下差值回绕导致巨大请求数，但此前CopyMem可能先越过真实目标",
+        "first_stop_gate": "首个出界操作才是停止点，不认定后面ZeroMem真实到达",
+        "evidence_ids": [
+          "BE98-E045",
+          "BE98-E089",
+          "BE98-E090"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-D09",
+        "node": "reloc",
+        "scenario": "实际重定位分支可达性",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadElf64Image仅在ImageAddress!=PreferredImageAddress时调RelocateElf64Sections；实际load_elf_kernel先赋ImageAddress=Preferred",
+        "conditional_result": "在上下文未被外部修改且正常到达此处的条件下本调用形态不进入重定位；ReloadRequired标志本调用方不控制这一判断",
+        "first_stop_gate": "库内独立接口存在不等于本次执行了任意重定位项",
+        "evidence_ids": [
+          "BE98-E081",
+          "BE98-E082",
+          "BE98-E091",
+          "BE98-E092",
+          "BE98-E093"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "entry_publication_and_status_consumption_matrix": [
+      {
+        "id": "C-P01",
+        "node": "entry",
+        "scenario": "入口值产生与提前发布",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Parse设置EntryPoint=e_entry，load_elf_kernel在申请页和LoadElfImage前把它赋给*entry_addr",
+        "conditional_result": "此处指针值是ELF header源值而非已被装入验证的目标入口地址",
+        "first_stop_gate": "后继装入/区域有效/可执行属性需独立确认",
+        "evidence_ids": [
+          "BE98-E062",
+          "BE98-E079",
+          "BE98-E081"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-P02",
+        "node": "return_status",
+        "scenario": "load_elf_kernel返回范围",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "局部status初始化SUCCESS后唯一更改是ParseElfImage返回，后面AllocatePages/LoadElfImage结果未赋回status，返回原status",
+        "conditional_result": "即使这两个后继操作出现EFI错误，只要正常返回到最后，外层返回值也未表达该错误",
+        "first_stop_gate": "先行解析必须成功，服务是否继续/异常须独立证明",
+        "evidence_ids": [
+          "BE98-E015",
+          "BE98-E079",
+          "BE98-E082"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-P03",
+        "node": "file_status",
+        "scenario": "LoadFile返回状态被忽略",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadFile可能RootFs->Open失败返回status；load_elf_kernel调用它没有取得return，紧跟对raw调用IsElfFormat",
+        "conditional_result": "不能由后继格式检查成功假定Read确实完成，UefiMain也不消费load_elf_kernel status",
+        "first_stop_gate": "若无有效raw对象，格式函数的首个读取即停止",
+        "evidence_ids": [
+          "BE98-E007",
+          "BE98-E011",
+          "BE98-E012",
+          "BE98-E015",
+          "BE98-E016"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-P04",
+        "node": "loader_status",
+        "scenario": "LoadElf64Image终结状态",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadElf64Image发CopyMem和ZeroMem、条件调用RelocateElf64Sections，最后直接返回EFI_SUCCESS；未消费该接口的重定位返回",
+        "conditional_result": "即使库函数返回SUCCESS也不等于外部内存操作成功",
+        "first_stop_gate": "外部CopyMem/ZeroMem与写入跨度无动态证据",
+        "evidence_ids": [
+          "BE98-E090",
+          "BE98-E091"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-P05",
+        "node": "reloc",
+        "scenario": "重定位接口限定",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "RelocateElf64Sections在入口按e_machine检查，计算Delta并改EntryPoint，ET_DYN会调用RelocateElf64Dynamic且返回status",
+        "conditional_result": "只有其它调用者把ImageAddress设为不同于Preferred，才进入本接口；本实际调用不走这一分支",
+        "first_stop_gate": "重定位条目算法不在本批展开，外部状态不提升",
+        "evidence_ids": [
+          "BE98-E092",
+          "BE98-E093",
+          "BE98-E094"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-P06",
+        "node": "reload_flag",
+        "scenario": "ReloadRequired不代替真正分配",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "Parse可因MemLen!=Length设置ReloadRequired=true；load_elf_kernel并未读取该字段决定目标，而固定将ImageAddress=Preferred",
+        "conditional_result": "报表Print中即使显示need reload也不证明已选重新装入地址",
+        "first_stop_gate": "外部ABI/实际LoadFile和ELF内容未核证",
+        "evidence_ids": [
+          "BE98-E065",
+          "BE98-E066",
+          "BE98-E080",
+          "BE98-E081",
+          "BE98-E082"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-P07",
+        "node": "uefi_exit",
+        "scenario": "UefiMain间接调用入口",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "UefiMain在所有MBI构造后取func=(void*)k_load_addr，以asm callq间接调用",
+        "conditional_result": "这只证明源码装配了入口尝试，真实CPU执行和页映射不可由此证明",
+        "first_stop_gate": "不审旧137寄存器复制/BSS，只保留历史BM80/97输入与服务阶段前提",
+        "evidence_ids": [
+          "BE98-E001",
+          "BE98-E003",
+          "BE98-E095",
+          "BE98-E096",
+          "BE98-E097",
+          "BE98-E098",
+          "BE98-E099"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-P08",
+        "node": "entry_gate",
+        "scenario": "入口和目标并非同一认证对象",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "*entry_addr赋自Parser EntryPoint，段写目标为ImageAddress+Delta且后置状态不回传；没有此链中逐字段入口区间合法性门",
+        "conditional_result": "可以分别核对EntryPoint、p_paddr和实际分配范围，但不能自动认为入口已包含于成功拷贝段",
+        "first_stop_gate": "首个未证源对象、目的页或执行权限阻断启动结论",
+        "evidence_ids": [
+          "BE98-E062",
+          "BE98-E081",
+          "BE98-E082",
+          "BE98-E089",
+          "BE98-E090"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "node": "length_split",
+        "scenario": "FileInfo长度→raw读取→ELF FileSize",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadFile的Read只更新局部bufsize；Parse从raw pointer解析，FileSize由section表元数据推演",
+        "conditional_result": "两个FileSize来源没有由实测Read长度相等连接",
+        "first_stop_gate": "原始raw可读范围和ELF表计算值各是不同证明门",
+        "evidence_ids": [
+          "BE98-E008",
+          "BE98-E009",
+          "BE98-E011",
+          "BE98-E015",
+          "BE98-E069",
+          "BE98-E073",
+          "BE98-E075",
+          "BE98-E076"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-02",
+        "node": "preferred",
+        "scenario": "raw→context→申请→复制→入口",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "raw固定0x2000000、Preferred由PT_LOAD算得、loaded_addr从ImageAddress旧值拿、ImageAddress随后被强设Preferred、*entry_addr在LoadElfImage前公布",
+        "conditional_result": "这些不是同一“装入地址”，需跨结构及调用时序表才能判断实际申请与写入重合",
+        "first_stop_gate": "不能把EFI_SUCCESS/打印或argc定名作为同址证明",
+        "evidence_ids": [
+          "BE98-E015",
+          "BE98-E017",
+          "BE98-E063",
+          "BE98-E067",
+          "BE98-E068",
+          "BE98-E069",
+          "BE98-E081",
+          "BE98-E082",
+          "BE98-E090"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-03",
+        "node": "return_status",
+        "scenario": "多层状态链",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "LoadFile、GetElfSegmentInfo、CalculateElfFileSize、LoadElfImage、AllocatePages各有不同检查和返回消费",
+        "conditional_result": "外层最终status不能代替所有下层成功，ASSERT行为也不得想当然",
+        "first_stop_gate": "正常返回路径以最先未证服务结果和对象访问为止",
+        "evidence_ids": [
+          "BE98-E007",
+          "BE98-E012",
+          "BE98-E064",
+          "BE98-E069",
+          "BE98-E082",
+          "BE98-E083",
+          "BE98-E086",
+          "BE98-E091"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-04",
+        "node": "uefi_exit",
+        "scenario": "固定启动顺序的上下游历史",
+        "preconditions": "前序格式、对象范围、服务返回和对应C算术均满足明确有效性前提",
+        "source_trace": "97固定源码显示随后UefiMain填MBI并有ExitBootServices阶段；98只处理ELF和entry，沿BT97-F05/F08/U01/U04/U09前提消费",
+        "conditional_result": "不能由已通过的97文档验收认证真实UEFI服务退出或后续启动成功",
+        "first_stop_gate": "本98不扩展旧137、ELF用户态/musl或重定位算法",
+        "evidence_ids": [
+          "BE98-E003",
+          "BE98-E095",
+          "BE98-E096",
+          "BE98-E097",
+          "BE98-E098",
+          "BE98-E099"
+        ],
+        "evidence_class": "FIXED_TIME_STATIC_CONDITIONAL",
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows": 58,
+  "matrix_rows_by_group": {
+    "file_read_status_and_extent_matrix": 10,
+    "file_handle_and_buffer_lifecycle_matrix": 5,
+    "elf64_validation_and_index_matrix": 11,
+    "elf_context_extent_and_status_matrix": 11,
+    "allocation_destination_and_segment_write_matrix": 9,
+    "entry_publication_and_status_consumption_matrix": 8,
+    "ABC_join_matrix": 4
+  },
+  "finite_models": [
+    {
+      "id": "BE98-M01",
+      "topic": "A",
+      "inputs": "size==0, FileInfo.FileSize==0",
+      "operations": "bufsize=0, (0+4095)/4096=0",
+      "conditional_result": "源级申请页数0；服务允许与否未证",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E009",
+        "BE98-E011",
+        "BE98-E013",
+        "BE98-E014"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M02",
+      "topic": "A",
+      "inputs": "size==0, FileInfo.FileSize==4097",
+      "operations": "bufsize=4097; (4097+4095)/4096=2",
+      "conditional_result": "仅请求2页，不证明AllocatePages/Read成功",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E009",
+        "BE98-E011",
+        "BE98-E014"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M03",
+      "topic": "A",
+      "inputs": "size==4096, FileInfo.FileSize==5000",
+      "operations": "bufsize保留4096；requested pages=1",
+      "conditional_result": "明确size与文件元信息不等同；不证明实际文件只读4096",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E008",
+        "BE98-E009",
+        "BE98-E011"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M04",
+      "topic": "A",
+      "inputs": "假设Read请求4096，外部只读512并回写局部bufsize",
+      "operations": "Read后bufsize=512，本函数未把512输出到调用者",
+      "conditional_result": "外部Read的具体返回语义未在固定仓库证明；仅条件模型",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E009",
+        "BE98-E011",
+        "BE98-E012"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M05",
+      "topic": "A",
+      "inputs": "若EFI外部调用把LoadFile局部addr从0x2000000改为0x3000000",
+      "operations": "后续IsElfFormat仍用caller raw_img_addr=0x2000000",
+      "conditional_result": "不是声明成功AllocateAddress真的会改址；源级按值入口仍固定",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E011",
+        "BE98-E015",
+        "BE98-E016"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M06",
+      "topic": "B",
+      "inputs": "ELF64其余字段满足，e_ident=[0x7f,'E','L','X']",
+      "operations": "EI_MAG3未在本谓词检查，魔数子表达式不因X而拒绝",
+      "conditional_result": "其它ELF64字段/实际对象若不满足仍会后续FALSE或先停",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E019",
+        "BE98-E020",
+        "BE98-E028",
+        "BE98-E029",
+        "BE98-E030",
+        "BE98-E031",
+        "BE98-E100",
+        "BE98-E101",
+        "BE98-E102",
+        "BE98-E103"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M07",
+      "topic": "B",
+      "inputs": "ELF64 e_shnum=0，Parse已通过先行IsElfFormat",
+      "operations": "GetElf64SectionByIndex(...,e_shstrndx)在Index>=0处返回NULL",
+      "conditional_result": "Parse先于Calculate即返回UNSUPPORTED；不能跳过更早section-name门宣称FileSize计算已发生",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E051",
+        "BE98-E060",
+        "BE98-E061"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M08",
+      "topic": "B",
+      "inputs": "抽象有效ELF64头+section-name表且ShNum=1,最后section offset0x100,size0x80,e_shoff0x200,e_shentsize64",
+      "operations": "FileSize1=0x180, FileSize2=0x240, FileSize=0x240",
+      "conditional_result": "只得字段推演0x240，不等于Read实际字节数",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E073",
+        "BE98-E074",
+        "BE98-E075",
+        "BE98-E076"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M09",
+      "topic": "B",
+      "inputs": "PT_LOAD addr0x200000, memsz4096, 假定EFI_PAGE_SIZE=4096, 无整型异常",
+      "operations": "Base0x200000,End0x200fff, ImageSize4096",
+      "conditional_result": "仅抽象Span，原ELF表/section-name/服务状态和实际页申请未证",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E063",
+        "BE98-E067",
+        "BE98-E068",
+        "BE98-E069"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M10",
+      "topic": "B",
+      "inputs": "没有PT_LOAD且假定先前合法section表，UINTN64",
+      "operations": "Base仍MAX_UINT32, End仍0, ImageSize为模2^64的-0xfffffffe",
+      "conditional_result": "不把这当真实已发布可用ImageSize；先行header/segment索引前提保持",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E063",
+        "BE98-E064",
+        "BE98-E069"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M11",
+      "topic": "B",
+      "inputs": "单PT_LOAD p_paddr=0x100000000, MemLen4096, EFI_PAGE_SIZE=4096，UINTN64",
+      "operations": "Base初始0xffffffff；aligned addr0x100000000并不小于Base，故Base保持0xffffffff",
+      "conditional_result": "不能从低32位初值推断真实需要分配在高端的正确映射",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E063",
+        "BE98-E067",
+        "BE98-E068"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M12",
+      "topic": "B",
+      "inputs": "Elf64_Shdr.sh_size=0x100000004,sh_offset=0x100000010，UINTN64",
+      "operations": "Parse存入ShStrLen=4，ShStrOff=16（先转UINT32）",
+      "conditional_result": "只说明窄化，不证明源字段/字符串有效",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E042",
+        "BE98-E043",
+        "BE98-E062"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M13",
+      "topic": "B",
+      "inputs": "PT_LOAD MemLen4096,Length8192，前序SegmentInfo有效",
+      "operations": "MemLen!=Length，ReloadRequired设置TRUE",
+      "conditional_result": "不能由该标志推出当前实现必在新地址重装；本调用反而强设Preferred",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E065",
+        "BE98-E066",
+        "BE98-E081",
+        "BE98-E082"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M14",
+      "topic": "B",
+      "inputs": "ShNum=0且隔离直接调用CalculateElfFileSize，UINT32 ShNum",
+      "operations": "ShNum-1模2^32为0xffffffff; GetElfSectionPos越计数，函数返回UNSUPPORTED",
+      "conditional_result": "在实际Parse主路径通常先于这里由shstr index门停止，不把隔离条件当可达轨迹",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E072",
+        "BE98-E073",
+        "BE98-E077",
+        "BE98-E078"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M15",
+      "topic": "C",
+      "inputs": "Parse成功且上下文清零使ImageAddress=NULL，Preferred=0x200000",
+      "operations": "loaded_addr=0；随后ImageAddress=0x200000；AllocateAddress将&loaded_addr作为目标，copy目的依旧0x200000",
+      "conditional_result": "申请成功、能申请物理0、实际内存范围都未证",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E056",
+        "BE98-E081",
+        "BE98-E082",
+        "BE98-E084",
+        "BE98-E090"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M16",
+      "topic": "C",
+      "inputs": "有效PT_LOAD p_paddr=0x200000,Preferred=0x200000,FileBase=0x2000000,p_offset=4096,p_filesz=1024,p_memsz=2048",
+      "operations": "Delta=0,CopyMem源0x2001000长1024;ZeroMem目的0x200400长1024",
+      "conditional_result": "这只是调用参数；真实Source/Dest页和成功未证",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E044",
+        "BE98-E045",
+        "BE98-E090"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M17",
+      "topic": "C",
+      "inputs": "p_filesz=8192,p_memsz=4096且UINTN64，valid Phdr",
+      "operations": "CopyMem请求8192后ZeroMem长度=(4096-8192)模2^64",
+      "conditional_result": "若第一CopyMem已越界则先在那里停；不能认证ZeroMem真的执行",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E045",
+        "BE98-E089",
+        "BE98-E090"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M18",
+      "topic": "C",
+      "inputs": "p_memsz=0,p_filesz=3，其他有效",
+      "operations": "因p_memsz==0跳过该段的CopyMem/ZeroMem请求",
+      "conditional_result": "这是当前load函数源码分支，不认证其它段",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E089",
+        "BE98-E090"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M19",
+      "topic": "C",
+      "inputs": "ImageAddress已由caller设为Preferred，按当前调用不再修改",
+      "operations": "LoadElf64Image的!=条件为false",
+      "conditional_result": "本次重定位接口分支不达；不能推广其它调用者",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E081",
+        "BE98-E082",
+        "BE98-E091"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M20",
+      "topic": "C",
+      "inputs": "Parse返回EFI_SUCCESS但后续AllocatePages错误并正常返回调用者",
+      "operations": "load_elf_kernel未保存该返回，最终return status仍源自Parse",
+      "conditional_result": "状态掩盖的条件模型，不认证真实成功返回或CPU执行",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E079",
+        "BE98-E081",
+        "BE98-E082"
+      ],
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BE98-M21",
+      "topic": "C",
+      "inputs": "假设两个有效PT_LOAD目的区间交叠",
+      "operations": "LoadElf64Image源码循环按索引发两个CopyMem与ZeroMem请求",
+      "conditional_result": "只可说潜在相互覆盖输入；具体CopyMem语义与目标合法性未证",
+      "first_stop_gate": "这是纯整数/源码分支的隔离输入；真实ELF源长度、服务状态、C对象和页范围先门，不执行仓库程序",
+      "evidence_ids": [
+        "BE98-E088",
+        "BE98-E089",
+        "BE98-E090"
+      ],
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "finite_model_count": 21,
+  "historical_consumption": {
+    "R80_S01": "for target entries[128], forming one-past address is not itself an out-of-bounds write; next member write is first unproved operation",
+    "R97_S01": "same one-past boundary and no automatic successful count publication",
+    "R97_S02": "exact support chain, C stage integer arithmetic/initialization and file bytes not inferred from size values",
+    "R97_S03": "EFI call versus return and real effect differentiated; ZERO-length trailing arrays do not prove object extent; graph CALL/INDIRECT_CALL separated",
+    "prior_qualified_ids": [
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F01",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F05",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F08",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U01",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U02",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U04",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U07",
+      "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09",
+      "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F03"
+    ],
+    "reopened_96_D00": false,
+    "old_97_changed": false
+  },
+  "read_account": {
+    "new_this_batch": [
+      "140_full",
+      "97_review_full",
+      "96_DOC_CLOSURE_full",
+      "98_checkpoint_full",
+      "110_full",
+      "124_full",
+      "63_full",
+      "79_full",
+      "protocol_v2_P1_to_P13_full",
+      "comments_6944267731_and_6950063808_full",
+      "time_source_files_9_full",
+      "time_options_flags_and_master_canaries",
+      "bootloader.h_direct_interface_full_fixed_time"
+    ],
+    "same_EXEC14_previous_read_reused_if_same_blob": [
+      "nine_MyOS2_constraints_except_63_79_protocol_reloaded",
+      "previous_Mnemosyne_task_local_guidance",
+      "97_six_files_fixed_at_f2df1e04cea8",
+      "80_review_R80_S01_03_full"
+    ],
+    "not_read_or_not_audited": [
+      "ELF32_loader_logic",
+      "RelocateElf64Dynamic_and_ProcessRelocation64_internal_algorithms_not_audited",
+      "real_UEFI_SDK_binary_or_external_file_bytes",
+      "user_exec_interpreter_musl",
+      "old137_register_BSS"
+    ],
+    "cold_originals_reloaded": false
+  },
+  "proof_policy": "A SOURCE_READ_LENGTH != B ELF_HEADER_DERIVED_FILESIZE != C LOADED_PAGES; real EFI return/valid raw file range/size fields/ABI pointer arithmetic must hold before any later conclusion",
+  "full_local_P9": "NOT_RUN",
+  "compiler_preprocess_link": "NOT_RUN",
+  "repository_programs_scripts": "NOT_RUN",
+  "graphviz_qemu_hardware": "NOT_RUN",
+  "kernel_loader_edits": false,
+  "patch_authorized": false,
+  "owner_decisions_requested_now": [],
+  "graph_alignment": {
+    "file": "boot-elf-load-paths.dot",
+    "graphviz": "NOT_RUN",
+    "full_CFG": false,
+    "nodes": 64,
+    "edges": 92,
+    "edges_with_undeclared_nodes": 0,
+    "all_46_matrix_nodes_defined": true,
+    "source_function_call_edges_classified": true,
+    "indirect_UEFI_calls_separate": true,
+    "conditional_relocation_edge_unselected_in_this_caller": true,
+    "DATA_HANDOFF_not_direct_CALL": true
+  }
+}
