@@ -1,0 +1,3759 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-HPET-ENABLE-CLOCKSOURCE-102",
+  "record_type": "bounded_static_hpet_enable_clocksource_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-15",
+  "mainline_owner": "MYOS2-A-C07",
+  "produced_by": "GPT-6（当前对话模型家族；具体后台努力档位不可独立认证）",
+  "model_per_owner": "GPT-6 + Extra（Owner选择）",
+  "date": "2026-11-18",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_fixed_short12": "75338cd7d005",
+  "exec_parent_short12": "14e8f1580f5a",
+  "master_short12": "e8e60cd19540",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "batch101_verdict": "RETURN",
+  "R101_01": "OPEN_AWAITING_C07",
+  "R100_01": "CLOSED_DOCUMENTATION_ONLY",
+  "batch100_composite": "PASS_PENDING_LOCAL",
+  "D00": {
+    "source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md",
+    "review_ref": "MyOS2@75338cd7d005:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-IRQ-REGISTRATION-DISPATCH-101-review.md",
+    "fixed_old_count": 105,
+    "historical_selfcheck": "105/105/0_UNCHANGED",
+    "original_overbroad_claim": "ALL_105_SINGLE_DEFINITION_AND_COMPLETE_MANDATORY_ANCHORS_WITHDRAWN_AS_DOCUMENTATION_CLAIM",
+    "supersedes": [
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E017",
+        "original_id": "IR101-E017",
+        "original_definition": "register_irq",
+        "original_failure": "PARAMETER_HEADER_ONLY_NO_FUNCTION_BODY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E017",
+        "new_id": "HC102-E001",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "A-L02",
+          "A-R03",
+          "B-V08",
+          "IR101-M01",
+          "IR101-M02",
+          "IR101-M03",
+          "IR101-F01",
+          "IR101-U01"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E022",
+        "original_id": "IR101-E022",
+        "original_definition": "unregister_irq",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E022",
+        "new_id": "HC102-E002",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "A-L07",
+          "A-R02",
+          "IR101-M06",
+          "IR101-F02",
+          "IR101-F04",
+          "IR101-U02",
+          "IR101-U08"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E026",
+        "original_id": "IR101-E026",
+        "original_definition": "hwint_irq_handler",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E026",
+        "new_id": "HC102-E003",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "A-L09",
+          "A-R05",
+          "A-R06",
+          "C-R01",
+          "C-R02",
+          "ABC-04",
+          "IR101-M04",
+          "IR101-M07",
+          "IR101-M08",
+          "IR101-M20",
+          "IR101-F01",
+          "IR101-F04",
+          "IR101-U01",
+          "IR101-U08",
+          "IR101-U09"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E032",
+        "original_id": "IR101-E032",
+        "original_definition": "IOAPIC_enable",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E032",
+        "new_id": "HC102-E004",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-V05",
+          "B-V06",
+          "B-V07",
+          "B-V08",
+          "B-R06",
+          "IR101-M09",
+          "IR101-M10",
+          "IR101-M11",
+          "IR101-M12",
+          "IR101-M13",
+          "IR101-M14",
+          "IR101-M15",
+          "IR101-M16",
+          "IR101-M18",
+          "IR101-F05",
+          "IR101-F07"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E034",
+        "original_id": "IR101-E034",
+        "original_definition": "IOAPIC_disable",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E034",
+        "new_id": "HC102-E005",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-V05",
+          "B-V07",
+          "B-R06",
+          "IR101-F05",
+          "IR101-F07"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E036",
+        "original_id": "IR101-E036",
+        "original_definition": "IOAPIC_install",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E036",
+        "new_id": "HC102-E006",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "A-R03",
+          "B-V05",
+          "B-V06",
+          "B-V07",
+          "B-V08",
+          "B-R08",
+          "ABC-01",
+          "IR101-M09",
+          "IR101-M14",
+          "IR101-M15",
+          "IR101-M16",
+          "IR101-M18",
+          "IR101-F05",
+          "IR101-F06",
+          "IR101-U04"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E037",
+        "original_id": "IR101-E037",
+        "original_definition": "IOAPIC_uninstall",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E037",
+        "new_id": "HC102-E007",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-V05"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E038",
+        "original_id": "IR101-E038",
+        "original_definition": "IOAPIC_level_ack",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E038",
+        "new_id": "HC102-E008",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "A-R06",
+          "B-R07",
+          "C-R05",
+          "IR101-M20",
+          "IR101-U08"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E040",
+        "original_id": "IR101-E040",
+        "original_definition": "IOAPIC_edge_ack",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E040",
+        "new_id": "HC102-E009",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "A-R06",
+          "B-R07",
+          "C-R03",
+          "IR101-M20",
+          "IR101-U08"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E041",
+        "original_id": "IR101-E041",
+        "original_definition": "ioapic_rte_read",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E041",
+        "new_id": "HC102-E010",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-R03",
+          "IR101-M13",
+          "IR101-M14",
+          "IR101-F05",
+          "IR101-F07",
+          "IR101-U03"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E044",
+        "original_id": "IR101-E044",
+        "original_definition": "apic_msr_write",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E044",
+        "new_id": "HC102-E011",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-R07",
+          "C-R03"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E045",
+        "original_id": "IR101-E045",
+        "original_definition": "ioapic_rte_write",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E045",
+        "new_id": "HC102-E012",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-R05",
+          "IR101-M17",
+          "IR101-F05",
+          "IR101-F07",
+          "IR101-U03"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E048",
+        "original_id": "IR101-E048",
+        "original_definition": "IOAPIC_init",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E048",
+        "new_id": "HC102-E013",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-R02",
+          "B-R09",
+          "IR101-U03"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E051",
+        "original_id": "IR101-E051",
+        "original_definition": "myos_init_bsp_intr",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E051",
+        "new_id": "HC102-E014",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-R09",
+          "C-S02",
+          "IR101-M11"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E061",
+        "original_id": "IR101-E061",
+        "original_definition": "myos_init_percpu_intr",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E061",
+        "new_id": "HC102-E015",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "C-S07"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E065",
+        "original_id": "IR101-E065",
+        "original_definition": "HPET_handler",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E065",
+        "new_id": "HC102-E016",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "C-S09",
+          "ABC-05",
+          "IR101-U05"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E067",
+        "original_id": "IR101-E067",
+        "original_definition": "myos_HPET_init",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E067",
+        "new_id": "HC102-E017",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "B-R08",
+          "C-S05",
+          "C-S06",
+          "IR101-M10",
+          "IR101-M18",
+          "IR101-F06",
+          "IR101-F08",
+          "IR101-U04",
+          "IR101-U05"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E076",
+        "original_id": "IR101-E076",
+        "original_definition": "LVT_timer_handler",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E076",
+        "new_id": "HC102-E018",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "C-R08",
+          "ABC-05",
+          "IR101-U06"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E078",
+        "original_id": "IR101-E078",
+        "original_definition": "LVT_timer_init",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E078",
+        "new_id": "HC102-E019",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "C-S07",
+          "C-S08",
+          "IR101-M19",
+          "IR101-U06"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      },
+      {
+        "original_source_ref": "MyOS2@14e8f1580f5a:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-irq-registration-dispatch-101/evidence.md::IR101-E081",
+        "original_id": "IR101-E081",
+        "original_definition": "LVT_timer_ack",
+        "original_failure": "CROSSES_FUNCTION_HEADER_BODY_BOUNDARY",
+        "supersedes": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-E081",
+        "new_id": "HC102-E020",
+        "disposition": "REPLACED_BY_FRESH_INTRA_BODY_CONTIGUOUS_QUOTE_NO_ORIGINAL_MUTATION",
+        "legacy_consumers": [
+          "C-S08",
+          "C-R04",
+          "IR101-M20",
+          "IR101-U06"
+        ],
+        "consumer_mapping_rule": "Original fact/model/issue text stays frozen; read original consumer together with this superseding evidence and R101-S01/S02/S03 limits."
+      }
+    ],
+    "additional_macro_chain": {
+      "source_refs": [
+        "IR101-E084",
+        "IR101-E085",
+        "IR101-E062"
+      ],
+      "new_ids": [
+        "HC102-E024",
+        "HC102-E025",
+        "HC102-E026",
+        "HC102-E027"
+      ],
+      "chain": "LOCAL_TIMER_VECTOR(0xec)→FIRST_SYSTEM_VECTOR→VECTOR_IPI(2)→LAPIC_LVT_TIMER_IRQ(0xee)",
+      "consumers": [
+        "B-V03",
+        "C-S07",
+        "IR101-M19",
+        "101正文的向量数值描述与101原DOT对应依赖"
+      ],
+      "qualification": "macro has its independent fixed-time definition; no real IDT or IRQ guaranteed"
+    },
+    "mandatory_review_limits": {
+      "R101_S01": "irq==256 yields one-past pointer; >256 pointer arithmetic invalid at earlier boundary; callback-return does not stabilize p->controller; return1 not controller success",
+      "R101_S02": "index+1 integer promotion then uint8 destination conversion; 3 IOAPIC pointer field types anchored by HC102-E028; RTE reads/writes, C representation, mb and MMIO separate",
+      "R101_S03": "history identity kept: MYOS2-LEAD-002::CA-05 and MYOS2-LEAD-002-CORE-CHECK-01::V14; don't merge into CORE-SCHED-INTEGRATION-03::IR-01; real ELF/IRQ and alias pending"
+    }
+  },
+  "source_quote_index": [
+    {
+      "id": "HC102-E001",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "register_irq",
+      "start_line": 182,
+      "end_line": 186,
+      "topic": "D00-E017",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E002",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "unregister_irq",
+      "start_line": 200,
+      "end_line": 204,
+      "topic": "D00-E022",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E003",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "hwint_irq_handler",
+      "start_line": 162,
+      "end_line": 164,
+      "topic": "D00-E026",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E004",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_enable",
+      "start_line": 33,
+      "end_line": 36,
+      "topic": "D00-E032",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E005",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_disable",
+      "start_line": 41,
+      "end_line": 44,
+      "topic": "D00-E034",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E006",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_install",
+      "start_line": 49,
+      "end_line": 50,
+      "topic": "D00-E036",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E007",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_uninstall",
+      "start_line": 55,
+      "end_line": 55,
+      "topic": "D00-E037",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E008",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_level_ack",
+      "start_line": 60,
+      "end_line": 62,
+      "topic": "D00-E038",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E009",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_edge_ack",
+      "start_line": 67,
+      "end_line": 67,
+      "topic": "D00-E040",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E010",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "ioapic_rte_read",
+      "start_line": 74,
+      "end_line": 78,
+      "topic": "D00-E041",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E011",
+      "source_path": "mykernel/arch/x86_64/include/asm/apic.h",
+      "definition": "apic_msr_write",
+      "start_line": 157,
+      "end_line": 160,
+      "topic": "D00-E044",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E012",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "ioapic_rte_write",
+      "start_line": 92,
+      "end_line": 95,
+      "topic": "D00-E045",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E013",
+      "source_path": "mykernel/arch/x86_64/myos/apic.c",
+      "definition": "IOAPIC_init",
+      "start_line": 112,
+      "end_line": 116,
+      "topic": "D00-E048",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E014",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "myos_init_bsp_intr",
+      "start_line": 224,
+      "end_line": 226,
+      "topic": "D00-E051",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E015",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "myos_init_percpu_intr",
+      "start_line": 231,
+      "end_line": 231,
+      "topic": "D00-E061",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E016",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "HPET_handler",
+      "start_line": 527,
+      "end_line": 528,
+      "topic": "D00-E065",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E017",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_HPET_init",
+      "start_line": 541,
+      "end_line": 545,
+      "topic": "D00-E067",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E018",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_handler",
+      "start_line": 33,
+      "end_line": 35,
+      "topic": "D00-E076",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E019",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_init",
+      "start_line": 45,
+      "end_line": 46,
+      "topic": "D00-E078",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E020",
+      "source_path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "definition": "LVT_timer_ack",
+      "start_line": 57,
+      "end_line": 60,
+      "topic": "D00-E081",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E021",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "hwint_irq_handler",
+      "start_line": 166,
+      "end_line": 169,
+      "topic": "D00-S01-reload",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E022",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "register_irq",
+      "start_line": 190,
+      "end_line": 193,
+      "topic": "D00-S01-post-install",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E023",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "definition": "unregister_irq",
+      "start_line": 204,
+      "end_line": 207,
+      "topic": "D00-S01-post-disable",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E024",
+      "source_path": "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "definition": "LOCAL_TIMER_VECTOR",
+      "start_line": 109,
+      "end_line": 109,
+      "topic": "D00-LOCAL_TIMER_VECTOR",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E025",
+      "source_path": "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "definition": "FIRST_SYSTEM_VECTOR",
+      "start_line": 113,
+      "end_line": 113,
+      "topic": "D00-FIRST_SYSTEM_VECTOR",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E026",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "definition": "VECTOR_IPI",
+      "start_line": 105,
+      "end_line": 105,
+      "topic": "D00-VECTOR_IPI",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E027",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "definition": "LAPIC_LVT_TIMER_IRQ",
+      "start_line": 108,
+      "end_line": 108,
+      "topic": "D00-LAPIC_LVT_TIMER_IRQ",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E028",
+      "source_path": "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+      "definition": "IOAPIC_map",
+      "start_line": 24,
+      "end_line": 26,
+      "topic": "D00-S02-IOAPIC-pointer-width",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E029",
+      "source_path": "mykernel/scripts/options_flags.cmake",
+      "definition": "set(CMAKE_C_FLAGS)",
+      "start_line": 58,
+      "end_line": 61,
+      "topic": "D00-build-config-declaration",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E030",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "myos_ioremap",
+      "start_line": 882,
+      "end_line": 884,
+      "topic": "A-map-return-pointer-cast",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E031",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "__kernel_physical_mapping_init",
+      "start_line": 863,
+      "end_line": 863,
+      "topic": "A-map-return-physical-end",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E032",
+      "source_path": "mykernel/CMakeLists.txt",
+      "definition": "file(GLOB_RECURSE KERNEL_C_SRCS)",
+      "start_line": 30,
+      "end_line": 30,
+      "topic": "BUILD-source-glob",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E033",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_channel",
+      "start_line": 24,
+      "end_line": 28,
+      "topic": "A-channel-fields",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E034",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_base",
+      "start_line": 34,
+      "end_line": 37,
+      "topic": "A-base-fields",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E035",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_address",
+      "start_line": 48,
+      "end_line": 48,
+      "topic": "A-address-global",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E036",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_virt_address",
+      "start_line": 50,
+      "end_line": 50,
+      "topic": "A-mapping-pointer-global",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E037",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_freq",
+      "start_line": 53,
+      "end_line": 53,
+      "topic": "B-frequency-global",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E038",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "clocksource_hpet",
+      "start_line": 60,
+      "end_line": 64,
+      "topic": "C-register-object",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E039",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "clocksource_hpet",
+      "start_line": 66,
+      "end_line": 67,
+      "topic": "C-clocksource-enable-callback",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E040",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_readl",
+      "start_line": 72,
+      "end_line": 72,
+      "topic": "A-readl-wrapper",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E041",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_writel",
+      "start_line": 76,
+      "end_line": 76,
+      "topic": "A-writel-wrapper",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E042",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_set_mapping",
+      "start_line": 80,
+      "end_line": 82,
+      "topic": "A-map-then-flush",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E043",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_clear_mapping",
+      "start_line": 86,
+      "end_line": 87,
+      "topic": "A-request-iounmap-then-NULL",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E044",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_cfg_working",
+      "start_line": 347,
+      "end_line": 350,
+      "topic": "A-config-working-loop",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E045",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 396,
+      "end_line": 398,
+      "topic": "A-early-0-return",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E046",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 401,
+      "end_line": 402,
+      "topic": "A-config-failure-exit",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E047",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 407,
+      "end_line": 409,
+      "topic": "B-period-range",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E048",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 412,
+      "end_line": 414,
+      "topic": "B-frequency-division",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E049",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 420,
+      "end_line": 424,
+      "topic": "A-ID-and-channel-count",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E050",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 433,
+      "end_line": 436,
+      "topic": "A-alloc-failure",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E051",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 438,
+      "end_line": 439,
+      "topic": "A-publish-channel-storage",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E052",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 442,
+      "end_line": 445,
+      "topic": "A-sanitize-global-config",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E053",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 450,
+      "end_line": 454,
+      "topic": "A-per-channel-boot-cfg",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E054",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 455,
+      "end_line": 459,
+      "topic": "A-per-channel-route-and-write",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E055",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 461,
+      "end_line": 465,
+      "topic": "A-second-mask-check-not-written",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E056",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 474,
+      "end_line": 475,
+      "topic": "B-counting-gate",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E057",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 479,
+      "end_line": 479,
+      "topic": "C-register-hz-narrow-u32",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E058",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 481,
+      "end_line": 484,
+      "topic": "A-legacy-periodic",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E059",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 487,
+      "end_line": 489,
+      "topic": "A-legacy-vs-not-return",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E060",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 491,
+      "end_line": 495,
+      "topic": "A-out_nohpet-cleanup",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E061",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_enable",
+      "start_line": 496,
+      "end_line": 497,
+      "topic": "A-out_nohpet-address-null",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E062",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_stop_counter",
+      "start_line": 136,
+      "end_line": 139,
+      "topic": "B-stop-counter-request",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E063",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_reset_counter",
+      "start_line": 144,
+      "end_line": 145,
+      "topic": "B-reset-low-high",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E064",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_start_counter",
+      "start_line": 150,
+      "end_line": 153,
+      "topic": "B-start-counter-request",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E065",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_restart_counter",
+      "start_line": 158,
+      "end_line": 160,
+      "topic": "B-restart-counter-order",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E066",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_counting",
+      "start_line": 360,
+      "end_line": 363,
+      "topic": "B-restart-counter-and-TSC",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E067",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_counting",
+      "start_line": 371,
+      "end_line": 375,
+      "topic": "B-counter-progress-bounded-loop",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E068",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_hpet_clkevt_set_state_periodic",
+      "start_line": 205,
+      "end_line": 209,
+      "topic": "B-periodic-input",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E069",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_hpet_clkevt_set_state_periodic",
+      "start_line": 214,
+      "end_line": 218,
+      "topic": "B-periodic-delta",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E070",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_hpet_clkevt_set_state_periodic",
+      "start_line": 219,
+      "end_line": 223,
+      "topic": "B-periodic-cfg-comparator",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E071",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "myos_hpet_clkevt_set_state_periodic",
+      "start_line": 232,
+      "end_line": 235,
+      "topic": "B-periodic-compare-second-write",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E072",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "read_hpet",
+      "start_line": 283,
+      "end_line": 283,
+      "topic": "B-active-clocksource-read",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E073",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_MIN_PERIOD",
+      "start_line": 63,
+      "end_line": 63,
+      "topic": "B-period-lower-bound",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E074",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_MAX_PERIOD",
+      "start_line": 58,
+      "end_line": 58,
+      "topic": "B-period-upper-bound",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E075",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_ID_LEGSUP",
+      "start_line": 35,
+      "end_line": 35,
+      "topic": "A-legacy-bit",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E076",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_ID_NUMBER",
+      "start_line": 33,
+      "end_line": 33,
+      "topic": "A-channel-bits",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E077",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_TN_PERIODIC",
+      "start_line": 47,
+      "end_line": 47,
+      "topic": "B-timer-periodic-bit",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E078",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_PERIOD",
+      "start_line": 13,
+      "end_line": 13,
+      "topic": "B-period-register-offset",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E079",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_CFG",
+      "start_line": 14,
+      "end_line": 14,
+      "topic": "B-config-register-offset",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E080",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_MMAP_SIZE",
+      "start_line": 10,
+      "end_line": 10,
+      "topic": "A-mapping-size",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E081",
+      "source_path": "mykernel/include/linux/kernel/hpet.h",
+      "definition": "Tn_INT_ROUTE_CNF_MASK",
+      "start_line": 72,
+      "end_line": 72,
+      "topic": "A-route-IRQ-mask",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E082",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/div64.h",
+      "definition": "do_div",
+      "start_line": 44,
+      "end_line": 48,
+      "topic": "B-do_div-definition",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E083",
+      "source_path": "mykernel/time/misc/time_misc_const.h",
+      "definition": "FSEC_PER_SEC",
+      "start_line": 34,
+      "end_line": 34,
+      "topic": "B-fsec-per-sec",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E084",
+      "source_path": "mykernel/time/misc/time_misc_const.h",
+      "definition": "NSEC_PER_SEC",
+      "start_line": 32,
+      "end_line": 32,
+      "topic": "B-nsec-per-sec",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E085",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "definition": "HZ",
+      "start_line": 9,
+      "end_line": 9,
+      "topic": "B-systick-rate",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E086",
+      "source_path": "mykernel/arch/x86_64/insns/x86msr.h",
+      "definition": "rdtsc",
+      "start_line": 63,
+      "end_line": 67,
+      "topic": "B-TSC-read-intrinsic",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E087",
+      "source_path": "mykernel/time/clocksource/clocksource_macro.h",
+      "definition": "clocksource_register_hz",
+      "start_line": 9,
+      "end_line": 10,
+      "topic": "C-register-macro",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E088",
+      "source_path": "mykernel/time/clocksource/clocksource_macro.h",
+      "definition": "CLOCKSOURCE_MASK",
+      "start_line": 7,
+      "end_line": 7,
+      "topic": "C-counter-mask",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E089",
+      "source_path": "mykernel/time/clocksource/clocksource_types.h",
+      "definition": "clocksource",
+      "start_line": 70,
+      "end_line": 74,
+      "topic": "C-read-mask-mult",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E090",
+      "source_path": "mykernel/time/clocksource/clocksource_types.h",
+      "definition": "clocksource",
+      "start_line": 81,
+      "end_line": 85,
+      "topic": "C-rating-list",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E091",
+      "source_path": "mykernel/time/clocksource/clocksource_types.h",
+      "definition": "clocksource",
+      "start_line": 88,
+      "end_line": 91,
+      "topic": "C-flags-enable",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E092",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "__clocksource_update_freq_scale",
+      "start_line": 205,
+      "end_line": 205,
+      "topic": "C-nonzero-freq",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E093",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "__clocksource_update_freq_scale",
+      "start_line": 215,
+      "end_line": 218,
+      "topic": "C-mask-over-freq",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E094",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "__clocksource_update_freq_scale",
+      "start_line": 220,
+      "end_line": 223,
+      "topic": "C-mult-shift",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E095",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "__clocksource_register_scale",
+      "start_line": 413,
+      "end_line": 414,
+      "topic": "C-register-conversion",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E096",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "__clocksource_register_scale",
+      "start_line": 420,
+      "end_line": 421,
+      "topic": "C-register-enqueue",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E097",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "clocksource_enqueue",
+      "start_line": 377,
+      "end_line": 381,
+      "topic": "C-rating-order",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E098",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "clocksource_enqueue",
+      "start_line": 383,
+      "end_line": 384,
+      "topic": "C-list-count",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E099",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "clocksource_find_best",
+      "start_line": 277,
+      "end_line": 278,
+      "topic": "C-empty-guard",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E100",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "clocksource_find_best",
+      "start_line": 285,
+      "end_line": 289,
+      "topic": "C-best-constraints",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E101",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "__clocksource_select",
+      "start_line": 301,
+      "end_line": 304,
+      "topic": "C-select-best",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E102",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "__clocksource_select",
+      "start_line": 341,
+      "end_line": 344,
+      "topic": "C-switch-commented",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E103",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "clocksource_done_booting",
+      "start_line": 357,
+      "end_line": 361,
+      "topic": "C-default-current",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E104",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "definition": "clocksource_done_booting",
+      "start_line": 363,
+      "end_line": 365,
+      "topic": "C-select-request",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E105",
+      "source_path": "mykernel/time/systick/systick.c",
+      "definition": "clocksource_jiffies",
+      "start_line": 21,
+      "end_line": 25,
+      "topic": "C-jiffies-fields",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E106",
+      "source_path": "mykernel/time/systick/systick.c",
+      "definition": "jiffies_read",
+      "start_line": 34,
+      "end_line": 34,
+      "topic": "C-jiffies-read",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E107",
+      "source_path": "mykernel/time/systick/systick.c",
+      "definition": "clocksource_default_clock",
+      "start_line": 38,
+      "end_line": 38,
+      "topic": "C-default-return",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E108",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "definition": "timekeeping_init",
+      "start_line": 253,
+      "end_line": 256,
+      "topic": "C-timekeeping-default",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E109",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "definition": "tk_setup_internals",
+      "start_line": 134,
+      "end_line": 138,
+      "topic": "C-tk-clock-and-mask",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E110",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "definition": "tk_setup_internals",
+      "start_line": 181,
+      "end_line": 185,
+      "topic": "C-tk-mult-cache",
+      "quote_line_count": 5,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E111",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "definition": "timekeeping_get_ns",
+      "start_line": 228,
+      "end_line": 228,
+      "topic": "C-time-consumer",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E112",
+      "source_path": "mykernel/time/timekeeping/timekeeping.h",
+      "definition": "tk_clock_read",
+      "start_line": 81,
+      "end_line": 82,
+      "topic": "C-clock-callback-read",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E113",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "definition": "do_timer",
+      "start_line": 272,
+      "end_line": 272,
+      "topic": "C-do_timer",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E114",
+      "source_path": "mykernel/arch/x86_64/kernel/time.c",
+      "definition": "hpet_time_init",
+      "start_line": 34,
+      "end_line": 34,
+      "topic": "C-hpet-return-ignored",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E115",
+      "source_path": "mykernel/arch/x86_64/kernel/time.c",
+      "definition": "hpet_time_init",
+      "start_line": 38,
+      "end_line": 38,
+      "topic": "C-hpet-irq-subsequent",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E116",
+      "source_path": "mykernel/arch/x86_64/kernel/time.c",
+      "definition": "late_time_init",
+      "start_line": 51,
+      "end_line": 51,
+      "topic": "C-late-time-init",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E117",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "start_line": 163,
+      "end_line": 165,
+      "topic": "C-timekeeper-earlier",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E118",
+      "source_path": "mykernel/init/main.c",
+      "definition": "start_kernel",
+      "start_line": 176,
+      "end_line": 177,
+      "topic": "C-hpet-later",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E119",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "definition": "list_header_for_each_container",
+      "start_line": 346,
+      "end_line": 347,
+      "topic": "C-list-loop",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E120",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "definition": "list_header_is_empty",
+      "start_line": 631,
+      "end_line": 632,
+      "topic": "C-count-guard",
+      "quote_line_count": 2,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E121",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "definition": "hpet_mode",
+      "start_line": 16,
+      "end_line": 19,
+      "topic": "A-枚举模式成员独立定义",
+      "quote_line_count": 4,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E122",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "definition": "iounmap",
+      "start_line": 887,
+      "end_line": 889,
+      "topic": "A-空函数体，区别调用与解除映射",
+      "quote_line_count": 3,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E123",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_COUNTER",
+      "start_line": 16,
+      "end_line": 16,
+      "topic": "B-32bit读偏移独立宏",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E124",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_Tn_CFG",
+      "start_line": 18,
+      "end_line": 18,
+      "topic": "A-按通道配置偏移",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E125",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_Tn_CMP",
+      "start_line": 19,
+      "end_line": 19,
+      "topic": "B-按通道比较偏移",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E126",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_ID_NUMBER_SHIFT",
+      "start_line": 37,
+      "end_line": 37,
+      "topic": "A-通道数移位独立宏",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E127",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_CFG_ENABLE",
+      "start_line": 40,
+      "end_line": 40,
+      "topic": "B-计数器使能标志",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E128",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_CFG_LEGACY",
+      "start_line": 41,
+      "end_line": 41,
+      "topic": "A-legacy清位",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E129",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_TN_ENABLE",
+      "start_line": 46,
+      "end_line": 46,
+      "topic": "B-通道使能标志",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    },
+    {
+      "id": "HC102-E130",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "definition": "HPET_TN_SETVAL",
+      "start_line": 50,
+      "end_line": 50,
+      "topic": "B-比较值置位标志",
+      "quote_line_count": 1,
+      "source_quote_recheck": "FIXED_SOURCE_LITERAL_AND_BOUNDARY_MANUAL",
+      "semantic_gate": "CONDITIONAL_STATIC_SOURCE_ONLY"
+    }
+  ],
+  "source_quote_recheck": {
+    "raw_anchors": 130,
+    "literal_matches_reported": 130,
+    "within_single_definition_or_independent_macro_or_single_CMake_command": 130,
+    "empty_iounmap_exception": "HC102-E122 braces-only structural empty function body: no fictitious executable statement; not generic parameter signature",
+    "function_body_header_corrections": "HC102-E001..E020 all exclude function signatures",
+    "count_verified_claims": 130,
+    "quote_line_range": "1..5",
+    "source_pin": "a039d9803ade",
+    "local_full_automatic_definition_scanner": "NOT_RUN",
+    "evidence_scope": "AUTHOR_FIXED_SOURCE_STATIC_RECONFIRMATION_NOT_EXTERNAL_HARDWARE_REVIEW"
+  },
+  "source_count": 27,
+  "source_ledger": [
+    "mykernel/arch/x86_64/myos/interrupt.c",
+    "mykernel/arch/x86_64/myos/apic.c",
+    "mykernel/arch/x86_64/include/asm/apic.h",
+    "mykernel/arch/x86_64/kernel/hpet.c",
+    "mykernel/arch/x86_64/myos/LVT_timer.c",
+    "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+    "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+    "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+    "mykernel/scripts/options_flags.cmake",
+    "mykernel/arch/x86_64/mm/init.c",
+    "mykernel/CMakeLists.txt",
+    "mykernel/arch/x86_64/include/asm/hpet.h",
+    "mykernel/include/linux/kernel/hpet.h",
+    "mykernel/include/linux/kernel/asm-generic/div64.h",
+    "mykernel/time/misc/time_misc_const.h",
+    "mykernel/include/linux/kernel/asm-generic/param.h",
+    "mykernel/arch/x86_64/insns/x86msr.h",
+    "mykernel/time/clocksource/clocksource_macro.h",
+    "mykernel/time/clocksource/clocksource_types.h",
+    "mykernel/time/clocksource/clocksource.c",
+    "mykernel/time/systick/systick.c",
+    "mykernel/time/timekeeping/timekeeping.c",
+    "mykernel/time/timekeeping/timekeeping.h",
+    "mykernel/arch/x86_64/kernel/time.c",
+    "mykernel/init/main.c",
+    "mykernel/lib/list/double_list_macro.h",
+    "mykernel/lib/list/double_list.h"
+  ],
+  "source_soft_limit": 36,
+  "evidence_soft_limit": 120,
+  "evidence_actual": 130,
+  "evidence_soft_exception": {
+    "excess": 10,
+    "reason": "146§7 requires independent source units: HC102-E121 enum, E122 empty iounmap body, E123/E124/E125 counter/channel offsets, E126 ID shift and E127-E130 enable/legacy/timer compare flags; splitting avoids cross-macro excerpts and false claims; no other subsystem added",
+    "ids": [
+      "HC102-E121",
+      "HC102-E122",
+      "HC102-E123",
+      "HC102-E124",
+      "HC102-E125",
+      "HC102-E126",
+      "HC102-E127",
+      "HC102-E128",
+      "HC102-E129",
+      "HC102-E130"
+    ]
+  },
+  "matrices": {
+    "mapping_channel_ownership_matrix": [
+      {
+        "id": "A-M01",
+        "scenario": "hpet_set_mapping的地址和指针",
+        "preconditions": "映射包装成功返回且MMIO使用另获合法虚拟地址",
+        "source_trace": "hpet_address=0xfed00000; myos_ioremap(HPET_MMAP_SIZE); flush_tlb_local",
+        "conditional_result": "请求映射及局部刷新；非NULL不是有效MMIO地址",
+        "first_stop_gate": "FM96-F03/U08已知包装返回物理端点强转，不能断言访问成功",
+        "evidence_ids": [
+          "HC102-E030",
+          "HC102-E031",
+          "HC102-E035",
+          "HC102-E036",
+          "HC102-E042",
+          "HC102-E080"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-M02",
+        "scenario": "channel和base的所有权",
+        "preconditions": "hpet_enable真实到达分配语句且分配器返回",
+        "source_trace": "kcalloc(channels,sizeof(*hc),GFP_KERNEL); hpet_base.channels=hc",
+        "conditional_result": "设置channel指针及数量，nr_clockevents未在该路径赋新值",
+        "first_stop_gate": "分配对象有效/原本存储对象是否已存在未知",
+        "evidence_ids": [
+          "HC102-E033",
+          "HC102-E034",
+          "HC102-E049",
+          "HC102-E050",
+          "HC102-E051"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-M03",
+        "scenario": "channels取值范围",
+        "preconditions": "id合法read且掩码常量如固定源码",
+        "source_trace": "(id & HPET_ID_NUMBER)>>HPET_ID_NUMBER_SHIFT + 1",
+        "conditional_result": "低5位给1..32通道；分配请求32倍元素大小上界",
+        "first_stop_gate": "不认证芯片实际可寻址通道数或对象sizeof溢出",
+        "evidence_ids": [
+          "HC102-E049",
+          "HC102-E076",
+          "HC102-E126",
+          "HC102-E033"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-M04",
+        "scenario": "全局cfg清位写出",
+        "preconditions": "合法MMIO配置读写",
+        "source_trace": "read HPET_CFG; cfg &= ~(ENABLE|LEGACY); writel(cfg)",
+        "conditional_result": "把清位后值提交写请求，boot_cfg存旧read值",
+        "first_stop_gate": "设备接受/中断禁用完成不由写函数名保证",
+        "evidence_ids": [
+          "HC102-E052",
+          "HC102-E079",
+          "HC102-E127",
+          "HC102-E128"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-M05",
+        "scenario": "per-channel配置写与未知位",
+        "preconditions": "i在0..channels-1且寄存器访问有效",
+        "source_trace": "读取每通道CFG→保存boot_cfg/irq→第一轮清位写；后续清更多位仅warning",
+        "conditional_result": "第二次cfg本地清位不构成第二次硬件写",
+        "first_stop_gate": "真实硬件位、对齐和MMIO范围另立门",
+        "evidence_ids": [
+          "HC102-E053",
+          "HC102-E054",
+          "HC102-E055",
+          "HC102-E081",
+          "HC102-E124"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-M06",
+        "scenario": "请求长度与最大channel偏移",
+        "preconditions": "HPET_MMAP_SIZE=1024，CFG偏移0x100+0x20*n，n有效0..31",
+        "source_trace": "n24的CFG偏移0x400=1024，n31为0x4e0=1248",
+        "conditional_result": "某些channel寄存器偏移超过名义1024字节请求长度",
+        "first_stop_gate": "myos_ioremap有4K页粒度取整，真实映射覆盖及硬件范围未证，不签越界故障",
+        "evidence_ids": [
+          "HC102-E049",
+          "HC102-E080",
+          "HC102-E124",
+          "HC102-E030"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-M07",
+        "scenario": "early NULL映射",
+        "preconditions": "myos_ioremap数值cast结果恰为NULL",
+        "source_trace": "hpet_set_mapping设置hpet_address后if(!hpet_virt_address)return0",
+        "conditional_result": "返回0，不执行out_nohpet清空hpet_address",
+        "first_stop_gate": "不把0等同所有失败状态；是否真实映射错误先卡指针门",
+        "evidence_ids": [
+          "HC102-E042",
+          "HC102-E045",
+          "HC102-E035"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-M08",
+        "scenario": "重复调用所有权",
+        "preconditions": "前一次已将channels非NULL发布且第二次初始化到达",
+        "source_trace": "再次kcalloc并覆盖hpet_base.channels; cleanup用当前global",
+        "conditional_result": "存在条件性旧对象引用丢失或清理指向新对象的风险",
+        "first_stop_gate": "未发现活动重复调用场景；不声明真实泄漏/双释放",
+        "evidence_ids": [
+          "HC102-E051",
+          "HC102-E050",
+          "HC102-E060",
+          "HC102-E121"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-M09",
+        "scenario": "模式枚举与字段",
+        "preconditions": "对象为合法allocated channel且此前初始化为零是额外前提",
+        "source_trace": "mode枚举有UNUSED/LEGACY/CLOCKEVT/DEVICE；legacy成功只写channel0.mode",
+        "conditional_result": "模式字段静态声明不能证明真实设备时钟事件配置已运行",
+        "first_stop_gate": "分配器清零与成功调用和硬件行为分开",
+        "evidence_ids": [
+          "HC102-E121",
+          "HC102-E033",
+          "HC102-E058"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      }
+    ],
+    "enable_exit_state_matrix": [
+      {
+        "id": "A-E01",
+        "scenario": "映射NULL直接0",
+        "preconditions": "cast数值为NULL",
+        "source_trace": "set_mapping→if(!hpet_virt_address)return0",
+        "conditional_result": "hpet_address已赋值，未运行统一清理；其它static全局保持前态",
+        "first_stop_gate": "有效映射/后态硬件不由NULL判定",
+        "evidence_ids": [
+          "HC102-E035",
+          "HC102-E042",
+          "HC102-E045"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-E02",
+        "scenario": "cfg错误到统一出口",
+        "preconditions": "映射和读取均合法但1000轮cfg均返回0xffffffff",
+        "source_trace": "hpet_cfg_working false→out_nohpet",
+        "conditional_result": "若有当前channels则kfree当前全局；设置指针NULL/nr_channels0/address0",
+        "first_stop_gate": "其它base字段/hpet_freq及页表实际撤销未更新",
+        "evidence_ids": [
+          "HC102-E044",
+          "HC102-E046",
+          "HC102-E060",
+          "HC102-E061",
+          "HC102-E122"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-E03",
+        "scenario": "period非法退出",
+        "preconditions": "合法寄存器读且period不在[100000,100000000]",
+        "source_trace": "hpet_enable period guard→out_nohpet",
+        "conditional_result": "退出0，未做本次频率转换/分配/注册",
+        "first_stop_gate": "旧静态字段与已有clocksource list由前态决定",
+        "evidence_ids": [
+          "HC102-E047",
+          "HC102-E073",
+          "HC102-E074",
+          "HC102-E060"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-E04",
+        "scenario": "kcalloc NULL",
+        "preconditions": "合法count/period/freq；alloc返回NULL",
+        "source_trace": "alloc failure→out_nohpet",
+        "conditional_result": "无新通道全局发布；无本次clocksource注册",
+        "first_stop_gate": "先前全局channels若非NULL，在统一出口可能被清理；需分开",
+        "evidence_ids": [
+          "HC102-E048",
+          "HC102-E049",
+          "HC102-E050",
+          "HC102-E060"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-E05",
+        "scenario": "计数不推进",
+        "preconditions": "计数读/rdtsc正常，200000TSC差门按算术域运行",
+        "source_trace": "hpet_counting false→out_nohpet",
+        "conditional_result": "本次已请求counter启动，再清当前channel指针和映射包装",
+        "first_stop_gate": "没有在out_nohpet显示stop_counter，不等于硬件仍实际运行",
+        "evidence_ids": [
+          "HC102-E066",
+          "HC102-E067",
+          "HC102-E056",
+          "HC102-E060",
+          "HC102-E122"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-E06",
+        "scenario": "no legacy返回0但已注册",
+        "preconditions": "计数通过，clocksource_register_hz正常返回，LEGSUP位0",
+        "source_trace": "clocksource_register_hz→if(id&LEGSUP) else return0",
+        "conditional_result": "登记路径已经发生；没有本次统一清理，channels及映射指针仍保留",
+        "first_stop_gate": "不签登记成功导致实际使用，也不认证MMIO",
+        "evidence_ids": [
+          "HC102-E057",
+          "HC102-E059",
+          "HC102-E075",
+          "HC102-E051",
+          "HC102-E095"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "A-E07",
+        "scenario": "legacy返回1",
+        "preconditions": "计数与注册均正常，LEGSUP位1，周期callee正常返回",
+        "source_trace": "调用myos_hpet_clkevt_set_state_periodic后mode=LEGACY，return1",
+        "conditional_result": "记录条件成功及资源存留",
+        "first_stop_gate": "没有检查周期helper结果/设备接受/IRQ送达",
+        "evidence_ids": [
+          "HC102-E057",
+          "HC102-E058",
+          "HC102-E059",
+          "HC102-E121"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      }
+    ],
+    "counter_progress_matrix": [
+      {
+        "id": "B-C01",
+        "scenario": "cfg工作读循环",
+        "preconditions": "每次hpet_readl可正常返回",
+        "source_trace": "for i=0..999比较HPET_CFG!=0xffffffff",
+        "conditional_result": "至多1000次合法寄存器读取尝试；可提前true",
+        "first_stop_gate": "单次读取若阻塞/非法，所谓1000次和时间界均失效",
+        "evidence_ids": [
+          "HC102-E044",
+          "HC102-E040",
+          "HC102-E079"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-C02",
+        "scenario": "stop reset start顺序",
+        "preconditions": "MMIO指针有效并且每个访问正常完成",
+        "source_trace": "stop清ENABLE→COUNTER低高各写0→start置ENABLE",
+        "conditional_result": "三个函数调用组合形成源码先后请求",
+        "first_stop_gate": "没有设备写入生效和电路实际开始计数证据",
+        "evidence_ids": [
+          "HC102-E062",
+          "HC102-E063",
+          "HC102-E064",
+          "HC102-E065",
+          "HC102-E123",
+          "HC102-E127"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-C03",
+        "scenario": "TSC期限检查",
+        "preconditions": "rdtsc单调推进且无算术异常",
+        "source_trace": "read初始t1→start=rdtsc→重复HPET读与rdtsc直到差>=200000",
+        "conditional_result": "固定200000是TSC ticks差比较，不是已证墙钟50–200us",
+        "first_stop_gate": "TSC不推进/回绕/非单调/访问不返回均独立失效门",
+        "evidence_ids": [
+          "HC102-E066",
+          "HC102-E067",
+          "HC102-E086"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-C04",
+        "scenario": "counter首次变化",
+        "preconditions": "HPET两次有效读值不同",
+        "source_trace": "if(t1!=hpet_readl(HPET_COUNTER))return true",
+        "conditional_result": "只证明从两次观察中发现变化",
+        "first_stop_gate": "不说明任意固定间隔更新、真实clocksource连续或中断频率",
+        "evidence_ids": [
+          "HC102-E067",
+          "HC102-E123",
+          "HC102-E072"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-C05",
+        "scenario": "read_hpet宽度与mask",
+        "preconditions": "uint/readl取值有效，编译目标的uint宽度满足项目假设",
+        "source_trace": "read_hpet返回(hpet_readl(COUNTER))转u64，mask=CLOCKSOURCE_MASK(32)",
+        "conditional_result": "返回u64类型不是读取了64位高半寄存器",
+        "first_stop_gate": "readl内部/实际硬件单调仍未审计",
+        "evidence_ids": [
+          "HC102-E072",
+          "HC102-E038",
+          "HC102-E088",
+          "HC102-E123"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-C06",
+        "scenario": "counter已启动后的清理",
+        "preconditions": "counting失败并达out_nohpet",
+        "source_trace": "hpet_restart_counter→计数检查失败→out_nohpet未直接调用hpet_stop_counter",
+        "conditional_result": "源码缺少该出口的stop请求语句",
+        "first_stop_gate": "不因此认证设备最终仍计数或硬件副作用",
+        "evidence_ids": [
+          "HC102-E066",
+          "HC102-E067",
+          "HC102-E060",
+          "HC102-E062"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      }
+    ],
+    "period_frequency_periodic_matrix": [
+      {
+        "id": "B-P01",
+        "scenario": "合法period区间",
+        "preconditions": "读取返回u32值并与定值宏相符",
+        "source_trace": "100000<=hpet_period<=100000000",
+        "conditional_result": "筛选是范围判断而非真实硬件规范认证",
+        "first_stop_gate": "FSEC_PER_SEC / p 的真实C表达式与类型需继续门",
+        "evidence_ids": [
+          "HC102-E047",
+          "HC102-E073",
+          "HC102-E074",
+          "HC102-E078"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-P02",
+        "scenario": "fs到Hz的两个类型层",
+        "preconditions": "p为允许的非零u32数",
+        "source_trace": "u64 freq=10^15; do_div(freq,p); hpet_freq=ulong; register_hz((u32)hpet_freq)",
+        "conditional_result": "全精度整数Hz先产生，再在register入口窄成u32；(u32)并未提前参与do_div",
+        "first_stop_gate": "ulong大小和平台ABI、注册结果及period硬件来源另立门",
+        "evidence_ids": [
+          "HC102-E048",
+          "HC102-E057",
+          "HC102-E082",
+          "HC102-E083",
+          "HC102-E037"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-P03",
+        "scenario": "高频窄化阈值",
+        "preconditions": "p=100000/200000/232830可作为被允许的数学输入",
+        "source_trace": "floor(10^15/p)>2^32-1",
+        "conditional_result": "三个例在传递(u32)时改变频率；不等于实际芯片返回",
+        "first_stop_gate": "下游mult/shift取新频率，不把数学频率当设备确认",
+        "evidence_ids": [
+          "HC102-E047",
+          "HC102-E048",
+          "HC102-E057"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-P04",
+        "scenario": "时源转换方向",
+        "preconditions": "freq32>0, scale=1,所有除法有合法分母",
+        "source_trace": "clocks_calc_mult_shift计算mult≈(10^9<<shift)/freq32",
+        "conditional_result": "这是cycles→ns乘数，不是ns→cycles乘数",
+        "first_stop_gate": "算术上周期代码乘mult的方向和正确转换待比较；不签外部硬件周期",
+        "evidence_ids": [
+          "HC102-E087",
+          "HC102-E092",
+          "HC102-E093",
+          "HC102-E094",
+          "HC102-E068"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-P05",
+        "scenario": "周期delta与整数阶段",
+        "preconditions": "HZ=1000, shift+7落在0..63，mult已是有效u32",
+        "source_trace": "delta=((u64)(NSEC_PER_SEC/HZ))*mult >> (shift+7)",
+        "conditional_result": "先整数除法后64位乘法再右移；再转换uint用于cmp和写cmp",
+        "first_stop_gate": "不是把无限精度表述直接当有效任意C输入",
+        "evidence_ids": [
+          "HC102-E069",
+          "HC102-E084",
+          "HC102-E085",
+          "HC102-E068"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-P06",
+        "scenario": "periodic配置写请求",
+        "preconditions": "有效寄存器、udelay可返回、channel=0",
+        "source_trace": "stop→read now→read cfg→OR ENABLE/PERIODIC/SETVAL→write CFG→write cmp→udelay→write delta→start",
+        "conditional_result": "第一次与第二次cmp写是两次请求且中间delay不代表硬件完成",
+        "first_stop_gate": "periodic capability和真实IRQ触发未证",
+        "evidence_ids": [
+          "HC102-E068",
+          "HC102-E069",
+          "HC102-E070",
+          "HC102-E071",
+          "HC102-E077",
+          "HC102-E129",
+          "HC102-E130"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-P07",
+        "scenario": "CMP计算的取模",
+        "preconditions": "now/unsigned cmp是源中uint范围，delta为u64",
+        "source_trace": "cmp=now+(uint)delta; hpet_writel((uint)delta,..)",
+        "conditional_result": "两次收窄和先加后写需分账，超出目标宽度按无符号模域",
+        "first_stop_gate": "设备实际比较器位宽/回绕模式未证",
+        "evidence_ids": [
+          "HC102-E069",
+          "HC102-E070",
+          "HC102-E071",
+          "HC102-E125"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-P08",
+        "scenario": "计数周期低位采样",
+        "preconditions": "clocksource mask=32、read()返回u64但来自hpet_readl",
+        "source_trace": "读取低位并按mask对时间差取模",
+        "conditional_result": "32位counter回绕周期取决于真实频率；若时间跨多轮可能丢失增量",
+        "first_stop_gate": "未证硬件时频或最大采样间隔",
+        "evidence_ids": [
+          "HC102-E072",
+          "HC102-E088",
+          "HC102-E089"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "B-P09",
+        "scenario": "配置位与能力位区分",
+        "preconditions": "寄存器字段可读且CPU/编译类型合法",
+        "source_trace": "periodic OR PERIODIC/SETVAL/ENABLE不先验证PERIODIC_CAP，TN_32BIT活动位未设置",
+        "conditional_result": "请求位组合不是设备支持声明，历史注释不作为外部认证",
+        "first_stop_gate": "无硬件或规范一手材料，[条件化]记录潜在配置风险",
+        "evidence_ids": [
+          "HC102-E070",
+          "HC102-E077",
+          "HC102-E129",
+          "HC102-E130"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      }
+    ],
+    "clocksource_registration_selection_matrix": [
+      {
+        "id": "C-R01",
+        "scenario": "clocksource结构静态绑定",
+        "preconditions": "固定time结构字段的编译条件成立",
+        "source_trace": "name hpet,rating250,read read_hpet,mask32,flags CONTINUOUS,enable hpet_enable,list initialized",
+        "conditional_result": "结构字段只是声明/初始化，非执行函数或证明source活跃",
+        "first_stop_gate": "回调不因绑定而被注册函数调用",
+        "evidence_ids": [
+          "HC102-E038",
+          "HC102-E039",
+          "HC102-E089",
+          "HC102-E090",
+          "HC102-E091"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-R02",
+        "scenario": "宏到register_scale",
+        "preconditions": "宏按活动预处理选入且参数类型合法",
+        "source_trace": "clocksource_register_hz(cs,(u32)freq)→__clocksource_register_scale(cs,1,Hz)",
+        "conditional_result": "Hz已窄为32位，返回值未检查",
+        "first_stop_gate": "编译实际替换以及freq不为零是下一门",
+        "evidence_ids": [
+          "HC102-E057",
+          "HC102-E087",
+          "HC102-E095"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-R03",
+        "scenario": "freq变换",
+        "preconditions": "freq>0及算术/整数溢出检查合法",
+        "source_trace": "update_freq_scale→sec、clocks_calc_mult_shift→mult/shift及maxadj",
+        "conditional_result": "转换字段在入队前写回对象",
+        "first_stop_gate": "freq=0不进入mult计算；若设备频率只由窄化生成则输入已变化",
+        "evidence_ids": [
+          "HC102-E092",
+          "HC102-E093",
+          "HC102-E094",
+          "HC102-E095"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-R04",
+        "scenario": "入队",
+        "preconditions": "list有效且不是已加入的同一节点",
+        "source_trace": "clocksource_enqueue按rating遍历，list_add并count++",
+        "conditional_result": "注册代码本身只到链表插入和return0",
+        "first_stop_gate": "重复注册同一个LIST节点的有效性未经审计",
+        "evidence_ids": [
+          "HC102-E096",
+          "HC102-E097",
+          "HC102-E098",
+          "HC102-E119",
+          "HC102-E120"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-R05",
+        "scenario": "注册不即时select",
+        "preconditions": "顺利抵达register_scale尾部",
+        "source_trace": "clocksource_select相关代码被注释，return0",
+        "conditional_result": "不得把register成功直接变为curr_clocksource切换",
+        "first_stop_gate": "若有其他路径选源则另证，本包只否定所读函数体内赋值",
+        "evidence_ids": [
+          "HC102-E095",
+          "HC102-E096",
+          "HC102-E101",
+          "HC102-E102"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-R06",
+        "scenario": "find_best的查询层",
+        "preconditions": "list count>0，遍历节点有效",
+        "source_trace": "clocksource_find_best跳过skipcur和oneshot条件后返回候选",
+        "conditional_result": "best指针仅是局部候选；rating排序是选择顺序前提",
+        "first_stop_gate": "未证当前源指针已写，更未证timekeeper已换",
+        "evidence_ids": [
+          "HC102-E099",
+          "HC102-E100",
+          "HC102-E097",
+          "HC102-E101"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-R07",
+        "scenario": "selector提交断点",
+        "preconditions": "__clocksource_select调用并有best",
+        "source_trace": "函数中真正curr_clocksource=best及timekeeping_notify均注释",
+        "conditional_result": "当前已读函数不会因为得到best而写curr_clocksource",
+        "first_stop_gate": "不能对全树其他代码做绝对不存在断言",
+        "evidence_ids": [
+          "HC102-E101",
+          "HC102-E102"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-R08",
+        "scenario": "done_booting初始化",
+        "preconditions": "fs_initcall得到实际运行且默认弱实现被链接选择",
+        "source_trace": "curr_clocksource=clocksource_default_clock; clocksource_select",
+        "conditional_result": "设置默认变量后尝试select；被注释的提交仍不能切换",
+        "first_stop_gate": "fs_initcall实际执行/其他强定义或外部切换未证",
+        "evidence_ids": [
+          "HC102-E103",
+          "HC102-E104",
+          "HC102-E107",
+          "HC102-E102"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      }
+    ],
+    "startup_timekeeper_consumer_matrix": [
+      {
+        "id": "C-S01",
+        "scenario": "start_kernel先后",
+        "preconditions": "start_kernel源码入口确被实际选择且早期函数正常返回",
+        "source_trace": "timekeeping_init在late_time_init之前",
+        "conditional_result": "先把默认时钟源缓存到timekeeper，再请求后置HPET初始化",
+        "first_stop_gate": "实际链接选择/boot到达另有门",
+        "evidence_ids": [
+          "HC102-E117",
+          "HC102-E118"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-S02",
+        "scenario": "弱默认jiffies",
+        "preconditions": "无强定义覆盖weak及链接符号选择相符",
+        "source_trace": "clocksource_default_clock返回&clocksource_jiffies（rating1）",
+        "conditional_result": "被调用的默认指针可为jiffies",
+        "first_stop_gate": "不能因weak源文本直接证明最终可执行文件一定选它",
+        "evidence_ids": [
+          "HC102-E105",
+          "HC102-E107",
+          "HC102-E108"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-S03",
+        "scenario": "timekeeper对象初始化",
+        "preconditions": "clocksource_default_clock返回有效对象并且enable回调合法",
+        "source_trace": "clock=default; if(clock->enable)clock->enable(clock); tk_setup_internals(tk,clock)",
+        "conditional_result": "timekeeper以此clock保存clock/mask/cycle_last/mult/shift；不是读取curr_clocksource",
+        "first_stop_gate": "未证另有通知路径会重绑定timekeeper",
+        "evidence_ids": [
+          "HC102-E108",
+          "HC102-E109",
+          "HC102-E110",
+          "HC102-E112"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-S04",
+        "scenario": "真实采样消费者",
+        "preconditions": "tkr->clock对象仍有效且read回调合法",
+        "source_trace": "tk_clock_read(tkr)→clock->read(clock); timekeeping_get_ns调用该helper",
+        "conditional_result": "消费的实际对象以tkr->clock为准，非注册列表最高rating",
+        "first_stop_gate": "并发换源和硬件正确性不由静态调用证明",
+        "evidence_ids": [
+          "HC102-E111",
+          "HC102-E112",
+          "HC102-E109"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-S05",
+        "scenario": "HPET使能返回被丢弃",
+        "preconditions": "hpet_time_init在late_time_init可达",
+        "source_trace": "hpet_enable(NULL); 随后 myos_HPET_init()",
+        "conditional_result": "即便enable返回0仍有尝试IRQ登记的后续语句",
+        "first_stop_gate": "注册与真实送达仍受101的vector/IOAPIC/硬件门",
+        "evidence_ids": [
+          "HC102-E114",
+          "HC102-E115",
+          "HC102-E017",
+          "HC102-E057",
+          "HC102-E059"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-S06",
+        "scenario": "jiffies增量旧根",
+        "preconditions": "原V14仅达到已公开源码与宿主链接别名模型",
+        "source_trace": "HPET_handler: jiffies++ + do_timer(1):jiffies_64+=ticks",
+        "conditional_result": "是否别名、真实IRQ与值改变按旧CA-05/V14条件保留，不计102新根",
+        "first_stop_gate": "不把两个语句不经ELF与装载论证直接说成真实双计数",
+        "evidence_ids": [
+          "HC102-E016",
+          "HC102-E113"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-S07",
+        "scenario": "clocksource登记与timekeeper状态不同步门",
+        "preconditions": "HPET已登记且start_kernel先初始化timekeeper，未证明切换通知",
+        "source_trace": "register_hz→入队；select提交被注释；tk持default对象",
+        "conditional_result": "可以同时存在注册HPET和继续使用default的timekeeper",
+        "first_stop_gate": "非全树不存在覆盖/特殊构建/实机计时故障的判据",
+        "evidence_ids": [
+          "HC102-E057",
+          "HC102-E096",
+          "HC102-E102",
+          "HC102-E108",
+          "HC102-E109",
+          "HC102-E117"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "C-S08",
+        "scenario": "legacy与clocksource职责分离",
+        "preconditions": "HPET ID LEGACY支持且periodic函数正常返回",
+        "source_trace": "legacy分支触发clockevent式硬件请求，clocksource也已注册",
+        "conditional_result": "定时中断的存在与系统时间读源的对象选择是不同路径",
+        "first_stop_gate": "不把IRQ2送达与clocksource选中合并",
+        "evidence_ids": [
+          "HC102-E058",
+          "HC102-E075",
+          "HC102-E057",
+          "HC102-E115",
+          "HC102-E112"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "scenario": "map到period读的有条件关联",
+        "preconditions": "合法HPET虚拟对象；readl可返回且period属于允许范围",
+        "source_trace": "set_mapping→cfg_working→period检查→频率转换",
+        "conditional_result": "A的MMIO有效性是B后续推导的门",
+        "first_stop_gate": "FM96-F03映射返回问题是旧根、不能重新报新故障",
+        "evidence_ids": [
+          "HC102-E042",
+          "HC102-E044",
+          "HC102-E047",
+          "HC102-E048",
+          "HC102-E030"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "ABC-02",
+        "scenario": "通道对象与周期channel0",
+        "preconditions": "通道数至少1、kcalloc成功且指针有效",
+        "source_trace": "ID解码+channels分配→legacy分支对channels[0].mode赋值",
+        "conditional_result": "只涉及首个通道；channels数由已读ID位决定",
+        "first_stop_gate": "无legacy或分配失败不走周期节点",
+        "evidence_ids": [
+          "HC102-E049",
+          "HC102-E051",
+          "HC102-E058",
+          "HC102-E121"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "ABC-03",
+        "scenario": "频率到clocksource注册",
+        "preconditions": "period合法/非0、freq转换合法且返回有效",
+        "source_trace": "u64 Hz→(u32)Hz→__clocksource_register_scale→mult/shift→enqueue",
+        "conditional_result": "在窄化处先失去完整频率，后续只能按窄化输入推导",
+        "first_stop_gate": "不认证实际clocksource被选或硬件频率",
+        "evidence_ids": [
+          "HC102-E048",
+          "HC102-E057",
+          "HC102-E087",
+          "HC102-E092",
+          "HC102-E094",
+          "HC102-E096"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "ABC-04",
+        "scenario": "register至timekeeper断点",
+        "preconditions": "HPET已入队且timekeeper早初始化",
+        "source_trace": "register list→best local→selector assignment commented→timekeeper default",
+        "conditional_result": "图为UNPROVEN_JOIN，不能画作DIRECT_CALL至HPET的timekeeper",
+        "first_stop_gate": "若有其它真实选源路径，需要后续静态证据而非猜测",
+        "evidence_ids": [
+          "HC102-E096",
+          "HC102-E101",
+          "HC102-E102",
+          "HC102-E108",
+          "HC102-E109"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "ABC-05",
+        "scenario": "IRQ联接与历史101",
+        "preconditions": "hpet_enable成功不是后续IRQ注册的必要代码判据",
+        "source_trace": "hpet_time_init忽略返回→myos_HPET_init→register_irq→HPET_handler",
+        "conditional_result": "保留101 IR101-F08/U05边界与CA-05/V14根；不是本102新双增发现",
+        "first_stop_gate": "设备IRQ投递及handler执行/ELF别名未证",
+        "evidence_ids": [
+          "HC102-E114",
+          "HC102-E115",
+          "HC102-E017",
+          "HC102-E016",
+          "HC102-E113"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "ABC-06",
+        "scenario": "D00向量与HPET IRQ区分",
+        "preconditions": "目标使用固定time宏定义",
+        "source_trace": "LVT 0xec+2=0xee，HPET的VECTOR_IRQ(2)使用外部向量域",
+        "conditional_result": "D00补末端宏链不表示HPET被LVT向量替换",
+        "first_stop_gate": "两个IRQ消费者独立，实际IDT/IOAPIC路由未证",
+        "evidence_ids": [
+          "HC102-E024",
+          "HC102-E025",
+          "HC102-E026",
+          "HC102-E027",
+          "HC102-E017"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      },
+      {
+        "id": "ABC-07",
+        "scenario": "无legacy与登记分离",
+        "preconditions": "可合法抵达id无LEGACY且register正常返回",
+        "source_trace": "clocksource登记之后直return0，保留映射及channel",
+        "conditional_result": "A的返回状态与C的登记状态不能用同一boolean表达",
+        "first_stop_gate": "重复调用和潜在资源后果是条件性问题，不签实际故障",
+        "evidence_ids": [
+          "HC102-E057",
+          "HC102-E059",
+          "HC102-E051",
+          "HC102-E060"
+        ],
+        "claim_class": "STATIC_SOURCE_OR_EXPLICIT_FINITE_CONDITIONAL"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows_by_group": {
+    "mapping_channel_ownership_matrix": 9,
+    "enable_exit_state_matrix": 7,
+    "counter_progress_matrix": 6,
+    "period_frequency_periodic_matrix": 9,
+    "clocksource_registration_selection_matrix": 8,
+    "startup_timekeeper_consumer_matrix": 8,
+    "ABC_join_matrix": 7
+  },
+  "matrix_rows": 54,
+  "finite_models": [
+    {
+      "id": "HC102-M01",
+      "scenario": "period_fs=100000",
+      "input": {
+        "period_fs": 100000,
+        "femtoseconds_per_second": "1000000000000000",
+        "HZ": 1000,
+        "bit32_modulus": "4294967296"
+      },
+      "preconditions": "纯整数有限算例；(u32)转换按2^32取模；freq32>0；本例所有所示位移合法且无64位乘积溢出；clocks_calc_mult_shift调整前参数按已读直接helper推导",
+      "full_hz": "10000000000",
+      "registered_hz_u32": "1410065408",
+      "truncation": true,
+      "sec_parameter": "3",
+      "mult": "3045934800",
+      "shift": "32",
+      "periodic_delta_cycles": "5540",
+      "nominal_1ms_counter_cycles": "10000000",
+      "conditional_result": "数值关系仅适用于给定period及特定源类型/前提，不保证寄存器返回此值或真实周期",
+      "first_stop_gate": "设备频率、读写行为、真实IRQ周期未证",
+      "evidence_ids": [
+        "HC102-E047",
+        "HC102-E048",
+        "HC102-E057",
+        "HC102-E069",
+        "HC102-E073",
+        "HC102-E074",
+        "HC102-E082",
+        "HC102-E083",
+        "HC102-E084",
+        "HC102-E085",
+        "HC102-E087",
+        "HC102-E094"
+      ]
+    },
+    {
+      "id": "HC102-M02",
+      "scenario": "period_fs=200000",
+      "input": {
+        "period_fs": 200000,
+        "femtoseconds_per_second": "1000000000000000",
+        "HZ": 1000,
+        "bit32_modulus": "4294967296"
+      },
+      "preconditions": "纯整数有限算例；(u32)转换按2^32取模；freq32>0；本例所有所示位移合法且无64位乘积溢出；clocks_calc_mult_shift调整前参数按已读直接helper推导",
+      "full_hz": "5000000000",
+      "registered_hz_u32": "705032704",
+      "truncation": true,
+      "sec_parameter": "6",
+      "mult": "3045934800",
+      "shift": "31",
+      "periodic_delta_cycles": "11081",
+      "nominal_1ms_counter_cycles": "5000000",
+      "conditional_result": "数值关系仅适用于给定period及特定源类型/前提，不保证寄存器返回此值或真实周期",
+      "first_stop_gate": "设备频率、读写行为、真实IRQ周期未证",
+      "evidence_ids": [
+        "HC102-E047",
+        "HC102-E048",
+        "HC102-E057",
+        "HC102-E069",
+        "HC102-E073",
+        "HC102-E074",
+        "HC102-E082",
+        "HC102-E083",
+        "HC102-E084",
+        "HC102-E085",
+        "HC102-E087",
+        "HC102-E094"
+      ]
+    },
+    {
+      "id": "HC102-M03",
+      "scenario": "period_fs=232830",
+      "input": {
+        "period_fs": 232830,
+        "femtoseconds_per_second": "1000000000000000",
+        "HZ": 1000,
+        "bit32_modulus": "4294967296"
+      },
+      "preconditions": "纯整数有限算例；(u32)转换按2^32取模；freq32>0；本例所有所示位移合法且无64位乘积溢出；clocks_calc_mult_shift调整前参数按已读直接helper推导",
+      "full_hz": "4294979169",
+      "registered_hz_u32": "11873",
+      "truncation": true,
+      "sec_parameter": "361742",
+      "mult": "2759875347",
+      "shift": "15",
+      "periodic_delta_cycles": "658005558",
+      "nominal_1ms_counter_cycles": "4294979",
+      "conditional_result": "数值关系仅适用于给定period及特定源类型/前提，不保证寄存器返回此值或真实周期",
+      "first_stop_gate": "设备频率、读写行为、真实IRQ周期未证",
+      "evidence_ids": [
+        "HC102-E047",
+        "HC102-E048",
+        "HC102-E057",
+        "HC102-E069",
+        "HC102-E073",
+        "HC102-E074",
+        "HC102-E082",
+        "HC102-E083",
+        "HC102-E084",
+        "HC102-E085",
+        "HC102-E087",
+        "HC102-E094"
+      ]
+    },
+    {
+      "id": "HC102-M04",
+      "scenario": "period_fs=232831",
+      "input": {
+        "period_fs": 232831,
+        "femtoseconds_per_second": "1000000000000000",
+        "HZ": 1000,
+        "bit32_modulus": "4294967296"
+      },
+      "preconditions": "纯整数有限算例；(u32)转换按2^32取模；freq32>0；本例所有所示位移合法且无64位乘积溢出；clocks_calc_mult_shift调整前参数按已读直接helper推导",
+      "full_hz": "4294960722",
+      "registered_hz_u32": "4294960722",
+      "truncation": false,
+      "sec_parameter": "1",
+      "mult": "1000001531",
+      "shift": "32",
+      "periodic_delta_cycles": "1818",
+      "nominal_1ms_counter_cycles": "4294960",
+      "conditional_result": "数值关系仅适用于给定period及特定源类型/前提，不保证寄存器返回此值或真实周期",
+      "first_stop_gate": "设备频率、读写行为、真实IRQ周期未证",
+      "evidence_ids": [
+        "HC102-E047",
+        "HC102-E048",
+        "HC102-E057",
+        "HC102-E069",
+        "HC102-E073",
+        "HC102-E074",
+        "HC102-E082",
+        "HC102-E083",
+        "HC102-E084",
+        "HC102-E085",
+        "HC102-E087",
+        "HC102-E094"
+      ]
+    },
+    {
+      "id": "HC102-M05",
+      "scenario": "period_fs=1000000",
+      "input": {
+        "period_fs": 1000000,
+        "femtoseconds_per_second": "1000000000000000",
+        "HZ": 1000,
+        "bit32_modulus": "4294967296"
+      },
+      "preconditions": "纯整数有限算例；(u32)转换按2^32取模；freq32>0；本例所有所示位移合法且无64位乘积溢出；clocks_calc_mult_shift调整前参数按已读直接helper推导",
+      "full_hz": "1000000000",
+      "registered_hz_u32": "1000000000",
+      "truncation": false,
+      "sec_parameter": "4",
+      "mult": "2147483648",
+      "shift": "31",
+      "periodic_delta_cycles": "7812",
+      "nominal_1ms_counter_cycles": "1000000",
+      "conditional_result": "数值关系仅适用于给定period及特定源类型/前提，不保证寄存器返回此值或真实周期",
+      "first_stop_gate": "设备频率、读写行为、真实IRQ周期未证",
+      "evidence_ids": [
+        "HC102-E047",
+        "HC102-E048",
+        "HC102-E057",
+        "HC102-E069",
+        "HC102-E073",
+        "HC102-E074",
+        "HC102-E082",
+        "HC102-E083",
+        "HC102-E084",
+        "HC102-E085",
+        "HC102-E087",
+        "HC102-E094"
+      ]
+    },
+    {
+      "id": "HC102-M06",
+      "scenario": "period_fs=10000000",
+      "input": {
+        "period_fs": 10000000,
+        "femtoseconds_per_second": "1000000000000000",
+        "HZ": 1000,
+        "bit32_modulus": "4294967296"
+      },
+      "preconditions": "纯整数有限算例；(u32)转换按2^32取模；freq32>0；本例所有所示位移合法且无64位乘积溢出；clocks_calc_mult_shift调整前参数按已读直接helper推导",
+      "full_hz": "100000000",
+      "registered_hz_u32": "100000000",
+      "truncation": false,
+      "sec_parameter": "42",
+      "mult": "2684354560",
+      "shift": "28",
+      "periodic_delta_cycles": "78125",
+      "nominal_1ms_counter_cycles": "100000",
+      "conditional_result": "数值关系仅适用于给定period及特定源类型/前提，不保证寄存器返回此值或真实周期",
+      "first_stop_gate": "设备频率、读写行为、真实IRQ周期未证",
+      "evidence_ids": [
+        "HC102-E047",
+        "HC102-E048",
+        "HC102-E057",
+        "HC102-E069",
+        "HC102-E073",
+        "HC102-E074",
+        "HC102-E082",
+        "HC102-E083",
+        "HC102-E084",
+        "HC102-E085",
+        "HC102-E087",
+        "HC102-E094"
+      ]
+    },
+    {
+      "id": "HC102-M07",
+      "scenario": "period_fs=100000000",
+      "input": {
+        "period_fs": 100000000,
+        "femtoseconds_per_second": "1000000000000000",
+        "HZ": 1000,
+        "bit32_modulus": "4294967296"
+      },
+      "preconditions": "纯整数有限算例；(u32)转换按2^32取模；freq32>0；本例所有所示位移合法且无64位乘积溢出；clocks_calc_mult_shift调整前参数按已读直接helper推导",
+      "full_hz": "10000000",
+      "registered_hz_u32": "10000000",
+      "truncation": false,
+      "sec_parameter": "429",
+      "mult": "3355443200",
+      "shift": "25",
+      "periodic_delta_cycles": "781250",
+      "nominal_1ms_counter_cycles": "10000",
+      "conditional_result": "数值关系仅适用于给定period及特定源类型/前提，不保证寄存器返回此值或真实周期",
+      "first_stop_gate": "设备频率、读写行为、真实IRQ周期未证",
+      "evidence_ids": [
+        "HC102-E047",
+        "HC102-E048",
+        "HC102-E057",
+        "HC102-E069",
+        "HC102-E073",
+        "HC102-E074",
+        "HC102-E082",
+        "HC102-E083",
+        "HC102-E084",
+        "HC102-E085",
+        "HC102-E087",
+        "HC102-E094"
+      ]
+    },
+    {
+      "id": "HC102-M08",
+      "scenario": "channels=1或32",
+      "preconditions": "id bits覆盖0..31且channel数组合法",
+      "source_trace": "((id&0x1f00)>>8)+1",
+      "conditional_result": "1..32；n=24时CFG offset=0x400，n=31时0x4e0，相对1024字节请求长度超出，但物理页映射范围未证",
+      "first_stop_gate": "地址有效和4K映射结果不能由数值对比认证",
+      "evidence_ids": [
+        "HC102-E049",
+        "HC102-E076",
+        "HC102-E080",
+        "HC102-E124",
+        "HC102-E126"
+      ]
+    },
+    {
+      "id": "HC102-M09",
+      "scenario": "mapping pointer NULL",
+      "preconditions": "myos_ioremap cast返回NULL",
+      "source_trace": "hpet_set_mapping设置hpet_address后立刻return0",
+      "conditional_result": "hpet_address未在本退出路径归零；未发后续config read",
+      "first_stop_gate": "不能声称已解除真实映射",
+      "evidence_ids": [
+        "HC102-E042",
+        "HC102-E045"
+      ]
+    },
+    {
+      "id": "HC102-M10",
+      "scenario": "hpet_cfg_working 0xFFFFFFFF x1000",
+      "preconditions": "1000次可返回且值均0xffffffff",
+      "source_trace": "for i<1000→false",
+      "conditional_result": "转out_nohpet清理当前channels，返回0",
+      "first_stop_gate": "单次MMIO访问成功未由循环代码保证",
+      "evidence_ids": [
+        "HC102-E044",
+        "HC102-E046",
+        "HC102-E060"
+      ]
+    },
+    {
+      "id": "HC102-M11",
+      "scenario": "hpet_counting TSC-stall",
+      "preconditions": "TSC不前进且HPET不变化且读操作能无限返回",
+      "source_trace": "(now-start)<200000UL在差值始终0时持续true",
+      "conditional_result": "代码中200000阈值不能构成真实墙钟上界",
+      "first_stop_gate": "TSC与MMIO真实进展未知",
+      "evidence_ids": [
+        "HC102-E066",
+        "HC102-E067",
+        "HC102-E086"
+      ]
+    },
+    {
+      "id": "HC102-M12",
+      "scenario": "hpet_counting changes early",
+      "preconditions": "相邻有效HPET读取值不同",
+      "source_trace": "t1!=readl → true",
+      "conditional_result": "返回true不代表定时IRQ已经设置或送达",
+      "first_stop_gate": "硬件寄存器行为独立",
+      "evidence_ids": [
+        "HC102-E067"
+      ]
+    },
+    {
+      "id": "HC102-M13",
+      "scenario": "LEGACY=0 after successful registration",
+      "preconditions": "counting、register流程合法且ID legacy位0",
+      "source_trace": "clocksource_register_hz; if LEGSUP else return0",
+      "conditional_result": "0返回与already-enqueued clocksource、allocated channels共存",
+      "first_stop_gate": "资源的二次释放/重入由后续调用决定",
+      "evidence_ids": [
+        "HC102-E057",
+        "HC102-E059",
+        "HC102-E075",
+        "HC102-E096"
+      ]
+    },
+    {
+      "id": "HC102-M14",
+      "scenario": "LEGACY=1 and periodic callback",
+      "preconditions": "counting与register正常且periodic helper正常返回",
+      "source_trace": "cfg|ENABLE|PERIODIC|SETVAL→write cfg→first cmp→udelay→second cmp→start",
+      "conditional_result": "返回1与寄存器请求序列成立，不保证硬件周期和IRQ投递",
+      "first_stop_gate": "能力位/设备接受未证",
+      "evidence_ids": [
+        "HC102-E058",
+        "HC102-E069",
+        "HC102-E070",
+        "HC102-E071",
+        "HC102-E129",
+        "HC102-E130"
+      ]
+    },
+    {
+      "id": "HC102-M15",
+      "scenario": "timekeeping-before-HPET",
+      "preconditions": "真实start_kernel正常到达两阶段且weak default未被强定义覆盖",
+      "source_trace": "timekeeping_init→default jiffies/tk_setup→late_time_init→hpet_time_init",
+      "conditional_result": "HPET入队后缺少已经确认的timekeeper rebind边",
+      "first_stop_gate": "其它链接强定义/其它runtime路径未证",
+      "evidence_ids": [
+        "HC102-E107",
+        "HC102-E108",
+        "HC102-E109",
+        "HC102-E117",
+        "HC102-E118"
+      ]
+    },
+    {
+      "id": "HC102-M16",
+      "scenario": "clocksource-register-enqueue-vs-current",
+      "preconditions": "登记链有效且无未知其它路径",
+      "source_trace": "enqueue排序；__clocksource_select中curr_clocksource=best被注释",
+      "conditional_result": "注册不足以使curr_clocksource或tkr_mono.clock指向HPET",
+      "first_stop_gate": "全树其它当前源写者不在本有界审计内",
+      "evidence_ids": [
+        "HC102-E096",
+        "HC102-E097",
+        "HC102-E102",
+        "HC102-E109"
+      ]
+    },
+    {
+      "id": "HC102-M17",
+      "scenario": "D00 LVT vector chain",
+      "preconditions": "固定time所列宏在相应编译分支选中",
+      "source_trace": "LOCAL_TIMER_VECTOR=0xec→FIRST_SYSTEM_VECTOR→VECTOR_IPI(2)→LAPIC_LVT_TIMER_IRQ",
+      "conditional_result": "算术值0xee，旧101缺末端独立宏已用HC102-E024补证",
+      "first_stop_gate": "不是IDT/设备投递认证",
+      "evidence_ids": [
+        "HC102-E024",
+        "HC102-E025",
+        "HC102-E026",
+        "HC102-E027"
+      ]
+    },
+    {
+      "id": "HC102-M18",
+      "scenario": "D00 controller changes during callback",
+      "preconditions": "回调使描述符p->controller改变而仍正常返回",
+      "source_trace": "install后再次读p->controller->enable；disable后再次读p->controller->uninstall",
+      "conditional_result": "先前非NULL检查不足以证明新controller有效，先停在重读解引用合法性",
+      "first_stop_gate": "没有证明重入、并发实际发生",
+      "evidence_ids": [
+        "HC102-E021",
+        "HC102-E022",
+        "HC102-E023"
+      ]
+    }
+  ],
+  "finite_model_count": 18,
+  "fact_to_evidence_id_index": {
+    "A-M01": [
+      "HC102-E030",
+      "HC102-E031",
+      "HC102-E035",
+      "HC102-E036",
+      "HC102-E042",
+      "HC102-E080"
+    ],
+    "A-M02": [
+      "HC102-E033",
+      "HC102-E034",
+      "HC102-E049",
+      "HC102-E050",
+      "HC102-E051"
+    ],
+    "A-M03": [
+      "HC102-E049",
+      "HC102-E076",
+      "HC102-E126",
+      "HC102-E033"
+    ],
+    "A-M04": [
+      "HC102-E052",
+      "HC102-E079",
+      "HC102-E127",
+      "HC102-E128"
+    ],
+    "A-M05": [
+      "HC102-E053",
+      "HC102-E054",
+      "HC102-E055",
+      "HC102-E081",
+      "HC102-E124"
+    ],
+    "A-M06": [
+      "HC102-E049",
+      "HC102-E080",
+      "HC102-E124",
+      "HC102-E030"
+    ],
+    "A-M07": [
+      "HC102-E042",
+      "HC102-E045",
+      "HC102-E035"
+    ],
+    "A-M08": [
+      "HC102-E051",
+      "HC102-E050",
+      "HC102-E060",
+      "HC102-E121"
+    ],
+    "A-M09": [
+      "HC102-E121",
+      "HC102-E033",
+      "HC102-E058"
+    ],
+    "A-E01": [
+      "HC102-E035",
+      "HC102-E042",
+      "HC102-E045"
+    ],
+    "A-E02": [
+      "HC102-E044",
+      "HC102-E046",
+      "HC102-E060",
+      "HC102-E061",
+      "HC102-E122"
+    ],
+    "A-E03": [
+      "HC102-E047",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E060"
+    ],
+    "A-E04": [
+      "HC102-E048",
+      "HC102-E049",
+      "HC102-E050",
+      "HC102-E060"
+    ],
+    "A-E05": [
+      "HC102-E066",
+      "HC102-E067",
+      "HC102-E056",
+      "HC102-E060",
+      "HC102-E122"
+    ],
+    "A-E06": [
+      "HC102-E057",
+      "HC102-E059",
+      "HC102-E075",
+      "HC102-E051",
+      "HC102-E095"
+    ],
+    "A-E07": [
+      "HC102-E057",
+      "HC102-E058",
+      "HC102-E059",
+      "HC102-E121"
+    ],
+    "B-C01": [
+      "HC102-E044",
+      "HC102-E040",
+      "HC102-E079"
+    ],
+    "B-C02": [
+      "HC102-E062",
+      "HC102-E063",
+      "HC102-E064",
+      "HC102-E065",
+      "HC102-E123",
+      "HC102-E127"
+    ],
+    "B-C03": [
+      "HC102-E066",
+      "HC102-E067",
+      "HC102-E086"
+    ],
+    "B-C04": [
+      "HC102-E067",
+      "HC102-E123",
+      "HC102-E072"
+    ],
+    "B-C05": [
+      "HC102-E072",
+      "HC102-E038",
+      "HC102-E088",
+      "HC102-E123"
+    ],
+    "B-C06": [
+      "HC102-E066",
+      "HC102-E067",
+      "HC102-E060",
+      "HC102-E062"
+    ],
+    "B-P01": [
+      "HC102-E047",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E078"
+    ],
+    "B-P02": [
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E082",
+      "HC102-E083",
+      "HC102-E037"
+    ],
+    "B-P03": [
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E057"
+    ],
+    "B-P04": [
+      "HC102-E087",
+      "HC102-E092",
+      "HC102-E093",
+      "HC102-E094",
+      "HC102-E068"
+    ],
+    "B-P05": [
+      "HC102-E069",
+      "HC102-E084",
+      "HC102-E085",
+      "HC102-E068"
+    ],
+    "B-P06": [
+      "HC102-E068",
+      "HC102-E069",
+      "HC102-E070",
+      "HC102-E071",
+      "HC102-E077",
+      "HC102-E129",
+      "HC102-E130"
+    ],
+    "B-P07": [
+      "HC102-E069",
+      "HC102-E070",
+      "HC102-E071",
+      "HC102-E125"
+    ],
+    "B-P08": [
+      "HC102-E072",
+      "HC102-E088",
+      "HC102-E089"
+    ],
+    "B-P09": [
+      "HC102-E070",
+      "HC102-E077",
+      "HC102-E129",
+      "HC102-E130"
+    ],
+    "C-R01": [
+      "HC102-E038",
+      "HC102-E039",
+      "HC102-E089",
+      "HC102-E090",
+      "HC102-E091"
+    ],
+    "C-R02": [
+      "HC102-E057",
+      "HC102-E087",
+      "HC102-E095"
+    ],
+    "C-R03": [
+      "HC102-E092",
+      "HC102-E093",
+      "HC102-E094",
+      "HC102-E095"
+    ],
+    "C-R04": [
+      "HC102-E096",
+      "HC102-E097",
+      "HC102-E098",
+      "HC102-E119",
+      "HC102-E120"
+    ],
+    "C-R05": [
+      "HC102-E095",
+      "HC102-E096",
+      "HC102-E101",
+      "HC102-E102"
+    ],
+    "C-R06": [
+      "HC102-E099",
+      "HC102-E100",
+      "HC102-E097",
+      "HC102-E101"
+    ],
+    "C-R07": [
+      "HC102-E101",
+      "HC102-E102"
+    ],
+    "C-R08": [
+      "HC102-E103",
+      "HC102-E104",
+      "HC102-E107",
+      "HC102-E102"
+    ],
+    "C-S01": [
+      "HC102-E117",
+      "HC102-E118"
+    ],
+    "C-S02": [
+      "HC102-E105",
+      "HC102-E107",
+      "HC102-E108"
+    ],
+    "C-S03": [
+      "HC102-E108",
+      "HC102-E109",
+      "HC102-E110",
+      "HC102-E112"
+    ],
+    "C-S04": [
+      "HC102-E111",
+      "HC102-E112",
+      "HC102-E109"
+    ],
+    "C-S05": [
+      "HC102-E114",
+      "HC102-E115",
+      "HC102-E017",
+      "HC102-E057",
+      "HC102-E059"
+    ],
+    "C-S06": [
+      "HC102-E016",
+      "HC102-E113"
+    ],
+    "C-S07": [
+      "HC102-E057",
+      "HC102-E096",
+      "HC102-E102",
+      "HC102-E108",
+      "HC102-E109",
+      "HC102-E117"
+    ],
+    "C-S08": [
+      "HC102-E058",
+      "HC102-E075",
+      "HC102-E057",
+      "HC102-E115",
+      "HC102-E112"
+    ],
+    "ABC-01": [
+      "HC102-E042",
+      "HC102-E044",
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E030"
+    ],
+    "ABC-02": [
+      "HC102-E049",
+      "HC102-E051",
+      "HC102-E058",
+      "HC102-E121"
+    ],
+    "ABC-03": [
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E087",
+      "HC102-E092",
+      "HC102-E094",
+      "HC102-E096"
+    ],
+    "ABC-04": [
+      "HC102-E096",
+      "HC102-E101",
+      "HC102-E102",
+      "HC102-E108",
+      "HC102-E109"
+    ],
+    "ABC-05": [
+      "HC102-E114",
+      "HC102-E115",
+      "HC102-E017",
+      "HC102-E016",
+      "HC102-E113"
+    ],
+    "ABC-06": [
+      "HC102-E024",
+      "HC102-E025",
+      "HC102-E026",
+      "HC102-E027",
+      "HC102-E017"
+    ],
+    "ABC-07": [
+      "HC102-E057",
+      "HC102-E059",
+      "HC102-E051",
+      "HC102-E060"
+    ],
+    "HC102-M01": [
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E069",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E082",
+      "HC102-E083",
+      "HC102-E084",
+      "HC102-E085",
+      "HC102-E087",
+      "HC102-E094"
+    ],
+    "HC102-M02": [
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E069",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E082",
+      "HC102-E083",
+      "HC102-E084",
+      "HC102-E085",
+      "HC102-E087",
+      "HC102-E094"
+    ],
+    "HC102-M03": [
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E069",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E082",
+      "HC102-E083",
+      "HC102-E084",
+      "HC102-E085",
+      "HC102-E087",
+      "HC102-E094"
+    ],
+    "HC102-M04": [
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E069",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E082",
+      "HC102-E083",
+      "HC102-E084",
+      "HC102-E085",
+      "HC102-E087",
+      "HC102-E094"
+    ],
+    "HC102-M05": [
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E069",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E082",
+      "HC102-E083",
+      "HC102-E084",
+      "HC102-E085",
+      "HC102-E087",
+      "HC102-E094"
+    ],
+    "HC102-M06": [
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E069",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E082",
+      "HC102-E083",
+      "HC102-E084",
+      "HC102-E085",
+      "HC102-E087",
+      "HC102-E094"
+    ],
+    "HC102-M07": [
+      "HC102-E047",
+      "HC102-E048",
+      "HC102-E057",
+      "HC102-E069",
+      "HC102-E073",
+      "HC102-E074",
+      "HC102-E082",
+      "HC102-E083",
+      "HC102-E084",
+      "HC102-E085",
+      "HC102-E087",
+      "HC102-E094"
+    ],
+    "HC102-M08": [
+      "HC102-E049",
+      "HC102-E076",
+      "HC102-E080",
+      "HC102-E124",
+      "HC102-E126"
+    ],
+    "HC102-M09": [
+      "HC102-E042",
+      "HC102-E045"
+    ],
+    "HC102-M10": [
+      "HC102-E044",
+      "HC102-E046",
+      "HC102-E060"
+    ],
+    "HC102-M11": [
+      "HC102-E066",
+      "HC102-E067",
+      "HC102-E086"
+    ],
+    "HC102-M12": [
+      "HC102-E067"
+    ],
+    "HC102-M13": [
+      "HC102-E057",
+      "HC102-E059",
+      "HC102-E075",
+      "HC102-E096"
+    ],
+    "HC102-M14": [
+      "HC102-E058",
+      "HC102-E069",
+      "HC102-E070",
+      "HC102-E071",
+      "HC102-E129",
+      "HC102-E130"
+    ],
+    "HC102-M15": [
+      "HC102-E107",
+      "HC102-E108",
+      "HC102-E109",
+      "HC102-E117",
+      "HC102-E118"
+    ],
+    "HC102-M16": [
+      "HC102-E096",
+      "HC102-E097",
+      "HC102-E102",
+      "HC102-E109"
+    ],
+    "HC102-M17": [
+      "HC102-E024",
+      "HC102-E025",
+      "HC102-E026",
+      "HC102-E027"
+    ],
+    "HC102-M18": [
+      "HC102-E021",
+      "HC102-E022",
+      "HC102-E023"
+    ]
+  },
+  "reading_ledger": {
+    "handoff_fixed": "75338cd7d005",
+    "new_receiver": [
+      "145-executor-continuation/00",
+      "145-executor-continuation/01",
+      "145-executor-continuation/02",
+      "146-user-hpet-enable-clocksource-contract.md",
+      "101-review",
+      "100-documentary-closure",
+      "101-reviewed-hpet102-checkpoint"
+    ],
+    "myos_rules_full": [
+      "lead/00-work-order.md",
+      "agent-workspace/README.md",
+      "agent-workspace/conventions.md",
+      "tasks/00-gpt-task-protocol-v2.md",
+      "lead/18-deferred-findings-and-resume.md",
+      "lead/24-chatgpt-specialist-conversation-separation.md",
+      "lead/28-review-and-next-batch-same-turn.md",
+      "lead/63-github-write-retry-and-readback.md",
+      "lead/79-work-package-sizing-and-pro-review.md"
+    ],
+    "additional_rules": [
+      "lead/110-owner-communication-and-delivery-continuity.md",
+      "lead/124-model-routing-and-pro-message-budget.md"
+    ],
+    "mnemosyne": "master@ee65de8a255d; onboarding+spec+receive/load commands+registry+8 task-applicable guards+project research display name §7",
+    "batch101_six": "ALL_FULL_READ_AT_14e8f1580f5a",
+    "batch101_author_comment": "6976123017_FULL_READ",
+    "historical_bounded": "96 review+closure; 65 review+closure; old FM96 F03/U08; CA05/V14 old identities; core and recheck refs; 100 closure only",
+    "time_sources": [
+      "mykernel/arch/x86_64/myos/interrupt.c",
+      "mykernel/arch/x86_64/myos/apic.c",
+      "mykernel/arch/x86_64/include/asm/apic.h",
+      "mykernel/arch/x86_64/kernel/hpet.c",
+      "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "mykernel/arch/x86_64/include/asm/irq_vectors.h",
+      "mykernel/arch/x86_64/include/obsolete/myos_irq_vectors.h",
+      "mykernel/arch/x86_64/include/obsolete/arch_proto.h",
+      "mykernel/scripts/options_flags.cmake",
+      "mykernel/arch/x86_64/mm/init.c",
+      "mykernel/CMakeLists.txt",
+      "mykernel/arch/x86_64/include/asm/hpet.h",
+      "mykernel/include/linux/kernel/hpet.h",
+      "mykernel/include/linux/kernel/asm-generic/div64.h",
+      "mykernel/time/misc/time_misc_const.h",
+      "mykernel/include/linux/kernel/asm-generic/param.h",
+      "mykernel/arch/x86_64/insns/x86msr.h",
+      "mykernel/time/clocksource/clocksource_macro.h",
+      "mykernel/time/clocksource/clocksource_types.h",
+      "mykernel/time/clocksource/clocksource.c",
+      "mykernel/time/systick/systick.c",
+      "mykernel/time/timekeeping/timekeeping.c",
+      "mykernel/time/timekeeping/timekeeping.h",
+      "mykernel/arch/x86_64/kernel/time.c",
+      "mykernel/init/main.c",
+      "mykernel/lib/list/double_list_macro.h",
+      "mykernel/lib/list/double_list.h"
+    ],
+    "source_count": 27,
+    "canaries_two_branches": [
+      "mykernel/scripts/options_flags.cmake",
+      "mykernel/debug/panic.c"
+    ]
+  },
+  "G00": {
+    "status": "PASS",
+    "time": "2026-11-18",
+    "direct_refs": {
+      "lead": "75338cd7d005",
+      "exec": "14e8f1580f5a",
+      "time": "a039d9803ade",
+      "master": "e8e60cd19540"
+    },
+    "pr16": "OPEN_READY_UNMERGED",
+    "pr17": "OPEN_DRAFT_UNMERGED",
+    "open_prs": [
+      16,
+      17
+    ],
+    "target_six": "ABSENT_PREWRITE",
+    "owner_formal_marker": "ZERO_PREWRITE_ACROSS_186_ISSUE_COMMENTS",
+    "publication_comment": "6977671832_EXISTS",
+    "old_executor": "STOP_WRITING",
+    "canaries": "TIME_AND_MASTER_INDEPENDENT_DIFFER",
+    "write_status": "NOT_PERFORMED_AS_OF_G00"
+  },
+  "related_historical_ids": {
+    "mapping_candidate": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03",
+    "mapping_gap": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U08",
+    "scheduler_hpet": "MYOS2-LEAD-002::CA-05",
+    "limited_model": "MYOS2-LEAD-002-CORE-CHECK-01::V14",
+    "irq_batch": "CORE-USER-IRQ-REGISTRATION-DISPATCH-101",
+    "irq_related": [
+      "IR101-F08",
+      "IR101-U05"
+    ],
+    "not_a_relabel": "CORE-SCHED-INTEGRATION-03::IR-01"
+  },
+  "graph_alignment": "See hpet-enable-clocksource-paths.dot; solid DIRECT_CALL vs dashed UNPROVEN_JOIN",
+  "observed_execution": "SOURCE_READ_ONLY",
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "compiler_preprocess_linker": "NOT_RUN",
+  "graphviz": "NOT_RUN",
+  "QEMU_hardware": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "new_source_findings_outcome": "CANDIDATES_CONDITIONAL_SEPARATE_FROM_PRIOR_ROOT"
+}
