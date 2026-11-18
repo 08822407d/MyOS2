@@ -1,0 +1,414 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99",
+  "record_type": "bounded_conditional_findings_and_external_evidence_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "produced_by": "GPT-6（可见；后台UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-18",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "D00": "NOT_REQUIRED",
+  "runtime_evidence": "NOT_RUN",
+  "new_candidates": [
+    {
+      "id": "UB99-F01",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-F01",
+      "topic": "A/C",
+      "kind": "STATIC_CONDITIONAL_PROVENANCE_OR_INSTALL_RISK",
+      "status": "needs_evidence",
+      "distinct_root": "相同ESP目标的两种不同EFI制品来源，构建与内容未同一化",
+      "source_observation": "myloader CMake通过install(PROGRAMS)指向仓库跟踪BOOTX64.EFI；另一个独立install_loader.sh从Build/Shell/.../bootloader.efi复制到同名/mnt/EFI/BOOT/BOOTX64.EFI。",
+      "conditions": "两种路线确实针对同一已挂载ESP运行，源文件真实存在且内容可能不同",
+      "first_proof_gate": "只确认候选来源分叉，不认证真实覆盖、哪个版本启动或文件不同；缺各源hash、部署记录与状态",
+      "evidence_ids": [
+        "UB99-E018",
+        "UB99-E063",
+        "UB99-E075",
+        "UB99-E076"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-ELF-LOAD-98::BE98-U09"
+      ],
+      "confirmed_runtime_defect": false,
+      "patch_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "UB99-F02",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-F02",
+      "topic": "C",
+      "kind": "STATIC_CONDITIONAL_PROVENANCE_OR_INSTALL_RISK",
+      "status": "needs_evidence",
+      "distinct_root": "内核安装的挂载状态与rm删除动作缺少有效性保护",
+      "source_observation": "make_install_kernel中mount和后续rm /mnt/boot/kernel是独立语句，cmake&&make&&make install也未与mount连接成一个成功链。",
+      "conditions": "mount失败、脚本/权限允许继续且/mnt可以访问时的隔离条件",
+      "first_proof_gate": "不能称已发生设备破坏、删除或实际安装失败；首先缺真实mount目标和状态",
+      "evidence_ids": [
+        "UB99-E065",
+        "UB99-E066",
+        "UB99-E067",
+        "UB99-E068"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U08"
+      ],
+      "confirmed_runtime_defect": false,
+      "patch_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "UB99-F03",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-F03",
+      "topic": "C",
+      "kind": "STATIC_CONDITIONAL_PROVENANCE_OR_INSTALL_RISK",
+      "status": "needs_evidence",
+      "distinct_root": "bootloader安装函数未把mount与cmake/install链连接",
+      "source_observation": "make_install_bootloader先mount，之后cmake&&make&&make install，随后sync与umount不检查该链的安装成功结果。",
+      "conditions": "Bash按手册解释&&，先行mount/目录对象有效且shell正常继续",
+      "first_proof_gate": "cmake或make失败是否发生、后缀umount成功及目标EFI实际字节均未证",
+      "evidence_ids": [
+        "UB99-E061",
+        "UB99-E062",
+        "UB99-E063",
+        "UB99-E064"
+      ],
+      "prior_related_qualified_ids": [],
+      "confirmed_runtime_defect": false,
+      "patch_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "UB99-F04",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-F04",
+      "topic": "C",
+      "kind": "STATIC_CONDITIONAL_PROVENANCE_OR_INSTALL_RISK",
+      "status": "needs_evidence",
+      "distinct_root": "主安装脚本以当前pwd决定根并在构建前无条件清理build文本",
+      "source_observation": "make_install.sh顶层PROJ_ROOT=$(pwd)，source ./scripts及rm -rf ./build/*以当前cwd为前提；随后三个安装函数不构成顶层&&链。",
+      "conditions": "假设从非项目根目录调用、或中间函数失败而后续仍被调用",
+      "first_proof_gate": "条件错误路径/误清理风险不代表实际运行；首先证初始cwd/正确文件对象/命令状态",
+      "evidence_ids": [
+        "UB99-E049",
+        "UB99-E053",
+        "UB99-E054",
+        "UB99-E055",
+        "UB99-E056",
+        "UB99-E057",
+        "UB99-E058",
+        "UB99-E059",
+        "UB99-E060"
+      ],
+      "prior_related_qualified_ids": [],
+      "confirmed_runtime_defect": false,
+      "patch_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "UB99-F05",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-F05",
+      "topic": "C",
+      "kind": "STATIC_CONDITIONAL_PROVENANCE_OR_INSTALL_RISK",
+      "status": "needs_evidence",
+      "distinct_root": "独立EDK复制的两个目标命令没有互相作为成功前提",
+      "source_observation": "install_loader.sh顺序执行两个cp、sync、umount，两个cp使用同一相对Build源但目标不同，没有用&&连接成整体交付成功状态。",
+      "conditions": "第一个cp成功、第二个失败或反向、且shell无额外停止行为的独立条件",
+      "first_proof_gate": "不声称任何目标写成、两目标同字节或真实出现不一致；读到的是执行文本",
+      "evidence_ids": [
+        "UB99-E074",
+        "UB99-E075",
+        "UB99-E076",
+        "UB99-E077",
+        "UB99-E078"
+      ],
+      "prior_related_qualified_ids": [],
+      "confirmed_runtime_defect": false,
+      "patch_authorized": false,
+      "owner_decision_requested": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "UB99-U01",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U01",
+      "topic": "A/B",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "没有实际EDK II平台DSC、选中LibraryClasses映射、输出PE入口记录及解析后的INF产物；UefiApplicationEntryPoint的具体实现未知",
+      "first_proof_gate": "INF的ENTRY_POINT和真实UefiMain签名只构成声明、函数两个节点；未闭合入口包装/ABI",
+      "evidence_ids": [
+        "UB99-E001",
+        "UB99-E002",
+        "UB99-E008",
+        "UB99-E009",
+        "UB99-E010",
+        "UB99-E015"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-ELF-LOAD-98::BE98-U09"
+      ],
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "UB99-U02",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U02",
+      "topic": "B",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "Uefi.h/PiPei.h/BaseLib/DebugLib/BaseMemoryLib/BootServicesTableLib等外部头/库实际版本、具体EFI_STATUS/UINTN/EFIAPI/断言定义未取得",
+      "first_proof_gate": "不能由本仓include/typedef名称给出真实外部类型、服务返回、失败控制流",
+      "evidence_ids": [
+        "UB99-E019",
+        "UB99-E020",
+        "UB99-E021",
+        "UB99-E028",
+        "UB99-E029",
+        "UB99-E030",
+        "UB99-E031",
+        "UB99-E033",
+        "UB99-E034",
+        "UB99-E035",
+        "UB99-E036"
+      ],
+      "prior_related_qualified_ids": [],
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "UB99-U03",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U03",
+      "topic": "B",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "EFI_PAGE_SIZE/ALIGN_VALUE/MAX_UINT32的所选宏定义类型及实际UEFI编译flags、ABI和编译器版本均未通过实际构建记录认证",
+      "first_proof_gate": "R98-S02关于整数提升与掩码高位的模型只能明示前提，kernel -mabi=sysv不可替代EDK flags",
+      "evidence_ids": [
+        "UB99-E036",
+        "UB99-E039",
+        "UB99-E040",
+        "UB99-E043",
+        "UB99-E044",
+        "UB99-E045",
+        "UB99-E046",
+        "UB99-E047",
+        "UB99-E048"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-ELF-LOAD-98::BE98-U05",
+        "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U03"
+      ],
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "UB99-U04",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U04",
+      "topic": "A/C",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "仓库跟踪myloader/BOOTX64.EFI Git Blob与外部Build/Shell/.../bootloader.efi的内容是否同一、生成commit与工具链记录及实际/EFI/BOOT目标hash未取得",
+      "first_proof_gate": "GitHub只读目录提供跟踪文件短blob/大小而非PE反汇编或部署字节；不可由名称推断同源",
+      "evidence_ids": [
+        "UB99-E018",
+        "UB99-E075",
+        "UB99-E076"
+      ],
+      "prior_related_qualified_ids": [],
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "UB99-U05",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U05",
+      "topic": "C",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "shell安装动作是否在正确工作目录和正确挂载点运行、各mount/rm/cmake/make/install/sync/umount返回状态和设备实际身份未证明",
+      "first_proof_gate": "对失败前缀的推导不能替代shell trace/实机安装；现禁止运行任何命令",
+      "evidence_ids": [
+        "UB99-E049",
+        "UB99-E057",
+        "UB99-E061",
+        "UB99-E062",
+        "UB99-E063",
+        "UB99-E064",
+        "UB99-E065",
+        "UB99-E066",
+        "UB99-E067",
+        "UB99-E068",
+        "UB99-E069"
+      ],
+      "prior_related_qualified_ids": [],
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "UB99-U06",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U06",
+      "topic": "C",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "独立install_loader.sh的Build输入真实存在与否、两次cp实际返回及辅助elfbinary_loader.efi最终内容、来源时间未取得",
+      "first_proof_gate": "必须另有外部EDK输出/文件身份/部署记录才能判断与跟踪EFI的关系",
+      "evidence_ids": [
+        "UB99-E074",
+        "UB99-E075",
+        "UB99-E076",
+        "UB99-E077",
+        "UB99-E078"
+      ],
+      "prior_related_qualified_ids": [],
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "UB99-U07",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U07",
+      "topic": "C",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "kernel CMake add_executable/install(TARGETS kernel)的最终已链接ELF字节、安装/mnt/boot/kernel的文件和UEFI LoadedImage同一卷的关系未证",
+      "first_proof_gate": "沿BB85-U08原完整qualified_id保留真实链接、安装与启动缺口，不重复报告旧构建根因",
+      "evidence_ids": [
+        "UB99-E067",
+        "UB99-E080",
+        "UB99-E081",
+        "UB99-E082",
+        "UB99-E086"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U08"
+      ],
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "UB99-U08",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U08",
+      "topic": "C/ABC",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "即使有EFI二进制与kernel安装声明，实际UEFI FileInfo/Read字节、PT_LOAD目标内存和CPU入口状态均未核验",
+      "first_proof_gate": "不因制品路径存在关闭BE98-U02/U06/U09或BT97服务阶段未知",
+      "evidence_ids": [
+        "UB99-E084",
+        "UB99-E085",
+        "UB99-E086",
+        "UB99-E087"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOT-ELF-LOAD-98::BE98-U02",
+        "CORE-USER-BOOT-ELF-LOAD-98::BE98-U06",
+        "CORE-USER-BOOT-ELF-LOAD-98::BE98-U09",
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09"
+      ],
+      "auto_fix_authorized": false
+    },
+    {
+      "id": "UB99-U09",
+      "qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-U09",
+      "topic": "A/C",
+      "kind": "UNVERIFIED_EXTERNAL_OR_ARTIFACT_IDENTITY_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "两个EFI安装路线是否在同一宿主、同一mount卷上发生、先后执行顺序及任何目标被覆盖的真实事件无证",
+      "first_proof_gate": "同名ESP目标由不同来源命令生成，不应从文本同名推断字节、最终启动制品或部署成功",
+      "evidence_ids": [
+        "UB99-E018",
+        "UB99-E063",
+        "UB99-E074",
+        "UB99-E075",
+        "UB99-E076"
+      ],
+      "prior_related_qualified_ids": [],
+      "auto_fix_authorized": false
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-F01",
+      "disposition": "retain unrelated offsets script zero-match; not this UEFI module builder"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-F05",
+      "disposition": "retain kernel offsets freshness root; no 99 duplication"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U01",
+      "disposition": "retain kernel CMake architecture/variable conditions"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U03",
+      "disposition": "retain kernel compiler flags unknown; do not transfer to EFI"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U05",
+      "disposition": "retain generator CMake/command semantics uncertainty"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-BUILD-CONTRACT-85::BB85-U08",
+      "disposition": "retain kernel link/install/boot outcome; 99 only connects textual destination"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F01",
+      "disposition": "retain file handle/status risk; not recreated as EFI build defect"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F02",
+      "disposition": "retain file length vs ELF computed FileSize uncertainty"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F05",
+      "disposition": "retain unconsumed return with R98-S01 reachability limitation"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F07",
+      "disposition": "retain destination allocation vs Preferred pointer risk"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F09",
+      "disposition": "retain entry publication and status semantics"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U02",
+      "disposition": "actual FileInfo and Read bytes not certified by install filename"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U05",
+      "disposition": "extern EFI_PAGE_SIZE and type/ABI unresolved"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U06",
+      "disposition": "actual allocation/segment write unresolved"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U09",
+      "disposition": "actual entry/CPU boot not certified"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F05",
+      "disposition": "firmware GetMemoryMap service status separate"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F08",
+      "disposition": "ExitBootServices stage separate"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09",
+      "disposition": "stage and handoff unverified"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 5,
+    "new_gaps": 9,
+    "existing_findings_recounted_as_new": 0,
+    "runtime_confirmed_bugs": 0,
+    "edits_or_patches": 0,
+    "Owner_decisions_now": 0
+  },
+  "limitations": [
+    "INF/CMake/Shell static text not actual build/installation",
+    "tracked binary metadata is not linked machine code proof",
+    "external EDK dependency and compiler version remain unverified",
+    "98 ELF source/load/entry not revisited or accepted as runtime"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "owner_decisions_requested_now": []
+}
