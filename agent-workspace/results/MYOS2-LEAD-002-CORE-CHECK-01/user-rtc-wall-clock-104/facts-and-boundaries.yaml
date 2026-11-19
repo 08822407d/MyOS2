@@ -1,0 +1,3350 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-RTC-WALL-CLOCK-104",
+  "record_type": "D00_ABC_fixed_time_static_facts",
+  "produced_by": "GPT-6（Owner指定GPT-6＋Extra；后台路由不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "mainline_contract_short12": "40725302f9ee",
+  "parent_exec_short12": "4d3183678a64",
+  "master_direct_short12": "e8e60cd19540",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "R102_01": "CLOSED_DOCUMENTATION_ONLY",
+  "R102_02": "OPEN",
+  "R102_03": "OPEN",
+  "R103_01": "OPEN",
+  "R103_02": "OPEN",
+  "D00": {
+    "R102_01": {
+      "status": "CLOSED_DOCUMENTATION_ONLY_BY_C07",
+      "not_reopened": true
+    },
+    "R102_02": {
+      "status": "OPEN",
+      "old_source": "MyOS2@1a92f9839e53:.../evidence.md and MyOS2@4d3183678a64:facts.D00",
+      "corrections": [
+        {
+          "issue": "all named CMake/clocksource/periodic symbols",
+          "new_ids": [
+            "RTC104-E001",
+            "RTC104-E002",
+            "RTC104-E003",
+            "RTC104-E004",
+            "RTC104-E005",
+            "RTC104-E006",
+            "RTC104-E007",
+            "RTC104-E008",
+            "RTC104-E009"
+          ],
+          "first_stop": "actual CMake command selection/linked functions not built"
+        },
+        {
+          "issue": "initcall middle chain and conditional __section expansions",
+          "source_chain": [
+            "fs_initcall",
+            "__define_initcall",
+            "___define_initcall",
+            "__unique_initcall",
+            "____define_initcall",
+            "__initcall_section"
+          ],
+          "new_ids": [
+            "RTC104-E015",
+            "RTC104-E016",
+            "RTC104-E017",
+            "RTC104-E018",
+            "RTC104-E019",
+            "RTC104-E020",
+            "RTC104-E021"
+          ],
+          "first_stop": "CONFIG_HAVE_ARCH_PREL32_RELOCATIONS and LTO/compiler section/actual initcall traversal not verified"
+        },
+        {
+          "issue": "A-M03 incorrect 103.new_id=TK103-E030",
+          "wrong_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/facts-and-boundaries.yaml::D00.R102_S02",
+          "new_evidence_ids": [
+            "TK103-E027",
+            "HC102-E049"
+          ],
+          "correct_source_trace": "((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1",
+          "consumers": [
+            "A-M03",
+            "HC102-M08",
+            "A-M06",
+            "A-E06"
+          ],
+          "first_stop": "read ID byte valid, enable path and MMIO semantics conditional"
+        },
+        {
+          "issue": "B-P09 correct periodic config",
+          "new_evidence_ids": [
+            "RTC104-E009"
+          ],
+          "corrected_claim": "periodic helper only ORs ENABLE|PERIODIC|SETVAL, does not explicitly OR TN_32BIT; preexisting bit may survive",
+          "consumers": [
+            "B-P09",
+            "B-P06",
+            "HC102-M14"
+          ],
+          "first_stop": "cfg input not known; device mode not inferred"
+        },
+        {
+          "issue": "clocksource and time header read ledger",
+          "new_evidence_ids": [
+            "RTC104-E022",
+            "RTC104-E023",
+            "RTC104-E027"
+          ],
+          "paths": [
+            "mykernel/time/clocksource/clocksource.h",
+            "mykernel/time/clocksource/clocksource_const.h",
+            "mykernel/time/clocksource/clocksource_api.h",
+            "mykernel/time/clocksource/clocksource_types.h",
+            "mykernel/time/time_const.h",
+            "mykernel/time/time_type_declaration.h",
+            "mykernel/time/timekeeping/timekeeping_types.h"
+          ],
+          "first_stop": "this batch actual focused read/window only; cannot retroactively certify prior author range"
+        }
+      ]
+    },
+    "R102_03": {
+      "status": "OPEN",
+      "original_graph_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+      "prior_103_D00_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/facts-and-boundaries.yaml::D00.R102_03.table",
+      "prior_accepted_eight": [
+        "G102-10",
+        "G102-11",
+        "G102-12",
+        "G102-19",
+        "G102-25",
+        "G102-36",
+        "G102-39",
+        "G102-40"
+      ],
+      "rows": [
+        {
+          "edge_id": "G102-01",
+          "old_from": "start_kernel",
+          "old_to": "timekeeping_init",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "start_kernel",
+          "actual_callee_or_field": "timekeeping_init",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E117",
+            "HC102-E118"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-02",
+          "old_from": "start_kernel",
+          "old_to": "late_time_init",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "start_kernel",
+          "actual_callee_or_field": "late_time_init",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E117",
+            "HC102-E118"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-03",
+          "old_from": "late_time_init",
+          "old_to": "hpet_time_init",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "late_time_init",
+          "actual_callee_or_field": "hpet_time_init",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E116"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-04",
+          "old_from": "hpet_time_init",
+          "old_to": "hpet_enable",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_time_init",
+          "actual_callee_or_field": "hpet_enable",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E059",
+            "HC102-E114",
+            "HC102-E115"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-05",
+          "old_from": "hpet_enable",
+          "old_to": "hpet_set_mapping",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_enable",
+          "actual_callee_or_field": "hpet_set_mapping",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E042",
+            "HC102-E044",
+            "HC102-E045",
+            "HC102-E046",
+            "HC102-E050",
+            "HC102-E052",
+            "HC102-E053",
+            "HC102-E054",
+            "HC102-E058",
+            "TK103-E027",
+            "TK103-E028"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-06",
+          "old_from": "hpet_set_mapping",
+          "old_to": "myos_ioremap",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_set_mapping",
+          "actual_callee_or_field": "myos_ioremap",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E042"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-07",
+          "old_from": "myos_ioremap",
+          "old_to": "kernel_map",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "myos_ioremap",
+          "actual_callee_or_field": "kernel_map",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E030"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-08",
+          "old_from": "hpet_enable",
+          "old_to": "cfg_working",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_enable",
+          "actual_callee_or_field": "cfg_working",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E042",
+            "HC102-E044",
+            "HC102-E045",
+            "HC102-E046",
+            "HC102-E050",
+            "HC102-E052",
+            "HC102-E053",
+            "HC102-E054",
+            "HC102-E058",
+            "TK103-E027",
+            "TK103-E028"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-09",
+          "old_from": "cfg_working",
+          "old_to": "hpet_readl",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "cfg_working",
+          "actual_callee_or_field": "hpet_readl",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E044"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-10",
+          "old_from": "channels_decode",
+          "old_to": "kcalloc",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "REPLACE_INVALID_DIRECT_CALL",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": true,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_enable",
+          "actual_callee_or_field": "kcalloc",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E027",
+            "HC102-E050"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-11",
+          "old_from": "cfg_sanitize",
+          "old_to": "hpet_readl",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "REPLACE_INVALID_DIRECT_CALL",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": true,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_enable",
+          "actual_callee_or_field": "hpet_readl",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E028",
+            "HC102-E053",
+            "HC102-E054"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-12",
+          "old_from": "cfg_sanitize",
+          "old_to": "hpet_writel",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "REPLACE_INVALID_DIRECT_CALL",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": true,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_enable",
+          "actual_callee_or_field": "hpet_writel",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E028",
+            "HC102-E053",
+            "HC102-E054"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-13",
+          "old_from": "hpet_counting",
+          "old_to": "restart_counter",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_counting",
+          "actual_callee_or_field": "restart_counter",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E066",
+            "HC102-E067"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-14",
+          "old_from": "restart_counter",
+          "old_to": "stop_counter",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "restart_counter",
+          "actual_callee_or_field": "stop_counter",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E065"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-15",
+          "old_from": "restart_counter",
+          "old_to": "reset_counter",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "restart_counter",
+          "actual_callee_or_field": "reset_counter",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E065"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-16",
+          "old_from": "restart_counter",
+          "old_to": "start_counter",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "restart_counter",
+          "actual_callee_or_field": "start_counter",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E065"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-17",
+          "old_from": "hpet_counting",
+          "old_to": "hpet_readl",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_counting",
+          "actual_callee_or_field": "hpet_readl",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E066",
+            "HC102-E067"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-18",
+          "old_from": "hpet_counting",
+          "old_to": "rdtsc",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_counting",
+          "actual_callee_or_field": "rdtsc",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E066",
+            "HC102-E067"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-19",
+          "old_from": "hz_macro",
+          "old_to": "register_scale",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETYPE_MACRO_EXPANSION",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": true,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "clocksource_register_hz",
+          "actual_callee_or_field": "__clocksource_register_scale",
+          "corrected_semantic_type": "MACRO_EXPANSION",
+          "minimal_support": [
+            "TK103-E018"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-20",
+          "old_from": "register_scale",
+          "old_to": "update_scale",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "CORRECT_SUPPORT_OR_EXPLICIT_EXPANSION",
+          "actual_caller_or_field": "__clocksource_register_scale",
+          "actual_callee_or_field": "__clocksource_update_freq_scale",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E095",
+            "RTC104-E011"
+          ],
+          "first_stop_gate": "register function request before/after update may not complete; no real device or source selection"
+        },
+        {
+          "edge_id": "G102-21",
+          "old_from": "update_scale",
+          "old_to": "multshift",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "CORRECT_SUPPORT_OR_EXPLICIT_EXPANSION",
+          "actual_caller_or_field": "__clocksource_update_freq_scale",
+          "actual_callee_or_field": "clocks_calc_mult_shift",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "RTC104-E004"
+          ],
+          "first_stop_gate": "only if freq nonzero and valid scale/counter"
+        },
+        {
+          "edge_id": "G102-22",
+          "old_from": "register_scale",
+          "old_to": "enqueue",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "CORRECT_SUPPORT_OR_EXPLICIT_EXPANSION",
+          "actual_caller_or_field": "__clocksource_register_scale",
+          "actual_callee_or_field": "clocksource_enqueue",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "RTC104-E012"
+          ],
+          "first_stop_gate": "distinct enqueue request and valid linked list, not clock selection"
+        },
+        {
+          "edge_id": "G102-23",
+          "old_from": "hpet_clock",
+          "old_to": "read_hpet",
+          "old_type": "CALLBACK_BINDING",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_clock",
+          "actual_callee_or_field": "read_hpet",
+          "corrected_semantic_type": "CALLBACK_BINDING",
+          "minimal_support": [
+            "HC102-E038",
+            "HC102-E039"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-24",
+          "old_from": "hpet_clock",
+          "old_to": "hpet_enable",
+          "old_type": "CALLBACK_BINDING",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_clock",
+          "actual_callee_or_field": "hpet_enable",
+          "corrected_semantic_type": "CALLBACK_BINDING",
+          "minimal_support": [
+            "HC102-E038",
+            "HC102-E039"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-25",
+          "old_from": "legacy",
+          "old_to": "periodic",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "REPLACE_INVALID_DIRECT_CALL",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": true,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_enable",
+          "actual_callee_or_field": "myos_hpet_clkevt_set_state_periodic",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E058"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-26",
+          "old_from": "periodic",
+          "old_to": "hpet_writel",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "periodic",
+          "actual_callee_or_field": "hpet_writel",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E068",
+            "HC102-E069",
+            "HC102-E070",
+            "HC102-E071"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-27",
+          "old_from": "periodic",
+          "old_to": "stop_counter",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "periodic",
+          "actual_callee_or_field": "stop_counter",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E068",
+            "HC102-E069",
+            "HC102-E070",
+            "HC102-E071"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-28",
+          "old_from": "periodic",
+          "old_to": "start_counter",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "periodic",
+          "actual_callee_or_field": "start_counter",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E068",
+            "HC102-E069",
+            "HC102-E070",
+            "HC102-E071"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-29",
+          "old_from": "read_hpet",
+          "old_to": "hpet_readl",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "read_hpet",
+          "actual_callee_or_field": "hpet_readl",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E072"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-30",
+          "old_from": "done_booting",
+          "old_to": "default_clock",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "done_booting",
+          "actual_callee_or_field": "default_clock",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E060",
+            "TK103-E061",
+            "TK103-E017"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-31",
+          "old_from": "done_booting",
+          "old_to": "select",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "CORRECT_SUPPORT_OR_EXPLICIT_EXPANSION",
+          "actual_caller_or_field": "clocksource_done_booting",
+          "actual_callee_or_field": "__clocksource_select",
+          "corrected_semantic_type": "DIRECT_CALL_VIA_MACRO_EXPANSION",
+          "minimal_support": [
+            "RTC104-E013",
+            "RTC104-E014"
+          ],
+          "first_stop_gate": "initcall macro registration need not certify runtime invocation; source call is not protected by commented if"
+        },
+        {
+          "edge_id": "G102-32",
+          "old_from": "select",
+          "old_to": "best",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "select",
+          "actual_callee_or_field": "best",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E101"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-33",
+          "old_from": "timekeeping_init",
+          "old_to": "default_clock",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "timekeeping_init",
+          "actual_callee_or_field": "default_clock",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E077"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-34",
+          "old_from": "timekeeping_init",
+          "old_to": "tk_setup",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "timekeeping_init",
+          "actual_callee_or_field": "tk_setup",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E077"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-35",
+          "old_from": "timekeeping_get_ns",
+          "old_to": "tk_clock_read",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "timekeeping_get_ns",
+          "actual_callee_or_field": "tk_clock_read",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E101"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-36",
+          "old_from": "tk_clock_read",
+          "old_to": "jiffies_clock",
+          "old_type": "CALLBACK_BINDING",
+          "prior_disposition": "REPLACE_INVALID_CALLBACK_BINDING",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": true,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "tk_clock_read",
+          "actual_callee_or_field": "tkr.clock.read",
+          "corrected_semantic_type": "CALLBACK_INVOKE",
+          "minimal_support": [
+            "TK103-E093",
+            "TK103-E085",
+            "TK103-E086"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-37",
+          "old_from": "hpet_time_init",
+          "old_to": "irq_init",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_time_init",
+          "actual_callee_or_field": "irq_init",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E059",
+            "HC102-E114",
+            "HC102-E115"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-38",
+          "old_from": "irq_init",
+          "old_to": "register_irq",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "irq_init",
+          "actual_callee_or_field": "register_irq",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "TK103-E136"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-39",
+          "old_from": "register_irq",
+          "old_to": "irq_handler",
+          "old_type": "CALLBACK_BINDING",
+          "prior_disposition": "REPLACE_INVALID_CALLBACK_BINDING",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": true,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "register_irq",
+          "actual_callee_or_field": "irq_descriptors[irq].handler",
+          "corrected_semantic_type": "DATA_FLOW",
+          "minimal_support": [
+            "TK103-E057",
+            "TK103-E058",
+            "TK103-E136"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-40",
+          "old_from": "irq_handler",
+          "old_to": "hpet_handler",
+          "old_type": "CALLBACK_BINDING",
+          "prior_disposition": "RETYPE_INDIRECT_INVOKE",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": true,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hwint_irq_handler",
+          "actual_callee_or_field": "irq_descriptors[vector].handler",
+          "corrected_semantic_type": "CALLBACK_INVOKE",
+          "minimal_support": [
+            "TK103-E058"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        },
+        {
+          "edge_id": "G102-41",
+          "old_from": "hpet_handler",
+          "old_to": "do_timer",
+          "old_type": "DIRECT_CALL",
+          "prior_disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "original_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "accepted_previous_revision": false,
+          "action": "RETAIN_PREVIOUS_STATIC_RELATION_WITH_PRECONDITIONS",
+          "actual_caller_or_field": "hpet_handler",
+          "actual_callee_or_field": "do_timer",
+          "corrected_semantic_type": "DIRECT_CALL",
+          "minimal_support": [
+            "HC102-E016"
+          ],
+          "first_stop_gate": "actual call/field path needs object lifetime, branch reachability and normal return; source edge is not execution evidence"
+        }
+      ],
+      "baseline_count": 41,
+      "prior_accepted_change_count": 8,
+      "focus_changes": [
+        "G102-20",
+        "G102-21",
+        "G102-22",
+        "G102-31"
+      ],
+      "not_new_root_count": 41
+    },
+    "R103_01": {
+      "status": "OPEN",
+      "alias_replacements": [
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E001",
+          "old_id": "TK103-E001",
+          "old_locator": "set_CMAKE_C_FLAGS",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "set(CMAKE_C_FLAGS)",
+          "new_evidence": "RTC104-E001",
+          "direct_consumers": [
+            "ABC-06",
+            "MANIFEST.P9-2",
+            "D00.config_and_nonexistence_gate"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E007",
+          "old_id": "TK103-E007",
+          "old_locator": "update_freq_scale",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "__clocksource_update_freq_scale",
+          "new_evidence": "RTC104-E002",
+          "direct_consumers": [
+            "R102-02.clocksource_update",
+            "C-R03",
+            "B-P04",
+            "HC102-M01..M07"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E008",
+          "old_id": "TK103-E008",
+          "old_locator": "update_freq_scale",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "__clocksource_update_freq_scale",
+          "new_evidence": "RTC104-E003",
+          "direct_consumers": [
+            "R102-02.clocksource_update",
+            "C-R03",
+            "B-P04",
+            "HC102-M01..M07"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E009",
+          "old_id": "TK103-E009",
+          "old_locator": "update_freq_scale",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "__clocksource_update_freq_scale",
+          "new_evidence": "RTC104-E004",
+          "direct_consumers": [
+            "R102-02.clocksource_update",
+            "C-R03",
+            "B-P04",
+            "HC102-M01..M07",
+            "G102-21"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E010",
+          "old_id": "TK103-E010",
+          "old_locator": "update_freq_scale",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "__clocksource_update_freq_scale",
+          "new_evidence": "RTC104-E005",
+          "direct_consumers": [
+            "R102-02.clocksource_adjustment",
+            "C-R03",
+            "B-P04"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E011",
+          "old_id": "TK103-E011",
+          "old_locator": "update_freq_scale",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "__clocksource_update_freq_scale",
+          "new_evidence": "RTC104-E006",
+          "direct_consumers": [
+            "R102-02.clocksource_adjustment",
+            "C-R03",
+            "B-P04"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E012",
+          "old_id": "TK103-E012",
+          "old_locator": "register_scale",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "__clocksource_register_scale",
+          "new_evidence": "RTC104-E007",
+          "direct_consumers": [
+            "R102-02.register_enqueuing",
+            "G102-22",
+            "C-R05",
+            "C-R07"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E013",
+          "old_id": "TK103-E013",
+          "old_locator": "register_scale",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "__clocksource_register_scale",
+          "new_evidence": "RTC104-E008",
+          "direct_consumers": [
+            "R102-02.register_end",
+            "C-R05",
+            "C-R07"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E030",
+          "old_id": "TK103-E030",
+          "old_locator": "periodic",
+          "action": "REPLACE_LOCATOR_WITH_REAL_DEFINITION_NAME",
+          "corrected_locator": "myos_hpet_clkevt_set_state_periodic",
+          "new_evidence": "RTC104-E009",
+          "direct_consumers": [
+            "B-P09",
+            "C-periodic-setting"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        },
+        {
+          "original_source_ref": "MyOS2@4d3183678a64:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timekeeping-readout-103/evidence.md::TK103-E089",
+          "old_id": "TK103-E089",
+          "old_locator": "TICK_NSEC_COMMENT_ONLY",
+          "action": "WITHDRAW_OLD_COMMENT_AS_DEFINITION_AND_REPLACE",
+          "corrected_locator": "TICK_NSEC",
+          "new_evidence": "RTC104-E010",
+          "direct_consumers": [
+            "A-F04",
+            "TK103-M01",
+            "A-M01",
+            "ABC-01"
+          ],
+          "first_stop_gate": "source bytes and symbol-definition support only; macros/variants require actual preprocessing; derived numerical use requires prior integer domain"
+        }
+      ],
+      "old_103_evidence_status": "137 raw quotes literal and index true; original P2 locator/semantic failures remain frozen",
+      "consumer_index_completion": "A-F04/TK103-M01 default jiffies computation now links to actual TICK_NSEC definition rather than old commentary; rest follows each direct row",
+      "selfcheck_scope": "new104 6 raw files counted separately; old103 all raw bytes unchanged",
+      "reading_repair": "104 distinguishes 26 quote source paths, full source fetches and focused excerpts; 103 source_paths=30 quoted sources not full read ledger",
+      "base_snapshot_correct": "time（分支名）"
+    },
+    "R103_02": {
+      "status": "OPEN",
+      "fixes": [
+        {
+          "old": [
+            "A-F09",
+            "TK103-F04"
+          ],
+          "corrected": "old_clock NULL skips raw.xtime_nsec writes within tk_setup; non-NULL each sign branch executes compound write for mono and raw; shift_change==0 executes <<=0 assignment with unchanged numeric value; mono.base has no active write in this bounded init function",
+          "new_evidence": [
+            "RTC104-E024",
+            "RTC104-E025",
+            "RTC104-E026"
+          ],
+          "first_stop": "object state, signed conversion and actual further writers unknown"
+        },
+        {
+          "old": [
+            "TK103-M15",
+            "A-I05",
+            "TK103-F02"
+          ],
+          "corrected": "clocksrc_s::shift is u32 per clocksource struct, not cached tk_read_base::shift; u32 subtraction→int conversion (out-of-range implementation-defined), negative branch unary -shift_change must avoid INT_MIN before valid 0..63 shift",
+          "new_evidence": [
+            "RTC104-E022",
+            "RTC104-E023",
+            "RTC104-E024",
+            "RTC104-E025"
+          ],
+          "first_stop": "actual replacement clock, compiler choice and valid C shifts not observed"
+        },
+        {
+          "old": [
+            "TK103-M20",
+            "C-N07",
+            "TK103-F06"
+          ],
+          "corrected": "-nsec (signed) then -1 occurs inside div_u64_rem argument; div returns u64; outer unary - operates on u64, then -1 in u64, result assigned to signed time64_t implementation-defined if out of range. For -1: inner0, q0, outer UINT64_MAX -> usual signed -1 only with implementation assumption",
+          "new_evidence": [
+            "RTC104-E029",
+            "RTC104-E030"
+          ],
+          "first_stop": "s32 rem passed to u32* contract is a separate incompatible pointer type constraint and no compilation performed"
+        },
+        {
+          "old": [
+            "TK103-M20",
+            "A-I01",
+            "C-N06"
+          ],
+          "corrected": "local_clock() has u64 return type, ns_to_timespec64 accepts s64; converting >S64_MAX argument is implementation-defined before ns converter call. native_sched_clock opaque",
+          "new_evidence": [
+            "RTC104-E027",
+            "RTC104-E028",
+            "RTC104-E029",
+            "RTC104-E030"
+          ],
+          "first_stop": "signed argument conversion and ABI/actual call not proven"
+        },
+        {
+          "old": [
+            "TK103-M11",
+            "TK103-M12",
+            "B-C08"
+          ],
+          "corrected": "when default jiffies mask low32, delta high32=0 and shift8; any highword1 shift33 scenario is only hypothetical direct helper not proven reachable from default readout",
+          "new_evidence": [
+            "RTC104-E023"
+          ],
+          "first_stop": "source selection, actual clock fields and old roots kept separate"
+        }
+      ]
+    },
+    "history": {
+      "R100_01": "CLOSED_DOCUMENTATION_ONLY",
+      "R101_01": "CLOSED_DOCUMENTATION_ONLY",
+      "batch100": "PASS_PENDING_LOCAL",
+      "batch101": "PASS_PENDING_LOCAL",
+      "batch102": "RETURN",
+      "batch103": "RETURN",
+      "new_executor_batch104": "READY_FOR_MAINLINE_REVIEW only after publish",
+      "legacy_root_identities": [
+        "MYOS2-LEAD-002::CA-05",
+        "MYOS2-LEAD-002-CORE-CHECK-01::V14",
+        "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03",
+        "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U08",
+        "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F08/U05"
+      ],
+      "persistent_clock_old_gap": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U02 only persistent input source narrowed; local_clock and device validation remain open"
+    }
+  },
+  "source_evidence_index": [
+    {
+      "id": "RTC104-E001",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/scripts/options_flags.cmake",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "real_symbol": "set(CMAKE_C_FLAGS)",
+      "line_start": 58,
+      "line_end": 61,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E002",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_update_freq_scale",
+      "line_start": 205,
+      "line_end": 205,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E003",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_update_freq_scale",
+      "line_start": 215,
+      "line_end": 219,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E004",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_update_freq_scale",
+      "line_start": 220,
+      "line_end": 223,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E005",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_update_freq_scale",
+      "line_start": 249,
+      "line_end": 251,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E006",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_update_freq_scale",
+      "line_start": 252,
+      "line_end": 254,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E007",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_register_scale",
+      "line_start": 420,
+      "line_end": 422,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E008",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_register_scale",
+      "line_start": 424,
+      "line_end": 428,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E009",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/hpet.c",
+      "path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "real_symbol": "myos_hpet_clkevt_set_state_periodic",
+      "line_start": 219,
+      "line_end": 223,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E010",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/systick/systick_const.h",
+      "path": "mykernel/time/systick/systick_const.h",
+      "real_symbol": "TICK_NSEC",
+      "line_start": 7,
+      "line_end": 7,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E011",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_register_scale",
+      "line_start": 413,
+      "line_end": 414,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E012",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "__clocksource_register_scale",
+      "line_start": 420,
+      "line_end": 420,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E013",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource.c",
+      "path": "mykernel/time/clocksource/clocksource.c",
+      "real_symbol": "clocksource_done_booting",
+      "line_start": 363,
+      "line_end": 363,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E014",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource_macro.h",
+      "path": "mykernel/time/clocksource/clocksource_macro.h",
+      "real_symbol": "clocksource_select",
+      "line_start": 14,
+      "line_end": 15,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E015",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/init/init.h",
+      "path": "mykernel/include/linux/init/init.h",
+      "real_symbol": "fs_initcall",
+      "line_start": 304,
+      "line_end": 304,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E016",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/init/init.h",
+      "path": "mykernel/include/linux/init/init.h",
+      "real_symbol": "__define_initcall",
+      "line_start": 278,
+      "line_end": 278,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E017",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/init/init.h",
+      "path": "mykernel/include/linux/init/init.h",
+      "real_symbol": "___define_initcall",
+      "line_start": 275,
+      "line_end": 276,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E018",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/init/init.h",
+      "path": "mykernel/include/linux/init/init.h",
+      "real_symbol": "__unique_initcall",
+      "line_start": 268,
+      "line_end": 272,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E019",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/init/init.h",
+      "path": "mykernel/include/linux/init/init.h",
+      "real_symbol": "____define_initcall",
+      "line_start": 263,
+      "line_end": 265,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E020",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/init/init.h",
+      "path": "mykernel/include/linux/init/init.h",
+      "real_symbol": "____define_initcall",
+      "line_start": 255,
+      "line_end": 259,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E021",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/init/init.h",
+      "path": "mykernel/include/linux/init/init.h",
+      "real_symbol": "__initcall_section",
+      "line_start": 245,
+      "line_end": 246,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E022",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/clocksource/clocksource_types.h",
+      "path": "mykernel/time/clocksource/clocksource_types.h",
+      "real_symbol": "clocksource",
+      "line_start": 70,
+      "line_end": 74,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E023",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping_types.h",
+      "path": "mykernel/time/timekeeping/timekeeping_types.h",
+      "real_symbol": "tk_read_base",
+      "line_start": 30,
+      "line_end": 34,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E024",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "tk_setup_internals",
+      "line_start": 161,
+      "line_end": 165,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E025",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "tk_setup_internals",
+      "line_start": 166,
+      "line_end": 169,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E026",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "tk_setup_internals",
+      "line_start": 135,
+      "line_end": 139,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E027",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/sched/clock.h",
+      "path": "mykernel/include/linux/sched/clock.h",
+      "real_symbol": "local_clock",
+      "line_start": 53,
+      "line_end": 53,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E028",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "ns_to_timespec64",
+      "line_start": 52,
+      "line_end": 56,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E029",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "ns_to_timespec64",
+      "line_start": 64,
+      "line_end": 65,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E030",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/math64.h",
+      "path": "mykernel/include/linux/kernel/math64.h",
+      "real_symbol": "div_u64_rem",
+      "line_start": 43,
+      "line_end": 44,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E031",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/rtc.c",
+      "path": "mykernel/arch/x86_64/kernel/rtc.c",
+      "real_symbol": "rtc_cmos_read",
+      "line_start": 20,
+      "line_end": 20,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E032",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/rtc.c",
+      "path": "mykernel/arch/x86_64/kernel/rtc.c",
+      "real_symbol": "rtc_cmos_read",
+      "line_start": 22,
+      "line_end": 25,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E033",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/rtc.c",
+      "path": "mykernel/arch/x86_64/kernel/rtc.c",
+      "real_symbol": "rtc_cmos_read",
+      "line_start": 27,
+      "line_end": 27,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E034",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "path": "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "real_symbol": "RTC_PORT",
+      "line_start": 12,
+      "line_end": 12,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E035",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "path": "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "real_symbol": "CMOS_READ",
+      "line_start": 27,
+      "line_end": 27,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E036",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "simple_mc146818_gettime",
+      "line_start": 18,
+      "line_end": 20,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E037",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "simple_mc146818_gettime",
+      "line_start": 21,
+      "line_end": 23,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E038",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "mc146818_get_time",
+      "line_start": 45,
+      "line_end": 49,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E039",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_SECONDS",
+      "line_start": 51,
+      "line_end": 51,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E040",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_MINUTES",
+      "line_start": 53,
+      "line_end": 53,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E041",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_HOURS",
+      "line_start": 55,
+      "line_end": 55,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E042",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_DAY_OF_MONTH",
+      "line_start": 61,
+      "line_end": 61,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E043",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_MONTH",
+      "line_start": 62,
+      "line_end": 62,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E044",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_YEAR",
+      "line_start": 63,
+      "line_end": 63,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E045",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/uapi/linux/rtc.h",
+      "path": "mykernel/include/uapi/linux/rtc.h",
+      "real_symbol": "rtc_time",
+      "line_start": 26,
+      "line_end": 30,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E046",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/uapi/linux/rtc.h",
+      "path": "mykernel/include/uapi/linux/rtc.h",
+      "real_symbol": "rtc_time",
+      "line_start": 31,
+      "line_end": 34,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E047",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "path": "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "real_symbol": "lock_cmos_prefix",
+      "line_start": 16,
+      "line_end": 17,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E048",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_UIP",
+      "line_start": 81,
+      "line_end": 81,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E049",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_CONTROL",
+      "line_start": 96,
+      "line_end": 96,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E050",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_DM_BINARY",
+      "line_start": 102,
+      "line_end": 102,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E051",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_24H",
+      "line_start": 103,
+      "line_end": 103,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E052",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "path": "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "real_symbol": "RTC_ALWAYS_BCD",
+      "line_start": 13,
+      "line_end": 13,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E053",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "simple_mc146818_gettime",
+      "line_start": 28,
+      "line_end": 32,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E054",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "simple_mc146818_gettime",
+      "line_start": 36,
+      "line_end": 36,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E055",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "mc146818_get_time",
+      "line_start": 46,
+      "line_end": 49,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E056",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/insns/io_arch.h",
+      "path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "real_symbol": "BUILDIO",
+      "line_start": 188,
+      "line_end": 190,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E057",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/insns/io_arch.h",
+      "path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "real_symbol": "BUILDIO",
+      "line_start": 191,
+      "line_end": 194,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E058",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/insns/io_arch.h",
+      "path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "real_symbol": "BUILDIO",
+      "line_start": 197,
+      "line_end": 200,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E059",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/insns/io_arch.h",
+      "path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "real_symbol": "BUILDIO",
+      "line_start": 201,
+      "line_end": 204,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E060",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/insns/io_arch.h",
+      "path": "mykernel/arch/x86_64/insns/io_arch.h",
+      "real_symbol": "BUILDIO",
+      "line_start": 239,
+      "line_end": 239,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E061",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "simple_mc146818_gettime",
+      "line_start": 13,
+      "line_end": 16,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E062",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "mc146818_get_time",
+      "line_start": 79,
+      "line_end": 79,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E063",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/rtc.c",
+      "path": "mykernel/arch/x86_64/kernel/rtc.c",
+      "real_symbol": "read_persistent_clock64",
+      "line_start": 43,
+      "line_end": 43,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E064",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/arch/x86_64/kernel/rtc.c",
+      "path": "mykernel/arch/x86_64/kernel/rtc.c",
+      "real_symbol": "read_persistent_clock64",
+      "line_start": 47,
+      "line_end": 48,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E065",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_REG_A",
+      "line_start": 67,
+      "line_end": 67,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E066",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_VRT",
+      "line_start": 116,
+      "line_end": 116,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E067",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/bcd.h",
+      "path": "mykernel/include/linux/kernel/bcd.h",
+      "real_symbol": "bcd2bin",
+      "line_start": 7,
+      "line_end": 10,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E068",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/bcd.h",
+      "path": "mykernel/include/linux/kernel/bcd.h",
+      "real_symbol": "const_bcd2bin",
+      "line_start": 19,
+      "line_end": 19,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E069",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/lib/bcd.c",
+      "path": "mykernel/lib/bcd.c",
+      "real_symbol": "_bcd2bin",
+      "line_start": 6,
+      "line_end": 6,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E070",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/bcd.h",
+      "path": "mykernel/include/linux/kernel/bcd.h",
+      "real_symbol": "const_bcd_is_valid",
+      "line_start": 21,
+      "line_end": 21,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E071",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/bcd.h",
+      "path": "mykernel/include/linux/kernel/bcd.h",
+      "real_symbol": "bcd_is_valid",
+      "line_start": 17,
+      "line_end": 17,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E072",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "mc146818_get_time",
+      "line_start": 51,
+      "line_end": 53,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E073",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "mc146818_get_time",
+      "line_start": 54,
+      "line_end": 56,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E074",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "mc146818_get_time",
+      "line_start": 74,
+      "line_end": 75,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E075",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/rtc-mc146818.c",
+      "path": "mykernel/drivers/rtc/rtc-mc146818.c",
+      "real_symbol": "mc146818_get_time",
+      "line_start": 77,
+      "line_end": 77,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E076",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/lib.c",
+      "path": "mykernel/drivers/rtc/lib.c",
+      "real_symbol": "rtc_days_in_month",
+      "line_start": 19,
+      "line_end": 21,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E077",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/rtc.h",
+      "path": "mykernel/include/linux/kernel/rtc.h",
+      "real_symbol": "is_leap_year",
+      "line_start": 224,
+      "line_end": 224,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E078",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/lib.c",
+      "path": "mykernel/drivers/rtc/lib.c",
+      "real_symbol": "rtc_month_days",
+      "line_start": 35,
+      "line_end": 35,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E079",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/lib.c",
+      "path": "mykernel/drivers/rtc/lib.c",
+      "real_symbol": "rtc_valid_tm",
+      "line_start": 152,
+      "line_end": 154,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E080",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/lib.c",
+      "path": "mykernel/drivers/rtc/lib.c",
+      "real_symbol": "rtc_valid_tm",
+      "line_start": 155,
+      "line_end": 158,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E081",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/lib.c",
+      "path": "mykernel/drivers/rtc/lib.c",
+      "real_symbol": "rtc_valid_tm",
+      "line_start": 159,
+      "line_end": 159,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E082",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/lib.c",
+      "path": "mykernel/drivers/rtc/lib.c",
+      "real_symbol": "rtc_valid_tm",
+      "line_start": 161,
+      "line_end": 161,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E083",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/mc146818rtc.h",
+      "path": "mykernel/include/linux/kernel/mc146818rtc.h",
+      "real_symbol": "RTC_DAY_OF_WEEK",
+      "line_start": 60,
+      "line_end": 60,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E084",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/uapi/linux/rtc.h",
+      "path": "mykernel/include/uapi/linux/rtc.h",
+      "real_symbol": "rtc_time",
+      "line_start": 30,
+      "line_end": 34,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E085",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/drivers/rtc/lib.c",
+      "path": "mykernel/drivers/rtc/lib.c",
+      "real_symbol": "rtc_tm_to_time64",
+      "line_start": 171,
+      "line_end": 172,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E086",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "mktime64",
+      "line_start": 245,
+      "line_end": 245,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E087",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "mktime64",
+      "line_start": 248,
+      "line_end": 251,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E088",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "mktime64",
+      "line_start": 253,
+      "line_end": 255,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E089",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "mktime64",
+      "line_start": 256,
+      "line_end": 258,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E090",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/time_type_declaration.h",
+      "path": "mykernel/time/time_type_declaration.h",
+      "real_symbol": "time64_t",
+      "line_start": 10,
+      "line_end": 10,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E091",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc_types.h",
+      "path": "mykernel/time/misc/time_misc_types.h",
+      "real_symbol": "timespec64",
+      "line_start": 8,
+      "line_end": 9,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E092",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 244,
+      "line_end": 245,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E093",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 251,
+      "line_end": 251,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E094",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 253,
+      "line_end": 256,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E095",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 258,
+      "line_end": 261,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E096",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "tk_set_xtime",
+      "line_start": 35,
+      "line_end": 37,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E097",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "tk_set_wall_to_mono",
+      "line_start": 56,
+      "line_end": 60,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E098",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping_types.h",
+      "path": "mykernel/time/timekeeping/timekeeping_types.h",
+      "real_symbol": "timekeeper",
+      "line_start": 87,
+      "line_end": 91,
+      "quote_lines": 5,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E099",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 238,
+      "line_end": 241,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E100",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.h",
+      "path": "mykernel/time/misc/time_misc.h",
+      "real_symbol": "timespec64_sub",
+      "line_start": 80,
+      "line_end": 83,
+      "quote_lines": 4,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E101",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "ns_to_timespec64",
+      "line_start": 55,
+      "line_end": 57,
+      "quote_lines": 3,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E102",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/misc/time_misc.c",
+      "path": "mykernel/time/misc/time_misc.c",
+      "real_symbol": "ns_to_timespec64",
+      "line_start": 52,
+      "line_end": 53,
+      "quote_lines": 2,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E103",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/include/linux/kernel/types.h",
+      "path": "mykernel/include/linux/kernel/types.h",
+      "real_symbol": "uint",
+      "line_start": 104,
+      "line_end": 104,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    },
+    {
+      "id": "RTC104-E104",
+      "source_ref": "MyOS2@a039d9803ade:mykernel/time/timekeeping/timekeeping.c",
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "real_symbol": "timekeeping_init",
+      "line_start": 263,
+      "line_end": 263,
+      "quote_lines": 1,
+      "scope": "static_source_literal_only"
+    }
+  ],
+  "source_evidence_count": 104,
+  "source_quote_paths": [
+    "mykernel/scripts/options_flags.cmake",
+    "mykernel/time/clocksource/clocksource.c",
+    "mykernel/arch/x86_64/kernel/hpet.c",
+    "mykernel/time/systick/systick_const.h",
+    "mykernel/time/clocksource/clocksource_macro.h",
+    "mykernel/include/linux/init/init.h",
+    "mykernel/time/clocksource/clocksource_types.h",
+    "mykernel/time/timekeeping/timekeeping_types.h",
+    "mykernel/time/timekeeping/timekeeping.c",
+    "mykernel/include/linux/sched/clock.h",
+    "mykernel/time/misc/time_misc.c",
+    "mykernel/include/linux/kernel/math64.h",
+    "mykernel/arch/x86_64/kernel/rtc.c",
+    "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+    "mykernel/drivers/rtc/rtc-mc146818.c",
+    "mykernel/include/linux/kernel/mc146818rtc.h",
+    "mykernel/include/uapi/linux/rtc.h",
+    "mykernel/arch/x86_64/insns/io_arch.h",
+    "mykernel/include/linux/kernel/bcd.h",
+    "mykernel/lib/bcd.c",
+    "mykernel/drivers/rtc/lib.c",
+    "mykernel/include/linux/kernel/rtc.h",
+    "mykernel/time/time_type_declaration.h",
+    "mykernel/time/misc/time_misc_types.h",
+    "mykernel/time/misc/time_misc.h",
+    "mykernel/include/linux/kernel/types.h"
+  ],
+  "matrices": {
+    "rtc_field_origin_consumer_matrix": [
+      {
+        "id": "rtc_field_origin_consumer_matrix-01",
+        "topic": "sec",
+        "source_fact": "CMOS_READ(RTC_SECONDS)=index0",
+        "preconditions": "valid byte read and BCD input",
+        "conditional_result": "int tm_sec then bcd2bin then mktime second argument last",
+        "first_stop_gate": "no one-snapshot or device guarantee",
+        "evidence_ids": [
+          "RTC104-E036",
+          "RTC104-E039",
+          "RTC104-E072",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "rtc_field_origin_consumer_matrix-02",
+        "topic": "min",
+        "source_fact": "CMOS_READ(RTC_MINUTES)=index2",
+        "preconditions": "valid byte read and BCD input",
+        "conditional_result": "int tm_min then bcd2bin then mktime minute input",
+        "first_stop_gate": "hardware origin not observed",
+        "evidence_ids": [
+          "RTC104-E036",
+          "RTC104-E040",
+          "RTC104-E072",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "rtc_field_origin_consumer_matrix-03",
+        "topic": "hour",
+        "source_fact": "CMOS_READ(RTC_HOURS)=index4",
+        "preconditions": "valid byte read and mode actually 24h BCD",
+        "conditional_result": "int tm_hour then mktime hour input",
+        "first_stop_gate": "RTC_CONTROL not actively read",
+        "evidence_ids": [
+          "RTC104-E036",
+          "RTC104-E041",
+          "RTC104-E050",
+          "RTC104-E051",
+          "RTC104-E072",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "rtc_field_origin_consumer_matrix-04",
+        "topic": "mday",
+        "source_fact": "CMOS_READ(RTC_DAY_OF_MONTH)=index7",
+        "preconditions": "valid byte input",
+        "conditional_result": "tm_mday converted then passed to mktime",
+        "first_stop_gate": "calendar validation not called",
+        "evidence_ids": [
+          "RTC104-E037",
+          "RTC104-E042",
+          "RTC104-E073",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "rtc_field_origin_consumer_matrix-05",
+        "topic": "month",
+        "source_fact": "CMOS_READ(RTC_MONTH)=index8",
+        "preconditions": "input must be BCD1..12",
+        "conditional_result": "tm_mon decodes then decrements; converter restores +1",
+        "first_stop_gate": "raw zero invalid but not rejected",
+        "evidence_ids": [
+          "RTC104-E037",
+          "RTC104-E043",
+          "RTC104-E075",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "rtc_field_origin_consumer_matrix-06",
+        "topic": "year",
+        "source_fact": "CMOS_READ(RTC_YEAR)=index9",
+        "preconditions": "two-digit BCD value and century assumption",
+        "conditional_result": "tm_year decoded then 69 cutoff and 1900 added",
+        "first_stop_gate": "century unknown",
+        "evidence_ids": [
+          "RTC104-E037",
+          "RTC104-E044",
+          "RTC104-E074",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "rtc_field_origin_consumer_matrix-07",
+        "topic": "unused_fields",
+        "source_fact": "tm_wday tm_yday tm_isdst declared and not assigned here",
+        "preconditions": "only read_persistent_clock64 direct call to rtc_tm_to_time64 considered",
+        "conditional_result": "converter uses exactly six fields and ignores other three",
+        "first_stop_gate": "other consumers outside scope",
+        "evidence_ids": [
+          "RTC104-E031",
+          "RTC104-E046",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "rtc_field_origin_consumer_matrix-08",
+        "topic": "status",
+        "source_fact": "mc146818_get_time returns 0 yet caller ignores result",
+        "preconditions": "valid object and normal I/O flow",
+        "conditional_result": "no proof fields form coherent or correct RTC date",
+        "first_stop_gate": "unobserved device return, rc ignored",
+        "evidence_ids": [
+          "RTC104-E038",
+          "RTC104-E062",
+          "RTC104-E063",
+          "RTC104-E064"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      }
+    ],
+    "active_sampling_steps_matrix": [
+      {
+        "id": "active_sampling_steps_matrix-01",
+        "topic": "CMOS_macro",
+        "source_fact": "CMOS_READ expands to rtc_cmos_read",
+        "preconditions": "macro selected and valid index",
+        "conditional_result": "one register read request per invocation",
+        "first_stop_gate": "not one atomic six-field transaction",
+        "evidence_ids": [
+          "RTC104-E035",
+          "RTC104-E032"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "active_sampling_steps_matrix-02",
+        "topic": "index_select",
+        "source_fact": "outb(addr,RTC_PORT(0)) targets nominal 0x70",
+        "preconditions": "BUILDIO byte form actually selected",
+        "conditional_result": "requests index register value",
+        "first_stop_gate": "no port hardware response measured",
+        "evidence_ids": [
+          "RTC104-E032",
+          "RTC104-E034",
+          "RTC104-E056",
+          "RTC104-E057",
+          "RTC104-E060"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "active_sampling_steps_matrix-03",
+        "topic": "data_read",
+        "source_fact": "inb(RTC_PORT(1)) nominal 0x71",
+        "preconditions": "I/O wrapper valid and permitted",
+        "conditional_result": "requests sampled byte for one index",
+        "first_stop_gate": "no consistency proof",
+        "evidence_ids": [
+          "RTC104-E032",
+          "RTC104-E034",
+          "RTC104-E058",
+          "RTC104-E059",
+          "RTC104-E060"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "active_sampling_steps_matrix-04",
+        "topic": "read_order",
+        "source_fact": "sec min hour then mday month year",
+        "preconditions": "six function calls return",
+        "conditional_result": "six separate requests in specified sequence",
+        "first_stop_gate": "not necessarily same calendar instant",
+        "evidence_ids": [
+          "RTC104-E036",
+          "RTC104-E037"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "active_sampling_steps_matrix-05",
+        "topic": "lock",
+        "source_fact": "lock macros exist but rtc_cmos_read calls commented",
+        "preconditions": "this bounded read site",
+        "conditional_result": "no active lock calls from these lines",
+        "first_stop_gate": "other synchronization outside scope",
+        "evidence_ids": [
+          "RTC104-E033",
+          "RTC104-E047"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "active_sampling_steps_matrix-06",
+        "topic": "UIP",
+        "source_fact": "RTC_UIP macro and avoid_UIP call exist but guard commented",
+        "preconditions": "this fixed mc getter",
+        "conditional_result": "does not actively retry on update-in-progress here",
+        "first_stop_gate": "actual RTC status unknown",
+        "evidence_ids": [
+          "RTC104-E048",
+          "RTC104-E055",
+          "RTC104-E038"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "active_sampling_steps_matrix-07",
+        "topic": "mode_century",
+        "source_fact": "RTC_CONTROL and century lines commented",
+        "preconditions": "fixed simple getter only",
+        "conditional_result": "does not actively read binary mode, 24h mode or century",
+        "first_stop_gate": "macro presence not hardware configuration",
+        "evidence_ids": [
+          "RTC104-E049",
+          "RTC104-E050",
+          "RTC104-E051",
+          "RTC104-E052",
+          "RTC104-E053",
+          "RTC104-E054"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "active_sampling_steps_matrix-08",
+        "topic": "return",
+        "source_fact": "mc getter returns zero",
+        "preconditions": "normal path reached",
+        "conditional_result": "read_persistent_clock64 does not examine rc",
+        "first_stop_gate": "zero does not certify six valid fields",
+        "evidence_ids": [
+          "RTC104-E062",
+          "RTC104-E063",
+          "RTC104-E064"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      }
+    ],
+    "bcd_representation_transition_matrix": [
+      {
+        "id": "bcd_representation_transition_matrix-01",
+        "topic": "choice",
+        "source_fact": "bcd2bin macro uses __builtin_constant_p on u8 cast",
+        "preconditions": "actual compiler choice unknown",
+        "conditional_result": "constant and _bcd2bin formulas agree on 8bit raw numeric values",
+        "first_stop_gate": "not a decoded-validity gate",
+        "evidence_ids": [
+          "RTC104-E067",
+          "RTC104-E068",
+          "RTC104-E069"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "bcd_representation_transition_matrix-02",
+        "topic": "digit_validity",
+        "source_fact": "const_bcd_is_valid tests both nibbles less than10",
+        "preconditions": "must be called to validate",
+        "conditional_result": "bcd_is_valid available but not invoked in direct chain",
+        "first_stop_gate": "no claim of actual invalid data",
+        "evidence_ids": [
+          "RTC104-E070",
+          "RTC104-E071",
+          "RTC104-E072"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "bcd_representation_transition_matrix-03",
+        "topic": "sec_min",
+        "source_fact": "three bcd2bin conversions on seconds minute hour",
+        "preconditions": "BCD and suitable hour mode assumed",
+        "conditional_result": "numeric fields can be out of permitted ranges",
+        "first_stop_gate": "rtc_valid_tm not called",
+        "evidence_ids": [
+          "RTC104-E072",
+          "RTC104-E050",
+          "RTC104-E051"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "bcd_representation_transition_matrix-04",
+        "topic": "mday_mon_year",
+        "source_fact": "three bcd2bin conversions on day month year",
+        "preconditions": "BCD byte representation assumed",
+        "conditional_result": "conversion does not enforce calendar rules",
+        "first_stop_gate": "invalid nibble may still produce integer",
+        "evidence_ids": [
+          "RTC104-E073",
+          "RTC104-E068",
+          "RTC104-E069"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "bcd_representation_transition_matrix-05",
+        "topic": "year69",
+        "source_fact": "decoded year <=69",
+        "preconditions": "two-digit year without century information",
+        "conditional_result": "adds100 so offset year0..69 yields 2000..2069",
+        "first_stop_gate": "century actual unknown",
+        "evidence_ids": [
+          "RTC104-E074",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "bcd_representation_transition_matrix-06",
+        "topic": "year70",
+        "source_fact": "decoded year70..99",
+        "preconditions": "same BCD two-digit assumptions",
+        "conditional_result": "unchanged offset maps 1970..1999",
+        "first_stop_gate": "representation discontinuity not time observation",
+        "evidence_ids": [
+          "RTC104-E074",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "bcd_representation_transition_matrix-07",
+        "topic": "month0based",
+        "source_fact": "decoded month 1..12",
+        "preconditions": "valid raw month",
+        "conditional_result": "tm_mon-- gives0..11; wrapper mon+1 gets1..12",
+        "first_stop_gate": "zero raw yields -1 and not rejected here",
+        "evidence_ids": [
+          "RTC104-E075",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "bcd_representation_transition_matrix-08",
+        "topic": "mode",
+        "source_fact": "RTC_ALWAYS_BCD defined and decode unconditional",
+        "preconditions": "need RTC truly in BCD and24h mode",
+        "conditional_result": "control bits described but not actively inspected",
+        "first_stop_gate": "binary and 12h inputs remain conditional",
+        "evidence_ids": [
+          "RTC104-E052",
+          "RTC104-E049",
+          "RTC104-E050",
+          "RTC104-E051",
+          "RTC104-E072"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      }
+    ],
+    "calendar_validity_invocation_matrix": [
+      {
+        "id": "calendar_validity_invocation_matrix-01",
+        "topic": "year",
+        "source_fact": "rtc_valid_tm checks tm_year lower and upper",
+        "preconditions": "only if checker separately called",
+        "conditional_result": "rejects offset below70 or above INT_MAX-1900",
+        "first_stop_gate": "not called in read_persistent_clock64 path",
+        "evidence_ids": [
+          "RTC104-E079",
+          "RTC104-E081",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "calendar_validity_invocation_matrix-02",
+        "topic": "month",
+        "source_fact": "unsigned tm_mon checked against12",
+        "preconditions": "checker invoked",
+        "conditional_result": "negative or >=12 rejected before array access",
+        "first_stop_gate": "not read-path validation",
+        "evidence_ids": [
+          "RTC104-E079",
+          "RTC104-E076",
+          "RTC104-E078"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "calendar_validity_invocation_matrix-03",
+        "topic": "mday",
+        "source_fact": "tm_mday 1..rtc_month_days",
+        "preconditions": "checker invoked and valid month",
+        "conditional_result": "rejects out-of-month day",
+        "first_stop_gate": "no actual bad sample observed",
+        "evidence_ids": [
+          "RTC104-E079",
+          "RTC104-E080",
+          "RTC104-E078"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "calendar_validity_invocation_matrix-04",
+        "topic": "leap",
+        "source_fact": "is_leap_year year uses mod4 mod100 mod400",
+        "preconditions": "year range known",
+        "conditional_result": "2000 leap and 2001 nonleap under Gregorian rule",
+        "first_stop_gate": "does not prove driver validated",
+        "evidence_ids": [
+          "RTC104-E077",
+          "RTC104-E078"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "calendar_validity_invocation_matrix-05",
+        "topic": "hour",
+        "source_fact": "unsigned tm_hour<24",
+        "preconditions": "checker invoked",
+        "conditional_result": "12h encoded PM bit could give out-of-range result",
+        "first_stop_gate": "actual mode not sampled, checker not invoked",
+        "evidence_ids": [
+          "RTC104-E080",
+          "RTC104-E051"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "calendar_validity_invocation_matrix-06",
+        "topic": "minute",
+        "source_fact": "unsigned tm_min<60",
+        "preconditions": "checker invoked",
+        "conditional_result": "rejects out of range minute",
+        "first_stop_gate": "not called by converter",
+        "evidence_ids": [
+          "RTC104-E080",
+          "RTC104-E072"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "calendar_validity_invocation_matrix-07",
+        "topic": "second",
+        "source_fact": "unsigned tm_sec<60",
+        "preconditions": "checker invoked",
+        "conditional_result": "rejects value60 in this validator",
+        "first_stop_gate": "not an RTC sample claim",
+        "evidence_ids": [
+          "RTC104-E080",
+          "RTC104-E072"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "calendar_validity_invocation_matrix-08",
+        "topic": "invocation",
+        "source_fact": "rtc_tm_to_time64 only calls mktime64",
+        "preconditions": "fixed bounded functions examined",
+        "conditional_result": "rtc_valid_tm definition exists separately but not invoked",
+        "first_stop_gate": "cannot infer invalid sample actually passed",
+        "evidence_ids": [
+          "RTC104-E085",
+          "RTC104-E079",
+          "RTC104-E080",
+          "RTC104-E081",
+          "RTC104-E082"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      }
+    ],
+    "gregorian_arithmetic_type_matrix": [
+      {
+        "id": "gregorian_arithmetic_type_matrix-01",
+        "topic": "args",
+        "source_fact": "tm_year signed int becomes unsigned int then adds1900",
+        "preconditions": "valid adjusted year and month",
+        "conditional_result": "mktime64 takes uint year mon day hour min sec",
+        "first_stop_gate": "bad negative fields convert rather than validate",
+        "evidence_ids": [
+          "RTC104-E085",
+          "RTC104-E103"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "gregorian_arithmetic_type_matrix-02",
+        "topic": "local_uint",
+        "source_fact": "uint mon and year initialized from args",
+        "preconditions": "uint typedef unsigned int",
+        "conditional_result": "unsigned intermediate math before time64_t cast",
+        "first_stop_gate": "actual compiler ABI not run",
+        "evidence_ids": [
+          "RTC104-E086",
+          "RTC104-E103"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "gregorian_arithmetic_type_matrix-03",
+        "topic": "January",
+        "source_fact": "mon0=1 then uint mon-=2 wraps UINT_MAX",
+        "preconditions": "implementation-defined uint32 to int conversion chosen",
+        "conditional_result": "under common two-complement mapping -1 branch adjusts mon11 year--",
+        "first_stop_gate": "not generic C guaranteed branch",
+        "evidence_ids": [
+          "RTC104-E087",
+          "RTC104-E103"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "gregorian_arithmetic_type_matrix-04",
+        "topic": "February",
+        "source_fact": "mon0=2 yields uint0 then cast int0",
+        "preconditions": "int0 <=0",
+        "conditional_result": "mon+=12, year--",
+        "first_stop_gate": "normal date still requires calendar value constraints",
+        "evidence_ids": [
+          "RTC104-E087"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "gregorian_arithmetic_type_matrix-05",
+        "topic": "MarDec",
+        "source_fact": "mon0 in3..12",
+        "preconditions": "uint subtract remains1..10",
+        "conditional_result": "no JanFeb adjustment",
+        "first_stop_gate": "inputs outside range not covered",
+        "evidence_ids": [
+          "RTC104-E087"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "gregorian_arithmetic_type_matrix-06",
+        "topic": "weekday_daycount",
+        "source_fact": "year/4 -year/100 +year/400 +367*mon/12 + day",
+        "preconditions": "year and mon in small valid range",
+        "conditional_result": "computes Gregorian day count component",
+        "first_stop_gate": "uint partial sums could overflow for arbitrary year",
+        "evidence_ids": [
+          "RTC104-E088",
+          "RTC104-E089"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "gregorian_arithmetic_type_matrix-07",
+        "topic": "seconds",
+        "source_fact": "daycount*24 +hour then*60+min then*60+sec",
+        "preconditions": "signed64 domain and valid fields",
+        "conditional_result": "time64_t seconds since epoch under selected conditional JanFeb cast",
+        "first_stop_gate": "not actual RTC reading",
+        "evidence_ids": [
+          "RTC104-E088",
+          "RTC104-E089",
+          "RTC104-E090"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "gregorian_arithmetic_type_matrix-08",
+        "topic": "invalid_date",
+        "source_fact": "rtc_tm_to_time64 calls mktime64 not rtc_valid_tm",
+        "preconditions": "fixed direct source path",
+        "conditional_result": "calculation is not validation; invalid Feb29 may map to next day",
+        "first_stop_gate": "no real invalid sample observed",
+        "evidence_ids": [
+          "RTC104-E085",
+          "RTC104-E079",
+          "RTC104-E080"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      }
+    ],
+    "wall_clock_timekeeper_fields_matrix": [
+      {
+        "id": "wall_clock_timekeeper_fields_matrix-01",
+        "topic": "seconds",
+        "source_fact": "read_persistent_clock64 stores converter result in ts.tv_sec",
+        "preconditions": "rtc getter and mktime succeed",
+        "conditional_result": "wall_time time64_t seconds",
+        "first_stop_gate": "no coherent RTC sample proof",
+        "evidence_ids": [
+          "RTC104-E063",
+          "RTC104-E064",
+          "RTC104-E085",
+          "RTC104-E090",
+          "RTC104-E091"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "wall_clock_timekeeper_fields_matrix-02",
+        "topic": "nanosecond",
+        "source_fact": "same producer explicitly assigns tv_nsec=0",
+        "preconditions": "ts valid and producer normally returns",
+        "conditional_result": "fraction initialized zero not measured fine precision",
+        "first_stop_gate": "port hardware mode unknown",
+        "evidence_ids": [
+          "RTC104-E064",
+          "RTC104-E091"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "wall_clock_timekeeper_fields_matrix-03",
+        "topic": "consumer_wall",
+        "source_fact": "timekeeping_init calls persistent clock first",
+        "preconditions": "function reaches call and returns",
+        "conditional_result": "wall_time local gets ts values",
+        "first_stop_gate": "not boot-time clock correctness",
+        "evidence_ids": [
+          "RTC104-E092",
+          "RTC104-E100"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "wall_clock_timekeeper_fields_matrix-04",
+        "topic": "local_clock",
+        "source_fact": "local_clock returns u64 but ns_to_timespec64 takes s64",
+        "preconditions": "opaque native_sched_clock result",
+        "conditional_result": "u64 to s64 conversion if out of signed range is implementation-defined",
+        "first_stop_gate": "local_clock not expanded by104",
+        "evidence_ids": [
+          "RTC104-E027",
+          "RTC104-E028",
+          "RTC104-E093",
+          "RTC104-E102"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "wall_clock_timekeeper_fields_matrix-05",
+        "topic": "offset",
+        "source_fact": "wall_to_mono=timespec64_sub(boot_offset,wall_time)",
+        "preconditions": "both input structs normal and signed subtract in range",
+        "conditional_result": "local variable is computed and normalized",
+        "first_stop_gate": "not saved to timekeeper field",
+        "evidence_ids": [
+          "RTC104-E094",
+          "RTC104-E100"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "wall_clock_timekeeper_fields_matrix-06",
+        "topic": "clock_setup",
+        "source_fact": "default_clock then callback then tk_setup",
+        "preconditions": "valid clock and callbacks",
+        "conditional_result": "mono.shift prepared before tk_set_xtime",
+        "first_stop_gate": "weak default and HPET selection not proved",
+        "evidence_ids": [
+          "RTC104-E095",
+          "RTC104-E026"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "wall_clock_timekeeper_fields_matrix-07",
+        "topic": "xtime_copy",
+        "source_fact": "tk_set_xtime copies ts.tv_sec and shifts ts.tv_nsec",
+        "preconditions": "legal shift and storage",
+        "conditional_result": "xtime_sec=u64 from wall seconds; xtime_nsec=0 shifted if legal",
+        "first_stop_gate": "negative signed sec may convert to huge u64",
+        "evidence_ids": [
+          "RTC104-E096",
+          "RTC104-E097",
+          "RTC104-E099"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "wall_clock_timekeeper_fields_matrix-08",
+        "topic": "wall_to_mono",
+        "source_fact": "tk_set_wall_to_mono called but actual assignment commented",
+        "preconditions": "this bounded function only",
+        "conditional_result": "no active field store; raw_sec set0 separately",
+        "first_stop_gate": "other write paths not audited",
+        "evidence_ids": [
+          "RTC104-E096",
+          "RTC104-E098",
+          "RTC104-E099"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      }
+    ],
+    "ABC_join_first_stop_matrix": [
+      {
+        "id": "ABC_join_first_stop_matrix-01",
+        "topic": "A_read",
+        "source_fact": "read six indices sequentially",
+        "preconditions": "I/O helpers selected and valid objects",
+        "conditional_result": "six integer field values supplied",
+        "first_stop_gate": "snapshot consistency first unknown",
+        "evidence_ids": [
+          "RTC104-E032",
+          "RTC104-E034",
+          "RTC104-E036",
+          "RTC104-E037"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "ABC_join_first_stop_matrix-02",
+        "topic": "A_mode",
+        "source_fact": "no active UIP mode century checks",
+        "preconditions": "this direct getter only",
+        "conditional_result": "one logical sample and correct format unproved",
+        "first_stop_gate": "device responses and settings unknown",
+        "evidence_ids": [
+          "RTC104-E038",
+          "RTC104-E053",
+          "RTC104-E054",
+          "RTC104-E055"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "ABC_join_first_stop_matrix-03",
+        "topic": "B_decode",
+        "source_fact": "six bcd2bin numeric transforms",
+        "preconditions": "BCD and legal field ranges assumed",
+        "conditional_result": "decoded six int fields",
+        "first_stop_gate": "not calendar validation",
+        "evidence_ids": [
+          "RTC104-E067",
+          "RTC104-E068",
+          "RTC104-E069",
+          "RTC104-E072",
+          "RTC104-E073"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "ABC_join_first_stop_matrix-04",
+        "topic": "B_year",
+        "source_fact": "69 threshold and month--",
+        "preconditions": "valid two-digit year and month",
+        "conditional_result": "map to tm_year offset and tm_mon0..11",
+        "first_stop_gate": "century and date validity unknown",
+        "evidence_ids": [
+          "RTC104-E074",
+          "RTC104-E075"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "ABC_join_first_stop_matrix-05",
+        "topic": "B_validate",
+        "source_fact": "rtc_valid_tm defined but not direct call",
+        "preconditions": "restricted call graph",
+        "conditional_result": "cannot claim valid calendar input",
+        "first_stop_gate": "no actual sample observed",
+        "evidence_ids": [
+          "RTC104-E079",
+          "RTC104-E080",
+          "RTC104-E085"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "ABC_join_first_stop_matrix-06",
+        "topic": "C_secs",
+        "source_fact": "rtc_tm_to_time64→mktime64",
+        "preconditions": "JanFeb int conversion and unsigned intermediates valid",
+        "conditional_result": "conditional integer epoch seconds",
+        "first_stop_gate": "no universal C or hardware certification",
+        "evidence_ids": [
+          "RTC104-E085",
+          "RTC104-E086",
+          "RTC104-E087",
+          "RTC104-E088",
+          "RTC104-E089"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "ABC_join_first_stop_matrix-07",
+        "topic": "C_ts",
+        "source_fact": "ts.tv_sec from seconds and tv_nsec=0",
+        "preconditions": "normal return",
+        "conditional_result": "wall_time prepared for timekeeper",
+        "first_stop_gate": "RTC coherence unknown",
+        "evidence_ids": [
+          "RTC104-E063",
+          "RTC104-E064",
+          "RTC104-E092"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      },
+      {
+        "id": "ABC_join_first_stop_matrix-08",
+        "topic": "C_tk",
+        "source_fact": "timekeeping_init consumes wall_time and passes wall_to_mono into no-op body",
+        "preconditions": "clock setup and legal shift",
+        "conditional_result": "xtime_sec and mono.xtime_nsec written, wall_to_monotonic not here",
+        "first_stop_gate": "other writers and actual source link unknown",
+        "evidence_ids": [
+          "RTC104-E094",
+          "RTC104-E095",
+          "RTC104-E096",
+          "RTC104-E097",
+          "RTC104-E098"
+        ],
+        "level": "STATIC_SOURCE_OR_EXPLICIT_CONDITIONAL"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows": 56,
+  "matrix_rows_by_group": {
+    "rtc_field_origin_consumer_matrix": 8,
+    "active_sampling_steps_matrix": 8,
+    "bcd_representation_transition_matrix": 8,
+    "calendar_validity_invocation_matrix": 8,
+    "gregorian_arithmetic_type_matrix": 8,
+    "wall_clock_timekeeper_fields_matrix": 8,
+    "ABC_join_first_stop_matrix": 8
+  },
+  "finite_models": [
+    {
+      "id": "RTC104-M01",
+      "title": "BCD 0x59",
+      "declared_inputs": {
+        "raw": "0x59"
+      },
+      "closed_form_or_type_domain": "9+5*10=59",
+      "conditional_result": "numeric 59 only, valid BCD condition independently required",
+      "evidence_ids": [
+        "RTC104-E067",
+        "RTC104-E068",
+        "RTC104-E069"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M02",
+      "title": "invalid BCD nibble",
+      "declared_inputs": {
+        "raw": "0xFA"
+      },
+      "closed_form_or_type_domain": "10+15*10=160",
+      "conditional_result": "arithmetic result160 but nibble validity false; actual sample unknown",
+      "evidence_ids": [
+        "RTC104-E067",
+        "RTC104-E068",
+        "RTC104-E069",
+        "RTC104-E070"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M03",
+      "title": "hypothetical binary-mode byte",
+      "declared_inputs": {
+        "raw": "0x16"
+      },
+      "closed_form_or_type_domain": "BCD interpretation16 vs binary integer22",
+      "conditional_result": "conditional mismatch; control mode not read",
+      "evidence_ids": [
+        "RTC104-E049",
+        "RTC104-E050",
+        "RTC104-E067",
+        "RTC104-E072"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M04",
+      "title": "two-digit year69",
+      "declared_inputs": {
+        "bcd_year": "0x69"
+      },
+      "closed_form_or_type_domain": "decoded69+100+1900=2069",
+      "conditional_result": "epoch calendar year2069 only under BCD and no century override",
+      "evidence_ids": [
+        "RTC104-E074",
+        "RTC104-E085"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M05",
+      "title": "two-digit year70",
+      "declared_inputs": {
+        "bcd_year": "0x70"
+      },
+      "closed_form_or_type_domain": "decoded70+1900=1970",
+      "conditional_result": "epoch calendar year1970 only under stated interpretation",
+      "evidence_ids": [
+        "RTC104-E074",
+        "RTC104-E085"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M06",
+      "title": "month byte zero",
+      "declared_inputs": {
+        "bcd_month": "0x00"
+      },
+      "closed_form_or_type_domain": "decoded0 then tm_mon--=-1 and converter mon0=0",
+      "conditional_result": "rtc_valid_tm would reject if invoked; actual converter path does not validate",
+      "evidence_ids": [
+        "RTC104-E073",
+        "RTC104-E075",
+        "RTC104-E079",
+        "RTC104-E085"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M07",
+      "title": "valid 2000 leap date",
+      "declared_inputs": {
+        "year": 2000,
+        "month": 2,
+        "day": 29
+      },
+      "closed_form_or_type_domain": "2000%400=0, Feb length29",
+      "conditional_result": "validator would accept; 2000-02-29 UTC calendar epoch951782400 under legal mktime types",
+      "evidence_ids": [
+        "RTC104-E076",
+        "RTC104-E077",
+        "RTC104-E078",
+        "RTC104-E079",
+        "RTC104-E085",
+        "RTC104-E087",
+        "RTC104-E088"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M08",
+      "title": "invalid 2001 leap date",
+      "declared_inputs": {
+        "year": 2001,
+        "month": 2,
+        "day": 29
+      },
+      "closed_form_or_type_domain": "2001%4!=0, Feb length28",
+      "conditional_result": "validator would reject; unchecked calendar arithmetic can normalize to March1 conditional",
+      "evidence_ids": [
+        "RTC104-E076",
+        "RTC104-E077",
+        "RTC104-E078",
+        "RTC104-E079",
+        "RTC104-E080",
+        "RTC104-E085"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M09",
+      "title": "1970 Jan origin",
+      "declared_inputs": {
+        "year0": 1970,
+        "mon0": 1,
+        "mday": 1
+      },
+      "closed_form_or_type_domain": "unsigned mon-2 wraps UINT_MAX then (int) cast implementation-defined",
+      "conditional_result": "under common two-complement cast branch mon11 year1969 => epoch0; not unconditional C",
+      "evidence_ids": [
+        "RTC104-E086",
+        "RTC104-E087",
+        "RTC104-E088",
+        "RTC104-E089",
+        "RTC104-E103"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M10",
+      "title": "2000 Feb29 epoch",
+      "declared_inputs": {
+        "year0": 2000,
+        "mon0": 2,
+        "mday": 29
+      },
+      "closed_form_or_type_domain": "mon2-2=0 then mon12 year1999, epoch day11016",
+      "conditional_result": "951782400 seconds under valid types and date",
+      "evidence_ids": [
+        "RTC104-E086",
+        "RTC104-E087",
+        "RTC104-E088",
+        "RTC104-E089"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M11",
+      "title": "2000 Mar01 epoch",
+      "declared_inputs": {
+        "year0": 2000,
+        "mon0": 3,
+        "mday": 1
+      },
+      "closed_form_or_type_domain": "mon3-2=1 non-JanFeb, epoch day11017",
+      "conditional_result": "951868800 seconds under valid types and date",
+      "evidence_ids": [
+        "RTC104-E086",
+        "RTC104-E087",
+        "RTC104-E088",
+        "RTC104-E089"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M12",
+      "title": "local_clock signed argument",
+      "declared_inputs": {
+        "opaque_return_u64": "9223372036854775808"
+      },
+      "closed_form_or_type_domain": "u64 > S64_MAX cast into s64 ns_to_timespec64 parameter",
+      "conditional_result": "implementation-defined before helper; no native_sched_clock model run",
+      "evidence_ids": [
+        "RTC104-E027",
+        "RTC104-E028",
+        "RTC104-E093",
+        "RTC104-E102"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M13",
+      "title": "negative -1 two-stage unary",
+      "declared_inputs": {
+        "nsec_s64": "-1"
+      },
+      "closed_form_or_type_domain": "signed -nsec-1=0; u64 quotient0; outer u64 -0-1=UINT64_MAX",
+      "conditional_result": "signed tv_sec -1 requires out-of-range unsigned-to-signed implementation choice",
+      "evidence_ids": [
+        "RTC104-E029",
+        "RTC104-E030"
+      ],
+      "hardware_or_source_executed": false
+    },
+    {
+      "id": "RTC104-M14",
+      "title": "non-null oldclock shift0",
+      "declared_inputs": {
+        "old_clock": "nonNULL",
+        "shift_change": 0
+      },
+      "closed_form_or_type_domain": "raw and mono compound assignments <<=0 occur",
+      "conditional_result": "fields written even if numeric value unchanged; null branch skips",
+      "evidence_ids": [
+        "RTC104-E024",
+        "RTC104-E025"
+      ],
+      "hardware_or_source_executed": false
+    }
+  ],
+  "finite_model_count": 14,
+  "read_ledger": {
+    "new_full": [
+      "148 contract @40725302f9ee",
+      "102 partial closure @40725302f9ee",
+      "103 independent review @40725302f9ee",
+      "2026-11-19 timekeeping103 reviewed RTC104 checkpoint @40725302f9ee",
+      "C07 publication issuecomment 6996626151",
+      "103 author issuecomment 6983342388",
+      "protocol v2 all P1-P13",
+      "63 retry rule",
+      "110 and 124"
+    ],
+    "same_actor_reuse": [
+      "nine MyOS2 constraints independently fully read in this continuing conversation",
+      "102 six source results read in prior same conversation; fixed/active same full content and blobs now reconfirmed",
+      "103 six source results read in prior same conversation; fixed/active same full content and blobs now reconfirmed"
+    ],
+    "source_quote_path_count": 26,
+    "source_quote_paths": [
+      "mykernel/scripts/options_flags.cmake",
+      "mykernel/time/clocksource/clocksource.c",
+      "mykernel/arch/x86_64/kernel/hpet.c",
+      "mykernel/time/systick/systick_const.h",
+      "mykernel/time/clocksource/clocksource_macro.h",
+      "mykernel/include/linux/init/init.h",
+      "mykernel/time/clocksource/clocksource_types.h",
+      "mykernel/time/timekeeping/timekeeping_types.h",
+      "mykernel/time/timekeeping/timekeeping.c",
+      "mykernel/include/linux/sched/clock.h",
+      "mykernel/time/misc/time_misc.c",
+      "mykernel/include/linux/kernel/math64.h",
+      "mykernel/arch/x86_64/kernel/rtc.c",
+      "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "mykernel/drivers/rtc/rtc-mc146818.c",
+      "mykernel/include/linux/kernel/mc146818rtc.h",
+      "mykernel/include/uapi/linux/rtc.h",
+      "mykernel/arch/x86_64/insns/io_arch.h",
+      "mykernel/include/linux/kernel/bcd.h",
+      "mykernel/lib/bcd.c",
+      "mykernel/drivers/rtc/lib.c",
+      "mykernel/include/linux/kernel/rtc.h",
+      "mykernel/time/time_type_declaration.h",
+      "mykernel/time/misc/time_misc_types.h",
+      "mykernel/time/misc/time_misc.h",
+      "mykernel/include/linux/kernel/types.h"
+    ],
+    "full_core_source_fetches": [
+      "mykernel/arch/x86_64/kernel/rtc.c",
+      "mykernel/drivers/rtc/rtc-mc146818.c",
+      "mykernel/arch/x86_64/include/asm/mc146818rtc.h",
+      "mykernel/include/linux/kernel/mc146818rtc.h",
+      "mykernel/include/uapi/linux/rtc.h",
+      "mykernel/drivers/rtc/lib.c",
+      "mykernel/include/linux/kernel/bcd.h",
+      "mykernel/lib/bcd.c",
+      "mykernel/time/misc/time_misc.c",
+      "mykernel/time/timekeeping/timekeeping.c",
+      "mykernel/include/linux/sched/clock.h"
+    ],
+    "scoped_real_definition_reads": [
+      "mykernel/arch/x86_64/include/asm/insns.h",
+      "mykernel/arch/x86_64/insns/insns_arch_api.h",
+      "mykernel/arch/x86_64/insns/io_arch.h",
+      "mykernel/time/clocksource/clocksource.c",
+      "mykernel/time/clocksource/clocksource.h",
+      "mykernel/time/clocksource/clocksource_const.h",
+      "mykernel/time/clocksource/clocksource_api.h",
+      "mykernel/time/clocksource/clocksource_types.h",
+      "mykernel/time/time_const.h",
+      "mykernel/time/time_type_declaration.h",
+      "mykernel/time/timekeeping/timekeeping_types.h",
+      "mykernel/time/misc/time_misc_types.h",
+      "mykernel/include/linux/kernel/math64.h"
+    ],
+    "meaning": "listed as actually fetched and read for relevant windows; not asserting full-file semantic audit"
+  },
+  "self_check": {
+    "verified_claims": 104,
+    "quotes_reconfirmed": 104,
+    "downgraded_to_inferred": 0,
+    "raw_total_expected": 104,
+    "full_local_P9": "NOT_RUN"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}
