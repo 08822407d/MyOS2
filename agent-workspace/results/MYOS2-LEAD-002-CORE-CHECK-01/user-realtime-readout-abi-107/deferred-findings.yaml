@@ -1,0 +1,256 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-REALTIME-READOUT-ABI-107",
+  "source_pin_short12": "a039d9803ade",
+  "record_type": "source_bounded_conditionals_and_gaps",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "R105_01": "OPEN",
+  "R105_02": "CLOSED_DOCUMENTATION_ONLY",
+  "R106_01": "OPEN",
+  "R106_02": "OPEN",
+  "batch105": "RETURN",
+  "batch106": "RETURN",
+  "old_roots_preserved": [
+    {
+      "source": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105",
+      "refs": [
+        "SC105-F01..F08",
+        "SC105-U01..U08"
+      ],
+      "disposition": "frozen; R105-01 remains partial open"
+    },
+    {
+      "source": "CORE-USER-BOOT-DELAY-ACCOUNTING-106",
+      "refs": [
+        "BD106-F01..F06",
+        "BD106-U01..U06"
+      ],
+      "disposition": "frozen; D00 corrections submitted not closed"
+    },
+    {
+      "source": "CORE-USER-HPET-ENABLE-CLOCKSOURCE-102",
+      "refs": [
+        "HC102-F/U"
+      ],
+      "disposition": "existing HPET conditional bounds, not new proven defect"
+    },
+    {
+      "source": "CORE-USER-UACCESS-COPY-63",
+      "refs": [
+        "UC63-S01",
+        "R63-01"
+      ],
+      "disposition": "copy boundary retained; R63-01 independent documentation closure already effective"
+    },
+    {
+      "source": "CORE-USER-TIMEKEEPING-READOUT-103",
+      "refs": [
+        "TK103 review restrictions"
+      ],
+      "disposition": "source bounds reused, not a new timekeeper review"
+    }
+  ],
+  "new_conditional_candidates": [
+    {
+      "id": "RT107-F01",
+      "title": "Real wall-clock sample reads tk fields without active seqcount retry in inspected body",
+      "classification": "STATIC_CONCURRENCY_CONDITIONAL",
+      "evidence_refs": [
+        "RT107-E071",
+        "RT107-E072",
+        "RT107-E073"
+      ],
+      "premise": "Concurrently updated timekeeper fields are possible; selected build uses this body",
+      "conditional_impact": "Independently read sec/nsecs might not be coherent; no mixed sample observed",
+      "first_unverified_step": "Actual execution/locking path and concurrent update experiment",
+      "severity": "undetermined",
+      "status": "NEEDS_EVIDENCE",
+      "actual_failure_observed": false
+    },
+    {
+      "id": "RT107-F02",
+      "title": "Non-null tz argument is not populated by inspected gettimeofday body",
+      "classification": "SOURCE_ABI_COMPATIBILITY_CANDIDATE",
+      "evidence_refs": [
+        "RT107-E059",
+        "RT107-P03"
+      ],
+      "premise": "Caller provides tz and expects traditional timezone fields",
+      "conditional_impact": "Body has commented tz copy and returns zero; behavior outside normal tv-only workload needs scoped review",
+      "first_unverified_step": "Userspace contract and any other timezone binding/compat code",
+      "severity": "undetermined",
+      "status": "DEFERRED_OWNER_NOT_READY",
+      "actual_failure_observed": false
+    },
+    {
+      "id": "RT107-F03",
+      "title": "Simple put_user macro is direct store and -ENOERR, not proof of invalid pointer safety",
+      "classification": "USER_POINTER_SAFETY_GAP",
+      "evidence_refs": [
+        "RT107-E058",
+        "RT107-E088"
+      ],
+      "premise": "Invalid user pointer case excluded from present contract",
+      "conditional_impact": "Macro body lacks explicit fault-safe branch; do not claim EFAULT always returned on invalid pointer",
+      "first_unverified_step": "Real exception handling, page mapping and user memory fault test with separate authorization",
+      "severity": "unknown",
+      "status": "NEEDS_EVIDENCE",
+      "actual_failure_observed": false
+    },
+    {
+      "id": "RT107-F04",
+      "title": "Negative clockid branch has a while(1) in clockid_to_kclock",
+      "classification": "OUT_OF_SCOPE_SOURCE_CANDIDATE",
+      "evidence_refs": [
+        "RT107-E068",
+        "RT107-E069"
+      ],
+      "premise": "clockid < 0, unlike this batch CLOCK_REALTIME=0",
+      "conditional_impact": "Potential lack of normal return on negative id; no dynamic clock test performed",
+      "first_unverified_step": "Independent later contract on dynamic clock IDs and error semantics",
+      "severity": "undetermined",
+      "status": "DEFERRED_OWNER_NOT_READY",
+      "actual_failure_observed": false
+    },
+    {
+      "id": "RT107-F05",
+      "title": "User copy completion is conditional on access_ok and raw_copy_to_user contract",
+      "classification": "COPY_RESIDUAL_CONDITION",
+      "evidence_refs": [
+        "RT107-E087",
+        "RT107-E089",
+        "RT107-E090"
+      ],
+      "premise": "tp is valid mapped writable and copy path returns 0 remainder",
+      "conditional_impact": "Successful output needs more than valid source struct; no arbitrary user address guarantee",
+      "first_unverified_step": "Use accepted 63/64 copy readout boundary; future runtime user-copy validation",
+      "severity": "undetermined",
+      "status": "NEEDS_EVIDENCE",
+      "actual_failure_observed": false
+    },
+    {
+      "id": "RT107-F06",
+      "title": "ABI layout and timestamp field conversion remain conditional on actual 64-bit type and alignment",
+      "classification": "ABI_LAYOUT_AND_VALUE_DOMAIN",
+      "evidence_refs": [
+        "RT107-E081",
+        "RT107-E082",
+        "RT107-E083",
+        "RT107-E084",
+        "RT107-E085",
+        "RT107-E086"
+      ],
+      "premise": "long and long long are 64bit and normally aligned as assumed",
+      "conditional_impact": "Expected 16B examples are logical ABI models, not measured sizeof; overflow/truncation outside normal samples unexamined",
+      "first_unverified_step": "Actual x86-64 toolchain sizeof/alignof, compiled syscall wrappers and user ABI",
+      "severity": "undetermined",
+      "status": "NEEDS_EVIDENCE",
+      "actual_failure_observed": false
+    }
+  ],
+  "new_evidence_gaps": [
+    {
+      "id": "RT107-U01",
+      "topic": "Actual preprocessor and linked wrapper entry chain",
+      "needed": "Proof of __x64_sys_*, __se_sys_* and __do_sys_* expansion/link and switch use",
+      "evidence_refs": [
+        "RT107-E041",
+        "RT107-E046",
+        "RT107-E047",
+        "RT107-E053",
+        "RT107-E054",
+        "RT107-E055"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "RT107-U02",
+      "topic": "Real CLOCK_REALTIME selection and clocksource field population",
+      "needed": "Runtime posix clock array, pointers, active timekeeper clocksource and actual read value",
+      "evidence_refs": [
+        "RT107-E064",
+        "RT107-E066",
+        "RT107-E067",
+        "RT107-E069",
+        "RT107-E077"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "RT107-U03",
+      "topic": "Timekeeper concurrency and normalized read precision",
+      "needed": "Actual lock/seqcount state, timebase updates, CPU cycle and precision observations",
+      "evidence_refs": [
+        "RT107-E071",
+        "RT107-E072",
+        "RT107-E073",
+        "RT107-E078",
+        "RT107-E080"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "RT107-U04",
+      "topic": "User memory write/fault status",
+      "needed": "User pointer mapping, put_user generated code, copy_to_user residual behavior and actual EFAULT path",
+      "evidence_refs": [
+        "RT107-E058",
+        "RT107-E087",
+        "RT107-E088",
+        "RT107-E089",
+        "RT107-E090"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "RT107-U05",
+      "topic": "Actual type layout on target ABI",
+      "needed": "Preprocessor-selected typedefs and sizeof/alignof on configured target, no target build executed",
+      "evidence_refs": [
+        "RT107-E081",
+        "RT107-E082",
+        "RT107-E083",
+        "RT107-E084",
+        "RT107-E085"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "RT107-U06",
+      "topic": "C07 independent adjudication of 105/106 documentation corrections",
+      "needed": "Pro reviewer readback of D00 rows, source line anchors, consumer table and old graph correction statuses",
+      "evidence_refs": [
+        "RT107-E001",
+        "RT107-E002",
+        "RT107-E003",
+        "RT107-E005",
+        "RT107-E007",
+        "RT107-E031",
+        "RT107-E032",
+        "RT107-E035",
+        "RT107-E036"
+      ],
+      "status": "PENDING_C07_REVIEW"
+    }
+  ],
+  "counts": {
+    "candidates": 6,
+    "gaps": 6
+  },
+  "local_checks": {
+    "source_text_read": "GitHub connector",
+    "full_local_P9": "NOT_RUN",
+    "preprocessor": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "repository_code_execution": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "user_memory_experiment": "NOT_RUN"
+  },
+  "work_boundary": "No kernel changes, no patch, no side branch/PR, no runtime proof and no self-closure of mainline RETURN items."
+}
