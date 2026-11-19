@@ -1,0 +1,286 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMER-BASE-FORWARDING-110",
+  "record_type": "conditional_findings_and_deferred_evidence",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "c06abde41e91",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical_C07_states": {
+    "R108_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R108_02": "OPEN",
+    "R109_01": "OPEN",
+    "R109_02": "OPEN",
+    "batch108": "RETURN",
+    "batch109": "RETURN"
+  },
+  "old_roots_preserved": [
+    {
+      "source": "CORE-USER-TIMER-WHEEL-PLACEMENT-109",
+      "fixed": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/deferred-findings.yaml@3b2efdee5d85",
+      "ids": "TW109-F01..F07 and TW109-U01..U07",
+      "disposition": "historical conditionals unchanged; TW109-U01 base provenance is current analysis entry but runtime pending"
+    },
+    {
+      "source": "CORE-USER-DURATION-TICK-CONVERSION-108",
+      "fixed": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/deferred-findings.yaml@a8436da2c2b3",
+      "ids": "DT108-F01..F06 and DT108-U01..U06",
+      "disposition": "historical items preserved; R108-02 documentation correction pending C07"
+    },
+    {
+      "source": "CORE-USER-REALTIME-READOUT-ABI-107",
+      "fixed": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/deferred-findings.yaml@988632b3757e",
+      "ids": "RT107-F01..F06 and RT107-U01..U06",
+      "disposition": "no new runtime claim"
+    },
+    {
+      "source": "CORE-USER-SCHEDULE-TIMEOUT-50 and CORE-USER-WAIT-WAKE-CONSISTENCY-52",
+      "fixed": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-SCHEDULE-TIMEOUT-50-review.md@c06abde41e91",
+      "ids": "ST50/R50 and WW52/closure historic review",
+      "disposition": "existing timeout and wait/wake conditions only, not reimplemented"
+    }
+  ],
+  "new_conditional_candidates": [
+    {
+      "id": "TB110-F01",
+      "title": "LOCAL/GLOBAL and perCPU base object binding is not established from inspected declarations",
+      "classification": "BASE_OBJECT_PROVENANCE_GAP",
+      "source_ids": [
+        "TB110-E008",
+        "TB110-E010",
+        "TB110-E012",
+        "TB110-P01"
+      ],
+      "premise": "target source expresses timer_bases[BASE_LOCAL/GLOBAL] and per_cpu_ptr helpers",
+      "conditional_implication": "selector expression can be analyzed but numeric enum, actual perCPU storage and link-time definitions not yet shown",
+      "first_unverified_step": "target definition and build inspection under later authorization",
+      "actual_bug_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "TB110-F02",
+      "title": "Lock flags sampling can retry when migrating or when exact flags change",
+      "classification": "LOCK_CONCURRENCY_BOUNDARY",
+      "source_ids": [
+        "TB110-E013",
+        "TB110-E014",
+        "TB110-E015",
+        "TB110-E016"
+      ],
+      "premise": "other CPU modifies flags or migration bit",
+      "conditional_implication": "function loops and requests cpu_relax; success and fairness cannot be inferred from single-thread trace",
+      "first_unverified_step": "actual lock implementation and concurrency trace",
+      "actual_bug_observed": false,
+      "status": "DEFERRED"
+    },
+    {
+      "id": "TB110-F03",
+      "title": "WARN_ON_ONCE selected macro is a condition passthrough",
+      "classification": "SOURCE_CONTROL_FLOW_DIFFERENCE",
+      "source_ids": [
+        "TB110-E002",
+        "TB110-E029",
+        "TB110-E032"
+      ],
+      "premise": "fixed CMake CONFIG_BUG option applied and this header selected",
+      "conditional_implication": "next_expiry earlier than old clk triggers conditional early return, not proven diagnostic emission",
+      "first_unverified_step": "actual preprocessor and runtime input",
+      "actual_bug_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "TB110-F04",
+      "title": "Forwarded clock can be written with the same numerical value",
+      "classification": "FIELD_WRITE_VS_VALUE_CHANGE",
+      "source_ids": [
+        "TB110-E027",
+        "TB110-E029",
+        "TB110-E030"
+      ],
+      "premise": "old clk1000,basej1010,next_expiry1000",
+      "conditional_implication": "else writes base.clk=1000 even though its value remains unchanged; source write distinct from early return",
+      "first_unverified_step": "actual store visibility and concurrents",
+      "actual_bug_observed": false,
+      "status": "SOURCE_OBSERVATION"
+    },
+    {
+      "id": "TB110-F05",
+      "title": "Same-bucket change updates expires but does not request requeue in inspected branch",
+      "classification": "TIMER_INDEX_REUSE_SCOPE",
+      "source_ids": [
+        "TB110-E045",
+        "TB110-E046",
+        "TB110-E047"
+      ],
+      "premise": "pending old/new absolute expires map to same idx at forwarded clk",
+      "conditional_implication": "old bucket effective expiry still groups the timer; source returns ret1 without detach/reinsert",
+      "first_unverified_step": "actual scheduler timeout semantics and runtime timer expiry",
+      "actual_bug_observed": false,
+      "status": "CONDITIONAL_SOURCE_OBSERVATION"
+    },
+    {
+      "id": "TB110-F06",
+      "title": "PENDING_ONLY inactive request may still forward base prior to return0",
+      "classification": "RETURN_VALUE_SIDE_EFFECT_SCOPE",
+      "source_ids": [
+        "TB110-E048",
+        "TB110-E049",
+        "TB110-E050",
+        "TB110-E054"
+      ],
+      "premise": "inactive timer with valid callback, normal branch entered and forward succeeds",
+      "conditional_implication": "no expiry assignment or insertion requested, but base clock may have changed; ret0 not no-side-effect guarantee",
+      "first_unverified_step": "runtime base state and lock",
+      "actual_bug_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "TB110-F07",
+      "title": "Precomputed index reuse tests clock value not base pointer identity",
+      "classification": "BASE_IDENTITY_COMPARISON_SCOPE",
+      "source_ids": [
+        "TB110-E018",
+        "TB110-E019",
+        "TB110-E020",
+        "TB110-E053"
+      ],
+      "premise": "migration path can change base and both base clocks compare numerically equal",
+      "conditional_implication": "source chooses reuse by idx sentinel and numeric clk equality, so pointer identity is not established by that conditional",
+      "first_unverified_step": "real migration and base initialization behavior",
+      "actual_bug_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "TB110-F08",
+      "title": "lock_timer_base signature annotation and actual timer_list fields require build verification",
+      "classification": "TYPE_AND_ANNOTATION_SCOPE",
+      "source_ids": [
+        "TB110-P02",
+        "TB110-E021"
+      ],
+      "premise": "__acquires annotation mentions timer->base->lock while inspected timer_list fields list entry/expires/function/flags",
+      "conditional_implication": "cannot assert preprocessing/typechecking succeeds or report a compile error without real compiler and macro resolution",
+      "first_unverified_step": "actual __acquires macro expansion and target build",
+      "actual_bug_observed": false,
+      "status": "DEFERRED"
+    }
+  ],
+  "new_evidence_gaps": [
+    {
+      "id": "TB110-U01",
+      "topic": "Actual timer_bases storage and selected base enum numbering",
+      "needed": "Precise BASE_LOCAL/BASE_GLOBAL/NR_BASES definitions, perCPU address layout, and link result",
+      "refs": [
+        "TB110-P01",
+        "TB110-E008",
+        "TB110-E010"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TB110-U02",
+      "topic": "Timer base lock/flags concurrent consistency",
+      "needed": "Real READ_ONCE and spinlock atomicity, migration interleavings, stalled-writer progress",
+      "refs": [
+        "TB110-E013",
+        "TB110-E015",
+        "TB110-E016"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TB110-U03",
+      "topic": "Clock source samples and timer expiry updates",
+      "needed": "Actual jiffies at schedule_timeout and later READ_ONCE(jiffies), next_expiry state, asynchronous update writers",
+      "refs": [
+        "TB110-E027",
+        "TB110-E028",
+        "TB110-E031",
+        "TW109-E006"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TB110-U04",
+      "topic": "Actual CONFIG_BUG and active WARN_ON_ONCE macro",
+      "needed": "Preprocessor-expanded warning definition and generated control flow; current source macro returns raw condition",
+      "refs": [
+        "TB110-E002",
+        "TB110-E032",
+        "TB110-P06",
+        "TB110-P07"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TB110-U05",
+      "topic": "Real timer pending index and list node lifecycle",
+      "needed": "Selected hlist pointers, timer_get_idx flags and detach enqueue under concurrent timer expiration",
+      "refs": [
+        "TB110-E038",
+        "TB110-E045",
+        "TB110-E058",
+        "TB110-E059",
+        "TB110-E060"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TB110-U06",
+      "topic": "Same/different bucket actual expiry and callback",
+      "needed": "Runtime queue traversal and hrtimer/timer callback path, not infer from expires or idx equality",
+      "refs": [
+        "TB110-E046",
+        "TB110-E047",
+        "TB110-E053"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TB110-U07",
+      "topic": "Actual target build/link, local P9 and Graphviz",
+      "needed": "Target preprocessing/compiling/linker of timer source and annotation macros, full P9, Graphviz, QEMU, physical CPU/IRQ",
+      "refs": [
+        "TB110-E001",
+        "TB110-E003",
+        "TB110-P02"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TB110-U08",
+      "topic": "C07 Pro audit of three open documentation issues",
+      "needed": "R108-02 full put_user condition and exact original107 endpoints, R109-01 tables/models and types, R109-02 true forward/trigger call owners",
+      "refs": [
+        "TB110-E071",
+        "TB110-E072",
+        "TB110-E073",
+        "TB110-E033",
+        "TB110-E034",
+        "TB110-P05"
+      ],
+      "status": "PENDING_C07_REVIEW"
+    }
+  ],
+  "counts": {
+    "candidates": 8,
+    "gaps": 8
+  },
+  "local_activity": {
+    "fixed_source_read": "GitHub connector",
+    "manual_integer_models": "12 bounded paper examples only",
+    "complete_local_P9": "NOT_RUN",
+    "preprocessor": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "kernel_or_emulator": "NOT_RUN",
+    "real_concurrency": "NOT_RUN"
+  },
+  "scope": "No kernel changes, no side PR, no temporary branches, no runtime bug certificate and no author closure of C07 RETURN items."
+}

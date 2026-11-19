@@ -1,0 +1,1857 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMER-BASE-FORWARDING-110",
+  "record_type": "bounded_timer_base_forwarding_facts",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "c06abde41e91",
+  "exec_parent_short12": "3b2efdee5d85",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical_status": {
+    "R108_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R108_02": "OPEN",
+    "R109_01": "OPEN",
+    "R109_02": "OPEN",
+    "batch108": "RETURN",
+    "batch109": "RETURN"
+  },
+  "D00_exact_source_and_consumer_corrections": [
+    {
+      "id": "108A",
+      "issue": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/timer-wheel-placement-paths.dot@3b2efdee5d85",
+      "old_consumer": "firstok -> putus L155",
+      "correction": "The second put_user expression is evaluated only if first put_user normally returns0, with valid nonNULL tv; new DOT label must contain all three IDs and full Chinese conditional text",
+      "source_ids": [
+        "TB110-E071",
+        "TB110-E072",
+        "TB110-E073",
+        "TW109-E059",
+        "DT108-E016",
+        "DT108-E010"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/time/syscall.c#LNaN-L19",
+        "time@a039d9803ade:mykernel/arch/x86_64/include/asm/uaccess.h#LNaN-L191",
+        "time@a039d9803ade:mykernel/include/uapi/asm-generic/errno-base.h#LNaN-L5",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E059",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E010"
+      ]
+    },
+    {
+      "id": "108B",
+      "issue": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/timer-wheel-placement-paths.dot@3b2efdee5d85",
+      "old_consumer": "gt -> putus L153",
+      "correction": "Original source expression uses a second macro, but its actual evaluation is gated by valid tv and first-success; annotate lexical use separately from conditional execution",
+      "source_ids": [
+        "TB110-E071",
+        "TB110-E072",
+        "TB110-E073",
+        "RT107-E057"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/time/syscall.c#LNaN-L19",
+        "time@a039d9803ade:mykernel/arch/x86_64/include/asm/uaccess.h#LNaN-L191",
+        "time@a039d9803ade:mykernel/include/uapi/asm-generic/errno-base.h#LNaN-L5",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E057"
+      ]
+    },
+    {
+      "id": "108C",
+      "issue": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/timer-wheel-placement-paths.dot@3b2efdee5d85",
+      "old_consumer": "cfgwrapper -> sysguard L148",
+      "correction": "Use TW109-E001 or new TB110-E001 (CONFIG wrapper), not TW109-E002 (HZ); positive syscalls.h 93-102 include, separate inverse prototype gate 314-317; cannot say only affects",
+      "source_ids": [
+        "TB110-E001",
+        "TB110-E003",
+        "TB110-P08",
+        "TB110-P09",
+        "TW109-E001",
+        "DT108-P08"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/scripts/options_flags.cmake#LNaN-L65",
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#LNaN-L9",
+        "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P08",
+        "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P09",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E001",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P08"
+      ]
+    },
+    {
+      "id": "108D",
+      "issue": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "R108-02-B source_ids",
+      "correction": "Replace erroneous TW109-E002 config source with wrapper option source TW109-E001/new E001; keep HZ scoped to wheel depth",
+      "source_ids": [
+        "TB110-E001",
+        "TB110-E003",
+        "TW109-E001",
+        "DT108-E001"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/scripts/options_flags.cmake#LNaN-L65",
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#LNaN-L9",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E001",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E001"
+      ]
+    },
+    {
+      "id": "108E",
+      "issue": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "LOC-R107-02-12",
+      "correction": "Explicit fixed107 DOT endpoints: ktimeread -> sample_sec (L110), ktimeread -> sample_nsec (L111), iterdiv -> sample_sec (L108), iterdiv -> sample_nsec (L109). 'iterdiv->outputs' is only shorthand",
+      "source_ids": [
+        "RT107-E072",
+        "RT107-E073",
+        "RT107-E078",
+        "RT107-E079",
+        "RT107-E080"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E072",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E073",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E078",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E079",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E080"
+      ]
+    },
+    {
+      "id": "108F",
+      "issue": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/timer-wheel-placement-paths.dot@3b2efdee5d85",
+      "old_consumer": "sysmacro -> sys_switch",
+      "correction": "Third macro definition DT108-E004 and actual switch include E006 plus both syscall instances P03/P04; no ungrounded actual linked execution",
+      "source_ids": [
+        "DT108-E004",
+        "DT108-E006",
+        "DT108-P03",
+        "DT108-P04"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E004",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P03",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P04"
+      ]
+    },
+    {
+      "id": "108G",
+      "issue": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "R108-02-D/E/F",
+      "correction": "Keep accepted split timekeeping masked delta, timer-wheel expires minus clk, iterdiv actual quotient and remainder dataflow",
+      "source_ids": [
+        "TB110-E074",
+        "TW109-E060",
+        "TW109-E061",
+        "TW109-E062",
+        "TW109-E063"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#LNaN-L199",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E060",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E061",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E062",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E063"
+      ]
+    },
+    {
+      "id": "109A",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "A08",
+      "correction": "Need schedule_timeout L796-799 showing active mod call, commented schedule and active del_timer_sync after enqueue request",
+      "source_ids": [
+        "TB110-E070",
+        "TW109-E006",
+        "RV109-Q1"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L796",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-WHEEL-PLACEMENT-109-review.md@c06abde41e91#RV109-Q1"
+      ]
+    },
+    {
+      "id": "109B",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "X08",
+      "correction": "Original model's registration alone does not establish sleep; use same L796-799 downstream deletion request",
+      "source_ids": [
+        "TB110-E070",
+        "TW109-E014",
+        "TW109-E015",
+        "RV109-Q1"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L796",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E014",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E015",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-WHEEL-PLACEMENT-109-review.md@c06abde41e91#RV109-Q1"
+      ]
+    },
+    {
+      "id": "109C",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "N06",
+      "correction": "Condition false means no trigger in this enqueue body; cite strict comparator E037 AND true-body E038 rather than only body",
+      "source_ids": [
+        "TW109-E037",
+        "TW109-E038"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E037",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E038"
+      ]
+    },
+    {
+      "id": "109D",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "N07",
+      "correction": "Trigger called from enqueue_timer earlier branch, definition P06 has commented IPI/wake lines; one call evidence not same as body",
+      "source_ids": [
+        "TW109-E037",
+        "TW109-E038",
+        "TW109-P06",
+        "RV109-Q5"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E037",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E038",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-P06",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-WHEEL-PLACEMENT-109-review.md@c06abde41e91#RV109-Q5"
+      ]
+    },
+    {
+      "id": "109E",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "G03",
+      "correction": "HZ>100 preprocessing selector at timer_const.h114 plus HZ=1000 and LVL_DEPTH9 macro; selected value alone insufficient",
+      "source_ids": [
+        "TB110-E003",
+        "TB110-P05",
+        "TW109-E002",
+        "TW109-E031",
+        "TW109-P08"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#LNaN-L9",
+        "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P05",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E002",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E031",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-P08"
+      ]
+    },
+    {
+      "id": "109F",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "G07",
+      "correction": "Level7 threshold LVL_START(7) line66 in TW109-E019; level8 threshold LVL_START(8) line68 in E020",
+      "source_ids": [
+        "TW109-E019",
+        "TW109-E020",
+        "TW109-E026"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E019",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E020",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E026"
+      ]
+    },
+    {
+      "id": "109G",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "X04",
+      "correction": "Absolute expires from schedule_timeout, relative delta selection and calc_index both needed when base moves; E035 alone insufficient",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E035",
+        "RV109-Q3"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E035",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-WHEEL-PLACEMENT-109-review.md@c06abde41e91#RV109-Q3"
+      ]
+    },
+    {
+      "id": "109H",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "C03",
+      "correction": "timer_set_idx is actual inline function, ARRAYMASK/ARRAYSHIFT are separate macros; do not relabel function as macro",
+      "source_ids": [
+        "TB110-E062",
+        "TW109-E036",
+        "TW109-E042",
+        "TW109-E043",
+        "TW109-E045",
+        "RV109-Q6"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L90",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E036",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E042",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E043",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E045",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-WHEEL-PLACEMENT-109-review.md@c06abde41e91#RV109-Q6"
+      ]
+    },
+    {
+      "id": "109I",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "N08",
+      "correction": "level1 expires1064 aligned to8 results bucket1072 only after calc_index +1; old compare E037 alone cannot derive value",
+      "source_ids": [
+        "TB110-E063",
+        "TW109-E017",
+        "TW109-E025",
+        "TW109-E035",
+        "TW109-E037"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L109",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E035",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E037"
+      ]
+    },
+    {
+      "id": "109J",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "R108-01-F",
+      "correction": "The milli return type signature is DT108-P11 and body E044; microseconds signature P12 and body E046. Prior new F row incorrectly used P12 for milliseconds",
+      "source_ids": [
+        "DT108-P11",
+        "DT108-E044",
+        "DT108-P12",
+        "DT108-E046",
+        "DR109-Q2"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P11",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E044",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P12",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E046",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-WHEEL-PLACEMENT-109-D00-108-review.md@c06abde41e91#DR109-Q2"
+      ]
+    },
+    {
+      "id": "109K",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/deferred-findings.yaml@3b2efdee5d85",
+      "old_consumer": "TW109-F01/F05/F06/F07",
+      "correction": "Retain old root identities and conditional statuses; new forwarding and trigger analysis not a runtime bug conclusion",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E015",
+        "TW109-E038",
+        "TW109-P06"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E015",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E038",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-P06"
+      ]
+    },
+    {
+      "id": "109X",
+      "issue": "R109-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/timer-wheel-placement-paths.dot@3b2efdee5d85",
+      "old_consumer": "base_lock -> base_forward L87",
+      "correction": "Only __mod_timer calls forward_timer_base at lines255/289; lock_timer_base does not. Original edge is caller source-order not direct call",
+      "source_ids": [
+        "TB110-E013",
+        "TB110-E014",
+        "TB110-E015",
+        "TB110-E033",
+        "TB110-E034",
+        "RV109-Q2"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L197",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L199",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L201",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L255",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L289",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-WHEEL-PLACEMENT-109-review.md@c06abde41e91#RV109-Q2"
+      ]
+    },
+    {
+      "id": "109Y",
+      "issue": "R109-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/timer-wheel-placement-paths.dot@3b2efdee5d85",
+      "old_consumer": "trigger -> triggerbody L145",
+      "correction": "Real trigger request from enqueue_timer strict earlier branch; trigger-to-own-body is annotation/definition scope, not a direct call",
+      "source_ids": [
+        "TW109-E037",
+        "TW109-E038",
+        "TW109-P06",
+        "RV109-Q5"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E037",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E038",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-P06",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-WHEEL-PLACEMENT-109-review.md@c06abde41e91#RV109-Q5"
+      ]
+    },
+    {
+      "id": "109Z",
+      "issue": "R109-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/timer-wheel-placement-paths.dot@3b2efdee5d85",
+      "old_consumer": "hz -> depth L98",
+      "correction": "Preprocessor HZ>100 at timer_const.h114 required separately from active LVL_DEPTH9 definition line115",
+      "source_ids": [
+        "TB110-E003",
+        "TB110-P05",
+        "TW109-E031",
+        "TW109-P08"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#LNaN-L9",
+        "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P05",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E031",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-P08"
+      ]
+    },
+    {
+      "id": "109M1",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "TW109-M01",
+      "correction": "Model geometry needs independent HZ>100 and wheel macro definitions",
+      "source_ids": [
+        "TB110-E003",
+        "TB110-P05",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E028",
+        "TW109-E031",
+        "TW109-E032"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#LNaN-L9",
+        "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P05",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E023",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E031",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E032"
+      ]
+    },
+    {
+      "id": "109M2",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "TW109-M02",
+      "correction": "Each prior model requires absolute expires origin, strict delta selector and independent calc_index values for both bucket_expiry and idx; not just a computed final number",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E028",
+        "TW109-E029",
+        "TW109-E030",
+        "TW109-E035"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E018",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E023",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E029",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E030",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E035"
+      ]
+    },
+    {
+      "id": "109M3",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "TW109-M03",
+      "correction": "Each prior model requires absolute expires origin, strict delta selector and independent calc_index values for both bucket_expiry and idx; not just a computed final number",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E028",
+        "TW109-E029",
+        "TW109-E030",
+        "TW109-E035"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E018",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E023",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E029",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E030",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E035"
+      ]
+    },
+    {
+      "id": "109M4",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "TW109-M04",
+      "correction": "Each prior model requires absolute expires origin, strict delta selector and independent calc_index values for both bucket_expiry and idx; not just a computed final number",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E028",
+        "TW109-E029",
+        "TW109-E030",
+        "TW109-E035"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E018",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E023",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E029",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E030",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E035"
+      ]
+    },
+    {
+      "id": "109M5",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "TW109-M05",
+      "correction": "Each prior model requires absolute expires origin, strict delta selector and independent calc_index values for both bucket_expiry and idx; not just a computed final number",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E028",
+        "TW109-E029",
+        "TW109-E030",
+        "TW109-E035"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E018",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E023",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E029",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E030",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E035"
+      ]
+    },
+    {
+      "id": "109M6",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "TW109-M06",
+      "correction": "Each prior model requires absolute expires origin, strict delta selector and independent calc_index values for both bucket_expiry and idx; not just a computed final number",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E028",
+        "TW109-E029",
+        "TW109-E030",
+        "TW109-E035"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E018",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E023",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E029",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E030",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E035"
+      ]
+    },
+    {
+      "id": "109M7",
+      "issue": "R109-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+      "old_consumer": "TW109-M07",
+      "correction": "Each prior model requires absolute expires origin, strict delta selector and independent calc_index values for both bucket_expiry and idx; not just a computed final number",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E028",
+        "TW109-E029",
+        "TW109-E030",
+        "TW109-E035"
+      ],
+      "premise": "fixed time source, ordinary valid objects and bounded C values; prior batch unchanged",
+      "first_unverified_step": "actual preprocessing, concurrency and hardware/CPU execution",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source_locations": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E018",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E023",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E029",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E030",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E035"
+      ]
+    }
+  ],
+  "D00_counts": {
+    "R108-02": 7,
+    "R109-01": 18,
+    "R109-02": 3
+  },
+  "old_fixed_file_ledger": {
+    "f109": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/facts-and-boundaries.yaml@3b2efdee5d85",
+    "g109": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/timer-wheel-placement-paths.dot@3b2efdee5d85",
+    "d109": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/deferred-findings.yaml@3b2efdee5d85",
+    "f108": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+    "g108": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+    "g107": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+    "f107": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+    "m107": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/MANIFEST.md@988632b3757e"
+  },
+  "D00_107_graph_LOC_R107_02_12_four_exact_endpoints": [
+    {
+      "old_doc": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+      "edge": "iterdiv -> sample_sec",
+      "line": 108,
+      "old_evidence": [
+        "RT107-E078"
+      ],
+      "new_scope": "old endpoint provenance; true final sec must combine initial sec and quotient of bounded helper"
+    },
+    {
+      "old_doc": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+      "edge": "iterdiv -> sample_nsec",
+      "line": 109,
+      "old_evidence": [
+        "RT107-E078"
+      ],
+      "new_scope": "old endpoint provenance; residual nanos depends on helper remainder"
+    },
+    {
+      "old_doc": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+      "edge": "ktimeread -> sample_sec",
+      "line": 110,
+      "old_evidence": [
+        "RT107-E072"
+      ],
+      "new_scope": "old direct edge label under-evidenced final field, use RT107-E078 and returned quotient"
+    },
+    {
+      "old_doc": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+      "edge": "ktimeread -> sample_nsec",
+      "line": 111,
+      "old_evidence": [
+        "RT107-E073"
+      ],
+      "new_scope": "old direct edge label under-evidenced final field, use RT107-E078 and returned remainder"
+    }
+  ],
+  "five_bounded_matrices": {
+    "base_selection": [
+      {
+        "id": "A01",
+        "source_ids": [
+          "TB110-E004",
+          "TB110-E007",
+          "TB110-E008",
+          "TB110-E009"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L183",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L189",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L117",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L125"
+        ],
+        "premise": "flags=5,pin off,valid explicit CPU=5",
+        "conditional_result": "TIMER_CPUMASK masks low18 bits to 5; per_cpu_ptr(timer_bases[BASE_GLOBAL],5) candidate returned",
+        "first_unverified_step": "real perCPU objects/enum binding"
+      },
+      {
+        "id": "A02",
+        "source_ids": [
+          "TB110-E004",
+          "TB110-E007",
+          "TB110-E008",
+          "TB110-E009"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L183",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L189",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L117",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L125"
+        ],
+        "premise": "flags=0x00100005, pin set, explicit cpu5",
+        "conditional_result": "same low CPU=5 but candidate becomes BASE_LOCAL index",
+        "first_unverified_step": "real allocated address"
+      },
+      {
+        "id": "A03",
+        "source_ids": [
+          "TB110-E008",
+          "TB110-E010",
+          "TB110-E012"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L117",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L131",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L145"
+        ],
+        "premise": "flags low CPU field=5, explicit CPU arg7, currentCPU assumed5",
+        "conditional_result": "get_timer_base uses CPU bits5; get_timer_cpu_base(tflags,7) uses7; this_cpu picker takes current CPU not low bits",
+        "first_unverified_step": "actual CPU and perCPU macro translation"
+      },
+      {
+        "id": "A04",
+        "source_ids": [
+          "TB110-E005",
+          "TB110-E006",
+          "TB110-E013",
+          "TB110-E014"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L184",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L185",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L197",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L199"
+        ],
+        "premise": "timer flags stable and MIGRATING absent",
+        "conditional_result": "READ_ONCE flags then get_timer_base; MIGRATING bit present skips base acquisition in that pass",
+        "first_unverified_step": "concurrent migration state"
+      },
+      {
+        "id": "A05",
+        "source_ids": [
+          "TB110-E015",
+          "TB110-E016"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L201",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L205"
+        ],
+        "premise": "valid base and spin lock succeeds; flags remain equal",
+        "conditional_result": "spin_lock_irqsave requested and exact timer->flags==tf lets return selected base; mismatch unlock and cpu_relax retries",
+        "first_unverified_step": "actual atomicity/preemption"
+      },
+      {
+        "id": "A06",
+        "source_ids": [
+          "TB110-E017",
+          "TB110-E018",
+          "TB110-E019",
+          "TB110-E020"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L296",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L306",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L310",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L313"
+        ],
+        "premise": "old base differs from new candidate, base->running_timer != timer",
+        "conditional_result": "__mod_timer marks migrating, unlocks, substitutes new base, relocks, updates flags CPU bits, then forwards new base",
+        "first_unverified_step": "real spinlock order and concurrent migration"
+      },
+      {
+        "id": "A07",
+        "source_ids": [
+          "TB110-E021",
+          "TB110-E022"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#LNaN-L75",
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#LNaN-L60"
+        ],
+        "premise": "struct type selected",
+        "conditional_result": "timer_list flags/entry/expires separate from timer_base clk/next_expiry/cpu/recalc",
+        "first_unverified_step": "sizeof and initialized value"
+      },
+      {
+        "id": "A08",
+        "source_ids": [
+          "TB110-E007",
+          "TB110-E008",
+          "TB110-E010",
+          "TB110-P23"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L189",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L117",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L131",
+          "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P23"
+        ],
+        "premise": "DEF selection source in both pickers commented",
+        "conditional_result": "inspected active selection chooses LOCAL/GLOBAL by PINNED; no active DEF selection shown in these bodies",
+        "first_unverified_step": "full build and other helpers"
+      },
+      {
+        "id": "A09",
+        "source_ids": [
+          "TB110-P01",
+          "TB110-P02"
+        ],
+        "source_paths": [
+          "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P01",
+          "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P02"
+        ],
+        "premise": "external timer_bases declaration read, no linked definition in inspected local files",
+        "conditional_result": "timer_api.h has extern timer_bases[NR_BASES], not proof of actual array layout or perCPU storage",
+        "first_unverified_step": "definition and compiler linker"
+      }
+    ],
+    "forwarding_branch": [
+      {
+        "id": "B01",
+        "source_ids": [
+          "TB110-E031",
+          "TB110-E027",
+          "TB110-E025",
+          "TB110-E026"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L174",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155",
+          "time@a039d9803ade:mykernel/time/systick/systick_macro.h#LNaN-L48",
+          "time@a039d9803ade:mykernel/time/systick/systick_macro.h#LNaN-L60"
+        ],
+        "premise": "old clk1000, sampled basej999 or1000, small unwrapped comparison",
+        "conditional_result": "time_before_eq(basej,clk) true, returns without writing clk",
+        "first_unverified_step": "jiffies sampling and actual CPU"
+      },
+      {
+        "id": "B02",
+        "source_ids": [
+          "TB110-E031",
+          "TB110-E027",
+          "TB110-E028"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L174",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162"
+        ],
+        "premise": "old clk1000,basej1010,next1020",
+        "conditional_result": "first gate false, time_after(next,basej) true; writes clk=basej1010",
+        "first_unverified_step": "actual next value"
+      },
+      {
+        "id": "B03",
+        "source_ids": [
+          "TB110-E031",
+          "TB110-E027",
+          "TB110-E028",
+          "TB110-E029",
+          "TB110-E032"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L174",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L165",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/bug.h#LNaN-L113"
+        ],
+        "premise": "old clk1000,basej1010,next999",
+        "conditional_result": "first gate false, later-than false, WARN_ON_ONCE(time_before(next,clk)) true under CONFIG_BUG active macro, returns without clk write",
+        "first_unverified_step": "actual compiler config and memory state"
+      },
+      {
+        "id": "B04",
+        "source_ids": [
+          "TB110-E027",
+          "TB110-E028",
+          "TB110-E029",
+          "TB110-E030",
+          "TB110-E032"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L165",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L167",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/bug.h#LNaN-L113"
+        ],
+        "premise": "old clk1000,basej1010,next1000",
+        "conditional_result": "second branch else, WARN condition false, performs assignment base->clk=next1000 (same numerical value but is a write)",
+        "first_unverified_step": "real store race"
+      },
+      {
+        "id": "B05",
+        "source_ids": [
+          "TB110-E027",
+          "TB110-E028",
+          "TB110-E029",
+          "TB110-E030"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L165",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L167"
+        ],
+        "premise": "old clk1000,basej1010,next1005",
+        "conditional_result": "second branch else writes clk=next1005 (earlier than sampled basej)",
+        "first_unverified_step": "real next expiry"
+      },
+      {
+        "id": "B06",
+        "source_ids": [
+          "TB110-E027",
+          "TB110-E028",
+          "TB110-E029",
+          "TB110-E030"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L165",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L167"
+        ],
+        "premise": "old clk1000,basej1010,next1010",
+        "conditional_result": "equal next/basej routes else and writes1010",
+        "first_unverified_step": "concurrency"
+      },
+      {
+        "id": "B07",
+        "source_ids": [
+          "TB110-E027",
+          "TB110-E028"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162"
+        ],
+        "premise": "old clk1000,basej1010,next1020",
+        "conditional_result": "time_after true writes sampled jiffies1010 not next1020",
+        "first_unverified_step": "real timing"
+      },
+      {
+        "id": "B08",
+        "source_ids": [
+          "TB110-E023",
+          "TB110-E024",
+          "TB110-E025",
+          "TB110-E026"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/systick/systick_macro.h#LNaN-L39",
+          "time@a039d9803ade:mykernel/time/systick/systick_macro.h#LNaN-L27",
+          "time@a039d9803ade:mykernel/time/systick/systick_macro.h#LNaN-L48",
+          "time@a039d9803ade:mykernel/time/systick/systick_macro.h#LNaN-L60"
+        ],
+        "premise": "small differences, long and ulong same width",
+        "conditional_result": "time_before_eq(a,b) delegates to time_after_eq(b,a); time_after uses signed-long from unsigned subtraction; comparisons require bounded domain",
+        "first_unverified_step": "wrap signed conversion"
+      },
+      {
+        "id": "B09",
+        "source_ids": [
+          "TB110-E002",
+          "TB110-E032",
+          "TB110-P06",
+          "TB110-P07"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/scripts/options_flags.cmake#LNaN-L66",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/bug.h#LNaN-L113",
+          "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P06",
+          "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P07"
+        ],
+        "premise": "fixed CMake CONFIG_BUG text and bug.h active macro selection",
+        "conditional_result": "WARN_ON_ONCE(condition) expands to (condition) in selected branch, not automatically a diagnostic or one-time state",
+        "first_unverified_step": "actual preprocessor"
+      },
+      {
+        "id": "B10",
+        "source_ids": [
+          "TB110-E013",
+          "TB110-E014",
+          "TB110-E015",
+          "TB110-E033",
+          "TB110-E034"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L197",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L199",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L201",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L255",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L289"
+        ],
+        "premise": "__mod_timer selected pending/normal path",
+        "conditional_result": "both branches request forward_timer_base after obtaining base and passing callback/lock gate; lock_timer_base alone never invokes forward",
+        "first_unverified_step": "runtime lock"
+      }
+    ],
+    "pending_and_options": [
+      {
+        "id": "C01",
+        "source_ids": [
+          "TB110-E035",
+          "TB110-E036",
+          "TB110-E037",
+          "TB110-E055",
+          "TB110-E056",
+          "TB110-E057"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L204",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L205",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L206",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L358",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L391",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L417"
+        ],
+        "premise": "three public wrappers selected",
+        "conditional_result": "mod_timer_pending passes PENDING_ONLY1, mod_timer passes0, timer_reduce passesREDUCE2 to __mod_timer",
+        "first_unverified_step": "actual external caller"
+      },
+      {
+        "id": "C02",
+        "source_ids": [
+          "TB110-E038",
+          "TB110-E039",
+          "TB110-E040"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L63",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L227",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L233"
+        ],
+        "premise": "pending true, options not NOTPENDING, same expires",
+        "conditional_result": "diff=0 returns1 before lock and no field update",
+        "first_unverified_step": "actual pending state and no side effects elsewhere"
+      },
+      {
+        "id": "C03",
+        "source_ids": [
+          "TB110-E039",
+          "TB110-E040",
+          "TB110-E041"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L227",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L233",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L237"
+        ],
+        "premise": "pending true REDUCE and oldexpires <= newexpires in signed small domain",
+        "conditional_result": "diff <=0 returns1; reduce request not earlier, no change/lock",
+        "first_unverified_step": "signed cast rules"
+      },
+      {
+        "id": "C04",
+        "source_ids": [
+          "TB110-E042",
+          "TB110-E043",
+          "TB110-E044"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L246",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L252",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L257"
+        ],
+        "premise": "pending true REDUCE but oldexpires<=newexpires after lock",
+        "conditional_result": "second reduce gate returns1, protects against races or later no-reduction",
+        "first_unverified_step": "concurrent changes"
+      },
+      {
+        "id": "C05",
+        "source_ids": [
+          "TB110-E045",
+          "TB110-E061"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L263",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L84"
+        ],
+        "premise": "normal pending branch after forward",
+        "conditional_result": "clk=base->clk, new idx calc_wheel_index(expires,clk), compare with timer_get_idx timer flags",
+        "first_unverified_step": "actual idx flags validity"
+      },
+      {
+        "id": "C06",
+        "source_ids": [
+          "TB110-E046",
+          "TB110-E047"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L271",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L275"
+        ],
+        "premise": "pending true, new idx equals old idx, no REDUCE",
+        "conditional_result": "timer->expires updated to proposed value, ret1, early goto without detach/reenqueue",
+        "first_unverified_step": "other timer fields unchanged by this path"
+      },
+      {
+        "id": "C07",
+        "source_ids": [
+          "TB110-E046",
+          "TB110-E047"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L271",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L275"
+        ],
+        "premise": "pending true, new idx same, REDUCE with new earlier",
+        "conditional_result": "time_after(oldexpires,newexpires) true updates expires only; ret1",
+        "first_unverified_step": "clock/wrap and actual pending"
+      },
+      {
+        "id": "C08",
+        "source_ids": [
+          "TB110-E058",
+          "TB110-E059",
+          "TB110-E060"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L159",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L164",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L169"
+        ],
+        "premise": "timer pending stable, old bucket singular",
+        "conditional_result": "detach_if_pending returns1; sets next_expiry_recalc true when singular and detaches node",
+        "first_unverified_step": "actual hlist pointer correctness"
+      },
+      {
+        "id": "C09",
+        "source_ids": [
+          "TB110-E050",
+          "TB110-E054"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L292",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L337"
+        ],
+        "premise": "timer not pending, options PENDING_ONLY, valid function",
+        "conditional_result": "detach_if_pending0 followed by PENDING_ONLY early exit; return0 and timer->expires not written; forwarding might have affected base->clk",
+        "first_unverified_step": "actual lock/forward"
+      },
+      {
+        "id": "C10",
+        "source_ids": [
+          "TB110-E049",
+          "TB110-E050",
+          "TB110-E051",
+          "TB110-E052",
+          "TB110-E053"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L286",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L292",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L296",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L321",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L328"
+        ],
+        "premise": "pending old bucket changed, no migration, same clk",
+        "conditional_result": "detach old, select current CPU base, write expires, precomputed idx reused for enqueue when idx!=UINT_MAX and clk equal",
+        "first_unverified_step": "CPU identity and actual lock"
+      }
+    ],
+    "bucket_reuse_and_recalc": [
+      {
+        "id": "D01",
+        "source_ids": [
+          "TB110-E064",
+          "TB110-E065",
+          "TB110-E066",
+          "TB110-E067",
+          "TB110-E068",
+          "TB110-E069",
+          "TB110-E063"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L51",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L56",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L105",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L97",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L110",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L111",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L109"
+        ],
+        "premise": "clk1000, old expires1064, new1065",
+        "conditional_result": "both select level1 and bucket1072 idx70, so same-bucket update with no list reenqueue under mod_timer",
+        "first_unverified_step": "timer pending true"
+      },
+      {
+        "id": "D02",
+        "source_ids": [
+          "TB110-E064",
+          "TB110-E065",
+          "TB110-E063"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L51",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L56",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L109"
+        ],
+        "premise": "clk1000, oldexpires1063 new1064",
+        "conditional_result": "old bucket1064 idx69, new bucket1072 idx70, so detachable old and enqueue new",
+        "first_unverified_step": "old idx flags match and active list"
+      },
+      {
+        "id": "D03",
+        "source_ids": [
+          "TB110-E040"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L233"
+        ],
+        "premise": "pending oldexpires1064 new1064 options0",
+        "conditional_result": "return1 early before computing bucket; no stored writes in inspected function path",
+        "first_unverified_step": "prior object pending"
+      },
+      {
+        "id": "D04",
+        "source_ids": [
+          "TB110-E041",
+          "TB110-E036"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L237",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L205"
+        ],
+        "premise": "pending old1064 new1065 REDUCE",
+        "conditional_result": "new later so early return1, expires unchanged",
+        "first_unverified_step": "normal signed difference"
+      },
+      {
+        "id": "D05",
+        "source_ids": [
+          "TB110-E044",
+          "TB110-E046",
+          "TB110-E047"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L257",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L271",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L275"
+        ],
+        "premise": "pending old1065 new1064 REDUCE",
+        "conditional_result": "after forward, old time_before_eq(new) false; idx same70; time_after(old,new) true updates expires1064 ret1",
+        "first_unverified_step": "lock/clock stable"
+      },
+      {
+        "id": "D06",
+        "source_ids": [
+          "TB110-E045",
+          "TB110-E046",
+          "TB110-E050",
+          "TB110-E053"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L263",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L271",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L292",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L328"
+        ],
+        "premise": "pending old1063 new1064, idx69 vs70, base pointer same, clk unchanged",
+        "conditional_result": "detach return1; after update expires1064 direct enqueue(base,idx70,bucket1072) without recompute",
+        "first_unverified_step": "timer/base valid"
+      },
+      {
+        "id": "D07",
+        "source_ids": [
+          "TB110-E045",
+          "TB110-E050",
+          "TB110-E051",
+          "TB110-E052",
+          "TB110-E053"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L263",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L292",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L296",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L321",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L328"
+        ],
+        "premise": "pending old1063 new1064 but original clk differs from final base->clk",
+        "conditional_result": "old idx precompute cannot be reused, internal_add_timer recalculates based on final base->clk",
+        "first_unverified_step": "actual migrated base clock"
+      },
+      {
+        "id": "D08",
+        "source_ids": [
+          "TB110-E051",
+          "TB110-E018",
+          "TB110-E019",
+          "TB110-E020"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L296",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L306",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L310",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L313"
+        ],
+        "premise": "base != new_base and not running_timer",
+        "conditional_result": "may switch pointer, rewrite CPU flags, forward selected base, then if numeric clk equal original clk may still reuse idx",
+        "first_unverified_step": "pointer identity not proved by numeric equality"
+      },
+      {
+        "id": "D09",
+        "source_ids": [
+          "TB110-E058",
+          "TB110-E059",
+          "TB110-E060"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L159",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L164",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L169"
+        ],
+        "premise": "pending detach and singular node",
+        "conditional_result": "next_expiry_recalc may become true before following enqueue; a later earlier bucket may reset false, not universally unchanged",
+        "first_unverified_step": "other bucket/list state"
+      },
+      {
+        "id": "D10",
+        "source_ids": [
+          "TB110-E038",
+          "TB110-E061",
+          "TB110-E062"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L63",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L84",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L90"
+        ],
+        "premise": "old timer idx encoded in flags and pending state validated",
+        "conditional_result": "stored idx and old expires are separate: changing expires alone in same bucket leaves flags bucket index intact",
+        "first_unverified_step": "concurrency"
+      }
+    ],
+    "cross_checks": [
+      {
+        "id": "X01",
+        "source_ids": [
+          "TB110-E008",
+          "TB110-E010",
+          "TB110-E012",
+          "TB110-E004",
+          "TB110-E007"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L117",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L131",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L145",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L183",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L189"
+        ],
+        "premise": "flags5/pin off vs flags0x00100005/pin on, explicit/current CPU valid",
+        "conditional_result": "same CPU mask5, different LOCAL/GLOBAL candidate index; no proof runtime address",
+        "first_unverified_step": "perCPU storage binding"
+      },
+      {
+        "id": "X02",
+        "source_ids": [
+          "TB110-E027",
+          "TB110-E028",
+          "TB110-E029",
+          "TB110-E030",
+          "TB110-E032"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L165",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L167",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/bug.h#LNaN-L113"
+        ],
+        "premise": "old1000,basej1010,next999/1000/1005/1010/1020",
+        "conditional_result": "warning early return/no write, assignment same, earlier next, equal next, later next respectively",
+        "first_unverified_step": "actual device state"
+      },
+      {
+        "id": "X03",
+        "source_ids": [
+          "TB110-E056",
+          "TB110-E039",
+          "TB110-E040",
+          "TB110-E045",
+          "TB110-E046",
+          "TB110-E061"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L391",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L227",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L233",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L263",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L271",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L84"
+        ],
+        "premise": "old1064,new1065,pending true, mod_timer",
+        "conditional_result": "return1 after writing expires only; idx70 identical",
+        "first_unverified_step": "actual thread/IRQ concurrency"
+      },
+      {
+        "id": "X04",
+        "source_ids": [
+          "TB110-E056",
+          "TB110-E039",
+          "TB110-E045",
+          "TB110-E050",
+          "TB110-E053",
+          "TB110-E061"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L391",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L227",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L263",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L292",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L328",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L84"
+        ],
+        "premise": "old1063,new1064,pending true, same base and clk1000",
+        "conditional_result": "idx69->70, detach then enqueue new bucket, ret1",
+        "first_unverified_step": "timer list validity"
+      },
+      {
+        "id": "X05",
+        "source_ids": [
+          "TB110-E057",
+          "TB110-E039",
+          "TB110-E041"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L417",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L227",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L237"
+        ],
+        "premise": "old1064,new1065,pending true,timer_reduce",
+        "conditional_result": "ret1 unchanged because REDUCE does not extend timer",
+        "first_unverified_step": "actual signed conversion"
+      },
+      {
+        "id": "X06",
+        "source_ids": [
+          "TB110-E055",
+          "TB110-E049",
+          "TB110-E050",
+          "TB110-E054"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L358",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L286",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L292",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L337"
+        ],
+        "premise": "old pending false, mod_timer_pending",
+        "conditional_result": "ret0 no expires assignment; still may call lock/forward",
+        "first_unverified_step": "actual lock effects"
+      },
+      {
+        "id": "X07",
+        "source_ids": [
+          "TB110-E071",
+          "TB110-E072",
+          "TB110-E073"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/time/syscall.c#LNaN-L19",
+          "time@a039d9803ade:mykernel/arch/x86_64/include/asm/uaccess.h#LNaN-L191",
+          "time@a039d9803ade:mykernel/include/uapi/asm-generic/errno-base.h#LNaN-L5"
+        ],
+        "premise": "valid tv and first put_user store success",
+        "conditional_result": "first -ENOERR=0 so OR right-hand second put_user evaluated; explicit full conditional label",
+        "first_unverified_step": "real user memory"
+      },
+      {
+        "id": "X08",
+        "source_ids": [
+          "TB110-E003",
+          "TB110-P05",
+          "TW109-E031"
+        ],
+        "source_paths": [
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#LNaN-L9",
+          "POSITION_ONLY:user-timer-base-forwarding-110/evidence.md#TB110-P05",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-wheel-placement-109/evidence.md@3b2efdee5d85#TW109-E031"
+        ],
+        "premise": "HZ1000 and independent #if HZ>100",
+        "conditional_result": "select depth9, not from HZ macro alone; old review geometry corrected",
+        "first_unverified_step": "actual preprocess"
+      }
+    ]
+  },
+  "matrix_counts": {
+    "base_selection": 9,
+    "forwarding_branch": 10,
+    "pending_and_options": 10,
+    "bucket_reuse_and_recalc": 10,
+    "cross_checks": 8
+  },
+  "total_bounded_rows": 47,
+  "paper_models": [
+    {
+      "id": "TB110-M01",
+      "label": "flags off",
+      "premise": "flags 0x00000005, cpu5",
+      "paper_result": "candidate BASE_GLOBAL at masked CPU5",
+      "source_ids": [
+        "TB110-E004",
+        "TB110-E007",
+        "TB110-E008",
+        "TB110-E012"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L183",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L189",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L117",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L145"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M02",
+      "label": "flags PINNED",
+      "premise": "flags 0x00100005, cpu5",
+      "paper_result": "candidate BASE_LOCAL at masked CPU5, low cpu bits still5",
+      "source_ids": [
+        "TB110-E004",
+        "TB110-E007",
+        "TB110-E008",
+        "TB110-E012"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L183",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L189",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L117",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L145"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M03",
+      "label": "forward earlier basej",
+      "premise": "clk1000 basej999 next1030",
+      "paper_result": "early return, no clk write, remains1000",
+      "source_ids": [
+        "TB110-E027"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M04",
+      "label": "forward equal basej",
+      "premise": "clk1000 basej1000 next1010",
+      "paper_result": "early return, no clk write, remains1000",
+      "source_ids": [
+        "TB110-E027"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L155"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M05",
+      "label": "forward inverted next",
+      "premise": "clk1000 basej1010 next999",
+      "paper_result": "warning condition true, early return, no write; remains1000",
+      "source_ids": [
+        "TB110-E029",
+        "TB110-E032"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L165",
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/bug.h#LNaN-L113"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M06",
+      "label": "forward equal old clk",
+      "premise": "clk1000 basej1010 next1000",
+      "paper_result": "warning false, assignment clk=1000 (same numeric)",
+      "source_ids": [
+        "TB110-E029",
+        "TB110-E030"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L165",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L167"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M07",
+      "label": "forward intermediate next",
+      "premise": "clk1000 basej1010 next1005",
+      "paper_result": "assignment clk=1005",
+      "source_ids": [
+        "TB110-E028",
+        "TB110-E029",
+        "TB110-E030"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L165",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L167"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M08",
+      "label": "forward next equals sample",
+      "premise": "clk1000 basej1010 next1010",
+      "paper_result": "else assignment clk=1010",
+      "source_ids": [
+        "TB110-E028",
+        "TB110-E030"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L167"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M09",
+      "label": "forward later next",
+      "premise": "clk1000 basej1010 next1020",
+      "paper_result": "time_after next true; assignment clk=basej1010",
+      "source_ids": [
+        "TB110-E028"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L162"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M10",
+      "label": "same bucket update",
+      "premise": "pending old1064 new1065,clk1000,options0",
+      "paper_result": "old and new idx70; timer.expires updated1065, return1 without requeue",
+      "source_ids": [
+        "TB110-E040",
+        "TB110-E045",
+        "TB110-E046",
+        "TB110-E047",
+        "TB110-E061",
+        "TB110-E063",
+        "TB110-E065"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L233",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L263",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L271",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L275",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L84",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L109",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L56"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M11",
+      "label": "different bucket reinsert",
+      "premise": "pending old1063 new1064,clk1000,base stable,options0",
+      "paper_result": "idx69->70, detach return1; reuse precomputed idx70, enqueue at bucket1072",
+      "source_ids": [
+        "TB110-E045",
+        "TB110-E050",
+        "TB110-E053",
+        "TB110-E063",
+        "TB110-E064",
+        "TB110-E065"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L263",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L292",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L328",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#LNaN-L109",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L51",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L56"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TB110-M12",
+      "label": "reduce refuses extension",
+      "premise": "pending old1064 new1065, options MOD_TIMER_REDUCE",
+      "paper_result": "ret1 early; expiry remains1064, no lock or detach",
+      "source_ids": [
+        "TB110-E036",
+        "TB110-E039",
+        "TB110-E040",
+        "TB110-E041"
+      ],
+      "source_paths": [
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#LNaN-L205",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L227",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L233",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#LNaN-L237"
+      ],
+      "repository_executed": false
+    }
+  ],
+  "model_count": 12,
+  "finite_model_preconditions": "simple well-typed valid objects, low nonwrapping integer differences, no real interleavings or device evidence",
+  "conditional_no_runtime": true,
+  "explicit_unverified": [
+    "TIMER_BASEMASK bitfield and pointer expressions read, but numeric BASE_GLOBAL/BASE_LOCAL enum values or timer_bases[NR_BASES] actual storage/link not established",
+    "Function signature __acquires annotation does not establish compilability; all compiling and actual spinlock effects NOT_RUN",
+    "READ_ONCE(jiffies) in forward_timer_base is a new read; not automatically equal schedule_timeout jiffies",
+    "Numeric equality of precomputed clk and selected base clk is sufficient in source for reuse, not pointer identity proof",
+    "Actual CPU address, IRQ, timekeeping/timer callbacks and concurrent interleavings NOT_RUN"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "actual_build": "NOT_RUN",
+  "actual_repository_execution": "NOT_RUN"
+}
