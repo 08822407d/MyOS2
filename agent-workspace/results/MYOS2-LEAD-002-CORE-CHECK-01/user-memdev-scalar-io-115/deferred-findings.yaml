@@ -1,0 +1,213 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-MEMDEV-SCALAR-IO-115",
+  "record_type": "bounded_deferred_findings_stage2",
+  "date": "2026-11-20",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "history": {
+    "batch112": "PASS_PENDING_LOCAL",
+    "batch113": "PASS_PENDING_LOCAL",
+    "batch114": "RETURN",
+    "R114_01": "OPEN",
+    "R114_02": "OPEN"
+  },
+  "candidates": [
+    {
+      "id": "MD115-CAND-01",
+      "topic": "R114-01",
+      "type": "DOC_CORRECTION",
+      "premise": "old E003 is mapping macro invocation not definition, 114 literal58/58 and qualified57/58",
+      "candidate": "reclassify E003, preserve E004 and E044, link config65/include/DEFINE3/actual x64 stub and se/do",
+      "anchors": [
+        "MD115-E001",
+        "MD115-E002",
+        "MD115-E003",
+        "MD115-E004",
+        "MD115-E005",
+        "MD115-E006",
+        "MD115-E007",
+        "MD115-E008",
+        "MD115-P01",
+        "MD115-P02"
+      ],
+      "first_unverified_step": "C08 independently reviews each historic consumer and macro expansion chain",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "MD115-CAND-02",
+      "topic": "R114-02",
+      "type": "DOC_CORRECTION",
+      "premise": "fd upper gate reads curr->files->fd_count before rejecting, FAT case recognises origin without guaranteeing range",
+      "candidate": "correct no-pointer claim and FAT PASS=case-only, preserve B04/B10 success and B05/06/07/11 rejection",
+      "anchors": [
+        "MD115-P07",
+        "MD115-P08",
+        "FS114-E010",
+        "FS114-E030",
+        "FS114-E031"
+      ],
+      "first_unverified_step": "C08 checks old facts keyed records and new B-case mapping",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "MD115-CAND-03",
+      "topic": "A",
+      "type": "SOURCE_MODE_GATE",
+      "premise": "vfs_read requires READ, vfs_write requires WRITE and CAN_WRITE, ordinary OPEN_FMODE yields only access bits",
+      "candidate": "ordinary O_WRONLY may stop with -EINVAL before write_null, explicit WRITE+CAN_WRITE model enters callback",
+      "anchors": [
+        "MD115-E023",
+        "MD115-E028",
+        "MD115-E038",
+        "MD115-E040",
+        "MD115-E041"
+      ],
+      "first_unverified_step": "prove all f_mode changes along complete real open to device; actual mode lifetime",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "MD115-CAND-04",
+      "topic": "A",
+      "type": "SOURCE_POSITION",
+      "premise": "file_ppos chooses NULL for STREAM, outer ksys condition ret>=0 && ppos",
+      "candidate": "nonnegative returns perform same-value commit unless callback changed local pos, negative and STREAM omit outer commit",
+      "anchors": [
+        "MD115-E014",
+        "MD115-E017",
+        "MD115-E021"
+      ],
+      "first_unverified_step": "actual callback position side effects and concurrent f_pos modifications",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "MD115-CAND-05",
+      "topic": "A",
+      "type": "VFS_DISPATCH",
+      "premise": "read_iter precedes scalar read; scalar write precedes write_iter; rw_verify_area returns0 early",
+      "candidate": "distinct branch order and 0/EBADF/EINVAL/EFAULT outcomes from shown bodies",
+      "anchors": [
+        "MD115-E026",
+        "MD115-E027",
+        "MD115-E031",
+        "MD115-E032",
+        "MD115-E033"
+      ],
+      "first_unverified_step": "compiled access_ok, fd lookup fault behavior and untested iter callbacks",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "MD115-CAND-06",
+      "topic": "B",
+      "type": "SOURCE_COUNT_UNDERREPORT",
+      "premise": "read_zero zeroes chunk before checking count==0, but cleared+=chunk occurs only on non-final iterations",
+      "candidate": "for n>0 all n bytes zeroed, reported4096*floor((n-1)/4096); last page/chunk omitted; sentinel unchanged",
+      "anchors": [
+        "MD115-E048",
+        "MD115-E049",
+        "MD115-E052",
+        "MD115-E053",
+        "MD115-E054",
+        "MD115-E055",
+        "MD115-E056"
+      ],
+      "first_unverified_step": "real memory access, actual compilation/runtime and buffer failure behavior",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "MD115-CAND-07",
+      "topic": "C",
+      "type": "DEVICE_SCALAR",
+      "premise": "null and zero scalar read/write initializers active, write_zero aliased twice to write_null",
+      "candidate": "null read0, zero read undercounts, conditional null/zero write returns n with no buffer/position change",
+      "anchors": [
+        "MD115-E057",
+        "MD115-E058",
+        "MD115-E059",
+        "MD115-E060",
+        "MD115-E061",
+        "MD115-E062"
+      ],
+      "first_unverified_step": "cdev registration and accessible runtime device file",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "MD115-CAND-08",
+      "topic": "C",
+      "type": "METHOD_ABSENCE",
+      "premise": "full_fops holds only commented methods, normal O_WRONLY has no proven CAN_WRITE",
+      "candidate": "two different -EINVAL layers: no CAN_WRITE at vfs gate or missing full write method; no active write_full claimed",
+      "anchors": [
+        "MD115-P34",
+        "MD115-E028",
+        "MD115-E065"
+      ],
+      "first_unverified_step": "actual f_mode initialization/mutation and full opened object",
+      "status": "CONDITIONAL_STATIC"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "MD115-GAP-01",
+      "topic": "R114-01",
+      "first_unverified_step": "C08 Pro checks 114 E003 classification, config line65 and generated x64 stub provenance",
+      "resume": "D00.R114_01 and original 114 evidence/facts/graph",
+      "state": "PENDING"
+    },
+    {
+      "id": "MD115-GAP-02",
+      "topic": "R114-02",
+      "first_unverified_step": "C08 Pro verifies fd_count dereference and FAT origin recognition vs candidate boundary and f_pos write",
+      "resume": "D00.R114_02 and original 114 cases",
+      "state": "PENDING"
+    },
+    {
+      "id": "MD115-GAP-03",
+      "topic": "A",
+      "first_unverified_step": "verify actual reachable fd path and object lifetime including myos_fdget_pos vs fdget_pos unguarded fd_array indexing",
+      "resume": "mykernel/fs/vfs/file.c:197–203 and include/linux/fs/file.h:51–82",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "MD115-GAP-04",
+      "topic": "A",
+      "first_unverified_step": "verify f_mode bits in complete opened null/zero/full file; prove or refute CAN_WRITE injection",
+      "resume": "mykernel/fs/vfs/file_table.c:38–64; fs/vfs/open.c:46–65",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "MD115-GAP-05",
+      "topic": "B",
+      "first_unverified_step": "compile or run read_zero with valid and failing user buffers and compare memory vs reported byte count",
+      "resume": "mykernel/drivers/char/mem.c:82–109",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "MD115-GAP-06",
+      "topic": "B",
+      "first_unverified_step": "verify PAGE_SIZE and MAX_RW_COUNT preprocessor expansion for fixed x86-64 configuration",
+      "resume": "arch/x86_64/mm/page/page_const_arch.h:8–11 and include/linux/fs/fs.h:2423",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "MD115-GAP-07",
+      "topic": "C",
+      "first_unverified_step": "confirm actual devlist cdev_add outcome, device_create, chrdev_open and file.f_op final pointer",
+      "resume": "mykernel/drivers/char/mem.c:166–208 and drivers/char/char_dev.c:65–88",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "MD115-GAP-08",
+      "topic": "P9_RUNTIME",
+      "first_unverified_step": "complete local P9, preprocess/compile/link, Graphviz, QEMU/real hardware and concurrency/access_ok validation",
+      "resume": "future separately authorized testing",
+      "state": "NOT_RUN"
+    }
+  ],
+  "recovery_authority": "Only C08 mainline independently closes D00 or authorizes execution beyond bounded static source; no kernel modifications authorized.",
+  "all_actual_runtime_checks": "NOT_RUN"
+}
