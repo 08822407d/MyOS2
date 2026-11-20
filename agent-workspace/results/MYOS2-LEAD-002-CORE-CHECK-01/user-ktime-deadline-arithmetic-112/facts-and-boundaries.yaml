@@ -1,0 +1,2627 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-KTIME-DEADLINE-ARITHMETIC-112",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-17",
+  "record_type": "bounded_static_source_facts_D00_A_B_C",
+  "date": "2026-11-20",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "source_pin": "time@a039d9803ade",
+  "execution_parent": "ab6c14299a76",
+  "lead_contract": "92d7b5af084f",
+  "historical_states": {
+    "R109_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R109_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch109": "PASS_PENDING_LOCAL",
+    "R110_01": "OPEN",
+    "R110_02": "OPEN",
+    "batch110": "RETURN",
+    "R111_01": "OPEN",
+    "R111_02": "OPEN",
+    "batch111": "RETURN"
+  },
+  "G00_before_publication": {
+    "lead": "92d7b5af084f",
+    "exec": "ab6c14299a76",
+    "time": "a039d9803ade",
+    "master": "e8e60cd19540",
+    "PR16": "OPEN_READY_NOT_MERGED",
+    "PR17": "OPEN_DRAFT_NOT_MERGED",
+    "fixed_and_active_111_six": "EXACT_TEXT_AND_BLOB_MATCH",
+    "new_112_six": "ABSENT",
+    "complete_PR17_comments_before": 208,
+    "contract_comment": 7027219383,
+    "reassignment_comment": 7028098868,
+    "author_marker_112_before": 0,
+    "canaries": "time:kernel/fno-pie/smp_processor_id; master:large/fPIE/raw_smp_processor_id"
+  },
+  "D00": {
+    "R110_01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "reconstruction": "for each frozen111.repaired_223_field_occurrences use section+record_id to read frozen110 actual row, use original field source_locations ONLY for D00; source_paths for five_bounded_matrices and paper_models. Match the ordinal of original source_ids to frozen111.source_dictionary_74, then read fixed time source path and integer closed window. Correct the 111 field key for 58 records/200 positions without touching frozen source IDs, dictionary, or earlier files.",
+      "old_ref": "user-timer-base-forwarding-110/facts-and-boundaries.yaml@d7ebfb1d5e40",
+      "old_evidence": "user-timer-base-forwarding-110/evidence.md@d7ebfb1d5e40",
+      "frozen_recovery_ref": "user-timer-arm-target-111/facts-and-boundaries.yaml@ab6c14299a76",
+      "original_110_total_records": 87,
+      "original_110_total_positions": 375,
+      "affected_records": 71,
+      "repaired_positions": 223,
+      "original_field_rows_present": 71,
+      "ID_same_ordinal_match": 223,
+      "path_same_ordinal_match": 223,
+      "old_110_dictionary_quote_match": "74/74 independently fixed-time source checked",
+      "section": {
+        "D00": {
+          "records": 13,
+          "positions": 23,
+          "original_field": "source_locations",
+          "field_key_fix_needed": 0
+        },
+        "base_selection": {
+          "records": 8,
+          "positions": 26,
+          "original_field": "source_paths",
+          "field_key_fix_needed": 26
+        },
+        "forwarding_branch": {
+          "records": 10,
+          "positions": 38,
+          "original_field": "source_paths",
+          "field_key_fix_needed": 38
+        },
+        "pending_and_options": {
+          "records": 10,
+          "positions": 31,
+          "original_field": "source_paths",
+          "field_key_fix_needed": 31
+        },
+        "bucket_reuse_and_recalc": {
+          "records": 10,
+          "positions": 35,
+          "original_field": "source_paths",
+          "field_key_fix_needed": 35
+        },
+        "cross_checks": {
+          "records": 8,
+          "positions": 33,
+          "original_field": "source_paths",
+          "field_key_fix_needed": 33
+        },
+        "models": {
+          "records": 12,
+          "positions": 37,
+          "original_field": "source_paths",
+          "field_key_fix_needed": 37
+        }
+      },
+      "first_record": {
+        "section": "D00",
+        "id": "108A",
+        "field": "source_locations",
+        "ordinal_0based": 0,
+        "source_id": "TB110-E071",
+        "path": "mykernel/time/syscall.c",
+        "line_start": 19,
+        "line_end": 22
+      },
+      "last_record": {
+        "section": "models",
+        "id": "TB110-M12",
+        "field": "source_paths",
+        "ordinal_0based": 3,
+        "source_id": "TB110-E041",
+        "path": "mykernel/time/timer/timer.c",
+        "line_start": 237,
+        "line_end": 238
+      },
+      "start_296_collision": [
+        {
+          "id": "TB110-E017",
+          "path": "mykernel/time/timer/timer.c",
+          "start": 296,
+          "end": 296
+        },
+        {
+          "id": "TB110-E051",
+          "path": "mykernel/time/timer/timer.c",
+          "start": 296,
+          "end": 298
+        }
+      ],
+      "rows_71": [
+        {
+          "section": "D00",
+          "record_id": "108A",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E071",
+            "TB110-E072",
+            "TB110-E073",
+            "TW109-E059",
+            "DT108-E016",
+            "DT108-E010"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "D00",
+          "record_id": "108B",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E071",
+            "TB110-E072",
+            "TB110-E073",
+            "RT107-E057"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "D00",
+          "record_id": "108C",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E001",
+            "TB110-E003",
+            "TB110-P08",
+            "TB110-P09",
+            "TW109-E001",
+            "DT108-P08"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "D00",
+          "record_id": "108D",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E001",
+            "TB110-E003",
+            "TW109-E001",
+            "DT108-E001"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "D00",
+          "record_id": "108G",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E074",
+            "TW109-E060",
+            "TW109-E061",
+            "TW109-E062",
+            "TW109-E063"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "D00",
+          "record_id": "109A",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E070",
+            "TW109-E006",
+            "RV109-Q1"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "D00",
+          "record_id": "109B",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E070",
+            "TW109-E014",
+            "TW109-E015",
+            "RV109-Q1"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "D00",
+          "record_id": "109E",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E003",
+            "TB110-P05",
+            "TW109-E002",
+            "TW109-E031",
+            "TW109-P08"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "D00",
+          "record_id": "109H",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E062",
+            "TW109-E036",
+            "TW109-E042",
+            "TW109-E043",
+            "TW109-E045",
+            "RV109-Q6"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "D00",
+          "record_id": "109I",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E063",
+            "TW109-E017",
+            "TW109-E025",
+            "TW109-E035",
+            "TW109-E037"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "D00",
+          "record_id": "109X",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ordered_source_ids": [
+            "TB110-E013",
+            "TB110-E014",
+            "TB110-E015",
+            "TB110-E033",
+            "TB110-E034",
+            "RV109-Q2"
+          ],
+          "recovered_count": 5
+        },
+        {
+          "section": "D00",
+          "record_id": "109Z",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E003",
+            "TB110-P05",
+            "TW109-E031",
+            "TW109-P08"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "D00",
+          "record_id": "109M1",
+          "original_field": "source_locations",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E003",
+            "TB110-P05",
+            "TW109-E023",
+            "TW109-E025",
+            "TW109-E026",
+            "TW109-E028",
+            "TW109-E031",
+            "TW109-E032"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "base_selection",
+          "record_id": "A01",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E004",
+            "TB110-E007",
+            "TB110-E008",
+            "TB110-E009"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "base_selection",
+          "record_id": "A02",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E004",
+            "TB110-E007",
+            "TB110-E008",
+            "TB110-E009"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "base_selection",
+          "record_id": "A03",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E008",
+            "TB110-E010",
+            "TB110-E012"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "base_selection",
+          "record_id": "A04",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E005",
+            "TB110-E006",
+            "TB110-E013",
+            "TB110-E014"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "base_selection",
+          "record_id": "A05",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E015",
+            "TB110-E016"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "base_selection",
+          "record_id": "A06",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E017",
+            "TB110-E018",
+            "TB110-E019",
+            "TB110-E020"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "base_selection",
+          "record_id": "A07",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E021",
+            "TB110-E022"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "base_selection",
+          "record_id": "A08",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E007",
+            "TB110-E008",
+            "TB110-E010",
+            "TB110-P23"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B01",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E031",
+            "TB110-E027",
+            "TB110-E025",
+            "TB110-E026"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B02",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E031",
+            "TB110-E027",
+            "TB110-E028"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B03",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ordered_source_ids": [
+            "TB110-E031",
+            "TB110-E027",
+            "TB110-E028",
+            "TB110-E029",
+            "TB110-E032"
+          ],
+          "recovered_count": 5
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B04",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ordered_source_ids": [
+            "TB110-E027",
+            "TB110-E028",
+            "TB110-E029",
+            "TB110-E030",
+            "TB110-E032"
+          ],
+          "recovered_count": 5
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B05",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E027",
+            "TB110-E028",
+            "TB110-E029",
+            "TB110-E030"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B06",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E027",
+            "TB110-E028",
+            "TB110-E029",
+            "TB110-E030"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B07",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E027",
+            "TB110-E028"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B08",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E023",
+            "TB110-E024",
+            "TB110-E025",
+            "TB110-E026"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B09",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E002",
+            "TB110-E032",
+            "TB110-P06",
+            "TB110-P07"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "forwarding_branch",
+          "record_id": "B10",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ordered_source_ids": [
+            "TB110-E013",
+            "TB110-E014",
+            "TB110-E015",
+            "TB110-E033",
+            "TB110-E034"
+          ],
+          "recovered_count": 5
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C01",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "ordered_source_ids": [
+            "TB110-E035",
+            "TB110-E036",
+            "TB110-E037",
+            "TB110-E055",
+            "TB110-E056",
+            "TB110-E057"
+          ],
+          "recovered_count": 6
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C02",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E038",
+            "TB110-E039",
+            "TB110-E040"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C03",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E039",
+            "TB110-E040",
+            "TB110-E041"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C04",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E042",
+            "TB110-E043",
+            "TB110-E044"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C05",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E045",
+            "TB110-E061"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C06",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E046",
+            "TB110-E047"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C07",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E046",
+            "TB110-E047"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C08",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E058",
+            "TB110-E059",
+            "TB110-E060"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C09",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E050",
+            "TB110-E054"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "pending_and_options",
+          "record_id": "C10",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ordered_source_ids": [
+            "TB110-E049",
+            "TB110-E050",
+            "TB110-E051",
+            "TB110-E052",
+            "TB110-E053"
+          ],
+          "recovered_count": 5
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D01",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "ordered_source_ids": [
+            "TB110-E064",
+            "TB110-E065",
+            "TB110-E066",
+            "TB110-E067",
+            "TB110-E068",
+            "TB110-E069",
+            "TB110-E063"
+          ],
+          "recovered_count": 7
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D02",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E064",
+            "TB110-E065",
+            "TB110-E063"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D03",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E040"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D04",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E041",
+            "TB110-E036"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D05",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E044",
+            "TB110-E046",
+            "TB110-E047"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D06",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E045",
+            "TB110-E046",
+            "TB110-E050",
+            "TB110-E053"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D07",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ordered_source_ids": [
+            "TB110-E045",
+            "TB110-E050",
+            "TB110-E051",
+            "TB110-E052",
+            "TB110-E053"
+          ],
+          "recovered_count": 5
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D08",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E051",
+            "TB110-E018",
+            "TB110-E019",
+            "TB110-E020"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D09",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E058",
+            "TB110-E059",
+            "TB110-E060"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "bucket_reuse_and_recalc",
+          "record_id": "D10",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E038",
+            "TB110-E061",
+            "TB110-E062"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "cross_checks",
+          "record_id": "X01",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ordered_source_ids": [
+            "TB110-E008",
+            "TB110-E010",
+            "TB110-E012",
+            "TB110-E004",
+            "TB110-E007"
+          ],
+          "recovered_count": 5
+        },
+        {
+          "section": "cross_checks",
+          "record_id": "X02",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "ordered_source_ids": [
+            "TB110-E027",
+            "TB110-E028",
+            "TB110-E029",
+            "TB110-E030",
+            "TB110-E032"
+          ],
+          "recovered_count": 5
+        },
+        {
+          "section": "cross_checks",
+          "record_id": "X03",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "ordered_source_ids": [
+            "TB110-E056",
+            "TB110-E039",
+            "TB110-E040",
+            "TB110-E045",
+            "TB110-E046",
+            "TB110-E061"
+          ],
+          "recovered_count": 6
+        },
+        {
+          "section": "cross_checks",
+          "record_id": "X04",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "ordered_source_ids": [
+            "TB110-E056",
+            "TB110-E039",
+            "TB110-E045",
+            "TB110-E050",
+            "TB110-E053",
+            "TB110-E061"
+          ],
+          "recovered_count": 6
+        },
+        {
+          "section": "cross_checks",
+          "record_id": "X05",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E057",
+            "TB110-E039",
+            "TB110-E041"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "cross_checks",
+          "record_id": "X06",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E055",
+            "TB110-E049",
+            "TB110-E050",
+            "TB110-E054"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "cross_checks",
+          "record_id": "X07",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E071",
+            "TB110-E072",
+            "TB110-E073"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "cross_checks",
+          "record_id": "X08",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E003",
+            "TB110-P05",
+            "TW109-E031"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M01",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E004",
+            "TB110-E007",
+            "TB110-E008",
+            "TB110-E012"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M02",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E004",
+            "TB110-E007",
+            "TB110-E008",
+            "TB110-E012"
+          ],
+          "recovered_count": 4
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M03",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E027"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M04",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E027"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M05",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E029",
+            "TB110-E032"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M06",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E029",
+            "TB110-E030"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M07",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2
+          ],
+          "ordered_source_ids": [
+            "TB110-E028",
+            "TB110-E029",
+            "TB110-E030"
+          ],
+          "recovered_count": 3
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M08",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1
+          ],
+          "ordered_source_ids": [
+            "TB110-E028",
+            "TB110-E030"
+          ],
+          "recovered_count": 2
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M09",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0
+          ],
+          "ordered_source_ids": [
+            "TB110-E028"
+          ],
+          "recovered_count": 1
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M10",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "ordered_source_ids": [
+            "TB110-E040",
+            "TB110-E045",
+            "TB110-E046",
+            "TB110-E047",
+            "TB110-E061",
+            "TB110-E063",
+            "TB110-E065"
+          ],
+          "recovered_count": 7
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M11",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "ordered_source_ids": [
+            "TB110-E045",
+            "TB110-E050",
+            "TB110-E053",
+            "TB110-E063",
+            "TB110-E064",
+            "TB110-E065"
+          ],
+          "recovered_count": 6
+        },
+        {
+          "section": "models",
+          "record_id": "TB110-M12",
+          "original_field": "source_paths",
+          "erroneous_111_field": "source_locations",
+          "ordinals_0based": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "ordered_source_ids": [
+            "TB110-E036",
+            "TB110-E039",
+            "TB110-E040",
+            "TB110-E041"
+          ],
+          "recovered_count": 4
+        }
+      ]
+    },
+    "R110_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "O11_options": [
+        {
+          "wrapper": "mod_timer_pending",
+          "old_id": "TB110-E055",
+          "new_id": "KD112-E006",
+          "to": "__mod_timer",
+          "options": "MOD_TIMER_PENDING_ONLY"
+        },
+        {
+          "wrapper": "mod_timer",
+          "old_id": "TB110-E056",
+          "new_id": "KD112-E007",
+          "to": "__mod_timer",
+          "options": "0"
+        },
+        {
+          "wrapper": "timer_reduce",
+          "old_id": "TB110-E057",
+          "new_id": "KD112-E008",
+          "to": "__mod_timer",
+          "options": "MOD_TIMER_REDUCE"
+        }
+      ],
+      "O12_true_init": {
+        "new_id": "KD112-E004",
+        "old_good_ids": [
+          "AT111-E027",
+          "TW109-E007"
+        ],
+        "file": "mykernel/time/timer/timer.c",
+        "line": 217,
+        "statement": "uint idx = UINT_MAX;"
+      },
+      "O12_false_init": {
+        "old_id": "TB110-E027",
+        "actual_file": "mykernel/time/timer/timer.h",
+        "actual_lines": "155–156",
+        "actual_semantics": "basej early return; not sentinel init"
+      },
+      "O12_final_check": {
+        "old_id": "TB110-E053",
+        "new_id": "KD112-E005",
+        "file": "mykernel/time/timer/timer.c",
+        "lines": "328–331",
+        "semantics": "idx!=UINT_MAX && clk==base->clk => enqueue, otherwise recalc"
+      },
+      "O01_disjoint_old_consumers": [
+        "110 timer-base-forwarding.md line53",
+        "110 facts B10"
+      ],
+      "O01_to_O10": "prior C07 accepted portions remain frozen; these supplements do not rewrite history"
+    },
+    "R111_01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "old_id": "AT111-E017",
+      "old_window": "mykernel/lib/list/hash_list.h#L109–110",
+      "old_verified_labels": 54,
+      "old_literal_exact_matches": 54,
+      "old_body_qualified": 53,
+      "new_body_only_id": "KD112-E002",
+      "new_window": "mykernel/lib/list/hash_list.h#L110",
+      "signature_position": "KD112-P13",
+      "pending_outer_id": "KD112-E003",
+      "direct_consumers": [
+        "111 initialization_fields/A07",
+        "111 current_cpu_wrappers/B05",
+        "111 paper_models/AT111-M08",
+        "111 old DOT pprev->unhashed",
+        "111 old DOT pending->initPending",
+        "any other direct consumer of AT111-E017"
+      ],
+      "interpretation": "new verified source substitutes body-only evidence without changing original 54 counters"
+    },
+    "R111_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "consumers": [
+        {
+          "ids": [
+            "AT111-M05",
+            "AT111-M06",
+            "AT111-M07"
+          ],
+          "original_overbroad": "AT111-E032 explicit-CPU selector",
+          "current_cpu_path": [
+            "AT111-E049",
+            "AT111-E033",
+            "TB110-E011",
+            "KD112-E009",
+            "KD112-E010",
+            "KD112-E011"
+          ],
+          "old_flags_path": [
+            "AT111-E035",
+            "AT111-E036",
+            "AT111-E034",
+            "KD112-E013",
+            "KD112-E012"
+          ],
+          "explicit_cpu_selector_only": [
+            "AT111-E032",
+            "KD112-E014"
+          ],
+          "premise": "callback valid, notpending gate and lock path reachable"
+        },
+        {
+          "id": "AT111-B08",
+          "position_ids": [
+            "AT111-P02",
+            "AT111-P03",
+            "AT111-P04",
+            "KD112-P09"
+          ],
+          "meaning": "three wrappers have void signatures and discard returned int"
+        },
+        {
+          "id": "AT111-C07",
+          "position_ids": [
+            "AT111-P05",
+            "KD112-P10"
+          ],
+          "new_ids": [
+            "KD112-E017",
+            "KD112-E018",
+            "KD112-E019"
+          ],
+          "meaning": "explicit CPU entry returns void, common forward/arm/unlock"
+        },
+        {
+          "id": "AT111-C08",
+          "position_ids": [
+            "AT111-P11",
+            "KD112-P10"
+          ],
+          "old_ids": [
+            "AT111-E031"
+          ],
+          "new_ids": [
+            "KD112-E021",
+            "KD112-E018"
+          ],
+          "meaning": "complete add_timer_on body has no expires assignment; lower path reads expires"
+        },
+        {
+          "id": "AT111-C10",
+          "old_ids": [
+            "AT111-E042",
+            "AT111-E045",
+            "AT111-E046",
+            "AT111-E047"
+          ],
+          "new_ids": [
+            "KD112-E015",
+            "KD112-E017",
+            "KD112-E018",
+            "KD112-E019"
+          ],
+          "meaning": "equal pointer skips migration only, not forward/add/unlock"
+        },
+        {
+          "id": "AT111-X06",
+          "old_ids": [
+            "AT111-E042",
+            "AT111-E043",
+            "AT111-E044",
+            "AT111-E045",
+            "AT111-E046"
+          ],
+          "new_ids": [
+            "KD112-E015",
+            "KD112-E016",
+            "KD112-E017",
+            "KD112-E018"
+          ],
+          "meaning": "different base, lock switch, CPU flag at intermediate point"
+        },
+        {
+          "id": "AT111-X07",
+          "old_ids": [
+            "AT111-E047"
+          ],
+          "new_ids": [
+            "KD112-E029",
+            "KD112-E019",
+            "KD112-E020"
+          ],
+          "meaning": "callback NULL after PINNED write routes to macro unlock"
+        },
+        {
+          "id": "AT111-X08",
+          "old_ids": [
+            "AT111-E042",
+            "AT111-E045",
+            "AT111-E046",
+            "AT111-E047"
+          ],
+          "new_ids": [
+            "KD112-E015",
+            "KD112-E017",
+            "KD112-E018",
+            "KD112-E019"
+          ],
+          "meaning": "same-base path still calls forward/add"
+        },
+        {
+          "id": "AT111-M09",
+          "old_ids": [
+            "AT111-E052",
+            "AT111-E053",
+            "AT111-E031"
+          ],
+          "new_ids": [
+            "KD112-E022",
+            "KD112-E023",
+            "KD112-E021",
+            "KD112-E024"
+          ],
+          "meaning": "CPU write intermediate, enqueue timer_set_idx final flags"
+        }
+      ],
+      "fix_full_body_ranges": [
+        {
+          "old": "AT111-P10",
+          "correct": "mykernel/time/timer/timer.c#L441–480",
+          "new": "KD112-P09"
+        },
+        {
+          "old": "AT111-P15",
+          "correct": "mykernel/time/timer/timer.h#L114–126",
+          "new": "KD112-P11"
+        },
+        {
+          "old": "AT111-P16",
+          "correct": "mykernel/time/timer/timer.h#L128–140",
+          "new": "KD112-P12"
+        }
+      ],
+      "cpu7_sampling": {
+        "conditions": "valid nonpending timer, old CPU5/flags0x00000005, PINNED, target CPU7, base != new_base, forward reached and base->clk=1000, expires=1064, enqueue succeeds",
+        "time1_cpu_WRITE_ONCE": "0x00100007",
+        "delta": 64,
+        "level": 1,
+        "expires_rounded_shift": "(1064 >> 3)+1 = 134",
+        "bucket_expiry": 1072,
+        "index": 70,
+        "time2_after_timer_set_idx": "0x11900007",
+        "formula": "(0x00100007 & ~0xFFC00000)|(70 << 22)",
+        "new_ids": [
+          "KD112-E015",
+          "KD112-E016",
+          "KD112-E017",
+          "KD112-E021",
+          "KD112-E022",
+          "KD112-E023",
+          "KD112-E024",
+          "KD112-E027"
+        ]
+      },
+      "graph_edge_line145": {
+        "old": "DIRECT_CALL on->onUnlock",
+        "new": "MACRO_USE callsite; MACRO_EXPANSION to raw_spin_unlock_irqrestore(lock,&flags)",
+        "callsite": "KD112-E019",
+        "macrodef": "KD112-E020"
+      }
+    }
+  },
+  "new_analysis": {
+    "types": {
+      "ktime_t": "s64",
+      "timespec64_tv_sec": "time64_t=s64",
+      "timespec64_tv_nsec": "long",
+      "ktime_set_nsec_argument": "ulong",
+      "ns_to_timespec64_rem": "s32",
+      "div_u64_rem_remainder_parameter": "u32*",
+      "positions": [
+        "KD112-P01",
+        "KD112-P02",
+        "KD112-P08"
+      ]
+    },
+    "constants": {
+      "NSEC_PER_SEC": "1000000000",
+      "KTIME_MAX": "9223372036854775807",
+      "KTIME_MIN": "-9223372036854775808",
+      "KTIME_SEC_MAX": "9223372036",
+      "KTIME_SEC_MIN": "-9223372036",
+      "sources": [
+        "KD112-E033",
+        "KD112-E034"
+      ]
+    },
+    "A": {
+      "source_ids": [
+        "KD112-E035",
+        "KD112-E036",
+        "KD112-E037",
+        "KD112-E038",
+        "KD112-E039",
+        "KD112-E040",
+        "KD112-E041",
+        "KD112-E042"
+      ],
+      "facts": [
+        "timespec64_to_ktime calls ktime_set by value",
+        "ktime_set checks only upper sec>=SEC_MAX; normal branch signed multiply/add",
+        "timespec64_to_ns pointer input checks both upper and lower inclusive gates before tv_nsec arithmetic",
+        "valid and strict are independent caller checks; conversion bodies do not call them",
+        "negative sec math sample not strict-valid; lower sec=SEC_MIN demonstrates divergence"
+      ],
+      "models": [
+        {
+          "model": "A01",
+          "input": {
+            "tv_sec": "0",
+            "tv_nsec": "0"
+          },
+          "to_ktime": "0",
+          "to_ns": "0",
+          "valid_strict": true,
+          "interpretation": "zero path",
+          "source_ids": [
+            "KD112-E033",
+            "KD112-E034",
+            "KD112-E035",
+            "KD112-E036",
+            "KD112-E037",
+            "KD112-E038",
+            "KD112-E039",
+            "KD112-E040",
+            "KD112-E041",
+            "KD112-E042"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "A02",
+          "input": {
+            "tv_sec": "1",
+            "tv_nsec": "7"
+          },
+          "to_ktime": "1000000007",
+          "to_ns": "1000000007",
+          "valid_strict": true,
+          "interpretation": "ordinary normalized",
+          "source_ids": [
+            "KD112-E033",
+            "KD112-E034",
+            "KD112-E035",
+            "KD112-E036",
+            "KD112-E037",
+            "KD112-E038",
+            "KD112-E039",
+            "KD112-E040",
+            "KD112-E041",
+            "KD112-E042"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "A03",
+          "input": {
+            "tv_sec": "-1",
+            "tv_nsec": "999999999"
+          },
+          "to_ktime": "-1",
+          "to_ns": "-1",
+          "valid_strict": false,
+          "interpretation": "arithmetic representable, external valid rejects negative sec",
+          "source_ids": [
+            "KD112-E033",
+            "KD112-E034",
+            "KD112-E035",
+            "KD112-E036",
+            "KD112-E037",
+            "KD112-E038",
+            "KD112-E039",
+            "KD112-E040",
+            "KD112-E041",
+            "KD112-E042"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "A04",
+          "input": {
+            "tv_sec": "9223372035",
+            "tv_nsec": "999999999"
+          },
+          "to_ktime": "9223372035999999999",
+          "to_ns": "9223372035999999999",
+          "valid_strict": true,
+          "interpretation": "SEC_MAX-1 upper bounded",
+          "source_ids": [
+            "KD112-E033",
+            "KD112-E034",
+            "KD112-E035",
+            "KD112-E036",
+            "KD112-E037",
+            "KD112-E038",
+            "KD112-E039",
+            "KD112-E040",
+            "KD112-E041",
+            "KD112-E042"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "A05",
+          "input": {
+            "tv_sec": "9223372036",
+            "tv_nsec": "0"
+          },
+          "to_ktime": "9223372036854775807",
+          "to_ns": "9223372036854775807",
+          "valid_strict": false,
+          "interpretation": "both upper guards return MAX before arithmetic",
+          "source_ids": [
+            "KD112-E033",
+            "KD112-E034",
+            "KD112-E035",
+            "KD112-E036",
+            "KD112-E037",
+            "KD112-E038",
+            "KD112-E039",
+            "KD112-E040",
+            "KD112-E041",
+            "KD112-E042"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "A06",
+          "input": {
+            "tv_sec": "-9223372036",
+            "tv_nsec": "0"
+          },
+          "to_ktime": "-9223372036000000000",
+          "to_ns": "-9223372036854775808",
+          "valid_strict": false,
+          "interpretation": "ktime_set no lower clamp, timespec64_to_ns returns MIN",
+          "source_ids": [
+            "KD112-E033",
+            "KD112-E034",
+            "KD112-E035",
+            "KD112-E036",
+            "KD112-E037",
+            "KD112-E038",
+            "KD112-E039",
+            "KD112-E040",
+            "KD112-E041",
+            "KD112-E042"
+          ],
+          "repository_executed": false
+        }
+      ]
+    },
+    "B": {
+      "source_ids": [
+        "KD112-E043",
+        "KD112-E044",
+        "KD112-E045",
+        "KD112-E046",
+        "KD112-E047",
+        "KD112-E035"
+      ],
+      "facts": [
+        "unsafe macro casts lhs to u64, sum has unsigned arithmetic",
+        "result assignment to signed ktime_t may be implementation-defined for out-of-range unsigned values",
+        "res<0 || res<lhs || res<rhs short circuits, then ktime_set(SEC_MAX,0) returns KTIME_MAX",
+        "-1+2 has no mathematical overflow but res<rhs still caps",
+        "ordinary ktime_add / ktime_add_ns are separate unguarded + macros"
+      ],
+      "models": [
+        {
+          "model": "B01",
+          "lhs": "1",
+          "rhs": "2",
+          "u64_sum": "3",
+          "res_s64": "3",
+          "short_circuit_conditions": [
+            false,
+            false,
+            false
+          ],
+          "result": "3",
+          "assumptions": "all values nonnegative and representable",
+          "source_ids": [
+            "KD112-E044",
+            "KD112-E046",
+            "KD112-E047",
+            "KD112-E035",
+            "KD112-E034"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "B02",
+          "lhs": "0",
+          "rhs": "9223372036854775807",
+          "u64_sum": "9223372036854775807",
+          "res_s64": "9223372036854775807",
+          "short_circuit_conditions": [
+            false,
+            false,
+            false
+          ],
+          "result": "9223372036854775807",
+          "assumptions": "exact maximum, no overflow",
+          "source_ids": [
+            "KD112-E044",
+            "KD112-E046",
+            "KD112-E047",
+            "KD112-E035",
+            "KD112-E034"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "B03",
+          "lhs": "9223372036854775807",
+          "rhs": "1",
+          "u64_sum": "9223372036854775808",
+          "res_s64": "ASSUME_TWO_COMPLEMENT_SIGNED_MIN",
+          "short_circuit_conditions": [
+            "true under stated conversion",
+            "short circuited",
+            "short circuited"
+          ],
+          "result": "9223372036854775807",
+          "assumptions": "u64 sum is modulo 2^64; signed assignment out-of-range is implementation-defined",
+          "source_ids": [
+            "KD112-E044",
+            "KD112-E046",
+            "KD112-E047",
+            "KD112-E035",
+            "KD112-E034"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "B04",
+          "lhs": "-1",
+          "rhs": "2",
+          "u64_sum": "1",
+          "res_s64": "1",
+          "short_circuit_conditions": [
+            false,
+            false,
+            true
+          ],
+          "result": "9223372036854775807",
+          "assumptions": "mathematically no overflow; third comparison nevertheless triggers saturation",
+          "source_ids": [
+            "KD112-E044",
+            "KD112-E046",
+            "KD112-E047",
+            "KD112-E035",
+            "KD112-E034"
+          ],
+          "repository_executed": false
+        }
+      ]
+    },
+    "C": {
+      "source_ids": [
+        "KD112-E048",
+        "KD112-E049",
+        "KD112-E050",
+        "KD112-E051",
+        "KD112-E052",
+        "KD112-E053"
+      ],
+      "facts": [
+        "macro expands to ns_to_timespec64",
+        "zero uses {0,0}; positive quotient + remainder; negative -nsec-1 then sec=-quotient-1 and nsec=1e9-rem-1",
+        "div_u64_rem returns u64 quotient and writes unsigned u32 remainder via pointer",
+        "actual caller s32 rem -> callee u32* incompatibility, compiler diagnostics and execution NOT_RUN",
+        "INT64_MIN branch evaluates unary -nsec before subtract 1 so may overflow signed intermediate"
+      ],
+      "models": [
+        {
+          "model": "C01",
+          "scalar_ns": "0",
+          "paper_timespec64": {
+            "tv_sec": "0",
+            "tv_nsec": "0"
+          },
+          "branch": "zero",
+          "quotient": null,
+          "rem": null,
+          "normalization_bounded": true,
+          "conditional_on": "actual s32* to u32* helper call works with appropriate compatible remainder behavior; not verified by build/runtime",
+          "source_ids": [
+            "KD112-E048",
+            "KD112-E049",
+            "KD112-E050",
+            "KD112-E051",
+            "KD112-E053"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "C02",
+          "scalar_ns": "1",
+          "paper_timespec64": {
+            "tv_sec": "0",
+            "tv_nsec": "1"
+          },
+          "branch": "positive",
+          "quotient": "0",
+          "rem": "1",
+          "normalization_bounded": true,
+          "conditional_on": "actual s32* to u32* helper call works with appropriate compatible remainder behavior; not verified by build/runtime",
+          "source_ids": [
+            "KD112-E048",
+            "KD112-E049",
+            "KD112-E050",
+            "KD112-E051",
+            "KD112-E053"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "C03",
+          "scalar_ns": "-1",
+          "paper_timespec64": {
+            "tv_sec": "-1",
+            "tv_nsec": "999999999"
+          },
+          "branch": "negative",
+          "quotient": "0",
+          "rem": "0",
+          "normalization_bounded": true,
+          "conditional_on": "actual s32* to u32* helper call works with appropriate compatible remainder behavior; not verified by build/runtime",
+          "source_ids": [
+            "KD112-E048",
+            "KD112-E049",
+            "KD112-E050",
+            "KD112-E051",
+            "KD112-E053"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "C04",
+          "scalar_ns": "1000000000",
+          "paper_timespec64": {
+            "tv_sec": "1",
+            "tv_nsec": "0"
+          },
+          "branch": "positive",
+          "quotient": "1",
+          "rem": "0",
+          "normalization_bounded": true,
+          "conditional_on": "actual s32* to u32* helper call works with appropriate compatible remainder behavior; not verified by build/runtime",
+          "source_ids": [
+            "KD112-E048",
+            "KD112-E049",
+            "KD112-E050",
+            "KD112-E051",
+            "KD112-E053"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "C05",
+          "scalar_ns": "-1000000000",
+          "paper_timespec64": {
+            "tv_sec": "-1",
+            "tv_nsec": "0"
+          },
+          "branch": "negative",
+          "quotient": "0",
+          "rem": "999999999",
+          "normalization_bounded": true,
+          "conditional_on": "actual s32* to u32* helper call works with appropriate compatible remainder behavior; not verified by build/runtime",
+          "source_ids": [
+            "KD112-E048",
+            "KD112-E049",
+            "KD112-E050",
+            "KD112-E051",
+            "KD112-E053"
+          ],
+          "repository_executed": false
+        },
+        {
+          "model": "C06",
+          "scalar_ns": "-1000000001",
+          "paper_timespec64": {
+            "tv_sec": "-2",
+            "tv_nsec": "999999999"
+          },
+          "branch": "negative",
+          "quotient": "1",
+          "rem": "0",
+          "normalization_bounded": true,
+          "conditional_on": "actual s32* to u32* helper call works with appropriate compatible remainder behavior; not verified by build/runtime",
+          "source_ids": [
+            "KD112-E048",
+            "KD112-E049",
+            "KD112-E050",
+            "KD112-E051",
+            "KD112-E053"
+          ],
+          "repository_executed": false
+        }
+      ]
+    }
+  },
+  "anchor_ledger": [
+    {
+      "id": "KD112-E001",
+      "semantic_key": "CFG",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "set(CMAKE_C_FLAGS)",
+      "window_start": 66,
+      "window_end": 66,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E002",
+      "semantic_key": "H_UNHASH",
+      "path": "mykernel/lib/list/hash_list.h",
+      "symbol": "hlist_unhashed_lockless",
+      "window_start": 110,
+      "window_end": 110,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E003",
+      "semantic_key": "H_PENDING",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "timer_pending",
+      "window_start": 63,
+      "window_end": 63,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E004",
+      "semantic_key": "H_INIT",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "__mod_timer",
+      "window_start": 217,
+      "window_end": 217,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E005",
+      "semantic_key": "H_REUSE",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "__mod_timer",
+      "window_start": 328,
+      "window_end": 331,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E006",
+      "semantic_key": "H_MODP",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "mod_timer_pending",
+      "window_start": 358,
+      "window_end": 358,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E007",
+      "semantic_key": "H_MOD",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "mod_timer",
+      "window_start": 391,
+      "window_end": 391,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E008",
+      "semantic_key": "H_REDUCE",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "timer_reduce",
+      "window_start": 417,
+      "window_end": 417,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E009",
+      "semantic_key": "H_NOW_CALL",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "__mod_timer",
+      "window_start": 296,
+      "window_end": 296,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E010",
+      "semantic_key": "H_NOW_SELECT",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "get_timer_this_cpu_base",
+      "window_start": 131,
+      "window_end": 132,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E011",
+      "semantic_key": "H_NOW_RETURN",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "get_timer_this_cpu_base",
+      "window_start": 139,
+      "window_end": 139,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E012",
+      "semantic_key": "H_OLD_SELECT",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "get_timer_base",
+      "window_start": 145,
+      "window_end": 145,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E013",
+      "semantic_key": "H_OLD_LOCK",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "lock_timer_base",
+      "window_start": 197,
+      "window_end": 200,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E014",
+      "semantic_key": "H_EXPLICIT",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "get_timer_cpu_base",
+      "window_start": 117,
+      "window_end": 118,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E015",
+      "semantic_key": "H_BRANCH",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "window_start": 523,
+      "window_end": 524,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E016",
+      "semantic_key": "H_SWITCH",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "window_start": 526,
+      "window_end": 530,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E017",
+      "semantic_key": "H_FWD",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "window_start": 532,
+      "window_end": 532,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E018",
+      "semantic_key": "H_INTERNAL",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "window_start": 535,
+      "window_end": 535,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E019",
+      "semantic_key": "H_UNLOCK",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "window_start": 538,
+      "window_end": 538,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E020",
+      "semantic_key": "H_UNLOCK_MACRO",
+      "path": "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+      "symbol": "spin_unlock_irqrestore",
+      "window_start": 169,
+      "window_end": 170,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E021",
+      "semantic_key": "H_BUCKET",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "internal_add_timer",
+      "window_start": 149,
+      "window_end": 151,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E022",
+      "semantic_key": "H_ENQUEUE",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "enqueue_timer",
+      "window_start": 123,
+      "window_end": 125,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E023",
+      "semantic_key": "H_SETIDX",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "timer_set_idx",
+      "window_start": 90,
+      "window_end": 91,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E024",
+      "semantic_key": "H_CALCIDX",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "calc_index",
+      "window_start": 109,
+      "window_end": 111,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E025",
+      "semantic_key": "H_LVLSHIFT",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_SHIFT",
+      "window_start": 97,
+      "window_end": 97,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E026",
+      "semantic_key": "H_LVLBITS",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_BITS/LVL_SIZE/LVL_MASK/LVL_OFFS",
+      "window_start": 108,
+      "window_end": 111,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E027",
+      "semantic_key": "H_IDX_MASK",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "TIMER_ARRAYSHIFT/TIMER_ARRAYMASK",
+      "window_start": 195,
+      "window_end": 196,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E028",
+      "semantic_key": "H_PIN",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "window_start": 506,
+      "window_end": 506,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E029",
+      "semantic_key": "H_NULL_CB",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "window_start": 520,
+      "window_end": 521,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E030",
+      "semantic_key": "H_W0",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer",
+      "window_start": 443,
+      "window_end": 445,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E031",
+      "semantic_key": "H_W1",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_local",
+      "window_start": 459,
+      "window_end": 462,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E032",
+      "semantic_key": "H_W2",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_global",
+      "window_start": 476,
+      "window_end": 479,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E033",
+      "semantic_key": "A_UNIT",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "NSEC_PER_SEC",
+      "window_start": 32,
+      "window_end": 32,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E034",
+      "semantic_key": "A_LIMITS",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "KTIME_MAX/MIN/SEC_MAX/SEC_MIN",
+      "window_start": 44,
+      "window_end": 47,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E035",
+      "semantic_key": "A_SET",
+      "path": "mykernel/time/ktime/ktime.h",
+      "symbol": "ktime_set",
+      "window_start": 54,
+      "window_end": 57,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E036",
+      "semantic_key": "A_TO_K",
+      "path": "mykernel/time/ktime/ktime.h",
+      "symbol": "timespec64_to_ktime",
+      "window_start": 64,
+      "window_end": 64,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E037",
+      "semantic_key": "A_TO_NS_HI",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_to_ns",
+      "window_start": 134,
+      "window_end": 135,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E038",
+      "semantic_key": "A_TO_NS_LO",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_to_ns",
+      "window_start": 137,
+      "window_end": 140,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E039",
+      "semantic_key": "A_VALID_NEG",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid",
+      "window_start": 93,
+      "window_end": 94,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E040",
+      "semantic_key": "A_VALID_NS",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid",
+      "window_start": 96,
+      "window_end": 98,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E041",
+      "semantic_key": "A_STRICT_1",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid_strict",
+      "window_start": 104,
+      "window_end": 105,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E042",
+      "semantic_key": "A_STRICT_2",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid_strict",
+      "window_start": 107,
+      "window_end": 109,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E043",
+      "semantic_key": "B_ADD_DIRECT",
+      "path": "mykernel/time/ktime/ktime_macro.h",
+      "symbol": "ktime_add",
+      "window_start": 10,
+      "window_end": 10,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E044",
+      "semantic_key": "B_ADD_UNSAFE",
+      "path": "mykernel/time/ktime/ktime_macro.h",
+      "symbol": "ktime_add_unsafe",
+      "window_start": 16,
+      "window_end": 16,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E045",
+      "semantic_key": "B_ADD_NS",
+      "path": "mykernel/time/ktime/ktime_macro.h",
+      "symbol": "ktime_add_ns",
+      "window_start": 22,
+      "window_end": 22,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E046",
+      "semantic_key": "B_RES",
+      "path": "mykernel/time/timer/hrtimer.c",
+      "symbol": "ktime_add_safe",
+      "window_start": 9,
+      "window_end": 9,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E047",
+      "semantic_key": "B_GUARD",
+      "path": "mykernel/time/timer/hrtimer.c",
+      "symbol": "ktime_add_safe",
+      "window_start": 15,
+      "window_end": 18,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E048",
+      "semantic_key": "C_TO_TS",
+      "path": "mykernel/time/ktime/ktime_macro.h",
+      "symbol": "ktime_to_timespec64",
+      "window_start": 31,
+      "window_end": 31,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E049",
+      "semantic_key": "C_START",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "window_start": 52,
+      "window_end": 53,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E050",
+      "semantic_key": "C_POS",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "window_start": 55,
+      "window_end": 58,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E051",
+      "semantic_key": "C_NEG",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "window_start": 64,
+      "window_end": 65,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E052",
+      "semantic_key": "C_RETURN",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "window_start": 68,
+      "window_end": 68,
+      "source_pin": "a039d9803ade"
+    },
+    {
+      "id": "KD112-E053",
+      "semantic_key": "C_DIV",
+      "path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "div_u64_rem",
+      "window_start": 43,
+      "window_end": 44,
+      "source_pin": "a039d9803ade"
+    }
+  ],
+  "new_anchor_count": 53,
+  "history_original_labels": {
+    "old110": 74,
+    "old111": 54,
+    "old111_body_qualified": 53
+  },
+  "position_only_count": 18,
+  "source_checks": {
+    "old110_74_anchors": "74/74 fixed-time quotes checked in independent call",
+    "old110_223_occurrences": {
+      "field_row_match": 71,
+      "original_ID_same_ordinal": 223,
+      "original_path_same_ordinal": 223
+    }
+  },
+  "testing": {
+    "full_local_P9": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "repository_scripts": "NOT_RUN",
+    "preprocessor": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "kernel_runtime": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "external_models": "NOT_RUN",
+    "limited_integer_paper_models": 16
+  }
+}

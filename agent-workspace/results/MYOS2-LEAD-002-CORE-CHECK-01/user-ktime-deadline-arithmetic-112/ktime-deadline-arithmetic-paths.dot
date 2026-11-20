@@ -1,0 +1,120 @@
+digraph KD112 {
+  graph [rankdir=LR,labelloc=t,label="MyOS2 #112: D00 corrections and A/B/C static ktime paths | time@a039d9803ade"];
+  node [shape=box,fontname="Helvetica",fontsize=10];
+  edge [fontname="Helvetica",fontsize=9];
+  subgraph cluster_D00 {
+    label="D00";
+    modp [label="mod_timer_pending"];
+    mod [label="mod_timer"];
+    reduce [label="timer_reduce"];
+    add [label="add_timer"];
+    local [label="add_timer_local"];
+    global [label="add_timer_global"];
+    modcore [label="__mod_timer"];
+    initidx [label="idx = UINT_MAX"];
+    reuse [label="idx != UINT_MAX && clk == base->clk"];
+    current [label="get_timer_this_cpu_base"];
+    thiscpu [label="this_cpu_ptr macro"];
+    currentret [label="return base"];
+    oldlock [label="lock_timer_base"];
+    oldselect [label="get_timer_base"];
+    explicit [label="get_timer_cpu_base"];
+    percpu [label="per_cpu_ptr macro"];
+    on [label="add_timer_on"];
+    branch [label="base != new_base"];
+    migrate [label="WRITE_ONCE flags | explicit cpu"];
+    fwd [label="forward_timer_base"];
+    internal [label="internal_add_timer"];
+    idxcalc [label="calc_wheel_index -> calc_index"];
+    enqueue [label="enqueue_timer"];
+    setidx [label="timer_set_idx"];
+    unl [label="spin_unlock_irqrestore macro"];
+    rawunl [label="raw_spin_unlock_irqrestore"];
+    pprev [label="initial entry.pprev=NULL"];
+    unhashed [label="hlist_unhashed_lockless"];
+    pending [label="timer_pending"];
+    initpending [label="pending guard"];
+  }
+  subgraph cluster_A {
+    label="A";
+    ts [label="timespec64 (sec, nsec)"];
+    tskt [label="timespec64_to_ktime"];
+    set [label="ktime_set"];
+    to_ns [label="timespec64_to_ns"];
+    valid [label="timespec64_valid + strict (external)"];
+    hi [label="SEC_MAX guard"];
+    lo [label="SEC_MIN guard"];
+  }
+  subgraph cluster_B {
+    label="B";
+    safe [label="ktime_add_safe"];
+    unsafe [label="ktime_add_unsafe macro u64 cast"];
+    res [label="signed ktime_t res"];
+    test [label="res<0 || res<lhs || res<rhs"];
+    cap [label="ktime_set(SEC_MAX,0)"];
+  }
+  subgraph cluster_C {
+    label="C";
+    ktmacro [label="ktime_to_timespec64 macro"];
+    nsts [label="ns_to_timespec64"];
+    zero [label="ts={0,0}; s32 rem"];
+    pos [label="positive branch"];
+    neg [label="negative branch -nsec-1"];
+    div [label="div_u64_rem(u64,u32,u32*)"];
+    out [label="quotient & rem->fields"];
+    ptr [label="s32* vs u32* mismatch"];
+  }
+  modp -> modcore [label="DIRECT_CALL opts=PENDING_ONLY; KD112-E006"];
+  mod -> modcore [label="DIRECT_CALL opts=0; KD112-E007"];
+  reduce -> modcore [label="DIRECT_CALL opts=REDUCE; KD112-E008"];
+  modcore -> initidx [label="INITIALIZE_SENTINEL; KD112-E004"];
+  initidx -> reuse [label="CONTROL_DATA_CONDITION; KD112-E005"];
+  modcore -> reuse [label="BRANCH; KD112-E005"];
+  add -> modcore [label="DIRECT_CALL opts=NOTPENDING; KD112-E030"];
+  local -> modcore [label="DIRECT_CALL opts=NOTPENDING; KD112-E031"];
+  global -> modcore [label="DIRECT_CALL opts=NOTPENDING; KD112-E032"];
+  modcore -> current [label="DIRECT_CALL_CURRENT_CPU; KD112-E009"];
+  current -> thiscpu [label="MACRO_USE; KD112-E010"];
+  current -> currentret [label="RETURN_VALUE; KD112-E011"];
+  oldlock -> oldselect [label="DIRECT_CALL_OLD_FLAGS; KD112-E013"];
+  oldselect -> explicit [label="DIRECT_CALL_FROM_OLD_BITS; KD112-E012"];
+  explicit -> percpu [label="MACRO_USE_EXPLICIT_CPU; KD112-E014"];
+  on -> explicit [label="DIRECT_CALL_TARGET_CPU; KD112-E014"];
+  on -> branch [label="POINTER_COMPARE; KD112-E015"];
+  branch -> migrate [label="IF_DIFFERENT; KD112-E015/KD112-E016"];
+  on -> fwd [label="DIRECT_CALL_AFTER_BRANCH; KD112-E017"];
+  on -> internal [label="DIRECT_CALL_AFTER_BRANCH; KD112-E018"];
+  on -> unl [label="MACRO_USE; KD112-E019"];
+  unl -> rawunl [label="MACRO_EXPANSION_address_of_flags; KD112-E020"];
+  pprev -> unhashed [label="DATAFLOW_INIT_FIELD; KD112-E002"];
+  pending -> unhashed [label="DIRECT_CALL; KD112-E003/KD112-E002"];
+  unhashed -> pending [label="RETURN_INVERSION; KD112-E003"];
+  pending -> initpending [label="CONTROL_GUARD; KD112-E030/KD112-E031/KD112-E032"];
+  internal -> idxcalc [label="DIRECT_CALL_EXISTING_EXPIRES; KD112-E021/KD112-E024"];
+  internal -> enqueue [label="DIRECT_CALL; KD112-E021"];
+  enqueue -> setidx [label="DIRECT_CALL_AFTER_INSERT; KD112-E022/KD112-E023"];
+  ts -> tskt [label="ARGUMENT_BY_VALUE; KD112-P02/KD112-E036"];
+  tskt -> set [label="DIRECT_CALL; KD112-E036"];
+  set -> hi [label="SHORT_CIRCUIT_UPPER; KD112-E035"];
+  ts -> to_ns [label="ARGUMENT_BY_POINTER; KD112-P02/KD112-E037"];
+  to_ns -> hi [label="UPPER_GUARD; KD112-E037"];
+  to_ns -> lo [label="LOWER_GUARD; KD112-E038"];
+  valid -> tskt [label="NO_DIRECT_CALL_IN_BODY; KD112-P03/KD112-P04"];
+  valid -> to_ns [label="NO_DIRECT_CALL_IN_BODY; KD112-P04/KD112-P05"];
+  safe -> unsafe [label="MACRO_EXPANSION; KD112-E046/KD112-E044"];
+  unsafe -> res [label="UNSIGNED_TO_SIGNED_ASSIGNMENT; KD112-E046"];
+  res -> test [label="SHORT_CIRCUIT; KD112-E047"];
+  test -> cap [label="BRANCH_TRUE_DIRECT_CALL; KD112-E047/KD112-E035"];
+  ktmacro -> nsts [label="MACRO_EXPANSION; KD112-E048"];
+  nsts -> zero [label="INIT; KD112-E049"];
+  nsts -> pos [label="POSITIVE_CONDITIONAL; KD112-E050"];
+  nsts -> neg [label="NEGATIVE_CONDITIONAL; KD112-E050/KD112-E051"];
+  pos -> div [label="DIRECT_CALL; KD112-E050"];
+  neg -> div [label="DIRECT_CALL; KD112-E051"];
+  zero -> out [label="ZERO_RETURN; KD112-E052"];
+  div -> out [label="RETURN_QUOTIENT_POINTER_REMAINDER; KD112-E053"];
+  div -> ptr [label="STATIC_INCOMPATIBLE_POINTER_TYPES; KD112-P08/KD112-E049"];
+  ptr -> out [label="CONDITIONAL_MATH_NOT_VERIFIED_C_EXECUTION; KD112-P08/KD112-E053"];
+  // Historical timer uses jiffies; new A/B/C operates in nanoseconds. No undocumented direct call edge connects the two.
+  // DOT is source-level text only. Graphviz NOT_RUN; edges are dataflow, macro, direct call or conditional branch as labeled.
+}
