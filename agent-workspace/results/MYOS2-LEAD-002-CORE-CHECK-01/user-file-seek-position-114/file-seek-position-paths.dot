@@ -1,0 +1,138 @@
+digraph FS114 {
+ graph [rankdir=LR,labelloc=t,label="MyOS2 batch114: lseek/FAT32/char and D00 evidence | time@a039d9803ade"];
+ node [shape=box,fontname="Helvetica",fontsize=9];
+ edge [fontname="Helvetica",fontsize=8];
+ subgraph cluster_D00 {
+  label="D00";
+  nsts [label="ns_to_timespec64"];
+  negtest [label="nsec<0 guard at L58"];
+  negative [label="negative branch L64-65"];
+  zero_init [label="timespec64={0,0}"];
+  positive [label="positive branch L55-57"];
+  nonzero_fields [label="explicit nonzero field writes"];
+  ts_return [label="return timespec64 struct"];
+  clock [label="clock_gettime"];
+  clock_cb [label="clock provider result"];
+  noterror [label="evaluate !error every normal callback return"];
+  put [label="put_timespec64 RHS if success"];
+  eq [label="timespec64_equal"];
+  cmp [label="timespec64_compare"];
+  same_nano [label="same-second nanosecond subtraction"];
+ }
+ subgraph cluster_A {
+  label="A";
+  nr [label="__NR_lseek=8"];
+  mapping [label="__SYSCALL map to sys_lseek"];
+  switch [label="active x64_sys_call switch"];
+  entry [label="lseek syscall body"];
+  fdguard [label="fd unsigned upper bound"];
+  whenceguard [label="whence unsigned >= SEEK_MAX"];
+  rejectbad [label="return -EBADF"];
+  rejectwhence [label="return -EINVAL"];
+  getfile [label="current->files->fd_array[fd]"];
+  methodcheck [label="if f_op and f_op->llseek"];
+  call [label="indirect llseek(file,offset,whence)"];
+  absent [label="absent method"];
+  retzero [label="return ret initialized 0"];
+  ret [label="return ret ulong -> long wrapper"];
+ }
+ subgraph cluster_B {
+  label="B";
+  fat_inode [label="regular FAT inode"];
+  inodeops [label="inode->i_fop=FAT32_file_ops"];
+  open [label="myos_do_dentry_open"];
+  fileops [label="file->f_op=inode->i_fop"];
+  fatops [label="FAT32_file_ops.llseek"];
+  fat [label="FAT32_lseek"];
+  set [label="case SEEK_SET candidate"];
+  cur [label="case SEEK_CUR candidate"];
+  end [label="case SEEK_END candidate"];
+  def [label="default invalid origin"];
+  candidate [label="signed long pos computed"];
+  range [label="0 <= pos <= i_size gate"];
+  overflow [label="return -EOVERFLOW"];
+  invalid [label="return -EINVAL"];
+  write [label="filp->f_pos=pos"];
+  ok [label="return pos"];
+ }
+ subgraph cluster_C {
+  label="C";
+  devlist [label="mem.c devlist"];
+  nullop [label="null_fops.llseek"];
+  zeroop [label="zero_fops.llseek"];
+  fullop [label="full_fops missing active llseek"];
+  zeroalias [label="zero_lseek macro aliases null_lseek"];
+  null [label="null_lseek"];
+  nullwrite [label="file->f_pos=0"];
+  nullret [label="return 0"];
+  defaultop [label="def_chr_fops.llseek=noop"];
+  noop [label="noop_llseek"];
+  noopret [label="return existing f_pos"];
+  chr_open [label="chrdev_open"];
+  replace [label="filp->f_op=p->ops"];
+  no_method [label="no llseek callback"];
+  no_method_ret [label="entry ret=0 without writing f_pos"];
+ }
+ nsts -> negtest [label="CONTROL_EVALUATION | FS114-E047"];
+ negtest -> negative [label="BRANCH_TRUE | FS114-E050"];
+ nsts -> positive [label="CONTROL_EVALUATION | FS114-E049"];
+ nsts -> zero_init [label="INITIALIZATION | FS114-E048"];
+ zero_init -> ts_return [label="ZERO_RETURN_NO_FURTHER_MEMBER_WRITE | FS114-E048 FS114-E051"];
+ positive -> nonzero_fields [label="FIELD_WRITE | FS114-E049"];
+ negative -> nonzero_fields [label="FIELD_WRITE | FS114-E050"];
+ nonzero_fields -> ts_return [label="RETURN_AFTER_FIELD_WRITE | FS114-E051"];
+ clock -> clock_cb [label="INDIRECT_CALLBACK | FS114-E053"];
+ clock_cb -> noterror [label="RETURN_VALUE_TO_ALWAYS_EVALUATED_TEST | FS114-E053 FS114-E054"];
+ noterror -> put [label="SHORT_CIRCUIT_RHS_IF_SUCCESS | FS114-E054"];
+ clock -> put [label="DIRECT_CALL_WHEN_ERROR_ZERO | FS114-E054"];
+ cmp -> same_nano [label="EQUAL_SECONDS_BRANCH | FS114-E058"];
+ nr -> mapping [label="MACRO_MAPPING | FS114-E002 FS114-E003"];
+ mapping -> switch [label="MACRO_EXPANSION_ACTIVE | FS114-E004 FS114-E005"];
+ switch -> entry [label="DISPATCH | FS114-E004 FS114-E006"];
+ entry -> fdguard [label="CONTROL_GATE | FS114-E010"];
+ fdguard -> rejectbad [label="IF_FD_GE_FDCOUNT | FS114-E010"];
+ entry -> whenceguard [label="CONTROL_GATE | FS114-E011"];
+ whenceguard -> rejectwhence [label="IF_WHENCE_GE_4 | FS114-E011 FS114-E020"];
+ entry -> getfile [label="READ_FD_ARRAY | FS114-E012"];
+ getfile -> methodcheck [label="CHECK_METHOD_AFTER_GATES | FS114-E013"];
+ methodcheck -> call [label="INDIRECT_CALL_IF_PRESENT | FS114-E013"];
+ methodcheck -> absent [label="BRANCH_IF_NO_FOP_OR_LLSEEK | FS114-E013"];
+ absent -> retzero [label="RETURN_INITIAL_ZERO | FS114-E009 FS114-E014"];
+ call -> ret [label="CALLBACK_RETURN_VIA_ULONG | FS114-E013 FS114-E014"];
+ fat_inode -> inodeops [label="FIELD_ASSIGN | FS114-E022"];
+ fat_inode -> open [label="OBJECT_PREMISE_FOR_OPEN | FS114-E022 FS114-E023"];
+ inodeops -> fileops [label="DATA_FROM_INODE | FS114-E023"];
+ open -> fileops [label="FIELD_WRITE | FS114-E023"];
+ fileops -> fatops [label="METHOD_TABLE_REFERENCE | FS114-E024"];
+ fatops -> fat [label="METHOD_POINTER_BINDING | FS114-E024"];
+ call -> fat [label="INDIRECT_CALL_ON_FAT_FILE | FS114-E013 FS114-E024"];
+ fat -> set [label="SWITCH_CASE_ORIGIN_0 | FS114-E026"];
+ fat -> cur [label="SWITCH_CASE_ORIGIN_1 | FS114-E027"];
+ fat -> end [label="SWITCH_CASE_ORIGIN_2 | FS114-E028"];
+ fat -> def [label="SWITCH_DEFAULT_ORIGIN_3 | FS114-E029"];
+ def -> invalid [label="EARLY_RETURN_NO_WRITE | FS114-E029"];
+ set -> candidate [label="POS_EQUALS_OFFSET | FS114-E026"];
+ cur -> candidate [label="POS_EQUALS_FPOS_PLUS_OFFSET | FS114-E027"];
+ end -> candidate [label="POS_EQUALS_ISIZE_PLUS_OFFSET | FS114-E028"];
+ candidate -> range [label="CHECK_AFTER_ARITHMETIC | FS114-E030"];
+ range -> overflow [label="OUTSIDE_RANGE_EARLY_RETURN | FS114-E030"];
+ range -> write [label="INSIDE_RANGE | FS114-E031"];
+ write -> ok [label="RETURN_NEW_POSITION | FS114-E031 FS114-E032"];
+ devlist -> nullop [label="TABLE_REFERENCE_MINOR3 | FS114-E040 FS114-E038"];
+ devlist -> zeroop [label="TABLE_REFERENCE_MINOR5 | FS114-E041 FS114-E039"];
+ devlist -> fullop [label="TABLE_REFERENCE_MINOR7_COMMENTED_METHOD | FS114-E042 FS114-P16"];
+ nullop -> null [label="METHOD_BINDING | FS114-E038"];
+ zeroop -> zeroalias [label="METHOD_BINDING | FS114-E039"];
+ zeroalias -> null [label="MACRO_REPLACEMENT_EARLY_AND_LATE | FS114-E033 FS114-E036"];
+ null -> nullwrite [label="FIELD_WRITE | FS114-E035"];
+ nullwrite -> nullret [label="ASSIGNMENT_EXPRESSION_RETURN | FS114-E035"];
+ defaultop -> noop [label="METHOD_BINDING | FS114-E044"];
+ noop -> noopret [label="RETURN_NO_FIELD_WRITE | FS114-E043"];
+ chr_open -> replace [label="FIELD_WRITE_METHOD_TABLE | FS114-E045"];
+ fullop -> no_method [label="ANNOTATION_ACTIVE_METHOD_MISSING | FS114-P16"];
+ no_method -> no_method_ret [label="SKIP_CALLBACK | FS114-E013 FS114-E014"];
+ // 113 old line114 nsts->negative repaired with branch condition at time_misc.c:58 and body 64-65.
+ // 113 old line122 zero->fields repaired to initialized-pair->return, distinct from nonzero writes.
+ // 113 old line137 callback-result->!error evaluated always after normal return; old 138 conditional direct put preserved.
+ // All effects conditional on valid object and source path; Graphviz, compiled runtime and actual devices NOT_RUN.
+}

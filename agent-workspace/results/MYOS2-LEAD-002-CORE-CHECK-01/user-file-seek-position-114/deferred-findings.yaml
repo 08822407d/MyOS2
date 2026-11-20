@@ -1,0 +1,207 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FILE-SEEK-POSITION-114",
+  "record_type": "deferred_findings_source_stage2",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "source_short12": "a039d9803ade",
+  "date": "2026-11-20",
+  "candidates": [
+    {
+      "id": "FS114-CAND-01",
+      "root": "R112-02",
+      "premise": "Six converted pairs/twelve return results already accepted, five nonzero row annotations overbroad",
+      "candidate": "Positive models C02/C04 require only incompatible-pointer result premise; C03/C05/C06 add unsigned q stored as signed conversion",
+      "evidence_ids": [
+        "FS114-E047",
+        "FS114-E048",
+        "FS114-E049",
+        "FS114-E050",
+        "FS114-E051",
+        "FS114-E052"
+      ],
+      "first_unverified_step": "C07 independently verifies row keys, new caveats and negative/zero graph edge",
+      "status": "PENDING_C07"
+    },
+    {
+      "id": "FS114-CAND-02",
+      "root": "R113-01",
+      "premise": "113 graph line137, C04/C05/C06 and CAND-07 mismatched attribution",
+      "candidate": "Always check !error after normal callback; conditionally evaluate put; correct equal/compare source IDs and two independent C integer hazards",
+      "evidence_ids": [
+        "FS114-E053",
+        "FS114-E054",
+        "FS114-E055",
+        "FS114-E058"
+      ],
+      "first_unverified_step": "C07 independent fact/graph/CAND-07 mapping review",
+      "status": "PENDING_C07"
+    },
+    {
+      "id": "FS114-CAND-03",
+      "root": "A",
+      "premise": "fd and whence both unsigned; whence upper gate is >= SEEK_MAX with alias4",
+      "candidate": "SEEK_HOLE(4) rejected at syscall entry, while SEEK_DATA(3) passes to callback and FAT default rejects",
+      "evidence_ids": [
+        "FS114-E010",
+        "FS114-E011",
+        "FS114-E018",
+        "FS114-E019",
+        "FS114-E020",
+        "FS114-E029"
+      ],
+      "first_unverified_step": "Actual compiled syscall routing and userspace behavior not tested",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "FS114-CAND-04",
+      "root": "A",
+      "premise": "Entry initializes ulong ret=0 and calls llseek only if f_op and callback present",
+      "candidate": "No method can return0 without any f_pos write; negative callback errors cross unsigned and signed boundaries",
+      "evidence_ids": [
+        "FS114-E009",
+        "FS114-E013",
+        "FS114-E014",
+        "FS114-E008"
+      ],
+      "first_unverified_step": "Target compiler unsigned-to-signed conversion and actual fd table integrity",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "FS114-CAND-05",
+      "root": "B",
+      "premise": "FAT32_lseek computes long pos then verifies within [0,i_size] before sole f_pos assignment",
+      "candidate": "11 bounded cases independently checked; EOF equality accepted, outside interval rejected without f_pos change",
+      "evidence_ids": [
+        "FS114-E025",
+        "FS114-E026",
+        "FS114-E027",
+        "FS114-E028",
+        "FS114-E029",
+        "FS114-E030",
+        "FS114-E031",
+        "FS114-E032"
+      ],
+      "first_unverified_step": "Signed intermediate overflow and loff_t to long narrowing on large inputs",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "FS114-CAND-06",
+      "root": "B",
+      "premise": "Ordinary inode/f_op binding and open copying method table are visible",
+      "candidate": "FAT32 regular file can route to FAT32_lseek under valid open/object premise",
+      "evidence_ids": [
+        "FS114-E021",
+        "FS114-E022",
+        "FS114-E023",
+        "FS114-E024"
+      ],
+      "first_unverified_step": "Actual open path/fat metadata and lifetime of file/inode",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "FS114-CAND-07",
+      "root": "C",
+      "premise": "null and zero file operations bind null_lseek, which assigns file->f_pos=0",
+      "candidate": "Under valid file and admitted whence, null/zero both return0 and end position0 even when start9",
+      "evidence_ids": [
+        "FS114-E033",
+        "FS114-E035",
+        "FS114-E036",
+        "FS114-E038",
+        "FS114-E039",
+        "FS114-E040",
+        "FS114-E041"
+      ],
+      "first_unverified_step": "Actual character device registrations and opened objects",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "FS114-CAND-08",
+      "root": "C",
+      "premise": "def_chr_fops binds noop_llseek, chrdev_open replaces f_op with p->ops; full_fops seek initializer is a comment",
+      "candidate": "Noop returns current position without write; absent method returns initial0 without write. Same return0 may leave f_pos=0 or9.",
+      "evidence_ids": [
+        "FS114-E042",
+        "FS114-E043",
+        "FS114-E044",
+        "FS114-E045",
+        "FS114-E014"
+      ],
+      "first_unverified_step": "Which f_op survives real chrdev_open; actual hardware/driver registration",
+      "status": "CONDITIONAL_STATIC"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "FS114-GAP-01",
+      "root": "R112-02",
+      "first_unverified_step": "C07 Pro checks five source-indexed caveats and 113 graph edges 114/122",
+      "resume": "D00.R112_02 + frozen113",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "FS114-GAP-02",
+      "root": "R113-01",
+      "first_unverified_step": "C07 Pro checks line137 short circuit, three model outputs and CAND-07 distinctions",
+      "resume": "D00.R113_01 + frozen113",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "FS114-GAP-03",
+      "root": "A",
+      "first_unverified_step": "Verify x86-64 syscall wrapper, compiled signed/unsigned return, actual error encoding",
+      "resume": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h:241-251",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "FS114-GAP-04",
+      "root": "A",
+      "first_unverified_step": "Prove fd->file object nonnull, method table lifetime and race protection",
+      "resume": "mykernel/fs/syscall.c:75-91",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "FS114-GAP-05",
+      "root": "B",
+      "first_unverified_step": "Evaluate large offsets and signed intermediate overflow under target compiler and valid FAT objects",
+      "resume": "mykernel/fs/fat/myos_fat32.c:278-309",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "FS114-GAP-06",
+      "root": "B",
+      "first_unverified_step": "Determine actual successful open and inode operation binding, including open method's missing terminal explicit return",
+      "resume": "mykernel/fs/vfs/open.c:46-65",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "FS114-GAP-07",
+      "root": "C",
+      "first_unverified_step": "Run authorized character-device registration and real open to identify active final llseek method",
+      "resume": "mykernel/drivers/char/mem.c:166-208 and char_dev.c:35-98",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "FS114-GAP-08",
+      "root": "fullP9_and_hardware",
+      "first_unverified_step": "Full local P9, preprocess/compile/link, Graphviz, kernel/QEMU/real hardware and concurrent f_pos tests",
+      "resume": "MyOS2 future authorized test phase",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "legacy_preserved": [
+    "R111-02:CLOSED_DOCUMENTATION_ONLY",
+    "R112-01:CLOSED_DOCUMENTATION_ONLY",
+    "R112-02:OPEN",
+    "R113-01:OPEN",
+    "batch112:RETURN",
+    "batch113:RETURN"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "repo_scripts": "NOT_RUN",
+  "build": "NOT_RUN",
+  "actual_io": "NOT_RUN"
+}
