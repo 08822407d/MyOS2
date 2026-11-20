@@ -1,0 +1,2059 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMESPEC-ABI-BOUNDARIES-113",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-17",
+  "record_type": "bounded_timespec_abi_facts_and_three_document_corrections",
+  "date": "2026-11-20",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "c58d1ad8f222",
+  "execution_parent_short12": "f909700f17ab",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "R111_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "source": "frozen111.facts.seven_bounded_matrices and paper_models; frozen112.D00.R111_02",
+      "matrix_records": [
+        {
+          "original_111_matrix": "current_cpu_wrappers",
+          "original_111_record_id": "B08",
+          "original_111_actual_source_ids": [
+            "AT111-E019",
+            "AT111-E020",
+            "AT111-E021",
+            "AT111-E023",
+            "AT111-E024",
+            "AT111-E026"
+          ],
+          "frozen112_invalid_lookup_key": "AT111-B08",
+          "corrected_lookup_expression": "seven_bounded_matrices.current_cpu_wrappers[id==\"B08\"]",
+          "old_112_extra_source_ids": [],
+          "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+        },
+        {
+          "original_111_matrix": "explicit_cpu_add_timer_on",
+          "original_111_record_id": "C07",
+          "original_111_actual_source_ids": [
+            "AT111-E045",
+            "AT111-E046",
+            "AT111-E047"
+          ],
+          "frozen112_invalid_lookup_key": "AT111-C07",
+          "corrected_lookup_expression": "seven_bounded_matrices.explicit_cpu_add_timer_on[id==\"C07\"]",
+          "old_112_extra_source_ids": [
+            "KD112-E017",
+            "KD112-E018",
+            "KD112-E019"
+          ],
+          "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+        },
+        {
+          "original_111_matrix": "explicit_cpu_add_timer_on",
+          "original_111_record_id": "C08",
+          "original_111_actual_source_ids": [
+            "AT111-E039",
+            "AT111-E040",
+            "AT111-E041",
+            "AT111-E045",
+            "AT111-E046"
+          ],
+          "frozen112_invalid_lookup_key": "AT111-C08",
+          "corrected_lookup_expression": "seven_bounded_matrices.explicit_cpu_add_timer_on[id==\"C08\"]",
+          "old_112_extra_source_ids": [
+            "KD112-E021",
+            "KD112-E018"
+          ],
+          "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+        },
+        {
+          "original_111_matrix": "explicit_cpu_add_timer_on",
+          "original_111_record_id": "C10",
+          "original_111_actual_source_ids": [
+            "AT111-E039",
+            "AT111-E032",
+            "AT111-E034",
+            "AT111-E033",
+            "AT111-E051"
+          ],
+          "frozen112_invalid_lookup_key": "AT111-C10",
+          "corrected_lookup_expression": "seven_bounded_matrices.explicit_cpu_add_timer_on[id==\"C10\"]",
+          "old_112_extra_source_ids": [
+            "KD112-E015",
+            "KD112-E017",
+            "KD112-E018",
+            "KD112-E019"
+          ],
+          "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+        },
+        {
+          "original_111_matrix": "cross_path_boundaries",
+          "original_111_record_id": "X06",
+          "original_111_actual_source_ids": [
+            "AT111-E037",
+            "AT111-E038",
+            "AT111-E039",
+            "AT111-E044"
+          ],
+          "frozen112_invalid_lookup_key": "AT111-X06",
+          "corrected_lookup_expression": "seven_bounded_matrices.cross_path_boundaries[id==\"X06\"]",
+          "old_112_extra_source_ids": [
+            "KD112-E015",
+            "KD112-E016",
+            "KD112-E017",
+            "KD112-E018"
+          ],
+          "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+        },
+        {
+          "original_111_matrix": "cross_path_boundaries",
+          "original_111_record_id": "X07",
+          "original_111_actual_source_ids": [
+            "AT111-E037",
+            "AT111-E038",
+            "AT111-E041"
+          ],
+          "frozen112_invalid_lookup_key": "AT111-X07",
+          "corrected_lookup_expression": "seven_bounded_matrices.cross_path_boundaries[id==\"X07\"]",
+          "old_112_extra_source_ids": [
+            "KD112-E029",
+            "KD112-E019",
+            "KD112-E020"
+          ],
+          "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+        },
+        {
+          "original_111_matrix": "cross_path_boundaries",
+          "original_111_record_id": "X08",
+          "original_111_actual_source_ids": [
+            "AT111-E039",
+            "AT111-E040",
+            "AT111-E045",
+            "AT111-E046"
+          ],
+          "frozen112_invalid_lookup_key": "AT111-X08",
+          "corrected_lookup_expression": "seven_bounded_matrices.cross_path_boundaries[id==\"X08\"]",
+          "old_112_extra_source_ids": [
+            "KD112-E015",
+            "KD112-E017",
+            "KD112-E018",
+            "KD112-E019"
+          ],
+          "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+        }
+      ],
+      "matrix_count": 7,
+      "model_void_signature_corrections": [
+        {
+          "model": "AT111-M08",
+          "correct_source_positions": [
+            "AT111-P02",
+            "AT111-P03",
+            "AT111-P04",
+            "TS113-P17"
+          ],
+          "meaning": "three wrapper functions return void; lower __mod_timer int discarded"
+        },
+        {
+          "model": "AT111-M10",
+          "correct_source_positions": [
+            "AT111-P05",
+            "TS113-P18"
+          ],
+          "meaning": "add_timer_on is void, same-base path still forward/internal and unlock"
+        },
+        {
+          "model": "AT111-M11",
+          "correct_source_positions": [
+            "AT111-P05",
+            "TS113-P18"
+          ],
+          "meaning": "add_timer_on is void even if callback NULL and goes to common unlock"
+        }
+      ],
+      "model_M09_corrected": {
+        "original_model_id": "AT111-M09",
+        "original_real_source_ids": [
+          "AT111-E038",
+          "AT111-E039",
+          "AT111-E042",
+          "AT111-E043",
+          "AT111-E044",
+          "AT111-E045",
+          "AT111-E046"
+        ],
+        "remove_misattributed_in_frozen112": "AT111-E052",
+        "why": "AT111-E052 belongs to schedule_timeout stack-timer setup, not CPU/array write in this scenario",
+        "cpu_bits_write": {
+          "old_id": "AT111-E044",
+          "old_updated_id": "KD112-E016",
+          "new_id": "TS113-E018",
+          "moment": "after base != new_base migration",
+          "flags": "0x00100007"
+        },
+        "bucket_bits_write": {
+          "old_id": "AT111-E053",
+          "old_updated_id": "KD112-E023",
+          "new_id": "TS113-E017",
+          "caller": "TS113-E019",
+          "moment": "after internal_add_timer calculates idx=70 and enqueue_timer calls timer_set_idx",
+          "flags": "0x11900007"
+        },
+        "linking_sources": [
+          "AT111-E031",
+          "TS113-E016",
+          "TS113-E019",
+          "TS113-E017",
+          "TS113-E006",
+          "TS113-E007"
+        ],
+        "premise": "oldCPU5, targetCPU7, equal-value target pointer condition false, valid callback/!pending, after forward clk1000, expires1064, delta64, lvl1, bucket expiry1072, idx70, insertion reached",
+        "actual_runtime": "NOT_RUN"
+      }
+    },
+    "R112_01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "frozen_112_original_tags": 53,
+      "frozen_112_literal_matches": 53,
+      "frozen_112_qualified_single_definition": 50,
+      "frozen_112_failed_composite_labels": [
+        "KD112-E026",
+        "KD112-E027",
+        "KD112-E034"
+      ],
+      "replacement_macro_count": 10,
+      "independent_macros": [
+        {
+          "replaced_id": "KD112-E026",
+          "macro": "LVL_BITS",
+          "path": "mykernel/time/timer/timer_const.h",
+          "line": 108,
+          "example_value": 6,
+          "new_id": "TS113-E002",
+          "source_window": "mykernel/time/timer/timer_const.h#L108",
+          "purpose": "six bits per level"
+        },
+        {
+          "replaced_id": "KD112-E026",
+          "macro": "LVL_SIZE",
+          "path": "mykernel/time/timer/timer_const.h",
+          "line": 109,
+          "example_value": 64,
+          "new_id": "TS113-E003",
+          "source_window": "mykernel/time/timer/timer_const.h#L109",
+          "purpose": "level width=1<<6"
+        },
+        {
+          "replaced_id": "KD112-E026",
+          "macro": "LVL_MASK",
+          "path": "mykernel/time/timer/timer_const.h",
+          "line": 110,
+          "example_value": 63,
+          "new_id": "TS113-E004",
+          "source_window": "mykernel/time/timer/timer_const.h#L110",
+          "purpose": "level index mask=64-1"
+        },
+        {
+          "replaced_id": "KD112-E026",
+          "macro": "LVL_OFFS",
+          "path": "mykernel/time/timer/timer_const.h",
+          "line": 111,
+          "example_value": 64,
+          "new_id": "TS113-E005",
+          "source_window": "mykernel/time/timer/timer_const.h#L111",
+          "purpose": "LVL_OFFS(n)=n*LVL_SIZE; example n=1 produces 64 (not a constant 64 for every n)",
+          "example_input_n": 1
+        },
+        {
+          "replaced_id": "KD112-E027",
+          "macro": "TIMER_ARRAYSHIFT",
+          "path": "mykernel/time/timer/timer_const.h",
+          "line": 195,
+          "example_value": 22,
+          "new_id": "TS113-E006",
+          "source_window": "mykernel/time/timer/timer_const.h#L195",
+          "purpose": "bucket-index bit shift"
+        },
+        {
+          "replaced_id": "KD112-E027",
+          "macro": "TIMER_ARRAYMASK",
+          "path": "mykernel/time/timer/timer_const.h",
+          "line": 196,
+          "example_value": 4290772992,
+          "new_id": "TS113-E007",
+          "source_window": "mykernel/time/timer/timer_const.h#L196",
+          "purpose": "high index bit mask"
+        },
+        {
+          "replaced_id": "KD112-E034",
+          "macro": "KTIME_MAX",
+          "path": "mykernel/time/misc/time_misc_const.h",
+          "line": 44,
+          "example_value": "9223372036854775807",
+          "new_id": "TS113-E008",
+          "source_window": "mykernel/time/misc/time_misc_const.h#L44",
+          "purpose": "s64 positive cap"
+        },
+        {
+          "replaced_id": "KD112-E034",
+          "macro": "KTIME_MIN",
+          "path": "mykernel/time/misc/time_misc_const.h",
+          "line": 45,
+          "example_value": "-9223372036854775808",
+          "new_id": "TS113-E009",
+          "source_window": "mykernel/time/misc/time_misc_const.h#L45",
+          "purpose": "s64 negative cap"
+        },
+        {
+          "replaced_id": "KD112-E034",
+          "macro": "KTIME_SEC_MAX",
+          "path": "mykernel/time/misc/time_misc_const.h",
+          "line": 46,
+          "example_value": "9223372036",
+          "new_id": "TS113-E010",
+          "source_window": "mykernel/time/misc/time_misc_const.h#L46",
+          "purpose": "truncated signed sec boundary"
+        },
+        {
+          "replaced_id": "KD112-E034",
+          "macro": "KTIME_SEC_MIN",
+          "path": "mykernel/time/misc/time_misc_const.h",
+          "line": 47,
+          "example_value": "-9223372036",
+          "new_id": "TS113-E011",
+          "source_window": "mykernel/time/misc/time_misc_const.h#L47",
+          "purpose": "negative sec boundary"
+        }
+      ],
+      "separated_geometry_ledger": {
+        "selector": {
+          "source": "TS113-E015",
+          "boundary_source": "TS113-E014",
+          "LVL_START_1": 63,
+          "LVL_START_2": 504,
+          "delta64_selects_lvl": 1
+        },
+        "granularity": {
+          "source_ids": [
+            "TS113-E012",
+            "TS113-E013",
+            "TS113-E005",
+            "TS113-E004",
+            "TS113-E016"
+          ],
+          "shift_for_level1": 3,
+          "rounded_expires_step": 8,
+          "expires1064_rounded_bucket_expiry": 1072,
+          "index_for_input": 70
+        },
+        "encoding": {
+          "source_ids": [
+            "TS113-E006",
+            "TS113-E007",
+            "TS113-E017"
+          ],
+          "shift": 22,
+          "mask_hex": "0xFFC00000",
+          "afterCPU_write": "0x00100007",
+          "afterBucketWrite": "0x11900007"
+        }
+      },
+      "type_correction": {
+        "type_name": "time64_t",
+        "path": "mykernel/time/time_type_declaration.h",
+        "line": 10,
+        "statement": "typedef __s64 time64_t;",
+        "role": "POSITION_ONLY",
+        "position_id": "TS113-P23"
+      },
+      "frozen112_manifest_metadata_append": {
+        "record_owner": "frozen_112_MANIFEST.md at f909700f17ab; additive correction held ONLY in batch113 facts, original untouched",
+        "inputs_read": [
+          "agent-workspace/lead/MYOS2-LEAD-002/159-executor-continuation/00-C07b-to-C07c-handoff-package.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/159-executor-continuation/01-MYOS2-A-C07c-receiver-startup-prompt.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/160-user-ktime-deadline-arithmetic-contract.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-ARM-TARGET-111-review.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-TIMER-ARM-TARGET-111-D00-109-110-review.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-11-20-timer-arm111-reviewed-ktime112.md",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-base-forwarding-110/facts-and-boundaries.yaml",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-base-forwarding-110/evidence.md",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-arm-target-111/MANIFEST.md",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-arm-target-111/deferred-findings.yaml",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-arm-target-111/evidence.md",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-arm-target-111/facts-and-boundaries.yaml",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-arm-target-111/timer-arm-target-paths.dot",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-timer-arm-target-111/timer-arm-target.md",
+          "agent-workspace/README.md",
+          "agent-workspace/conventions.md",
+          "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/24-chatgpt-specialist-conversation-separation.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/28-review-and-next-batch-same-turn.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md",
+          "agent-workspace/lead/MYOS2-LEAD-002/124-model-routing-and-pro-message-budget.md",
+          "mykernel/scripts/options_flags.cmake",
+          "mykernel/debug/panic.c",
+          "mykernel/time/time_type_declaration.h",
+          "mykernel/time/misc/time_misc_const.h",
+          "mykernel/time/misc/time_misc_types.h",
+          "mykernel/time/ktime/ktime.h",
+          "mykernel/time/ktime/ktime_macro.h",
+          "mykernel/time/misc/time_misc.h",
+          "mykernel/time/misc/time_misc.c",
+          "mykernel/time/timer/hrtimer.c",
+          "mykernel/time/timer/timer.c",
+          "mykernel/time/timer/timer.h",
+          "mykernel/time/timer/timer_const.h",
+          "mykernel/lib/list/hash_list.h",
+          "mykernel/lock_IPC/spinlock/spinlock_smp_macro.h",
+          "mykernel/include/linux/kernel/math64.h",
+          "mykernel/time/timer/timer_types.h",
+          "mykernel/time/systick/systick_macro.h",
+          "mykernel/include/linux/kernel/asm-generic/param.h",
+          "mykernel/include/linux/kernel/asm-generic/bug.h",
+          "mykernel/time/syscall.c",
+          "mykernel/arch/x86_64/include/asm/uaccess.h",
+          "mykernel/include/uapi/asm-generic/errno-base.h",
+          "mykernel/time/timekeeping/timekeeping.c"
+        ],
+        "other_repo_guidance_read": "Mnemosyne read in same conversation 112: README, human-approved-spec, receive/load commands, guard-registry, nine task-relevant guards and display registry; see frozen112 MANIFEST body",
+        "open_questions": [],
+        "open_questions_scope": "No Owner decision was requested in the 112 execution; 112 technical unknowns retained in frozen deferred-findings.yaml and review",
+        "branch_canary_quotes": {
+          "time_options": "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\",
+          "master_options": "\t-m64 -mcmodel=large -fPIE \\",
+          "time_panic": "\tthis_cpu = smp_processor_id();",
+          "master_panic": "\tthis_cpu = raw_smp_processor_id();"
+        },
+        "note": "This fills the three missing machine-readable keys for the frozen 112 report by cross-reference, not by modifying its immutable MANIFEST"
+      }
+    },
+    "R112_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "original_112_roundtrip_source": "frozen112.new_analysis.C.models C01–C06",
+      "roundtrip": {
+        "normal_math_for_nonzero": "input scalar -> ns_to_timespec64 -> timespec64 fields -> timespec64_to_ktime and timespec64_to_ns",
+        "base_predicates_not_called_by_converters": true,
+        "zero_branch": "ts={0,0}, input nsec==0 skips div_u64_rem, return ts at L68",
+        "negative_expression_steps": [
+          "evaluate signed -nsec, then subtract signed one, with signed-min intermediate unsafe",
+          "call div_u64_rem yields u64 quotient q and writes nonnegative remainder to u32*",
+          "unary - on returned u64 q and subtract1 occurs with unsigned modulo 2^64",
+          "convert resulting out-of-s64 unsigned value to signed time64_t tv_sec: implementation-defined; paper model assumes expected two-complement value",
+          "caller writes tv_nsec=1e9-rem-1"
+        ],
+        "unsigned_negative_quotient_cases": [
+          {
+            "q": 0,
+            "outer_unsigned_value": "18446744073709551615",
+            "assigned_sec_assumption": "-1"
+          },
+          {
+            "q": 1,
+            "outer_unsigned_value": "18446744073709551614",
+            "assigned_sec_assumption": "-2"
+          }
+        ],
+        "pointer_mismatch": {
+          "caller_local": "s32 rem; &rem is s32*",
+          "callee_parameter": "div_u64_rem(...,u32 *remainder)",
+          "status": "compiler diagnostic and runtime semantics NOT_RUN",
+          "source_ids": [
+            "TS113-E049",
+            "TS113-E053",
+            "TS113-P14"
+          ]
+        },
+        "caller_field_writes": {
+          "zero": [
+            "TS113-E049",
+            "TS113-E052"
+          ],
+          "positive": [
+            "TS113-E050",
+            "TS113-E053",
+            "TS113-E052"
+          ],
+          "negative": [
+            "TS113-E051",
+            "TS113-E053",
+            "TS113-E052"
+          ]
+        },
+        "A_wrapper": {
+          "structure_parameter": "timespec64_s ts BY_VALUE; full signature TS113-P15",
+          "forwarded_scalars": "ktime_set(ts.tv_sec, ts.tv_nsec)",
+          "source": "TS113-E054"
+        },
+        "models": [
+          {
+            "original_model": "C01",
+            "scalar_input": "0",
+            "branch": "zero",
+            "quotient": null,
+            "remainder": null,
+            "returned_pair": {
+              "tv_sec": "0",
+              "tv_nsec": "0"
+            },
+            "u64_negative_outer_expression_if_applicable": null,
+            "signed_tv_sec_assumption": "not_needed",
+            "via_timespec64_to_ktime": "0",
+            "via_timespec64_to_ns": "0",
+            "math_matches_input": true,
+            "normalized_nsecs": true,
+            "actual_C_executed": false,
+            "source_ids": [
+              "TS113-E049",
+              "TS113-E052",
+              "TS113-E054",
+              "TS113-E055",
+              "TS113-E056",
+              "TS113-E057"
+            ],
+            "caveat": "No div_u64_rem call; zero initializes pair directly"
+          },
+          {
+            "original_model": "C02",
+            "scalar_input": "1",
+            "branch": "positive",
+            "quotient": "0",
+            "remainder": "1",
+            "returned_pair": {
+              "tv_sec": "0",
+              "tv_nsec": "1"
+            },
+            "u64_negative_outer_expression_if_applicable": null,
+            "signed_tv_sec_assumption": "not_needed",
+            "via_timespec64_to_ktime": "1",
+            "via_timespec64_to_ns": "1",
+            "math_matches_input": true,
+            "normalized_nsecs": true,
+            "actual_C_executed": false,
+            "source_ids": [
+              "TS113-E049",
+              "TS113-E050",
+              "TS113-E053",
+              "TS113-E052",
+              "TS113-E054",
+              "TS113-E055",
+              "TS113-E056",
+              "TS113-E057"
+            ],
+            "caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion"
+          },
+          {
+            "original_model": "C03",
+            "scalar_input": "-1",
+            "branch": "negative",
+            "quotient": "0",
+            "remainder": "0",
+            "returned_pair": {
+              "tv_sec": "-1",
+              "tv_nsec": "999999999"
+            },
+            "u64_negative_outer_expression_if_applicable": "18446744073709551615",
+            "signed_tv_sec_assumption": "map out-of-s64 u64 result to expected two-complement signed value under target implementation-defined conversion",
+            "via_timespec64_to_ktime": "-1",
+            "via_timespec64_to_ns": "-1",
+            "math_matches_input": true,
+            "normalized_nsecs": true,
+            "actual_C_executed": false,
+            "source_ids": [
+              "TS113-E049",
+              "TS113-E051",
+              "TS113-E053",
+              "TS113-E052",
+              "TS113-E054",
+              "TS113-E055",
+              "TS113-E056",
+              "TS113-E057"
+            ],
+            "caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion"
+          },
+          {
+            "original_model": "C04",
+            "scalar_input": "1000000000",
+            "branch": "positive",
+            "quotient": "1",
+            "remainder": "0",
+            "returned_pair": {
+              "tv_sec": "1",
+              "tv_nsec": "0"
+            },
+            "u64_negative_outer_expression_if_applicable": null,
+            "signed_tv_sec_assumption": "not_needed",
+            "via_timespec64_to_ktime": "1000000000",
+            "via_timespec64_to_ns": "1000000000",
+            "math_matches_input": true,
+            "normalized_nsecs": true,
+            "actual_C_executed": false,
+            "source_ids": [
+              "TS113-E049",
+              "TS113-E050",
+              "TS113-E053",
+              "TS113-E052",
+              "TS113-E054",
+              "TS113-E055",
+              "TS113-E056",
+              "TS113-E057"
+            ],
+            "caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion"
+          },
+          {
+            "original_model": "C05",
+            "scalar_input": "-1000000000",
+            "branch": "negative",
+            "quotient": "0",
+            "remainder": "999999999",
+            "returned_pair": {
+              "tv_sec": "-1",
+              "tv_nsec": "0"
+            },
+            "u64_negative_outer_expression_if_applicable": "18446744073709551615",
+            "signed_tv_sec_assumption": "map out-of-s64 u64 result to expected two-complement signed value under target implementation-defined conversion",
+            "via_timespec64_to_ktime": "-1000000000",
+            "via_timespec64_to_ns": "-1000000000",
+            "math_matches_input": true,
+            "normalized_nsecs": true,
+            "actual_C_executed": false,
+            "source_ids": [
+              "TS113-E049",
+              "TS113-E051",
+              "TS113-E053",
+              "TS113-E052",
+              "TS113-E054",
+              "TS113-E055",
+              "TS113-E056",
+              "TS113-E057"
+            ],
+            "caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion"
+          },
+          {
+            "original_model": "C06",
+            "scalar_input": "-1000000001",
+            "branch": "negative",
+            "quotient": "1",
+            "remainder": "0",
+            "returned_pair": {
+              "tv_sec": "-2",
+              "tv_nsec": "999999999"
+            },
+            "u64_negative_outer_expression_if_applicable": "18446744073709551614",
+            "signed_tv_sec_assumption": "map out-of-s64 u64 result to expected two-complement signed value under target implementation-defined conversion",
+            "via_timespec64_to_ktime": "-1000000001",
+            "via_timespec64_to_ns": "-1000000001",
+            "math_matches_input": true,
+            "normalized_nsecs": true,
+            "actual_C_executed": false,
+            "source_ids": [
+              "TS113-E049",
+              "TS113-E051",
+              "TS113-E053",
+              "TS113-E052",
+              "TS113-E054",
+              "TS113-E055",
+              "TS113-E056",
+              "TS113-E057"
+            ],
+            "caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion"
+          }
+        ]
+      },
+      "frozen112_graph_repairs": [
+        {
+          "old_line": 82,
+          "original": "on -> explicit (DIRECT_CALL_TARGET_CPU; KD112-E014)",
+          "correction": [
+            "add_timer_on -> get_timer_cpu_base (DIRECT_CALL)",
+            "get_timer_cpu_base -> per_cpu_ptr (MACRO_USE)"
+          ],
+          "source_ids": [
+            "TS113-E020",
+            "AT111-E039",
+            "KD112-E014"
+          ]
+        },
+        {
+          "old_line": 89,
+          "original": "pprev -> unhashed (DATAFLOW_INIT_FIELD; KD112-E002)",
+          "correction": [
+            "simple_init_timer_key -> entry.pprev=NULL (WRITE_FIELD)",
+            "entry.pprev -> hlist_unhashed_lockless (READ_ONCE_CONSUMER)"
+          ],
+          "source_ids": [
+            "TS113-E021",
+            "AT111-E012",
+            "KD112-E002",
+            "TS113-E060"
+          ]
+        },
+        {
+          "old_line": 102,
+          "original": "valid -> tskt (NO_DIRECT_CALL_IN_BODY)",
+          "correction": [
+            "timespec64_to_ktime -> no_validate_inside (ANNOTATION_ONLY_NO_CALL; scope complete function)"
+          ],
+          "source_ids": [
+            "KD112-P03",
+            "KD112-P04",
+            "TS113-P15"
+          ]
+        },
+        {
+          "old_line": 103,
+          "original": "valid -> to_ns (NO_DIRECT_CALL_IN_BODY)",
+          "correction": [
+            "timespec64_to_ns -> no_validate_inside (ANNOTATION_ONLY_NO_CALL; scope complete function)"
+          ],
+          "source_ids": [
+            "KD112-P04",
+            "KD112-P05",
+            "TS113-P16"
+          ]
+        },
+        {
+          "old_line": 107,
+          "original": "test -> cap (BRANCH_TRUE_DIRECT_CALL)",
+          "correction": [
+            "safe_add -> guard_true (CONTROL_BRANCH)",
+            "ktime_add_safe -> ktime_set (DIRECT_CALL)"
+          ],
+          "source_ids": [
+            "TS113-E058",
+            "KD112-E047"
+          ]
+        },
+        {
+          "old_line": 112,
+          "original": "pos -> div (DIRECT_CALL)",
+          "correction": [
+            "ns_to_timespec64 -> div_u64_rem (DIRECT_CALL at positive branch)",
+            "ns_to_timespec64 -> positive (CONTROL_BRANCH)"
+          ],
+          "source_ids": [
+            "TS113-E050",
+            "TS113-E053"
+          ]
+        },
+        {
+          "old_line": 113,
+          "original": "neg -> div (DIRECT_CALL)",
+          "correction": [
+            "ns_to_timespec64 -> div_u64_rem (DIRECT_CALL at negative branch)",
+            "ns_to_timespec64 -> negative (CONTROL_BRANCH)"
+          ],
+          "source_ids": [
+            "TS113-E051",
+            "TS113-E053"
+          ]
+        },
+        {
+          "old_line": 115,
+          "original": "div -> out (RETURN_QUOTIENT_POINTER_REMAINDER)",
+          "correction": [
+            "div_u64_rem -> quotient (RETURN_VALUE)",
+            "div_u64_rem -> rem (POINTER_WRITE)",
+            "ns_to_timespec64 -> tv_sec (FIELD_WRITE)",
+            "ns_to_timespec64 -> tv_nsec (FIELD_WRITE)"
+          ],
+          "source_ids": [
+            "TS113-E053",
+            "TS113-E050",
+            "TS113-E051",
+            "TS113-P14"
+          ]
+        }
+      ]
+    }
+  },
+  "prior_dispositions": {
+    "R110_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R110_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch110": "PASS_PENDING_LOCAL",
+    "R111_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R111_02": "OPEN",
+    "batch111": "RETURN",
+    "R112_01": "OPEN",
+    "R112_02": "OPEN",
+    "batch112": "RETURN"
+  },
+  "ABC": {
+    "A": {
+      "source_reference": "mykernel/time/misc/time_misc.c#L273–314 and syscall.c#L33–50",
+      "user_structure": {
+        "typedef": "__kernel_timespec_s",
+        "tv_sec": "__kernel_time64_t=long long",
+        "tv_nsec": "long long",
+        "type_positions": [
+          "TS113-P05",
+          "TS113-P06"
+        ]
+      },
+      "internal_structure": {
+        "typedef": "timespec64_s",
+        "tv_sec": "time64_t=__s64",
+        "tv_nsec": "long",
+        "type_positions": [
+          "TS113-P07",
+          "TS113-P08"
+        ]
+      },
+      "assumptions": [
+        "x86-64 LP64 type widths/representability are assumptions, not observed sizeof/offset bytes",
+        "get_timespec64 only returns based on copy_from_user result; no validity predicate called in its complete body",
+        "compat mask L285–L287 is commented out; no executable masking inferred",
+        "copy_from_user bytes requested: sizeof(kts), value not replaced by guessed constant",
+        "copy_to_user bytes requested: sizeof(kts), no layout/packing guarantee proven",
+        "two fields are assigned only after successful reported input copy; output initializes kts before copy call"
+      ],
+      "path_read": {
+        "ret_expression": "ret=copy_from_user(&kts,uts,sizeof(kts)); if(ret)return -EFAULT; ts.tv_sec=kts.tv_sec; ts.tv_nsec=kts.tv_nsec; return0",
+        "anchor_ids": [
+          "TS113-E022",
+          "TS113-E023",
+          "TS113-E024"
+        ]
+      },
+      "path_write": {
+        "init": "__kernel_timespec_s kts={.tv_sec=ts->tv_sec,.tv_nsec=ts->tv_nsec}",
+        "copy": "return copy_to_user(uts,&kts,sizeof(kts)) ? -EFAULT:0",
+        "anchor_ids": [
+          "TS113-E025",
+          "TS113-E026"
+        ]
+      },
+      "callsite_clock_gettime": {
+        "null_kclock": "-EINVAL before clock_get_timespec and put",
+        "clock_call": "error=kc->clock_get_timespec(...)",
+        "output_guard": "!error && put_timespec64(&kernel_tp,tp)",
+        "put_failed_return": "-EFAULT",
+        "anchors": [
+          "TS113-E027",
+          "TS113-E028",
+          "TS113-E029"
+        ]
+      },
+      "abstract_cases": [
+        {
+          "id": "A01",
+          "operation": "get_timespec64",
+          "copy_from_user_ret": "0",
+          "input": {
+            "kts_tv_sec": "1",
+            "kts_tv_nsec": "7"
+          },
+          "return_value": "0",
+          "destination_writes": [
+            "ts->tv_sec=kts.tv_sec",
+            "ts->tv_nsec=kts.tv_nsec"
+          ],
+          "order": [
+            "copy_from_user",
+            "ret gate false",
+            "tv_sec assign",
+            "tv_nsec assign",
+            "return0"
+          ],
+          "source_ids": [
+            "TS113-E022",
+            "TS113-E023",
+            "TS113-E024"
+          ],
+          "premise": "valid user/local structures; both values representable in target types; copy reports zero",
+          "note": "Neither field validated in get_timespec64"
+        },
+        {
+          "id": "A02",
+          "operation": "get_timespec64",
+          "copy_from_user_ret": "nonzero",
+          "return_value": "-EFAULT",
+          "destination_writes": [],
+          "order": [
+            "copy_from_user",
+            "ret gate true",
+            "return -EFAULT"
+          ],
+          "source_ids": [
+            "TS113-E022"
+          ],
+          "premise": "ret != 0; no assumption about actual copied bytes",
+          "note": "kts may be partial/uninitialized; no ts field assignments reached by this function"
+        },
+        {
+          "id": "A03",
+          "operation": "put_timespec64",
+          "copy_to_user_ret": "0",
+          "return_value": "0",
+          "local_initialization": [
+            "kts.tv_sec=ts->tv_sec",
+            "kts.tv_nsec=ts->tv_nsec"
+          ],
+          "output_copy_requested": "sizeof(kts)",
+          "source_ids": [
+            "TS113-E025",
+            "TS113-E026"
+          ],
+          "premise": "ordinary representable source fields, copy routine reports zero",
+          "note": "Byte count and layout not independently measured"
+        },
+        {
+          "id": "A04",
+          "operation": "put_timespec64",
+          "copy_to_user_ret": "nonzero",
+          "return_value": "-EFAULT",
+          "local_initialization": [
+            "kts.tv_sec=ts->tv_sec",
+            "kts.tv_nsec=ts->tv_nsec"
+          ],
+          "output_copy_requested": "sizeof(kts)",
+          "source_ids": [
+            "TS113-E025",
+            "TS113-E026"
+          ],
+          "premise": "copy routine reports nonzero",
+          "note": "Actual partial user bytes, fault and padding unknown"
+        },
+        {
+          "id": "A05",
+          "operation": "clock_gettime",
+          "condition": "kc==NULL",
+          "return_value": "-EINVAL",
+          "put_timespec64_called": false,
+          "source_ids": [
+            "TS113-E027"
+          ],
+          "premise": "clockid_to_kclock result null"
+        },
+        {
+          "id": "A06",
+          "operation": "clock_gettime",
+          "condition": "kc exists, kc->clock_get_timespec returns nonzero",
+          "return_value": "upstream error",
+          "put_timespec64_called": false,
+          "source_ids": [
+            "TS113-E028",
+            "TS113-E029"
+          ],
+          "premise": "!error false; short circuit no put"
+        },
+        {
+          "id": "A07",
+          "operation": "clock_gettime",
+          "condition": "kc exists, get callback returns zero",
+          "return_value": "0 if put returns0, -EFAULT if put nonzero",
+          "put_timespec64_called": true,
+          "source_ids": [
+            "TS113-E028",
+            "TS113-E029",
+            "TS113-E026"
+          ],
+          "premise": "valid pointers and clock call; put result abstracted"
+        }
+      ]
+    },
+    "B": {
+      "source_reference": "mykernel/time/misc/time_misc.h#L89–121",
+      "predicates": {
+        "basic": {
+          "name": "timespec64_valid",
+          "tests": [
+            "if tv_sec<0 return false",
+            "else if (ulong)tv_nsec>=NSEC_PER_SEC return false",
+            "else return true"
+          ],
+          "source": [
+            "TS113-E030",
+            "TS113-E031"
+          ]
+        },
+        "strict": {
+          "name": "timespec64_valid_strict",
+          "call": "timespec64_valid(ts)",
+          "additional": "(ulonglong)tv_sec>=KTIME_SEC_MAX causes false",
+          "source": [
+            "TS113-E032",
+            "TS113-E033"
+          ]
+        },
+        "settod": {
+          "name": "timespec64_valid_settod",
+          "call": "timespec64_valid(ts)",
+          "additional": "(ulonglong)tv_sec>=TIME_SETTOD_SEC_MAX causes false",
+          "source": [
+            "TS113-E034",
+            "TS113-E035"
+          ]
+        }
+      },
+      "limits_seconds": {
+        "NSEC_PER_SEC": "1000000000",
+        "KTIME_SEC_MAX": "9223372036",
+        "TIME_UPTIME_SEC_MAX": "946080000",
+        "TIME_SETTOD_SEC_MAX": "8277292036",
+        "formula": "(KTIME_MAX / NSEC_PER_SEC) - (30LL * 365 * 24 * 3600)",
+        "sources": [
+          "TS113-E008",
+          "TS113-E010",
+          "TS113-E037",
+          "TS113-E038",
+          "TS113-E036"
+        ]
+      },
+      "type_assumptions": [
+        "tv_sec signed 64-bit integer; tv_nsec signed long; (ulong)negative tv_nsec becomes large unsigned under LP64",
+        "if basic valid=false, strict and settod second guard is not evaluated because of early return"
+      ],
+      "validation_truth_table": [
+        {
+          "id": "V01",
+          "tv_sec": "0",
+          "tv_nsec": "0",
+          "basic": true,
+          "strict": true,
+          "settod": true,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "normalized zero",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V02",
+          "tv_sec": "0",
+          "tv_nsec": "-1",
+          "basic": false,
+          "strict": false,
+          "settod": false,
+          "basic_branch": "UNSIGNED_NSEC_RANGE_RETURN_FALSE",
+          "strict_extra_gate": "SHORT_CIRCUITED",
+          "settod_extra_gate": "SHORT_CIRCUITED",
+          "note": "negative nanosecond -> unsigned high",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V03",
+          "tv_sec": "0",
+          "tv_nsec": "999999999",
+          "basic": true,
+          "strict": true,
+          "settod": true,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "largest canonical ns",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V04",
+          "tv_sec": "0",
+          "tv_nsec": "1000000000",
+          "basic": false,
+          "strict": false,
+          "settod": false,
+          "basic_branch": "UNSIGNED_NSEC_RANGE_RETURN_FALSE",
+          "strict_extra_gate": "SHORT_CIRCUITED",
+          "settod_extra_gate": "SHORT_CIRCUITED",
+          "note": "inclusive invalid ns",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V05",
+          "tv_sec": "-1",
+          "tv_nsec": "999999999",
+          "basic": false,
+          "strict": false,
+          "settod": false,
+          "basic_branch": "NEGATIVE_SECONDS_RETURN_FALSE",
+          "strict_extra_gate": "SHORT_CIRCUITED",
+          "settod_extra_gate": "SHORT_CIRCUITED",
+          "note": "negative seconds checked first",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V06",
+          "tv_sec": "8277292035",
+          "tv_nsec": "0",
+          "basic": true,
+          "strict": true,
+          "settod": true,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "settime ceiling minus1",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V07",
+          "tv_sec": "8277292036",
+          "tv_nsec": "0",
+          "basic": true,
+          "strict": true,
+          "settod": false,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "settime ceiling equality",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V08",
+          "tv_sec": "8277292037",
+          "tv_nsec": "0",
+          "basic": true,
+          "strict": true,
+          "settod": false,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "settime ceiling plus1",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V09",
+          "tv_sec": "9223372035",
+          "tv_nsec": "0",
+          "basic": true,
+          "strict": true,
+          "settod": false,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "ktime ceiling minus1",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V10",
+          "tv_sec": "9223372036",
+          "tv_nsec": "0",
+          "basic": true,
+          "strict": false,
+          "settod": false,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "ktime ceiling equality",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V11",
+          "tv_sec": "9223372037",
+          "tv_nsec": "0",
+          "basic": true,
+          "strict": false,
+          "settod": false,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "ktime ceiling plus1",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        },
+        {
+          "id": "V12",
+          "tv_sec": "1",
+          "tv_nsec": "7",
+          "basic": true,
+          "strict": true,
+          "settod": true,
+          "basic_branch": "RETURN_TRUE",
+          "strict_extra_gate": "EVALUATED",
+          "settod_extra_gate": "EVALUATED",
+          "note": "ordinary valid normalized input",
+          "source_ids": [
+            "TS113-E030",
+            "TS113-E031",
+            "TS113-E032",
+            "TS113-E033",
+            "TS113-E034",
+            "TS113-E035",
+            "TS113-E036",
+            "TS113-E037",
+            "TS113-E038"
+          ],
+          "executed": false
+        }
+      ]
+    },
+    "C": {
+      "source_reference": "mykernel/time/misc/time_misc.h#L44–84, mykernel/time/misc/time_misc.c#L22–41",
+      "equality": {
+        "formula": "a.tv_sec==b.tv_sec && a.tv_nsec==b.tv_nsec",
+        "short_circuit": "if sec differs, nsec equality may not be evaluated",
+        "source": "TS113-E039"
+      },
+      "compare": {
+        "sec_less": "return -1",
+        "sec_greater": "return 1",
+        "same_sec": "return lhs.tv_nsec-rhs.tv_nsec as int",
+        "valid_range": "for normalized nsec both [0,999999999], difference [-999999999,999999999] fits int32; outside domain may overflow long or int conversion",
+        "source": [
+          "TS113-E040",
+          "TS113-E041",
+          "TS113-E042"
+        ]
+      },
+      "normalize": {
+        "carry": "while nsec>=1e9: asm barrier, nsec-=1e9, ++sec",
+        "borrow": "while nsec<0: asm barrier, nsec+=1e9,--sec",
+        "assign": [
+          "ts->tv_sec=sec",
+          "ts->tv_nsec=nsec"
+        ],
+        "source": [
+          "TS113-E043",
+          "TS113-E044",
+          "TS113-E045",
+          "TS113-E046"
+        ]
+      },
+      "real_callers": [
+        {
+          "from": "timespec64_add",
+          "to": "set_normalized_timespec64",
+          "kind": "DIRECT_CALL",
+          "source": "TS113-E047"
+        },
+        {
+          "from": "timespec64_sub",
+          "to": "set_normalized_timespec64",
+          "kind": "DIRECT_CALL",
+          "source": "TS113-E048"
+        }
+      ],
+      "bounded_examples": [
+        {
+          "id": "C01",
+          "inputs": [
+            {
+              "sec": 2,
+              "nsec": 7
+            },
+            {
+              "sec": 2,
+              "nsec": 7
+            }
+          ],
+          "equal": true,
+          "compare": 0,
+          "reason": "same fields; seconds equal, nsec difference0",
+          "source_ids": [
+            "TS113-E039",
+            "TS113-E040",
+            "TS113-E041",
+            "TS113-E042"
+          ]
+        },
+        {
+          "id": "C02",
+          "inputs": [
+            {
+              "sec": 2,
+              "nsec": 7
+            },
+            {
+              "sec": 2,
+              "nsec": 0
+            }
+          ],
+          "equal": false,
+          "compare": 7,
+          "reason": "same seconds, normalized nsec difference+7",
+          "source_ids": [
+            "TS113-E039",
+            "TS113-E042"
+          ]
+        },
+        {
+          "id": "C03",
+          "inputs": [
+            {
+              "sec": 2,
+              "nsec": 0
+            },
+            {
+              "sec": 2,
+              "nsec": 7
+            }
+          ],
+          "equal": false,
+          "compare": -7,
+          "reason": "same seconds, nsec difference-7",
+          "source_ids": [
+            "TS113-E039",
+            "TS113-E042"
+          ]
+        },
+        {
+          "id": "C04",
+          "inputs": [
+            {
+              "sec": 1,
+              "nsec": 999999999
+            },
+            {
+              "sec": 2,
+              "nsec": 0
+            }
+          ],
+          "equal": false,
+          "compare": -1,
+          "reason": "seconds comparison first even though nanosecond is larger",
+          "source_ids": [
+            "TS113-E040"
+          ]
+        },
+        {
+          "id": "C05",
+          "inputs": [
+            {
+              "sec": 2,
+              "nsec": 0
+            },
+            {
+              "sec": 1,
+              "nsec": 999999999
+            }
+          ],
+          "equal": false,
+          "compare": 1,
+          "reason": "seconds greater gate",
+          "source_ids": [
+            "TS113-E041"
+          ]
+        },
+        {
+          "id": "C06",
+          "inputs": [
+            {
+              "sec": 0,
+              "nsec": 1000000000
+            },
+            {
+              "sec": 1,
+              "nsec": 0
+            }
+          ],
+          "raw_equal": false,
+          "raw_compare": -1,
+          "normalize_left_to": {
+            "sec": 1,
+            "nsec": 0
+          },
+          "normalized_equal": true,
+          "normalized_compare": 0,
+          "source_ids": [
+            "TS113-E039",
+            "TS113-E040",
+            "TS113-E043",
+            "TS113-E044",
+            "TS113-E046"
+          ],
+          "reason": "raw fields differ; one carry gives equal canonical pair; raw left invalid under B"
+        },
+        {
+          "id": "C07",
+          "input": {
+            "sec": 0,
+            "nsec": -1
+          },
+          "normalized": {
+            "sec": -1,
+            "nsec": 999999999
+          },
+          "raw_basic_valid": false,
+          "normalized_basic_valid": false,
+          "source_ids": [
+            "TS113-E045",
+            "TS113-E046",
+            "TS113-E030",
+            "TS113-E031"
+          ],
+          "reason": "borrow converts nsec to canonical but sec negative, so valid still rejects"
+        },
+        {
+          "id": "C08",
+          "operation": "timespec64_add",
+          "inputs": [
+            {
+              "sec": 0,
+              "nsec": 999999999
+            },
+            {
+              "sec": 0,
+              "nsec": 1
+            }
+          ],
+          "output": {
+            "sec": 1,
+            "nsec": 0
+          },
+          "source_ids": [
+            "TS113-E047",
+            "TS113-E044",
+            "TS113-E046"
+          ],
+          "premise": "intermediate sec and nsec representable"
+        },
+        {
+          "id": "C09",
+          "operation": "timespec64_sub",
+          "inputs": [
+            {
+              "sec": 1,
+              "nsec": 0
+            },
+            {
+              "sec": 0,
+              "nsec": 1
+            }
+          ],
+          "output": {
+            "sec": 0,
+            "nsec": 999999999
+          },
+          "source_ids": [
+            "TS113-E048",
+            "TS113-E045",
+            "TS113-E046"
+          ],
+          "premise": "intermediate sec and nsec representable"
+        }
+      ],
+      "assumptions": [
+        "Inputs and intermediates representable signed values; no extreme integer overflow",
+        "raw noncanonical fields may compare differently from their normalized copies",
+        "normalization alone does not guarantee timespec64_valid, e.g. normalized negative sec"
+      ]
+    }
+  },
+  "evidence_ledger": [
+    {
+      "id": "TS113-E001",
+      "key": "CFG",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "set(CMAKE_C_FLAGS)",
+      "start": 66,
+      "end": 66
+    },
+    {
+      "id": "TS113-E002",
+      "key": "LVL_BITS",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_BITS",
+      "start": 108,
+      "end": 108
+    },
+    {
+      "id": "TS113-E003",
+      "key": "LVL_SIZE",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_SIZE",
+      "start": 109,
+      "end": 109
+    },
+    {
+      "id": "TS113-E004",
+      "key": "LVL_MASK",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_MASK",
+      "start": 110,
+      "end": 110
+    },
+    {
+      "id": "TS113-E005",
+      "key": "LVL_OFFS",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_OFFS",
+      "start": 111,
+      "end": 111
+    },
+    {
+      "id": "TS113-E006",
+      "key": "ARR_SHIFT",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "TIMER_ARRAYSHIFT",
+      "start": 195,
+      "end": 195
+    },
+    {
+      "id": "TS113-E007",
+      "key": "ARR_MASK",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "TIMER_ARRAYMASK",
+      "start": 196,
+      "end": 196
+    },
+    {
+      "id": "TS113-E008",
+      "key": "KT_MAX",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "KTIME_MAX",
+      "start": 44,
+      "end": 44
+    },
+    {
+      "id": "TS113-E009",
+      "key": "KT_MIN",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "KTIME_MIN",
+      "start": 45,
+      "end": 45
+    },
+    {
+      "id": "TS113-E010",
+      "key": "SEC_MAX",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "KTIME_SEC_MAX",
+      "start": 46,
+      "end": 46
+    },
+    {
+      "id": "TS113-E011",
+      "key": "SEC_MIN",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "KTIME_SEC_MIN",
+      "start": 47,
+      "end": 47
+    },
+    {
+      "id": "TS113-E012",
+      "key": "LVL_CLK_SHIFT",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_CLK_SHIFT",
+      "start": 94,
+      "end": 94
+    },
+    {
+      "id": "TS113-E013",
+      "key": "LVL_SHIFT",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_SHIFT",
+      "start": 97,
+      "end": 97
+    },
+    {
+      "id": "TS113-E014",
+      "key": "LVL_START",
+      "path": "mykernel/time/timer/timer_const.h",
+      "symbol": "LVL_START",
+      "start": 105,
+      "end": 105
+    },
+    {
+      "id": "TS113-E015",
+      "key": "SELECT_LEVEL",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "calc_wheel_index",
+      "start": 54,
+      "end": 57
+    },
+    {
+      "id": "TS113-E016",
+      "key": "INDEX_CALC",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "calc_index",
+      "start": 109,
+      "end": 111
+    },
+    {
+      "id": "TS113-E017",
+      "key": "WRITE_INDEX",
+      "path": "mykernel/time/timer/timer.h",
+      "symbol": "timer_set_idx",
+      "start": 90,
+      "end": 91
+    },
+    {
+      "id": "TS113-E018",
+      "key": "WRITE_CPU",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "start": 529,
+      "end": 530
+    },
+    {
+      "id": "TS113-E019",
+      "key": "ENQUEUE",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "enqueue_timer",
+      "start": 123,
+      "end": 125
+    },
+    {
+      "id": "TS113-E020",
+      "key": "ON_CPU_CALL",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "add_timer_on",
+      "start": 508,
+      "end": 508
+    },
+    {
+      "id": "TS113-E021",
+      "key": "PPREV_INIT",
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "simple_init_timer_key",
+      "start": 716,
+      "end": 716
+    },
+    {
+      "id": "TS113-E022",
+      "key": "A_COPY",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "get_timespec64",
+      "start": 279,
+      "end": 281
+    },
+    {
+      "id": "TS113-E023",
+      "key": "A_SEC",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "get_timespec64",
+      "start": 283,
+      "end": 283
+    },
+    {
+      "id": "TS113-E024",
+      "key": "A_NSEC",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "get_timespec64",
+      "start": 290,
+      "end": 292
+    },
+    {
+      "id": "TS113-E025",
+      "key": "A_PUT_INIT",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "put_timespec64",
+      "start": 307,
+      "end": 310
+    },
+    {
+      "id": "TS113-E026",
+      "key": "A_PUT_COPY",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "put_timespec64",
+      "start": 312,
+      "end": 312
+    },
+    {
+      "id": "TS113-E027",
+      "key": "A_CLOCK_NULL",
+      "path": "mykernel/time/syscall.c",
+      "symbol": "clock_gettime",
+      "start": 41,
+      "end": 42
+    },
+    {
+      "id": "TS113-E028",
+      "key": "A_CLOCK_GET",
+      "path": "mykernel/time/syscall.c",
+      "symbol": "clock_gettime",
+      "start": 44,
+      "end": 44
+    },
+    {
+      "id": "TS113-E029",
+      "key": "A_CLOCK_PUT",
+      "path": "mykernel/time/syscall.c",
+      "symbol": "clock_gettime",
+      "start": 46,
+      "end": 49
+    },
+    {
+      "id": "TS113-E030",
+      "key": "B_VALID_NEG",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid",
+      "start": 93,
+      "end": 94
+    },
+    {
+      "id": "TS113-E031",
+      "key": "B_VALID_NSEC",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid",
+      "start": 96,
+      "end": 98
+    },
+    {
+      "id": "TS113-E032",
+      "key": "B_STRICT_VALID",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid_strict",
+      "start": 104,
+      "end": 105
+    },
+    {
+      "id": "TS113-E033",
+      "key": "B_STRICT_UPPER",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid_strict",
+      "start": 107,
+      "end": 109
+    },
+    {
+      "id": "TS113-E034",
+      "key": "B_SETTOD_VALID",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid_settod",
+      "start": 115,
+      "end": 116
+    },
+    {
+      "id": "TS113-E035",
+      "key": "B_SETTOD_UPPER",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_valid_settod",
+      "start": 118,
+      "end": 120
+    },
+    {
+      "id": "TS113-E036",
+      "key": "B_NSEC_UNIT",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "NSEC_PER_SEC",
+      "start": 32,
+      "end": 32
+    },
+    {
+      "id": "TS113-E037",
+      "key": "B_UPTIME",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "TIME_UPTIME_SEC_MAX",
+      "start": 57,
+      "end": 57
+    },
+    {
+      "id": "TS113-E038",
+      "key": "B_SETTOD_LIMIT",
+      "path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "TIME_SETTOD_SEC_MAX",
+      "start": 58,
+      "end": 58
+    },
+    {
+      "id": "TS113-E039",
+      "key": "C_EQUAL",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_equal",
+      "start": 47,
+      "end": 47
+    },
+    {
+      "id": "TS113-E040",
+      "key": "C_CMP_LESS",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_compare",
+      "start": 58,
+      "end": 59
+    },
+    {
+      "id": "TS113-E041",
+      "key": "C_CMP_GREATER",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_compare",
+      "start": 60,
+      "end": 61
+    },
+    {
+      "id": "TS113-E042",
+      "key": "C_CMP_NSEC",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_compare",
+      "start": 62,
+      "end": 62
+    },
+    {
+      "id": "TS113-E043",
+      "key": "C_CARRY_GATE",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "set_normalized_timespec64",
+      "start": 24,
+      "end": 24
+    },
+    {
+      "id": "TS113-E044",
+      "key": "C_CARRY_ACT",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "set_normalized_timespec64",
+      "start": 30,
+      "end": 33
+    },
+    {
+      "id": "TS113-E045",
+      "key": "C_BORROW",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "set_normalized_timespec64",
+      "start": 34,
+      "end": 37
+    },
+    {
+      "id": "TS113-E046",
+      "key": "C_ASSIGN",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "set_normalized_timespec64",
+      "start": 39,
+      "end": 40
+    },
+    {
+      "id": "TS113-E047",
+      "key": "C_ADD_CALL",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_add",
+      "start": 69,
+      "end": 70
+    },
+    {
+      "id": "TS113-E048",
+      "key": "C_SUB_CALL",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_sub",
+      "start": 81,
+      "end": 82
+    },
+    {
+      "id": "TS113-E049",
+      "key": "D_NS_INIT",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 52,
+      "end": 53
+    },
+    {
+      "id": "TS113-E050",
+      "key": "D_NS_POS",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 55,
+      "end": 57
+    },
+    {
+      "id": "TS113-E051",
+      "key": "D_NS_NEG",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 64,
+      "end": 65
+    },
+    {
+      "id": "TS113-E052",
+      "key": "D_NS_RETURN",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 68,
+      "end": 68
+    },
+    {
+      "id": "TS113-E053",
+      "key": "D_DIV",
+      "path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "div_u64_rem",
+      "start": 43,
+      "end": 44
+    },
+    {
+      "id": "TS113-E054",
+      "key": "D_A_WRAP",
+      "path": "mykernel/time/ktime/ktime.h",
+      "symbol": "timespec64_to_ktime",
+      "start": 64,
+      "end": 64
+    },
+    {
+      "id": "TS113-E055",
+      "key": "D_A_KSET",
+      "path": "mykernel/time/ktime/ktime.h",
+      "symbol": "ktime_set",
+      "start": 54,
+      "end": 57
+    },
+    {
+      "id": "TS113-E056",
+      "key": "D_A_NS_HI",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_to_ns",
+      "start": 134,
+      "end": 135
+    },
+    {
+      "id": "TS113-E057",
+      "key": "D_A_NS_LO",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_to_ns",
+      "start": 137,
+      "end": 140
+    },
+    {
+      "id": "TS113-E058",
+      "key": "D_SAFE",
+      "path": "mykernel/time/timer/hrtimer.c",
+      "symbol": "ktime_add_safe",
+      "start": 15,
+      "end": 18
+    },
+    {
+      "id": "TS113-E059",
+      "key": "D_KT_MACRO",
+      "path": "mykernel/time/ktime/ktime_macro.h",
+      "symbol": "ktime_to_timespec64",
+      "start": 31,
+      "end": 31
+    },
+    {
+      "id": "TS113-E060",
+      "key": "D_UNHASH",
+      "path": "mykernel/lib/list/hash_list.h",
+      "symbol": "hlist_unhashed_lockless",
+      "start": 110,
+      "end": 110
+    }
+  ],
+  "new_anchors": 60,
+  "source_window_validation": "All 60 quotes sourced from fixed time in first retrieval; each window 1–5 consecutive lines, single real function or macro",
+  "ordinary_positions": 26,
+  "tests": {
+    "full_local_P9": "NOT_RUN",
+    "build": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "link": "NOT_RUN",
+    "kernel": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_hardware": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "concurrency": "NOT_RUN",
+    "repository_scripts": "NOT_RUN",
+    "models_run": "NOT_RUN",
+    "paper_checks": {
+      "validation_cases": 12,
+      "user_copy_cases": 7,
+      "compare_normalization_cases": 9,
+      "roundtrip_112_cases": 6
+    }
+  }
+}
