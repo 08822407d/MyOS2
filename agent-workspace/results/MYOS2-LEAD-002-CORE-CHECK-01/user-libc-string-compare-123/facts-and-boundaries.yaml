@@ -1,0 +1,2810 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-STRING-COMPARE-123",
+  "record_type": "static_source_data_and_bounded_models",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-18",
+  "produced_by": "GPT-6（身份自报，后端/effort未认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "date": "2026-11-22",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "lead_release_short12": "561261755177",
+  "execution_parent_short12": "7d0e810ec4ff",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "open": [
+      "R122-01"
+    ],
+    "already_closed_by_C08": [
+      "R120-02",
+      "R121-01",
+      "R121-02"
+    ],
+    "direct_call_edges": [
+      {
+        "caller": "do_sys_open",
+        "callee": "build_open_how",
+        "path": "mykernel/fs/vfs/open.c",
+        "line": 268,
+        "kind": "DIRECT_CALL",
+        "args": [
+          "flags",
+          "mode"
+        ]
+      },
+      {
+        "caller": "do_sys_open",
+        "callee": "do_sys_openat2",
+        "path": "mykernel/fs/vfs/open.c",
+        "line": 269,
+        "kind": "DIRECT_CALL",
+        "args": [
+          "dfd",
+          "filename",
+          "&how"
+        ]
+      },
+      {
+        "caller": "do_creatat",
+        "callee": "dir->i_op->create",
+        "path": "mykernel/fs/vfs/namei.c",
+        "line": 921,
+        "kind": "INDIRECT_CALL",
+        "guard": "valid dir i_op and method present"
+      },
+      {
+        "caller": "do_creatat",
+        "callee": "done_path_create",
+        "path": "mykernel/fs/vfs/namei.c",
+        "line": 922,
+        "kind": "DIRECT_CALL",
+        "guard": "method present and callback returns to caller"
+      },
+      {
+        "caller": "do_creatat",
+        "callee": "putname",
+        "path": "mykernel/fs/vfs/namei.c",
+        "line": 928,
+        "kind": "DIRECT_CALL",
+        "guard": "normal/out_putname path, not method-missing early return"
+      },
+      {
+        "caller": "do_mkdirat",
+        "callee": "dir->i_op->mkdir",
+        "path": "mykernel/fs/vfs/namei.c",
+        "line": 988,
+        "kind": "INDIRECT_CALL",
+        "guard": "method present"
+      },
+      {
+        "caller": "do_mkdirat",
+        "callee": "done_path_create",
+        "path": "mykernel/fs/vfs/namei.c",
+        "line": 989,
+        "kind": "DIRECT_CALL",
+        "guard": "method present and callback returns"
+      },
+      {
+        "caller": "do_mkdirat",
+        "callee": "putname",
+        "path": "mykernel/fs/vfs/namei.c",
+        "line": 995,
+        "kind": "DIRECT_CALL",
+        "guard": "normal/out_putname, not method-missing early return"
+      },
+      {
+        "caller": "rm_command",
+        "callee": "unlink",
+        "path": "myinitramfs/myshell/myshell.c",
+        "line": 370,
+        "kind": "DIRECT_CALL",
+        "guard": "argc==2"
+      },
+      {
+        "caller": "rm_command",
+        "callee": "strerror",
+        "path": "myinitramfs/myshell/myshell.c",
+        "line": 372,
+        "kind": "DIRECT_CALL",
+        "guard": "err!=0"
+      },
+      {
+        "caller": "rm_command",
+        "callee": "printf",
+        "path": "myinitramfs/myshell/myshell.c",
+        "line": 372,
+        "kind": "DIRECT_CALL",
+        "guard": "err!=0"
+      },
+      {
+        "caller": "rmdir_command",
+        "callee": "rmdir",
+        "path": "myinitramfs/myshell/myshell.c",
+        "line": 356,
+        "kind": "DIRECT_CALL",
+        "guard": "argc==2"
+      },
+      {
+        "caller": "rmdir_command",
+        "callee": "strerror",
+        "path": "myinitramfs/myshell/myshell.c",
+        "line": 358,
+        "kind": "DIRECT_CALL",
+        "guard": "err!=0"
+      },
+      {
+        "caller": "rmdir_command",
+        "callee": "printf",
+        "path": "myinitramfs/myshell/myshell.c",
+        "line": 358,
+        "kind": "DIRECT_CALL",
+        "guard": "err!=0"
+      },
+      {
+        "caller": "_IO_new_fopen",
+        "callee": "_IO_new_file_fopen",
+        "path": "myinitramfs/mylib/myglibc/libio/iofopen.c",
+        "line": 87,
+        "kind": "DIRECT_CALL",
+        "guard": "valid FILE P"
+      },
+      {
+        "caller": "_IO_new_file_fopen",
+        "callee": "_IO_file_open",
+        "path": "myinitramfs/mylib/myglibc/libio/fileops.c",
+        "line": 267,
+        "kind": "DIRECT_CALL",
+        "guard": "initial fd -1; accepted first char and suffix loop complete"
+      },
+      {
+        "caller": "_IO_file_open",
+        "callee": "open",
+        "path": "myinitramfs/mylib/myglibc/libio/fileops.c",
+        "line": 178,
+        "kind": "DIRECT_CALL",
+        "guard": "entered helper"
+      }
+    ],
+    "forbidden_as_DIRECT_CALL": [
+      [
+        "build_open_how",
+        "do_sys_openat2"
+      ],
+      [
+        "dir->i_op->create",
+        "done_path_create"
+      ],
+      [
+        "done_path_create",
+        "putname"
+      ],
+      [
+        "dir->i_op->mkdir",
+        "done_path_create"
+      ],
+      [
+        "strerror",
+        "printf"
+      ],
+      [
+        "case_id",
+        "_IO_new_fopen"
+      ],
+      [
+        "_IO_file_open",
+        "_IO_new_fopen"
+      ]
+    ],
+    "sequencing_and_data": [
+      {
+        "from": "build_open_how",
+        "to": "do_sys_openat2",
+        "kind": "SEQUENCE_AND_DATA",
+        "data": "how returned by build_open_how in do_sys_open, then &how passed by do_sys_open",
+        "owned_by": "do_sys_open",
+        "path": "open.c:268-269"
+      },
+      {
+        "from": "dir->i_op->create",
+        "to": "done_path_create",
+        "kind": "SEQUENCE",
+        "owned_by": "do_creatat",
+        "path": "namei.c:921-922"
+      },
+      {
+        "from": "done_path_create",
+        "to": "putname",
+        "kind": "SEQUENCE",
+        "owned_by": "do_creatat",
+        "path": "namei.c:922-928"
+      },
+      {
+        "from": "dir->i_op->mkdir",
+        "to": "done_path_create",
+        "kind": "SEQUENCE",
+        "owned_by": "do_mkdirat",
+        "path": "namei.c:988-989"
+      },
+      {
+        "from": "done_path_create",
+        "to": "putname",
+        "kind": "SEQUENCE",
+        "owned_by": "do_mkdirat",
+        "path": "namei.c:989-995"
+      },
+      {
+        "from": "strerror_result",
+        "to": "printf_arg1",
+        "kind": "DATA",
+        "owned_by": "rm_command or rmdir_command, distinct case",
+        "path": "myshell.c:358/372"
+      },
+      {
+        "from": "argv1",
+        "to": "printf_arg2",
+        "kind": "DATA",
+        "owned_by": "rm_command or rmdir_command",
+        "path": "myshell.c:355/369"
+      }
+    ],
+    "special_cases": [
+      {
+        "case_id": "D121-A01",
+        "condition": "create method ABSENT with valid i_op",
+        "callback": false,
+        "done_path_create": false,
+        "putname": false,
+        "kernel_return": "-EPERM",
+        "user_return": "CONDITIONAL_ON_ACTUAL_LIBC_NORMAL_RETURN",
+        "builtin_return": 0
+      },
+      {
+        "case_id": "D121-B01",
+        "condition": "mkdir method ABSENT with valid i_op",
+        "callback": false,
+        "done_path_create": false,
+        "putname": false,
+        "kernel_return": "-EPERM",
+        "user_return": "CONDITIONAL_ON_ACTUAL_LIBC_NORMAL_RETURN",
+        "builtin_return": 0
+      },
+      {
+        "case_id": "D121-A02",
+        "condition": "create method present, callback 0",
+        "callback": true,
+        "done_path_create": true,
+        "putname": true,
+        "kernel_return": 0,
+        "builtin_return": 0
+      },
+      {
+        "case_id": "D121-B02",
+        "condition": "mkdir method present, callback 0",
+        "callback": true,
+        "done_path_create": true,
+        "putname": true,
+        "kernel_return": 0,
+        "builtin_return": 0
+      }
+    ],
+    "C121_return_cases": [
+      {
+        "case_id": "C121-01",
+        "model_start": "P valid, mode r, open result -1",
+        "outer_called": true,
+        "parse_called": true,
+        "helper_called": true,
+        "open_count": 1,
+        "helper_result": "NULL",
+        "parse_result": "NULL",
+        "outer_result": "NULL"
+      },
+      {
+        "case_id": "C121-04",
+        "model_start": "P valid, mode q",
+        "outer_called": true,
+        "parse_called": true,
+        "helper_called": false,
+        "open_count": 0,
+        "helper_result": null,
+        "parse_result": "NULL",
+        "outer_result": "NULL"
+      },
+      {
+        "case_id": "C121-05",
+        "model_start": "P with _fileno=7, direct parser call",
+        "outer_called": false,
+        "parse_called": true,
+        "helper_called": false,
+        "open_count": 0,
+        "helper_result": null,
+        "parse_result": "NULL",
+        "outer_result": null
+      }
+    ],
+    "access_decoding_from_C08": {
+      "low_two_bits": {
+        "0": "O_RDONLY",
+        "1": "O_WRONLY",
+        "2": "O_RDWR"
+      },
+      "user_O_APPEND_raw_0x8": "filtered_as_not_valid_on_repo_kernel",
+      "kernel_0x800": [
+        "O_NONBLOCK",
+        "O_NDELAY"
+      ],
+      "not_recomputed_8_open_how_values": true
+    }
+  },
+  "A_strcmp": {
+    "source": "myinitramfs/mylib/myglibc/string/strcmp.c:20-44",
+    "pointer_types": [
+      "const char *p1",
+      "const char *p2"
+    ],
+    "casts": [
+      "const unsigned char *s1",
+      "const unsigned char *s2"
+    ],
+    "reads_each_iteration": [
+      "c1=(unsigned char)*s1++",
+      "c2=(unsigned char)*s2++"
+    ],
+    "stop_conditions": [
+      "c1==NUL",
+      "c1!=c2"
+    ],
+    "return_expression": "c1 - c2",
+    "cases": [
+      {
+        "case_id": "A123-01",
+        "why": "same",
+        "lhs_bytes": [
+          112,
+          119,
+          100,
+          0
+        ],
+        "rhs_bytes": [
+          112,
+          119,
+          100,
+          0
+        ],
+        "pairs_read": 4,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 112,
+              "hex": "0x70"
+            },
+            "second": {
+              "dec": 112,
+              "hex": "0x70"
+            },
+            "delta": 0
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 119,
+              "hex": "0x77"
+            },
+            "second": {
+              "dec": 119,
+              "hex": "0x77"
+            },
+            "delta": 0
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "second": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "delta": 0
+          },
+          {
+            "index": 3,
+            "first": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "second": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "delta": 0
+          }
+        ],
+        "first_decisive_index": 3,
+        "stopped_by": "FIRST_STRING_NUL",
+        "result": 0,
+        "sign": 0,
+        "precondition": "both readable terminated byte arrays; in-repo STRCMP alias selected"
+      },
+      {
+        "case_id": "A123-02",
+        "why": "first_byte",
+        "lhs_bytes": [
+          99,
+          97,
+          116,
+          0
+        ],
+        "rhs_bytes": [
+          98,
+          97,
+          116,
+          0
+        ],
+        "pairs_read": 1,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": 1
+          }
+        ],
+        "first_decisive_index": 0,
+        "stopped_by": "BYTE_DIFFERENCE",
+        "result": 1,
+        "sign": 1,
+        "precondition": "both readable terminated byte arrays; in-repo STRCMP alias selected"
+      },
+      {
+        "case_id": "A123-03",
+        "why": "prefix_s1",
+        "lhs_bytes": [
+          114,
+          109,
+          0
+        ],
+        "rhs_bytes": [
+          114,
+          109,
+          100,
+          105,
+          114,
+          0
+        ],
+        "pairs_read": 3,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 114,
+              "hex": "0x72"
+            },
+            "second": {
+              "dec": 114,
+              "hex": "0x72"
+            },
+            "delta": 0
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 109,
+              "hex": "0x6D"
+            },
+            "second": {
+              "dec": 109,
+              "hex": "0x6D"
+            },
+            "delta": 0
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "second": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "delta": -100
+          }
+        ],
+        "first_decisive_index": 2,
+        "stopped_by": "FIRST_STRING_NUL",
+        "result": -100,
+        "sign": -1,
+        "precondition": "both readable terminated byte arrays; in-repo STRCMP alias selected"
+      },
+      {
+        "case_id": "A123-04",
+        "why": "prefix_s2",
+        "lhs_bytes": [
+          114,
+          109,
+          100,
+          105,
+          114,
+          0
+        ],
+        "rhs_bytes": [
+          114,
+          109,
+          0
+        ],
+        "pairs_read": 3,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 114,
+              "hex": "0x72"
+            },
+            "second": {
+              "dec": 114,
+              "hex": "0x72"
+            },
+            "delta": 0
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 109,
+              "hex": "0x6D"
+            },
+            "second": {
+              "dec": 109,
+              "hex": "0x6D"
+            },
+            "delta": 0
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "second": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "delta": 100
+          }
+        ],
+        "first_decisive_index": 2,
+        "stopped_by": "BYTE_DIFFERENCE",
+        "result": 100,
+        "sign": 1,
+        "precondition": "both readable terminated byte arrays; in-repo STRCMP alias selected"
+      },
+      {
+        "case_id": "A123-05",
+        "why": "high_unsigned_char",
+        "lhs_bytes": [
+          128,
+          0
+        ],
+        "rhs_bytes": [
+          127,
+          0
+        ],
+        "pairs_read": 1,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 128,
+              "hex": "0x80"
+            },
+            "second": {
+              "dec": 127,
+              "hex": "0x7F"
+            },
+            "delta": 1
+          }
+        ],
+        "first_decisive_index": 0,
+        "stopped_by": "BYTE_DIFFERENCE",
+        "result": 1,
+        "sign": 1,
+        "precondition": "both readable terminated byte arrays; in-repo STRCMP alias selected"
+      },
+      {
+        "case_id": "A123-06",
+        "why": "same_short",
+        "lhs_bytes": [
+          99,
+          100,
+          0
+        ],
+        "rhs_bytes": [
+          99,
+          100,
+          0
+        ],
+        "pairs_read": 3,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "second": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "delta": 0
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "second": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "delta": 0
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "second": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "delta": 0
+          }
+        ],
+        "first_decisive_index": 2,
+        "stopped_by": "FIRST_STRING_NUL",
+        "result": 0,
+        "sign": 0,
+        "precondition": "both readable terminated byte arrays; in-repo STRCMP alias selected"
+      }
+    ]
+  },
+  "B_strncmp": {
+    "source": "myinitramfs/mylib/myglibc/string/strncmp.c:21-71",
+    "n_zero_no_dereference": true,
+    "if_n_ge_4": "n4=n>>2 then four sequential comparisons each group; --n4 and loop",
+    "group_finished_remainder": "n &= 3",
+    "n_less_4": "only while(n>0) remainder comparisons",
+    "early_stop": "c1==NUL or c1!=c2, before n--",
+    "return_expression": "c1-c2",
+    "cases": [
+      {
+        "case_id": "B123-01",
+        "why": "zero_budget",
+        "lhs": "abcdX",
+        "rhs": "abcdY",
+        "n_requested": 0,
+        "underlying_strncmp_is_called": true,
+        "group_iterations_started": 0,
+        "full_groups_completed": 0,
+        "remainder_bytes_read": 0,
+        "pairs_read": 0,
+        "pairs": [],
+        "decisive_index": null,
+        "stopped_by": "N_EXHAUSTED",
+        "result": 0,
+        "sign": 0,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      },
+      {
+        "case_id": "B123-02",
+        "why": "budget_before_difference",
+        "lhs": "abcdX",
+        "rhs": "abcdY",
+        "n_requested": 3,
+        "underlying_strncmp_is_called": true,
+        "group_iterations_started": 0,
+        "full_groups_completed": 0,
+        "remainder_bytes_read": 3,
+        "pairs_read": 3,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "second": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "delta": 0,
+            "phase": "REMAINDER"
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": 0,
+            "phase": "REMAINDER"
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "second": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "delta": 0,
+            "phase": "REMAINDER"
+          }
+        ],
+        "decisive_index": 2,
+        "stopped_by": "N_EXHAUSTED",
+        "result": 0,
+        "sign": 0,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      },
+      {
+        "case_id": "B123-03",
+        "why": "complete_group_four",
+        "lhs": "abcdX",
+        "rhs": "abcdY",
+        "n_requested": 4,
+        "underlying_strncmp_is_called": true,
+        "group_iterations_started": 1,
+        "full_groups_completed": 1,
+        "remainder_bytes_read": 0,
+        "pairs_read": 4,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "second": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP1"
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP2"
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "second": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP3"
+          },
+          {
+            "index": 3,
+            "first": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "second": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP4"
+          }
+        ],
+        "decisive_index": 3,
+        "stopped_by": "N_EXHAUSTED",
+        "result": 0,
+        "sign": 0,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      },
+      {
+        "case_id": "B123-04",
+        "why": "group_plus_remainder_difference",
+        "lhs": "abcdX",
+        "rhs": "abcdY",
+        "n_requested": 5,
+        "underlying_strncmp_is_called": true,
+        "n_budget_original": null,
+        "group_iterations_started": 1,
+        "full_groups_completed": 1,
+        "remainder_bytes_read": 1,
+        "pairs_read": 5,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "second": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP1"
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP2"
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "second": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP3"
+          },
+          {
+            "index": 3,
+            "first": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "second": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP4"
+          },
+          {
+            "index": 4,
+            "first": {
+              "dec": 88,
+              "hex": "0x58"
+            },
+            "second": {
+              "dec": 89,
+              "hex": "0x59"
+            },
+            "delta": -1,
+            "phase": "REMAINDER"
+          }
+        ],
+        "decisive_index": 4,
+        "stopped_by": "BYTE_DIFFERENCE",
+        "result": -1,
+        "sign": -1,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      },
+      {
+        "case_id": "B123-05",
+        "why": "early_third_in_group",
+        "lhs": "abXd",
+        "rhs": "abYd",
+        "n_requested": 4,
+        "underlying_strncmp_is_called": true,
+        "n": 4,
+        "group_iterations_started": 1,
+        "full_groups_completed": 0,
+        "remainder_bytes_read": 0,
+        "pairs_read": 3,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "second": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP1"
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP2"
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 88,
+              "hex": "0x58"
+            },
+            "second": {
+              "dec": 89,
+              "hex": "0x59"
+            },
+            "delta": -1,
+            "phase": "GROUP4_STEP3"
+          }
+        ],
+        "decisive_index": 2,
+        "stopped_by": "BYTE_DIFFERENCE",
+        "result": -1,
+        "sign": -1,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      },
+      {
+        "case_id": "B123-06",
+        "why": "NUL_in_fourth",
+        "lhs": "abc",
+        "rhs": "abcd",
+        "n_requested": 4,
+        "underlying_strncmp_is_called": true,
+        "n": 4,
+        "group_iterations_started": 1,
+        "full_groups_completed": 0,
+        "remainder_bytes_read": 0,
+        "pairs_read": 4,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "second": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP1"
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP2"
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "second": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP3"
+          },
+          {
+            "index": 3,
+            "first": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "second": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "delta": -100,
+            "phase": "GROUP4_STEP4"
+          }
+        ],
+        "decisive_index": 3,
+        "stopped_by": "FIRST_STRING_NUL",
+        "result": -100,
+        "sign": -1,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      },
+      {
+        "case_id": "B123-07",
+        "why": "same_short_NUL",
+        "lhs": "abc",
+        "rhs": "abc",
+        "n_requested": 5,
+        "underlying_strncmp_is_called": true,
+        "n": 5,
+        "group_iterations_started": 1,
+        "full_groups_completed": 0,
+        "remainder_bytes_read": 0,
+        "pairs_read": 4,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "second": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP1"
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP2"
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "second": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP3"
+          },
+          {
+            "index": 3,
+            "first": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "second": {
+              "dec": 0,
+              "hex": "0x00"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP4"
+          }
+        ],
+        "decisive_index": 3,
+        "stopped_by": "FIRST_STRING_NUL",
+        "result": 0,
+        "sign": 0,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      },
+      {
+        "case_id": "B123-08",
+        "why": "two_full_groups",
+        "lhs": "abcdefgh",
+        "rhs": "abcdefghi",
+        "n_requested": 8,
+        "underlying_strncmp_is_called": true,
+        "group_iterations_started": 2,
+        "full_groups_completed": 2,
+        "remainder_bytes_read": 0,
+        "pairs_read": 8,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "second": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP1"
+          },
+          {
+            "index": 1,
+            "first": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP2"
+          },
+          {
+            "index": 2,
+            "first": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "second": {
+              "dec": 99,
+              "hex": "0x63"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP3"
+          },
+          {
+            "index": 3,
+            "first": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "second": {
+              "dec": 100,
+              "hex": "0x64"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP4"
+          },
+          {
+            "index": 4,
+            "first": {
+              "dec": 101,
+              "hex": "0x65"
+            },
+            "second": {
+              "dec": 101,
+              "hex": "0x65"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP1"
+          },
+          {
+            "index": 5,
+            "first": {
+              "dec": 102,
+              "hex": "0x66"
+            },
+            "second": {
+              "dec": 102,
+              "hex": "0x66"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP2"
+          },
+          {
+            "index": 6,
+            "first": {
+              "dec": 103,
+              "hex": "0x67"
+            },
+            "second": {
+              "dec": 103,
+              "hex": "0x67"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP3"
+          },
+          {
+            "index": 7,
+            "first": {
+              "dec": 104,
+              "hex": "0x68"
+            },
+            "second": {
+              "dec": 104,
+              "hex": "0x68"
+            },
+            "delta": 0,
+            "phase": "GROUP4_STEP4"
+          }
+        ],
+        "decisive_index": 7,
+        "stopped_by": "N_EXHAUSTED",
+        "result": 0,
+        "sign": 0,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      },
+      {
+        "case_id": "B123-09",
+        "why": "n_below_four_first_diff",
+        "lhs": "a",
+        "rhs": "b",
+        "n_requested": 1,
+        "underlying_strncmp_is_called": true,
+        "n_budget_original": null,
+        "group_iterations_started": 0,
+        "full_groups_completed": 0,
+        "remainder_bytes_read": 1,
+        "pairs_read": 1,
+        "pairs": [
+          {
+            "index": 0,
+            "first": {
+              "dec": 97,
+              "hex": "0x61"
+            },
+            "second": {
+              "dec": 98,
+              "hex": "0x62"
+            },
+            "delta": -1,
+            "phase": "REMAINDER"
+          }
+        ],
+        "decisive_index": 0,
+        "stopped_by": "BYTE_DIFFERENCE",
+        "result": -1,
+        "sign": -1,
+        "precondition": "valid readable NUL-terminated buffers and n-sized reads in bounds; reference in-repo STRNCMP selected"
+      }
+    ]
+  },
+  "C_shell": {
+    "source": "myinitramfs/myshell/myshell.c",
+    "command_table_order": [
+      "cd",
+      "ls",
+      "pwd",
+      "cat",
+      "touch",
+      "rm",
+      "mkdir",
+      "rmdir",
+      "exec",
+      "reboot"
+    ],
+    "find_cmd_cases": [
+      {
+        "case_id": "C123-F01",
+        "cmd": "pwd",
+        "find_cmd_called": true,
+        "cmd_table_count": 10,
+        "strcmp_call_count": 3,
+        "byte_pairs_total": 6,
+        "comparisons": [
+          {
+            "table_index": 0,
+            "table_entry": "cd",
+            "return_value": 13,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 13
+              }
+            ]
+          },
+          {
+            "table_index": 1,
+            "table_entry": "ls",
+            "return_value": 4,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 108,
+                  "hex": "0x6C"
+                },
+                "delta": 4
+              }
+            ]
+          },
+          {
+            "table_index": 2,
+            "table_entry": "pwd",
+            "return_value": 0,
+            "pairs_read": 4,
+            "decisive_index": 3,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 119,
+                  "hex": "0x77"
+                },
+                "second": {
+                  "dec": 119,
+                  "hex": "0x77"
+                },
+                "delta": 0
+              },
+              {
+                "index": 2,
+                "first": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "second": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "delta": 0
+              },
+              {
+                "index": 3,
+                "first": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "second": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "delta": 0
+              }
+            ]
+          }
+        ],
+        "find_return": 2,
+        "main_branch": "run_cmd",
+        "actual_libc": "UNKNOWN",
+        "trace_assumes": "in-repo strcmp implementation and table contents"
+      },
+      {
+        "case_id": "C123-F02",
+        "cmd": "pw",
+        "find_cmd_called": true,
+        "cmd_table_count": 10,
+        "strcmp_call_count": 10,
+        "byte_pairs_total": 12,
+        "comparisons": [
+          {
+            "table_index": 0,
+            "table_entry": "cd",
+            "return_value": 13,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 13
+              }
+            ]
+          },
+          {
+            "table_index": 1,
+            "table_entry": "ls",
+            "return_value": 4,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 108,
+                  "hex": "0x6C"
+                },
+                "delta": 4
+              }
+            ]
+          },
+          {
+            "table_index": 2,
+            "table_entry": "pwd",
+            "return_value": -100,
+            "pairs_read": 3,
+            "decisive_index": 2,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 119,
+                  "hex": "0x77"
+                },
+                "second": {
+                  "dec": 119,
+                  "hex": "0x77"
+                },
+                "delta": 0
+              },
+              {
+                "index": 2,
+                "first": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "second": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "delta": -100
+              }
+            ]
+          },
+          {
+            "table_index": 3,
+            "table_entry": "cat",
+            "return_value": 13,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 13
+              }
+            ]
+          },
+          {
+            "table_index": 4,
+            "table_entry": "touch",
+            "return_value": -4,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 116,
+                  "hex": "0x74"
+                },
+                "delta": -4
+              }
+            ]
+          },
+          {
+            "table_index": 5,
+            "table_entry": "rm",
+            "return_value": -2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": -2
+              }
+            ]
+          },
+          {
+            "table_index": 6,
+            "table_entry": "mkdir",
+            "return_value": 3,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "delta": 3
+              }
+            ]
+          },
+          {
+            "table_index": 7,
+            "table_entry": "rmdir",
+            "return_value": -2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": -2
+              }
+            ]
+          },
+          {
+            "table_index": 8,
+            "table_entry": "exec",
+            "return_value": 11,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 101,
+                  "hex": "0x65"
+                },
+                "delta": 11
+              }
+            ]
+          },
+          {
+            "table_index": 9,
+            "table_entry": "reboot",
+            "return_value": -2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": -2
+              }
+            ]
+          }
+        ],
+        "find_return": -1,
+        "main_branch": "printf Input Error, No Command Found!",
+        "actual_libc": "UNKNOWN",
+        "trace_assumes": "in-repo strcmp implementation and table contents"
+      },
+      {
+        "case_id": "C123-F03",
+        "cmd": "rm",
+        "find_cmd_called": true,
+        "cmd_table_count": 10,
+        "strcmp_call_count": 6,
+        "byte_pairs_total": 8,
+        "comparisons": [
+          {
+            "table_index": 0,
+            "table_entry": "cd",
+            "return_value": 15,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 15
+              }
+            ]
+          },
+          {
+            "table_index": 1,
+            "table_entry": "ls",
+            "return_value": 6,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 108,
+                  "hex": "0x6C"
+                },
+                "delta": 6
+              }
+            ]
+          },
+          {
+            "table_index": 2,
+            "table_entry": "pwd",
+            "return_value": 2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "delta": 2
+              }
+            ]
+          },
+          {
+            "table_index": 3,
+            "table_entry": "cat",
+            "return_value": 15,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 15
+              }
+            ]
+          },
+          {
+            "table_index": 4,
+            "table_entry": "touch",
+            "return_value": -2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 116,
+                  "hex": "0x74"
+                },
+                "delta": -2
+              }
+            ]
+          },
+          {
+            "table_index": 5,
+            "table_entry": "rm",
+            "return_value": 0,
+            "pairs_read": 3,
+            "decisive_index": 2,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "second": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "delta": 0
+              },
+              {
+                "index": 2,
+                "first": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "second": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "delta": 0
+              }
+            ]
+          }
+        ],
+        "find_return": 5,
+        "main_branch": "run_cmd",
+        "actual_libc": "UNKNOWN",
+        "trace_assumes": "in-repo strcmp implementation and table contents"
+      },
+      {
+        "case_id": "C123-F04",
+        "cmd": "rmdir",
+        "find_cmd_called": true,
+        "cmd_table_count": 10,
+        "strcmp_call_count": 8,
+        "byte_pairs_total": 15,
+        "comparisons": [
+          {
+            "table_index": 0,
+            "table_entry": "cd",
+            "return_value": 15,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 15
+              }
+            ]
+          },
+          {
+            "table_index": 1,
+            "table_entry": "ls",
+            "return_value": 6,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 108,
+                  "hex": "0x6C"
+                },
+                "delta": 6
+              }
+            ]
+          },
+          {
+            "table_index": 2,
+            "table_entry": "pwd",
+            "return_value": 2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "delta": 2
+              }
+            ]
+          },
+          {
+            "table_index": 3,
+            "table_entry": "cat",
+            "return_value": 15,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 15
+              }
+            ]
+          },
+          {
+            "table_index": 4,
+            "table_entry": "touch",
+            "return_value": -2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 116,
+                  "hex": "0x74"
+                },
+                "delta": -2
+              }
+            ]
+          },
+          {
+            "table_index": 5,
+            "table_entry": "rm",
+            "return_value": 100,
+            "pairs_read": 3,
+            "decisive_index": 2,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "second": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "delta": 0
+              },
+              {
+                "index": 2,
+                "first": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "second": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "delta": 100
+              }
+            ]
+          },
+          {
+            "table_index": 6,
+            "table_entry": "mkdir",
+            "return_value": 5,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "delta": 5
+              }
+            ]
+          },
+          {
+            "table_index": 7,
+            "table_entry": "rmdir",
+            "return_value": 0,
+            "pairs_read": 6,
+            "decisive_index": 5,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "second": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "delta": 0
+              },
+              {
+                "index": 2,
+                "first": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "second": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "delta": 0
+              },
+              {
+                "index": 3,
+                "first": {
+                  "dec": 105,
+                  "hex": "0x69"
+                },
+                "second": {
+                  "dec": 105,
+                  "hex": "0x69"
+                },
+                "delta": 0
+              },
+              {
+                "index": 4,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": 0
+              },
+              {
+                "index": 5,
+                "first": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "second": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "delta": 0
+              }
+            ]
+          }
+        ],
+        "find_return": 7,
+        "main_branch": "run_cmd",
+        "actual_libc": "UNKNOWN",
+        "trace_assumes": "in-repo strcmp implementation and table contents"
+      },
+      {
+        "case_id": "C123-F05",
+        "cmd": "rmd",
+        "find_cmd_called": true,
+        "cmd_table_count": 10,
+        "strcmp_call_count": 10,
+        "byte_pairs_total": 16,
+        "comparisons": [
+          {
+            "table_index": 0,
+            "table_entry": "cd",
+            "return_value": 15,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 15
+              }
+            ]
+          },
+          {
+            "table_index": 1,
+            "table_entry": "ls",
+            "return_value": 6,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 108,
+                  "hex": "0x6C"
+                },
+                "delta": 6
+              }
+            ]
+          },
+          {
+            "table_index": 2,
+            "table_entry": "pwd",
+            "return_value": 2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 112,
+                  "hex": "0x70"
+                },
+                "delta": 2
+              }
+            ]
+          },
+          {
+            "table_index": 3,
+            "table_entry": "cat",
+            "return_value": 15,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 15
+              }
+            ]
+          },
+          {
+            "table_index": 4,
+            "table_entry": "touch",
+            "return_value": -2,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 116,
+                  "hex": "0x74"
+                },
+                "delta": -2
+              }
+            ]
+          },
+          {
+            "table_index": 5,
+            "table_entry": "rm",
+            "return_value": 100,
+            "pairs_read": 3,
+            "decisive_index": 2,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "second": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "delta": 0
+              },
+              {
+                "index": 2,
+                "first": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "second": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "delta": 100
+              }
+            ]
+          },
+          {
+            "table_index": 6,
+            "table_entry": "mkdir",
+            "return_value": 5,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "delta": 5
+              }
+            ]
+          },
+          {
+            "table_index": 7,
+            "table_entry": "rmdir",
+            "return_value": -105,
+            "pairs_read": 4,
+            "decisive_index": 3,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "second": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "delta": 0
+              },
+              {
+                "index": 2,
+                "first": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "second": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "delta": 0
+              },
+              {
+                "index": 3,
+                "first": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "second": {
+                  "dec": 105,
+                  "hex": "0x69"
+                },
+                "delta": -105
+              }
+            ]
+          },
+          {
+            "table_index": 8,
+            "table_entry": "exec",
+            "return_value": 13,
+            "pairs_read": 1,
+            "decisive_index": 0,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 101,
+                  "hex": "0x65"
+                },
+                "delta": 13
+              }
+            ]
+          },
+          {
+            "table_index": 9,
+            "table_entry": "reboot",
+            "return_value": 8,
+            "pairs_read": 2,
+            "decisive_index": 1,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "second": {
+                  "dec": 114,
+                  "hex": "0x72"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 109,
+                  "hex": "0x6D"
+                },
+                "second": {
+                  "dec": 101,
+                  "hex": "0x65"
+                },
+                "delta": 8
+              }
+            ]
+          }
+        ],
+        "find_return": -1,
+        "main_branch": "printf Input Error, No Command Found!",
+        "actual_libc": "UNKNOWN",
+        "trace_assumes": "in-repo strcmp implementation and table contents"
+      },
+      {
+        "case_id": "C123-F06",
+        "cmd": "cd",
+        "find_cmd_called": true,
+        "cmd_table_count": 10,
+        "strcmp_call_count": 1,
+        "byte_pairs_total": 3,
+        "comparisons": [
+          {
+            "table_index": 0,
+            "table_entry": "cd",
+            "return_value": 0,
+            "pairs_read": 3,
+            "decisive_index": 2,
+            "read_pairs": [
+              {
+                "index": 0,
+                "first": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "second": {
+                  "dec": 99,
+                  "hex": "0x63"
+                },
+                "delta": 0
+              },
+              {
+                "index": 1,
+                "first": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "second": {
+                  "dec": 100,
+                  "hex": "0x64"
+                },
+                "delta": 0
+              },
+              {
+                "index": 2,
+                "first": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "second": {
+                  "dec": 0,
+                  "hex": "0x00"
+                },
+                "delta": 0
+              }
+            ]
+          }
+        ],
+        "find_return": 0,
+        "main_branch": "run_cmd",
+        "actual_libc": "UNKNOWN",
+        "trace_assumes": "in-repo strcmp implementation and table contents"
+      }
+    ],
+    "cd_cases": [
+      {
+        "case_id": "C123-D01",
+        "argc": 2,
+        "argv1": ".",
+        "actual_strcmp_argument_order": [
+          ".",
+          "."
+        ],
+        "compare": {
+          "pairs_read": 2,
+          "pairs": [
+            {
+              "index": 0,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 0
+            },
+            {
+              "index": 1,
+              "first": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "second": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "delta": 0
+            }
+          ],
+          "first_decisive_index": 1,
+          "stopped_by": "FIRST_STRING_NUL",
+          "result": 0,
+          "sign": 0
+        },
+        "return_sign": 0,
+        "early_return_one": true,
+        "chdir_requested": false,
+        "final_return_if_normal": 1,
+        "actual_chdir_result": "UNKNOWN",
+        "subsequent_current_dir": "UNKNOWN",
+        "record_path_valid": true
+      },
+      {
+        "case_id": "C123-D02",
+        "argc": 2,
+        "argv1": "./",
+        "actual_strcmp_argument_order": [
+          ".",
+          "./"
+        ],
+        "compare": {
+          "pairs_read": 2,
+          "pairs": [
+            {
+              "index": 0,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 0
+            },
+            {
+              "index": 1,
+              "first": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "second": {
+                "dec": 47,
+                "hex": "0x2F"
+              },
+              "delta": -47
+            }
+          ],
+          "first_decisive_index": 1,
+          "stopped_by": "FIRST_STRING_NUL",
+          "result": -47,
+          "sign": -1
+        },
+        "return_sign": -1,
+        "early_return_one": false,
+        "chdir_requested": true,
+        "final_return_if_normal": 1,
+        "actual_chdir_result": "UNKNOWN",
+        "subsequent_current_dir": "UNKNOWN",
+        "record_path_valid": true
+      }
+    ],
+    "ls_cases": [
+      {
+        "case_id": "C123-L01",
+        "given_dirent_name": ".",
+        "readdir_gave_valid_name": true,
+        "actual_first_strcmp_args": [
+          ".",
+          "."
+        ],
+        "first": {
+          "pairs_read": 2,
+          "pairs": [
+            {
+              "index": 0,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 0
+            },
+            {
+              "index": 1,
+              "first": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "second": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "delta": 0
+            }
+          ],
+          "first_decisive_index": 1,
+          "stopped_by": "FIRST_STRING_NUL",
+          "result": 0,
+          "sign": 0
+        },
+        "second_strcmp_invoked": false,
+        "second_strcmp_args": null,
+        "second": null,
+        "condition_and_short_circuit": false,
+        "name_printf_requested": 0,
+        "name_printf_format": "%s\\t",
+        "final_newline_printf_if_loop_exits": 1,
+        "scope": "one valid dirent, then readdir returns NULL; opendir/closedir not executed"
+      },
+      {
+        "case_id": "C123-L02",
+        "given_dirent_name": "..",
+        "readdir_gave_valid_name": true,
+        "actual_first_strcmp_args": [
+          "..",
+          "."
+        ],
+        "first": {
+          "pairs_read": 2,
+          "pairs": [
+            {
+              "index": 0,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 0
+            },
+            {
+              "index": 1,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "delta": 46
+            }
+          ],
+          "first_decisive_index": 1,
+          "stopped_by": "BYTE_DIFFERENCE",
+          "result": 46,
+          "sign": 1
+        },
+        "second_strcmp_invoked": true,
+        "second_strcmp_args": [
+          "..",
+          ".."
+        ],
+        "second": {
+          "pairs_read": 3,
+          "pairs": [
+            {
+              "index": 0,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 0
+            },
+            {
+              "index": 1,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 0
+            },
+            {
+              "index": 2,
+              "first": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "second": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "delta": 0
+            }
+          ],
+          "first_decisive_index": 2,
+          "stopped_by": "FIRST_STRING_NUL",
+          "result": 0,
+          "sign": 0
+        },
+        "condition_and_short_circuit": false,
+        "name_printf_requested": 0,
+        "name_printf_format": "%s\\t",
+        "final_newline_printf_if_loop_exits": 1,
+        "scope": "one valid dirent, then readdir returns NULL; opendir/closedir not executed"
+      },
+      {
+        "case_id": "C123-L03",
+        "given_dirent_name": ".config",
+        "readdir_gave_valid_name": true,
+        "actual_first_strcmp_args": [
+          ".config",
+          "."
+        ],
+        "first": {
+          "pairs_read": 2,
+          "pairs": [
+            {
+              "index": 0,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 0
+            },
+            {
+              "index": 1,
+              "first": {
+                "dec": 99,
+                "hex": "0x63"
+              },
+              "second": {
+                "dec": 0,
+                "hex": "0x00"
+              },
+              "delta": 99
+            }
+          ],
+          "first_decisive_index": 1,
+          "stopped_by": "BYTE_DIFFERENCE",
+          "result": 99,
+          "sign": 1
+        },
+        "second_strcmp_invoked": true,
+        "second_strcmp_args": [
+          ".config",
+          ".."
+        ],
+        "second": {
+          "pairs_read": 2,
+          "pairs": [
+            {
+              "index": 0,
+              "first": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 0
+            },
+            {
+              "index": 1,
+              "first": {
+                "dec": 99,
+                "hex": "0x63"
+              },
+              "second": {
+                "dec": 46,
+                "hex": "0x2E"
+              },
+              "delta": 53
+            }
+          ],
+          "first_decisive_index": 1,
+          "stopped_by": "BYTE_DIFFERENCE",
+          "result": 53,
+          "sign": 1
+        },
+        "condition_and_short_circuit": true,
+        "name_printf_requested": 1,
+        "name_printf_format": "%s\\t",
+        "final_newline_printf_if_loop_exits": 1,
+        "scope": "one valid dirent, then readdir returns NULL; opendir/closedir not executed"
+      }
+    ],
+    "real_shell_uses_strcmp": true,
+    "real_shell_uses_strncmp_in_these_sites": false,
+    "actual_linked_libc": "UNKNOWN",
+    "line_printf_distinct_from_name_printf": true
+  },
+  "build_source": {
+    "inrepo_myglibc_string_sources": "CMake GLOB *.c into target_sources(mylibc PUBLIC ...) if separate target configured",
+    "top_initramfs": "project then external MUSL_PATH and add_subdirectory(myinit),add_subdirectory(myshell); does not establish sh links inrepo myglibc",
+    "real_sh_uses_inrepo_functions": "UNKNOWN",
+    "conditional_exact_numeric_returns": "only for chosen inrepo function implementation"
+  },
+  "limitations": {
+    "compilation": "NOT_RUN",
+    "preprocessing": "NOT_RUN",
+    "link": "NOT_RUN",
+    "full_local_P9": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_directory_and_file_operations": "NOT_RUN",
+    "invalid_pointers": "OUT_OF_SCOPE",
+    "non_terminated_bytes": "OUT_OF_SCOPE",
+    "unicode_collation": "OUT_OF_SCOPE"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}
