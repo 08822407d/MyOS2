@@ -1,0 +1,185 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-STDIO-FILE-OPEN-121",
+  "record_type": "bounded_deferred_findings_and_documentation_corrections",
+  "produced_by": "GPT-6（后端不可认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner选择）",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-18",
+  "date": "2026-11-22",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "old_closed_not_reopened": {
+    "R118-01": "CLOSED_DOCUMENTATION_ONLY",
+    "R118-02": "CLOSED_DOCUMENTATION_ONLY",
+    "R119-01": "CLOSED_DOCUMENTATION_ONLY"
+  },
+  "prior_batch_verdicts": {
+    "117": "RETURN",
+    "118": "PASS_PENDING_LOCAL_COMPOSITE",
+    "119": "PASS_PENDING_LOCAL_COMPOSITE",
+    "120": "RETURN"
+  },
+  "items": [
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::R117-02",
+      "kind": "historic_P2_qualification_erratum",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_state": "OPEN",
+      "evidence_refs": [
+        "120 evidence.md FC120-E072 source old 71-75",
+        "121 evidence.md FO121-E065 E066 E067",
+        "120-D00-117-119-review.md"
+      ],
+      "findings": "Original 120 has 81 byte-matched windows and 81 label occurrences but E072 crosses sysexit_ret_addr: original-label eligible80; split real assembly labels 71-73/74-76/79-81 in new121, preserve 117-119 original and qualified counts",
+      "closure_gate": "C08 independently checks all final121 P2 windows, full new literal counts and historical reconciliation; old artifacts untouched",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::R120-01",
+      "kind": "source_and_build_provenance_erratum",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_state": "OPEN",
+      "evidence_refs": [
+        "121 stdio-file-open.md D00 source layer table",
+        "myinitramfs/CMakeLists.txt:3,40-51",
+        "myshell/CMakeLists.txt:1-10",
+        "kernel asm/unistd_64.h:103,104,106,108",
+        "namei.c::filename_create:770-823",
+        "stdio/errlist.c:27-29",
+        "08 mainline §6"
+      ],
+      "findings": "Separate actual shell source-level caller from in-repo user syscall stubs, kernel numbering and dispatch, and external-musl build intent; no attested binary link; P03 line correction/P10 range correction and errlist negative-to-index return",
+      "closure_gate": "C08 validates each cross-layer source and first unproven execution/link condition, errno and printf conditions",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::R120-02",
+      "kind": "source_graph_erratum",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_state": "OPEN",
+      "evidence_refs": [
+        "121 stdio-file-open-paths.dot cluster_D00_CRE D00_MKD D00_RM D00_RMDIR",
+        "namei.c::do_creatat",
+        "namei.c::do_mkdirat",
+        "myshell.c::rm_command rmdir_command"
+      ],
+      "findings": "Own branch to -EPERM bypasses done/putname yet reaches conditional user result, local err, builtin0 for touch/mkdir; rm/rmdir each retains distinct arg gate, own error print, final result, mechanically forbidden cross paths",
+      "closure_gate": "C08 checks positive/negative graph paths case IDs, no cross command reachability, cleanup bypass and valid return conditions",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::A-BUILD-SOURCE",
+      "kind": "external_toolchain_provenance_gap",
+      "status": "needs_evidence",
+      "evidence_refs": [
+        "myinitramfs/CMakeLists.txt:3,40-51",
+        "myinitramfs/myshell/CMakeLists.txt:4",
+        "myinitramfs/mylib/myglibc/CMakeLists.txt:1,29"
+      ],
+      "findings": "Top-level source text points to external musl-gcc and includes myinit/myshell, while myglibc/libio static target is a separate read subtree; neither source tree location nor target_sources prove actual sh linked it",
+      "limitation": "actual configure compiler/toolchain, resolved headers and binary dependency are not observed",
+      "resume_gate": "separate Owner-approved build artifacts, compiler command/link map or executable symbol examination; do not invoke now",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::A-MALLOC-NULL",
+      "kind": "source_validity_boundary",
+      "status": "needs_evidence",
+      "evidence_refs": [
+        "myinitramfs/mylib/myglibc/libio/iofopen.c:83-87"
+      ],
+      "findings": "_IO_new_fopen immediately dereferences new_f after malloc without local NULL check",
+      "limitation": "cannot model allocation failure as ordinary NULL return; no real allocation-failure witness",
+      "resume_gate": "when runtime validation allowed, independently exercise safe memory failure/NULL checks in isolated test",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::B-FLAGS2-INIT",
+      "kind": "field_initialization_and_integer_model_boundary",
+      "status": "needs_evidence",
+      "evidence_refs": [
+        "iofopen.c:85-87",
+        "fileops.c:250-259",
+        "struct_FILE.h:73-75"
+      ],
+      "findings": "Only _fileno=-1 is assigned by new_fopen; m/c/e use OR assignment to existing _flags2, whose initial value is not established by malloc; examples 67/99 require explicit prior initial value",
+      "limitation": "real FILE flags2 cannot be assumed zero; whether C execution is valid and complete struct initialization is untested",
+      "resume_gate": "source-based initialization and actual selected compiler/binary evidence with separate authorization",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::B-CONDITIONAL-MACROS",
+      "kind": "conditional_header_boundary",
+      "status": "needs_evidence",
+      "evidence_refs": [
+        "myglibc/bits/fcntl.h:42-58",
+        "fileops.c:178,256-259"
+      ],
+      "findings": "O_CLOEXEC defined only under __USE_XOPEN2K8, O_LARGEFILE defined as zero only under __USE_LARGEFILE64; no actual preprocessed header set checked",
+      "limitation": "numeric bit models conditional and cannot certify compilation or actual close-on-exec",
+      "resume_gate": "inspect exact compiler invocation, defines and preprocessed chosen header in a separately authorized build",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::B-MODE-USER-VS-FILE",
+      "kind": "flag_state_gap",
+      "status": "needs_evidence",
+      "evidence_refs": [
+        "fileops.c:201-267",
+        "fileops.c:183-195"
+      ],
+      "findings": "read_write computes internal _IO_NO_READS/_IO_NO_WRITES/_IO_IS_APPENDING but active _IO_mask_flags that would set FILE._flags is commented; no active seek/close on append in these read functions",
+      "limitation": "mode to open flags source calculation does not establish FILE buffering, offset/append state or actual access semantics",
+      "resume_gate": "next authorized fileops read/write / seek / close static review or real unit test",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::C-FP-OWNERSHIP",
+      "kind": "local_object_lifecycle_observation",
+      "status": "deferred_owner_not_ready",
+      "evidence_refs": [
+        "iofopen.c:83-88",
+        "fileops.c:173-197",
+        "fileops.c:199-340"
+      ],
+      "findings": "Observed open negative/bad first char returns NULL from inner, passed outward; these read functions contain no active free(new_f) cleanup and new_fopen only creates FILE-size object",
+      "limitation": "not measured resource leak and no proof other library lifecycle or stream initialization; no fd ownership guarantee",
+      "resume_gate": "future dedicated lifecycle source audit after Owner scope instruction",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-STDIO-FILE-OPEN-121::C-FD-AND-ABI",
+      "kind": "runtime_result_and_layout_gap",
+      "status": "needs_evidence",
+      "evidence_refs": [
+        "fileops.c:178-196",
+        "struct_FILE.h:69-99",
+        "08 mainline §6"
+      ],
+      "findings": "local code stores any nonnegative given fd including 0 in _fileno and returns same fp; actual syscall/user ABI, FILE layout and fd runtime state unverified",
+      "limitation": "cannot infer disk file contents, real first offset, actual stream use, close-on-exec or syscalls from static result",
+      "resume_gate": "when authorized, inspect real selected libc/binary and runtime in separate workflow",
+      "owner_action_now": "NONE"
+    }
+  ],
+  "limits": {
+    "complete_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_files": "NOT_RUN",
+    "external_musl": "NOT_READ",
+    "kernel_modification": false,
+    "stage3": false
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}
