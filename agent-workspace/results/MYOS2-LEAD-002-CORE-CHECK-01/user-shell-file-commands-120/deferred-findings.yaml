@@ -1,0 +1,153 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-FILE-COMMANDS-120",
+  "record_type": "phase2_deferred_findings_and_corrections",
+  "produced_by": "GPT-6（后端不可认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner选择）",
+  "date": "2026-11-21",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "legacy_statuses": {
+    "R115-03": "CLOSED_DOCUMENTATION_ONLY",
+    "R116-01": "CLOSED_DOCUMENTATION_ONLY",
+    "R117-01": "CLOSED_DOCUMENTATION_ONLY",
+    "R117-02": "OPEN",
+    "R117-03": "CLOSED_DOCUMENTATION_ONLY",
+    "R118-01": "CLOSED_DOCUMENTATION_ONLY",
+    "R118-02": "OPEN",
+    "R119-01": "OPEN"
+  },
+  "items": [
+    {
+      "id": "R117-02",
+      "kind": "historical_P2_qualification_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_state": "OPEN",
+      "source_refs": [
+        "117 MANIFEST:113",
+        "118 evidence:3",
+        "118 CW118-E051/E052",
+        "119 IN119-E020/E021/E022"
+      ],
+      "correction": "117 88 original windows 89 literal prefixes; 118 91/92 with two file-scope objects disqualified -> 89 candidate windows; 119 46/46 with three global array initializer segments disqualified -> 43 eligible candidate windows; 120 only new 81 eligible windows/81 literal prefixes",
+      "closure_gate": "C08 independently counts final byte strings and checks source function/macro/struct definitions; P6 81/81/0",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "R118-02",
+      "kind": "historical_call_graph_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_state": "OPEN",
+      "source_refs": [
+        "119 shell-input-dispatch-paths.dot",
+        "time myshell.c:75-76,203-207",
+        "time d_path.c:196-230"
+      ],
+      "correction": "new D00A path connects cd zero, actual getcwd call, kernel length failure, bypassed copy, then empty cwd to pwd and prompt; full copy vs failure unknown separate; D00B backspace count0 gate; cat concrete strcpy/strcat",
+      "closure_gate": "C08 independently traverses new directed typed graph path and checks separate success/failure/copy-unknown",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "R119-01",
+      "kind": "historical_dispatch_fact_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_state": "OPEN",
+      "source_refs": [
+        "119 facts C_dispatch",
+        "119 main/parse/find",
+        "time myshell.c:94-102,139-185"
+      ],
+      "correction": "D120-C01..C05 five rows join raw input to tokens, find_called, find_return nullable, parse_return, main real branch call, output requests; negative three cases only main printf, no run_cmd",
+      "closure_gate": "C08 compares report/facts/DOT by explicit IDs and true direct caller, no find result for early return",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "A120-FD",
+      "kind": "source_runtime_gap",
+      "status": "needs_evidence",
+      "source_ref": "time namei.c::do_creatat 899-935",
+      "observation": "the local do_creatat function returns error from i_op->create, no get_unused_fd_flags/fd_install/close in read body",
+      "boundary": "not a verified POSIX creat open file descriptor; callback may have separate effects",
+      "resume": "new explicit investigation of FD lifecycle after scope approval",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "A120-MODE",
+      "kind": "mode_semantics_boundary",
+      "status": "needs_evidence",
+      "source_ref": "user stat.h 164-186, bits/stat.h82-84; kernel namei.c 920-921",
+      "observation": "touch 0666 user request; kernel mask to 01777; commented umask line in do_creatat",
+      "boundary": "effective persisted FAT mode, existing file truncate, timestamps, durability not demonstrated",
+      "resume": "consult fixed FAT callback and runtime only with authorization",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "B120-EARLY",
+      "kind": "cleanup_on_early_return",
+      "status": "deferred_owner_not_ready",
+      "source_ref": "time namei.c::do_mkdirat 975-996",
+      "observation": "i_op->mkdir null early return -EPERM before done_path_create and putname, unlike normal path",
+      "boundary": "records code path, not a measured memory leak or reference count corruption",
+      "resume": "future dedicated path/object lifecycle investigation",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "B120-PATH",
+      "kind": "getname_validity_boundary",
+      "status": "needs_evidence",
+      "source_ref": "time namei.c::getname/filename_create/putname",
+      "observation": "getname can yield error-valued result; do_mkdirat and do_creatat arguments used and putname on common exit",
+      "boundary": "cannot assume all invalid inputs safely normalize into errno; model B120-04 assumes valid name object before simulated dentry error",
+      "resume": "consult historical R58-S01 and EI28/PN29 source before expanded claims",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "C120-ERRNO",
+      "kind": "errno_and_strerror_provenance_gap",
+      "status": "needs_evidence",
+      "source_ref": "time syscall.c:71-81 and errlist.c:23-31",
+      "observation": "the user asm lines intended to update errno and normalize return -1 are commented; strerror(errno) is requested in shell",
+      "boundary": "kernel negative return does not by itself establish errno value or exact error string",
+      "resume": "separate user libc strerror/errno mapping trace with target ABI and execution evidence",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "C120-INODE",
+      "kind": "conditional_source_risk",
+      "status": "deferred_owner_not_ready",
+      "source_ref": "time namei.c::do_unlinkat 1169-1182",
+      "observation": "inode=dentry->d_inode is consumed at S_ISDIR(inode->i_mode) after a non-error dentry check",
+      "boundary": "requires valid non-null inode; no runtime null witness or system-wide safety verdict",
+      "resume": "review negative dentry/object validity in FS path when authorized",
+      "owner_action_now": "NONE"
+    },
+    {
+      "id": "C120-OUTPUT",
+      "kind": "stdout_and_error_effect_boundary",
+      "status": "needs_evidence",
+      "source_ref": "time myshell.c:349-375; printf.c:17-25",
+      "observation": "main independent LF and conditional error format lead to stdout write requests",
+      "boundary": "write count, terminal rendering and exact strerror text not measured",
+      "resume": "future console output test as separately authorized runtime work",
+      "owner_action_now": "NONE"
+    }
+  ],
+  "task_limits": {
+    "phase": 2,
+    "code_changes": false,
+    "build": false,
+    "run": false,
+    "full_local_P9": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_filesystem_actions": "NOT_RUN",
+    "next_batch_not_authorized": true
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}
