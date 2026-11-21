@@ -1,0 +1,162 @@
+digraph TS113 {
+ graph [rankdir=LR,labelloc=t,label="MYOS2-B113: D00 historical corrections + A/B/C timespec ABI fixed time@a039d9803ade"];
+ node [fontname="Helvetica",shape=box,fontsize=9];
+ edge [fontname="Helvetica",fontsize=8];
+ subgraph cluster_D00 {
+  label="D00";
+  oldmatrix [label="111 frozen matrices B08/C07/C08/C10/X06-X08"];
+  fixedkey [label="correct section + id; not AT111-prefix"];
+  oldmodel [label="111 models AT111-M08/M09/M10/M11"];
+  voidtype [label="void signatures (P02-P05)"];
+  on [label="add_timer_on"];
+  selector [label="get_timer_cpu_base"];
+  percpu [label="per_cpu_ptr"];
+  cpuwrite [label="CPU bits WRITE_ONCE"];
+  oldsimple [label="simple_init_timer_key"];
+  pprev [label="timer.entry.pprev"];
+  unhashed [label="hlist_unhashed_lockless"];
+  internal [label="internal_add_timer"];
+  enq [label="enqueue_timer"];
+  setidx [label="timer_set_idx"];
+  bits [label="arrayshift/mask macros"];
+  lvl [label="LVL_* macros separate definitions"];
+  index [label="calc_wheel_index/calc_index"];
+ }
+ subgraph cluster_D112 {
+  label="D112";
+  tokt [label="timespec64_to_ktime (by value)"];
+  kset [label="ktime_set (two scalar args)"];
+  tons [label="timespec64_to_ns (pointer)"];
+  absence [label="body-range no-validation note (NOT CALL)"];
+  valid [label="timespec64_valid"];
+  strict [label="timespec64_valid_strict"];
+  settod [label="timespec64_valid_settod"];
+  safe [label="ktime_add_safe"];
+  guard [label="safe-add res short-circuit gate"];
+  tsreturnmacro [label="ktime_to_timespec64 macro"];
+  nsts [label="ns_to_timespec64"];
+  positive [label="nsec>0 condition"];
+  negative [label="nsec<0 condition"];
+  zero [label="zero initialized pair"];
+  div [label="div_u64_rem(u64,u32,u32*)"];
+  quot [label="u64 quotient returned"];
+  rem [label="u32 remainder pointer written"];
+  fields [label="ns_to_timespec64 tv_sec/tv_nsec writes"];
+ }
+ subgraph cluster_A {
+  label="A";
+  get [label="get_timespec64"];
+  cfu [label="copy_from_user"];
+  ret [label="input copy ret gate"];
+  efault [label="-EFAULT return"];
+  local_kts [label="local __kernel_timespec_s kts"];
+  sec [label="kernel ts->tv_sec"];
+  ns [label="kernel ts->tv_nsec"];
+  put [label="put_timespec64"];
+  init_kts [label="local output kts fields initialized"];
+  ctu [label="copy_to_user"];
+  put_ret [label="outbound ret gate"];
+  clock [label="clock_gettime"];
+  clockselect [label="clockid_to_kclock"];
+  clkret [label="kc->clock_get_timespec"];
+  outguard [label="if !error"];
+  copy_note [label="no byte-level/layout guarantee"];
+ }
+ subgraph cluster_B {
+  label="B";
+  basic [label="timespec64_valid"];
+  basic_sec [label="tv_sec<0 gate"];
+  basic_nsec [label="(ulong)tv_nsec>=1e9 gate"];
+  strict_b [label="timespec64_valid_strict"];
+  strict_g [label="sec>=KTIME_SEC_MAX gate"];
+  set_b [label="timespec64_valid_settod"];
+  set_g [label="sec>=TIME_SETTOD_SEC_MAX gate"];
+  reserve [label="TIME_UPTIME_SEC_MAX = 30 years in seconds"];
+  set_max [label="TIME_SETTOD_SEC_MAX macro"];
+ }
+ subgraph cluster_C {
+  label="C";
+  eq [label="timespec64_equal"];
+  eqsec [label="equal seconds"];
+  eqnsec [label="equal nsecs if seconds equal"];
+  cmp [label="timespec64_compare"];
+  cmpsec [label="first/second sec order gates"];
+  cmpns [label="same-second nsec difference"];
+  plus [label="timespec64_add"];
+  minus [label="timespec64_sub"];
+  norm [label="set_normalized_timespec64"];
+  carry [label="while nsec>=1e9; subtract and ++sec"];
+  borrow [label="while nsec<0; add and --sec"];
+  normalized [label="write ts.tv_sec then ts.tv_nsec"];
+ }
+ oldmatrix -> fixedkey [label="DOCUMENT_FIELD_MAPPING | 111 fact JSON; R111-02 review"];
+ oldmodel -> voidtype [label="SIGNATURE_POSITION_ONLY | AT111-P02/P03/P04/P05"];
+ on -> selector [label="DIRECT_CALL_EXPLICIT_CPU | TS113-E020 + KD112-E014"];
+ selector -> percpu [label="MACRO_USE | KD112-E014"];
+ on -> cpuwrite [label="CONDITIONAL_FIELD_WRITE | TS113-E018"];
+ oldsimple -> pprev [label="FIELD_WRITE | TS113-E021"];
+ pprev -> unhashed [label="READ_ONCE_CONSUMER | TS113-E060"];
+ internal -> index [label="DIRECT_CALL_TO_CALC_WHEEL | KD112-E021 + TS113-E015"];
+ index -> enq [label="INDEX_DATA_TO_ENQUEUE | KD112-E021"];
+ enq -> setidx [label="DIRECT_CALL | TS113-E019"];
+ setidx -> bits [label="MACRO_USE_AND_WRITE | TS113-E017 TS113-E006 TS113-E007"];
+ index -> lvl [label="MACRO_USE_FOR_LEVEL | TS113-E014 TS113-E013 TS113-E005"];
+ tokt -> kset [label="DIRECT_CALL_TWO_SCALARS | TS113-E054"];
+ tokt -> absence [label="ANNOTATION_ONLY_NO_CALL | TS113-P15"];
+ tons -> absence [label="ANNOTATION_ONLY_NO_CALL | TS113-P16"];
+ strict -> valid [label="DIRECT_CALL | TS113-E032"];
+ settod -> valid [label="DIRECT_CALL | TS113-E034"];
+ safe -> guard [label="CONTROL_BRANCH | TS113-E058"];
+ safe -> kset [label="DIRECT_CALL_IF_GUARD_TRUE | TS113-E058"];
+ tsreturnmacro -> nsts [label="MACRO_EXPANSION | TS113-E059"];
+ nsts -> zero [label="INITIALIZE | TS113-E049"];
+ nsts -> positive [label="CONDITION | TS113-E050"];
+ nsts -> negative [label="CONDITION | TS113-E051"];
+ nsts -> div [label="DIRECT_CALL_POSITIVE | TS113-E050"];
+ nsts -> div [label="DIRECT_CALL_NEGATIVE | TS113-E051"];
+ div -> quot [label="RETURN_VALUE_U64 | TS113-E053"];
+ div -> rem [label="POINTER_WRITE_U32 | TS113-E053"];
+ quot -> fields [label="RESULT_DATA | TS113-E050 TS113-E051"];
+ rem -> fields [label="RESULT_DATA_UNVERIFIED_POINTER_COMPAT | TS113-E050 TS113-E051"];
+ nsts -> fields [label="CALLER_FIELD_WRITE | TS113-E050 TS113-E051"];
+ zero -> fields [label="RETURN_INITIALIZED_PAIR | TS113-E052"];
+ get -> cfu [label="DIRECT_CALL | TS113-E022"];
+ cfu -> ret [label="RETURN_VALUE_CHECK | TS113-E022"];
+ ret -> efault [label="CONTROL_IF_NONZERO | TS113-E022"];
+ ret -> sec [label="CONTROL_IF_ZERO | TS113-E023"];
+ ret -> ns [label="CONTROL_IF_ZERO | TS113-E024"];
+ local_kts -> sec [label="READ_FIELD_AS_DATA | TS113-E023"];
+ local_kts -> ns [label="READ_FIELD_AS_DATA | TS113-E024"];
+ get -> sec [label="FIELD_WRITE_AFTER_COPY | TS113-E023"];
+ get -> ns [label="FIELD_WRITE_AFTER_SEC | TS113-E024"];
+ put -> init_kts [label="LOCAL_FIELD_INITIALIZATION | TS113-E025"];
+ put -> ctu [label="DIRECT_CALL | TS113-E026"];
+ ctu -> put_ret [label="RETURN_VALUE_CHECK | TS113-E026"];
+ clock -> clockselect [label="DIRECT_CALL | TS113-P04"];
+ clock -> clkret [label="INDIRECT_CALL_VIA_kc | TS113-E028"];
+ clkret -> outguard [label="CONTROL_ONLY_ON_SUCCESS | TS113-E029"];
+ clock -> put [label="DIRECT_CALL_IF_ZERO | TS113-E029"];
+ put -> copy_note [label="ANNOTATION_BYTES_UNKNOWN | TS113-P03"];
+ get -> copy_note [label="ANNOTATION_BYTES_UNKNOWN | TS113-P01"];
+ basic -> basic_sec [label="CONTROL_GATE | TS113-E030"];
+ basic -> basic_nsec [label="CONTROL_GATE_AFTER_SEC | TS113-E031"];
+ strict_b -> basic [label="DIRECT_CALL | TS113-E032"];
+ strict_b -> strict_g [label="CONTROL_AFTER_VALID_TRUE | TS113-E033"];
+ set_b -> basic [label="DIRECT_CALL | TS113-E034"];
+ set_b -> set_g [label="CONTROL_AFTER_VALID_TRUE | TS113-E035"];
+ reserve -> set_max [label="MACRO_FORMULA | TS113-E037 TS113-E038"];
+ set_max -> set_g [label="LIMIT_DATA | TS113-E038"];
+ eq -> eqsec [label="SHORT_CIRCUIT_FIRST | TS113-E039"];
+ eqsec -> eqnsec [label="CONDITIONAL_SECOND | TS113-E039"];
+ cmp -> cmpsec [label="CONTROL_BRANCH | TS113-E040 TS113-E041"];
+ cmp -> cmpns [label="EQUAL_SECONDS_BRANCH | TS113-E042"];
+ plus -> norm [label="DIRECT_CALL | TS113-E047"];
+ minus -> norm [label="DIRECT_CALL | TS113-E048"];
+ norm -> carry [label="CONTROL_LOOP | TS113-E043 TS113-E044"];
+ norm -> borrow [label="CONTROL_LOOP | TS113-E045"];
+ norm -> normalized [label="FIELD_WRITES | TS113-E046"];
+ // Frozen112 DOT repair log: line82 on->explicit needs caller E039; line89 pprev source must be simple_init_timer_key writer; lines102-103 directed non-call edges become annotated complete-body observations.
+ // Frozen112 line107 safe-add call belongs to ktime_add_safe; lines112-113 ns_to_timespec64 is direct caller of div_u64_rem in each branch; line115 separates helper quotient/remainder and caller field writes.
+ // D00 macros: KD112-E026=LVL_BITS/LVL_SIZE/LVL_MASK/LVL_OFFS; KD112-E027=ARRAYSHIFT/ARRAYMASK; KD112-E034=KTIME_MAX/MIN/SEC_MAX/SEC_MIN. Each has its independent TS113 source anchor.
+ // No direct-call edge is inferred between get_timespec64 and validity helpers or normalization. Graphviz and runtime NOT_RUN.
+}

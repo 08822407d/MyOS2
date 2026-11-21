@@ -1,0 +1,257 @@
+---
+# YAML 1.2 compatible JSON mapping with old qualified IDs preserved
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-ELF-HEADER-READ-27",
+  "record_type": "bounded_deferred_findings_and_prior_evidence_links",
+  "date": "2026-11-02",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "487936efec09",
+  "writer": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "phase": 2,
+  "status": "deferred_owner_not_ready",
+  "owner_decisions_requested_now": [],
+  "kernel_change_authorized": false,
+  "runtime_evidence": "NOT_RUN",
+  "old_artifacts_unchanged": true,
+  "global_dedup": "NOT_PERFORMED",
+  "new_findings": [
+    {
+      "id": "EH27-F01",
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27::EH27-F01",
+      "kind": "short_first_block_input_contract",
+      "status": "needs_evidence",
+      "title": "prepare_binprm不要求首块完整256字节便进入格式分派",
+      "claim": "固定prepare_binprm先清零256，再返回kernel_read的int结果；search_binary_handler只拒绝retval<0，0和正短读仍被传给各格式处理器",
+      "premises": [
+        "bprm和file有效且内存清零活动调用正常完成",
+        "kernel_read实际返回0或1..255，而不是失败/异常",
+        "格式列表迭代与ELF指针绑定实际可用"
+      ],
+      "possible_impact": "格式处理器可能读取清零保留区作为头字段值；分派层自身没有证明256字节全部由文件提供",
+      "counterevidence": [
+        "load_elf_binary随后检查四字节magic、类型、机器类型及phdr大小/完整读取",
+        "64字节正常ELF结构可完全落在不足256字节的首块内；短读不必然构成缺陷",
+        "所选文件页缓存的返回并不保证实现真实EOF短读，未找到必然生产者"
+      ],
+      "anchors": [
+        "EH27-A005",
+        "EH27-A007",
+        "EH27-A019",
+        "EH27-A020",
+        "EH27-A021",
+        "EH27-A040"
+      ],
+      "related_existing": [
+        "CORE-USER-VFS-BASELINE-05::UV-06"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来从实际有效文件/短读来源证明可达及字段使用，再评估是否为新根因"
+    },
+    {
+      "id": "EH27-F02",
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27::EH27-F02",
+      "kind": "program_header_read_error_identity_collapse",
+      "status": "needs_evidence",
+      "title": "load_elf_phdrs将尺寸/分配/读取失败折叠为NULL，上层初始-ENOEXEC未恢复原错误",
+      "claim": "helper从初始retval=-1开始，e_phentsize/size拒绝或kmalloc失败返回NULL；elf_read的读错误或短读经kfree后也变NULL；load_elf_binary在此门前保留retval=-ENOEXEC且if(!elf_phdata)跳到out",
+      "premises": [
+        "固定load_elf_binary到达对应的程序头助手调用",
+        "helper自身失败条件实际发生，并按定义返回NULL",
+        "中间没有另一个活动retval赋值覆盖-ENOEXEC"
+      ],
+      "possible_impact": "例如底层原-EIO或分配失败在这一层被呈现为-ENOEXEC；上层无法仅靠errno区分失败来源",
+      "counterevidence": [
+        "格式分派本来需要-ENOEXEC表示不可识别，不能简单认定所有使用场景必须保留原错",
+        "没有实测分配失败或短读，也未审完整外层错误显示和诊断行为"
+      ],
+      "anchors": [
+        "EH27-A020",
+        "EH27-A023",
+        "EH27-A027",
+        "EH27-A028",
+        "EH27-A029",
+        "EH27-A030",
+        "EH27-A031",
+        "EH27-A032",
+        "EH27-A033"
+      ],
+      "related_existing": [
+        "CORE-USER-VFS-BASELINE-05::UV-02",
+        "CORE-USER-VFS-BASELINE-05::UV-06"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来错误传播专项先区分格式不匹配、资源不足、读错误的所选调用点"
+    },
+    {
+      "id": "EH27-F03",
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27::EH27-F03",
+      "kind": "phdr_offset_range_and_read_verify_gap",
+      "status": "needs_evidence",
+      "title": "程序头e_phoff未在load_elf_phdrs显式核验文件范围，rw_verify_area的前置校验为常量0",
+      "claim": "e_phoff为Elf64_Off(__u64)，helper将其传给以loff_t按值接收的elf_read；kernel_read经立即return0的rw_verify_area到__kernel_read；没有在所选接口中先验证e_phoff+size在文件内",
+      "premises": [
+        "头部已通过magic/type/arch/e_phentsize/数量门",
+        "e_phoff取特殊值或指向不足完整表的文件区域",
+        "实际read接口可到达相应访问，而非先自行拒绝"
+      ],
+      "possible_impact": "头部大小校验不能代替文件偏移/EOF/符号范围约束；依赖读接口真实错误/短读返回及elf_read完整长度门",
+      "counterevidence": [
+        "elf_read对非负长度不符返回-EIO，不会在其定义良好返回后正常交付部分phdr",
+        "所读FAT32/pagecache已有自己复杂的对象及范围条件；没有实测不当读取",
+        "无符号超过有符号loff_t表示范围的转换效果未编译/运行，不假定固定errno"
+      ],
+      "anchors": [
+        "EH27-A044",
+        "EH27-A025",
+        "EH27-A029",
+        "EH27-A031",
+        "EH27-A055",
+        "EH27-A059",
+        "EH27-A063"
+      ],
+      "related_existing": [
+        "CORE-USER-VFS-BASELINE-05::UV-06",
+        "CORE-USER-VFS-BASELINE-05::UV-07"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "需要实际文件长度/读取接口可达性证据才讨论独立根因"
+    },
+    {
+      "id": "EH27-F04",
+      "qualified_id": "CORE-USER-ELF-HEADER-READ-27::EH27-F04",
+      "kind": "selected_ELF64_header_validation_coverage",
+      "status": "needs_evidence",
+      "title": "所选load_elf_binary入口只查magic/type/machine等而未单独核e_ident class/data/version和e_ehsize",
+      "claim": "固定入口将bprm.buf强转为Elf64_Ehdr，比较四字节魔数、e_type、e_machine及文件mmap能力，随后load_elf_phdrs检查e_phentsize/e_phnum；已读入口没有独立对EI_CLASS/EI_DATA/EI_VERSION/e_ehsize/e_version的活动比较",
+      "premises": [
+        "必须将语义限定于所读固定load_elf_binary和直接helper",
+        "程序数据能通过存在的检查/缓冲及程序头读取门，才能进一步讨论潜在误判"
+      ],
+      "possible_impact": "入口检查范围可能不足以识别全部不兼容ELF头组合；不能仅因看到标准64位结构就认证来文件满足所有64位约束",
+      "counterevidence": [
+        "未证任何带无效扩展字段的ELF能完成后续映射/启动",
+        "代码也存在程序头e_phentsize/数量等其他校验",
+        "不能推出全仓、外部固件或工具链没有提供格式约束"
+      ],
+      "anchors": [
+        "EH27-A019",
+        "EH27-A020",
+        "EH27-A021",
+        "EH27-A022",
+        "EH27-A028",
+        "EH27-A043",
+        "EH27-A044",
+        "EH27-A045",
+        "EH27-A050"
+      ],
+      "related_existing": [
+        "CORE-USER-VFS-BASELINE-05::UV-03"
+      ],
+      "owner_action_now": "none",
+      "resume_condition": "未来受限ELF头格式兼容性专项核约束和实际输入，禁止本批实验"
+    }
+  ],
+  "historical_evidence_appends": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-03",
+      "kind": "evidence_append_only",
+      "status_change": false,
+      "note": "真实search_binary_handler循环的过早return块注释；elf_format仅定点核到一处注册，第二格式仅为假设",
+      "anchors": [
+        "EH27-A001",
+        "EH27-A002",
+        "EH27-A009",
+        "EH27-A010",
+        "EH27-A016",
+        "EH27-A017",
+        "EH27-A053"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-06",
+      "kind": "evidence_append_only",
+      "status_change": false,
+      "note": "ELF phdr以e_phoff和56*e_phnum调用kernel_read，纸面e_phoff=64、e_phnum=72使已有simple_filemap_read公式给len=-64；不重新计根因",
+      "anchors": [
+        "EH27-A025",
+        "EH27-A029",
+        "EH27-A031",
+        "EH27-A074",
+        "EH27-A076",
+        "EH27-A077",
+        "EH27-A082"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-07",
+      "kind": "existing_limit_reference",
+      "status_change": false,
+      "note": "缓存page_array下标有效性未由header计数门认证，不能把纸面len当实际完成",
+      "anchors": [
+        "EH27-A075",
+        "EH27-A076"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-08",
+      "kind": "existing_limit_reference",
+      "status_change": false,
+      "note": "FAT32/generic_file_read_iter到file cache填页后端read返回未消费，读取数字与正确磁盘内容分开",
+      "anchors": [
+        "EH27-A073",
+        "EH27-A075",
+        "EH27-A078",
+        "EH27-A079"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-02",
+      "kind": "existing_limit_reference",
+      "status_change": false,
+      "note": "point_of_no_return后致命信号注释及错误传播边界沿用，不重新审其MM恢复",
+      "anchors": [
+        "EH27-A013",
+        "EH27-A014"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26-REVIEW-001::R26-S01",
+      "kind": "review_disposition_reference",
+      "status_change": false,
+      "note": "源字节/请求长度与合法范围条件不可混用",
+      "anchors": [
+        "EH27-A029",
+        "EH27-A031"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26-REVIEW-001::R26-S02",
+      "kind": "review_disposition_reference",
+      "status_change": false,
+      "note": "调用者缺乏检查不证明出现非零返回者；各种本地返回条件单独界定",
+      "anchors": [
+        "EH27-A055",
+        "EH27-A060"
+      ]
+    },
+    {
+      "qualified_id": "CORE-USER-ELF-SEGMENT-LOAD-26-REVIEW-001::R26-S03",
+      "kind": "review_disposition_reference",
+      "status_change": false,
+      "note": "实际调用/绑定/数据/返回图使用真实方向、引用保留1–5行，避免因标题省略门",
+      "anchors": [
+        "EH27-A005",
+        "EH27-A009",
+        "EH27-A016",
+        "EH27-A026"
+      ]
+    }
+  ],
+  "new_finding_count": 4,
+  "history_entry_count": 8,
+  "no_full_repo_dedup": true,
+  "run_evidence": "NOT_RUN",
+  "kernel_correctness": "NOT_ISSUED"
+}

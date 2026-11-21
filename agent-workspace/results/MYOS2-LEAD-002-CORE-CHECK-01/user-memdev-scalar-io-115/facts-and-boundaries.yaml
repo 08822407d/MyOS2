@@ -1,0 +1,2040 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-MEMDEV-SCALAR-IO-115",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-17",
+  "date": "2026-11-20",
+  "date_timezone": "Asia/Shanghai",
+  "record_type": "bounded_scalar_memdev_source_facts_and_D00",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "direct_master_short12": "e8e60cd19540",
+  "lead_contract_short12": "a5b40470646a",
+  "execution_parent_short12": "a2dd370fcf15",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "R114_01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_original": "user-file-seek-position-114/evidence.md;facts A.dispatch_chain;DOT lines89–91;report lines41/55",
+      "historical_count": {
+        "literal_matches": 58,
+        "single_definition_qualified": 57,
+        "original_position_only": 28,
+        "newly_reclassified_old_label": "FS114-E003"
+      },
+      "reclassification": {
+        "old_anchor": "FS114-E003",
+        "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+        "line": 11,
+        "original": "[VERIFIED] macro invocation",
+        "new": "POSITION_ONLY macro invocation of __SYSCALL(__NR_lseek,sys_lseek); no macro definition here",
+        "new_position_id": "MD115-P01",
+        "literal_still_matches": true,
+        "old_true_definition": "FS114-E004",
+        "definition_source": "MD115-E002",
+        "old_aggregate_qualified": "FS114-E044",
+        "aggregate_source": "MD115-E008"
+      },
+      "mapped_steps": [
+        {
+          "n": 1,
+          "type": "BUILD_DEFINE",
+          "path": "mykernel/scripts/options_flags.cmake#L65",
+          "id": "MD115-E001",
+          "claim": "-DCONFIG_ARCH_HAS_SYSCALL_WRAPPER, distinct from line66 CONFIG_BUG (FS114-E001)"
+        },
+        {
+          "n": 2,
+          "type": "CONDITIONAL_INCLUDE_POSITION_ONLY",
+          "path": "mykernel/include/linux/kernel/syscalls.h#L93–102",
+          "id": "MD115-P02",
+          "claim": "#ifdef branch includes asm/syscall_wrapper.h at line101"
+        },
+        {
+          "n": 3,
+          "type": "MACRO_USE",
+          "path": "mykernel/include/linux/kernel/syscalls.h#L1386",
+          "id": "MD115-E004",
+          "claim": "MYOS_SYSCALL_DEFINE3 invokes __MYOS_SYSCALL_DEFINEx"
+        },
+        {
+          "n": 4,
+          "type": "MACRO_INVOCATION_POSITION_ONLY",
+          "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h#L11",
+          "id": "MD115-P01",
+          "claim": "mapping instance of __NR_lseek to sys_lseek"
+        },
+        {
+          "n": 5,
+          "type": "MACRO_DEFINITION",
+          "path": "mykernel/arch/x86_64/entry/syscall_64.c#L26",
+          "id": "MD115-E002",
+          "claim": "active __SYSCALL expansion into case nr: return __x64_##sym(regs)"
+        },
+        {
+          "n": 6,
+          "type": "ACTIVE_SWITCH_MACRO_USE",
+          "path": "mykernel/arch/x86_64/entry/syscall_64.c#L29–31",
+          "id": "MD115-E003",
+          "claim": "active switch includes mapping header"
+        },
+        {
+          "n": 7,
+          "type": "GENERATOR_MACRO_USE",
+          "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L241–244",
+          "id": "MD115-E005",
+          "claim": "FS114-E007 invokes __SYS_STUBx(x64,sys##name)"
+        },
+        {
+          "n": 8,
+          "type": "STUB_DIRECT_CALL_AND_RETURN",
+          "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L105–109",
+          "id": "MD115-E006",
+          "claim": "__x64_sys_lseek long stub returns __se_sys_lseek(regs)"
+        },
+        {
+          "n": 9,
+          "type": "SE_TO_DO_DIRECT_CALL_AND_RETURN",
+          "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L245–249",
+          "id": "MD115-E007",
+          "claim": "FS114-E008 __se_sys_lseek calls __do_sys_lseek then returns long"
+        }
+      ],
+      "original_consumer_ids": [
+        "FS114-E002",
+        "FS114-E003",
+        "FS114-E004",
+        "FS114-E005",
+        "FS114-E006",
+        "FS114-E008"
+      ],
+      "consumer_repairs": {
+        "report_line41": "map is invocation, not definition, and wrapper is enabled by CONFIG_ARCH_HAS_SYSCALL_WRAPPER",
+        "report_line55": "x64 stub returns __se and se returns do; separate from E007 callsite",
+        "facts_A_dispatch_chain": "retain historical original list but reclassify E003 and add typed mapping chain",
+        "DOT_lines89_91": "nr->mapping invocation edge POSITION_ONLY, mapping->switch MACRO_EXPANSION source FS114-E004/MD115-E002; switch->entry GENERATED_STUB_CALL with MD115-E004–E007"
+      }
+    },
+    "R114_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "fd_upper_bound": {
+        "original_path": "facts-and-boundaries.yaml A.fd_gate.no_pointer_dereference_before_return",
+        "original_value": true,
+        "corrected_value": "reads curr->files->fd_count in comparison, then returns -EBADF if fd>=count; skips fd_array[fd], fp->f_op, llseek and position mutation",
+        "executed_before_reject": [
+          "task_s* curr=current",
+          "dereference curr->files->fd_count",
+          "unsigned fd>=fd_count compare"
+        ],
+        "skipped_after_reject": [
+          "current->files->fd_array[fd]",
+          "file.f_op lookup",
+          "llseek callback",
+          "f_pos assignment"
+        ],
+        "source_location": "mykernel/fs/syscall.c#L78–90; old FS114-E010 / MD115-P07",
+        "report_line": "file-seek-position.md line43"
+      },
+      "FAT_recognition": {
+        "old": "facts A.whence_gate.values n=0/1/2 FAT PASS; old facts physical lines402/408/414; report lines45-51",
+        "new": "FAT switch recognizes SET/CUR/END, then calculates candidate within integer-domain assumptions, then checks 0<=pos<=i_size, only then writes f_pos; origin alone does not mean accepted return",
+        "source_location": "mykernel/fs/fat/myos_fat32.c#L283–308 / MD115-P08",
+        "per_origin": [
+          {
+            "n": 0,
+            "name": "SEEK_SET",
+            "old_field": "PASS",
+            "recognized": true,
+            "new_meaning": "CASE_ONLY_NOT_FINAL_PASS",
+            "case_models": [
+              {
+                "id": "B01",
+                "offset": 0,
+                "ret": 0,
+                "wrote": true,
+                "final_f_pos": 0
+              },
+              {
+                "id": "B06",
+                "offset": -1,
+                "ret": "-EOVERFLOW",
+                "wrote": false,
+                "final_f_pos": 40
+              },
+              {
+                "id": "B10",
+                "offset": 100,
+                "ret": 100,
+                "wrote": true,
+                "final_f_pos": 100
+              },
+              {
+                "id": "B11",
+                "offset": 101,
+                "ret": "-EOVERFLOW",
+                "wrote": false,
+                "final_f_pos": 40
+              }
+            ]
+          },
+          {
+            "n": 1,
+            "name": "SEEK_CUR",
+            "old_field": "PASS",
+            "recognized": true,
+            "new_meaning": "CASE_ONLY_NOT_FINAL_PASS",
+            "case_models": [
+              {
+                "id": "B02",
+                "offset": 5,
+                "ret": 45,
+                "wrote": true,
+                "final_f_pos": 45
+              },
+              {
+                "id": "B03",
+                "offset": -40,
+                "ret": 0,
+                "wrote": true,
+                "final_f_pos": 0
+              },
+              {
+                "id": "B07",
+                "offset": -41,
+                "ret": "-EOVERFLOW",
+                "wrote": false,
+                "final_f_pos": 40
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "name": "SEEK_END",
+            "old_field": "PASS",
+            "recognized": true,
+            "new_meaning": "CASE_ONLY_NOT_FINAL_PASS",
+            "case_models": [
+              {
+                "id": "B04",
+                "offset": 0,
+                "ret": 100,
+                "wrote": true,
+                "final_f_pos": 100
+              },
+              {
+                "id": "B05",
+                "offset": 1,
+                "ret": "-EOVERFLOW",
+                "wrote": false,
+                "final_f_pos": 40
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "name": "SEEK_DATA",
+            "old_field": "DEFAULT_-EINVAL",
+            "recognized": false,
+            "new_meaning": "ENTRY_ALLOWED_FAT_DEFAULT_-EINVAL",
+            "case_models": [
+              {
+                "id": "B08",
+                "offset": 0,
+                "ret": "-EINVAL",
+                "wrote": false,
+                "final_f_pos": 40
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "name": "SEEK_HOLE",
+            "old_field": "NOT_CALLED",
+            "recognized": false,
+            "new_meaning": "ENTRY_REJECTED_FAT_NOT_INVOKED",
+            "case_models": [
+              {
+                "id": "B09",
+                "offset": 0,
+                "ret": "-EINVAL",
+                "wrote": false,
+                "final_f_pos": 40
+              }
+            ]
+          }
+        ],
+        "boundary_examples": [
+          {
+            "id": "B04",
+            "origin": "END",
+            "ret": 100,
+            "wrote": true,
+            "final_f_pos": 100
+          },
+          {
+            "id": "B05",
+            "origin": "END",
+            "ret": "-EOVERFLOW",
+            "wrote": false,
+            "final_f_pos": 40
+          },
+          {
+            "id": "B06",
+            "origin": "SET",
+            "ret": "-EOVERFLOW",
+            "wrote": false,
+            "final_f_pos": 40
+          },
+          {
+            "id": "B07",
+            "origin": "CUR",
+            "ret": "-EOVERFLOW",
+            "wrote": false,
+            "final_f_pos": 40
+          },
+          {
+            "id": "B08",
+            "origin": "DEFAULT",
+            "ret": "-EINVAL",
+            "wrote": false,
+            "final_f_pos": 40
+          },
+          {
+            "id": "B09",
+            "origin": "NOT_REACHED",
+            "ret": "-EINVAL",
+            "wrote": false,
+            "final_f_pos": 40
+          },
+          {
+            "id": "B10",
+            "origin": "SET",
+            "ret": 100,
+            "wrote": true,
+            "final_f_pos": 100
+          },
+          {
+            "id": "B11",
+            "origin": "SET",
+            "ret": "-EOVERFLOW",
+            "wrote": false,
+            "final_f_pos": 40
+          }
+        ],
+        "original_A6_B11_C5_preserved": true,
+        "report_lines": "43,45-51, original fields382-415"
+      }
+    },
+    "note": "Neither OPEN correction is an independent acceptance or an edit to fixed114. R114-01/02 remain OPEN until C08 Pro review."
+  },
+  "history": {
+    "R112_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R113_01": "CLOSED_DOCUMENTATION_ONLY",
+    "batch112": "PASS_PENDING_LOCAL",
+    "batch113": "PASS_PENDING_LOCAL",
+    "batch114": "RETURN",
+    "R114_01": "OPEN",
+    "R114_02": "OPEN"
+  },
+  "G00": {
+    "lead": "a5b40470646a",
+    "execution": "a2dd370fcf15",
+    "time": "a039d9803ade",
+    "direct_master": "e8e60cd19540",
+    "PR16": "OPEN_READY_UNMERGED",
+    "PR17": "OPEN_DRAFT_ORIGINAL_TITLE_UNMERGED",
+    "open_prs": [
+      16,
+      17
+    ],
+    "prior114_fixed_vs_active_six": "6/6_FULL_TEXT_AND_BLOB_IDENTICAL",
+    "target115": "ALL_SIX_PATHS_ABSENT",
+    "PR17_top_level_initial_pages": [
+      100,
+      100,
+      16,
+      0
+    ],
+    "PR17_top_level_initial_total": 216,
+    "prior114_formal_id": 7034736478,
+    "C07_to_C08_confirmation_id": 7038425448,
+    "C08_115_publisher_id": 7043832344,
+    "new115_formal_initial_count": 0,
+    "mainline_owner": "MYOS2-A-C08",
+    "writer_authority": "C08 mainline; CHAT-EXEC-17 existing PR17 result branch only"
+  },
+  "A": {
+    "read_call_chain": {
+      "syscall": "MYOS_SYSCALL_DEFINE3(read)->ksys_read",
+      "fd_get": "myos_fdget_pos(fd)",
+      "fd_get_source": "MD115-E011",
+      "vfs": "vfs_read",
+      "source_ids": [
+        "MD115-E009",
+        "MD115-E015",
+        "MD115-E017"
+      ]
+    },
+    "write_call_chain": {
+      "syscall": "MYOS_SYSCALL_DEFINE3(write)->ksys_write",
+      "fd_get": "fdget_pos(fd)->__to_fd(fd)",
+      "fd_get_source": [
+        "MD115-E012",
+        "MD115-E013"
+      ],
+      "vfs": "vfs_write",
+      "source_ids": [
+        "MD115-E010",
+        "MD115-E019",
+        "MD115-E021"
+      ]
+    },
+    "position_rule": {
+      "file_ppos": "FMODE_STREAM ? NULL : &file->f_pos",
+      "source": "MD115-E014",
+      "normal": "load f_pos into stack local pos and pass &pos to VFS; ret>=0 commits f_pos=pos even if pos unchanged",
+      "negative": "ret<0 skips outer commit even if callback modified local pos",
+      "stream": "ppos=NULL, no local f_pos load/commit; true callback may independently mutate file field but not modeled",
+      "read_commit_source": "MD115-E017",
+      "write_commit_source": "MD115-E021"
+    },
+    "read_VFS": {
+      "mode_gate": "FMODE_READ else -EBADF; FMODE_CAN_READ gate is commented",
+      "source": "MD115-E025",
+      "access": "access_ok(buf,count) else -EFAULT",
+      "access_source": "MD115-E024",
+      "verify": "rw_verify_area first statement returns 0",
+      "limit": "count=min(count,MAX_RW_COUNT) after verify",
+      "priorities": "read_iter first via new_sync_read, then read, else -EINVAL",
+      "sources": [
+        "MD115-E026",
+        "MD115-E027",
+        "MD115-E034"
+      ]
+    },
+    "write_VFS": {
+      "mode_gate": "FMODE_WRITE else -EBADF; FMODE_CAN_WRITE else -EINVAL",
+      "source": "MD115-E030",
+      "access": "access_ok(buf,count) else -EFAULT",
+      "access_source": "MD115-E029",
+      "verify": "rw_verify_area first statement returns 0",
+      "limit": "count=min(count,MAX_RW_COUNT) after verify",
+      "priorities": "write first then write_iter via new_sync_write, else -EINVAL",
+      "sources": [
+        "MD115-E031",
+        "MD115-E032",
+        "MD115-E035"
+      ]
+    },
+    "iter_detail": {
+      "read": "new_sync_read stores kiocb.ki_pos to *ppos if ppos nonnull even if callback ret negative; outer suppresses final commit if negative",
+      "write": "new_sync_write stores kiocb.ki_pos to *ppos only if ret>0 and ppos exists; outer may assign same pos on ret==0",
+      "sources": [
+        "MD115-E034",
+        "MD115-E035"
+      ]
+    },
+    "file_creation": {
+      "initial": "__alloc_file sets file->f_mode=OPEN_FMODE(flags)",
+      "formula": "(flags+1)&O_ACCMODE plus optional NONOTIFY",
+      "O_ACCMODE": 3,
+      "O_RDONLY": {
+        "flags": 0,
+        "result_fmode": 1
+      },
+      "O_WRONLY": {
+        "flags": 1,
+        "result_fmode": 2
+      },
+      "O_RDWR": {
+        "flags": 2,
+        "result_fmode": 3
+      },
+      "CAN_WRITE_bit": "0x40000, not set by shown OPEN_FMODE for three ordinary access modes",
+      "source_ids": [
+        "MD115-E041",
+        "MD115-E040",
+        "MD115-E044",
+        "MD115-E045",
+        "MD115-E046",
+        "MD115-E047",
+        "MD115-E038"
+      ],
+      "scope": "limited to shown allocation/open path and no later f_mode modification assumed; mode permissions 0666 or devlist.fmode do not automatically set CAN_WRITE"
+    },
+    "MAX_RW_COUNT": {
+      "formula": "INT_MAX & PAGE_MASK",
+      "page_shift": 12,
+      "decimal": 2147479552,
+      "hex": "0x7ffff000",
+      "source_ids": [
+        "MD115-E043",
+        "MD115-E048",
+        "MD115-E049"
+      ]
+    },
+    "models": [
+      {
+        "id": "A01",
+        "operation": "read",
+        "input_mode": "READ",
+        "initial_file_f_pos": 9,
+        "callback_return": 5,
+        "ppos_is_null": false,
+        "local_pos_initial": 9,
+        "callback_writes_local_pos": 14,
+        "callback_changed_local_pos": true,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": true,
+        "final_file_f_pos": 14,
+        "file_position_value_changed": true,
+        "source_ids": [
+          "MD115-E011",
+          "MD115-E014",
+          "MD115-E016",
+          "MD115-E017"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A02",
+        "operation": "read",
+        "input_mode": "READ",
+        "initial_file_f_pos": 9,
+        "callback_return": 0,
+        "ppos_is_null": false,
+        "local_pos_initial": 9,
+        "callback_writes_local_pos": 9,
+        "callback_changed_local_pos": false,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": true,
+        "final_file_f_pos": 9,
+        "file_position_value_changed": false,
+        "source_ids": [
+          "MD115-E011",
+          "MD115-E014",
+          "MD115-E016",
+          "MD115-E017"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A03",
+        "operation": "read",
+        "input_mode": "READ",
+        "initial_file_f_pos": 9,
+        "callback_return": -5,
+        "ppos_is_null": false,
+        "local_pos_initial": 9,
+        "callback_writes_local_pos": 14,
+        "callback_changed_local_pos": true,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": false,
+        "final_file_f_pos": 9,
+        "file_position_value_changed": false,
+        "source_ids": [
+          "MD115-E011",
+          "MD115-E014",
+          "MD115-E016",
+          "MD115-E017"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A04",
+        "operation": "read",
+        "input_mode": "READ",
+        "initial_file_f_pos": 9,
+        "callback_return": 0,
+        "ppos_is_null": false,
+        "local_pos_initial": 9,
+        "callback_writes_local_pos": 14,
+        "callback_changed_local_pos": true,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": true,
+        "final_file_f_pos": 14,
+        "file_position_value_changed": true,
+        "source_ids": [
+          "MD115-E011",
+          "MD115-E014",
+          "MD115-E016",
+          "MD115-E017"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A05",
+        "operation": "write",
+        "input_mode": "WRITE|CAN_WRITE",
+        "initial_file_f_pos": 9,
+        "callback_return": 4,
+        "ppos_is_null": false,
+        "local_pos_initial": 9,
+        "callback_writes_local_pos": 13,
+        "callback_changed_local_pos": true,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": true,
+        "final_file_f_pos": 13,
+        "file_position_value_changed": true,
+        "source_ids": [
+          "MD115-E012",
+          "MD115-E014",
+          "MD115-E020",
+          "MD115-E021"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A06",
+        "operation": "write",
+        "input_mode": "WRITE|CAN_WRITE",
+        "initial_file_f_pos": 9,
+        "callback_return": 0,
+        "ppos_is_null": false,
+        "local_pos_initial": 9,
+        "callback_writes_local_pos": 9,
+        "callback_changed_local_pos": false,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": true,
+        "final_file_f_pos": 9,
+        "file_position_value_changed": false,
+        "source_ids": [
+          "MD115-E012",
+          "MD115-E014",
+          "MD115-E020",
+          "MD115-E021"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A07",
+        "operation": "write",
+        "input_mode": "WRITE|CAN_WRITE",
+        "initial_file_f_pos": 9,
+        "callback_return": -22,
+        "ppos_is_null": false,
+        "local_pos_initial": 9,
+        "callback_writes_local_pos": 17,
+        "callback_changed_local_pos": true,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": false,
+        "final_file_f_pos": 9,
+        "file_position_value_changed": false,
+        "source_ids": [
+          "MD115-E012",
+          "MD115-E014",
+          "MD115-E020",
+          "MD115-E021"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A08",
+        "operation": "read",
+        "input_mode": "READ|STREAM",
+        "initial_file_f_pos": 9,
+        "callback_return": 5,
+        "ppos_is_null": true,
+        "local_pos_initial": null,
+        "callback_writes_local_pos": null,
+        "callback_changed_local_pos": false,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": false,
+        "final_file_f_pos": 9,
+        "file_position_value_changed": false,
+        "source_ids": [
+          "MD115-E011",
+          "MD115-E014",
+          "MD115-E016",
+          "MD115-E017"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A09",
+        "operation": "write",
+        "input_mode": "WRITE|CAN_WRITE|STREAM",
+        "initial_file_f_pos": 9,
+        "callback_return": 5,
+        "ppos_is_null": true,
+        "local_pos_initial": null,
+        "callback_writes_local_pos": null,
+        "callback_changed_local_pos": false,
+        "outer_writeback_condition": "ret>=0 && ppos != NULL",
+        "outer_f_pos_assignment": false,
+        "final_file_f_pos": 9,
+        "file_position_value_changed": false,
+        "source_ids": [
+          "MD115-E012",
+          "MD115-E014",
+          "MD115-E020",
+          "MD115-E021"
+        ],
+        "premise": "valid opened file, passing access/mode gates; modeled callback return and local ppos mutation; no direct f_pos mutation by callback or concurrency",
+        "status": "PAPER_ONLY"
+      }
+    ],
+    "mode_gates": [
+      {
+        "id": "G_READONLY_WRITE",
+        "f_mode": "0x1=READ",
+        "request": "write",
+        "first_gate": "FMODE_WRITE missing",
+        "return_value": "-EBADF",
+        "method_called": false,
+        "final_f_pos": 9,
+        "source": "MD115-E028"
+      },
+      {
+        "id": "G_WRONLY_WRITE",
+        "f_mode": "0x2=WRITE, normal O_WRONLY OPEN_FMODE",
+        "request": "write",
+        "first_gate": "FMODE_CAN_WRITE missing",
+        "return_value": "-EINVAL",
+        "method_called": false,
+        "final_f_pos": 9,
+        "source": "MD115-E028"
+      },
+      {
+        "id": "G_RDWR_WRITE",
+        "f_mode": "0x3=READ|WRITE, normal O_RDWR OPEN_FMODE",
+        "request": "write",
+        "first_gate": "FMODE_CAN_WRITE missing",
+        "return_value": "-EINVAL",
+        "method_called": false,
+        "final_f_pos": 9,
+        "source": "MD115-E028"
+      },
+      {
+        "id": "G_EXPLICIT_WRITE",
+        "f_mode": "0x40002=WRITE|CAN_WRITE",
+        "request": "write",
+        "first_gate": "passed",
+        "return_value": "callback-dependent",
+        "method_called": "if present",
+        "final_f_pos": "callback-dependent",
+        "source": "MD115-E031"
+      },
+      {
+        "id": "G_WRITEONLY_READ",
+        "f_mode": "0x2=WRITE",
+        "request": "read",
+        "first_gate": "FMODE_READ missing",
+        "return_value": "-EBADF",
+        "method_called": false,
+        "final_f_pos": 9,
+        "source": "MD115-E023"
+      }
+    ],
+    "active_source_claims": "No actual kernel/driver execution performed"
+  },
+  "B": {
+    "P": 4096,
+    "PAGE_SHIFT": 12,
+    "MAX_RW_COUNT": 2147479552,
+    "configuration_sources": [
+      "MD115-E048",
+      "MD115-E049",
+      "MD115-E050",
+      "MD115-E043"
+    ],
+    "preconditions": "n is count after VFS cap, writable normal buffer with length>=n+1, prefix initially nonzero, sentinel at n, no real faults or concurrency; every n model <MAX_RW_COUNT",
+    "closed_form_return": "n==0 ? 0 : P * floor((n-1)/P)",
+    "closed_form_zero_bytes": "n bytes [0,n), sentinel buf[n] not touched",
+    "closed_form_last_chunk": "n>0 => 1..P bytes; return=n-last_chunk",
+    "reason": "read_zero does memset(buf+cleared,0,chunk); count-=chunk; if(count==0) break; cleared+=chunk comes only after the break test",
+    "positive_zero_return": "for 0<n<=P: entire requested buffer is zeroed, but function returns 0 (EOF-like count); buffer mutation is observable under memory precondition even though return says zero bytes",
+    "position": "read_zero ignores loff_t* ppos; ksys_read ret>=0 commits old local position9 back into f_pos (same value)",
+    "source_ids": [
+      "MD115-E051",
+      "MD115-E052",
+      "MD115-E053",
+      "MD115-E054",
+      "MD115-E055",
+      "MD115-E056"
+    ],
+    "models": [
+      {
+        "model": "B01",
+        "requested_length": 0,
+        "effective_VFS_count": 0,
+        "MAX_RW_COUNT": 2147479552,
+        "page_size": 4096,
+        "initial_nonzero_prefix_length": 0,
+        "sentinel_byte_offset": 0,
+        "sentinel_byte": "unchanged",
+        "actual_zeroed_byte_count": 0,
+        "zeroed_ranges": [],
+        "reported_read_count": 0,
+        "final_chunk_not_counted": 0,
+        "loop_steps": [],
+        "callback_ppos_writes": 0,
+        "ksys_outer_writeback": "YES_ret>=0_and_ppos_nonNULL",
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "f_pos_value_changed": false,
+        "source_ids": [
+          "MD115-E051",
+          "MD115-E052",
+          "MD115-E050",
+          "MD115-E053",
+          "MD115-E054",
+          "MD115-E055",
+          "MD115-E056",
+          "MD115-E017"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "model": "B02",
+        "requested_length": 1,
+        "effective_VFS_count": 1,
+        "MAX_RW_COUNT": 2147479552,
+        "page_size": 4096,
+        "initial_nonzero_prefix_length": 1,
+        "sentinel_byte_offset": 1,
+        "sentinel_byte": "unchanged",
+        "actual_zeroed_byte_count": 1,
+        "zeroed_ranges": [
+          {
+            "start": 0,
+            "end_exclusive": 1
+          }
+        ],
+        "reported_read_count": 0,
+        "final_chunk_not_counted": 1,
+        "loop_steps": [
+          {
+            "iteration": 1,
+            "cleared_before": 0,
+            "memset_offset": 0,
+            "chunk": 1,
+            "remaining_before": 1,
+            "remaining_after_subtract": 0,
+            "break_triggered": true,
+            "cleared_after_step": 0
+          }
+        ],
+        "callback_ppos_writes": 0,
+        "ksys_outer_writeback": "YES_ret>=0_and_ppos_nonNULL",
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "f_pos_value_changed": false,
+        "source_ids": [
+          "MD115-E051",
+          "MD115-E052",
+          "MD115-E050",
+          "MD115-E053",
+          "MD115-E054",
+          "MD115-E055",
+          "MD115-E056",
+          "MD115-E017"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "model": "B03",
+        "requested_length": 4095,
+        "effective_VFS_count": 4095,
+        "MAX_RW_COUNT": 2147479552,
+        "page_size": 4096,
+        "initial_nonzero_prefix_length": 4095,
+        "sentinel_byte_offset": 4095,
+        "sentinel_byte": "unchanged",
+        "actual_zeroed_byte_count": 4095,
+        "zeroed_ranges": [
+          {
+            "start": 0,
+            "end_exclusive": 4095
+          }
+        ],
+        "reported_read_count": 0,
+        "final_chunk_not_counted": 4095,
+        "loop_steps": [
+          {
+            "iteration": 1,
+            "cleared_before": 0,
+            "memset_offset": 0,
+            "chunk": 4095,
+            "remaining_before": 4095,
+            "remaining_after_subtract": 0,
+            "break_triggered": true,
+            "cleared_after_step": 0
+          }
+        ],
+        "callback_ppos_writes": 0,
+        "ksys_outer_writeback": "YES_ret>=0_and_ppos_nonNULL",
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "f_pos_value_changed": false,
+        "source_ids": [
+          "MD115-E051",
+          "MD115-E052",
+          "MD115-E050",
+          "MD115-E053",
+          "MD115-E054",
+          "MD115-E055",
+          "MD115-E056",
+          "MD115-E017"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "model": "B04",
+        "requested_length": 4096,
+        "effective_VFS_count": 4096,
+        "MAX_RW_COUNT": 2147479552,
+        "page_size": 4096,
+        "initial_nonzero_prefix_length": 4096,
+        "sentinel_byte_offset": 4096,
+        "sentinel_byte": "unchanged",
+        "actual_zeroed_byte_count": 4096,
+        "zeroed_ranges": [
+          {
+            "start": 0,
+            "end_exclusive": 4096
+          }
+        ],
+        "reported_read_count": 0,
+        "final_chunk_not_counted": 4096,
+        "loop_steps": [
+          {
+            "iteration": 1,
+            "cleared_before": 0,
+            "memset_offset": 0,
+            "chunk": 4096,
+            "remaining_before": 4096,
+            "remaining_after_subtract": 0,
+            "break_triggered": true,
+            "cleared_after_step": 0
+          }
+        ],
+        "callback_ppos_writes": 0,
+        "ksys_outer_writeback": "YES_ret>=0_and_ppos_nonNULL",
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "f_pos_value_changed": false,
+        "source_ids": [
+          "MD115-E051",
+          "MD115-E052",
+          "MD115-E050",
+          "MD115-E053",
+          "MD115-E054",
+          "MD115-E055",
+          "MD115-E056",
+          "MD115-E017"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "model": "B05",
+        "requested_length": 4097,
+        "effective_VFS_count": 4097,
+        "MAX_RW_COUNT": 2147479552,
+        "page_size": 4096,
+        "initial_nonzero_prefix_length": 4097,
+        "sentinel_byte_offset": 4097,
+        "sentinel_byte": "unchanged",
+        "actual_zeroed_byte_count": 4097,
+        "zeroed_ranges": [
+          {
+            "start": 0,
+            "end_exclusive": 4096
+          },
+          {
+            "start": 4096,
+            "end_exclusive": 4097
+          }
+        ],
+        "reported_read_count": 4096,
+        "final_chunk_not_counted": 1,
+        "loop_steps": [
+          {
+            "iteration": 1,
+            "cleared_before": 0,
+            "memset_offset": 0,
+            "chunk": 4096,
+            "remaining_before": 4097,
+            "remaining_after_subtract": 1,
+            "break_triggered": false,
+            "cleared_after_step": 4096
+          },
+          {
+            "iteration": 2,
+            "cleared_before": 4096,
+            "memset_offset": 4096,
+            "chunk": 1,
+            "remaining_before": 1,
+            "remaining_after_subtract": 0,
+            "break_triggered": true,
+            "cleared_after_step": 4096
+          }
+        ],
+        "callback_ppos_writes": 0,
+        "ksys_outer_writeback": "YES_ret>=0_and_ppos_nonNULL",
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "f_pos_value_changed": false,
+        "source_ids": [
+          "MD115-E051",
+          "MD115-E052",
+          "MD115-E050",
+          "MD115-E053",
+          "MD115-E054",
+          "MD115-E055",
+          "MD115-E056",
+          "MD115-E017"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "model": "B06",
+        "requested_length": 8192,
+        "effective_VFS_count": 8192,
+        "MAX_RW_COUNT": 2147479552,
+        "page_size": 4096,
+        "initial_nonzero_prefix_length": 8192,
+        "sentinel_byte_offset": 8192,
+        "sentinel_byte": "unchanged",
+        "actual_zeroed_byte_count": 8192,
+        "zeroed_ranges": [
+          {
+            "start": 0,
+            "end_exclusive": 4096
+          },
+          {
+            "start": 4096,
+            "end_exclusive": 8192
+          }
+        ],
+        "reported_read_count": 4096,
+        "final_chunk_not_counted": 4096,
+        "loop_steps": [
+          {
+            "iteration": 1,
+            "cleared_before": 0,
+            "memset_offset": 0,
+            "chunk": 4096,
+            "remaining_before": 8192,
+            "remaining_after_subtract": 4096,
+            "break_triggered": false,
+            "cleared_after_step": 4096
+          },
+          {
+            "iteration": 2,
+            "cleared_before": 4096,
+            "memset_offset": 4096,
+            "chunk": 4096,
+            "remaining_before": 4096,
+            "remaining_after_subtract": 0,
+            "break_triggered": true,
+            "cleared_after_step": 4096
+          }
+        ],
+        "callback_ppos_writes": 0,
+        "ksys_outer_writeback": "YES_ret>=0_and_ppos_nonNULL",
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "f_pos_value_changed": false,
+        "source_ids": [
+          "MD115-E051",
+          "MD115-E052",
+          "MD115-E050",
+          "MD115-E053",
+          "MD115-E054",
+          "MD115-E055",
+          "MD115-E056",
+          "MD115-E017"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "model": "B07",
+        "requested_length": 8193,
+        "effective_VFS_count": 8193,
+        "MAX_RW_COUNT": 2147479552,
+        "page_size": 4096,
+        "initial_nonzero_prefix_length": 8193,
+        "sentinel_byte_offset": 8193,
+        "sentinel_byte": "unchanged",
+        "actual_zeroed_byte_count": 8193,
+        "zeroed_ranges": [
+          {
+            "start": 0,
+            "end_exclusive": 4096
+          },
+          {
+            "start": 4096,
+            "end_exclusive": 8192
+          },
+          {
+            "start": 8192,
+            "end_exclusive": 8193
+          }
+        ],
+        "reported_read_count": 8192,
+        "final_chunk_not_counted": 1,
+        "loop_steps": [
+          {
+            "iteration": 1,
+            "cleared_before": 0,
+            "memset_offset": 0,
+            "chunk": 4096,
+            "remaining_before": 8193,
+            "remaining_after_subtract": 4097,
+            "break_triggered": false,
+            "cleared_after_step": 4096
+          },
+          {
+            "iteration": 2,
+            "cleared_before": 4096,
+            "memset_offset": 4096,
+            "chunk": 4096,
+            "remaining_before": 4097,
+            "remaining_after_subtract": 1,
+            "break_triggered": false,
+            "cleared_after_step": 8192
+          },
+          {
+            "iteration": 3,
+            "cleared_before": 8192,
+            "memset_offset": 8192,
+            "chunk": 1,
+            "remaining_before": 1,
+            "remaining_after_subtract": 0,
+            "break_triggered": true,
+            "cleared_after_step": 8192
+          }
+        ],
+        "callback_ppos_writes": 0,
+        "ksys_outer_writeback": "YES_ret>=0_and_ppos_nonNULL",
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "f_pos_value_changed": false,
+        "source_ids": [
+          "MD115-E051",
+          "MD115-E052",
+          "MD115-E050",
+          "MD115-E053",
+          "MD115-E054",
+          "MD115-E055",
+          "MD115-E056",
+          "MD115-E017"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "C": {
+    "common_request_count": 4097,
+    "initial_f_pos": 9,
+    "provenance": "static mem.c devlist and initializers, valid opened objects and accessible buffers assumed; no actual cdev registration/open or IO executed",
+    "devlist": {
+      "null": {
+        "minor": 3,
+        "mode": "0666",
+        "devlist_fmode": "FMODE_NOWAIT",
+        "file_ops": "null_fops",
+        "source_ids": [
+          "MD115-E063",
+          "MD115-E061"
+        ]
+      },
+      "zero": {
+        "minor": 5,
+        "mode": "0666",
+        "devlist_fmode": "FMODE_NOWAIT",
+        "file_ops": "zero_fops",
+        "source_ids": [
+          "MD115-E064",
+          "MD115-E062"
+        ]
+      },
+      "full": {
+        "minor": 7,
+        "mode": "0666",
+        "devlist_fmode": "0",
+        "file_ops": "full_fops",
+        "source_ids": [
+          "MD115-E065",
+          "MD115-P34"
+        ]
+      }
+    },
+    "mode_separation": "0666 belongs to devlist.mode; devlist.fmode is NOWAIT/0; file.f_mode comes from OPEN_FMODE in __alloc_file in bounded open path, not directly from 0666 or devlist.fmode. No CAN_WRITE grant established.",
+    "operations": {
+      "null": {
+        "read": "read_null returns0 without buffer/pos mutation",
+        "write": "write_null returns count without buffer/pos mutation",
+        "sources": [
+          "MD115-E057",
+          "MD115-E058"
+        ]
+      },
+      "zero": {
+        "read": "read_zero clears all n bytes but returns undercount",
+        "write": "write_zero macro appears twice, both aliases write_null (discard)",
+        "sources": [
+          "MD115-E056",
+          "MD115-E059",
+          "MD115-E060",
+          "MD115-E058"
+        ]
+      },
+      "full": {
+        "read": "both .read and .read_iter absent",
+        "write": "both .write and .write_iter absent",
+        "sources": [
+          "MD115-P34",
+          "MD115-E065"
+        ]
+      }
+    },
+    "installation": {
+      "devlist_to_cdev": "memdev=devlist[minor]; cdev_init(&memdev.cdev,memdev.fops); cdev_add, conditionally device_create",
+      "sources": [
+        "MD115-E042",
+        "MD115-E068",
+        "MD115-E069"
+      ],
+      "fops_open": "myos_do_dentry_open gets inode.i_fop; chrdev_open uses fops=p->ops, then filp->f_op=fops",
+      "actual_registration": "NOT_RUN"
+    },
+    "six_cells": [
+      {
+        "model": "C_NULL_READ",
+        "device": "null",
+        "minor": 3,
+        "operation": "read",
+        "fops": "null_fops",
+        "request": 4097,
+        "effective_count": 4097,
+        "file_f_mode": "FMODE_READ (0x1)",
+        "f_mode_assumption": "valid file having READ bit",
+        "method": "read_null",
+        "first_deciding_branch": "vfs_read chooses scalar .read after read_iter absent",
+        "return_value": 0,
+        "buffer_effect": "unchanged",
+        "actually_zeroed_bytes": 0,
+        "callback_ppos_changed": false,
+        "outer_f_pos_assignment": true,
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "position_value_changed": false,
+        "source_ids": [
+          "MD115-E063",
+          "MD115-E061",
+          "MD115-E026",
+          "MD115-E027",
+          "MD115-E017",
+          "MD115-E057"
+        ],
+        "run": "NOT_RUN"
+      },
+      {
+        "model": "C_NULL_WRITE",
+        "device": "null",
+        "minor": 3,
+        "operation": "write",
+        "fops": "null_fops",
+        "request": 4097,
+        "effective_count": 4097,
+        "file_f_mode": "FMODE_WRITE|FMODE_CAN_WRITE (0x40002), explicit hypothetical mode",
+        "f_mode_assumption": "not derived from normal O_WRONLY; assuming required two bits and valid source user buffer",
+        "method": "write_null",
+        "first_deciding_branch": "vfs_write chooses active scalar .write",
+        "return_value": 4097,
+        "buffer_effect": "unchanged",
+        "actually_zeroed_bytes": 0,
+        "callback_ppos_changed": false,
+        "outer_f_pos_assignment": true,
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "position_value_changed": false,
+        "source_ids": [
+          "MD115-E063",
+          "MD115-E061",
+          "MD115-E028",
+          "MD115-E031",
+          "MD115-E032",
+          "MD115-E021",
+          "MD115-E058"
+        ],
+        "run": "NOT_RUN"
+      },
+      {
+        "model": "C_ZERO_READ",
+        "device": "zero",
+        "minor": 5,
+        "operation": "read",
+        "fops": "zero_fops",
+        "request": 4097,
+        "effective_count": 4097,
+        "file_f_mode": "FMODE_READ (0x1)",
+        "f_mode_assumption": "valid file having READ bit",
+        "method": "read_zero",
+        "first_deciding_branch": "vfs_read chooses scalar .read after read_iter absent",
+        "return_value": 4096,
+        "buffer_effect": "zeroed 4097 requested bytes; sentinel at 4097 untouched",
+        "actually_zeroed_bytes": 4097,
+        "callback_ppos_changed": false,
+        "outer_f_pos_assignment": true,
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "position_value_changed": false,
+        "source_ids": [
+          "MD115-E064",
+          "MD115-E062",
+          "MD115-E026",
+          "MD115-E027",
+          "MD115-E017",
+          "MD115-E053",
+          "MD115-E056"
+        ],
+        "run": "NOT_RUN"
+      },
+      {
+        "model": "C_ZERO_WRITE",
+        "device": "zero",
+        "minor": 5,
+        "operation": "write",
+        "fops": "zero_fops",
+        "request": 4097,
+        "effective_count": 4097,
+        "file_f_mode": "FMODE_WRITE|FMODE_CAN_WRITE (0x40002), explicit hypothetical mode",
+        "f_mode_assumption": "not derived from normal O_WRONLY; assuming required two bits and valid source user buffer",
+        "method": "write_zero macro=>write_null",
+        "first_deciding_branch": "vfs_write chooses active scalar .write",
+        "return_value": 4097,
+        "buffer_effect": "unchanged",
+        "actually_zeroed_bytes": 0,
+        "callback_ppos_changed": false,
+        "outer_f_pos_assignment": true,
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "position_value_changed": false,
+        "source_ids": [
+          "MD115-E064",
+          "MD115-E062",
+          "MD115-E028",
+          "MD115-E031",
+          "MD115-E032",
+          "MD115-E021",
+          "MD115-E059",
+          "MD115-E060",
+          "MD115-E058"
+        ],
+        "run": "NOT_RUN"
+      },
+      {
+        "model": "C_FULL_READ",
+        "device": "full",
+        "minor": 7,
+        "operation": "read",
+        "fops": "full_fops",
+        "request": 4097,
+        "effective_count": 4097,
+        "file_f_mode": "FMODE_READ (0x1)",
+        "f_mode_assumption": "valid file having READ bit",
+        "method": "MISSING_READ_CALLBACK",
+        "first_deciding_branch": "vfs_read neither read_iter nor read => -EINVAL",
+        "return_value": "-EINVAL",
+        "buffer_effect": "unchanged",
+        "actually_zeroed_bytes": 0,
+        "callback_ppos_changed": false,
+        "outer_f_pos_assignment": false,
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "position_value_changed": false,
+        "source_ids": [
+          "MD115-E065",
+          "MD115-P34",
+          "MD115-E026",
+          "MD115-E027",
+          "MD115-E017"
+        ],
+        "run": "NOT_RUN"
+      },
+      {
+        "model": "C_FULL_WRITE",
+        "device": "full",
+        "minor": 7,
+        "operation": "write",
+        "fops": "full_fops",
+        "request": 4097,
+        "effective_count": 4097,
+        "file_f_mode": "FMODE_WRITE|FMODE_CAN_WRITE (0x40002), explicit hypothetical mode",
+        "f_mode_assumption": "not derived from normal O_WRONLY; assuming required two bits and valid source user buffer",
+        "method": "MISSING_WRITE_CALLBACK",
+        "first_deciding_branch": "vfs_write missing .write and .write_iter => -EINVAL",
+        "return_value": "-EINVAL",
+        "buffer_effect": "unchanged",
+        "actually_zeroed_bytes": 0,
+        "callback_ppos_changed": false,
+        "outer_f_pos_assignment": false,
+        "initial_f_pos": 9,
+        "final_f_pos": 9,
+        "position_value_changed": false,
+        "source_ids": [
+          "MD115-E065",
+          "MD115-P34",
+          "MD115-E028",
+          "MD115-E031",
+          "MD115-E032",
+          "MD115-E021"
+        ],
+        "run": "NOT_RUN"
+      }
+    ],
+    "write_mode_contrasts": [
+      {
+        "model": "W01",
+        "mode": "read-only f_mode 0x1",
+        "devices": "all null/zero/full",
+        "first_deciding_gate": "FMODE_WRITE false",
+        "return_value": "-EBADF",
+        "method_invoked": false,
+        "buffer_changed": false,
+        "f_pos_writeback": false,
+        "final_f_pos": 9
+      },
+      {
+        "model": "W02",
+        "mode": "normal O_WRONLY -> OPEN_FMODE 0x2",
+        "devices": "all null/zero/full",
+        "first_deciding_gate": "FMODE_CAN_WRITE false",
+        "return_value": "-EINVAL",
+        "method_invoked": false,
+        "buffer_changed": false,
+        "f_pos_writeback": false,
+        "final_f_pos": 9
+      },
+      {
+        "model": "W03",
+        "mode": "conditional WRITE|CAN_WRITE 0x40002",
+        "devices": "null/zero",
+        "first_deciding_gate": "callback write_null",
+        "return_value": 4097,
+        "method_invoked": true,
+        "buffer_changed": false,
+        "f_pos_writeback": true,
+        "final_f_pos": 9
+      },
+      {
+        "model": "W04",
+        "mode": "conditional WRITE|CAN_WRITE 0x40002",
+        "devices": "full",
+        "first_deciding_gate": "both write methods absent",
+        "return_value": "-EINVAL",
+        "method_invoked": false,
+        "buffer_changed": false,
+        "f_pos_writeback": false,
+        "final_f_pos": 9
+      }
+    ],
+    "note": "Same -EINVAL for full missing method and ordinary O_WRONLY lacking CAN_WRITE, but the rejection layer differs."
+  },
+  "evidence_ledger": [
+    {
+      "id": "MD115-E001",
+      "key": "D_CFG_WRAPPER",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMake_C_FLAGS",
+      "start_line": 65,
+      "end_line": 65
+    },
+    {
+      "id": "MD115-E002",
+      "key": "D_SWITCH_DEF",
+      "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+      "symbol": "__SYSCALL",
+      "start_line": 26,
+      "end_line": 26
+    },
+    {
+      "id": "MD115-E003",
+      "key": "D_SWITCH_USE",
+      "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+      "symbol": "x64_sys_call",
+      "start_line": 29,
+      "end_line": 31
+    },
+    {
+      "id": "MD115-E004",
+      "key": "D_DEFINE3",
+      "path": "mykernel/include/linux/kernel/syscalls.h",
+      "symbol": "MYOS_SYSCALL_DEFINE3",
+      "start_line": 1386,
+      "end_line": 1386
+    },
+    {
+      "id": "MD115-E005",
+      "key": "D_STUB_USE",
+      "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h",
+      "symbol": "__MYOS_SYSCALL_DEFINEx",
+      "start_line": 241,
+      "end_line": 244
+    },
+    {
+      "id": "MD115-E006",
+      "key": "D_STUB_RETURN",
+      "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h",
+      "symbol": "__SYS_STUBx",
+      "start_line": 105,
+      "end_line": 109
+    },
+    {
+      "id": "MD115-E007",
+      "key": "D_SE_TO_DO",
+      "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h",
+      "symbol": "__MYOS_SYSCALL_DEFINEx",
+      "start_line": 245,
+      "end_line": 249
+    },
+    {
+      "id": "MD115-E008",
+      "key": "D_CHAR_AGGREGATE",
+      "path": "mykernel/drivers/char/char_dev.c",
+      "symbol": "def_chr_fops",
+      "start_line": 95,
+      "end_line": 98
+    },
+    {
+      "id": "MD115-E009",
+      "key": "A_READ_SYSCALL",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(read)",
+      "start_line": 13,
+      "end_line": 14
+    },
+    {
+      "id": "MD115-E010",
+      "key": "A_WRITE_SYSCALL",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(write)",
+      "start_line": 34,
+      "end_line": 35
+    },
+    {
+      "id": "MD115-E011",
+      "key": "A_READ_FDGET",
+      "path": "mykernel/fs/vfs/file.c",
+      "symbol": "myos_fdget_pos",
+      "start_line": 199,
+      "end_line": 202
+    },
+    {
+      "id": "MD115-E012",
+      "key": "A_WRITE_FDGET",
+      "path": "mykernel/include/linux/fs/file.h",
+      "symbol": "fdget_pos",
+      "start_line": 74,
+      "end_line": 74
+    },
+    {
+      "id": "MD115-E013",
+      "key": "A_TO_FD",
+      "path": "mykernel/include/linux/fs/file.h",
+      "symbol": "__to_fd",
+      "start_line": 53,
+      "end_line": 56
+    },
+    {
+      "id": "MD115-E014",
+      "key": "A_PPOS",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "file_ppos",
+      "start_line": 177,
+      "end_line": 177
+    },
+    {
+      "id": "MD115-E015",
+      "key": "A_KREAD_FD",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_read",
+      "start_line": 182,
+      "end_line": 185
+    },
+    {
+      "id": "MD115-E016",
+      "key": "A_KREAD_POS",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_read",
+      "start_line": 185,
+      "end_line": 189
+    },
+    {
+      "id": "MD115-E017",
+      "key": "A_KREAD_CALL",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_read",
+      "start_line": 191,
+      "end_line": 194
+    },
+    {
+      "id": "MD115-E018",
+      "key": "A_KREAD_RETURN",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_read",
+      "start_line": 196,
+      "end_line": 196
+    },
+    {
+      "id": "MD115-E019",
+      "key": "A_KWRITE_FD",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_write",
+      "start_line": 321,
+      "end_line": 323
+    },
+    {
+      "id": "MD115-E020",
+      "key": "A_KWRITE_POS",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_write",
+      "start_line": 325,
+      "end_line": 329
+    },
+    {
+      "id": "MD115-E021",
+      "key": "A_KWRITE_CALL",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_write",
+      "start_line": 331,
+      "end_line": 334
+    },
+    {
+      "id": "MD115-E022",
+      "key": "A_KWRITE_RETURN",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_write",
+      "start_line": 337,
+      "end_line": 337
+    },
+    {
+      "id": "MD115-E023",
+      "key": "A_VREAD_MODE",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 147,
+      "end_line": 148
+    },
+    {
+      "id": "MD115-E024",
+      "key": "A_VREAD_ACCESS",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 151,
+      "end_line": 152
+    },
+    {
+      "id": "MD115-E025",
+      "key": "A_VREAD_VERIFY",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 154,
+      "end_line": 158
+    },
+    {
+      "id": "MD115-E026",
+      "key": "A_VREAD_DISPATCH",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 160,
+      "end_line": 163
+    },
+    {
+      "id": "MD115-E027",
+      "key": "A_VREAD_MISSING",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 164,
+      "end_line": 165
+    },
+    {
+      "id": "MD115-E028",
+      "key": "A_VWRITE_MODE",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 291,
+      "end_line": 294
+    },
+    {
+      "id": "MD115-E029",
+      "key": "A_VWRITE_ACCESS",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 295,
+      "end_line": 296
+    },
+    {
+      "id": "MD115-E030",
+      "key": "A_VWRITE_VERIFY",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 298,
+      "end_line": 302
+    },
+    {
+      "id": "MD115-E031",
+      "key": "A_VWRITE_DISPATCH",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 304,
+      "end_line": 307
+    },
+    {
+      "id": "MD115-E032",
+      "key": "A_VWRITE_MISSING",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 308,
+      "end_line": 309
+    },
+    {
+      "id": "MD115-E033",
+      "key": "A_VERIFY_EARLY",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "rw_verify_area",
+      "start_line": 51,
+      "end_line": 51
+    },
+    {
+      "id": "MD115-E034",
+      "key": "A_SYNC_READ",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "new_sync_read",
+      "start_line": 88,
+      "end_line": 92
+    },
+    {
+      "id": "MD115-E035",
+      "key": "A_SYNC_WRITE",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "new_sync_write",
+      "start_line": 212,
+      "end_line": 216
+    },
+    {
+      "id": "MD115-E036",
+      "key": "A_READ_FLAG",
+      "path": "mykernel/include/linux/fs/fs.h",
+      "symbol": "FMODE_READ",
+      "start_line": 61,
+      "end_line": 61
+    },
+    {
+      "id": "MD115-E037",
+      "key": "A_WRITE_FLAG",
+      "path": "mykernel/include/linux/fs/fs.h",
+      "symbol": "FMODE_WRITE",
+      "start_line": 63,
+      "end_line": 63
+    },
+    {
+      "id": "MD115-E038",
+      "key": "A_CAN_WRITE_FLAG",
+      "path": "mykernel/include/linux/fs/fs.h",
+      "symbol": "FMODE_CAN_WRITE",
+      "start_line": 108,
+      "end_line": 108
+    },
+    {
+      "id": "MD115-E039",
+      "key": "A_STREAM_FLAG",
+      "path": "mykernel/include/linux/fs/fs.h",
+      "symbol": "FMODE_STREAM",
+      "start_line": 114,
+      "end_line": 114
+    },
+    {
+      "id": "MD115-E040",
+      "key": "A_OPEN_FMODE",
+      "path": "mykernel/include/linux/fs/fs.h",
+      "symbol": "OPEN_FMODE",
+      "start_line": 3425,
+      "end_line": 3428
+    },
+    {
+      "id": "MD115-E041",
+      "key": "A_ALLOC_MODE",
+      "path": "mykernel/fs/vfs/file_table.c",
+      "symbol": "__alloc_file",
+      "start_line": 59,
+      "end_line": 63
+    },
+    {
+      "id": "MD115-E042",
+      "key": "A_OPEN_ASSIGN",
+      "path": "mykernel/fs/vfs/open.c",
+      "symbol": "myos_do_dentry_open",
+      "start_line": 53,
+      "end_line": 55
+    },
+    {
+      "id": "MD115-E043",
+      "key": "A_RW_CAP",
+      "path": "mykernel/include/linux/fs/fs.h",
+      "symbol": "MAX_RW_COUNT",
+      "start_line": 2423,
+      "end_line": 2423
+    },
+    {
+      "id": "MD115-E044",
+      "key": "A_O_ACCMODE",
+      "path": "mykernel/include/uapi/asm-generic/fcntl.h",
+      "symbol": "O_ACCMODE",
+      "start_line": 19,
+      "end_line": 19
+    },
+    {
+      "id": "MD115-E045",
+      "key": "A_O_RDONLY",
+      "path": "mykernel/include/uapi/asm-generic/fcntl.h",
+      "symbol": "O_RDONLY",
+      "start_line": 20,
+      "end_line": 20
+    },
+    {
+      "id": "MD115-E046",
+      "key": "A_O_WRONLY",
+      "path": "mykernel/include/uapi/asm-generic/fcntl.h",
+      "symbol": "O_WRONLY",
+      "start_line": 21,
+      "end_line": 21
+    },
+    {
+      "id": "MD115-E047",
+      "key": "A_O_RDWR",
+      "path": "mykernel/include/uapi/asm-generic/fcntl.h",
+      "symbol": "O_RDWR",
+      "start_line": 22,
+      "end_line": 22
+    },
+    {
+      "id": "MD115-E048",
+      "key": "B_PAGE_SHIFT",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_SHIFT",
+      "start_line": 9,
+      "end_line": 9
+    },
+    {
+      "id": "MD115-E049",
+      "key": "B_PAGE_SIZE",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_SIZE",
+      "start_line": 10,
+      "end_line": 10
+    },
+    {
+      "id": "MD115-E050",
+      "key": "B_MIN_T",
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "symbol": "min_t",
+      "start_line": 114,
+      "end_line": 114
+    },
+    {
+      "id": "MD115-E051",
+      "key": "B_ZERO_INIT",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 85,
+      "end_line": 85
+    },
+    {
+      "id": "MD115-E052",
+      "key": "B_ZERO_CHUNK",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 87,
+      "end_line": 88
+    },
+    {
+      "id": "MD115-E053",
+      "key": "B_ZERO_MEMSET",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 90,
+      "end_line": 91
+    },
+    {
+      "id": "MD115-E054",
+      "key": "B_ZERO_BREAK",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 92,
+      "end_line": 93
+    },
+    {
+      "id": "MD115-E055",
+      "key": "B_ZERO_ACCUM",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 95,
+      "end_line": 95
+    },
+    {
+      "id": "MD115-E056",
+      "key": "B_ZERO_RETURN",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 108,
+      "end_line": 108
+    },
+    {
+      "id": "MD115-E057",
+      "key": "C_READ_NULL",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_null",
+      "start_line": 61,
+      "end_line": 61
+    },
+    {
+      "id": "MD115-E058",
+      "key": "C_WRITE_NULL",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "write_null",
+      "start_line": 67,
+      "end_line": 67
+    },
+    {
+      "id": "MD115-E059",
+      "key": "C_WRITE_ZERO_ALIAS1",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "write_zero",
+      "start_line": 44,
+      "end_line": 44
+    },
+    {
+      "id": "MD115-E060",
+      "key": "C_WRITE_ZERO_ALIAS2",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "write_zero",
+      "start_line": 113,
+      "end_line": 113
+    },
+    {
+      "id": "MD115-E061",
+      "key": "C_NULL_OPS",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "null_fops",
+      "start_line": 125,
+      "end_line": 128
+    },
+    {
+      "id": "MD115-E062",
+      "key": "C_ZERO_OPS",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "zero_fops",
+      "start_line": 142,
+      "end_line": 145
+    },
+    {
+      "id": "MD115-E063",
+      "key": "C_DEV_NULL",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "devlist",
+      "start_line": 170,
+      "end_line": 170
+    },
+    {
+      "id": "MD115-E064",
+      "key": "C_DEV_ZERO",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "devlist",
+      "start_line": 174,
+      "end_line": 174
+    },
+    {
+      "id": "MD115-E065",
+      "key": "C_DEV_FULL",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "devlist",
+      "start_line": 175,
+      "end_line": 175
+    },
+    {
+      "id": "MD115-E066",
+      "key": "C_INIT_CDEV",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "chr_dev_init",
+      "start_line": 197,
+      "end_line": 199
+    },
+    {
+      "id": "MD115-E067",
+      "key": "C_ADD_CDEV",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "chr_dev_init",
+      "start_line": 200,
+      "end_line": 203
+    },
+    {
+      "id": "MD115-E068",
+      "key": "C_FOPS_FROM_DEV",
+      "path": "mykernel/drivers/char/char_dev.c",
+      "symbol": "chrdev_open",
+      "start_line": 70,
+      "end_line": 73
+    },
+    {
+      "id": "MD115-E069",
+      "key": "C_FOPS_SWAP",
+      "path": "mykernel/drivers/char/char_dev.c",
+      "symbol": "chrdev_open",
+      "start_line": 76,
+      "end_line": 78
+    },
+    {
+      "id": "MD115-E070",
+      "key": "C_NOWAIT_FLAG",
+      "path": "mykernel/include/linux/fs/fs.h",
+      "symbol": "FMODE_NOWAIT",
+      "start_line": 120,
+      "end_line": 120
+    }
+  ],
+  "new_P2_count": 70,
+  "position_only_count": 35,
+  "source_checks": {
+    "new_P2_labels": 70,
+    "quotes_exact": 70,
+    "single_active_definition": 70,
+    "downgraded": 0,
+    "historical_114_literal": 58,
+    "historical_114_qualified": 57,
+    "historical_114_ordinary_positions": 28,
+    "repository_runtime_executed": false
+  },
+  "full_local_P9": "NOT_RUN",
+  "compilation": "NOT_RUN",
+  "link": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "scripts": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "kernel": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "real_hardware": "NOT_RUN",
+  "real_device_IO": "NOT_RUN",
+  "concurrency": "NOT_RUN",
+  "paper_case_counts": {
+    "A_position": 9,
+    "A_modes": 5,
+    "B_page_lengths": 7,
+    "C_device_matrix": 6,
+    "C_write_modes": 4
+  }
+}

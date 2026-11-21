@@ -1,0 +1,523 @@
+{
+ "record": "L02_UV05_STATIC_RECHECK",
+ "run": {
+  "cwd": "<repo_root> (fresh clone root, see l01_identity.json repo_root)",
+  "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B -P agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/scripts/run_uv05_recheck.py \"$PWD\" agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05 agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/records/l02/facts_check.json agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/mm-04-disposition.md agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/user-vfs-baseline.md",
+  "env_and_flags": {
+   "PYTHONDONTWRITEBYTECODE": "1",
+   "python_flags": [
+    "-B",
+    "-P"
+   ],
+   "note": "-P keeps the adapter directory off sys.path; the checker chain adds its own two package paths"
+  },
+  "started_utc": "2026-10-25T10:31:42Z",
+  "finished_utc": "2026-10-25T10:31:44Z",
+  "returncode": 0,
+  "stdout_file": "records/l02/stdout.txt",
+  "stdout": {
+   "anchors": [
+    90,
+    90
+   ],
+   "markdown_tags": {
+    "mm-04-disposition.md": [
+     0,
+     0
+    ],
+    "user-vfs-baseline.md": [
+     31,
+     31
+    ]
+   },
+   "structure_errors": 0,
+   "deferred_findings_errors": 0,
+   "query_errors": 0,
+   "structure_checks": [
+    7,
+    7
+   ],
+   "value_tables_ok": true,
+   "supersedes_scope": [
+    40,
+    40
+   ],
+   "hex40_in_package": 0,
+   "all_ok": true
+  },
+  "stderr_file": "records/l02/stderr.txt",
+  "stderr_adapter_binding": {
+   "adapter": "run_uv05_recheck",
+   "repo_frozen": "/home/user/MyOS2",
+   "repo_rebound": "/home/cheyh/projs/myos2-handoff06-local/MyOS2",
+   "shared_module": true,
+   "pin": "a039d9803ade",
+   "reviewed": "de7c96ede546",
+   "modules": {
+    "uv_facts_check": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_facts_check.py",
+    "mm_facts_check": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_facts_check.py",
+    "scan_index": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/scripts/scan_index.py"
+   }
+  },
+  "stderr_other_lines": [],
+  "inputs_sha256_before_run": {
+   "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_facts_check.py": "f11a8f7ee2fb96ae b21b66ef30aab6e3 77d0ec36ece6c997 6bbd5ac75b161dc0",
+   "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_facts_check.py": "2d3f68c82b0ccddc ff9935c7a090bcd0 bd9e46412a567e8d 09a9b53c18559229",
+   "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/scripts/scan_index.py": "468fd2d538f0862c 1f00de7e8d814735 2c6fbfd7ec0e39ce 597b32df8cc60efc",
+   "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/execution-handoff-06/local/scripts/run_uv05_recheck.py": "846b71489a2e168c 2e0266f6e1b5aa7b 0dbf22ca874bfd9e 2307f4616191a628"
+  },
+  "pycache_dirs_in_clone": {
+   "before": 0,
+   "after": 0
+  },
+  "outputs": [
+   "records/l02/facts_check.json",
+   "records/l02/queries.json (written by the checker next to out.json)"
+  ]
+ },
+ "versions": {
+  "python": "3.14.4",
+  "pyyaml": "6.0.3",
+  "pyyaml_origin": "/usr/lib/python3/dist-packages/yaml/__init__.py",
+  "git": "git version 2.53.0"
+ },
+ "checker_chain_unmodified": [
+  {
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/scripts/uv_facts_check.py",
+   "blob_at_frozen": "855f9f9bd09a",
+   "blob_at_head": "855f9f9bd09a",
+   "sha256_worktree": "f11a8f7ee2fb96ae b21b66ef30aab6e3 77d0ec36ece6c997 6bbd5ac75b161dc0"
+  },
+  {
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/scripts/mm_facts_check.py",
+   "blob_at_frozen": "61e33f92ae22",
+   "blob_at_head": "61e33f92ae22",
+   "sha256_worktree": "2d3f68c82b0ccddc ff9935c7a090bcd0 bd9e46412a567e8d 09a9b53c18559229"
+  },
+  {
+   "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/scripts/scan_index.py",
+   "blob_at_frozen": "b422cc24007e",
+   "blob_at_head": "b422cc24007e",
+   "sha256_worktree": "468fd2d538f0862c 1f00de7e8d814735 2c6fbfd7ec0e39ce 597b32df8cc60efc"
+  }
+ ],
+ "outputs_vs_frozen": {
+  "facts_check.json": {
+   "local_bytes": 5418,
+   "frozen_bytes": 5418,
+   "byte_identical": true,
+   "local_sha256": "43238075da2597d0 d5abbc51cdaca093 9af615e4d11e2d4d c604feefc404fa3f",
+   "frozen_sha256": "43238075da2597d0 d5abbc51cdaca093 9af615e4d11e2d4d c604feefc404fa3f",
+   "frozen_last_commit": "22934124fe92"
+  },
+  "queries.json": {
+   "local_bytes": 37203,
+   "frozen_bytes": 37203,
+   "byte_identical": true,
+   "local_sha256": "4541c49345315856 7371bfe9dda6ad48 b29ca791f4d3fb1d c20d2cca055c8004",
+   "frozen_sha256": "4541c49345315856 7371bfe9dda6ad48 b29ca791f4d3fb1d c20d2cca055c8004",
+   "frozen_last_commit": "22934124fe92"
+  }
+ },
+ "dimensions": {
+  "anchors": {
+   "local": [
+    90,
+    90
+   ],
+   "frozen": [
+    90,
+    90
+   ],
+   "equal": true
+  },
+  "anchors_by_kind": {
+   "local": {
+    "build": 2,
+    "in_body": 80,
+    "in_body_comment": 6,
+    "macro": 1,
+    "type_member": 1
+   },
+   "frozen": {
+    "build": 2,
+    "in_body": 80,
+    "in_body_comment": 6,
+    "macro": 1,
+    "type_member": 1
+   },
+   "equal": true
+  },
+  "markdown_tags": {
+   "local": {
+    "mm-04-disposition.md": [
+     0,
+     0
+    ],
+    "user-vfs-baseline.md": [
+     31,
+     31
+    ]
+   },
+   "frozen": {
+    "mm-04-disposition.md": [
+     0,
+     0
+    ],
+    "user-vfs-baseline.md": [
+     31,
+     31
+    ]
+   },
+   "equal": true
+  },
+  "structure": {
+   "local": {
+    "ok": true,
+    "errors": 0,
+    "limits": {
+     "capabilities": [
+      20,
+      20
+     ],
+     "edges": [
+      43,
+      45
+     ],
+     "anchors": [
+      90,
+      90
+     ],
+     "candidates": [
+      6,
+      6
+     ],
+     "per_object": {
+      "sched.forkexec": 9,
+      "fs.vfs": 9,
+      "boundary": 2
+     }
+    },
+    "recount": {
+     "objects": 3,
+     "capabilities": 20,
+     "capabilities_per_object": {
+      "sched.forkexec": 9,
+      "fs.vfs": 9,
+      "boundary": 2
+     },
+     "anchors": 90,
+     "anchors_by_kind": {
+      "build": 2,
+      "in_body": 80,
+      "in_body_comment": 6,
+      "macro": 1,
+      "type_member": 1
+     },
+     "edges": 43,
+     "edges_by_kind": {
+      "build": 1,
+      "call": 34,
+      "config": 1,
+      "data": 3,
+      "init_order": 4
+     },
+     "queries": 44,
+     "structure_checks": 7,
+     "value_tables": 2,
+     "chains": 6,
+     "link_breaks": 10,
+     "dependency_risks": 6,
+     "next_validation_candidates": 6,
+     "gaps": 10,
+     "gaps_open": 10,
+     "old_inputs_index": 19,
+     "implementation_evidence": {
+      "connected_body": 15,
+      "declaration_only": 1,
+      "not_assessed": 0,
+      "not_located_in_scope": 0,
+      "partial_body": 4
+     }
+    }
+   },
+   "frozen": {
+    "ok": true,
+    "errors": 0,
+    "limits": {
+     "capabilities": [
+      20,
+      20
+     ],
+     "edges": [
+      43,
+      45
+     ],
+     "anchors": [
+      90,
+      90
+     ],
+     "candidates": [
+      6,
+      6
+     ],
+     "per_object": {
+      "sched.forkexec": 9,
+      "fs.vfs": 9,
+      "boundary": 2
+     }
+    },
+    "recount": {
+     "objects": 3,
+     "capabilities": 20,
+     "capabilities_per_object": {
+      "sched.forkexec": 9,
+      "fs.vfs": 9,
+      "boundary": 2
+     },
+     "anchors": 90,
+     "anchors_by_kind": {
+      "build": 2,
+      "in_body": 80,
+      "in_body_comment": 6,
+      "macro": 1,
+      "type_member": 1
+     },
+     "edges": 43,
+     "edges_by_kind": {
+      "build": 1,
+      "call": 34,
+      "config": 1,
+      "data": 3,
+      "init_order": 4
+     },
+     "queries": 44,
+     "structure_checks": 7,
+     "value_tables": 2,
+     "chains": 6,
+     "link_breaks": 10,
+     "dependency_risks": 6,
+     "next_validation_candidates": 6,
+     "gaps": 10,
+     "gaps_open": 10,
+     "old_inputs_index": 19,
+     "implementation_evidence": {
+      "connected_body": 15,
+      "declaration_only": 1,
+      "not_assessed": 0,
+      "not_located_in_scope": 0,
+      "partial_body": 4
+     }
+    }
+   },
+   "equal": true
+  },
+  "deferred_findings": {
+   "local": {
+    "ok": true,
+    "errors": 0,
+    "recount": {
+     "findings": 16,
+     "errata": 2,
+     "status_changes": 10,
+     "cross_links": 13,
+     "findings_by_status": {
+      "deferred_owner_not_ready": 12,
+      "needs_evidence": 4
+     }
+    }
+   },
+   "frozen": {
+    "ok": true,
+    "errors": 0,
+    "recount": {
+     "findings": 16,
+     "errata": 2,
+     "status_changes": 10,
+     "cross_links": 13,
+     "findings_by_status": {
+      "deferred_owner_not_ready": 12,
+      "needs_evidence": 4
+     }
+    }
+   },
+   "equal": true
+  },
+  "queries": {
+   "local": {
+    "total": 44,
+    "tool_failures": 0,
+    "errors": 0,
+    "ok": true
+   },
+   "frozen": {
+    "total": 44,
+    "tool_failures": 0,
+    "errors": 0,
+    "ok": true
+   },
+   "equal": true
+  },
+  "structure_checks": {
+   "local": [
+    7,
+    7
+   ],
+   "frozen": [
+    7,
+    7
+   ],
+   "equal": true
+  },
+  "structure_check_rows": {
+   "local": [
+    [
+     "SC-01",
+     "no_active_match",
+     true
+    ],
+    [
+     "SC-02",
+     "no_active_match",
+     true
+    ],
+    [
+     "SC-03",
+     "empty_body",
+     true
+    ],
+    [
+     "SC-04",
+     "no_active_match",
+     true
+    ],
+    [
+     "SC-05",
+     "active_match_count",
+     true
+    ],
+    [
+     "SC-06",
+     "no_active_match",
+     true
+    ],
+    [
+     "SC-07",
+     "empty_body",
+     true
+    ]
+   ],
+   "frozen": [
+    [
+     "SC-01",
+     "no_active_match",
+     true
+    ],
+    [
+     "SC-02",
+     "no_active_match",
+     true
+    ],
+    [
+     "SC-03",
+     "empty_body",
+     true
+    ],
+    [
+     "SC-04",
+     "no_active_match",
+     true
+    ],
+    [
+     "SC-05",
+     "active_match_count",
+     true
+    ],
+    [
+     "SC-06",
+     "no_active_match",
+     true
+    ],
+    [
+     "SC-07",
+     "empty_body",
+     true
+    ]
+   ],
+   "equal": true
+  },
+  "value_tables": {
+   "local": {
+    "ok": true,
+    "VT-MR01_rows_ok": [
+     7,
+     7
+    ],
+    "VT-FR01_rows_ok": [
+     5,
+     5
+    ],
+    "VT-FR01_differs_from_intended": 3
+   },
+   "frozen": {
+    "ok": true,
+    "VT-MR01_rows_ok": [
+     7,
+     7
+    ],
+    "VT-FR01_rows_ok": [
+     5,
+     5
+    ],
+    "VT-FR01_differs_from_intended": 3
+   },
+   "equal": true
+  },
+  "supersedes_scope": {
+   "local": {
+    "ok": 40,
+    "total": 40,
+    "superseded": 33,
+    "reviewed_retained": 7
+   },
+   "frozen": {
+    "ok": 40,
+    "total": 40,
+    "superseded": 33,
+    "reviewed_retained": 7
+   },
+   "equal": true
+  },
+  "hex40_in_package": {
+   "local": 0,
+   "frozen": 0,
+   "equal": true
+  },
+  "all_ok": {
+   "local": true,
+   "frozen": true,
+   "equal": true
+  }
+ },
+ "queries_record": {
+  "local_total": 44,
+  "frozen_total": 44,
+  "per_query_equal": 44,
+  "returncodes": {
+   "0": 42,
+   "1": 2
+  },
+  "pin_time": [
+   "a039d9803ade",
+   "a039d9803ade"
+  ]
+ },
+ "all_dimensions_equal": true,
+ "scope_note": "mechanical text consistency at the time pin only; not a semantic review of the 90 anchors, not a kernel run; the 12 negative probes were not re-run",
+ "commands_run": [
+  "git log -1 --format=%h --abbrev=12 -- agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/records/facts_check.json",
+  "git log -1 --format=%h --abbrev=12 -- agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/records/queries.json",
+  "git ls-tree -r -z --full-tree 293a9e3ef5f4",
+  "git ls-tree -r -z --full-tree HEAD"
+ ]
+}

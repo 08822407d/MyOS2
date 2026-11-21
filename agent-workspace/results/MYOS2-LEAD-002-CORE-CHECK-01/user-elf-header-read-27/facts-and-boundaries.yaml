@@ -1,0 +1,735 @@
+---
+# This JSON object is a YAML 1.2-compatible single mapping document
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-ELF-HEADER-READ-27",
+  "record_type": "bounded_elf_initial_input_facts_and_boundaries",
+  "date": "2026-11-02",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "source_pin_short12": "a039d9803ade",
+  "instruction_short12": "e1fc364983c0",
+  "review_26_short12": "895acd739f07",
+  "result_base_short12": "487936efec09",
+  "read_channel": "connector",
+  "phase": 2,
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_register": "evidence.md",
+  "authorization": "only own six new files in user-elf-header-read-27",
+  "width_and_bounds": {
+    "arch": "x86_64",
+    "first_buffer_bytes": 256,
+    "elf64_ehdr_bytes_under_normal_type_layout": 64,
+    "elf64_phdr_bytes_under_normal_type_layout": 56,
+    "elf64_e_phnum_type": "Elf64_Half / __u16",
+    "elf64_e_phoff_type": "Elf64_Off / __u64",
+    "phdr_size_variable_type": "uint (32-bit on pinned x86-64)",
+    "phdr_size_expr": "sizeof(elf_phdr_s)*e_phnum",
+    "size_guard": "size != 0 && size <= 65536 && size <= ELF_MIN_ALIGN",
+    "ELF_MIN_ALIGN_bytes": 4096,
+    "normal_max_phdr_entries": 73,
+    "accepted_max_bytes": 4088,
+    "first_rejected_above_guard_entries": 74,
+    "first_rejected_above_guard_bytes": 4144,
+    "MAX_RW_COUNT_under_common_x86_64_int_model": "0x7ffff000",
+    "first_and_phdr_requests_below_MAX_RW_COUNT": true,
+    "int_conversion_notes": "prepare_binprm returns int from ssize_t kernel_read; within contract 0..256 or normal errno no truncation; out-of-contract excessive results not established",
+    "evidence": [
+      "EH27-A005",
+      "EH27-A028",
+      "EH27-A029",
+      "EH27-A038",
+      "EH27-A040",
+      "EH27-A043",
+      "EH27-A045",
+      "EH27-A047",
+      "EH27-A048",
+      "EH27-A080",
+      "EH27-A081",
+      "EH27-A068",
+      "EH27-A085",
+      "EH27-A086"
+    ]
+  },
+  "objects": [
+    {
+      "id": "EH27-O01",
+      "name": "linux_bprm_s.file",
+      "origin": "alloc_bprm.do_open_execat result assigned to bprm->file",
+      "role": "file object for both initial and phdr kernel_read",
+      "evidence": [
+        "EH27-A003",
+        "EH27-A004",
+        "EH27-A037"
+      ]
+    },
+    {
+      "id": "EH27-O02",
+      "name": "linux_bprm_s.buf",
+      "origin": "embedded char[BINPRM_BUF_SIZE]",
+      "role": "256-byte first-block target and later elf header cast",
+      "evidence": [
+        "EH27-A038",
+        "EH27-A040",
+        "EH27-A019"
+      ]
+    },
+    {
+      "id": "EH27-O03",
+      "name": "prepare_binprm.pos",
+      "origin": "loff_t pos=0 local automatic",
+      "role": "by-pointer file offset argument for initial read, not file.f_pos",
+      "evidence": [
+        "EH27-A005"
+      ]
+    },
+    {
+      "id": "EH27-O04",
+      "name": "search_binary_handler.retval",
+      "origin": "int populated by prepare, then reset -ENOENT, then overwritten by each handler",
+      "role": "negative-only preflight and final last-handler outcome",
+      "evidence": [
+        "EH27-A006",
+        "EH27-A007",
+        "EH27-A008",
+        "EH27-A009",
+        "EH27-A011"
+      ]
+    },
+    {
+      "id": "EH27-O05",
+      "name": "formats list",
+      "origin": "static DECLARE_LIST_HDR_S(formats)",
+      "role": "contains registered linux_bfmt_s; one selected source registration confirmed",
+      "evidence": [
+        "EH27-A001",
+        "EH27-A002",
+        "EH27-A017",
+        "EH27-A051",
+        "EH27-A054"
+      ]
+    },
+    {
+      "id": "EH27-O06",
+      "name": "elf_format.load_binary",
+      "origin": "designated function pointer to load_elf_binary",
+      "role": "dispatch binding, not direct function call by data object",
+      "evidence": [
+        "EH27-A016",
+        "EH27-A039"
+      ]
+    },
+    {
+      "id": "EH27-O07",
+      "name": "elf_ex",
+      "origin": "(elfhdr_s *)bprm->buf",
+      "role": "read fields from pre-zeroed first block, not separately copied verified header",
+      "evidence": [
+        "EH27-A019",
+        "EH27-A020",
+        "EH27-A043",
+        "EH27-A085",
+        "EH27-A086"
+      ]
+    },
+    {
+      "id": "EH27-O08",
+      "name": "elf_phdata",
+      "origin": "kmalloc(uint size,GFP_KERNEL)",
+      "role": "allocated uninitialized program-header table destination, freed on retval failure",
+      "evidence": [
+        "EH27-A027",
+        "EH27-A030",
+        "EH27-A031",
+        "EH27-A032",
+        "EH27-A033"
+      ]
+    },
+    {
+      "id": "EH27-O09",
+      "name": "elf_read.pos",
+      "origin": "loff_t pos passed by value from e_phoff",
+      "role": "private local position passed by pointer to kernel_read",
+      "evidence": [
+        "EH27-A025",
+        "EH27-A031",
+        "EH27-A044"
+      ]
+    },
+    {
+      "id": "EH27-O10",
+      "name": "kvec iov",
+      "origin": "__kernel_read stack local {.iov_base=buf,.iov_len=min(count,MAX_RW_COUNT)}",
+      "role": "kernel-destination iterator data, NOT ITER_UBUF",
+      "evidence": [
+        "EH27-A056",
+        "EH27-A069",
+        "EH27-A071"
+      ]
+    },
+    {
+      "id": "EH27-O11",
+      "name": "kiocb.ki_pos",
+      "origin": "init_sync_kiocb followed by pos?*pos:0",
+      "role": "read_iter local starting offset; selected wrapper does not write it back to *pos",
+      "evidence": [
+        "EH27-A059",
+        "EH27-A061",
+        "EH27-A067"
+      ]
+    },
+    {
+      "id": "EH27-O12",
+      "name": "file->f_op.read_iter",
+      "origin": "FAT32_file_ops.read_iter=generic_file_read_iter under selected file binding",
+      "role": "precedence over legacy read; value/error may derive from pagecache",
+      "evidence": [
+        "EH27-A060",
+        "EH27-A078",
+        "EH27-A079",
+        "EH27-A072",
+        "EH27-A073"
+      ]
+    },
+    {
+      "id": "EH27-O13",
+      "name": "file->f_op.read",
+      "origin": "fallback method and pagecache fill read callback",
+      "role": "fallback receives original count and loff_t*pos, caller doesn't overwrite the pointer",
+      "evidence": [
+        "EH27-A060",
+        "EH27-A078",
+        "EH27-A075"
+      ]
+    },
+    {
+      "id": "EH27-O14",
+      "name": "rw_verify_area",
+      "origin": "fixed function returns 0 immediately",
+      "role": "no active position/length verification here; wrapper then calls __kernel_read",
+      "evidence": [
+        "EH27-A055",
+        "EH27-A063"
+      ]
+    }
+  ],
+  "stage_order": [
+    [
+      "S01",
+      "alloc_bprm",
+      "do_open_execat assigns file into bprm",
+      "EH27-A003",
+      "EH27-A004"
+    ],
+    [
+      "S02",
+      "prepare_binprm",
+      "zero 256 then request 256 from local offset0",
+      "EH27-A005",
+      "EH27-A084"
+    ],
+    [
+      "S03",
+      "search_binary_handler",
+      "reject only read return <0; then set retval=-ENOENT",
+      "EH27-A007",
+      "EH27-A008"
+    ],
+    [
+      "S04",
+      "format iteration",
+      "for each item invoke fmt->load_binary; early stop is commented",
+      "EH27-A009",
+      "EH27-A010"
+    ],
+    [
+      "S05",
+      "load_elf_binary",
+      "interpret buf as Elf64_Ehdr, check magic/type/arch/f_op->mmap",
+      "EH27-A019",
+      "EH27-A020",
+      "EH27-A021",
+      "EH27-A022"
+    ],
+    [
+      "S06",
+      "load_elf_phdrs",
+      "e_phentsize equality, uint size and bounds, kmalloc then elf_read at e_phoff",
+      "EH27-A028",
+      "EH27-A029",
+      "EH27-A030",
+      "EH27-A031"
+    ],
+    [
+      "S07",
+      "elf_read",
+      "pass local pos by address; compare ssize_t rv to size_t len; mismatch negative error preserved, nonnegative mismatch -EIO",
+      "EH27-A025",
+      "EH27-A026"
+    ],
+    [
+      "S08",
+      "load_elf_phdrs",
+      "nonzero elf_read result => kfree and NULL; caller uses NULL -> -ENOEXEC",
+      "EH27-A032",
+      "EH27-A023",
+      "EH27-A020"
+    ],
+    [
+      "S09",
+      "phdr success",
+      "program-head pointer enters later iteration; PT_LOAD fields consumed in batch26",
+      "EH27-A024"
+    ]
+  ],
+  "format_dispatch": [
+    {
+      "case_id": "D01",
+      "input": "prepare returns negative",
+      "local_result": "same negative returned, no format handler call",
+      "provenance": "caller branch",
+      "evidence": [
+        "EH27-A007"
+      ]
+    },
+    {
+      "case_id": "D02",
+      "input": "prepare returns 0",
+      "local_result": "not rejected here; starts formats iteration after -ENOENT reset",
+      "provenance": "helper model",
+      "evidence": [
+        "EH27-A005",
+        "EH27-A007",
+        "EH27-A008"
+      ]
+    },
+    {
+      "case_id": "D03",
+      "input": "prepare returns 1..255",
+      "local_result": "same as 0 at dispatch gate, buffer remainder zero if initial memset executed and reader conforms",
+      "provenance": "helper model; actual producer not established",
+      "evidence": [
+        "EH27-A005",
+        "EH27-A007"
+      ]
+    },
+    {
+      "case_id": "D04",
+      "input": "prepare returns 256",
+      "local_result": "continues to handlers",
+      "provenance": "helper model; only return count not data certificate",
+      "evidence": [
+        "EH27-A005",
+        "EH27-A007"
+      ]
+    },
+    {
+      "case_id": "D05",
+      "input": "defined iteration with no registered handler",
+      "local_result": "retval remains -ENOENT",
+      "provenance": "conditional: list_first_entry empty-list C object semantics not proved",
+      "evidence": [
+        "EH27-A008",
+        "EH27-A011",
+        "EH27-A052",
+        "EH27-A053"
+      ]
+    },
+    {
+      "case_id": "D06",
+      "input": "one actual registered ELF handler",
+      "local_result": "retval becomes load_elf_binary return (0 or negative under selected branch)",
+      "provenance": "selected binding and valid list assumptions",
+      "evidence": [
+        "EH27-A016",
+        "EH27-A017",
+        "EH27-A009",
+        "EH27-A011"
+      ]
+    },
+    {
+      "case_id": "D07",
+      "input": "hypothetical two handlers, first returns0 then second -ENOEXEC",
+      "local_result": "last retval -ENOEXEC, no active early exit",
+      "provenance": "direct multi-handler model only, historically UV-03",
+      "evidence": [
+        "EH27-A009",
+        "EH27-A010",
+        "EH27-A011"
+      ]
+    },
+    {
+      "case_id": "D08",
+      "input": "hypothetical positive handler return",
+      "local_result": "bprm_execve compares only retval<0; does not enforce ==0",
+      "provenance": "no actual positive load_elf_binary producer found",
+      "evidence": [
+        "EH27-A012"
+      ]
+    }
+  ],
+  "header_checks": [
+    {
+      "field": "e_ident[0..3]",
+      "condition": "memcmp(...,ELFMAG,SELFMAG) ==0",
+      "source": "load_elf_binary",
+      "stage": "before load_elf_phdrs",
+      "evidence": [
+        "EH27-A020",
+        "EH27-A041",
+        "EH27-A042"
+      ]
+    },
+    {
+      "field": "e_type",
+      "condition": "ET_EXEC or ET_DYN",
+      "source": "load_elf_binary",
+      "stage": "before phdr read",
+      "evidence": [
+        "EH27-A021",
+        "EH27-A049"
+      ]
+    },
+    {
+      "field": "e_machine",
+      "condition": "EM_X86_64 via elf_check_arch",
+      "source": "asm/elf.h",
+      "stage": "before phdr read",
+      "evidence": [
+        "EH27-A021",
+        "EH27-A050"
+      ]
+    },
+    {
+      "field": "file->f_op->mmap",
+      "condition": "non-NULL",
+      "source": "load_elf_binary",
+      "stage": "before phdr read",
+      "evidence": [
+        "EH27-A022"
+      ]
+    },
+    {
+      "field": "e_phentsize",
+      "condition": "equals sizeof(elf_phdr_s) = 56 under chosen ABI model",
+      "source": "load_elf_phdrs",
+      "stage": "before allocation",
+      "evidence": [
+        "EH27-A028",
+        "EH27-A046",
+        "EH27-A047"
+      ]
+    },
+    {
+      "field": "e_phnum",
+      "condition": "uint size=56*e_phnum; 1<=e_phnum<=73 in normal 64-bit ABI model",
+      "source": "load_elf_phdrs",
+      "stage": "before allocation",
+      "evidence": [
+        "EH27-A029",
+        "EH27-A045",
+        "EH27-A048",
+        "EH27-A080"
+      ]
+    },
+    {
+      "field": "e_phoff",
+      "condition": "passed to elf_read as loff_t; no explicit filesize or signed range check in selected phdr helper",
+      "source": "load_elf_phdrs",
+      "stage": "read time, exact count checked by elf_read",
+      "evidence": [
+        "EH27-A031",
+        "EH27-A025",
+        "EH27-A044",
+        "EH27-A055"
+      ]
+    },
+    {
+      "field": "e_ident class/data/version, e_ehsize and e_version",
+      "condition": "not explicitly compared in selected initial load_elf_binary checks",
+      "source": "fixed selected function only, not a global ELF parser exhaustiveness claim",
+      "stage": "remain unknown for accepted conditions",
+      "evidence": [
+        "EH27-A020",
+        "EH27-A021",
+        "EH27-A043",
+        "EH27-A044",
+        "EH27-A045"
+      ]
+    }
+  ],
+  "phdr_results": [
+    {
+      "case_id": "P01",
+      "input": "e_phentsize != 56",
+      "effect": "returns NULL through out; no kmalloc in this function",
+      "result": "load_elf_binary returns -ENOEXEC with preserved initial retval",
+      "provenance": "local conditional",
+      "evidence": [
+        "EH27-A028",
+        "EH27-A023",
+        "EH27-A020"
+      ]
+    },
+    {
+      "case_id": "P02",
+      "input": "e_phnum=0",
+      "effect": "size0->goto out",
+      "result": "NULL",
+      "provenance": "local conditional",
+      "evidence": [
+        "EH27-A029"
+      ]
+    },
+    {
+      "case_id": "P03",
+      "input": "e_phnum=73, e_phentsize=56",
+      "effect": "size4088 allowed by numeric gates, kmalloc then read attempted",
+      "result": "not yet success",
+      "provenance": "paper ABI arithmetic",
+      "evidence": [
+        "EH27-A029",
+        "EH27-A030",
+        "EH27-A031"
+      ]
+    },
+    {
+      "case_id": "P04",
+      "input": "e_phnum=74, e_phentsize=56",
+      "effect": "size4144>4096",
+      "result": "NULL; no allocation attempted in helper",
+      "provenance": "paper ABI arithmetic",
+      "evidence": [
+        "EH27-A029"
+      ]
+    },
+    {
+      "case_id": "P05",
+      "input": "kmalloc returns NULL",
+      "effect": "no elf_read",
+      "result": "NULL and caller -ENOEXEC; original allocation failure not returned as -ENOMEM",
+      "provenance": "conditional",
+      "evidence": [
+        "EH27-A030",
+        "EH27-A023",
+        "EH27-A020"
+      ]
+    },
+    {
+      "case_id": "P06",
+      "input": "elf_read returns -EIO or other negative",
+      "effect": "kfree(elf_phdata) attempted, pointer NULL",
+      "result": "NULL and caller -ENOEXEC",
+      "provenance": "conditional",
+      "evidence": [
+        "EH27-A026",
+        "EH27-A032",
+        "EH27-A023"
+      ]
+    },
+    {
+      "case_id": "P07",
+      "input": "kernel_read returns0 or positive < requested len",
+      "effect": "elf_read returns -EIO; attempted free of buffer",
+      "result": "NULL and caller -ENOEXEC",
+      "provenance": "conditional, assumes reader normally returns",
+      "evidence": [
+        "EH27-A026",
+        "EH27-A032",
+        "EH27-A023"
+      ]
+    },
+    {
+      "case_id": "P08",
+      "input": "kernel_read returns exactly requested len",
+      "effect": "elf_read returns0, allocated buffer returned",
+      "result": "pointer may be consumed; byte correctness still not proven",
+      "provenance": "conditional",
+      "evidence": [
+        "EH27-A026",
+        "EH27-A033",
+        "EH27-A024"
+      ]
+    },
+    {
+      "case_id": "P09",
+      "input": "kernel_read returns > requested len",
+      "effect": "elf_read sees mismatch and -EIO",
+      "result": "not a proven legal read producer",
+      "provenance": "out-of-contract helper model only",
+      "evidence": [
+        "EH27-A026"
+      ]
+    }
+  ],
+  "read_interfaces": [
+    {
+      "id": "I01",
+      "scenario": "rw_verify_area",
+      "behavior": "returns 0 before its count and pos checks, so does not block kernel_read",
+      "result": "kernel_read proceeds to __kernel_read",
+      "evidence": [
+        "EH27-A055",
+        "EH27-A063"
+      ]
+    },
+    {
+      "id": "I02",
+      "scenario": "__kernel_read FMODE_READ absent",
+      "behavior": "WARN_ON_ONCE condition evaluated true",
+      "result": "returns -EINVAL before dispatch",
+      "evidence": [
+        "EH27-A057",
+        "EH27-A066"
+      ]
+    },
+    {
+      "id": "I03",
+      "scenario": "read_iter exists",
+      "behavior": "initialize sync kiocb local .ki_pos from *pos, create ITER_KVEC, pass bounded iov_len",
+      "result": "returns method ssize_t; selected wrapper does not copy ki_pos into *pos",
+      "evidence": [
+        "EH27-A056",
+        "EH27-A059",
+        "EH27-A060",
+        "EH27-A061",
+        "EH27-A071"
+      ]
+    },
+    {
+      "id": "I04",
+      "scenario": "read_iter absent, read exists",
+      "behavior": "legacy read called with original count and same loff_t*pos",
+      "result": "method return; pos may be modified by method (not assured)",
+      "evidence": [
+        "EH27-A060"
+      ]
+    },
+    {
+      "id": "I05",
+      "scenario": "no read_iter and no read",
+      "behavior": "fallback selection",
+      "result": "-EINVAL, nonzero returned through kernel_read and elf_read",
+      "evidence": [
+        "EH27-A060",
+        "EH27-A063",
+        "EH27-A026"
+      ]
+    },
+    {
+      "id": "I06",
+      "scenario": "selected FAT32 read_iter binding",
+      "behavior": "generic_file_read_iter -> simple_filemap_read -> cache fill may call FAT32_read, ignored return",
+      "result": "interface byte count not guaranteed disk data integrity",
+      "evidence": [
+        "EH27-A078",
+        "EH27-A079",
+        "EH27-A073",
+        "EH27-A074",
+        "EH27-A075",
+        "EH27-A077"
+      ]
+    },
+    {
+      "id": "I07",
+      "scenario": "count 256 or 56*N (1..73)",
+      "behavior": "min(count,MAX_RW_COUNT) not truncate in selected numeric model",
+      "result": "kvec iov_len=count",
+      "evidence": [
+        "EH27-A040",
+        "EH27-A029",
+        "EH27-A056",
+        "EH27-A068"
+      ]
+    },
+    {
+      "id": "I08",
+      "scenario": "read_iter with nonnegative return",
+      "behavior": "__kernel_read returns ret without pos copyback",
+      "result": "elf_read modifies only its local pos through any call that writes *pos; file.f_pos not directly updated by these wrappers",
+      "evidence": [
+        "EH27-A061",
+        "EH27-A062",
+        "EH27-A025"
+      ]
+    }
+  ],
+  "paper_examples": [
+    {
+      "case_id": "X01",
+      "title": "首块短读",
+      "read_requested": 256,
+      "returned": 64,
+      "zero_before_read": 256,
+      "possible_file_byte_prefix": "[0,64) assuming faithful copy",
+      "zero_suffix": "[64,256)",
+      "first_header_struct_bytes": 64,
+      "distinction": "the 64-byte structured header can be fully present although initial 256 request short; accepted ELF/PHDR path still needs its own gates and valid file read producer",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "case_id": "X02",
+      "title": "程序头数量边界",
+      "elf64_phdr_bytes": 56,
+      "e_phnum_73_size": 4088,
+      "e_phnum_74_size": 4144,
+      "ELF_MIN_ALIGN": 4096,
+      "e_phentsize_must_equal": 56,
+      "arithmetic": "73 passes size-only guard, 74 fails; not prove file-range or valid contents",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "case_id": "X03",
+      "title": "历史UV-06的程序头新消费点",
+      "e_phoff": 64,
+      "e_phnum": 72,
+      "requested_size": 4032,
+      "requested_end": 4096,
+      "pgcache_pos": 0,
+      "inpage_start": 64,
+      "branch": "pgcache_pos+4096<end false",
+      "last_page_len_from_source": -64,
+      "warning": "negative loff_t as memcpy size_t is not a successful completed read; dependent on valid mapping and control flow; evidence append to UV-06 not a new root cause",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "case_id": "X04",
+      "title": "连续格式处理器假设",
+      "first_handler_return": 0,
+      "second_handler_return": "-ENOEXEC",
+      "final_retval": "-ENOEXEC",
+      "source_scope": "hypothetical second registered format only; current confirmed registration elf_format",
+      "historical_ref": "CORE-USER-VFS-BASELINE-05::UV-03",
+      "runtime_evidence": "NOT_RUN"
+    }
+  ],
+  "deferred_new_ids": [
+    "EH27-F01",
+    "EH27-F02",
+    "EH27-F03",
+    "EH27-F04"
+  ],
+  "historical_links": [
+    "CORE-USER-VFS-BASELINE-05::UV-02",
+    "CORE-USER-VFS-BASELINE-05::UV-03",
+    "CORE-USER-VFS-BASELINE-05::UV-06",
+    "CORE-USER-VFS-BASELINE-05::UV-07",
+    "CORE-USER-VFS-BASELINE-05::UV-08",
+    "CORE-USER-ELF-SEGMENT-LOAD-26-REVIEW-001::R26-S01",
+    "CORE-USER-ELF-SEGMENT-LOAD-26-REVIEW-001::R26-S02",
+    "CORE-USER-ELF-SEGMENT-LOAD-26-REVIEW-001::R26-S03"
+  ],
+  "known_unproven": [
+    "kernel_read positive count implies byte content correct",
+    "full first-block request implies only real file bytes",
+    "ELF header class/data/ehsize globally validated",
+    "complete phdr table offset within file",
+    "successful zero-page/mapping or actual process exec",
+    "empty handler list has fully defined C sentinel iteration",
+    "multi-handler scenario occurs in selected build",
+    "all underlying filesystem/exception paths exercised",
+    "read_iter advances loff_t*pos automatically"
+  ],
+  "no_repair_or_runtime": true
+}

@@ -1,0 +1,221 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOT-DELAY-ACCOUNTING-106",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "b8745d51ba7e",
+  "read_channel": "GitHub connector",
+  "record_type": "bounded_static_delay_findings_and_deferred_gaps",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical_dispositions": {
+    "R102_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R102_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R102_03": "CLOSED_DOCUMENTATION_ONLY",
+    "R103_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R103_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R104_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R104_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R105_01": "OPEN",
+    "R105_02": "OPEN",
+    "batch105": "RETURN",
+    "batch106": "READY_FOR_MAINLINE_REVIEW_AUTHOR_ONLY"
+  },
+  "relationship_to_old_roots": [
+    "SC105-F01…F08 are previous candidate IDs, not renamed nor newly verified",
+    "SC105-U01…U08 remain prior evidence gaps",
+    "HC102-F/U and prior HPET anomalies retain original identity",
+    "R105-01/02 are 105 documentation corrections awaiting C07, not independent 106 defects"
+  ],
+  "new_conditional_candidates": [
+    {
+      "id": "BD106-F01",
+      "title": "HPET may use a fixed static loops_per_jiffy rather than an early calibrated value",
+      "condition": "tsc_early_init fails and no other intervening writer; hpet periodic call is reachable",
+      "source_ref": [
+        "BD106-E026",
+        "BD106-E034",
+        "BD106-E055",
+        "BD106-E071"
+      ],
+      "finding_type": "STATIC_TIMING_DEPENDENCY",
+      "observed_failure": false,
+      "overlap": "potential follow-on to SC105 clock calibration; do not declare new independent root",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "BD106-F02",
+      "title": "uint subtraction and signed abs conversion have nontrivial width and overflow domains",
+      "condition": "actual macro selected; cpu_khz and tsc_khz produce values near signed limits",
+      "source_ref": [
+        "BD106-E007",
+        "BD106-E008",
+        "BD106-E009"
+      ],
+      "finding_type": "CONDITIONAL_INTEGER_DOMAIN",
+      "observed_failure": false,
+      "overlap": "SC105-F08 follow-up, not new proven root",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "BD106-F03",
+      "title": "One-microsecond delay request can map to CPU busy-loop parameter rather than elapsed wall clock",
+      "condition": "udelay(1) selects __const_udelay and delay_fn remains delay_loop",
+      "source_ref": [
+        "BD106-E047",
+        "BD106-E055",
+        "BD106-E056",
+        "BD106-E058"
+      ],
+      "finding_type": "STATIC_UNIT_AND_CALIBRATION_GAP",
+      "observed_failure": false,
+      "overlap": "HPET102 delay usage plus batch106 new accounting only",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "BD106-F04",
+      "title": "delay_fn is not automatically switched by __use_tsc",
+      "condition": "only inspected direct TSC scheduler init/disabled use_tsc_delay",
+      "source_ref": [
+        "BD106-E032",
+        "BD106-E033",
+        "BD106-E040",
+        "BD106-E041"
+      ],
+      "finding_type": "STATIC_SELECTOR_DIVERGENCE",
+      "observed_failure": false,
+      "overlap": "SC105-F06 distinct clocksource scheduler gate; no claim of runtime bug",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "BD106-F05",
+      "title": "Inline asm declares only an input for register modified by a decrement loop",
+      "condition": "source is compiled using shown GCC-compatible asm rules and not modified by other setup",
+      "source_ref": [
+        "BD106-E059",
+        "BD106-E060",
+        "BD106-E061",
+        "BD106-E062"
+      ],
+      "finding_type": "STATIC_ASM_CONSTRAINT_REVIEW_CANDIDATE",
+      "observed_failure": false,
+      "overlap": "no confirmed optimizer miscompilation or kernel failure",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "BD106-F06",
+      "title": "HPET comparator double write and one-microsecond request are not proof of device interval or acceptance",
+      "condition": "LEGSUP branch is selected and first/second writes are reached",
+      "source_ref": [
+        "BD106-E066",
+        "BD106-E067",
+        "BD106-E068",
+        "BD106-E069",
+        "BD106-E071"
+      ],
+      "finding_type": "STATIC_DEVICE_BEHAVIOR_LIMIT",
+      "observed_failure": false,
+      "overlap": "HC102 and IRQ routing earlier existing candidate family",
+      "status": "NEEDS_EVIDENCE"
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "BD106-U01",
+      "topic": "Actual preprocessor selection and code generation",
+      "required": "Complete compiler/preprocessor output for delay macros, asm/delay.h include, symbol type choices, actual __bad_* references and chosen link",
+      "source_ref": [
+        "BD106-E027",
+        "BD106-E042",
+        "BD106-E047",
+        "BD106-E063"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BD106-U02",
+      "topic": "Real frequency path and loops_per_jiffy overwrite at HPET call time",
+      "required": "Actual cpuid/VMware choice and call sequence, value of tsc_khz, early success and late decision, read/write of global lpj",
+      "source_ref": [
+        "BD106-E026",
+        "BD106-E030",
+        "BD106-E032",
+        "BD106-E034",
+        "BD106-E037"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BD106-U03",
+      "topic": "Compiler and CPU instruction-level result of asm mull and loop",
+      "required": "Known ABI/verified disassembly, register allocation and runtime sample of EAX/EDX, delay_loop instruction count and wallclock timing",
+      "source_ref": [
+        "BD106-E055",
+        "BD106-E056",
+        "BD106-E057",
+        "BD106-E062"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BD106-U04",
+      "topic": "HPET counter and comparator device behavior",
+      "required": "HPET MMIO trace of both comparator writes, register state, interval, counter start and interrupt observations",
+      "source_ref": [
+        "BD106-E065",
+        "BD106-E066",
+        "BD106-E067",
+        "BD106-E068",
+        "BD106-E069"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BD106-U05",
+      "topic": "Lifetime and CPU provenance of early perCPU cyc2ns",
+      "required": "Reuse fixed86 R86-S01/S02/S03 acceptance boundary; validate addresses and GS/object state if later actual build allowed",
+      "source_ref": [
+        "BD106-E018",
+        "BD106-E019",
+        "BD106-E020",
+        "BD106-E022"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "BD106-U06",
+      "topic": "Original 105 abs and signature consumers under actual C build",
+      "required": "C07 semantic readback of amended old consumers, type diagnostics for s32* vs u32*, signed conversion bounds and raw lines; no old artifact edits",
+      "source_ref": [
+        "BD106-E007",
+        "BD106-E008",
+        "BD106-E009",
+        "BD106-E011",
+        "BD106-E012",
+        "BD106-E013",
+        "BD106-E014"
+      ],
+      "status": "PENDING_C07_REVIEW"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 6,
+    "new_evidence_gaps": 6,
+    "old_105_return_items": 2
+  },
+  "actual_execution": {
+    "full_local_P9": "NOT_RUN",
+    "source_programs": "NOT_RUN",
+    "preprocessing": "NOT_RUN",
+    "compilation": "NOT_RUN",
+    "linking": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "CPU_instructions": "NOT_RUN",
+    "MMIO": "NOT_RUN",
+    "concurrency": "NOT_RUN"
+  },
+  "boundary": "No repair permission, no branch creation, no source edits, no actual runtime fault claim. New items are conditional static leads only."
+}

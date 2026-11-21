@@ -1,0 +1,2363 @@
+{
+  "check": "V00",
+  "pins": {
+    "time": "a039d9803ade",
+    "master": "de3bb1df906a",
+    "taskbook": "57a7c3e0eebf"
+  },
+  "report": {
+    "path": "agent-workspace/lead/MYOS2-LEAD-002/07-scheduler-wakeup-timer-audit.md",
+    "bytes": 22708,
+    "sha256_segments": [
+      "a44f91940cf33240",
+      "2cb01a68a263840c",
+      "b6046cf8345df9e6",
+      "1ea43fb3173334d8"
+    ]
+  },
+  "tag_count_regex": 47,
+  "tag_count_raw_substring": 47,
+  "ids_unique": true,
+  "ids_missing_from_A01_A47": [],
+  "ids_duplicated": [],
+  "ids_unassigned_tags": [],
+  "ids_order_in_report": [
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A09",
+    "A10",
+    "A11",
+    "A12",
+    "A13",
+    "A14",
+    "A33",
+    "A34",
+    "A44",
+    "A45",
+    "A15",
+    "A16",
+    "A17",
+    "A18",
+    "A19",
+    "A20",
+    "A40",
+    "A41",
+    "A21",
+    "A22",
+    "A23",
+    "A24",
+    "A25",
+    "A26",
+    "A27",
+    "A42",
+    "A28",
+    "A29",
+    "A30",
+    "A31",
+    "A46",
+    "A32",
+    "A43",
+    "A35",
+    "A36",
+    "A37",
+    "A38",
+    "A39",
+    "A47"
+  ],
+  "anchors": [
+    {
+      "id": "A01",
+      "tag_line": 76,
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "fence_lang": "cmake",
+      "fence_ok": true,
+      "quote_lines": 3,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": true,
+      "path_exists_in_time": true,
+      "file_lines": 85,
+      "contiguous_hits": [
+        64
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "cmake_command",
+          "start": 39,
+          "end": 51,
+          "pattern": "\\bset\\s*\\(\\s*CMAKE_C_FLAGS\\b",
+          "method": "CMake view (comments/strings blanked); command ( ... ) paren match"
+        },
+        {
+          "kind": "cmake_command",
+          "start": 58,
+          "end": 70,
+          "pattern": "\\bset\\s*\\(\\s*CMAKE_C_FLAGS\\b",
+          "method": "CMake view (comments/strings blanked); command ( ... ) paren match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 64,
+          "cand": [
+            58,
+            70
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "三行位于第二个 set(CMAKE_C_FLAGS ...)（第58-70行）；文件共有两个 set(CMAKE_C_FLAGS) 命令，第一个不含这些 -D。"
+      }
+    },
+    {
+      "id": "A02",
+      "tag_line": 91,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "set_task_cpu",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 4,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        177
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 123,
+          "start": 123,
+          "body_open": 124,
+          "end": 181,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 177,
+          "cand": [
+            123,
+            181
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "set_task_cpu 活动尾部：取 per_cpu rq、写 TASK_RUNNING、contains 检查后 add_to_head；其前全部为注释。"
+      }
+    },
+    {
+      "id": "A03",
+      "tag_line": 101,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "try_to_wake_up",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        330
+      ],
+      "substring_hits_first_line": 3,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 328,
+          "start": 328,
+          "body_open": 329,
+          "end": 483,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 330,
+          "cand": [
+            328,
+            483
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "success 仅在此声明处初始化为 0。"
+      }
+    },
+    {
+      "id": "A04",
+      "tag_line": 109,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "try_to_wake_up",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        462
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 328,
+          "start": 328,
+          "body_open": 329,
+          "end": 483,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 462,
+          "cand": [
+            328,
+            483
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "调用活动；传入的是局部 cpu（初值 0），原 p->wake_cpu 版本被注释。"
+      }
+    },
+    {
+      "id": "A05",
+      "tag_line": 116,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "try_to_wake_up",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        471
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 328,
+          "start": 328,
+          "body_open": 329,
+          "end": 483,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 471,
+          "cand": [
+            328,
+            483
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "外层 if (task_cpu(p) != cpu) 被注释，故 set_task_cpu 在非 current 路径无条件执行。"
+      }
+    },
+    {
+      "id": "A06",
+      "tag_line": 123,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "try_to_wake_up",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 3,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        480
+      ],
+      "substring_hits_first_line": 2,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 328,
+          "start": 328,
+          "body_open": 329,
+          "end": 483,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 480,
+          "cand": [
+            328,
+            483
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 1,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "定义体内对 success 的活动引用只有声明与本 return；ttwu_state_match(...&success) 全为注释。"
+      }
+    },
+    {
+      "id": "A07",
+      "tag_line": 132,
+      "path": "mykernel/sched/scheduler/scheduler.h",
+      "symbol": "select_task_rq",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 336,
+      "contiguous_hits": [
+        79
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 58,
+          "start": 56,
+          "body_open": 58,
+          "end": 80,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 79,
+          "cand": [
+            56,
+            80
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _LINUX_SCHEDULER_H_",
+        "#if defined(SCHEDULER_DEFINATION) || !(DEBUG)"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "select_task_rq 除 return cpu 外全部为注释。"
+      }
+    },
+    {
+      "id": "A08",
+      "tag_line": 139,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "wake_up_process",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        558
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 556,
+          "start": 556,
+          "body_open": 557,
+          "end": 559,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 558,
+          "cand": [
+            556,
+            559
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "wake_up_process 直接返回 try_to_wake_up(p, TASK_NORMAL, 0)。"
+      }
+    },
+    {
+      "id": "A09",
+      "tag_line": 146,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "wake_up_new_task",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        721
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 684,
+          "start": 684,
+          "body_open": 685,
+          "end": 722,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 721,
+          "cand": [
+            684,
+            722
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "rq 取 per_cpu(runqueues, 0)；与 set_task_cpu 不同，此处 add_to_head 前没有 list_header_contains 检查。"
+      }
+    },
+    {
+      "id": "A10",
+      "tag_line": 153,
+      "path": "mykernel/sched/scheduler/myos_rt.c",
+      "symbol": "pick_next_task_myos",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 68,
+      "contiguous_hits": [
+        24
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 5,
+          "start": 5,
+          "body_open": 6,
+          "end": 58,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 24,
+          "cand": [
+            5,
+            58
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "pick_next_task_myos 在条件分支内 remove_head 取下一任务。"
+      }
+    },
+    {
+      "id": "A11",
+      "tag_line": 161,
+      "path": "mykernel/sched/scheduler/myos_rt.c",
+      "symbol": "myos_rt_sched_class",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 68,
+      "contiguous_hits": [
+        66
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "macro_generated_initializer",
+          "start": 65,
+          "end": 68,
+          "method": "DEFINE_SCHED_CLASS(myos_rt) = { ... } brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 66,
+          "cand": [
+            65,
+            68
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "名称由 DEFINE_SCHED_CLASS(myos_rt) 宏拼接生成；所读快照中 DEFINE_SCHED_CLASS 只在 myos_rt.c 使用一次，kernel.lds 以 __sched_class_highest/lowest 包住 .data.sched_class。"
+      }
+    },
+    {
+      "id": "A12",
+      "tag_line": 169,
+      "path": "mykernel/sched/scheduler/scheduler.h",
+      "symbol": "__pick_next_task",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 3,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 336,
+      "contiguous_hits": [
+        264
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 222,
+          "start": 220,
+          "body_open": 223,
+          "end": 277,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 264,
+          "cand": [
+            220,
+            277
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _LINUX_SCHEDULER_H_",
+        "#if defined(SCHEDULER_DEFINATION) || !(DEBUG)"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "for_each_class 循环内活动调用 class->pick_next_task；注释掉的是 pick_task 分支。"
+      }
+    },
+    {
+      "id": "A13",
+      "tag_line": 184,
+      "path": "mykernel/sched/scheduler/scheduler.h",
+      "symbol": "__schedule_loop",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 5,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 336,
+      "contiguous_hits": [
+        282
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 281,
+          "start": 279,
+          "body_open": 281,
+          "end": 287,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 282,
+          "cand": [
+            279,
+            287
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _LINUX_SCHEDULER_H_",
+        "#if defined(SCHEDULER_DEFINATION) || !(DEBUG)"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "schedule() 调用 __schedule_loop(SM_NONE)（同文件第1211行），循环内调用 __schedule。"
+      }
+    },
+    {
+      "id": "A14",
+      "tag_line": 195,
+      "path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "symbol": "excep_hwint_context",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 239,
+      "contiguous_hits": [
+        128
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 119,
+          "start": 119,
+          "body_open": 120,
+          "end": 130,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 128,
+          "cand": [
+            119,
+            130
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "excep_hwint_context 在异常/硬中断处理后 !in_atomic() 即调用 schedule()，不看 need_resched。"
+      }
+    },
+    {
+      "id": "A33",
+      "tag_line": 203,
+      "path": "mykernel/sched/scheduler/myos_rt.c",
+      "symbol": "pick_next_task_myos",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 5,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 68,
+      "contiguous_hits": [
+        14
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 5,
+          "start": 5,
+          "body_open": 6,
+          "end": 58,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 14,
+          "cand": [
+            5,
+            58
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "取下一任务的整个分支以 running_lhdr.count > 0 为合取条件。"
+      }
+    },
+    {
+      "id": "A34",
+      "tag_line": 214,
+      "path": "mykernel/sched/scheduler/myos_rt.c",
+      "symbol": "pick_next_task_myos",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 68,
+      "contiguous_hits": [
+        9
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 5,
+          "start": 5,
+          "body_open": 6,
+          "end": 58,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 9,
+          "cand": [
+            5,
+            58
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "retval 默认 current；分支不执行时 rq->curr = retval 并返回 current。"
+      }
+    },
+    {
+      "id": "A44",
+      "tag_line": 221,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "__schedule",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        1116
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 1018,
+          "start": 1017,
+          "body_open": 1018,
+          "end": 1170,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 1116,
+          "cand": [
+            1017,
+            1170
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "pick_next_task 在同文件第976行 #define 为 __pick_next_task。"
+      }
+    },
+    {
+      "id": "A45",
+      "tag_line": 228,
+      "path": "mykernel/sched/scheduler/scheduler_core.c",
+      "symbol": "__schedule",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 1644,
+      "contiguous_hits": [
+        1162
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 1018,
+          "start": 1017,
+          "body_open": 1018,
+          "end": 1170,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 1162,
+          "cand": [
+            1017,
+            1170
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "prev != next 分支调用 context_switch。"
+      }
+    },
+    {
+      "id": "A15",
+      "tag_line": 241,
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "schedule_timeout",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 4,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 873,
+      "contiguous_hits": [
+        796
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 759,
+          "start": 759,
+          "body_open": 760,
+          "end": 806,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 796,
+          "cand": [
+            759,
+            806
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [
+        798
+      ],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION_INCLUDES_COMMENT_LINE",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "引文第3行 '// schedule();' 是注释行，属于有意引用；其余三行为活动语句。机械结果 MATCH_IN_DEFINITION_INCLUDES_COMMENT_LINE 与此一致。"
+      }
+    },
+    {
+      "id": "A16",
+      "tag_line": 251,
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "schedule_timeout",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 873,
+      "contiguous_hits": [
+        805
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 759,
+          "start": 759,
+          "body_open": 760,
+          "end": 806,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 805,
+          "cand": [
+            759,
+            806
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "定义体内没有以 jiffies/expire 计算剩余量的活动语句；out 标签后只有此返回式。"
+      }
+    },
+    {
+      "id": "A17",
+      "tag_line": 258,
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "msleep",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 873,
+      "contiguous_hits": [
+        856
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 852,
+          "start": 852,
+          "body_open": 853,
+          "end": 858,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 856,
+          "cand": [
+            852,
+            858
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "msleep 循环以 schedule_timeout_uninterruptible 的返回值作为下一轮 timeout。"
+      }
+    },
+    {
+      "id": "A18",
+      "tag_line": 266,
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "schedule_timeout_uninterruptible",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 873,
+      "contiguous_hits": [
+        828
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 826,
+          "start": 826,
+          "body_open": 827,
+          "end": 830,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 828,
+          "cand": [
+            826,
+            830
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "先写 TASK_UNINTERRUPTIBLE 再调用 schedule_timeout。"
+      }
+    },
+    {
+      "id": "A19",
+      "tag_line": 276,
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "schedule_timeout",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 873,
+      "contiguous_hits": [
+        774
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 759,
+          "start": 759,
+          "body_open": 760,
+          "end": 806,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 774,
+          "cand": [
+            759,
+            806
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "case MAX_SCHEDULE_TIMEOUT 分支 schedule(); goto out。"
+      }
+    },
+    {
+      "id": "A20",
+      "tag_line": 284,
+      "path": "mykernel/kactive/completion/completion.c",
+      "symbol": "wait_for_completion",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 55,
+      "contiguous_hits": [
+        54
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 53,
+          "start": 53,
+          "body_open": 53,
+          "end": 55,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 54,
+          "cand": [
+            53,
+            55
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "wait_for_completion 以 MAX_SCHEDULE_TIMEOUT 调 wait_for_common；后者把 schedule_timeout 作为 action（completion.h）。"
+      }
+    },
+    {
+      "id": "A40",
+      "tag_line": 293,
+      "path": "mykernel/init/main.c",
+      "symbol": "rest_init",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 365,
+      "contiguous_hits": [
+        120
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 82,
+          "start": 82,
+          "body_open": 83,
+          "end": 129,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 120,
+          "cand": [
+            82,
+            129
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "rest_init 在两次 kernel_thread 之后 complete(&kthreadd_done)。"
+      }
+    },
+    {
+      "id": "A41",
+      "tag_line": 300,
+      "path": "mykernel/init/main.c",
+      "symbol": "kernel_init",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 365,
+      "contiguous_hits": [
+        277
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 270,
+          "start": 270,
+          "body_open": 271,
+          "end": 309,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 277,
+          "cand": [
+            270,
+            309
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "kernel_init 首条语句等待 kthreadd_done。"
+      }
+    },
+    {
+      "id": "A21",
+      "tag_line": 313,
+      "path": "mykernel/kactive/swait/swait.c",
+      "symbol": "__prepare_to_swait",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 3,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 66,
+      "contiguous_hits": [
+        47
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 46,
+          "start": 46,
+          "body_open": 46,
+          "end": 50,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 47,
+          "cand": [
+            46,
+            50
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "__prepare_to_swait：节点自指时 list_header_add_to_tail。"
+      }
+    },
+    {
+      "id": "A22",
+      "tag_line": 322,
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_add_to_tail",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 695,
+      "contiguous_hits": [
+        665
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 664,
+          "start": 662,
+          "body_open": 664,
+          "end": 667,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 665,
+          "cand": [
+            662,
+            667
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _LINUX_DOUBLE_LIST_H_",
+        "#if defined(LIST_DEFINATION) || !(DEBUG)"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "list_header_add_to_tail 增加 count。"
+      }
+    },
+    {
+      "id": "A23",
+      "tag_line": 330,
+      "path": "mykernel/kactive/swait/swait.c",
+      "symbol": "swake_up_locked",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 5,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 66,
+      "contiguous_hits": [
+        26
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 23,
+          "start": 23,
+          "body_open": 24,
+          "end": 31,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 26,
+          "cand": [
+            23,
+            31
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "swake_up_locked 以 count 判空，取 anchor.next 容器，唤醒后 list_del_init（不带头计数）。"
+      }
+    },
+    {
+      "id": "A24",
+      "tag_line": 341,
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_del_init",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 695,
+      "contiguous_hits": [
+        281
+      ],
+      "substring_hits_first_line": 2,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 280,
+          "start": 278,
+          "body_open": 280,
+          "end": 283,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 281,
+          "cand": [
+            278,
+            283
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _LINUX_DOUBLE_LIST_H_",
+        "#if defined(LIST_DEFINATION) || !(DEBUG)"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "list_del_init 只改链接并自指，不改 count；其 __list_del_entry_valid 在链接不一致时是 while(...); 自旋而不是报错返回。"
+      }
+    },
+    {
+      "id": "A25",
+      "tag_line": 349,
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_is_empty",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 695,
+      "contiguous_hits": [
+        631
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 630,
+          "start": 628,
+          "body_open": 630,
+          "end": 632,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 631,
+          "cand": [
+            628,
+            632
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _LINUX_DOUBLE_LIST_H_",
+        "#if defined(LIST_DEFINATION) || !(DEBUG)"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "list_header_is_empty 只读 count。"
+      }
+    },
+    {
+      "id": "A26",
+      "tag_line": 356,
+      "path": "mykernel/kactive/swait/swait.c",
+      "symbol": "__finish_swait",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 3,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 66,
+      "contiguous_hits": [
+        53
+      ],
+      "substring_hits_first_line": 2,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 52,
+          "start": 52,
+          "body_open": 52,
+          "end": 56,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 53,
+          "cand": [
+            52,
+            56
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "__finish_swait 仅在节点非自指时调用带 count 的 list_header_delete_node。"
+      }
+    },
+    {
+      "id": "A27",
+      "tag_line": 365,
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_headr_first_container",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": true,
+      "path_exists_in_time": true,
+      "file_lines": 353,
+      "contiguous_hits": [
+        334
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_macro",
+          "start": 334,
+          "end": 335,
+          "method": "#define line in comment-blanked view + backslash continuations"
+        }
+      ],
+      "within": [
+        {
+          "hit": 334,
+          "cand": [
+            334,
+            335
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _LINUX_DOUBLE_LIST_MACROS_H_"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "宏展开为 list_first_entry(&anchor, ...) -> container_of(anchor.next, ...)，不检查 count 或 anchor。"
+      }
+    },
+    {
+      "id": "A42",
+      "tag_line": 373,
+      "path": "mykernel/kactive/completion/completion.c",
+      "symbol": "complete",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 3,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 55,
+      "contiguous_hits": [
+        36
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 32,
+          "start": 32,
+          "body_open": 33,
+          "end": 40,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 36,
+          "cand": [
+            32,
+            40
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "complete 在锁内 done++ 后调用 swake_up_locked。"
+      }
+    },
+    {
+      "id": "A28",
+      "tag_line": 390,
+      "path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "HPET_handler",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 554,
+      "contiguous_hits": [
+        527
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 525,
+          "start": 525,
+          "body_open": 526,
+          "end": 537,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 527,
+          "cand": [
+            525,
+            537
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "HPET_handler 前两条活动语句 jiffies++; do_timer(1);。"
+      }
+    },
+    {
+      "id": "A29",
+      "tag_line": 398,
+      "path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "do_timer",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 273,
+      "contiguous_hits": [
+        272
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 270,
+          "start": 270,
+          "body_open": 271,
+          "end": 273,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 272,
+          "cand": [
+            270,
+            273
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "do_timer 唯一语句 jiffies_64 += ticks。"
+      }
+    },
+    {
+      "id": "A30",
+      "tag_line": 405,
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "symbol": "jiffies",
+      "fence_lang": "ld",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": false,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 187,
+      "contiguous_hits": [
+        17
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "ld_symbol_assignment",
+          "start": 17,
+          "end": 17,
+          "brace_depth": 0,
+          "method": "linker-script assignment '<sym> = ...;' (comments blanked)"
+        }
+      ],
+      "within": [
+        {
+          "hit": 17,
+          "cand": [
+            17,
+            17
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "kernel.lds 第17行顶层赋值（SECTIONS 之外）。"
+      }
+    },
+    {
+      "id": "A31",
+      "tag_line": 412,
+      "path": "mykernel/scripts/target_kernel.cmake",
+      "symbol": "target_link_options",
+      "fence_lang": "cmake",
+      "fence_ok": true,
+      "quote_lines": 3,
+      "length_1_to_5": true,
+      "quote_has_tab": false,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 32,
+      "contiguous_hits": [
+        6
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "cmake_command",
+          "start": 6,
+          "end": 8,
+          "pattern": "(?<![\\w$])target_link_options\\s*\\(",
+          "method": "CMake view (comments/strings blanked); command ( ... ) paren match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 6,
+          "cand": [
+            6,
+            8
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "kernel 目标以 -T arch/${ARCH}/kernel.lds 链接；ARCH 缺省在 options_flags.cmake 设为 x86_64。未运行 CMake。"
+      }
+    },
+    {
+      "id": "A46",
+      "tag_line": 421,
+      "path": "mykernel/CMakeLists.txt",
+      "symbol": "KERNEL_C_SRCS",
+      "fence_lang": "cmake",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": false,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 36,
+      "contiguous_hits": [
+        30
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "cmake_command",
+          "start": 30,
+          "end": 30,
+          "pattern": "\\bfile\\s*\\(\\s*[A-Z_]+\\s+KERNEL_C_SRCS\\b",
+          "method": "CMake view (comments/strings blanked); command ( ... ) paren match"
+        }
+      ],
+      "within": [],
+      "partial_overlap": [
+        {
+          "hit": 30,
+          "cand": [
+            30,
+            30
+          ],
+          "lines_outside": [
+            31
+          ]
+        }
+      ],
+      "within_definition": false,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "verdict_mech": "OUTSIDE_OR_PARTIAL_DEFINITION",
+      "semantic": {
+        "verdict": "PARTIAL_BOUNDARY",
+        "note": "语义支持“根 CMake 递归收集源码”；但第二行 file(GLOB_RECURSE KERNEL_ASM_SRCS ...) 是另一个变量的定义，落在所标符号 KERNEL_C_SRCS 的定义（第30行单行命令）之外，按 P2 定义体规则为部分失败。"
+      }
+    },
+    {
+      "id": "A32",
+      "tag_line": 431,
+      "path": "mykernel/arch/x86_64/myos/LVT_timer.c",
+      "symbol": "LVT_timer_handler",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 61,
+      "contiguous_hits": [
+        33
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 31,
+          "start": 31,
+          "body_open": 32,
+          "end": 41,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 33,
+          "cand": [
+            31,
+            41
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "LVT_timer_handler 递增 lvt_count，不触及 jiffies。"
+      }
+    },
+    {
+      "id": "A43",
+      "tag_line": 438,
+      "path": "mykernel/time/timer/timer.c",
+      "symbol": "process_timeout",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 2,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 873,
+      "contiguous_hits": [
+        43
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 42,
+          "start": 41,
+          "body_open": 42,
+          "end": 45,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 43,
+          "cand": [
+            41,
+            45
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "process_timeout 取容器后 wake_up_process(timeout->task)。"
+      }
+    },
+    {
+      "id": "A35",
+      "tag_line": 452,
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "symbol": "WARN_ON",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 248,
+      "contiguous_hits": [
+        130
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "c_macro",
+          "start": 130,
+          "end": 130,
+          "method": "#define line in comment-blanked view + backslash continuations"
+        }
+      ],
+      "within": [
+        {
+          "hit": 130,
+          "cand": [
+            130,
+            130
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _ASM_GENERIC_BUG_H",
+        "#ifndef __ASSEMBLY__",
+        "#ifdef CONFIG_BUG"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "定义位于 #ifdef CONFIG_BUG 内；CONFIG_BUG 由 A01 的 -DCONFIG_BUG 定义；所读快照中 WARN_ON 只有这一处活动 #define（其余为注释）。"
+      }
+    },
+    {
+      "id": "A36",
+      "tag_line": 459,
+      "path": ".vscode-kdbg/run-qemu-gdb-myos2.sh",
+      "symbol": "(top-level)",
+      "fence_lang": "bash",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": false,
+      "quote_has_backslash": true,
+      "path_exists_in_time": true,
+      "file_lines": 97,
+      "contiguous_hits": [
+        73
+      ],
+      "substring_hits_first_line": 1,
+      "shell_functions": [
+        {
+          "name": "log_start",
+          "start": 27,
+          "end": 27
+        },
+        {
+          "name": "log_ready",
+          "start": 28,
+          "end": 28
+        },
+        {
+          "name": "log_fail",
+          "start": 29,
+          "end": 29
+        },
+        {
+          "name": "cleanup_old",
+          "start": 31,
+          "end": 42
+        },
+        {
+          "name": "die",
+          "start": 43,
+          "end": 43
+        }
+      ],
+      "boundary_method": "heuristic shell function ranges; quote must lie outside all of them",
+      "within_definition": true,
+      "definition_candidates": [],
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "顶层 QEMU 命令续行；同一命令另有 -smp 1 与 -S；该 drive 行无 readonly/snapshot。"
+      }
+    },
+    {
+      "id": "A37",
+      "tag_line": 466,
+      "path": ".vscode-kdbg/run-qemu-gdb-myos2.sh",
+      "symbol": "(top-level)",
+      "fence_lang": "bash",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": false,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 97,
+      "contiguous_hits": [
+        88
+      ],
+      "substring_hits_first_line": 1,
+      "shell_functions": [
+        {
+          "name": "log_start",
+          "start": 27,
+          "end": 27
+        },
+        {
+          "name": "log_ready",
+          "start": 28,
+          "end": 28
+        },
+        {
+          "name": "log_fail",
+          "start": 29,
+          "end": 29
+        },
+        {
+          "name": "cleanup_old",
+          "start": 31,
+          "end": 42
+        },
+        {
+          "name": "die",
+          "start": 43,
+          "end": 43
+        }
+      ],
+      "boundary_method": "heuristic shell function ranges; quote must lie outside all of them",
+      "within_definition": true,
+      "definition_candidates": [],
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "顶层 for 循环中 nc -z 成功即 log_ready；另一分支用 /dev/tcp 探测，含义相同（端口可连）。"
+      }
+    },
+    {
+      "id": "A38",
+      "tag_line": 477,
+      "path": "mykernel/arch/x86_64/lock_IPC/atomic/atomic_arch.h",
+      "symbol": "arch_atomic_add_test_negative",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 3,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": true,
+      "path_exists_in_time": true,
+      "file_lines": 409,
+      "contiguous_hits": [
+        170,
+        274
+      ],
+      "substring_hits_first_line": 4,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 272,
+          "start": 270,
+          "body_open": 272,
+          "end": 283,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 274,
+          "cand": [
+            270,
+            283
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _ASM_X86_ATOMIC_H_",
+        "#if defined(ARCH_ATOMIC_DEFINATION) || !(DEBUG)"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "同样三行也出现在 arch_atomic_sub_test_zero（第170行）；单纯 grep -F 会命中两处，定义体边界定位到第274行 arch_atomic_add_test_negative。"
+      }
+    },
+    {
+      "id": "A39",
+      "tag_line": 486,
+      "path": "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+      "symbol": "arch_spin_trylock",
+      "fence_lang": "c",
+      "fence_ok": true,
+      "quote_lines": 5,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 96,
+      "contiguous_hits": [
+        52
+      ],
+      "substring_hits_first_line": 2,
+      "definition_candidates": [
+        {
+          "kind": "c_function",
+          "name_line": 51,
+          "start": 49,
+          "body_open": 51,
+          "end": 57,
+          "method": "comment/string/preprocessor-blanked view; depth-0 name(...) followed by {; brace match"
+        }
+      ],
+      "within": [
+        {
+          "hit": 52,
+          "cand": [
+            49,
+            57
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [
+        "#ifndef _ASM_X86_SPINLOCK_H_",
+        "#if defined(ARCH_SPINLOCK_SMP_DEFINATION) || !(DEBUG)"
+      ],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS",
+        "note": "arch_spin_trylock 只读 val 并比较 head/tail，无写入。"
+      }
+    },
+    {
+      "id": "A47",
+      "tag_line": 499,
+      "path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "AP_DEBUG",
+      "fence_lang": "asm",
+      "fence_ok": true,
+      "quote_lines": 1,
+      "length_1_to_5": true,
+      "quote_has_tab": true,
+      "quote_has_backslash": false,
+      "path_exists_in_time": true,
+      "file_lines": 152,
+      "contiguous_hits": [
+        124
+      ],
+      "substring_hits_first_line": 1,
+      "definition_candidates": [
+        {
+          "kind": "asm_symbol",
+          "start": 111,
+          "end": 130,
+          "end_rule": "next SYM_*_START or column-0 label",
+          "method": "heuristic: from SYM_*_START(sym)/sym: to its END, next start/label, or EOF"
+        }
+      ],
+      "within": [
+        {
+          "hit": 124,
+          "cand": [
+            111,
+            130
+          ]
+        }
+      ],
+      "partial_overlap": [],
+      "within_definition": true,
+      "quote_lines_in_comment": [],
+      "quote_blank_lines": 0,
+      "pp_stack_at_quote": [],
+      "verdict_mech": "MATCH_IN_DEFINITION",
+      "semantic": {
+        "verdict": "SUPPORTS_WITH_NOTE",
+        "note": "SYM_CODE_START(AP_DEBUG) 后第124行 jmp .；定义体终点按“下一个 SYM_*_START/列0标签/EOF”启发式确定。"
+      }
+    }
+  ],
+  "mechanical_verdict_counts": {
+    "MATCH_IN_DEFINITION": 45,
+    "MATCH_IN_DEFINITION_INCLUDES_COMMENT_LINE": 1,
+    "OUTSIDE_OR_PARTIAL_DEFINITION": 1
+  },
+  "semantic_verdict_counts": {
+    "SUPPORTS_WITH_NOTE": 12,
+    "SUPPORTS": 34,
+    "PARTIAL_BOUNDARY": 1
+  },
+  "canaries": [
+    {
+      "key": "options_flags_cmake",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "quote_repr": "'\\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\\\'",
+      "time_whole_line": 1,
+      "master_substring": 0,
+      "verdict": "DISCRIMINATES"
+    },
+    {
+      "key": "panic_c_panic",
+      "path": "mykernel/debug/panic.c",
+      "quote_repr": "'\\tthis_cpu = smp_processor_id();'",
+      "time_whole_line": 1,
+      "master_substring": 0,
+      "verdict": "DISCRIMINATES"
+    }
+  ],
+  "protection": {
+    "work_branch": "claude/dazzling-cori-q0dnyt",
+    "head_short12": "f9ae2bce9a64",
+    "head_descends_from_pilot_head": true,
+    "pilot_files_changed_since_pilot_head": [],
+    "worktree_changes_outside_core_dir": []
+  }
+}

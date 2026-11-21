@@ -1,0 +1,2866 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SMP-BOOT-PATH-100",
+  "record_type": "static_smp_boot_path_and_R99_01_documentary_correction",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "produced_by": "GPT-6（当前可见模型家族；后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-18",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_fixed_short12": "928c77c6bbb4",
+  "execution_parent_short12": "3df2ee58f100",
+  "master_direct_short12": "e8e60cd19540",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "batch99": "RETURN_DOCUMENTATION_ONLY",
+  "R99_01": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+  "D00": {
+    "R99_01": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "mainline_closure": "NOT_AUTHORIZED_BY_EXECUTOR",
+    "old_status": "RETURN_DOCUMENTATION_ONLY",
+    "old_files_modified": false,
+    "old_comment_modified": false,
+    "original_99_author_selfcheck": "87/87/0 unchanged",
+    "original_raw_prefix_count": 87,
+    "raw_literals_confirmed_99_by_C06": 87,
+    "old_definition_scope_failures": 14,
+    "old_all_87_qualifying_definition_claim": "WITHDRAWN",
+    "eligible_old_anchors_73_not_recertified_as_new_P9": true,
+    "corrected_declaration_context_categories": 13,
+    "corrected_prototype_context_categories": 1,
+    "corrected_new_definition_implementation_anchor": "SP100-E056",
+    "corrections": [
+      {
+        "id": "D00-UB99-E019",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E019",
+        "original_path": "myloader/uefi/utils.h",
+        "original_selector": "include(Uefi.h)",
+        "original_line_range": [
+          4,
+          4
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T01"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E020",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E020",
+        "original_path": "myloader/uefi/utils.h",
+        "original_selector": "include(UefiBootServicesTableLib.h)",
+        "original_line_range": [
+          6,
+          6
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T08"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E021",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E021",
+        "original_path": "myloader/uefi/utils.h",
+        "original_selector": "include(BaseMemoryLib.h)",
+        "original_line_range": [
+          8,
+          8
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T07"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E022",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E022",
+        "original_path": "myloader/uefi/utils.h",
+        "original_selector": "include(SimpleFileSystem.h)",
+        "original_line_range": [
+          9,
+          9
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T08"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E023",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E023",
+        "original_path": "myloader/uefi/utils.h",
+        "original_selector": "include(LoadedImage.h)",
+        "original_line_range": [
+          10,
+          10
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T08"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E024",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E024",
+        "original_path": "myloader/uefi/utils.h",
+        "original_selector": "include(ElfLib.h)",
+        "original_line_range": [
+          12,
+          12
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T01"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E025",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E025",
+        "original_path": "myloader/uefi/bootloader.h",
+        "original_selector": "include(PiDxeCis.h)",
+        "original_line_range": [
+          11,
+          11
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T08"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E026",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E026",
+        "original_path": "myloader/uefi/bootloader.h",
+        "original_selector": "include(MpService.h)",
+        "original_line_range": [
+          12,
+          12
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T08"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E027",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E027",
+        "original_path": "myloader/uefi/bootloader.h",
+        "original_selector": "include(multiboot2.h)",
+        "original_line_range": [
+          15,
+          15
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T03"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E028",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E028",
+        "original_path": "myloader/uefi/ElfLib.h",
+        "original_selector": "include(PiPei.h)",
+        "original_line_range": [
+          12,
+          12
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T01"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E029",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E029",
+        "original_path": "myloader/uefi/ElfLib/ElfLibInternal.h",
+        "original_selector": "include(BaseLib.h)",
+        "original_line_range": [
+          12,
+          12
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T09"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E030",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E030",
+        "original_path": "myloader/uefi/ElfLib/ElfLibInternal.h",
+        "original_selector": "include(DebugLib.h)",
+        "original_line_range": [
+          13,
+          13
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T05",
+          "B-T09",
+          "B-C08"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E031",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E031",
+        "original_path": "myloader/uefi/ElfLib/ElfLibInternal.h",
+        "original_selector": "include(BaseMemoryLib.h)",
+        "original_line_range": [
+          14,
+          14
+        ],
+        "original_category": "HEADER_INCLUDE_DIRECTIVE",
+        "actual_category": "PREPROCESSOR_INCLUDE_NON_DEFINITION",
+        "disposition": "KEEP_INCLUDE_DECLARATION_CONTEXT; WITHDRAW_DEFINITION_QUALIFICATION",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [],
+        "consumers": [
+          "B-T07",
+          "B-T09"
+        ],
+        "not_proved": "resolved external header, actual ABI and library instance unproved"
+      },
+      {
+        "id": "D00-UB99-E041",
+        "original_evidence_qualified_id": "CORE-USER-UEFI-BUILD-PROVENANCE-99::UB99-E041",
+        "original_path": "myloader/uefi/bootloader.h",
+        "original_selector": "load_elf_kernel",
+        "original_line_range": [
+          73,
+          74
+        ],
+        "original_category": "FUNCTION_DECLARATION",
+        "actual_category": "FUNCTION_PROTOTYPE_NON_DEFINITION",
+        "disposition": "WITHDRAW_DEFINITION_QUALIFICATION; USE_100_FUNCTION_BODY",
+        "old_literal_quote_remains_true": true,
+        "new_definition_anchor_for_consumers": [
+          "SP100-E056",
+          "SP100-E057",
+          "SP100-E058"
+        ],
+        "consumers": [
+          "B-T08"
+        ],
+        "not_proved": "actual ELF load and source call status unproved"
+      }
+    ],
+    "R99_S01": "CMake prefix/DESTDIR/installed bytes depend on actual config and shell continuation; original graph and files not changed",
+    "R99_S02": "precise Elf64 section multiplication SP100-E060, FileInfo->FileSize SP100-E059, conditional ASM_FILE plus __PI_UEFI_H__ not inferred",
+    "R99_S03": "old graph not-same-bytes -> byte identity not proven; kernel flags do not prove actual EFI flags differ; node identity cannot become real caller",
+    "old_candidates_and_qualified_ids": "UNCHANGED"
+  },
+  "source_quote_index": [
+    {
+      "id": "SP100-E001",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "UefiMain",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 51,
+      "line_end": 54
+    },
+    {
+      "id": "SP100-E002",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "fill_mmap_info",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 281,
+      "line_end": 282
+    },
+    {
+      "id": "SP100-E003",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "fill_cputopo_info",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 374,
+      "line_end": 378
+    },
+    {
+      "id": "SP100-E004",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "fill_cputopo_info",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 380,
+      "line_end": 383
+    },
+    {
+      "id": "SP100-E005",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "fill_cputopo_info",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 385,
+      "line_end": 389
+    },
+    {
+      "id": "SP100-E006",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "fill_cputopo_info",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 389,
+      "line_end": 393
+    },
+    {
+      "id": "SP100-E007",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "fill_cputopo_info",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 395,
+      "line_end": 396
+    },
+    {
+      "id": "SP100-E008",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "symbol": "MYOS2_TAG_TYPE_CPU_TOPO",
+      "language": "c",
+      "claim_class": "MACRO",
+      "topic": "A",
+      "line_start": 67,
+      "line_end": 67
+    },
+    {
+      "id": "SP100-E009",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "symbol": "CPU_DESCRIPTOR",
+      "language": "c",
+      "claim_class": "STRUCT",
+      "topic": "A",
+      "line_start": 457,
+      "line_end": 461
+    },
+    {
+      "id": "SP100-E010",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "symbol": "CPU_DESCRIPTOR",
+      "language": "c",
+      "claim_class": "STRUCT",
+      "topic": "A",
+      "line_start": 462,
+      "line_end": 464
+    },
+    {
+      "id": "SP100-E011",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "symbol": "myos2_tag_smpinfo",
+      "language": "c",
+      "claim_class": "STRUCT",
+      "topic": "A",
+      "line_start": 466,
+      "line_end": 470
+    },
+    {
+      "id": "SP100-E012",
+      "source_path": "myloader/uefi/multiboot2.h",
+      "symbol": "myos2_tag_smpinfo",
+      "language": "c",
+      "claim_class": "STRUCT",
+      "topic": "A",
+      "line_start": 470,
+      "line_end": 473
+    },
+    {
+      "id": "SP100-E013",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "symbol": "nr_cpu_ids",
+      "language": "c",
+      "claim_class": "GLOBAL_OBJECT",
+      "topic": "A",
+      "line_start": 16,
+      "line_end": 16
+    },
+    {
+      "id": "SP100-E014",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "symbol": "get_smpinfo",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 24,
+      "line_end": 27
+    },
+    {
+      "id": "SP100-E015",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "symbol": "parse_tag",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 57,
+      "line_end": 61
+    },
+    {
+      "id": "SP100-E016",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "symbol": "parse_tag",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 63,
+      "line_end": 65
+    },
+    {
+      "id": "SP100-E017",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "symbol": "parse_tag",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 67,
+      "line_end": 71
+    },
+    {
+      "id": "SP100-E018",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "symbol": "parse_tag",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 112,
+      "line_end": 115
+    },
+    {
+      "id": "SP100-E019",
+      "source_path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "symbol": "myos_early_init_system",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 47,
+      "line_end": 47
+    },
+    {
+      "id": "SP100-E020",
+      "source_path": "mykernel/include/linux/kernel/cpumask.h",
+      "symbol": "for_each_cpu",
+      "language": "c",
+      "claim_class": "MACRO",
+      "topic": "A",
+      "line_start": 19,
+      "line_end": 20
+    },
+    {
+      "id": "SP100-E021",
+      "source_path": "mykernel/include/linux/kernel/cpumask.h",
+      "symbol": "for_each_possible_cpu",
+      "language": "c",
+      "claim_class": "MACRO",
+      "topic": "A",
+      "line_start": 22,
+      "line_end": 22
+    },
+    {
+      "id": "SP100-E022",
+      "source_path": "mykernel/include/linux/kernel/cpumask.h",
+      "symbol": "for_each_online_cpu",
+      "language": "c",
+      "claim_class": "MACRO",
+      "topic": "A",
+      "line_start": 23,
+      "line_end": 23
+    },
+    {
+      "id": "SP100-E023",
+      "source_path": "mykernel/include/linux/kernel/cpumask.h",
+      "symbol": "num_possible_cpus",
+      "language": "c",
+      "claim_class": "MACRO",
+      "topic": "A",
+      "line_start": 27,
+      "line_end": 27
+    },
+    {
+      "id": "SP100-E024",
+      "source_path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "symbol": "__per_cpu_offset",
+      "language": "c",
+      "claim_class": "GLOBAL_OBJECT",
+      "topic": "A",
+      "line_start": 23,
+      "line_end": 26
+    },
+    {
+      "id": "SP100-E025",
+      "source_path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "symbol": "setup_per_cpu_areas",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 73,
+      "line_end": 76
+    },
+    {
+      "id": "SP100-E026",
+      "source_path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "symbol": "setup_per_cpu_areas",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 77,
+      "line_end": 79
+    },
+    {
+      "id": "SP100-E027",
+      "source_path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "symbol": "setup_per_cpu_areas",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 112,
+      "line_end": 113
+    },
+    {
+      "id": "SP100-E028",
+      "source_path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "symbol": "setup_per_cpu_areas",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "A",
+      "line_start": 141,
+      "line_end": 142
+    },
+    {
+      "id": "SP100-E029",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "apicid_to_cpunr",
+      "language": "c",
+      "claim_class": "GLOBAL_OBJECT",
+      "topic": "A",
+      "line_start": 81,
+      "line_end": 83
+    },
+    {
+      "id": "SP100-E030",
+      "source_path": "mykernel/include/linux/kernel/threads.h",
+      "symbol": "CONFIG_NR_CPUS",
+      "language": "c",
+      "claim_class": "CONDITIONAL_MACRO",
+      "topic": "A",
+      "line_start": 17,
+      "line_end": 17
+    },
+    {
+      "id": "SP100-E031",
+      "source_path": "mykernel/include/linux/kernel/threads.h",
+      "symbol": "NR_CPUS",
+      "language": "c",
+      "claim_class": "MACRO",
+      "topic": "A",
+      "line_start": 21,
+      "line_end": 21
+    },
+    {
+      "id": "SP100-E032",
+      "source_path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "set(CMAKE_C_FLAGS_CONFIG)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "A",
+      "line_start": 58,
+      "line_end": 61
+    },
+    {
+      "id": "SP100-E033",
+      "source_path": "mykernel/arch/x86_64/myos/smp.c",
+      "symbol": "myos_early_init_smp",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 16,
+      "line_end": 19
+    },
+    {
+      "id": "SP100-E034",
+      "source_path": "mykernel/arch/x86_64/myos/smp.c",
+      "symbol": "myos_early_init_smp",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 20,
+      "line_end": 24
+    },
+    {
+      "id": "SP100-E035",
+      "source_path": "mykernel/arch/x86_64/myos/smp.c",
+      "symbol": "myos_early_init_smp",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 23,
+      "line_end": 26
+    },
+    {
+      "id": "SP100-E036",
+      "source_path": "mykernel/arch/x86_64/myos/smp.c",
+      "symbol": "myos_startup_smp",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 28,
+      "line_end": 31
+    },
+    {
+      "id": "SP100-E037",
+      "source_path": "mykernel/arch/x86_64/kernel/head64.c",
+      "symbol": "x86_64_start_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 155,
+      "line_end": 158
+    },
+    {
+      "id": "SP100-E038",
+      "source_path": "mykernel/arch/x86_64/kernel/head64.c",
+      "symbol": "x86_64_start_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 171,
+      "line_end": 174
+    },
+    {
+      "id": "SP100-E039",
+      "source_path": "mykernel/arch/x86_64/kernel/head64.c",
+      "symbol": "x86_64_start_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 179,
+      "line_end": 181
+    },
+    {
+      "id": "SP100-E040",
+      "source_path": "mykernel/init/main.c",
+      "symbol": "start_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 132,
+      "line_end": 136
+    },
+    {
+      "id": "SP100-E041",
+      "source_path": "mykernel/init/main.c",
+      "symbol": "start_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 138,
+      "line_end": 140
+    },
+    {
+      "id": "SP100-E042",
+      "source_path": "mykernel/init/main.c",
+      "symbol": "start_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 190,
+      "line_end": 194
+    },
+    {
+      "id": "SP100-E043",
+      "source_path": "mykernel/init/main.c",
+      "symbol": "kernel_init_freeable",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 323,
+      "line_end": 327
+    },
+    {
+      "id": "SP100-E044",
+      "source_path": "mykernel/init/main.c",
+      "symbol": "kernel_init_freeable",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 328,
+      "line_end": 332
+    },
+    {
+      "id": "SP100-E045",
+      "source_path": "mykernel/arch/x86_64/kernel/setup.c",
+      "symbol": "setup_arch",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 169,
+      "line_end": 173
+    },
+    {
+      "id": "SP100-E046",
+      "source_path": "mykernel/arch/x86_64/kernel/setup.c",
+      "symbol": "setup_arch",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 221,
+      "line_end": 225
+    },
+    {
+      "id": "SP100-E047",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "symbol": "myos_init_percpu_intr",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 229,
+      "line_end": 232
+    },
+    {
+      "id": "SP100-E048",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "__x2apic_enable",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 255,
+      "line_end": 259
+    },
+    {
+      "id": "SP100-E049",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "__x2apic_enable",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 260,
+      "line_end": 264
+    },
+    {
+      "id": "SP100-E050",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "myos_try_enable_x2apic",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 292,
+      "line_end": 296
+    },
+    {
+      "id": "SP100-E051",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "myos_try_enable_x2apic",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 296,
+      "line_end": 300
+    },
+    {
+      "id": "SP100-E052",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "myos_try_enable_x2apic",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 300,
+      "line_end": 304
+    },
+    {
+      "id": "SP100-E053",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "myos_try_enable_x2apic",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 305,
+      "line_end": 308
+    },
+    {
+      "id": "SP100-E054",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "check_x2apic",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 312,
+      "line_end": 316
+    },
+    {
+      "id": "SP100-E055",
+      "source_path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "symbol": "check_x2apic",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "B",
+      "line_start": 317,
+      "line_end": 321
+    },
+    {
+      "id": "SP100-E056",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "D00/B",
+      "line_start": 334,
+      "line_end": 338
+    },
+    {
+      "id": "SP100-E057",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "D00/B",
+      "line_start": 361,
+      "line_end": 364
+    },
+    {
+      "id": "SP100-E058",
+      "source_path": "myloader/uefi/bootloader.c",
+      "symbol": "load_elf_kernel",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "D00/B",
+      "line_start": 365,
+      "line_end": 369
+    },
+    {
+      "id": "SP100-E059",
+      "source_path": "myloader/uefi/utils.c",
+      "symbol": "LoadFile",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "D00/B",
+      "line_start": 29,
+      "line_end": 31
+    },
+    {
+      "id": "SP100-E060",
+      "source_path": "myloader/uefi/ElfLib/ElfLib.c",
+      "symbol": "CalculateElfFileSize",
+      "language": "c",
+      "claim_class": "C_FUNCTION",
+      "topic": "D00/B",
+      "line_start": 150,
+      "line_end": 153
+    },
+    {
+      "id": "SP100-E061",
+      "source_path": "mykernel/CMakeLists.txt",
+      "symbol": "file(GLOB_RECURSE_KC)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "D00/B",
+      "line_start": 30,
+      "line_end": 30
+    },
+    {
+      "id": "SP100-E062",
+      "source_path": "mykernel/CMakeLists.txt",
+      "symbol": "file(GLOB_RECURSE_KASM)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "D00/B",
+      "line_start": 31,
+      "line_end": 31
+    },
+    {
+      "id": "SP100-E063",
+      "source_path": "mykernel/CMakeLists.txt",
+      "symbol": "list(REMOVE_ITEM)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND_BLOCK",
+      "topic": "D00/B",
+      "line_start": 32,
+      "line_end": 33
+    },
+    {
+      "id": "SP100-E064",
+      "source_path": "mykernel/CMakeLists.txt",
+      "symbol": "include(target_kernel.cmake)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "D00/B",
+      "line_start": 35,
+      "line_end": 35
+    },
+    {
+      "id": "SP100-E065",
+      "source_path": "mykernel/scripts/target_kernel.cmake",
+      "symbol": "target_sources(kernel)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "D00/B",
+      "line_start": 1,
+      "line_end": 1
+    },
+    {
+      "id": "SP100-E066",
+      "source_path": "mykernel/scripts/target_kernel.cmake",
+      "symbol": "target_link_options(kernel)",
+      "language": "cmake",
+      "claim_class": "CMAKE_UNIQUE_COMMAND",
+      "topic": "D00/B",
+      "line_start": 6,
+      "line_end": 8
+    },
+    {
+      "id": "SP100-E067",
+      "source_path": "mykernel/arch/x86_64/kernel.lds",
+      "symbol": "_APboot_phys_start",
+      "language": "ld",
+      "claim_class": "LINKER_ASSIGNMENT",
+      "topic": "D00/B",
+      "line_start": 8,
+      "line_end": 8
+    },
+    {
+      "id": "SP100-E068",
+      "source_path": "mykernel/arch/x86_64/kernel.lds",
+      "symbol": "ENTRY(phys_startup_64)",
+      "language": "ld",
+      "claim_class": "LINKER_COMMAND",
+      "topic": "D00/B",
+      "line_start": 4,
+      "line_end": 4
+    },
+    {
+      "id": "SP100-E069",
+      "source_path": "mykernel/arch/x86_64/kernel.lds",
+      "symbol": ".text_output",
+      "language": "ld",
+      "claim_class": "LINKER_OUTPUT_SECTION",
+      "topic": "D00/B",
+      "line_start": 28,
+      "line_end": 32
+    },
+    {
+      "id": "SP100-E070",
+      "source_path": "mykernel/arch/x86_64/kernel.lds",
+      "symbol": ".text_output",
+      "language": "ld",
+      "claim_class": "LINKER_OUTPUT_SECTION",
+      "topic": "D00/B",
+      "line_start": 33,
+      "line_end": 35
+    },
+    {
+      "id": "SP100-E071",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_APboot_start",
+      "language": "asm",
+      "claim_class": "ASM_ENTRY",
+      "topic": "C",
+      "line_start": 11,
+      "line_end": 14
+    },
+    {
+      "id": "SP100-E072",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_APboot_start",
+      "language": "asm",
+      "claim_class": "ASM_ENTRY",
+      "topic": "C",
+      "line_start": 15,
+      "line_end": 18
+    },
+    {
+      "id": "SP100-E073",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_APboot_start",
+      "language": "asm",
+      "claim_class": "ASM_ENTRY",
+      "topic": "C",
+      "line_start": 22,
+      "line_end": 26
+    },
+    {
+      "id": "SP100-E074",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_APboot_start",
+      "language": "asm",
+      "claim_class": "ASM_ENTRY",
+      "topic": "C",
+      "line_start": 27,
+      "line_end": 31
+    },
+    {
+      "id": "SP100-E075",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_APboot_start",
+      "language": "asm",
+      "claim_class": "ASM_ENTRY",
+      "topic": "C",
+      "line_start": 32,
+      "line_end": 35
+    },
+    {
+      "id": "SP100-E076",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code32",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 43,
+      "line_end": 47
+    },
+    {
+      "id": "SP100-E077",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code32",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 48,
+      "line_end": 50
+    },
+    {
+      "id": "SP100-E078",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code32",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 51,
+      "line_end": 53
+    },
+    {
+      "id": "SP100-E079",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code32",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 55,
+      "line_end": 57
+    },
+    {
+      "id": "SP100-E080",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code32",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 59,
+      "line_end": 62
+    },
+    {
+      "id": "SP100-E081",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code32",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 64,
+      "line_end": 67
+    },
+    {
+      "id": "SP100-E082",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code32",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 69,
+      "line_end": 69
+    },
+    {
+      "id": "SP100-E083",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code64",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 77,
+      "line_end": 81
+    },
+    {
+      "id": "SP100-E084",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code64",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 82,
+      "line_end": 86
+    },
+    {
+      "id": "SP100-E085",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code64",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 89,
+      "line_end": 93
+    },
+    {
+      "id": "SP100-E086",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code64",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 94,
+      "line_end": 95
+    },
+    {
+      "id": "SP100-E087",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code64",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 96,
+      "line_end": 99
+    },
+    {
+      "id": "SP100-E088",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_code64",
+      "language": "asm",
+      "claim_class": "ASM_LABEL",
+      "topic": "C",
+      "line_start": 101,
+      "line_end": 104
+    },
+    {
+      "id": "SP100-E089",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "l1",
+      "language": "asm",
+      "claim_class": "ASM_LOCAL_BASIC_BLOCK",
+      "topic": "C",
+      "line_start": 105,
+      "line_end": 109
+    },
+    {
+      "id": "SP100-E090",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "AP_DEBUG",
+      "language": "asm",
+      "claim_class": "ASM_ENTRY",
+      "topic": "C",
+      "line_start": 111,
+      "line_end": 115
+    },
+    {
+      "id": "SP100-E091",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "AP_DEBUG",
+      "language": "asm",
+      "claim_class": "ASM_ENTRY",
+      "topic": "C",
+      "line_start": 114,
+      "line_end": 116
+    },
+    {
+      "id": "SP100-E092",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "AP_DEBUG",
+      "language": "asm",
+      "claim_class": "ASM_ENTRY",
+      "topic": "C",
+      "line_start": 124,
+      "line_end": 124
+    },
+    {
+      "id": "SP100-E093",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_tmp_IDTptr",
+      "language": "asm",
+      "claim_class": "ASM_DATA_LABEL",
+      "topic": "C",
+      "line_start": 131,
+      "line_end": 133
+    },
+    {
+      "id": "SP100-E094",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_tmp_GDTptr",
+      "language": "asm",
+      "claim_class": "ASM_DATA_LABEL",
+      "topic": "C",
+      "line_start": 136,
+      "line_end": 138
+    },
+    {
+      "id": "SP100-E095",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_tmp_GDT",
+      "language": "asm",
+      "claim_class": "ASM_DATA_LABEL",
+      "topic": "C",
+      "line_start": 139,
+      "line_end": 143
+    },
+    {
+      "id": "SP100-E096",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_AP_tmp_GDT",
+      "language": "asm",
+      "claim_class": "ASM_DATA_LABEL",
+      "topic": "C",
+      "line_start": 143,
+      "line_end": 145
+    },
+    {
+      "id": "SP100-E097",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "cr3_paddr",
+      "language": "asm",
+      "claim_class": "ASM_DATA_MACRO",
+      "topic": "C",
+      "line_start": 147,
+      "line_end": 147
+    },
+    {
+      "id": "SP100-E098",
+      "source_path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "symbol": "_APboot_tmp_Stack_start",
+      "language": "asm",
+      "claim_class": "ASM_DATA_LABEL",
+      "topic": "C",
+      "line_start": 149,
+      "line_end": 152
+    },
+    {
+      "id": "SP100-E099",
+      "source_path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "THREAD_SIZE_ORDER",
+      "language": "c",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 13,
+      "line_end": 13
+    },
+    {
+      "id": "SP100-E100",
+      "source_path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "THREAD_SIZE",
+      "language": "c",
+      "claim_class": "MACRO",
+      "topic": "C",
+      "line_start": 14,
+      "line_end": 14
+    },
+    {
+      "id": "SP100-E101",
+      "source_path": "mykernel/arch/x86_64/mm/init.c",
+      "symbol": "kernel_cr3",
+      "language": "c",
+      "claim_class": "GLOBAL_OBJECT",
+      "topic": "C",
+      "line_start": 102,
+      "line_end": 102
+    }
+  ],
+  "source_count": 21,
+  "source_quote_recheck": {
+    "new_evidence_headings": 101,
+    "raw_prefixes_expected_new_evidence": 101,
+    "independent_source_reopened": 101,
+    "physical_contiguous_1_to_5": 101,
+    "explicit_definition_categories": "C_STRUCT_C_MACRO_C_OBJECT_C_FUNCTION_ASM_ENTRY_LOCAL_DATA_CMAKE_UNIQUE_LINKER_UNIQUE",
+    "literal_matching": "PASS",
+    "complete_local_P9": "NOT_RUN",
+    "numerical_conditionals": "PURE_MATH_ONLY_NOT_REPOSITORY_FUNCTION_EXECUTION"
+  },
+  "matrices": {
+    "topology_to_kernel_matrix": [
+      {
+        "id": "A-T01",
+        "node": "loader_cpu",
+        "source": "MP service gets nCores and nRunning as UINTN",
+        "conditional_result": "core_num and core_available assigned independently",
+        "first_stop_gate": "EFI service results and u32 narrowing unverified",
+        "evidence_ids": [
+          "SP100-E003",
+          "SP100-E004",
+          "SP100-E011",
+          "SP100-E012"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-T02",
+        "node": "loader_cpu",
+        "source": "CPU descriptor producer loops over original nCores",
+        "conditional_result": "copies ProcessorId StatusFlag Package Core Thread into cpus array",
+        "first_stop_gate": "valid service return and each destination slot first",
+        "evidence_ids": [
+          "SP100-E005",
+          "SP100-E006",
+          "SP100-E009",
+          "SP100-E010"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-T03",
+        "node": "cpu_tag",
+        "source": "type1000 and nCores-based tag size published",
+        "conditional_result": "cursor moves after size field computed",
+        "first_stop_gate": "MBI arena capacity and 32bit size conversion unproved",
+        "evidence_ids": [
+          "SP100-E007",
+          "SP100-E008",
+          "SP100-E011",
+          "SP100-E012"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-T04",
+        "node": "efi_phase",
+        "source": "mmap then ACPI then CPU producer called in UefiMain",
+        "conditional_result": "ExitBootServices occurs within prior mmap producer",
+        "first_stop_gate": "R97-S03 EFI success/service availability unknown",
+        "evidence_ids": [
+          "SP100-E001",
+          "SP100-E002"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-T05",
+        "node": "kernel_tag",
+        "source": "parse_tag magic/alignment guards then END-terminated scan",
+        "conditional_result": "CPU_TOPO case calls get_smpinfo",
+        "first_stop_gate": "real tag extent and valid traversal first",
+        "evidence_ids": [
+          "SP100-E015",
+          "SP100-E016",
+          "SP100-E017",
+          "SP100-E018"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-T06",
+        "node": "count_write",
+        "source": "get_smpinfo copies core_num into nr_cpu_ids only",
+        "conditional_result": "no core_available or cpus map field used in this function",
+        "first_stop_gate": "not proof of global absence or online count",
+        "evidence_ids": [
+          "SP100-E013",
+          "SP100-E014",
+          "SP100-E011",
+          "SP100-E012"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "cpu_count_and_map_matrix": [
+      {
+        "id": "A-C01",
+        "node": "dense_macro",
+        "source": "for_each_cpu defines int counter 0 to nr_cpu_ids-1",
+        "conditional_result": "for_each_possible_cpu and online share same macro",
+        "first_stop_gate": "signed integer loop and body indices must be legal",
+        "evidence_ids": [
+          "SP100-E020",
+          "SP100-E021",
+          "SP100-E022"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-C02",
+        "node": "capacity",
+        "source": "__per_cpu_offset has NR_CPUS entries, initially zero",
+        "conditional_result": "NR_CPUS resolves to CONFIG_NR_CPUS via header macro",
+        "first_stop_gate": "real config and N range unverified",
+        "evidence_ids": [
+          "SP100-E024",
+          "SP100-E030",
+          "SP100-E031"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-C03",
+        "node": "flags",
+        "source": "time options_flags text requests CONFIG_NR_CPUS=256",
+        "conditional_result": "not actual build or verified runtime cpu count",
+        "first_stop_gate": "no actual preprocessing or kernel artifact",
+        "evidence_ids": [
+          "SP100-E032"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-C04",
+        "node": "percpu",
+        "source": "setup_per_cpu_areas calls first chunk setup then loops over CPUs",
+        "conditional_result": "writes per_cpu_offset this_cpu_off and cpu_number",
+        "first_stop_gate": "N must be within allocated perCPU slots",
+        "evidence_ids": [
+          "SP100-E025",
+          "SP100-E026"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-C05",
+        "node": "gs_cpu0",
+        "source": "for cpu==0 setup_per_cpu_areas loads direct GDT then writes MSR_GS_BASE",
+        "conditional_result": "does not prove AP GS/cpu state ready",
+        "first_stop_gate": "R86/R87 hardware and allocation boundaries",
+        "evidence_ids": [
+          "SP100-E027",
+          "SP100-E028"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-C06",
+        "node": "apic_map",
+        "source": "apicid_to_cpunr is u64 CONFIG_NR_CPUS array initialized -1",
+        "conditional_result": "no producer mapping from tag observed in scoped functions",
+        "first_stop_gate": "no all-repository no-writer claim",
+        "evidence_ids": [
+          "SP100-E029",
+          "SP100-E014",
+          "SP100-E089"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "bsp_call_and_stage_matrix": [
+      {
+        "id": "B-S01",
+        "node": "early_caller",
+        "source": "x86_64_start_kernel calls myos_early_init_system and start_kernel",
+        "conditional_result": "not a call to myos_early_init_smp in this definition",
+        "first_stop_gate": "other callers not exhaustively searched",
+        "evidence_ids": [
+          "SP100-E037",
+          "SP100-E038",
+          "SP100-E039"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-S02",
+        "node": "start_kernel",
+        "source": "start_kernel calls setup_arch then setup_per_cpu_areas",
+        "conditional_result": "BSP source order conditional on earlier phases",
+        "first_stop_gate": "runtime not observed",
+        "evidence_ids": [
+          "SP100-E040",
+          "SP100-E041"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-S03",
+        "node": "x2apic_bsp",
+        "source": "setup_arch invokes myos_try_enable_x2apic then check_x2apic",
+        "conditional_result": "attempt is guarded by feature and MSR state",
+        "first_stop_gate": "not measured hardware enable",
+        "evidence_ids": [
+          "SP100-E045",
+          "SP100-E046",
+          "SP100-E050",
+          "SP100-E054"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-S04",
+        "node": "interrupt",
+        "source": "start_kernel calls myos_init_percpu_intr then rest_init",
+        "conditional_result": "callee calls LVT_timer_init",
+        "first_stop_gate": "not AP interrupt initialization proof",
+        "evidence_ids": [
+          "SP100-E042",
+          "SP100-E047"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-S05",
+        "node": "late",
+        "source": "smp_prepare_cpus and smp_init in kernel_init_freeable are comments",
+        "conditional_result": "no active SMP calls at those lines",
+        "first_stop_gate": "other code may contain active call",
+        "evidence_ids": [
+          "SP100-E043",
+          "SP100-E044"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-S06",
+        "node": "unconnected",
+        "source": "two SMP functions exist in myos/smp.c",
+        "conditional_result": "no active call from reviewed start_kernel or kernel_init_freeable",
+        "first_stop_gate": "no complete BSP-to-AP reachability evidence",
+        "evidence_ids": [
+          "SP100-E033",
+          "SP100-E035",
+          "SP100-E036",
+          "SP100-E041",
+          "SP100-E044"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ap_prepare_and_launch_matrix": [
+      {
+        "id": "B-P01",
+        "node": "copy_region",
+        "source": "myos_early_init_smp computes AP trampoline source length",
+        "conditional_result": "requests memcpy from linked _APboot_text to phys_to_virt of low address",
+        "first_stop_gate": "real linked symbol, source, destination object gates",
+        "evidence_ids": [
+          "SP100-E033",
+          "SP100-E034",
+          "SP100-E035"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-P02",
+        "node": "copy_target",
+        "source": "linker script names _APboot_phys_start=0xE000",
+        "conditional_result": "not allocation nor proof of AP start vector",
+        "first_stop_gate": "external mapping/link outcome absent",
+        "evidence_ids": [
+          "SP100-E035",
+          "SP100-E067"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-P03",
+        "node": "cr3",
+        "source": "myos_early_init_smp assigns kernel_cr3 to cr3_paddr",
+        "conditional_result": "kernel_cr3 is global defined with initial zero",
+        "first_stop_gate": "actual runtime update and copied physical image identity unknown",
+        "evidence_ids": [
+          "SP100-E035",
+          "SP100-E097",
+          "SP100-E101"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-P04",
+        "node": "launch",
+        "source": "myos_startup_smp issues two wrmsrl calls with literal constants",
+        "conditional_result": "INIT/SIPI comments are not hardware delivery proof",
+        "first_stop_gate": "wrapper returns, AP response and MSR semantics unverified",
+        "evidence_ids": [
+          "SP100-E036"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-P05",
+        "node": "gap",
+        "source": "scoped BSP start chain active calls distinct from two SMP functions",
+        "conditional_result": "call join between memcpy and launch not verified",
+        "first_stop_gate": "may be other callers outside scoped definitions",
+        "evidence_ids": [
+          "SP100-E039",
+          "SP100-E041",
+          "SP100-E042",
+          "SP100-E033",
+          "SP100-E036"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-P06",
+        "node": "link_gap",
+        "source": "ASM input section .AP_boot.text and .text* linker wildcard are different names",
+        "conditional_result": "real _APboot_text/_APboot_etext linker definition not anchored",
+        "first_stop_gate": "orphan placement and link map unknown",
+        "evidence_ids": [
+          "SP100-E069",
+          "SP100-E070",
+          "SP100-E071"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-P07",
+        "node": "cr3_data",
+        "source": "ASM SYM_DATA(cr3_paddr,.long 0) exists",
+        "conditional_result": "identity with copied trampoline and C write unproven",
+        "first_stop_gate": "link/object/layout/actual write required",
+        "evidence_ids": [
+          "SP100-E035",
+          "SP100-E097"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "source_selection_and_link_boundary_matrix": [
+      {
+        "id": "B-L01",
+        "node": "glob",
+        "source": "kernel CMake GLOB_RECURSE for *.c and *.S",
+        "conditional_result": "AP sources eligible by suffix as textual candidates",
+        "first_stop_gate": "actual evaluated glob and filters unrun",
+        "evidence_ids": [
+          "SP100-E061",
+          "SP100-E062"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-L02",
+        "node": "target",
+        "source": "target_sources uses C and ASM source variables",
+        "conditional_result": "declaration is not compiled machine code",
+        "first_stop_gate": "objects/linked ELF unknown",
+        "evidence_ids": [
+          "SP100-E065"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-L03",
+        "node": "link",
+        "source": "target_link_options references kernel.lds, ENTRY is phys_startup_64",
+        "conditional_result": "AP labels not certified actual entry symbols",
+        "first_stop_gate": "no linker output",
+        "evidence_ids": [
+          "SP100-E066",
+          "SP100-E068"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-L04",
+        "node": "section",
+        "source": "_APboot_phys_start appears in linker assignment",
+        "conditional_result": "does not define physical storage of .AP_boot.text",
+        "first_stop_gate": "source and end linking not proven",
+        "evidence_ids": [
+          "SP100-E067",
+          "SP100-E069",
+          "SP100-E070"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-L05",
+        "node": "selection",
+        "source": "CMake removes KBUILD_FILES from source lists",
+        "conditional_result": "selected files cannot be inferred from patterns alone",
+        "first_stop_gate": "real generator and arch state unknown",
+        "evidence_ids": [
+          "SP100-E063",
+          "SP100-E064"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-L06",
+        "node": "config",
+        "source": "CONFIG_NR_CPUS=256 flag request text",
+        "conditional_result": "not actual CPU topology count or ABI proof",
+        "first_stop_gate": "build was not run",
+        "evidence_ids": [
+          "SP100-E032"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ap_stage_and_address_matrix": [
+      {
+        "id": "C-S01",
+        "node": "code16",
+        "source": "_APboot_start contains cli, wbinvd and temp stack setup",
+        "conditional_result": "source instructions only",
+        "first_stop_gate": "actual AP vector and copied executable bytes unknown",
+        "evidence_ids": [
+          "SP100-E071",
+          "SP100-E072"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-S02",
+        "node": "code16_desc",
+        "source": "16bit block loads tmp GDT and IDT and requests far transition",
+        "conditional_result": "source ordering cannot prove CPU mode",
+        "first_stop_gate": "low physical descriptor address and hardware unknown",
+        "evidence_ids": [
+          "SP100-E073",
+          "SP100-E074",
+          "SP100-E075",
+          "SP100-E093",
+          "SP100-E094"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-S03",
+        "node": "code32",
+        "source": "_AP_code32 sets selectors, CR4, then reads cr3_paddr",
+        "conditional_result": "code32 presence not actual execution",
+        "first_stop_gate": "pointer and physical data object unknown",
+        "evidence_ids": [
+          "SP100-E076",
+          "SP100-E077",
+          "SP100-E078",
+          "SP100-E079"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-S04",
+        "node": "code32_mode",
+        "source": "32bit block writes MSR and CR0 bits then jumps code64",
+        "conditional_result": "instruction text not successful long mode state",
+        "first_stop_gate": "no external vendor manual applied",
+        "evidence_ids": [
+          "SP100-E080",
+          "SP100-E081",
+          "SP100-E082"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-S05",
+        "node": "code64_cr3",
+        "source": "64bit block sets segment regs and uses kernel_cr3 in CR3 request",
+        "conditional_result": "read of symbol not verified actual CR3 content",
+        "first_stop_gate": "actual linked value/mapping unknown",
+        "evidence_ids": [
+          "SP100-E083",
+          "SP100-E084",
+          "SP100-E101"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-S06",
+        "node": "code64_id",
+        "source": "64bit block has MSR requests then stores rax in r8",
+        "conditional_result": "cannot assume real AP ID response",
+        "first_stop_gate": "CPU features and read result unproved",
+        "evidence_ids": [
+          "SP100-E085",
+          "SP100-E086",
+          "SP100-E088"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-S07",
+        "node": "code64_gs",
+        "source": "source requests CR4 bit16",
+        "conditional_result": "not initialization of AP GSBASE in this snippet",
+        "first_stop_gate": "hardware flag/GS state unknown",
+        "evidence_ids": [
+          "SP100-E087"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-S08",
+        "node": "lookup",
+        "source": "sets array base and zeroes rbx then enters l1",
+        "conditional_result": "actual table backing and value unverified",
+        "first_stop_gate": "bounds checked only in model",
+        "evidence_ids": [
+          "SP100-E088",
+          "SP100-E089"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ap_lookup_stack_and_exit_matrix": [
+      {
+        "id": "C-X01",
+        "node": "lookup_index",
+        "source": "l1 increments rbx before indexed read",
+        "conditional_result": "first attempted array read index1, not zero",
+        "first_stop_gate": "valid target array and index bound first",
+        "evidence_ids": [
+          "SP100-E088",
+          "SP100-E089"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-X02",
+        "node": "lookup_unbounded",
+        "source": "cmp and jne loop contains no length check",
+        "conditional_result": "if no match, normal proof stops at first invalid read",
+        "first_stop_gate": "not an observed hang or trap",
+        "evidence_ids": [
+          "SP100-E089",
+          "SP100-E029"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-X03",
+        "node": "map_population",
+        "source": "array initially holds u64 -1 sentinel",
+        "conditional_result": "producer only transfers core_num not CPU APIC mapping",
+        "first_stop_gate": "other writers not exhaustively excluded",
+        "evidence_ids": [
+          "SP100-E029",
+          "SP100-E014",
+          "SP100-E089"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-X04",
+        "node": "BSP_comment",
+        "source": "comment assumes BSP ID0",
+        "conditional_result": "actual first index1 unconditional and BSP identity unverified",
+        "first_stop_gate": "not real CPU ID assurance",
+        "evidence_ids": [
+          "SP100-E089"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-X05",
+        "node": "stack",
+        "source": "AP_DEBUG reads indexed table entry again and adds THREAD_SIZE",
+        "conditional_result": "idle_tasks load is commented, value not a verified PCB",
+        "first_stop_gate": "source/stack valid backing required",
+        "evidence_ids": [
+          "SP100-E090",
+          "SP100-E091",
+          "SP100-E099",
+          "SP100-E100"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-X06",
+        "node": "thread_size",
+        "source": "THREAD_SIZE_ORDER=3, THREAD_SIZE shifts PAGE_SIZE",
+        "conditional_result": "if PAGE_SIZE4096 then 32768 mathematical bytes",
+        "first_stop_gate": "real preprocessed width/type not proven",
+        "evidence_ids": [
+          "SP100-E099",
+          "SP100-E100"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-X07",
+        "node": "exit",
+        "source": "AP_DEBUG has active jmp dot, alternative idle transfer commented",
+        "conditional_result": "no source code handoff to idle scheduler in scoped block",
+        "first_stop_gate": "hardware reaching it not proven",
+        "evidence_ids": [
+          "SP100-E091",
+          "SP100-E092"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-X08",
+        "node": "data",
+        "source": "temp GDT/IDT labels and cr3_paddr zero and temp stack label exist",
+        "conditional_result": "layout in copied low memory not certified",
+        "first_stop_gate": "real link/relocation unknown",
+        "evidence_ids": [
+          "SP100-E093",
+          "SP100-E094",
+          "SP100-E095",
+          "SP100-E096",
+          "SP100-E097",
+          "SP100-E098"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "node": "topo_join",
+        "source": "core_num transfer does not populate APIC map",
+        "conditional_result": "firmware record and AP lookup disconnected in scoped sources",
+        "first_stop_gate": "BT97 and PC86 unproven",
+        "evidence_ids": [
+          "SP100-E004",
+          "SP100-E005",
+          "SP100-E010",
+          "SP100-E012",
+          "SP100-E014",
+          "SP100-E029"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-02",
+        "node": "percpu_join",
+        "source": "nr_cpu_ids drives dense initialization",
+        "conditional_result": "CPU identities/count, offset array size and GS are distinct",
+        "first_stop_gate": "PC86/PA87 scope still applies",
+        "evidence_ids": [
+          "SP100-E014",
+          "SP100-E020",
+          "SP100-E021",
+          "SP100-E024",
+          "SP100-E026",
+          "SP100-E028"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-03",
+        "node": "bsp_join",
+        "source": "BSP calls setup_arch/setup_percpu/intr",
+        "conditional_result": "AP copy/startup functions defined but not called in selected startup chain",
+        "first_stop_gate": "no complete AP online proof",
+        "evidence_ids": [
+          "SP100-E038",
+          "SP100-E039",
+          "SP100-E041",
+          "SP100-E042",
+          "SP100-E033",
+          "SP100-E036"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-04",
+        "node": "ap_join",
+        "source": "AP code references cr3_paddr/kernel_cr3/map symbols",
+        "conditional_result": "source/copy/link/mapping not joined",
+        "first_stop_gate": "actual AP memory unproven",
+        "evidence_ids": [
+          "SP100-E034",
+          "SP100-E035",
+          "SP100-E067",
+          "SP100-E079",
+          "SP100-E084",
+          "SP100-E088"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC-05",
+        "node": "online_join",
+        "source": "AP lookup stack arithmetic and jmp dot are visible",
+        "conditional_result": "no online acknowledgement in scoped AP block",
+        "first_stop_gate": "no runtime online proof",
+        "evidence_ids": [
+          "SP100-E089",
+          "SP100-E090",
+          "SP100-E091",
+          "SP100-E092"
+        ],
+        "classification": "FIXED_TIME_STATIC_OR_CONDITIONAL_MODEL",
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 8,
+  "matrix_rows": 52,
+  "matrix_rows_by_group": {
+    "topology_to_kernel_matrix": 6,
+    "cpu_count_and_map_matrix": 6,
+    "bsp_call_and_stage_matrix": 6,
+    "ap_prepare_and_launch_matrix": 7,
+    "source_selection_and_link_boundary_matrix": 6,
+    "ap_stage_and_address_matrix": 8,
+    "ap_lookup_stack_and_exit_matrix": 8,
+    "ABC_join_matrix": 5
+  },
+  "fact_to_evidence_id_index": {
+    "topology_to_kernel_matrix": [
+      "SP100-E003",
+      "SP100-E004",
+      "SP100-E011",
+      "SP100-E012",
+      "SP100-E005",
+      "SP100-E006",
+      "SP100-E009",
+      "SP100-E010",
+      "SP100-E007",
+      "SP100-E008",
+      "SP100-E001",
+      "SP100-E002",
+      "SP100-E015",
+      "SP100-E016",
+      "SP100-E017",
+      "SP100-E018",
+      "SP100-E013",
+      "SP100-E014"
+    ],
+    "cpu_count_and_map_matrix": [
+      "SP100-E020",
+      "SP100-E021",
+      "SP100-E022",
+      "SP100-E024",
+      "SP100-E030",
+      "SP100-E031",
+      "SP100-E032",
+      "SP100-E025",
+      "SP100-E026",
+      "SP100-E027",
+      "SP100-E028",
+      "SP100-E029",
+      "SP100-E014",
+      "SP100-E089"
+    ],
+    "bsp_call_and_stage_matrix": [
+      "SP100-E037",
+      "SP100-E038",
+      "SP100-E039",
+      "SP100-E040",
+      "SP100-E041",
+      "SP100-E045",
+      "SP100-E046",
+      "SP100-E050",
+      "SP100-E054",
+      "SP100-E042",
+      "SP100-E047",
+      "SP100-E043",
+      "SP100-E044",
+      "SP100-E033",
+      "SP100-E035",
+      "SP100-E036"
+    ],
+    "ap_prepare_and_launch_matrix": [
+      "SP100-E033",
+      "SP100-E034",
+      "SP100-E035",
+      "SP100-E067",
+      "SP100-E097",
+      "SP100-E101",
+      "SP100-E036",
+      "SP100-E039",
+      "SP100-E041",
+      "SP100-E042",
+      "SP100-E069",
+      "SP100-E070",
+      "SP100-E071"
+    ],
+    "source_selection_and_link_boundary_matrix": [
+      "SP100-E061",
+      "SP100-E062",
+      "SP100-E065",
+      "SP100-E066",
+      "SP100-E068",
+      "SP100-E067",
+      "SP100-E069",
+      "SP100-E070",
+      "SP100-E063",
+      "SP100-E064",
+      "SP100-E032"
+    ],
+    "ap_stage_and_address_matrix": [
+      "SP100-E071",
+      "SP100-E072",
+      "SP100-E073",
+      "SP100-E074",
+      "SP100-E075",
+      "SP100-E093",
+      "SP100-E094",
+      "SP100-E076",
+      "SP100-E077",
+      "SP100-E078",
+      "SP100-E079",
+      "SP100-E080",
+      "SP100-E081",
+      "SP100-E082",
+      "SP100-E083",
+      "SP100-E084",
+      "SP100-E101",
+      "SP100-E085",
+      "SP100-E086",
+      "SP100-E088",
+      "SP100-E087",
+      "SP100-E089"
+    ],
+    "ap_lookup_stack_and_exit_matrix": [
+      "SP100-E088",
+      "SP100-E089",
+      "SP100-E029",
+      "SP100-E014",
+      "SP100-E090",
+      "SP100-E091",
+      "SP100-E099",
+      "SP100-E100",
+      "SP100-E092",
+      "SP100-E093",
+      "SP100-E094",
+      "SP100-E095",
+      "SP100-E096",
+      "SP100-E097",
+      "SP100-E098"
+    ],
+    "ABC_join_matrix": [
+      "SP100-E004",
+      "SP100-E005",
+      "SP100-E010",
+      "SP100-E012",
+      "SP100-E014",
+      "SP100-E029",
+      "SP100-E020",
+      "SP100-E021",
+      "SP100-E024",
+      "SP100-E026",
+      "SP100-E028",
+      "SP100-E038",
+      "SP100-E039",
+      "SP100-E041",
+      "SP100-E042",
+      "SP100-E033",
+      "SP100-E036",
+      "SP100-E034",
+      "SP100-E035",
+      "SP100-E067",
+      "SP100-E079",
+      "SP100-E084",
+      "SP100-E088",
+      "SP100-E089",
+      "SP100-E090",
+      "SP100-E091",
+      "SP100-E092"
+    ]
+  },
+  "finite_models": [
+    {
+      "id": "SP100-M01",
+      "topic": "A",
+      "conditions": "valid CPU tag core_num=0 and accessible parser state",
+      "conditional_computation": "nr_cpu_ids=0; dense possible-cpu loop has zero body iterations",
+      "interpretation": "No hardware CPU count or valid application boot certified",
+      "evidence_ids": [
+        "SP100-E013",
+        "SP100-E014",
+        "SP100-E020",
+        "SP100-E021"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M02",
+      "topic": "A",
+      "conditions": "tag core_num=1, valid perCPU objects, int32 index",
+      "conditional_computation": "dense loop visits index0 once",
+      "interpretation": "Does not establish BSP ID0 or APIC table entry",
+      "evidence_ids": [
+        "SP100-E014",
+        "SP100-E020",
+        "SP100-E021",
+        "SP100-E024"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M03",
+      "topic": "A",
+      "conditions": "N=256, NR_CPUS=256 and valid backing array",
+      "conditional_computation": "indices0..255 are within nominal fixed perCPU array",
+      "interpretation": "PerCPU allocation and body return remain prerequisites",
+      "evidence_ids": [
+        "SP100-E020",
+        "SP100-E024",
+        "SP100-E026",
+        "SP100-E030",
+        "SP100-E031",
+        "SP100-E032"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M04",
+      "topic": "A",
+      "conditions": "N=257, NR_CPUS=256, earlier iterations succeed",
+      "conditional_computation": "index256 is outside valid 0..255 array element range",
+      "interpretation": "Stop at first actual member/store; legal formation of one-past pointer alone not fault",
+      "evidence_ids": [
+        "SP100-E020",
+        "SP100-E024",
+        "SP100-E026",
+        "SP100-E030",
+        "SP100-E031"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M05",
+      "topic": "A",
+      "conditions": "nCores=2^32, UINTN64, member count u32 and legal source preconditions hypothetical",
+      "conditional_computation": "core_num narrows to zero but original producer loop still requests 2^32 entries",
+      "interpretation": "Source/destination 32-page arena and count overflow stop before final tag is published",
+      "evidence_ids": [
+        "SP100-E004",
+        "SP100-E005",
+        "SP100-E007",
+        "SP100-E011",
+        "SP100-E012"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M06",
+      "topic": "A",
+      "conditions": "core_num=2 and core_available=1, readable valid CPU tag",
+      "conditional_computation": "get_smpinfo makes nr_cpu_ids=2, not 1",
+      "interpretation": "No proof of second CPU online",
+      "evidence_ids": [
+        "SP100-E011",
+        "SP100-E012",
+        "SP100-E014"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M07",
+      "topic": "A",
+      "conditions": "CONFIG_NR_CPUS fallback macro chosen as1, runtime N=2",
+      "conditional_computation": "fixed offsets array capacity=1, first invalid target index1",
+      "interpretation": "Actual build selects fallback unknown; body validity independently gated",
+      "evidence_ids": [
+        "SP100-E020",
+        "SP100-E024",
+        "SP100-E030",
+        "SP100-E031"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M08",
+      "topic": "B",
+      "conditions": "AP source _APboot_text==_APboot_etext and addresses from same valid object",
+      "conditional_computation": "nominal source length zero",
+      "interpretation": "Zero-length expression not proof of copied executable or AP started",
+      "evidence_ids": [
+        "SP100-E033",
+        "SP100-E034",
+        "SP100-E035"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M09",
+      "topic": "B",
+      "conditions": "AP _APboot_etext < _APboot_text in unrelated or invalid C object",
+      "conditional_computation": "pointer subtraction lacks justified source object/domain",
+      "interpretation": "Stop before interpreting size_t as huge successful copy",
+      "evidence_ids": [
+        "SP100-E033",
+        "SP100-E034",
+        "SP100-E035"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M10",
+      "topic": "B",
+      "conditions": "_APboot_phys_start linker assignment numerically 0xE000",
+      "conditional_computation": "source C requests copy to phys_to_virt(0xE000)",
+      "interpretation": "No physical range allocation or copy effect established",
+      "evidence_ids": [
+        "SP100-E034",
+        "SP100-E035",
+        "SP100-E067"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M11",
+      "topic": "B",
+      "conditions": "kernel_cr3 hypothetical 0x100000123 and u32 cr3_paddr",
+      "conditional_computation": "conversion to32bit gives 0x123 if conversion reaches defined assignment",
+      "interpretation": "Does not prove actual table root or C/asm low memory storage is same",
+      "evidence_ids": [
+        "SP100-E035",
+        "SP100-E097",
+        "SP100-E101"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M12",
+      "topic": "B",
+      "conditions": "two wrmsrl calls syntactically present and called function reaches both",
+      "conditional_computation": "requests made in fixed source order",
+      "interpretation": "No external MSR meaning, return, IPI delivery or AP acknowledgement certified",
+      "evidence_ids": [
+        "SP100-E036"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M13",
+      "topic": "C",
+      "conditions": "AP compare input r8 equals table slot0 only, rest1..255 differ, all reads valid until last",
+      "conditional_computation": "loop starts with index1; misses slot0; first invalid access at slot256",
+      "interpretation": "No claim of hardware hang/trap after first invalid array dereference",
+      "evidence_ids": [
+        "SP100-E029",
+        "SP100-E088",
+        "SP100-E089"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M14",
+      "topic": "C",
+      "conditions": "all 256 table slots keep initializer -1, input r8 differs from -1 and has valid source value",
+      "conditional_computation": "no match at valid indices1..255; index256 attempted next",
+      "interpretation": "No actual writer survey or real APIC ID; stop on invalid memory read",
+      "evidence_ids": [
+        "SP100-E029",
+        "SP100-E088",
+        "SP100-E089"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M15",
+      "topic": "C",
+      "conditions": "slot1 equals r8 with valid array and previous instructions completed",
+      "conditional_computation": "l1 can exit on index1, AP_DEBUG reads same slot1 value then adds THREAD_SIZE",
+      "interpretation": "This is not an idle PCB pointer or a justified kstack",
+      "evidence_ids": [
+        "SP100-E089",
+        "SP100-E090",
+        "SP100-E091"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M16",
+      "topic": "C",
+      "conditions": "THREAD_SIZE_ORDER3 and PAGE_SIZE4096 as explicit arithmetic input",
+      "conditional_computation": "THREAD_SIZE=4096<<3=32768",
+      "interpretation": "Actual preprocess and valid stack object not proven",
+      "evidence_ids": [
+        "SP100-E099",
+        "SP100-E100"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M17",
+      "topic": "C",
+      "conditions": "valid lookup index1 and table value V; THREAD_SIZE=32768 and machine integer width64",
+      "conditional_computation": "source AP_DEBUG forms stack candidate V+32768 modulo2^64 then writes rsp",
+      "interpretation": "No proof V is task pointer, mapped stack or correct top-of-stack",
+      "evidence_ids": [
+        "SP100-E090",
+        "SP100-E091",
+        "SP100-E099",
+        "SP100-E100"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    },
+    {
+      "id": "SP100-M18",
+      "topic": "C",
+      "conditions": "source reaches AP_DEBUG jmp dot with prior memory/register operations legal",
+      "conditional_computation": "looping control instruction itself does not call idle or publish CPU online",
+      "interpretation": "No real CPU arrival or scheduler entry evidence",
+      "evidence_ids": [
+        "SP100-E091",
+        "SP100-E092"
+      ],
+      "first_unproven_gate": "Actual valid source/tag/array/mapping, linker, feature, ABI and no prior failure must be established before later model steps",
+      "execution": "PURE_TEXT_AND_FINITE_MATH_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 18,
+  "graph_alignment": {
+    "file": "smp-boot-paths.dot",
+    "nodes": 84,
+    "edges": 94,
+    "unresolved_edges": 0,
+    "all_matrix_row_nodes_present": true,
+    "source_call_vs_unproven_join_separate": true,
+    "full_CFG": false,
+    "graphviz": "NOT_RUN"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "G00": {
+    "status": "PASS_READ_ONLY",
+    "refs": {
+      "lead": "928c77c6bbb4",
+      "exec": "3df2ee58f100",
+      "master": "e8e60cd19540",
+      "time": "a039d9803ade"
+    },
+    "pr16": "OPEN_READY_UNMERGED",
+    "pr17": "OPEN_DRAFT_UNMERGED",
+    "open_prs": [
+      16,
+      17
+    ],
+    "batch100_target": "ABSENT",
+    "formal100_marker_count": 0,
+    "author99_marker_id": 6967898004,
+    "canaries": "time_and_master_distinct_exact_literal",
+    "write_before_gate": 0,
+    "first_combined_READ_error": "temporary_remote_disconnect; subsequent split read succeeded; no write request or retry"
+  },
+  "historical_qualified_ids": [
+    "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F07",
+    "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F08",
+    "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U01",
+    "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-F07",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U04",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U05",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U07",
+    "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-U08",
+    "CORE-USER-PERCPU-ALLOCATION-87::PA87-F05",
+    "CORE-USER-PERCPU-ALLOCATION-87::PA87-U03"
+  ],
+  "read_account": {
+    "new_this_batch": [
+      "142_contract_full",
+      "99_review_R99_S01_S02_S03_full",
+      "100_checkpoint_full",
+      "110_124_full",
+      "63_79_protocol_v2_P1_to_P13_full",
+      "97_review_full",
+      "86_review_86_DOC_CLOSURE_87_review_full",
+      "97_86_87_MANIFEST_deferred_fixed_full",
+      "99_two_author_mainline_comments_full",
+      "time_source_files_with_101_short_anchors_exact",
+      "time_options_flags_cmake_full_and_master_time_canaries"
+    ],
+    "same_EXEC14_prior_read_reused": [
+      "99_six_files_own_full_read_and_blob_identity_6_6",
+      "nine_prior_MyOS2_constraints_with_matching_Git_blob_except_new_full_63_79_protocol",
+      "prior_Mnemosyne_task_local_scope",
+      "85_and_98_formal_review_reuse_if_same_original_objects"
+    ],
+    "targeted_history_not_full_source": [
+      "97_86_87_facts_evidence_only_referenced_specific_models",
+      "no_whole_86_87_97_reanalysis"
+    ],
+    "not_read_or_not_done": [
+      "vendor_x86_manual_msr_revision_not_read",
+      "outside_scoped_callers_and_global_writers_not_exhaustively_read",
+      "all_ELF_and_linked_symbols_or_binary_not_inspected",
+      "hardware_online_cpu_state_not_observed",
+      "complete_local_P9_NOT_RUN"
+    ]
+  },
+  "source_ledger": [
+    {
+      "path": "myloader/uefi/bootloader.c",
+      "ids": [
+        "SP100-E001",
+        "SP100-E002",
+        "SP100-E003",
+        "SP100-E004",
+        "SP100-E005",
+        "SP100-E006",
+        "SP100-E007",
+        "SP100-E056",
+        "SP100-E057",
+        "SP100-E058"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "myloader/uefi/multiboot2.h",
+      "ids": [
+        "SP100-E008",
+        "SP100-E009",
+        "SP100-E010",
+        "SP100-E011",
+        "SP100-E012"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "ids": [
+        "SP100-E013",
+        "SP100-E014",
+        "SP100-E015",
+        "SP100-E016",
+        "SP100-E017",
+        "SP100-E018",
+        "SP100-E019"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/cpumask.h",
+      "ids": [
+        "SP100-E020",
+        "SP100-E021",
+        "SP100-E022",
+        "SP100-E023"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "ids": [
+        "SP100-E024",
+        "SP100-E025",
+        "SP100-E026",
+        "SP100-E027",
+        "SP100-E028"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/apic/apic.c",
+      "ids": [
+        "SP100-E029",
+        "SP100-E048",
+        "SP100-E049",
+        "SP100-E050",
+        "SP100-E051",
+        "SP100-E052",
+        "SP100-E053",
+        "SP100-E054",
+        "SP100-E055"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/threads.h",
+      "ids": [
+        "SP100-E030",
+        "SP100-E031"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ids": [
+        "SP100-E032"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/smp.c",
+      "ids": [
+        "SP100-E033",
+        "SP100-E034",
+        "SP100-E035",
+        "SP100-E036"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/head64.c",
+      "ids": [
+        "SP100-E037",
+        "SP100-E038",
+        "SP100-E039"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/init/main.c",
+      "ids": [
+        "SP100-E040",
+        "SP100-E041",
+        "SP100-E042",
+        "SP100-E043",
+        "SP100-E044"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "ids": [
+        "SP100-E045",
+        "SP100-E046"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "ids": [
+        "SP100-E047"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "myloader/uefi/utils.c",
+      "ids": [
+        "SP100-E059"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "myloader/uefi/ElfLib/ElfLib.c",
+      "ids": [
+        "SP100-E060"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/CMakeLists.txt",
+      "ids": [
+        "SP100-E061",
+        "SP100-E062",
+        "SP100-E063",
+        "SP100-E064"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/scripts/target_kernel.cmake",
+      "ids": [
+        "SP100-E065",
+        "SP100-E066"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "ids": [
+        "SP100-E067",
+        "SP100-E068",
+        "SP100-E069",
+        "SP100-E070"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/myos_APboot.S",
+      "ids": [
+        "SP100-E071",
+        "SP100-E072",
+        "SP100-E073",
+        "SP100-E074",
+        "SP100-E075",
+        "SP100-E076",
+        "SP100-E077",
+        "SP100-E078",
+        "SP100-E079",
+        "SP100-E080",
+        "SP100-E081",
+        "SP100-E082",
+        "SP100-E083",
+        "SP100-E084",
+        "SP100-E085",
+        "SP100-E086",
+        "SP100-E087",
+        "SP100-E088",
+        "SP100-E089",
+        "SP100-E090",
+        "SP100-E091",
+        "SP100-E092",
+        "SP100-E093",
+        "SP100-E094",
+        "SP100-E095",
+        "SP100-E096",
+        "SP100-E097",
+        "SP100-E098"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ids": [
+        "SP100-E099",
+        "SP100-E100"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/init.c",
+      "ids": [
+        "SP100-E101"
+      ],
+      "read_channel": "connector",
+      "fixed_ref": "time@a039d9803ade"
+    }
+  ],
+  "actual_total_distinct_quote_sources": 21,
+  "run_status": {
+    "repository_executables": "NOT_RUN",
+    "preprocess_compile_link": "NOT_RUN",
+    "CMake": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "msr_and_AP_IPI": "NOT_RUN"
+  },
+  "deferred_alignment": {
+    "file": "deferred-findings.yaml",
+    "new_conditional_candidates": 6,
+    "new_gaps": 9,
+    "prior_identifiers_reused_no_recount": true,
+    "missing_evidence_ids": 0
+  },
+  "MANIFEST_counters_prepublication": {
+    "all_new_quote_labels": 101,
+    "all_source_quotes_reopened": 101,
+    "downgraded": 0,
+    "no_extra_verification_labels_in_facts": true
+  },
+  "mainline_review_ceiling": "PASS_PENDING_LOCAL_NOT_SELF_SIGNED"
+}

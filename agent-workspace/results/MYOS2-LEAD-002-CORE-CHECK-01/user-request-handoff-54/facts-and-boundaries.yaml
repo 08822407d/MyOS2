@@ -1,0 +1,391 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-REQUEST-HANDOFF-54",
+  "source_pin_short12": "a039d9803ade",
+  "producer": "unknown",
+  "status": {
+    "H00": "completed_with_literal_location_discrepancy_disclosed",
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope",
+    "mainline_acceptance": "PENDING",
+    "runtime_evidence": "NOT_RUN"
+  },
+  "prior_batch53_correction": {
+    "status_R52_01": "CLOSED_DOCUMENTATION_ONLY_BY_C04",
+    "status_R53_01": "OPEN_RETURN",
+    "request_R53_01": "R53-01_DOCUMENTATION_CLOSURE_REQUESTED",
+    "old53_verdict": "RETURN",
+    "old53_files_modified": false,
+    "unrelated_old53_anchors_rechecked": 0,
+    "source_check": {
+      "CO53-A03": {
+        "old": "109-112",
+        "actual_original": "exact and continuous",
+        "replacement": "RH54-R5301 109-113, real blank after kzalloc at 113",
+        "consumer": "A.heap_origin"
+      },
+      "CO53-B03": {
+        "old": "242-245",
+        "actual_original": "exact and continuous",
+        "replacement": "RH54-R5302 242-246, real blank after kmalloc at 246",
+        "consumer": "B.origin"
+      },
+      "CO53-C03": {
+        "old": "17-21 contains comments outside struct",
+        "replacement": "RH54-R5303 19-22 only actual struct",
+        "consumer": "C.count_distinction"
+      }
+    }
+  },
+  "source_ledger": [
+    {
+      "k": "core",
+      "path": "mykernel/drivers/base/core.c",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "8c270d2f2e7e",
+      "line_count": 260,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "dev",
+      "path": "mykernel/drivers/base/devtmpfs.c",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "633678e473c0",
+      "line_count": 446,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "ide",
+      "path": "mykernel/arch/x86_64/myos/ide.c",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "39c36c8cc4f9",
+      "line_count": 392,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "nv",
+      "path": "mykernel/arch/x86_64/myos/MineOS_NVMe.c",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "6602a0c42fcf",
+      "line_count": 643,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "xh",
+      "path": "mykernel/arch/x86_64/myos/myos_XHCI.c",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "35ffad69b710",
+      "line_count": 702,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "blk",
+      "path": "mykernel/arch/x86_64/myos/myos_block.h",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "bc99d3b01204",
+      "line_count": 18,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "device",
+      "path": "mykernel/include/linux/device/device.h",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "1c1db1f727e9",
+      "line_count": 995,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "kdev",
+      "path": "mykernel/include/linux/kernel/kdev_t.h",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "bf05dd06471e",
+      "line_count": 83,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "err",
+      "path": "mykernel/include/linux/kernel/err.h",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "7cef4a3857f9",
+      "line_count": 72,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "list",
+      "path": "mykernel/lib/list/double_list.h",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "6e3e1aa8e724",
+      "line_count": 695,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "eno",
+      "path": "mykernel/include/uapi/asm-generic/errno-base.h",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "8705e60aee51",
+      "line_count": 43,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "comp",
+      "path": "mykernel/kactive/completion/completion.c",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "422ed6eee18b",
+      "line_count": 55,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "ctype",
+      "path": "mykernel/kactive/completion/completion_types.h",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "9512b9489959",
+      "line_count": 24,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "kth",
+      "path": "mykernel/sched/forkexec/kthread.c",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "4782afc6b3f2",
+      "line_count": 363,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "opts",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "6019436417ad",
+      "line_count": 85,
+      "read_scope": "complete_blob_this_round"
+    },
+    {
+      "k": "panic",
+      "path": "mykernel/debug/panic.c",
+      "ref": "time@a039d9803ade",
+      "blob_short12": "2e9d5b195559",
+      "line_count": 214,
+      "read_scope": "complete_blob_this_round"
+    }
+  ],
+  "supplemental_fixed_source_reads": [
+    "mykernel/drivers/char/tty_io.c:tty_init 156-176",
+    "mykernel/drivers/char/mem.c:chr_dev_init 178-207",
+    "mykernel/mm/kmalloc/slub.h:kzalloc/kfree small definitions"
+  ],
+  "evidence_count": 73,
+  "anchors_by_topic": {
+    "R53": 3,
+    "A": 19,
+    "B": 22,
+    "C": 29
+  },
+  "topic_A": {
+    "entry": "device_add / device_del / myos_device_create",
+    "facts": [
+      "device_add initial error=-EINVAL; ignored devtmpfs_create_node return",
+      "myos_device_create zeroed dev.parent not set; earlier &parent->kobj invalid in ordinary null model",
+      "device_del's node deletion call commented",
+      "direct caller tty_init/chr_dev_init results discarded"
+    ],
+    "limits": [
+      "valid pointers and defined evaluation before MAJOR",
+      "no whole-tree device_del caller absence claim"
+    ]
+  },
+  "topic_B": {
+    "entry": "IDE",
+    "facts": [
+      "queue count, transfer count, completion done distinct",
+      "active pointer set under req_lock, IRQ read outside lock",
+      "IDE_CMD_OUT returned 1 ignored",
+      "handler ERROR logs do not propagate",
+      "read/write decrement count, other handler doesn't",
+      "end_request complete then clear pointer",
+      "valid cmd normal wait returns -ENOERR=0"
+    ],
+    "limits": [
+      "hardware IRQ/lock correctness",
+      "eventual next task scheduling",
+      "all stale pointer users"
+    ]
+  },
+  "topic_C": {
+    "comparison": [
+      {
+        "driver": "IDE",
+        "entry": "ATA_disk_transfer",
+        "input_gate": "READ/WRITE/INFO only",
+        "active": "req_in_using set under req_lock after tail remove; IRQ reads without that lock",
+        "count": "IDEreq_lhdr.count = waiting nodes; node.count decremented by read/write, not other",
+        "finish": "IRQ calls end_request only when node.count==0",
+        "error": "DISK_STATUS_ERROR only logs; no caller err change",
+        "return": "normal wait -> -ENOERR=0, invalid cmd -> -EINVAL",
+        "free": "caller after wait frees Params/node",
+        "not_proven": "actual IRQ and last reader"
+      },
+      {
+        "driver": "NVMe",
+        "entry": "NVMe_transfer",
+        "input_gate": "READ/WRITE only",
+        "active": "same separate queue+pointer concept",
+        "count": "node.count assigned, end_handler acknowledges CQ index without decrement",
+        "finish": "NVMe_IO_handler calls NVMe_end_request after handler without count test",
+        "error": "no completion status propagated to caller in selected bodies",
+        "return": "normal wait -> -ENOERR=0, invalid cmd -> -EINVAL",
+        "free": "caller frees node, Params only if nonNULL",
+        "not_proven": "CID/status/real hardware"
+      },
+      {
+        "driver": "XHCI",
+        "entry": "XHCI_transfer",
+        "input_gate": "no whitelist in transfer; make_request default other_handler",
+        "active": "queue/req_in_using under lock; IRQ derefs global without lock",
+        "count": "node.count set, no IRQ count==0 gate",
+        "finish": "event-match condition then end_request MMIO updates→complete→clear; outer handler continues ring operations",
+        "error": "EvtTRB copied into Params but not returned as caller error",
+        "return": "normal wait -> -ENOERR=0 for any cmd",
+        "free": "caller frees node/Params, cached EP_Param separate",
+        "not_proven": "Slot_Params/EP pointer and event/real device"
+      }
+    ],
+    "limits": [
+      "controller status/CID/TRB validation opaque",
+      "XHCI Slot_Params and EP_Param lifecycle opaque",
+      "not all disk/USB paths globally certified"
+    ]
+  },
+  "finite_models": [
+    {
+      "id": "A01",
+      "setup": "valid dev,parent,MAJOR!=0, inner returns normally",
+      "source_result": "devtmpfs_create_node int ignored, device_add error remains -EINVAL",
+      "limit": "cannot infer this path from zeroed myos_device_create parent"
+    },
+    {
+      "id": "A02",
+      "setup": "myos_device_create valid kzalloc zeroed dev; no external parent setter",
+      "source_result": "dev.parent is NULL; device_add &parent->kobj lacks valid parent, stop",
+      "limit": "no compiled execution/actual crash proof"
+    },
+    {
+      "id": "A03",
+      "setup": "valid parent, MAJOR=0",
+      "source_result": "no devtmpfs call, device_add retains -EINVAL",
+      "limit": "other device functions out of scope"
+    },
+    {
+      "id": "B01",
+      "setup": "valid active node.count=1; IDE_read_handler sees DISK_STATUS_ERROR",
+      "source_result": "logs then count-- => 0; IRQ end_request can notify and caller return -ENOERR=0",
+      "limit": "not proof that read succeeded"
+    },
+    {
+      "id": "B02",
+      "setup": "IDE IRQ with req_in_using NULL",
+      "source_result": "first node->end_handler lacks valid object; stop",
+      "limit": "no real IRQ arrival inferred"
+    },
+    {
+      "id": "B03",
+      "setup": "two valid IDE requests, first active and second queued",
+      "source_result": "daemon won't dequeue second while req_in_using nonNULL; may later after clear",
+      "limit": "scheduling/fairness unknown"
+    },
+    {
+      "id": "B04",
+      "setup": "IDE end handler or complete does not normally return",
+      "source_result": "later clear/wait return not proved",
+      "limit": "no real deadlock claim"
+    },
+    {
+      "id": "C01",
+      "setup": "valid NVMe node, command and matching IO interrupt, all calls return normally",
+      "source_result": "ack CQ head, end_request without node.count gate, caller may return0",
+      "limit": "CQ status/CID not validated"
+    },
+    {
+      "id": "C02",
+      "setup": "NVMe no IRQ or active node invalid",
+      "source_result": "no proven wait return; null node first deref stop",
+      "limit": "not runtime failure"
+    },
+    {
+      "id": "C03",
+      "setup": "XHCI valid Slot/EP, matching event, NOP command, all calls normal",
+      "source_result": "TRB/doorbell; IRQ copies event; complete; later caller may return0",
+      "limit": "not hardware completed NOP certification"
+    },
+    {
+      "id": "C04",
+      "setup": "XHCI local Slot_ID=0 and DevCtx_Idx != 0",
+      "source_result": "while has no in-body local update; no sourced forward progress",
+      "limit": "may already stop at invalid input pointer"
+    },
+    {
+      "id": "C05",
+      "setup": "XHCI IRQ null req_in_using or event pointer mismatch",
+      "source_result": "no defined progress through expected complete",
+      "limit": "not observed"
+    },
+    {
+      "id": "C06",
+      "setup": "XHCI complete returns and waiter resumes before IRQ post-processing",
+      "source_result": "producer still advances/toggles cached EP_Param after end_request",
+      "limit": "EP_Param not identical to freed XHCIparam; actual lifetime unverified"
+    }
+  ],
+  "findings": [
+    {
+      "id": "RH54-F01",
+      "scope": "A",
+      "class": "source_level_conditional",
+      "prior_related": "CO53-F01/F02/F03 were inner request ownership, distinct result channel",
+      "condition": "valid parent and normal device_add path",
+      "observation": "inner devtmpfs result discarded, outer error stays -EINVAL",
+      "not_proven": "direct myos_device_create reachability or real failures"
+    },
+    {
+      "id": "RH54-F02",
+      "scope": "B/C",
+      "class": "source_level_conditional",
+      "prior_related": "CO53 object ownership distinct; shared fixed return across IDE/NVMe/XHCI",
+      "condition": "valid hardware/IRQ path returns normally",
+      "observation": "fixed -ENOERR=0, no selected caller-visible device error status",
+      "not_proven": "real failed hardware operation, false success in guest"
+    }
+  ],
+  "history": {
+    "R52_01": {
+      "canonical_status": "CLOSED_DOCUMENTATION_ONLY",
+      "origin": "C04 receipt"
+    },
+    "R53_01": {
+      "canonical_status": "OPEN_RETURN",
+      "origin": "C04 receipt"
+    },
+    "CA_03": {
+      "canonical_status": "SUPPORTED_IN_SCOPE",
+      "origin": "prior core host fixture; not re-run"
+    },
+    "CA_04": {
+      "canonical_status": "SUPPORTED_IN_SCOPE",
+      "origin": "prior core host fixture; not re-run"
+    },
+    "UV_01": {
+      "canonical_status": "deferred_owner_not_ready",
+      "origin": "Owner deferral"
+    },
+    "WW52_U04": {
+      "canonical_status": "needs_evidence",
+      "origin": "52 ownership gap"
+    }
+  },
+  "not_executed": [
+    "C/ASM/warehouse scripts",
+    "preprocess/compiler/linker",
+    "QEMU/hardware",
+    "Graphviz/full local P9",
+    "true SMP IRQ/device/controller"
+  ]
+}

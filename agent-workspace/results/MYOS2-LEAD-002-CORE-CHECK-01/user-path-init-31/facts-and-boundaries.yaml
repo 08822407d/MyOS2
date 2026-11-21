@@ -1,0 +1,744 @@
+---
+# YAML 1.2-compatible JSON mapping; local structural check only
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PATH-INIT-31",
+  "record_type": "bounded_path_start_field_and_return_facts",
+  "date": "2026-11-03",
+  "source_ref": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task54_short12": "867eba5aaff9",
+  "review30_docfix_short12": "867eba5aaff9",
+  "previous_execution_head_short12": "e33103ca7d9e",
+  "mainline": "MYOS2-A-C04",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-03",
+  "phase": 2,
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "read_channel": "connector",
+  "evidence_register": "evidence.md, PI31-A001..PI31-A080",
+  "objects": [
+    {
+      "id": "PI31-O01",
+      "name": "filename_s* name",
+      "kind": "borrowed object",
+      "producer": "actual getname/getname_kernel returned pointer in selected callers",
+      "reader": "set_nameidata stores unchanged; path_init dereferences name->name",
+      "state": "not copied by struct initialization",
+      "anchors": [
+        "PI31-A008",
+        "PI31-A010",
+        "PI31-A013"
+      ]
+    },
+    {
+      "id": "PI31-O02",
+      "name": "filename_s.name char*",
+      "kind": "borrowed C-string pointer",
+      "producer": "upstream name copy (batch29), must be valid",
+      "reader": "path_init takes const char*s; path_init does not allocate/copy bytes",
+      "anchors": [
+        "PI31-A008",
+        "PI31-A013",
+        "PI31-A016"
+      ]
+    },
+    {
+      "id": "PI31-O03",
+      "name": "nameidata_s nd",
+      "kind": "stack object",
+      "producer": "do_filp_open or filename_lookup local variable",
+      "reader": "set_nameidata first memsets whole object",
+      "anchors": [
+        "PI31-A001",
+        "PI31-A025",
+        "PI31-A034",
+        "PI31-A010"
+      ]
+    },
+    {
+      "id": "PI31-O04",
+      "name": "nd.path",
+      "kind": "path_s pair of pointers",
+      "producer": "set_nameidata zeroes; path_init later sets from fs.root or fs.pwd",
+      "reader": "path_openat and path_lookupat; later path result transfer conditional",
+      "anchors": [
+        "PI31-A005",
+        "PI31-A011",
+        "PI31-A015",
+        "PI31-A040"
+      ]
+    },
+    {
+      "id": "PI31-O05",
+      "name": "nd.root",
+      "kind": "path_s pair of pointers",
+      "producer": "set_nameidata optional root=*root, path_init unconditionally overwrites from current->fs->root",
+      "reader": "absolute-string branch assigns nd.path=nd.root",
+      "anchors": [
+        "PI31-A012",
+        "PI31-A014",
+        "PI31-A015"
+      ]
+    },
+    {
+      "id": "PI31-O06",
+      "name": "nd.name",
+      "kind": "filename_s pointer",
+      "producer": "set_nameidata stores caller's pointer, not a new filename",
+      "reader": "path_init deref; NULL or ERR_PTR not checked here",
+      "anchors": [
+        "PI31-A010",
+        "PI31-A013"
+      ]
+    },
+    {
+      "id": "PI31-O07",
+      "name": "nd.dfd",
+      "kind": "int saved but not used for selecting start",
+      "producer": "set_nameidata p->dfd=dfd",
+      "reader": "not referenced in complete selected path_init",
+      "anchors": [
+        "PI31-A004",
+        "PI31-A011",
+        "PI31-A015",
+        "PI31-A080"
+      ]
+    },
+    {
+      "id": "PI31-O08",
+      "name": "nd.flags",
+      "kind": "unsigned lookup options",
+      "producer": "memset sets zero; path_init sets to flags argument",
+      "reader": "not consulted in selected path_init path/root branch; deeper namei opaque",
+      "anchors": [
+        "PI31-A002",
+        "PI31-A010",
+        "PI31-A014"
+      ]
+    },
+    {
+      "id": "PI31-O09",
+      "name": "nd.state",
+      "kind": "unsigned state field",
+      "producer": "set_nameidata memset => zero on valid memory",
+      "reader": "no direct write by path_init in read definition",
+      "anchors": [
+        "PI31-A003",
+        "PI31-A010"
+      ]
+    },
+    {
+      "id": "PI31-O10",
+      "name": "nd.last_type",
+      "kind": "int",
+      "producer": "set_nameidata memset 0, link_path_walk sets LAST_ROOT before error check",
+      "reader": "open_last_lookups uses last_type; intermediate walk outside scope",
+      "anchors": [
+        "PI31-A002",
+        "PI31-A043",
+        "PI31-A068"
+      ]
+    },
+    {
+      "id": "PI31-O11",
+      "name": "current->fs->root",
+      "kind": "path_s value in fs_struct",
+      "producer": "not established by this batch; fs_struct provides root field",
+      "reader": "path_init unconditionally copies into nd.root",
+      "anchors": [
+        "PI31-A007",
+        "PI31-A014",
+        "PI31-A015"
+      ]
+    },
+    {
+      "id": "PI31-O12",
+      "name": "current->fs->pwd",
+      "kind": "path_s value in fs_struct",
+      "producer": "not established by this batch",
+      "reader": "path_init copies into nd.path for non-leading-slash names",
+      "anchors": [
+        "PI31-A007",
+        "PI31-A015"
+      ]
+    },
+    {
+      "id": "PI31-O13",
+      "name": "path_init local s",
+      "kind": "const char* same address as name->name",
+      "producer": "nd->name->name",
+      "reader": "s[0] and return s, does not skip '/'",
+      "anchors": [
+        "PI31-A013",
+        "PI31-A016"
+      ]
+    },
+    {
+      "id": "PI31-O14",
+      "name": "do_filp_open local flags",
+      "kind": "int copied from op.lookup_flags",
+      "producer": "valid prior build_open_flags or explicit do_open_execat initializer (batch30)",
+      "reader": "passed to path_openat then path_init nd.flags",
+      "anchors": [
+        "PI31-A025",
+        "PI31-A026",
+        "PI31-A030"
+      ]
+    },
+    {
+      "id": "PI31-O15",
+      "name": "filename_lookup root argument",
+      "kind": "path_s* optional",
+      "producer": "signature permits root pointer, selected wrapper does not pass it onward",
+      "reader": "set_nameidata root argument is literal NULL here",
+      "anchors": [
+        "PI31-A034",
+        "PI31-A035"
+      ]
+    },
+    {
+      "id": "PI31-O16",
+      "name": "path_lookupat output path_s* path",
+      "kind": "caller-out pointer",
+      "producer": "*path = nd.path only when err==0",
+      "reader": "after copy it nulls local nd.path pointers; no path_get in selected tail",
+      "anchors": [
+        "PI31-A040",
+        "PI31-A041"
+      ]
+    },
+    {
+      "id": "PI31-O17",
+      "name": "path_openat allocated file_s*",
+      "kind": "local file pointer or ERR_PTR",
+      "producer": "alloc_empty_file(op->open_flag)",
+      "reader": "error returns before path_init; later VFS path opaque",
+      "anchors": [
+        "PI31-A029",
+        "PI31-A055"
+      ]
+    },
+    {
+      "id": "PI31-O18",
+      "name": "dfd from direct callers",
+      "kind": "int values",
+      "producer": "sys_open passes 0; open_exec passes AT_FDCWD=-100; kern_path also AT_FDCWD; filename_lookup accepts dfd",
+      "reader": "set_nameidata stores but path_init not selecting start with dfd",
+      "anchors": [
+        "PI31-A024",
+        "PI31-A058",
+        "PI31-A060",
+        "PI31-A066",
+        "PI31-A011"
+      ]
+    },
+    {
+      "id": "PI31-O19",
+      "name": "optional root set by set_nameidata",
+      "kind": "path_s by value",
+      "producer": "root !=NULL helper-only option",
+      "reader": "before use path_init writes root from current fs regardless",
+      "anchors": [
+        "PI31-A012",
+        "PI31-A014"
+      ]
+    },
+    {
+      "id": "PI31-O20",
+      "name": "last-component and walk return",
+      "kind": "control/result of opaque downstream",
+      "producer": "link_path_walk sets LAST_ROOT and may immediately return0 on NUL; lookup_last or open_last_lookups may follow",
+      "reader": "cannot treat prefix return0 as full lookup success",
+      "anchors": [
+        "PI31-A043",
+        "PI31-A045",
+        "PI31-A039",
+        "PI31-A030"
+      ]
+    }
+  ],
+  "stage_flow": [
+    {
+      "id": "S01",
+      "stage": "caller",
+      "open": "do_filp_open: read op.lookup_flags; set_nameidata(&nd,dfd,name,NULL); path_openat(&nd,op,flags)",
+      "lookup": "filename_lookup: IS_ERR name; set_nameidata(&nd,dfd,name,NULL); path_lookupat(&nd,flags,path)",
+      "anchors": [
+        "PI31-A025",
+        "PI31-A026",
+        "PI31-A035",
+        "PI31-A036"
+      ]
+    },
+    {
+      "id": "S02",
+      "stage": "set_nameidata",
+      "effect": "memset whole nameidata; store borrowed name/dfd, zero nd.path.mnt/dentry, optional root by value; no reference increase established",
+      "anchors": [
+        "PI31-A009",
+        "PI31-A010",
+        "PI31-A011",
+        "PI31-A012"
+      ]
+    },
+    {
+      "id": "S03",
+      "stage": "path_init",
+      "effect": "deref nd.name.name -> set nd.flags -> overwrite nd.root from current.fs.root -> choose nd.path using s[0] -> return same s",
+      "anchors": [
+        "PI31-A013",
+        "PI31-A014",
+        "PI31-A015",
+        "PI31-A016"
+      ]
+    },
+    {
+      "id": "S04",
+      "stage": "link_path_walk prefix",
+      "effect": "set LAST_ROOT, IS_ERR(name), strip leading slashes and return0 on NUL; no entire walk proof",
+      "anchors": [
+        "PI31-A043",
+        "PI31-A044",
+        "PI31-A045"
+      ]
+    },
+    {
+      "id": "S05",
+      "stage": "path_openat",
+      "effect": "alloc_empty_file first, path_init second; call link_path_walk/open_last_lookups and conditionally do_open, terminate_walk empty; historical UV-04 bounds success",
+      "anchors": [
+        "PI31-A029",
+        "PI31-A030",
+        "PI31-A031",
+        "PI31-A032",
+        "PI31-A033"
+      ]
+    },
+    {
+      "id": "S06",
+      "stage": "path_lookupat",
+      "effect": "path_init and link_path_walk; if err==0 complete_walk returns0; *path=nd.path, clear nd.path pair; terminate_walk empty; return err",
+      "anchors": [
+        "PI31-A038",
+        "PI31-A039",
+        "PI31-A040",
+        "PI31-A041",
+        "PI31-A051"
+      ]
+    },
+    {
+      "id": "S07",
+      "stage": "outer cleanup",
+      "effect": "do_filp_open invokes restore_nameidata (comment-only) then returns filp; filename_lookup invokes putname then returns",
+      "anchors": [
+        "PI31-A054",
+        "PI31-A048",
+        "PI31-A049",
+        "PI31-A037"
+      ]
+    }
+  ],
+  "inputs_matrix": [
+    {
+      "id": "PI31-M01",
+      "entry": "do_filp_open",
+      "input": "valid filename '/a' and fs.root,pwd valid",
+      "dfd": "any int; sys_open actually supplies0",
+      "root_arg": "NULL",
+      "path_init_start": "nd.path=current.fs.root",
+      "prefix_walk": "link_path_walk skips initial slash and sees 'a'; later components opaque",
+      "outcome": "no guarantee of successful open",
+      "anchors": [
+        "PI31-A026",
+        "PI31-A015",
+        "PI31-A044",
+        "PI31-A060"
+      ]
+    },
+    {
+      "id": "PI31-M02",
+      "entry": "do_filp_open",
+      "input": "valid filename 'a'",
+      "dfd": "0 for shown sys_open",
+      "root_arg": "NULL",
+      "path_init_start": "nd.path=current.fs.pwd",
+      "prefix_walk": "link_path_walk starts at 'a', not an fd-based lookup in selected path_init",
+      "outcome": "caller name/path may still fail later",
+      "anchors": [
+        "PI31-A060",
+        "PI31-A015",
+        "PI31-A030"
+      ]
+    },
+    {
+      "id": "PI31-M03",
+      "entry": "do_filp_open",
+      "input": "valid filename '//a'",
+      "dfd": "0 or AT_FDCWD",
+      "root_arg": "NULL",
+      "path_init_start": "current.fs.root",
+      "prefix_walk": "strips both leading slash characters in link_path_walk, not in path_init",
+      "outcome": "later walk opaque",
+      "anchors": [
+        "PI31-A015",
+        "PI31-A044"
+      ]
+    },
+    {
+      "id": "PI31-M04",
+      "entry": "do_filp_open",
+      "input": "valid filename ''",
+      "dfd": "0 or AT_FDCWD",
+      "root_arg": "NULL",
+      "path_init_start": "current.fs.pwd",
+      "prefix_walk": "link_path_walk sets LAST_ROOT and returns0 immediately on NUL",
+      "outcome": "path_openat subsequently invokes open_last_lookups; no proof LOOKUP_EMPTY enforced nor open succeeds",
+      "anchors": [
+        "PI31-A015",
+        "PI31-A043",
+        "PI31-A045",
+        "PI31-A030",
+        "PI31-A068"
+      ]
+    },
+    {
+      "id": "PI31-M05",
+      "entry": "filename_lookup",
+      "input": "valid filename '/'",
+      "dfd": "AT_FDCWD in kern_path",
+      "root_arg": "NULL despite filename_lookup root parameter",
+      "path_init_start": "current.fs.root",
+      "prefix_walk": "strips only slash, sees NUL, returns0 and LAST_ROOT",
+      "outcome": "path_lookupat then lookup_last/walk_component remains; no complete resolution proved",
+      "anchors": [
+        "PI31-A058",
+        "PI31-A035",
+        "PI31-A015",
+        "PI31-A045",
+        "PI31-A039",
+        "PI31-A042"
+      ]
+    },
+    {
+      "id": "PI31-M06",
+      "entry": "filename_lookup",
+      "input": "valid filename '///'",
+      "dfd": "caller-supplied",
+      "root_arg": "NULL",
+      "path_init_start": "current.fs.root",
+      "prefix_walk": "skip3 slash bytes, then return0",
+      "outcome": "do not infer success or path ref",
+      "anchors": [
+        "PI31-A035",
+        "PI31-A015",
+        "PI31-A044"
+      ]
+    },
+    {
+      "id": "PI31-M07",
+      "entry": "open_exec→do_open_execat→do_filp_open",
+      "input": "valid kernel pathname '/bin/init'",
+      "dfd": "AT_FDCWD=-100",
+      "root_arg": "NULL",
+      "path_init_start": "root",
+      "prefix_walk": "slash skip in link_path_walk",
+      "outcome": "conditional on filename/file and alloc_empty_file; no ELF execution proof",
+      "anchors": [
+        "PI31-A024",
+        "PI31-A066",
+        "PI31-A026",
+        "PI31-A029"
+      ]
+    },
+    {
+      "id": "PI31-M08",
+      "entry": "helper-only set_nameidata(path_s*root=R)",
+      "input": "valid filename '/a', valid p/root and current.fs",
+      "dfd": "non-negative arbitrary",
+      "root_arg": "nonNULL root R",
+      "path_init_start": "path_init overwrites nd.root from current.fs.root, then selects it; supplied R not selected",
+      "prefix_walk": "remaining walk opaque",
+      "outcome": "actual do_filp_open and filename_lookup always pass NULL; do not claim caller invokes nonNULL",
+      "anchors": [
+        "PI31-A012",
+        "PI31-A014",
+        "PI31-A015",
+        "PI31-A026",
+        "PI31-A035"
+      ]
+    },
+    {
+      "id": "PI31-M09",
+      "entry": "raw path_init",
+      "input": "valid filename but nd.name is ERR_PTR or NULL",
+      "dfd": "any",
+      "root_arg": "any",
+      "path_init_start": "not determined",
+      "prefix_walk": "not reached under defined behavior",
+      "outcome": "nd.name.name dereference before any local IS_ERR and before link_path_walk IS_ERR(s); no fixed CPU consequence proved",
+      "anchors": [
+        "PI31-A013",
+        "PI31-A043"
+      ]
+    },
+    {
+      "id": "PI31-M10",
+      "entry": "filename_lookup",
+      "input": "name is ERR_PTR(-errno)",
+      "dfd": "any",
+      "root_arg": "any",
+      "path_init_start": "not selected",
+      "prefix_walk": "not reached",
+      "outcome": "IS_ERR(name) returns PTR_ERR; does not call set_nameidata or putname",
+      "anchors": [
+        "PI31-A035",
+        "PI31-A075",
+        "PI31-A076"
+      ]
+    },
+    {
+      "id": "PI31-M11",
+      "entry": "filename_lookup",
+      "input": "name is NULL",
+      "dfd": "any",
+      "root_arg": "any",
+      "path_init_start": "undefined/null deref if normal call advances",
+      "prefix_walk": "not reliably reached",
+      "outcome": "IS_ERR(NULL) false; selected path_init attempts nd.name.name; not a demonstrated real getname producer",
+      "anchors": [
+        "PI31-A035",
+        "PI31-A013"
+      ]
+    },
+    {
+      "id": "PI31-M12",
+      "entry": "do_filp_open",
+      "input": "name is ERR_PTR/NULL or name->name invalid",
+      "dfd": "any",
+      "root_arg": "NULL",
+      "path_init_start": "not safely defined",
+      "prefix_walk": "cannot rely on later link_path_walk error guard",
+      "outcome": "do_filp_open lacks name pointer check in read prefix; direct caller must have validity; original user getname errors returned before this in do_sys_openat2 under conditional path",
+      "anchors": [
+        "PI31-A026",
+        "PI31-A013",
+        "PI31-A043"
+      ]
+    },
+    {
+      "id": "PI31-M13",
+      "entry": "path_openat",
+      "input": "alloc_empty_file returns ERR_PTR",
+      "dfd": "nd already initialized by do_filp_open",
+      "root_arg": "NULL",
+      "path_init_start": "not called",
+      "prefix_walk": "not called",
+      "outcome": "returns file error before string/root operations",
+      "anchors": [
+        "PI31-A029",
+        "PI31-A055"
+      ]
+    },
+    {
+      "id": "PI31-M14",
+      "entry": "path_init",
+      "input": "name valid but current or current.fs NULL/dangling",
+      "dfd": "any",
+      "root_arg": "NULL or nonNULL",
+      "path_init_start": "cannot finish root assignment normally",
+      "prefix_walk": "not reached under valid C execution",
+      "outcome": "source dereferences current.fs.root before s[0]; no hardware result claimed",
+      "anchors": [
+        "PI31-A014",
+        "PI31-A015"
+      ]
+    },
+    {
+      "id": "PI31-M15",
+      "entry": "path_init with LOOKUP_IN_ROOT|LOOKUP_BENEATH|LOOKUP_EMPTY",
+      "input": "valid non-slash path",
+      "dfd": "non-negative or AT_FDCWD",
+      "root_arg": "NULL",
+      "path_init_start": "current.fs.pwd just as without flags",
+      "prefix_walk": "flags stored in nd.flags, no branch on bits in selected path_init; later walk not audited",
+      "outcome": "cannot certify or deny whole-system enforcement",
+      "anchors": [
+        "PI31-A014",
+        "PI31-A015",
+        "PI31-A020",
+        "PI31-A021",
+        "PI31-A022"
+      ]
+    },
+    {
+      "id": "PI31-M16",
+      "entry": "path_lookupat",
+      "input": "valid filename, link_path_walk and lookup_last produce err=0",
+      "dfd": "passed via nd but not read in path_init",
+      "root_arg": "NULL",
+      "path_init_start": "root/pwd as above",
+      "prefix_walk": "complete_walk returns0 in selected code",
+      "outcome": "*path copies two pointer fields by value; nd.path fields zeroed, terminate_walk empty; no path_get or path_put proved",
+      "anchors": [
+        "PI31-A039",
+        "PI31-A040",
+        "PI31-A041",
+        "PI31-A051",
+        "PI31-A005"
+      ]
+    },
+    {
+      "id": "PI31-M17",
+      "entry": "path_openat",
+      "input": "valid name, positive path-prefix result, deeper do_open called",
+      "dfd": "selected caller direct",
+      "root_arg": "NULL",
+      "path_init_start": "as above",
+      "prefix_walk": "deeper open_last_lookups and do_open beyond this task",
+      "outcome": "historical CORE-USER-VFS-BASELINE-05::UV-04 non-return blocks deterministic success/error claim",
+      "anchors": [
+        "PI31-A030",
+        "PI31-A031",
+        "PI31-A032"
+      ]
+    },
+    {
+      "id": "PI31-M18",
+      "entry": "restore_nameidata/terminate_walk/complete_walk",
+      "input": "any nd on selected return",
+      "dfd": "unrelated",
+      "root_arg": "unrelated",
+      "path_init_start": "not affected in their bodies",
+      "prefix_walk": "restore contains comments, terminate empty, complete0",
+      "outcome": "calling these helpers does not prove actual reference unshare, path release or global lock correctness",
+      "anchors": [
+        "PI31-A048",
+        "PI31-A049",
+        "PI31-A050",
+        "PI31-A051"
+      ]
+    }
+  ],
+  "paper_examples": [
+    {
+      "id": "PI31-X01",
+      "name": "absolute-single-slash",
+      "bytes": "/a",
+      "head": "/",
+      "start": "current.fs.root",
+      "same_pointer_returned": true,
+      "slashes_skipped_in": "link_path_walk",
+      "skip_count": 1,
+      "last_type_before_walk": "LAST_ROOT",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PI31-X02",
+      "name": "relative",
+      "bytes": "a",
+      "head": "a",
+      "start": "current.fs.pwd",
+      "same_pointer_returned": true,
+      "slashes_skipped": 0,
+      "dfd_effect_in_path_init": "none",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PI31-X03",
+      "name": "empty",
+      "bytes": "",
+      "head": "NUL",
+      "start": "current.fs.pwd",
+      "link_prefix_result": 0,
+      "last_type": "LAST_ROOT",
+      "full_lookup_status": "NOT_PROVED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PI31-X04",
+      "name": "slash-only",
+      "bytes": "/",
+      "head": "/",
+      "start": "current.fs.root",
+      "link_prefix_stripped": 1,
+      "link_prefix_result": 0,
+      "last_type": "LAST_ROOT",
+      "full_lookup_status": "NOT_PROVED",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PI31-X05",
+      "name": "multiple-leading-slashes",
+      "bytes": "///a",
+      "head": "/",
+      "start": "current.fs.root",
+      "link_prefix_stripped": 3,
+      "content_at_next": "a",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PI31-X06",
+      "name": "root-argument-override",
+      "root_argument": "R_nonNULL",
+      "root_written_by_set_nameidata": "R",
+      "path_init_root": "current.fs.root",
+      "start_for_absolute": "current.fs.root",
+      "actual_caller_root_argument": "NULL",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PI31-X07",
+      "name": "dfd-producers",
+      "source_sys_open": 0,
+      "source_open_exec": -100,
+      "AT_FDCWD": -100,
+      "set_nameidata_effect": "stores supplied int",
+      "path_init_effect": "does not read dfd",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "PI31-X08",
+      "name": "LOOKUP_EMPTY-IN_ROOT-BENEATH",
+      "flags": [
+        "LOOKUP_EMPTY=0x4000",
+        "LOOKUP_IN_ROOT=0x100000",
+        "LOOKUP_BENEATH=0x080000"
+      ],
+      "effect_in_path_init": "copy complete flags to nd.flags; selection solely first byte",
+      "actual_resolve_semantics": "NOT_PROVED",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "historical_links": [
+    "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+    "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+    "CORE-USER-VFS-BASELINE-05::UV-04",
+    "CORE-USER-SYSCALL-STDIO-08::US-03",
+    "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S01",
+    "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S02",
+    "CORE-USER-PATHNAME-COPY-29-REVIEW-001::R29-S03",
+    "CORE-USER-OPEN-FLAGS-30-DOC-FIX-01-REVIEW-001::R30-01",
+    "CORE-USER-OPEN-FLAGS-30-DOC-FIX-01-REVIEW-001::R30-02"
+  ],
+  "new_findings": [
+    "PI31-F01",
+    "PI31-F02",
+    "PI31-F03",
+    "PI31-F04",
+    "PI31-F05"
+  ],
+  "known_limits": [
+    "fixed-source time only",
+    "no actual path input runtime or probe",
+    "no actual current.fs lifetime or locks established",
+    "no actual VFS/permission/namei component walk results",
+    "no validated use of dfd as directory start in selected path_init",
+    "path allocation/return values separate from status",
+    "full repository dedup not performed"
+  ],
+  "owner_decisions_requested_now": [],
+  "kernel_patch": false
+}

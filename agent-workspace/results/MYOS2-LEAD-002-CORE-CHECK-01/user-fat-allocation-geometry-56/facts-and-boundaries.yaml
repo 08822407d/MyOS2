@@ -1,0 +1,474 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FAT-ALLOCATION-GEOMETRY-56",
+  "source_pin_short12": "a039d9803ade",
+  "status": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope",
+    "mainline_acceptance": "PENDING",
+    "runtime_evidence": "NOT_RUN"
+  },
+  "history": {
+    "R53_01": {
+      "canonical_status": "CLOSED_DOCUMENTATION_ONLY",
+      "origin": "C04 closure; false A03/B03 objections withdrawn"
+    },
+    "batch53": {
+      "canonical_status": "PASS_PENDING_LOCAL"
+    },
+    "batch54": {
+      "canonical_status": "PASS_PENDING_LOCAL",
+      "supplements": "R54-S01/S02"
+    },
+    "batch55": {
+      "canonical_status": "PASS_PENDING_LOCAL",
+      "supplements": "R55-S01/S02"
+    },
+    "CA_03": {
+      "canonical_status": "SUPPORTED_IN_SCOPE"
+    },
+    "CA_04": {
+      "canonical_status": "SUPPORTED_IN_SCOPE"
+    },
+    "UV_01": {
+      "canonical_status": "deferred_owner_not_ready"
+    },
+    "IT35": {
+      "canonical_status": "unchanged_as_prior",
+      "origin": "R35-S01/S02"
+    },
+    "SB38": {
+      "canonical_status": "unchanged_as_prior",
+      "origin": "R38-S01/S02"
+    },
+    "BI55": {
+      "canonical_status": "prior_conditional_candidates",
+      "origin": "BI55-F01..F05"
+    }
+  },
+  "source_ledger": [
+    {
+      "key": "f",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "447307aaa4b1",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "CRLF",
+      "lines": 510
+    },
+    {
+      "key": "i",
+      "path": "mykernel/fs/fat/myos_fat32_iobuf.c",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "f577b7f65786",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 269
+    },
+    {
+      "key": "h",
+      "path": "mykernel/include/linux/fs/fat32.h",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "f03f3c0c1ec7",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "CRLF",
+      "lines": 180
+    },
+    {
+      "key": "d",
+      "path": "mykernel/fs/fat/myos_dir.c",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "a6ef65d326d2",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 207
+    },
+    {
+      "key": "dev",
+      "path": "mykernel/arch/x86_64/include/obsolete/device.h",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "a97a1162420f",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 63
+    },
+    {
+      "key": "g",
+      "path": "mykernel/include/linux/fs/GPT.h",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "c06f8c9ab51a",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 54
+    },
+    {
+      "key": "pg",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "b10e280f26f0",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 105
+    },
+    {
+      "key": "sz",
+      "path": "mykernel/include/linux/kernel/sizes.h",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "be89dc5c0d3f",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 52
+    },
+    {
+      "key": "nv",
+      "path": "mykernel/arch/x86_64/myos/MineOS_NVMe.c",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "6602a0c42fcf",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 643
+    },
+    {
+      "key": "ide",
+      "path": "mykernel/arch/x86_64/myos/ide.c",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "39c36c8cc4f9",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 391
+    },
+    {
+      "key": "types",
+      "path": "mykernel/include/linux/kernel/types.h",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "ef531baa8317",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 241
+    },
+    {
+      "key": "o",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "6019436417ad",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 85
+    },
+    {
+      "key": "pan",
+      "path": "mykernel/debug/panic.c",
+      "source_pin": "time@a039d9803ade",
+      "blob_short12": "2e9d5b195559",
+      "read_scope": "complete_fixed_source",
+      "line_endings": "LF",
+      "lines": 214
+    }
+  ],
+  "evidence_count": 101,
+  "anchor_counts": {
+    "A": 24,
+    "B": 35,
+    "C": 42
+  },
+  "G01_A_cluster_traces": [
+    {
+      "id": "A01",
+      "premise": "read first=2, FAT[2]=3, BPS512 SPC8 DataFirst1000 count8192",
+      "events": [
+        "read cluster2 sector1000 pos4096",
+        "read cluster3 sector1008 pos8192"
+      ],
+      "result": "read cluster advances via do-tail, if all callees normal"
+    },
+    {
+      "id": "A02",
+      "premise": "write existing cluster2->3 count8192 same geometry",
+      "events": [
+        "first WRITE sector1000, next_cluster3",
+        "no cluster=3 assignment, second WRITE still sector1000"
+      ],
+      "result": "ordinary next branch retains old cluster"
+    },
+    {
+      "id": "A03",
+      "premise": "read remaining index>0 and FAT next EOF=0x0ffffff8",
+      "events": [
+        "EOF is nonzero; do loop next attempted",
+        "sector derivation uses EOF marker"
+      ],
+      "result": "STOP at invalid cluster arithmetic; not proof media access"
+    },
+    {
+      "id": "A04",
+      "premise": "write existing cluster2, FAT[2]=EOF, finder yields3",
+      "events": [
+        "old sector1000",
+        "request FAT[2]=3; FAT[3]=EOF",
+        "cluster3 flags1, next write retains sector1000"
+      ],
+      "result": "BI55-F02 stale sector old root"
+    },
+    {
+      "id": "A05",
+      "premise": "new file first_cluster0, finder5, calls normal",
+      "events": [
+        "candidate5",
+        "finode.first_cluster5",
+        "write_inode and FAT5 EOF requested",
+        "first data write sector0"
+      ],
+      "result": "request != persistent allocation; BI55-F02 old sector0"
+    },
+    {
+      "id": "A06",
+      "premise": "finder yields0 or1; regular next 0/1/BAD",
+      "events": [
+        "candidate0 -ENOSPC if normal",
+        "candidate1 not rejected by !cluster gate",
+        "next 0/1/BAD below EOF threshold leaves old cluster"
+      ],
+      "result": "STOP invalid cluster before downstream claims"
+    }
+  ],
+  "G02_B_unsigned_expand_models": [
+    {
+      "id": "B01",
+      "premise": "old nr_clus1, max_nr>=2, nr1, finder [5,0]",
+      "events": [
+        "append slot1, nr becomes0",
+        "next finder0 exits",
+        "commit nr_clus2"
+      ],
+      "result": "conditional return0, no FAT reservation"
+    },
+    {
+      "id": "B02",
+      "premise": "old1 max_nr>=3 nr1 finder[5,5,0]",
+      "events": [
+        "append slot1 nr0",
+        "extra append slot2, nr wraps SIZE_MAX",
+        "finder0 exit to rollback, free slot2/1",
+        "clusters/flags zero, buffers slots not nulled"
+      ],
+      "result": "conditional -EIO"
+    },
+    {
+      "id": "B03",
+      "premise": "nr0 finder5",
+      "events": [
+        "nr>=0 still true",
+        "may allocate one and nr-- wraps"
+      ],
+      "result": "not a guaranteed no-op"
+    },
+    {
+      "id": "B04",
+      "premise": "iobuf_init count0, arrays unallocated",
+      "events": [
+        "finder>1 then kmalloc succeeds",
+        "buffers[0] write without array object"
+      ],
+      "result": "STOP first invalid array access"
+    },
+    {
+      "id": "B05",
+      "premise": "old nr_clus=max_nr, arrays exactly max_nr slots",
+      "events": [
+        "append slot[tmp_nr] where tmp_nr==max_nr"
+      ],
+      "result": "STOP out-of-capacity write"
+    },
+    {
+      "id": "B06",
+      "premise": "finder unchanged disk and no other writer",
+      "events": [
+        "expand never invokes FAT setter",
+        "successive finder calls may repeat candidate5"
+      ],
+      "result": "candidate duplication possible"
+    },
+    {
+      "id": "B07",
+      "premise": "rollback after defined successful appends",
+      "events": [
+        "frees added buffer[i]",
+        "zeros clusters/flags but not buffers[i]",
+        "nr_clus uncommitted; no disk undo"
+      ],
+      "result": "partial local rollback only"
+    },
+    {
+      "id": "B08",
+      "premise": "fat_add_entries sees iter_reach_end",
+      "events": [
+        "expand(iobuf,1) return ignored",
+        "caller invokes next regardless"
+      ],
+      "result": "no error propagation"
+    },
+    {
+      "id": "B09",
+      "premise": "size_t nr0, tmp_nr approaches int max",
+      "events": [
+        "nr decrement unsigned wrap",
+        "tmp_nr++ may overflow or arrays fail"
+      ],
+      "result": "STOP before impossible later state"
+    }
+  ],
+  "G03_C_geometry_models": [
+    {
+      "id": "C01",
+      "premise": "BPS512 SPC8 unit512",
+      "bufBytes": 4096,
+      "count": 8,
+      "nominalBytes": 4096,
+      "effect": "matched nominal software units"
+    },
+    {
+      "id": "C02",
+      "premise": "BPS4096 SPC8 IDE software 512-per-count",
+      "bufBytes": 32768,
+      "count": 8,
+      "nominalBytes": 4096,
+      "effect": "underfill model"
+    },
+    {
+      "id": "C03",
+      "premise": "BPS512 SPC8 hypothetical NVMe block4096",
+      "bufBytes": 4096,
+      "count": 8,
+      "nominalBytes": 32768,
+      "effect": "nominal count exceeds memory size; no actual DMA proof"
+    },
+    {
+      "id": "C04",
+      "premise": "BPS4096 SPC8 hypothetical NVMe block4096",
+      "bufBytes": 32768,
+      "count": 8,
+      "nominalBytes": 32768,
+      "effect": "nominal match, FAT helper still only indexes128 values"
+    },
+    {
+      "id": "C05",
+      "premise": "FATSz32=0x80000000u32, NumFATs2u8",
+      "wideProduct": "4294967296",
+      "u32Product": 0,
+      "effect": "u32 intermediate multiplication wraps before u64 addition"
+    },
+    {
+      "id": "C06",
+      "premise": "BPS65535u16 SPC255u8",
+      "product": 16711425,
+      "effect": "u8*u16 promoted int multiplication fits signed int"
+    },
+    {
+      "id": "C07",
+      "premise": "PAGE_SIZE4096, SECT_PER_PG8, block unit512",
+      "requestedBytes": 4096,
+      "usedFATBytes": 512,
+      "stepLBABytes": 512,
+      "effect": "adjacent 4096byte windows start512 apart, conditional overlap"
+    },
+    {
+      "id": "C08",
+      "premise": "PAGE_SIZE4096, NVMe bootdiskLBAsize4096 => count1",
+      "requestedBytes": 4096,
+      "usedFATBytes": 512,
+      "effect": "first128 u32 used from 1024u32 page"
+    }
+  ],
+  "transfer_unit_matrix": [
+    {
+      "entry": "file cluster read/write",
+      "buffer": "BPS*SPC bytes",
+      "initialized": "read memset full; write flags0 memset, flags1 skips",
+      "LBA": "DataFirst+(cluster-2)*SPC",
+      "count": "SPC",
+      "unit_condition": "true lower unit must equal BPS to match buffer"
+    },
+    {
+      "entry": "iobuf release",
+      "buffer": "bufsize",
+      "initialized": "producer dependent",
+      "LBA": "clus_to_blknr",
+      "count": "bufsize/bytes_per_sector",
+      "unit_condition": "bytes_per_sector>0, valid buffers"
+    },
+    {
+      "entry": "FAT getter",
+      "buffer": "stack PAGE_SIZE4096",
+      "initialized": "all4096",
+      "LBA": "FAT1+(fat_entry>>7)",
+      "count": "SECT_PER_PG",
+      "used": "fat_entry&127 => first512 bytes"
+    },
+    {
+      "entry": "FAT finder",
+      "buffer": "stack PAGE_SIZE4096",
+      "initialized": "first512 each iteration",
+      "LBA": "FAT1+i",
+      "count": "SECT_PER_PG",
+      "used": "j<128 => 512 bytes"
+    },
+    {
+      "entry": "FAT setter",
+      "buffer": "stack PAGE_SIZE4096",
+      "initialized": "first512 then unchecked pre-read",
+      "LBA": "FAT1+FATsize*i+(entry>>7)",
+      "count": "SECT_PER_PG",
+      "used": "entry&127"
+    },
+    {
+      "entry": "FSInfo",
+      "buffer": "kzalloc(PAGE_SIZE4096)",
+      "initialized": "zero allocation assumed valid",
+      "LBA": "StartingLBA+FSInfo",
+      "count": "SECT_PER_PG"
+    },
+    {
+      "entry": "new directory",
+      "buffer": "bytes_per_sector",
+      "initialized": "kzalloc + data fields",
+      "LBA": "clus_to_blknr",
+      "count": "1"
+    }
+  ],
+  "new_findings": [
+    {
+      "id": "AG56-F01",
+      "topic": "A",
+      "claim": "write ordinary next_cluster not assigned to current cluster",
+      "prior": "BI55-F02 flags1 sector0/stale is separate",
+      "status": "source_conditional_only"
+    },
+    {
+      "id": "AG56-F02",
+      "topic": "B",
+      "claim": "size_t nr >=0 loop plus no capacity/array check; rollback leaves buffers slots non-null",
+      "prior": "BI55-F04 NEWCLUS release and IT35 iterator are separate",
+      "status": "source_conditional_only"
+    },
+    {
+      "id": "AG56-F03",
+      "topic": "C",
+      "claim": "BPB/ROOTBLK unit relation and FAT 512byte index vs PAGE_SIZE transfer",
+      "prior": "BI55-F05 ignored I/O return, not unit problem",
+      "status": "source_conditional_only"
+    },
+    {
+      "id": "AG56-F04",
+      "topic": "C",
+      "claim": "u32 FATsz32*NumFATs product can wrap before u64 addition",
+      "prior": "R38 source provenance independent",
+      "status": "source_conditional_only"
+    }
+  ],
+  "stop_conditions": [
+    "invalid pointer/index/cluster/geometry or nonnormal callee -> stop",
+    "no real hardware memory transfer or FAT disk reservation proof",
+    "no actual compile/preprocess"
+  ]
+}

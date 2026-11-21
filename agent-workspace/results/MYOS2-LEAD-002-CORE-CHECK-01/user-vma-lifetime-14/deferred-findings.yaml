@@ -1,0 +1,132 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-VMA-LIFETIME-14
+record_type: incremental_vma_lifetime_findings_and_evidence_appends
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-01
+model_per_owner: GPT-6
+effort_per_owner: Extra
+backend_identity: unknown_or_not_attestable
+date: "2026-10-31"
+read_channel: connector
+source_pin: "time @ a039d9803ade"
+result_base: "2d67bea2fe59"
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+policy: "18号问题先入库；不修内核不改变旧件"
+counts: {new_findings: 6, evidence_appends: 3, documentation_errata_candidates: 0}
+owner_decisions_requested_now: []
+findings:
+  - qualified_id: CORE-USER-VMA-LIFETIME-14::VL14-F01
+    id: VL14-F01
+    title: "munmap交叠查找严格前驱与NULL迭代器前提使首段/相邻边界不可保证"
+    kind: [source_fact, conditional_language_risk]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade; user-vma-lifetime-14/facts-and-boundaries.yaml::anchors"
+    claim: "find_vma_prev_to_addr只接受vm_end < start，find_vma_intersection仅在此前驱非NULL时测试其下一个VMA；首段和vm_end恰等start的前驱可被跳过。for_each_vma_topdown以NULL开始，mm_prev_vma/mm_next_vma的未保护&vma->list形成NULL对象成员取址的语言层前提。"
+    premises: ["目标范围确实触及首个VMA或恰邻接VMA边界","固定函数被调用、列表状态与C执行前提按原文成立"]
+    impact: "可能不选中有效相交VMA或不能定义良好完成遍历；不能保证munmap真正删除目标区间"
+    counter_evidence: ["有严格早于start的前驱且迭代器定义良好时，可按源码继续判断next和交叠","本次没有运行或复现实例、未穷尽所有替代迭代入口"]
+    unknown: ["编译器对NULL成员地址表达式的处理、动态顺序与实际页表效果NOT_RUN"]
+    evidence: [VL14-A061, VL14-A063, VL14-A064, VL14-A065, VL14-A067, VL14-A072, VL14-A078, VL14-A079]
+    related: []
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_and_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好、为具体后续专项发起独立授权，且当时回源验证"
+  - qualified_id: CORE-USER-VMA-LIFETIME-14::VL14-F02
+    id: VL14-F02
+    title: "VMA调整的vm_pgoff公式混合字节地址和页单位"
+    kind: [source_fact, conditional_inference]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-vma-lifetime-14/facts-and-boundaries.yaml::anchors"
+    claim: "__simple_vma_adjust直接执行vma->vm_pgoff += (start - vma->vm_pgoff) >> PAGE_SHIFT；vm_pgoff字段按页而start是虚拟地址，计算不是start与旧vm_start的字节差。split两个方向及merge共用该函数，可能意外偏移文件页或产生无效偏移。"
+    premises: ["成功进入__simple_vma_adjust且执行源文赋值","start与原vm_pgoff不是恰好碰巧满足目标变换的特殊数值"]
+    impact: "被保留或新VMA的文件页偏移不具静态正确性保证；实际访问数据未验证"
+    counter_evidence: ["仅声明字段单位和源语句维度错误，不声称某个给定文件已错误映射或固定数值","并非所有munmap输入都能到达分割/merge"]
+    unknown: ["实际pgoff实例与编译/运行效果NOT_RUN"]
+    evidence: [VL14-A035, VL14-A036, VL14-A091, VL14-A029, VL14-A032, VL14-A060]
+    related: []
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_and_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好、为具体后续专项发起独立授权，且当时回源验证"
+  - qualified_id: CORE-USER-VMA-LIFETIME-14::VL14-F03
+    id: VL14-F03
+    title: "munmap摘VMA节点未配对vm_area_free、fput或vm_ops.close"
+    kind: [source_fact, conditional_lifetime_gap]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-vma-lifetime-14/facts-and-boundaries.yaml::anchors"
+    claim: "simple_do_vma_munmap摘链循环只调用__vma_unlink_from_list，而该helper减map_count并删除节点；没有在所读两段执行vm_area_free、fput(vm_file)或vm_ops.close。文件VMA创建/分割曾通过get_file增引用，merge的__simple_vma_adjust还能额外unlink后继节点也不配清理。"
+    premises: ["成功选中交叠并实际unlink至少一个已建立的VMA","所选VMA拥有可释放的对象或文件引用；不存在所读函数体之外的自动清理"]
+    impact: "从列表不可查不等于释放对象和引用；存在有条件的VMA/file资源保留缺口"
+    counter_evidence: ["mmap失败/合并路径确实可以vm_area_free/fput/close，但不能自动套到munmap","其它页缓存或生命周期回收入口未被全仓穷尽"]
+    unknown: ["真实泄漏率、其它释放者与使用后行为NOT_RUN"]
+    evidence: [VL14-A017, VL14-A018, VL14-A083, VL14-A084, VL14-A085, VL14-A040, VL14-A044, VL14-A026, VL14-A037, VL14-A049, VL14-A050]
+    related: ["CORE-USER-FILE-CACHE-13::FC13-F05","CORE-USER-VFS-BASELINE-05::UV-10"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_and_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好、为具体后续专项发起独立授权，且当时回源验证"
+  - qualified_id: CORE-USER-VMA-LIFETIME-14::VL14-F04
+    id: VL14-F04
+    title: "VMA摘链没有活动页表清除/TLB失效与page归还连接"
+    kind: [source_fact, evidence_gap]
+    status: needs_evidence
+    source_ref: "time @ a039d9803ade; user-vma-lifetime-14/facts-and-boundaries.yaml::anchors"
+    claim: "所读simple_do_vma_munmap成功路径没有调用simple_unmap_region、unmap_vmas、free_pgtables、tlb_finish_mmu或put_page/folio_put；simple_unmap_region本体的实际清PTE及TLB语句为注释，且它仅从已核mmap错误清理调用。unlink只变更VMA链，无法证明硬件映射撤销或物理页归还。"
+    premises: ["原PTE/page映射可能已经存在","调用运行至相应列表unlink；没有另行证实的同步清理在所选区间生效"]
+    impact: "munmap返回0不能作为PTE/TLB或物理page被释放的证据；不预测硬件可访问性"
+    counter_evidence: ["13主线R13-S03已证明特定fault分支会put源缓存页或私有预分配folio，这些不等于munmap清理","没有全树穷尽所有映射清理/架构页表原语"]
+    unknown: ["实际硬件地址翻译、TLB/页表内容及页回收NOT_RUN"]
+    evidence: [VL14-A018, VL14-A055, VL14-A056, VL14-A051, VL14-A084, VL14-A085]
+    related: ["CORE-USER-FILE-CACHE-13::FC13-F05"]
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_and_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好、为具体后续专项发起独立授权，且当时回源验证"
+  - qualified_id: CORE-USER-VMA-LIFETIME-14::VL14-F05
+    id: VL14-F05
+    title: "第二次分割失败与mmap覆盖失败未实现事务式回滚"
+    kind: [source_fact, conditional_inference]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-vma-lifetime-14/facts-and-boundaries.yaml::anchors"
+    claim: "simple_do_vma_munmap第一次start处分割可浅拷贝、get_file、vm_ops.open、修改边界并入链，第二次end处分割若分配失败只跳end_split_failed→return，没有撤销第一次副作用。simple_mmap_region在新VMA分配/映射回调之前先解除旧重叠区间，后续失败路径亦不恢复旧列表。brk缩小先写mm->brk再调用该unmap。"
+    premises: ["第一次split成功、第二次失败；或重叠mmap的旧链修改后新分配/回调失败；或brk缩小后unmap失败","所有上游有效指针/列表和函数调用前提满足"]
+    impact: "错误返回并不保证区间、file引用或brk仍为调用前状态"
+    counter_evidence: ["第一次split本身在new分配失败时可于get_file/入链之前返回-ENOMEM","不声称真实内存压力和具体失败条件发生过"]
+    unknown: ["实际回滚策略其它调用层、运行副作用NOT_RUN"]
+    evidence: [VL14-A011, VL14-A012, VL14-A015, VL14-A016, VL14-A020, VL14-A024, VL14-A025, VL14-A026, VL14-A030, VL14-A086, VL14-A041, VL14-A057]
+    related: []
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_and_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好、为具体后续专项发起独立授权，且当时回源验证"
+  - qualified_id: CORE-USER-VMA-LIFETIME-14::VL14-F06
+    id: VL14-F06
+    title: "munmap输入零长度、对齐和start+len溢出缺局部前置检查"
+    kind: [source_fact, conditional_language_risk]
+    status: deferred_owner_not_ready
+    source_ref: "time @ a039d9803ade; user-vma-lifetime-14/facts-and-boundaries.yaml::anchors"
+    claim: "sys_munmap直接调用__vm_munmap，后者未经本地len==0、PAGE_ALIGNED(start)、start+len溢出及用户地址范围检查就将start,start+len送simple_do_vma_munmap；find_vma_intersection在start>end时为不更新值的while。故不能按标准munmap保证固定EINVAL、无副作用或恰好释放一段。"
+    premises: ["调用参数违反预期页/范围/溢出前提","确实进入交集助手，且之前未遭遇其它未定义行为"]
+    impact: "有条件非返回、误交集或无检查消费风险；具体用户返回/机器结果未验证"
+    counter_evidence: ["有效、非零、页对齐且无溢出参数不触发此输入前提","其它外层库调用/受限调用者可施加额外约束，非本函数提供"]
+    unknown: ["所有上游输入过滤及实际C/机器行为未核"]
+    evidence: [VL14-A003, VL14-A007, VL14-A009, VL14-A063, VL14-A064, VL14-A067]
+    related: []
+    owner_action_now: none
+    blocks: {ongoing_static_work: false, future_fix_and_runtime: separate_authorization}
+    reopen_conditions: "Owner明确准备好、为具体后续专项发起独立授权，且当时回源验证"
+evidence_appends:
+  - target: CORE-USER-FILE-CACHE-13::FC13-F05
+    operation: evidence_append_only
+    old_status_change: none
+    note: "从cache文件对象扩展到VMA生命周期：创建/分割可get_file；munmap unlink不fput/close/free；mmput的exit_mmap被注释。R13-S03的源页put与COW页put仍分属fault分支，非本次unlink的清缓存操作。"
+    evidence: [VL14-A044, VL14-A026, VL14-A018, VL14-A084, VL14-A085, VL14-A101, VL14-A102]
+  - target: CORE-USER-VFS-BASELINE-05::UV-15
+    operation: evidence_append_only
+    old_status_change: none
+    note: "退出已有do_exit的exit_mm调用被注释，exec_mmap虽有mmput但__mmput的exit_mmap仍为注释；追加VMA/page回收链断点，不重新写旧PID/等待/通知结论。"
+    evidence: [VL14-A104, VL14-A103, VL14-A101, VL14-A102]
+  - target: CORE-USER-VFS-BASELINE-05::UV-10
+    operation: evidence_append_only
+    old_status_change: none
+    note: "文件引用方面：mmap新VMA和split新片段增加file引用；所读munmap unlink没有fput，另有mmap错误路径的fput，须区别close/fput及VMA持有的file引用。"
+    evidence: [VL14-A044, VL14-A026, VL14-A018, VL14-A050, VL14-A093, VL14-A094]
+errata_candidates: []
+not_covered: ["complete VMA path and all indirect callers", "full PTE/TLB architecture and physical allocator", "global invalidation/truncate/page cache", "userland libc and binary runtime", "C preprocessing, compilation, QEMU, hardware"]

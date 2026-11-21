@@ -1,0 +1,197 @@
+{
+ "check": "EXPECTED_OBJECTS3",
+ "sources": {
+  "lead/07-core-audit-map.yaml": {
+   "commit_short12": "57a7c3e0eebf",
+   "bytes": 9612,
+   "sha256_segments": [
+    "0ce03c08a9593cb7",
+    "fd1700d19cd26756",
+    "21e2a50e8614a28c",
+    "242348ae127b854f"
+   ]
+  },
+  "lead/07-scheduler-wakeup-timer-audit.md": {
+   "commit_short12": "57a7c3e0eebf",
+   "bytes": 22708,
+   "sha256_segments": [
+    "a44f91940cf33240",
+    "2cb01a68a263840c",
+    "b6046cf8345df9e6",
+    "1ea43fb3173334d8"
+   ]
+  },
+  "lead/MANIFEST.md": {
+   "commit_short12": "57a7c3e0eebf",
+   "bytes": 7093,
+   "sha256_segments": [
+    "1d591d6b4b2ee7dd",
+    "adbe161e66f22345",
+    "25dd693c8d14b274",
+    "382474374a0c9916"
+   ]
+  }
+ },
+ "selection_rules_from": {
+  "v01": "core/fixtures/v01_structure.py @ a1e7c2277705 (FILES, paths, report inputs_read filter, scope_files)",
+  "static": "recheck-01 evaluate2.v08 and make_results2.v14_source @ b843d475367a"
+ },
+ "v01": {
+  "referenced_paths": {
+   "map.report": "agent-workspace/lead/MYOS2-LEAD-002/07-scheduler-wakeup-timer-audit.md",
+   "map.validation_contract": "agent-workspace/lead/MYOS2-LEAD-002/09-local-verification-contract.md",
+   "map.CA-01.old_claim_ref": "agent-workspace/WAVE-1-REVIEW.md"
+  },
+  "report_inputs_read": [
+   "mykernel/scripts/options_flags.cmake",
+   "mykernel/debug/panic.c",
+   "mykernel/sched/scheduler/scheduler_core.c",
+   "mykernel/sched/scheduler/scheduler.h",
+   "mykernel/sched/scheduler/myos_rt.c",
+   "mykernel/sched/scheduler/scheduler_macro.h",
+   "mykernel/time/timer/timer.c",
+   "mykernel/time/timer/timer.h",
+   "mykernel/time/systick/systick.c",
+   "mykernel/time/timekeeping/timekeeping.c",
+   "mykernel/kactive/completion/completion.c",
+   "mykernel/kactive/completion/completion.h",
+   "mykernel/kactive/swait/swait.c",
+   "mykernel/lib/list/double_list.h",
+   "mykernel/lib/list/double_list_macro.h",
+   "mykernel/init/main.c",
+   "mykernel/kactive/softirq/softirq.c",
+   "mykernel/kactive/softirq/softirq.h",
+   "mykernel/arch/x86_64/myos/interrupt.c",
+   "mykernel/arch/x86_64/myos/LVT_timer.c",
+   "mykernel/arch/x86_64/kernel/hpet.c",
+   "mykernel/arch/x86_64/kernel.lds",
+   "mykernel/CMakeLists.txt",
+   "mykernel/scripts/target_kernel.cmake",
+   "mykernel/arch/x86_64/lock_IPC/spinlock/spinlock_smp_arch.h",
+   "mykernel/arch/x86_64/lock_IPC/atomic/atomic_arch.h",
+   "mykernel/arch/x86_64/kernel/myos_APboot.S",
+   "mykernel/include/linux/kernel/asm-generic/bug.h",
+   "mykernel/printk/printk.c",
+   "mykernel/sched/forkexec/fork.c",
+   ".vscode-kdbg/run-qemu-gdb-myos2.sh",
+   "agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md",
+   "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-09-24-scheduling-sync-followup.md"
+  ],
+  "report_inputs_read_unique": true,
+  "manifest_scope_files": [
+   "07-scheduler-wakeup-timer-audit.md",
+   "07-core-audit-map.yaml",
+   "08-conversation-archive-disposition.md",
+   "09-local-verification-contract.md",
+   "MANIFEST.md",
+   "checkpoints/2026-09-24-core-audit-and-archive.md"
+  ],
+  "hex40_scope_file_keys": [
+   "07-scheduler-wakeup-timer-audit.md",
+   "07-core-audit-map.yaml",
+   "08-conversation-archive-disposition.md",
+   "09-local-verification-contract.md",
+   "MANIFEST.md",
+   "2026-09-24-core-audit-and-archive.md"
+  ],
+  "parse_keys": [
+   "report",
+   "map",
+   "contract09",
+   "pilot10",
+   "core11",
+   "manifest"
+  ],
+  "completion_flag_keys": [
+   "whole_002R_complete",
+   "whole_003R_complete",
+   "whole_007R_complete",
+   "whole_wave2_complete",
+   "acceptance_verdict",
+   "kernel_modified",
+   "map.replacement_for_002R_003R_007R"
+  ]
+ },
+ "v00": {
+  "anchor_ids": [
+   "A01",
+   "A02",
+   "A03",
+   "A04",
+   "A05",
+   "A06",
+   "A07",
+   "A08",
+   "A09",
+   "A10",
+   "A11",
+   "A12",
+   "A13",
+   "A14",
+   "A15",
+   "A16",
+   "A17",
+   "A18",
+   "A19",
+   "A20",
+   "A21",
+   "A22",
+   "A23",
+   "A24",
+   "A25",
+   "A26",
+   "A27",
+   "A28",
+   "A29",
+   "A30",
+   "A31",
+   "A32",
+   "A33",
+   "A34",
+   "A35",
+   "A36",
+   "A37",
+   "A38",
+   "A39",
+   "A40",
+   "A41",
+   "A42",
+   "A43",
+   "A44",
+   "A45",
+   "A46",
+   "A47"
+  ],
+  "count_source": "map.validation.source_quote_count_in_report_expected",
+  "consumed_anchor_keys": [
+   "id",
+   "verdict_mech",
+   "contiguous_hits",
+   "length_1_to_5",
+   "path_exists_in_time",
+   "semantic"
+  ]
+ },
+ "a46": {
+  "anchor_ids": [
+   "A46-C",
+   "A46-ASM"
+  ],
+  "source": "reviews/CORE-CHECK-01-core-review.md @ ec62453e76d2"
+ },
+ "static": {
+  "V08": [
+   "active_idle_state_writers",
+   "rest_init_state_changes",
+   "active_rq_idle_assignments",
+   "init_task_state_initializer"
+  ],
+  "V14": [
+   "lds_alias",
+   "target_link_options",
+   "active_c_definitions_of_jiffies",
+   "active_c_definitions_of_jiffies_64",
+   "elf_files_in_time_tree"
+  ]
+ }
+}

@@ -1,0 +1,84 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-REQUEST-HANDOFF-54",
+  "R53_01": {
+    "prior": "RETURN",
+    "status": "OPEN",
+    "request": "R53-01_DOCUMENTATION_CLOSURE_REQUESTED",
+    "self_closed": false,
+    "corrective_count": 3,
+    "discrepancy": "A03/B03 old literal quotes matched fixed source, review blank location incorrect; new full 5-line source excerpts include true trailing blank"
+  },
+  "canonical_history": {
+    "R52_01": {
+      "canonical_status": "CLOSED_DOCUMENTATION_ONLY",
+      "origin": "C04 receipt"
+    },
+    "R53_01": {
+      "canonical_status": "OPEN_RETURN",
+      "origin": "C04 receipt"
+    },
+    "CA_03": {
+      "canonical_status": "SUPPORTED_IN_SCOPE",
+      "origin": "prior core host fixture; not re-run"
+    },
+    "CA_04": {
+      "canonical_status": "SUPPORTED_IN_SCOPE",
+      "origin": "prior core host fixture; not re-run"
+    },
+    "UV_01": {
+      "canonical_status": "deferred_owner_not_ready",
+      "origin": "Owner deferral"
+    },
+    "WW52_U04": {
+      "canonical_status": "needs_evidence",
+      "origin": "52 ownership gap"
+    }
+  },
+  "new_candidates": [
+    {
+      "id": "RH54-F01",
+      "scope": "A",
+      "class": "source_level_conditional",
+      "prior_related": "CO53-F01/F02/F03 were inner request ownership, distinct result channel",
+      "condition": "valid parent and normal device_add path",
+      "observation": "inner devtmpfs result discarded, outer error stays -EINVAL",
+      "not_proven": "direct myos_device_create reachability or real failures"
+    },
+    {
+      "id": "RH54-F02",
+      "scope": "B/C",
+      "class": "source_level_conditional",
+      "prior_related": "CO53 object ownership distinct; shared fixed return across IDE/NVMe/XHCI",
+      "condition": "valid hardware/IRQ path returns normally",
+      "observation": "fixed -ENOERR=0, no selected caller-visible device error status",
+      "not_proven": "real failed hardware operation, false success in guest"
+    }
+  ],
+  "new_candidate_count": 2,
+  "runtime_observations": 0,
+  "new_gaps": [
+    {
+      "id": "RH54-U01",
+      "status": "needs_evidence",
+      "topic": "A",
+      "scope": "parent validity and reachability of device_add; deleted node path commented"
+    },
+    {
+      "id": "RH54-U02",
+      "status": "needs_evidence",
+      "topic": "B",
+      "scope": "IDE req_in_using IRQ race, status and second request progress"
+    },
+    {
+      "id": "RH54-U03",
+      "status": "needs_evidence",
+      "topic": "C",
+      "scope": "NVMe CQ status/CID, XHCI event status/EP pointer lifespan"
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "phase3_authorized": false,
+  "code_change_authorized": false,
+  "next_batch_authorized": false
+}

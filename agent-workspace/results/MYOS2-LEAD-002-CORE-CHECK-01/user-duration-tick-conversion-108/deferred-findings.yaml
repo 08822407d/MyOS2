@@ -1,0 +1,246 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DURATION-TICK-CONVERSION-108",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "b089a6e48c7b",
+  "record_type": "conditional_findings_and_deferred_evidence",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical_statuses": {
+    "R105_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R105_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R106_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R106_02": "OPEN",
+    "R107_01": "OPEN",
+    "R107_02": "OPEN",
+    "batch105": "PASS_PENDING_LOCAL",
+    "batch106": "RETURN",
+    "batch107": "RETURN"
+  },
+  "old_roots_preserved": [
+    {
+      "source": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105",
+      "ids": [
+        "SC105-F01..F08",
+        "SC105-U01..U08"
+      ],
+      "disposition": "historical IDs frozen; 105 closed documentation only"
+    },
+    {
+      "source": "CORE-USER-BOOT-DELAY-ACCOUNTING-106",
+      "ids": [
+        "BD106-F01..F06",
+        "BD106-U01..U06"
+      ],
+      "disposition": "fixed 106 original preserved; R106-02 pending C07 review"
+    },
+    {
+      "source": "CORE-USER-REALTIME-READOUT-ABI-107",
+      "ids": [
+        "RT107-F01..F06",
+        "RT107-U01..U06"
+      ],
+      "disposition": "fixed 107 original preserved; R107-01/02 pending C07 review"
+    },
+    {
+      "source": "CORE-USER-SCHEDULE-TIMEOUT-50",
+      "ids": [
+        "schedule timeout independent review"
+      ],
+      "disposition": "only boundary that jiffies value is not measured sleeping time; no duplicate root opened"
+    }
+  ],
+  "new_conditional_candidates": [
+    {
+      "id": "DT108-F01",
+      "title": "A uint millisecond argument can be interpreted through signed int conversion",
+      "classification": "STATIC_TYPE_DOMAIN_CANDIDATE",
+      "source_ids": [
+        "DT108-E037",
+        "DT108-E039"
+      ],
+      "premise": "m exceeds signed int representable range under a 32bit int ABI",
+      "conditional_implication": "(int)m<0 gate may saturate to MAX_JIFFY_OFFSET; not the same as an ordinary large positive duration on all implementations",
+      "first_unverified_step": "actual target compiler and high value caller; ordinary small inputs not affected",
+      "observed_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "DT108-F02",
+      "title": "jiffies_to_usecs uses a uint return even when input is ulong",
+      "classification": "STATIC_RETURN_WIDTH_CANDIDATE",
+      "source_ids": [
+        "DT108-E032",
+        "DT108-E035",
+        "DT108-E046"
+      ],
+      "premise": "LP64 and j near MAX_JIFFY_OFFSET",
+      "conditional_implication": "return may truncate the large unsigned product, and usecs_to_jiffies bound check uses the truncated result",
+      "first_unverified_step": "actual ABI and high input path or compile check",
+      "observed_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "DT108-F03",
+      "title": "Fixed-point timespec conversion is not a global infinite-precision ceil formula",
+      "classification": "STATIC_FINITE_PRECISION_SCOPE",
+      "source_ids": [
+        "DT108-E030",
+        "DT108-E031",
+        "DT108-E049",
+        "DT108-E051"
+      ],
+      "premise": "very large or borderline timespec durations outside bounded model",
+      "conditional_implication": "ceil approximations, shifts, intermediate overflow and sec cap need independent checks",
+      "first_unverified_step": "authorized larger domains and actual numeric type validation",
+      "observed_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "DT108-F04",
+      "title": "MAX_SEC clamp is an independent cap not identical to MAX_JIFFY_OFFSET",
+      "classification": "STATIC_SATURATION_BOUNDARY",
+      "source_ids": [
+        "DT108-E032",
+        "DT108-E033",
+        "DT108-E050"
+      ],
+      "premise": "timespec seconds >=MAX_SEC_IN_JIFFIES",
+      "conditional_implication": "code clamps seconds then zeros nsec, so caller may not get mathematically expected ceil of requested duration",
+      "first_unverified_step": "actual long width, intended timeout semantics and build",
+      "observed_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "DT108-F05",
+      "title": "Nominal HZ and TICK_NSEC do not certify observed interrupt period",
+      "classification": "REAL_TIME_EVIDENCE_GAP",
+      "source_ids": [
+        "DT108-E024",
+        "DT108-E025",
+        "DT108-E044",
+        "DT108-E052"
+      ],
+      "premise": "actual timer programming and CPU/IRQ delivery outside this batch",
+      "conditional_implication": "correct integer round trip does not guarantee real sleeping time or measured tick rate",
+      "first_unverified_step": "runtime hardware and scheduler trace under separate authorization",
+      "observed_failure": false,
+      "status": "DEFERRED_NO_RUN"
+    },
+    {
+      "id": "DT108-F06",
+      "title": "Large u64 jiffies times nanoseconds can exceed the source intermediate width",
+      "classification": "STATIC_INTEGER_OVERFLOW_DOMAIN",
+      "source_ids": [
+        "DT108-E052",
+        "DT108-E053"
+      ],
+      "premise": "jiffies large enough that multiplying by TICK_NSEC exceeds u64 representable range",
+      "conditional_implication": "the return fields cannot be equated to infinite-precision product quotient and remainder",
+      "first_unverified_step": "actual caller bounds and target type operations; normal inputs unaffected",
+      "observed_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    }
+  ],
+  "new_evidence_gaps": [
+    {
+      "id": "DT108-U01",
+      "topic": "Actual selected HZ/SEC_SC and compiler branch",
+      "need": "Kernel CMake flags, target_include_directories, full preprocessor selection and target ABI",
+      "source_ids": [
+        "DT108-E024",
+        "DT108-E026",
+        "DT108-E027",
+        "DT108-E028",
+        "DT108-E007",
+        "DT108-E008"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DT108-U02",
+      "topic": "LP64 and large uint conversions",
+      "need": "Actual sizeof/alignof of long, uint, ulong and cast from uint to int for out-of-range values",
+      "source_ids": [
+        "DT108-E032",
+        "DT108-E035",
+        "DT108-E037",
+        "DT108-E046"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DT108-U03",
+      "topic": "Full finite-domain rounding and intermediary arithmetic",
+      "need": "Authorized build and model validation of MAX_SEC, SEC/NSEC_CONVERSION, high timespec ranges and integer overflow checks",
+      "source_ids": [
+        "DT108-E030",
+        "DT108-E031",
+        "DT108-E033",
+        "DT108-E051"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DT108-U04",
+      "topic": "Real jiffies timer events and scheduler wakeups",
+      "need": "Actual interrupt programming, timer tick arrival, scheduler timeout/wakeup evidence; no device actions authorized",
+      "source_ids": [
+        "DT108-E024",
+        "DT108-E025",
+        "DT108-E052"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DT108-U05",
+      "topic": "Actual reverse output representation",
+      "need": "C compiled return and assignment width for jiffies_to_msecs/usecs and jiffies_to_timespec64 at relevant high inputs",
+      "source_ids": [
+        "DT108-E044",
+        "DT108-E046",
+        "DT108-E052",
+        "DT108-E053"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "DT108-U06",
+      "topic": "C07 Pro independent documentation review",
+      "need": "D00 R106-02 two original paths, R107-01 macro and config evidence, R107-02 quotient branch and graph corrections in frozen old consumers",
+      "source_ids": [
+        "DT108-E001",
+        "DT108-E002",
+        "DT108-E003",
+        "DT108-E004",
+        "DT108-E008",
+        "DT108-E011",
+        "DT108-E018",
+        "DT108-E056"
+      ],
+      "status": "PENDING_C07_REVIEW"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 6,
+    "new_evidence_gaps": 6
+  },
+  "execution_boundaries": {
+    "full_local_P9": "NOT_RUN",
+    "preprocessing": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "link": "NOT_RUN",
+    "repository_code_or_models": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "kernel": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_waiting": "NOT_RUN"
+  },
+  "root_identity_rule": "All new items conditional and scoped; old IDs remain authoritative for earlier findings. No runtime bug confirmed."
+}

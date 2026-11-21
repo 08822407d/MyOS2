@@ -1,0 +1,103 @@
+// MYOS2-LEAD-002-CHAT-EXEC-12 / CORE-USER-PRINTF-INTEGER-FORMAT-92
+// fixed time@a039d9803ade ; static call/data/order graph; not CFG.
+// blue solid: active direct function call, black solid: defined local data dependency,
+// dotted: intra-function source order, dashed: conditional, failure, or comparison only.
+// Cross-subsystem arrows are never automatically runtime ordering.
+// Graphviz, compiler, QEMU, hardware, actual concurrency: NOT_RUN.
+digraph PF92_IntegerFormat {
+  graph [rankdir=LR,labelloc=t,label="PF92: parser state -> integer generation -> bounded emission (static conditional)"];
+  node [shape=box,fontsize=10];edge [fontsize=9];
+  subgraph cluster_A {
+    label="A: format_decode state, width/precision and va_arg types";
+    fmt [label="valid fmt bytes\nliteral / %% / d i u o x X\nhh h l ll z t, width/precision"];
+    spec [label="printf_spec:\ntype 8b, width signed24,\nflags 8b, base 8b,\nprecision signed16"];
+    parse [label="format_decode\nNONE/literal or conversion"];
+    width [label="WIDTH type and early return\ncaller va_arg(args,int)\nset_field_width"];
+    wr [label="WIDTH resume\nnegative => LEFT, jump precision"];
+    prec [label="PRECISION type and early return\ncaller va_arg(args,int)\nset_precision"];
+    pr [label="PRECISION resume\nnegative=>0, jump qualifier"];
+    qual [label="d/i SIGN, u; oct8,\nx/X hex16; ll/z/t/hh/h"];
+    arg [label="vsnprintf va_arg switch:\nINT,UINT,LONG_LONG,\nULONG,LONG,SIZE_T,PTRDIFF,\nUBYTE/BYTE/USHORT/SHORT"];
+    inval [label="invalid format -> goto out\nno integer va_arg for that token"];
+    warns [shape=note,label="WARN_ONCE in fixed active header:\ncondition result; does not certify logging\nskip_atoi signed-int overflow gate"];
+    fmt -> parse [color=blue,label="format_decode called"];
+    parse -> spec [label="writes fields"];
+    parse -> width [style=dashed,label="if width *"];
+    width -> wr [style=dotted,label="caller re-enters"];
+    wr -> prec [style=dashed,label="if precision *"];
+    parse -> prec [style=dashed,label="if precision *"];
+    prec -> pr [style=dotted,label="caller re-enters"];
+    pr -> qual [style=dotted,label="resume conversion"];
+    parse -> qual [style=dashed,label="non-star normal"];
+    qual -> arg [style=dashed,label="recognized integer token"];
+    parse -> inval [style=dashed,label="unrecognized token"];
+    width -> warns [style=dotted,label="bitfield/check gate"];
+    prec -> warns [style=dotted,label="bitfield/check gate"];
+  }
+  subgraph cluster_B {
+    label="B: number tmp, sign/magnitude, digit pairs, divide chunks";
+    number [label="number(buf,end,num,spec)\nsource sign / width / prefix"];
+    sign [label="SIGN: cast num to signed long long\nif negative: unary minus\nLLONG_MIN stop gate"];
+    hex [label="base 8/16:\nmask + 3/4 bit shift\nhex_asc_upper and SMALL"];
+    dec [label="base10 -> put_dec(tmp,num)\nlow-order first"];
+    table [label="decpair[100] u16 + _(x)\nones/tens ASCII pair\ncpu_to_le16"];
+    trunc [label="put_dec_trunc8\nq100 approximations\nlast u16 write 2B;\nadvance 1 if r<10"];
+    full [label="put_dec_full8\nfour u16 stores -> 8B"];
+    div [label="do_div(n,1e8)\nreturn remainder and UPDATE n\noptional second split"];
+    tmp [label="tmp[3*sizeof(num)] align2\nlength is NOT store footprint"];
+    ext [shape=note,label="finite math checks:\n9,99,100,1e8,1e16,UINT64_MAX\nnot actual C code execution"];
+    arg -> number [color=blue,label="vsnprintf direct call"];
+    number -> sign [style=dotted,label="if SIGN"];
+    number -> hex [style=dashed,label="base8/16"];
+    number -> dec [style=dashed,label="base10"];
+    dec -> div [color=blue,label="put_dec invokes macro"];
+    div -> full [style=dotted,label="8 digit remainder"];
+    dec -> trunc [color=blue,label="final chunk"];
+    trunc -> table [label="pair indexed read"];
+    full -> table [label="pair indexed read"];
+    trunc -> tmp [label="physical u16 store"];
+    full -> tmp [label="physical u16 store"];
+    hex -> tmp [label="reverse digit byte stores"];
+    ext -> div [style=dashed,label="comparison checks"];
+  }
+  subgraph cluster_C {
+    label="C: prefix, padding, output limit, returns, consumer";
+    widthCalc [label="number: calculate digit i,\nprecision=max(i,precision),\nremaining field_width"];
+    leading [label="space leading if !ZEROPAD && !LEFT"];
+    signemit [label="emit sign if any"];
+    prefix [label="emit 0x/0X for hex SPECIAL\nor leading 0 for oct nonzero"];
+    zeropad [label="if !LEFT: zero/space fill"];
+    precision [label="emit precision zeros"];
+    reverse [label="emit tmp[i-1..0]\nlogical buf++"];
+    trailing [label="emit trailing spaces if LEFT\nreturn logical buf"];
+    end [label="vsnprintf:\nsize>0 NUL at str or end[-1]\nreturn str-buf demand"];
+    early [label="if size>INT_MAX:\nreturn0 before any output/NUL"];
+    actual [shape=note,label="physical write needs buf<end\nlogical pointer advances beyond\npossible effective buffer; C pointer gate"];
+    vsc [label="vscnprintf:\nreturn demand if <size;\nelse size-1 if nonzero else0"];
+    sn [label="snprintf returns vsnprintf i"];
+    sc [label="scnprintf returns vscnprintf i"];
+    worker [label="format_worker_id uses scnprintf\ncreate_worker ignores returned int\n91 name-lifetime bounds still apply"];
+    numstr [label="num_to_str separate user of put_dec:\nwidth spaces, reverse tmp,\nreturns count; no NUL emitted here"];
+    number -> widthCalc [style=dotted,label="after generating digits"];
+    widthCalc -> leading [style=dotted,label="source order"];
+    leading -> signemit [style=dotted,label="source order"];
+    signemit -> prefix [style=dotted,label="source order"];
+    prefix -> zeropad [style=dotted,label="source order"];
+    zeropad -> precision [style=dotted,label="source order"];
+    precision -> reverse [style=dotted,label="source order"];
+    tmp -> reverse [label="read digits by reverse index"];
+    reverse -> trailing [style=dotted,label="source order"];
+    trailing -> end [style=dotted,label="caller receives pointer"];
+    fmt -> early [style=dashed,label="size check before parsing"];
+    end -> vsc [color=blue,label="wrapper caller receives demand"];
+    end -> sn [style=dashed,label="separate snprintf path"];
+    vsc -> sc [style=dashed,label="scnprintf wrapper"];
+    sc -> worker [style=dashed,label="real consumer calls scnprintf"];
+    end -> actual [label="logical vs physical distinction"];
+    dec -> numstr [style=dashed,label="separate put_dec caller (not number direct call)"];
+  }
+  guard [shape=note,label="R90 CLOSED, R91 PASS_PENDING_LOCAL\nR91-S01/S02/S03 and R90C-S01 retained\nG00 PASSED, D00 NOT_REQUIRED\nnew author package awaiting C06 Pro\nruntime/full P9/Graphviz NOT_RUN"];
+  inval -> guard [style=dashed,label="bounded negative branch"];
+  numstr -> guard [style=dashed,label="no auto C-string claim"];
+  actual -> guard [style=dashed,label="C pointer gate"];
+}

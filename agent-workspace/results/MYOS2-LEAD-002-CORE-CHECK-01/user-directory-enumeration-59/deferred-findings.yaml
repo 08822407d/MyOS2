@@ -1,0 +1,322 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-DIRECTORY-ENUMERATION-59",
+  "record_type": "conditional_source_findings_and_prior58_return_appendix",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "8de2a76f5f73",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "prior_return_items": [
+    {
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::R58-01",
+      "original_mainline_verdict": "RETURN_DOCUMENTATION_ONLY",
+      "correction_status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "closed_by_executor": false,
+      "superseded_old_anchor_ids": [
+        "B24",
+        "B25"
+      ],
+      "historical_count": 87,
+      "historical_remaining_unrechecked": 85,
+      "new_D00_anchor_ids": [
+        "D01",
+        "D02",
+        "D03"
+      ],
+      "mandatory_supplements": [
+        "R58-S01",
+        "R58-S02"
+      ],
+      "old_artifacts_frozen": true,
+      "old_comment_frozen": "PR17#issuecomment-6720176655",
+      "consumption_index": "facts-and-boundaries.yaml::prior58_disposition and directory-enumeration.md::D00"
+    }
+  ],
+  "historical_statuses_unchanged": {
+    "batch57": "CLOSED_DOCUMENTATION_ONLY R57-01/02 by C05; PASS_PENDING_LOCAL + R57C-S01",
+    "batch58": "RETURN_DOCUMENTATION_ONLY R58-01 pending mainline",
+    "batch35": "PASS_PENDING_LOCAL + R35-S01/S02",
+    "batch36": "CLOSED_DOCUMENTATION_ONLY old corrections + R36C-S01",
+    "batch38": "PASS_PENDING_LOCAL + R38-S01/S02",
+    "batch41": "PASS_PENDING_LOCAL + R41-S01/S02"
+  },
+  "new_findings": [
+    {
+      "id": "DE59-F01",
+      "topic": "A",
+      "kind": "raw_fd_array_access_before_EBADF",
+      "claim": "myos_fdget_pos(int fd) indexes current->files->fd_array[fd] without a shown logical/physical bound gate; the syscall's later !f.file->-EBADF covers a valid slot containing NULL, not an invalid array index",
+      "premises": [
+        "selected getdents64 passes unsigned fd into int fd parameter; for out-of-range values conversion/validity is separately bounded",
+        "current/files pointer objects valid until index",
+        "selected raw getter called"
+      ],
+      "counterevidence": [
+        "valid in-range NULL slot returns ordinary fd_s with file NULL and syscall -EBADF",
+        "no supplied real user fd input or physical array observation"
+      ],
+      "earliest_stop": "fd_array indexing or earlier current/files read; cannot promise safe -EBADF",
+      "links": [
+        "CORE-USER-FD-LOOKUP-REF-41::FG41-F01"
+      ],
+      "note": "F01 applies to myos_fdget_pos; FG41-F01 applies to different __simple_fget and f_count, do not equate",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F01",
+      "classification": "source_conditional_candidate_only",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "owner separately authorized focused evidence gathering or execution",
+        "verified relevant current source and valid object inputs"
+      ],
+      "runtime_reproduced": false
+    },
+    {
+      "id": "DE59-F02",
+      "topic": "A",
+      "kind": "direct_iterator_dispatch_without_method_guard",
+      "claim": "getdents64 syscall body directly evaluates f.file->f_op->iterate_shared without checking f_op/iterate_shared for NULL; separate iterate_dir would guard method and return -ENOTDIR but its syscall invocation is commented",
+      "premises": [
+        "fd_s.file valid nonNULL and f_pos readable",
+        "f_op pointer or method absent",
+        "method call attempted on chosen path"
+      ],
+      "counterevidence": [
+        "valid FAT32_file_ops has iterate_shared bound to FAT32_getdents64 if it is actually the selected file op",
+        "iterate_dir direct helper has safe no-method branch but is not used here"
+      ],
+      "earliest_stop": "f_op member read if f_op NULL, or indirect method call if method NULL; no defined errno beyond",
+      "links": [],
+      "note": "not all files are guaranteed to lack method",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F02",
+      "classification": "source_conditional_candidate_only",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "owner separately authorized focused evidence gathering or execution",
+        "verified relevant current source and valid object inputs"
+      ],
+      "runtime_reproduced": false
+    },
+    {
+      "id": "DE59-F03",
+      "topic": "B",
+      "kind": "partial_enumeration_position_not_advanced",
+      "claim": "FAT32_getdents64 resets iobuf iterator to0 for every non--1 ctx.pos, and only sets ctx.pos=-1 when error==0; if actor accepts a record then rejects the next and returns error, ctx.pos remains prior f_pos while syscall returns accounted prefix bytes; next call can repeat same records",
+      "premises": [
+        "same valid file, stable directory and normal getter prefix with at least two ordinary entries",
+        "first actor succeeds, second returns -EINVAL or -EIO without earlier invalidity",
+        "ctx.pos initially0 or positive and no other writer"
+      ],
+      "counterevidence": [
+        "when normal FAT pass completes error0, ctx.pos=-1 and next call early returns0",
+        "real FAT last-entry omission/ERR_PTR and actual content may change observed actor prefix"
+      ],
+      "earliest_stop": "iobuf/getter/readent/parser invalidity may precede actor; under valid prefix, cursor reset and ctx.pos unchanged are local facts",
+      "links": [
+        "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F02"
+      ],
+      "note": "not a live duplicate reproduction; position policy and old final-entry issue are distinct",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F03",
+      "classification": "source_conditional_candidate_only",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "owner separately authorized focused evidence gathering or execution",
+        "verified relevant current source and valid object inputs"
+      ],
+      "runtime_reproduced": false
+    },
+    {
+      "id": "DE59-F04",
+      "topic": "B/C",
+      "kind": "fixed_zero_directory_metadata",
+      "claim": "FAT32_getdents64 passes offset=0, ino=0, d_type=0 to each ctx->actor; filldir64 writes these values into d_off (for prev) / d_ino / d_type on its active path, with final offset update commented",
+      "premises": [
+        "selected FAT32_file_ops bound and actor is filldir64",
+        "name, memory, all preceding writes valid",
+        "actor reaches field stores"
+      ],
+      "counterevidence": [
+        "other filesystems could provide real offset/type/inode; this is fixed FAT consumer only",
+        "not a measured user ABI or disk entry"
+      ],
+      "earliest_stop": "earlier parser or user-store invalidity; no proof of resulting user-visible fields if invalid",
+      "links": [],
+      "note": "source-level metadata constant, not stand-alone standard violation",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F04",
+      "classification": "source_conditional_candidate_only",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "owner separately authorized focused evidence gathering or execution",
+        "verified relevant current source and valid object inputs"
+      ],
+      "runtime_reproduced": false
+    },
+    {
+      "id": "DE59-F05",
+      "topic": "C",
+      "kind": "unconsumed_user_copy_residue_and_unprotected_stores",
+      "claim": "filldir64 directly writes prev->d_off, d_ino, d_reclen, d_type, then saves copy_to_user return into cplen without checking it; finally directly writes trailing NUL and advances buf/count; usercopy wrapper access_ok applies only to copy_to_user, not all direct stores",
+      "premises": [
+        "valid name, positive accepted reclen, ordinary target pointer accesses remain defined",
+        "copy_to_user hypothetically returns nonzero residue (without an earlier invalid direct store)",
+        "callee returns normally"
+      ],
+      "counterevidence": [
+        "normal successful copy with writable user memory may return0 residue and expected records",
+        "invalid pointer may fail at the earlier direct store, forbidding a later successful-byte prediction"
+      ],
+      "earliest_stop": "first direct user store or bad source before copy; when valid stores/partial copy can coexist, counter update is still requested",
+      "links": [
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F01"
+      ],
+      "note": "BI55-F01 pertains FAT read/write usercopy, not same call site",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F05",
+      "classification": "source_conditional_candidate_only",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "owner separately authorized focused evidence gathering or execution",
+        "verified relevant current source and valid object inputs"
+      ],
+      "runtime_reproduced": false
+    },
+    {
+      "id": "DE59-F06",
+      "topic": "C",
+      "kind": "trailing_dirent_offset_not_finalized",
+      "claim": "filldir64 writes offset to prev pointer computed from current_dir - prev_reclen; first record prev==current, subsequent records write the prior record; syscall final lastdirent->d_off patch remains commented, so in a two-record accepted model the second record's d_off has no active direct assignment from this function",
+      "premises": [
+        "valid user buffer and two successful actor calls with nonoverflowing reclen",
+        "no external memory writer supplies the last field",
+        "selected offset argument is fixed0 from FAT"
+      ],
+      "counterevidence": [
+        "single-record case writes its own offset because prev_reclen initial0",
+        "prior buffer contents might happen to equal the needed value; lack of assignment not proof of particular bytes"
+      ],
+      "earliest_stop": "invalid user pointer or copy issue may interrupt before second record; do not infer exact arbitrary d_off value",
+      "links": [],
+      "note": "field initialization gap, not runtime-verified ABI corruption",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F06",
+      "classification": "source_conditional_candidate_only",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "owner separately authorized focused evidence gathering or execution",
+        "verified relevant current source and valid object inputs"
+      ],
+      "runtime_reproduced": false
+    },
+    {
+      "id": "DE59-F07",
+      "topic": "A/C",
+      "kind": "unsigned_count_to_signed_and_prevalidation_arithmetic",
+      "claim": "getdents64 accepts unsigned count but getdents_cbk64_s.count is int; out-of-int-range requests have implementation-defined result on conversion. filldir64 computes int reclen from ALIGN(offsetof+namelen+1,8) before verify_dirent_name, so malformed extreme namelen cannot be assumed safely rejected before arithmetic",
+      "premises": [
+        "selected types/target model, no earlier invalid pointers",
+        "out-of-signed-range count or pathological namelen at helper entry",
+        "no actual compiler expansion measured"
+      ],
+      "counterevidence": [
+        "for representable count and sane positive name length the model yields expected 24/32/... aligned byte sizes",
+        "verify later rejects len<=0 or >=PATH_MAX if computation has remained valid"
+      ],
+      "earliest_stop": "conversion or arithmetic/value-range validity may be unproven before later error branch",
+      "links": [],
+      "note": "signed32 wrap examples are explicitly conditional, not universal C behavior",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F07",
+      "classification": "source_conditional_candidate_only",
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "resume_conditions": [
+        "owner separately authorized focused evidence gathering or execution",
+        "verified relevant current source and valid object inputs"
+      ],
+      "runtime_reproduced": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "DE59-U01",
+      "topic": "A",
+      "kind": "fd_array_provenance",
+      "detail": "fd_array physical capacity, fd_count and selected file/f_op validity, actual installed inode/ops sources and out-of-range user inputs not traced end-to-end",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-U01",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DE59-U02",
+      "topic": "B",
+      "kind": "real_FAT_directory_and_safe_getter",
+      "detail": "get_full_ent may deref ERR_PTR before outer check, last-entry suppression and actual cluster buffer/geometry; no real disk/FAT content or normal EOF proof",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-U02",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DE59-U03",
+      "topic": "C",
+      "kind": "user_memory_copy_contract",
+      "detail": "raw_copy_to_user, exception fixup, user pointer mapping/alignment and independent direct stores not executed or proven for arbitrary addresses",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-U03",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DE59-U04",
+      "topic": "C",
+      "kind": "compiled_layout_ABI",
+      "detail": "linux_dirent64_s offsetof/ALIGN and compiler macro expansion not measured; offset19 and align8 are explicit ordinary x86-64 layout model only",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-U04",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DE59-U05",
+      "topic": "A/C",
+      "kind": "count_and_length_type_boundary",
+      "detail": "unsigned count > INT_MAX conversion, pathological namelen arithmetic/offsetof padding, memory limits and named origin not certified by compiler",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-U05",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DE59-U06",
+      "topic": "B",
+      "kind": "file_position_lifecycle",
+      "detail": "concurrency on f_pos, fdput_pos current flags0, caller retry policy and actual user readdir semantics not audited",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-U06",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DE59-U07",
+      "topic": "D00",
+      "kind": "prior59_history_limit",
+      "detail": "58 historical 85 residual anchors were not fully rechecked; pending R58-01 closure remains C05, and no automatic PR/CI P9 full gate executed",
+      "qualified_id": "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-U07",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    }
+  ],
+  "candidate_count": 7,
+  "gap_count": 7,
+  "runtime_confirmed_issue_count": 0,
+  "duplicate_policy": "source_field/source_value preserved; consumer-specific extension named separately; no full historical dedup certification",
+  "not_authorized": [
+    "edit kernel",
+    "compile/preprocess/runtime",
+    "modify existing documents/comments",
+    "self-close R58-01",
+    "self-accept batch59",
+    "start batch60",
+    "merge/PR creation/force-push"
+  ]
+}

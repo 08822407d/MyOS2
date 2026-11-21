@@ -1,0 +1,359 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-WORKQUEUE-WORK-LIFECYCLE-88",
+  "record_type": "bounded_work_lifecycle_deferrals",
+  "produced_by": "GPT-6 (visible family; backend not attested)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-15",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_PENDING_PRO_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "open_questions": [
+    "WQ88-U01",
+    "WQ88-U02",
+    "WQ88-U03",
+    "WQ88-U04",
+    "WQ88-U05",
+    "WQ88-U06",
+    "WQ88-U07",
+    "WQ88-U08",
+    "WQ88-U09"
+  ],
+  "new_candidates": [
+    {
+      "qualified_id": "WQ88-F01",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE",
+      "title": "queue_work_on returns true after linked-entry rejection",
+      "trigger": "valid already-linked work->entry; lower helper returns after WARN/goto out",
+      "conditional_effect": "no new link or kick in internal function, but outer sets ret=true",
+      "first_unproved_gate": "does not establish an actual duplicate submission; correct API contract needs separately verified producer/invariant",
+      "evidence_ids": [
+        "WQ88-E003",
+        "WQ88-E004",
+        "WQ88-E008",
+        "WQ88-E009",
+        "WQ88-E016"
+      ],
+      "prior_findings_link": [],
+      "status": "DEFERRED_NEEDS_EVIDENCE",
+      "not_reproduced": true
+    },
+    {
+      "qualified_id": "WQ88-F02",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE",
+      "title": "pending guard and data association not active in selected enqueue path",
+      "trigger": "work->data pending bit0 or1 while entry detached",
+      "conditional_effect": "commented pending test does not change branch; selected source also has no active PWQ association update before inserting",
+      "first_unproved_gate": "other producers/writers not exhaustively audited; cannot assert global absence or actual repeated execution",
+      "evidence_ids": [
+        "WQ88-E003",
+        "WQ88-E010",
+        "WQ88-E012",
+        "WQ88-E013",
+        "WQ88-E022",
+        "WQ88-E023",
+        "WQ88-E073"
+      ],
+      "prior_findings_link": [],
+      "status": "DEFERRED_NEEDS_EVIDENCE",
+      "not_reproduced": true
+    },
+    {
+      "qualified_id": "WQ88-F03",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE",
+      "title": "POOL_BH notification branch does not return",
+      "trigger": "need_more_worker true, first_idle_worker nonnull, flags & POOL_BH",
+      "conditional_effect": "kick_pool reaches while(1) before normal return, so caller unlock and outer true cannot be inferred",
+      "first_unproved_gate": "must prove these conditions reachable and thread executes; no real BH hang observed",
+      "evidence_ids": [
+        "WQ88-E025",
+        "WQ88-E026",
+        "WQ88-E028",
+        "WQ88-E031",
+        "WQ88-E039",
+        "WQ88-E101"
+      ],
+      "prior_findings_link": [],
+      "status": "DEFERRED_NEEDS_EVIDENCE",
+      "not_reproduced": true
+    },
+    {
+      "qualified_id": "WQ88-F04",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE",
+      "title": "scheduled list emptiness is tested through an unguarded first-container macro",
+      "trigger": "worker->scheduled circular list count0 and anchor.next points to anchor, after processing or initially",
+      "conditional_effect": "list_headr_first_container computes container_of on sentinel, while(work) is not a real list_empty guard; normal termination and legal deref cannot be certified",
+      "first_unproved_gate": "return pointer may depend on address model; do not claim guaranteed nonnull, crash or infinite loop",
+      "evidence_ids": [
+        "WQ88-E055",
+        "WQ88-E056",
+        "WQ88-E082",
+        "WQ88-E083",
+        "WQ88-E084",
+        "WQ88-E085"
+      ],
+      "prior_findings_link": [],
+      "status": "DEFERRED_NEEDS_EVIDENCE",
+      "not_reproduced": true
+    },
+    {
+      "qualified_id": "WQ88-F05",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE",
+      "title": "process_one_work uses PWQ before checking a NULL decode",
+      "trigger": "get_work_pwq(work) returns NULL because PWQ flag absent or masked address zero",
+      "conditional_effect": "worker current_pwq can be set NULL then strscpy reads pwq->wq->name before callback",
+      "first_unproved_gate": "no actual work->data producer or runtime call data certified; scope does not prove missing global init",
+      "evidence_ids": [
+        "WQ88-E022",
+        "WQ88-E023",
+        "WQ88-E066",
+        "WQ88-E069",
+        "WQ88-E070",
+        "WQ88-E090"
+      ],
+      "prior_findings_link": [],
+      "status": "DEFERRED_NEEDS_EVIDENCE",
+      "not_reproduced": true
+    },
+    {
+      "qualified_id": "WQ88-F06",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE",
+      "title": "simple_assign_work ignores list removal result",
+      "trigger": "work is not a valid member of pool->worklist or list_header_delete_node returns NULL, but next add is otherwise attempted",
+      "conditional_effect": "helper still calls list_header_add_to_tail(worker->scheduled,&work->entry) and can return true",
+      "first_unproved_gate": "if prior list operations/object are illegal proof stops earlier; no actual double-link corruption shown",
+      "evidence_ids": [
+        "WQ88-E053",
+        "WQ88-E054",
+        "WQ88-E047",
+        "WQ88-E086"
+      ],
+      "prior_findings_link": [
+        "PA87-F08 (different PWQ linkage context, not same root)"
+      ],
+      "status": "DEFERRED_NEEDS_EVIDENCE",
+      "not_reproduced": true
+    },
+    {
+      "qualified_id": "WQ88-F07",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE",
+      "title": "worker processing clear-pending step inactive",
+      "trigger": "work data pending bit remains set in a model that requires clearing for requeue",
+      "conditional_effect": "selected process_one_work has commented pending clear and invokes callback after unlocking",
+      "first_unproved_gate": "other writers/initializers and callback semantics not exhaustively read; avoid claiming requeue always fails or succeeds",
+      "evidence_ids": [
+        "WQ88-E003",
+        "WQ88-E012",
+        "WQ88-E013",
+        "WQ88-E073",
+        "WQ88-E074"
+      ],
+      "prior_findings_link": [],
+      "status": "DEFERRED_NEEDS_EVIDENCE",
+      "not_reproduced": true
+    }
+  ],
+  "new_gaps": [
+    {
+      "qualified_id": "WQ88-U01",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "work->data/entry/func real producer",
+      "missing": "no active INIT_WORK or equivalent producer established in bounded time paths; default search fragment only comment",
+      "why_it_matters": "submission and PWQ decode require initialized atomic data, self-links, callable function",
+      "evidence_ids": [
+        "WQ88-E010",
+        "WQ88-E011",
+        "WQ88-E012",
+        "WQ88-E022",
+        "WQ88-E074"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQ88-U02",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "87 perCPU WQ slot decoding and PWQ lifetime",
+      "missing": "PA87-F05/U06/U07 and R87-S02 guard numeric pointer/GS difference, cache/object allocation and map",
+      "why_it_matters": "before deref pwq and pool a valid address and initialized object are required",
+      "evidence_ids": [
+        "WQ88-E007",
+        "WQ88-E008",
+        "WQ88-E089",
+        "WQ88-E090"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQ88-U03",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "smp_processor_id and CPU topology validity",
+      "missing": "real current CPU number, range and smp_processor_id lower implementation not fully audited",
+      "why_it_matters": "sentinel target selection cannot be presumed valid",
+      "evidence_ids": [
+        "WQ88-E006",
+        "WQ88-E007",
+        "WQ88-E014"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQ88-U04",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "list anchor/count and failure/lock behavior",
+      "missing": "source list helper count checks and add/delete; no complete caller/lifetime/concurrent mutation proof",
+      "why_it_matters": "list_add/first/delete can nonreturn or produce nonobject under bad list state",
+      "evidence_ids": [
+        "WQ88-E045",
+        "WQ88-E046",
+        "WQ88-E047",
+        "WQ88-E082",
+        "WQ88-E083",
+        "WQ88-E084",
+        "WQ88-E097",
+        "WQ88-E098",
+        "WQ88-E099",
+        "WQ88-E100"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQ88-U05",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "worker initialization, counters and state",
+      "missing": "pool nr_running producers, idle-list consistency, worker task and POOL_BH conditions not observed as run",
+      "why_it_matters": "kick_pool success/nonreturn branch requires actual field values",
+      "evidence_ids": [
+        "WQ88-E024",
+        "WQ88-E028",
+        "WQ88-E031",
+        "WQ88-E032",
+        "WQ88-E037",
+        "WQ88-E038",
+        "WQ88-E039",
+        "WQ88-E043",
+        "WQ88-E044",
+        "WQ88-E101"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQ88-U06",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "wake_up_process and scheduler effects",
+      "missing": "callee source only forwards to try_to_wake_up and downstream scheduling not audited",
+      "why_it_matters": "wake request/return value cannot certify worker gained CPU or callback ran",
+      "evidence_ids": [
+        "WQ88-E027",
+        "WQ88-E052",
+        "WQ88-E065",
+        "WQ88-E096"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQ88-U07",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "PWQ encoding and work function lifetime",
+      "missing": "work_struct_pwq pointer-bit mask and callback source fields read, but real data flag producer not obtained",
+      "why_it_matters": "get_work_pwq may return NULL/invalid pointer, func may be NULL/noncallable",
+      "evidence_ids": [
+        "WQ88-E010",
+        "WQ88-E021",
+        "WQ88-E022",
+        "WQ88-E023",
+        "WQ88-E069",
+        "WQ88-E070",
+        "WQ88-E074",
+        "WQ88-E090"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQ88-U08",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "scheduled loop empty-termination and callback changes",
+      "missing": "macro computes first even on empty header, callbacks may mutate/free/requeue work",
+      "why_it_matters": "post-callback loop, cleanup and object existence remain conditional",
+      "evidence_ids": [
+        "WQ88-E055",
+        "WQ88-E056",
+        "WQ88-E070",
+        "WQ88-E074",
+        "WQ88-E075",
+        "WQ88-E077",
+        "WQ88-E082",
+        "WQ88-E083",
+        "WQ88-E084"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQ88-U09",
+      "classification": "SOURCE_EVIDENCE_GAP_NOT_PROVEN_DEFECT",
+      "title": "whole system correctness and hardware",
+      "missing": "no full workqueue users, destroy/flush/timer, worker scheduler, SMP, CPU state, kernel execution or runtime evidence",
+      "why_it_matters": "partial static analysis cannot be a global correctness or safety certificate",
+      "evidence_ids": [
+        "WQ88-E003",
+        "WQ88-E009",
+        "WQ88-E026",
+        "WQ88-E065",
+        "WQ88-E075"
+      ],
+      "status": "UNRESOLVED",
+      "runtime_evidence": "NOT_RUN"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "prior": "R86-01",
+      "status": "CLOSED_DOCUMENTATION_ONLY_BY_C06",
+      "scope": "No D00 or retry; 86 composite PASS_PENDING_LOCAL"
+    },
+    {
+      "prior": "R87-S01/S02/S03",
+      "status": "MANDATORY_SUPPLEMENT",
+      "scope": "Do not convert metadata model claims into payload writes; retain unsigned/pointer/state conditions and source/graph caveats"
+    },
+    {
+      "prior": "R86-S01/S02/S03",
+      "status": "MANDATORY_SUPPLEMENT",
+      "scope": "Template/CPU offset, GS register and source-side initialization boundaries remain"
+    },
+    {
+      "prior": "PA87-F05/U06",
+      "status": "CONDITIONAL_OR_UNRESOLVED",
+      "scope": "WQ slot address legality not proved by workqueue functions"
+    },
+    {
+      "prior": "PA87-F07/F08/U07/U08",
+      "status": "CONDITIONAL_OR_UNRESOLVED",
+      "scope": "PWQ construction/cleanup and outer constructor errors not reaudited or closed"
+    },
+    {
+      "prior": "BM80/PT81/DM82/TI83/ER84/BB85/PC86",
+      "status": "ORIGINAL_QUALIFIED_IDS_RETAINED",
+      "scope": "No historical defects duplicated; no kernel fix or new runtime evidence"
+    }
+  ],
+  "tallies": {
+    "new_candidate_count": 7,
+    "new_gap_count": 9,
+    "confirmed_runtime_bugs": 0,
+    "old_findings_closed_or_reassigned": 0,
+    "owner_fix_decisions_requested": [],
+    "kernel_patch_authorized": false,
+    "source_only": true
+  }
+}

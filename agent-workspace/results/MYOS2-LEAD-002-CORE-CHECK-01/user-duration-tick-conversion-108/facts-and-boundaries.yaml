@@ -1,0 +1,1519 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DURATION-TICK-CONVERSION-108",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "lead_contract_short12": "b089a6e48c7b",
+  "execution_parent_short12": "988632b3757e",
+  "read_channel": "connector",
+  "record_type": "bounded_duration_tick_conversion_facts",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical_states": {
+    "R105_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R105_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R106_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R106_02": "OPEN",
+    "R107_01": "OPEN",
+    "R107_02": "OPEN",
+    "batch105_composite": "PASS_PENDING_LOCAL",
+    "batch106_composite": "RETURN",
+    "batch107": "RETURN"
+  },
+  "old_sources": {
+    "SC105": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-sched-clock-boot-offset-105/evidence.md@6cf2affdba45",
+    "BD106": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+    "RT107": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e",
+    "D107": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-REALTIME-READOUT-ABI-107-D00-105-106-review.md@b089a6e48c7b",
+    "RV107": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-REALTIME-READOUT-ABI-107-review.md@b089a6e48c7b"
+  },
+  "D00_R106_02_two_remaining_direct_references": [
+    {
+      "id": "R106-02-08",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "D00_R106_02_corrected_direct_consumers[id=R106-02-08]; old 106 DOT determine->early_true",
+      "old_ids": [
+        "SC105-E053",
+        "SC105-E054",
+        "BD106-E034"
+      ],
+      "supplemental_ids": [
+        "D107-Q1",
+        "DT108-E056"
+      ],
+      "premise": "determine_cpu_tsc_frequencies先通过tsc_khz==0返回false的门，执行到函数末尾；tsc_early_init在被调用返回后继续",
+      "conditional_conclusion": "被调用者末尾return true，调用者if (!determine(true)) return的false分支未取，然后才tsc_enable_sched_clock；不能以false门或调用者注释代正向返回",
+      "first_unverified_step": "实际校频值、返回路径和启用执行",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-16",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "D00_R106_02_corrected_direct_consumers[id=R106-02-16]; 106 include chain",
+      "old_ids": [
+        "BD106-E027",
+        "BD106-E063",
+        "RT107-P09"
+      ],
+      "supplemental_ids": [
+        "D107-Q2",
+        "D107-Q3",
+        "DT108-E007",
+        "DT108-E008",
+        "DT108-P01",
+        "DT108-P02",
+        "DT108-P23",
+        "DT108-P24"
+      ],
+      "premise": "ARCH=x86_64并且target_include_directories真实消费INCLUDE_DIRS；源头文件的两个include请求按相应根路径查找",
+      "conditional_conclusion": "mykernel/include/linux/kernel/delay.h:#include <asm/delay.h> 可经 ${PROJECT_SOURCE_DIR}/arch/${ARCH}/include 定位 mykernel/arch/x86_64/include/asm/delay.h；后者 #include <asm-generic/delay.h> 可经 ${PROJECT_SOURCE_DIR}/include/linux/kernel 定位 mykernel/include/linux/kernel/asm-generic/delay.h；E007给第80–83行双根，E008给kernel目标真正消费",
+      "first_unverified_step": "实际CMake配置、编译器搜索次序和选中的预处理文件",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    }
+  ],
+  "D00_R107_01_configuration_and_3_macros": [
+    {
+      "id": "R107-01-config",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "RT107-P05、MANIFEST的wrapper声明；153强制options_flags.cmake",
+      "supplemental_ids": [
+        "RV107-Q1",
+        "DT108-E001",
+        "RT107-P05"
+      ],
+      "premise": "固定time scripts/options_flags.cmake同一个set(CMAKE_C_FLAGS)中的选项行，syscalls.h中仅在CONFIG_ARCH_HAS_SYSCALL_WRAPPER条件下include架构头",
+      "conditional_conclusion": "已补实际配置原位P2宏/命令内锚，条件导入另由RT107-P05固定位置支持；不认证生成的实际二进制",
+      "first_unverified_step": "编译开关最终实际传入情况",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-01-extern",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "RT107-E043、t1-03/t1-04、sysmap->decls",
+      "supplemental_ids": [
+        "DT108-E002",
+        "DT108-P03",
+        "DT108-P04",
+        "DT108-P05"
+      ],
+      "premise": "第一处#define __SYSCALL(nr,sym)与其include/undef真实选中",
+      "conditional_conclusion": "第一宏名原样是__SYSCALL，生成extern __x64_函数声明；gettimeofday及clock_gettime两个映射实例分别定位，不把用途名称当宏标识符",
+      "first_unverified_step": "预处理/ELF链接",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-01-table",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "RT107-E044、t1-05/t1-06/t2-08、sysmap->table",
+      "supplemental_ids": [
+        "DT108-E003",
+        "DT108-E005",
+        "DT108-P03",
+        "DT108-P04",
+        "DT108-P06"
+      ],
+      "premise": "第二处#define __SYSCALL(nr,sym)与sys_call_table[]初始化内的include",
+      "conditional_conclusion": "此用途产生[nr]=__x64_符号指针的表项；不把表的存在等于运行时真正通过表分发",
+      "first_unverified_step": "表被最终编译、引用及链接",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-01-switch",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "RT107-E045/E046、t1-07/t1-08、sysmap->switch",
+      "supplemental_ids": [
+        "DT108-E004",
+        "DT108-E006",
+        "DT108-P03",
+        "DT108-P04",
+        "DT108-P07"
+      ],
+      "premise": "第三处#define __SYSCALL(nr,sym)位于switch前且同样include",
+      "conditional_conclusion": "case nr: return __x64_sym(regs)来自真实x64_sys_call函数内，include位置第30行；没有把第三次include冒称第三次#undef",
+      "first_unverified_step": "实际系统调用进入以及目标符号",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    }
+  ],
+  "D00_R107_02_source_domains_five_rows_graph": [
+    {
+      "id": "R107-02-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "t4-07",
+      "old_source_ids": [
+        "RT107-E078",
+        "RT107-E079",
+        "RT107-E080"
+      ],
+      "supplemental_ids": [
+        "RT107-E078",
+        "RT107-E079",
+        "RT107-E080",
+        "RV107-Q5",
+        "RV107-Q6",
+        "RV107-Q7",
+        "DT108-E011",
+        "DT108-E012",
+        "DT108-E013",
+        "DT108-E057"
+      ],
+      "premise": "S=tv_nsec+nsecs按u64运算无回绕，B=NSEC_PER_SEC=1000000000，q=floor(S/B)≤UINT32_MAX，最终tv_sec+q在time64_t域内",
+      "conditional_conclusion": "仅在该域才可断言完整数学商进入u32 ret并加秒，余数r∈[0,B)；源码计数器u32，非无限精度商",
+      "first_unverified_step": "实际原始样本与ABI",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "t7-05",
+      "old_source_ids": [
+        "RT107-E078",
+        "RT107-E080"
+      ],
+      "supplemental_ids": [
+        "RT107-E078",
+        "RT107-E080",
+        "DT108-E011",
+        "DT108-E012",
+        "DT108-E013",
+        "DT108-E057"
+      ],
+      "premise": "指定初始sec=12,原nsec=0,新加nsecs=B，算术无回绕且秒可表示",
+      "conditional_conclusion": "q=1≤UINT32_MAX, r=0，归一化后(13,0)；只对给定样例，不泛化所有大值",
+      "first_unverified_step": "实际时间样本",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-03",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "RT107-M04",
+      "old_source_ids": [
+        "RT107-E078",
+        "RT107-E080"
+      ],
+      "supplemental_ids": [
+        "DT108-E011",
+        "DT108-E012",
+        "DT108-E013",
+        "DT108-E057"
+      ],
+      "premise": "S=B，q=1,数字示例无回绕",
+      "conditional_conclusion": "原M04结果(13,0)保留；数学界标S=B×2^32则q=2^32不能装u32，不能宣称全域正确",
+      "first_unverified_step": "普通大数编译及运行",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-04",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "t4-05",
+      "old_source_ids": [
+        "RT107-E075",
+        "RT107-E076"
+      ],
+      "supplemental_ids": [
+        "RT107-E075",
+        "RT107-E076",
+        "RV107-Q9",
+        "DT108-E018",
+        "DT108-E019",
+        "DT108-E020"
+      ],
+      "premise": "计算delta后比较clock->max_cycles并保证移位合法",
+      "conditional_conclusion": "delta≤max走普通乘加移位；delta>max且高mask位判真返回xtime_nsec>>shift，否则请求delta_to_ns_safe，不能只用普通式说明所有输入",
+      "first_unverified_step": "clocksource字段及并发",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-05",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "t2-06",
+      "old_source_ids": [
+        "RT107-E057",
+        "RT107-P03"
+      ],
+      "supplemental_ids": [
+        "RT107-E057",
+        "RT107-P03",
+        "DT108-E014"
+      ],
+      "premise": "tv有效且非NULL，tz独立参数",
+      "conditional_conclusion": "tz的copy_to_user块是活动函数体内的注释，不能推本函数向tz写入；形参定位RT107-P03",
+      "first_unverified_step": "tz语义和用户实际入参",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-06",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "t2-08",
+      "old_source_ids": [
+        "RT107-E046",
+        "RT107-E053"
+      ],
+      "supplemental_ids": [
+        "RT107-E046",
+        "RT107-E053",
+        "DT108-E002",
+        "DT108-E003",
+        "DT108-E004",
+        "DT108-E005",
+        "DT108-E006",
+        "DT108-P03",
+        "DT108-P04"
+      ],
+      "premise": "同一映射清单三次源宏展开",
+      "conditional_conclusion": "数组表项与switch可各自定位，二者源级存在不等于运行时经数组调用",
+      "first_unverified_step": "编译链接及实际入口",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-07",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "t5-09",
+      "old_source_ids": [
+        "RT107-E065",
+        "RT107-E072",
+        "RT107-E083"
+      ],
+      "supplemental_ids": [
+        "RT107-E065",
+        "RT107-E072",
+        "RT107-E083",
+        "RT107-E086",
+        "DT108-E015"
+      ],
+      "premise": "内核timespec字段可表示用户__kernel_timespec字段",
+      "conditional_conclusion": "真正输出赋值在put_timespec64的局部kts初始化，不由回调函数或结构字段声明单独支持",
+      "first_unverified_step": "用户ABI及copy返回",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-08",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "t6-06",
+      "old_source_ids": [
+        "RT107-E060",
+        "RT107-E061"
+      ],
+      "supplemental_ids": [
+        "RT107-E060",
+        "RT107-E061",
+        "RT107-E065",
+        "DT108-E009"
+      ],
+      "premise": "clockid为0，kc回调非空并正常返回",
+      "conditional_conclusion": "posix_get_realtime_timespec读取并return0，这个callee返回值才支持成功条件；调用者记录error",
+      "first_unverified_step": "实际回调地址与时间样本",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-09",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "t6-11",
+      "old_source_ids": [
+        "RT107-E088"
+      ],
+      "supplemental_ids": [
+        "RT107-E088",
+        "RV107-Q8",
+        "DT108-E010",
+        "DT108-E016"
+      ],
+      "premise": "put_user的直接store成功且ENOERR常量解析为0",
+      "conditional_conclusion": "返回-ENOERR即0有独立定义，不能把任意不可写指针说成安全EFAULT",
+      "first_unverified_step": "实际用户映射与生成代码",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-10",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "DOT tvnonnull->ktimeread",
+      "old_source_ids": [
+        "RT107-E057"
+      ],
+      "supplemental_ids": [
+        "RT107-E057",
+        "DT108-E017"
+      ],
+      "premise": "tv!=NULL成立且真实do_gt执行",
+      "conditional_conclusion": "条件判定节点只输出CONDITIONAL_STEP，不是DIRECT_CALL；真正gettimeofday函数体对ktime_get_real_ts64有带门的DIRECT_CALL",
+      "first_unverified_step": "编译链接与调用到达",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-11",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "DOT do_gt->putsec/putusec",
+      "old_source_ids": [
+        "RT107-E058"
+      ],
+      "supplemental_ids": [
+        "RT107-E058",
+        "DT108-E016",
+        "DT108-E017"
+      ],
+      "premise": "两次参数表达式有效，第一宏返回0才按||短路继续第二宏",
+      "conditional_conclusion": "put_user是宏展开(MACRO_EXPANSION)及同函数内顺序/短路条件，不是普通函数DIRECT_CALL",
+      "first_unverified_step": "用户内存访问与宏实际扩展",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-12",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "DOT ktimeread->sample_sec/sample_nsec; iterdiv->outputs",
+      "old_source_ids": [
+        "RT107-E072",
+        "RT107-E073"
+      ],
+      "supplemental_ids": [
+        "RT107-E072",
+        "RT107-E073",
+        "RT107-E078",
+        "RT107-E079",
+        "RT107-E080",
+        "DT108-E011",
+        "DT108-E012",
+        "DT108-E057"
+      ],
+      "premise": "tk值合法，seqcount原重试注释，S合法且商≤UINT32_MAX",
+      "conditional_conclusion": "初始秒从xtime_sec，最终秒加iterdiv商且纳秒为余数；E072独证不了最终字段，必须合add_ns与迭代函数",
+      "first_unverified_step": "实际CPU时钟和并发",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R107-02-13",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+      "old_actual_consumer": "DOT to_ns->sample_ns",
+      "old_source_ids": [
+        "RT107-E075",
+        "RT107-E076"
+      ],
+      "supplemental_ids": [
+        "RT107-E075",
+        "RT107-E076",
+        "DT108-E018",
+        "DT108-E019",
+        "DT108-E020"
+      ],
+      "premise": "分别审查delta>max_cycles条件与mask高位",
+      "conditional_conclusion": "将普通、返回xtime_nsec>>shift及delta_to_ns_safe三种来源拆为条件数据边",
+      "first_unverified_step": "实际clocksource属性",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    }
+  ],
+  "seven_bounded_matrices": {
+    "units_and_selected_conditions": [
+      {
+        "id": "A01",
+        "source_ids": [
+          "DT108-E024",
+          "DT108-E021",
+          "DT108-E022",
+          "DT108-E013"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L27-L27",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L31-L31",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L32-L32"
+        ],
+        "premise": "固定time宏且HZ配置真正选中",
+        "conditional_conclusion": "HZ=1000，毫秒/微秒/纳秒每秒分别1000/1000000/1000000000",
+        "first_unverified_step": "实际构建与计时中断"
+      },
+      {
+        "id": "A02",
+        "source_ids": [
+          "DT108-E025",
+          "DT108-E024",
+          "DT108-E013"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L7-L7",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L32-L32"
+        ],
+        "premise": "正整型1000Hz且乘加不溢出",
+        "conditional_conclusion": "TICK_NSEC=(1000000000+500)/1000=1000000纳秒，源有整数近似舍入",
+        "first_unverified_step": "真实硬件每tick时长"
+      },
+      {
+        "id": "A03",
+        "source_ids": [
+          "DT108-E026",
+          "DT108-E024",
+          "DT108-P25"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L29-L29",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "POSITION_ONLY: user-duration-tick-conversion-108/evidence.md@this_package#DT108-P25"
+        ],
+        "premise": "HZ=1000位于768≤HZ<1536",
+        "conditional_conclusion": "SHIFT_HZ选择10",
+        "first_unverified_step": "最终预处理的配置门"
+      },
+      {
+        "id": "A04",
+        "source_ids": [
+          "DT108-E027",
+          "DT108-E028",
+          "DT108-E029"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L156-L156",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L159-L159",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L161-L161"
+        ],
+        "premise": "条件重定义检查probe=0，全部按有界LP64整值",
+        "conditional_conclusion": "SEC_JIFFIE_SC初值21，条件成立重定义22，NSEC_JIFFIE_SC=51",
+        "first_unverified_step": "实际预处理选择及整数宽度"
+      },
+      {
+        "id": "A05",
+        "source_ids": [
+          "DT108-E032",
+          "DT108-E035"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L83-L83",
+          "time@a039d9803ade:mykernel/include/linux/kernel/limits.h#L33-L33"
+        ],
+        "premise": "long64位，LONG_MAX=2^63−1",
+        "conditional_conclusion": "MAX_JIFFY_OFFSET=(LONG_MAX>>1)-1=4611686018427387902",
+        "first_unverified_step": "实际ABI"
+      },
+      {
+        "id": "A06",
+        "source_ids": [
+          "DT108-E033",
+          "DT108-E034",
+          "DT108-E055"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L177-L179",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L49-L53",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L52-L54"
+        ],
+        "premise": "long64位且SH_DIV中间量可表示",
+        "conditional_conclusion": "MAX_SEC_IN_JIFFIES在给定整数模型中是2199023255",
+        "first_unverified_step": "具体编译器类型/宏展式"
+      },
+      {
+        "id": "A07",
+        "source_ids": [
+          "DT108-E021",
+          "DT108-E022",
+          "DT108-E023"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L27-L27",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L31-L31",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L30-L30"
+        ],
+        "premise": "固定单位字面定义",
+        "conditional_conclusion": "1ms=1000us=1000000ns, 名义tick为1ms",
+        "first_unverified_step": "设备实际节律"
+      },
+      {
+        "id": "A08",
+        "source_ids": [
+          "DT108-E030",
+          "DT108-E031"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L162-L165",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L167-L170"
+        ],
+        "premise": "fixed-point比例的编译期常量表达式可求值",
+        "conditional_conclusion": "SEC_CONVERSION和NSEC_CONVERSION在A表另独立求值",
+        "first_unverified_step": "算术中间域"
+      }
+    ],
+    "fixed_point_scales": [
+      {
+        "id": "S01",
+        "source_ids": [
+          "DT108-E027",
+          "DT108-E028",
+          "DT108-E026",
+          "DT108-P25"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L156-L156",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L159-L159",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L29-L29",
+          "POSITION_ONLY: user-duration-tick-conversion-108/evidence.md@this_package#DT108-P25"
+        ],
+        "premise": "SHIFT_HZ10、初始SEC_SC21",
+        "conditional_conclusion": "条件测试左式先取NSEC_PER_SEC/1000000等值，最高位掩码测试为0",
+        "first_unverified_step": "预处理表达式实际宽度"
+      },
+      {
+        "id": "S02",
+        "source_ids": [
+          "DT108-E028",
+          "DT108-E029"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L159-L159",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L161-L161"
+        ],
+        "premise": "条件为真且sec_sc22",
+        "conditional_conclusion": "NSEC_JIFFIE_SC=22+29=51，差值29",
+        "first_unverified_step": "右移数合法域"
+      },
+      {
+        "id": "S03",
+        "source_ids": [
+          "DT108-E030",
+          "DT108-E025"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L162-L165",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L7-L7"
+        ],
+        "premise": "u64中间值有效，SEC_SC22",
+        "conditional_conclusion": "SEC_CONVERSION=ceil((1000000000×2^22)/1000000)=4194304000",
+        "first_unverified_step": "ulong存储宽度"
+      },
+      {
+        "id": "S04",
+        "source_ids": [
+          "DT108-E031",
+          "DT108-E025"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L167-L170",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L7-L7"
+        ],
+        "premise": "u64左移51合法且TICK_NSEC1e6",
+        "conditional_conclusion": "NSEC_CONVERSION=ceil(2^51/1000000)=2251799814",
+        "first_unverified_step": "ulong宽度"
+      },
+      {
+        "id": "S05",
+        "source_ids": [
+          "DT108-E034",
+          "DT108-E055"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L49-L53",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L52-L54"
+        ],
+        "premise": "SH_DIV商和余数有定义，除数非零",
+        "conditional_conclusion": "该宏对一份比例使用左移1和余数加DEN/2的有界整数路径",
+        "first_unverified_step": "重演ABI的类型表达式"
+      },
+      {
+        "id": "S06",
+        "source_ids": [
+          "DT108-E033",
+          "DT108-E032"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L177-L179",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L83-L83"
+        ],
+        "premise": "MAX_JIFFY_OFFSET被限制在long64模型",
+        "conditional_conclusion": "SEC上限由SH_DIV商再减1而不是直接LONG_MAX/HZ",
+        "first_unverified_step": "时钟大秒输入的钳制有效性"
+      },
+      {
+        "id": "S07",
+        "source_ids": [
+          "DT108-E051",
+          "DT108-E030",
+          "DT108-E031"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L162-L165",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L167-L170"
+        ],
+        "premise": "秒纳秒非负规范且sec<上限",
+        "conditional_conclusion": "先以秒乘秒比例，并将纳秒比例右移29再相加，最后右移22",
+        "first_unverified_step": "有限宽中间加法"
+      },
+      {
+        "id": "S08",
+        "source_ids": [
+          "DT108-E024",
+          "DT108-E028"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L159-L159"
+        ],
+        "premise": "固定HZ1000与条件重定义成立",
+        "conditional_conclusion": "未选编的通用/HZ其他分支不可从活动结果推定",
+        "first_unverified_step": "实际预处理记录"
+      }
+    ],
+    "milliseconds_to_jiffies": [
+      {
+        "id": "M01",
+        "source_ids": [
+          "DT108-E036",
+          "DT108-E024",
+          "DT108-E021"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L56-L56",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L27-L27"
+        ],
+        "premise": "HZ=1000且1000%HZ=0的首分支",
+        "conditional_conclusion": "_msecs_to_jiffies(m)=floor((m+1-1)/1)=m，普通范围精确",
+        "first_unverified_step": "m类型、算式提升与调用"
+      },
+      {
+        "id": "M02",
+        "source_ids": [
+          "DT108-E037"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L116-L119"
+        ],
+        "premise": "常量表达式可折叠且(uint)m经(int)为非负",
+        "conditional_conclusion": "msecs_to_jiffies常量支调用_msecs_to_jiffies",
+        "first_unverified_step": "真实编译选择"
+      },
+      {
+        "id": "M03",
+        "source_ids": [
+          "DT108-E038",
+          "DT108-E039"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L120-L122",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L102-L104"
+        ],
+        "premise": "m为非常量且(int)m非负",
+        "conditional_conclusion": "通过__msecs_to_jiffies包装，复用同一_msecs_to_jiffies",
+        "first_unverified_step": "编译器常量判断"
+      },
+      {
+        "id": "M04",
+        "source_ids": [
+          "DT108-E037",
+          "DT108-E039"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L116-L119",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L102-L104"
+        ],
+        "premise": "uint输入高于INT_MAX且int为32位",
+        "conditional_conclusion": "转换到int可能实现定义并走MAX_JIFFY_OFFSET，此域不是普通正时长",
+        "first_unverified_step": "实际实现定义转换"
+      },
+      {
+        "id": "M05",
+        "source_ids": [
+          "DT108-E036",
+          "DT108-E037",
+          "DT108-E039"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L56-L56",
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L116-L119",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L102-L104"
+        ],
+        "premise": "m=0，所有算式合法",
+        "conditional_conclusion": "常量0和变量0都为0 tick",
+        "first_unverified_step": "编译宏展开"
+      },
+      {
+        "id": "M06",
+        "source_ids": [
+          "DT108-E036",
+          "DT108-E037",
+          "DT108-E039"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L56-L56",
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L116-L119",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L102-L104"
+        ],
+        "premise": "m=1，合法",
+        "conditional_conclusion": "常量1和变量1都为1 tick",
+        "first_unverified_step": "实时时钟节律"
+      },
+      {
+        "id": "M07",
+        "source_ids": [
+          "DT108-E036",
+          "DT108-E044"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L56-L56",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L170-L171"
+        ],
+        "premise": "m小于等于普通uint范围且返回不窄化",
+        "conditional_conclusion": "毫秒经tick再毫秒的数值等于原m",
+        "first_unverified_step": "设备计时与溢出边界"
+      },
+      {
+        "id": "M08",
+        "source_ids": [
+          "DT108-E032",
+          "DT108-E037"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L83-L83",
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L116-L119"
+        ],
+        "premise": "MAX_JIFFY_OFFSET使用long64且条件转int",
+        "conditional_conclusion": "注释“负值当无限”不授权对任意uint解释为负时长",
+        "first_unverified_step": "完整C转换规则与调用类型"
+      }
+    ],
+    "microseconds_to_jiffies": [
+      {
+        "id": "U01",
+        "source_ids": [
+          "DT108-E040",
+          "DT108-E024",
+          "DT108-E022"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L31-L31"
+        ],
+        "premise": "HZ=1000且1000000%HZ=0",
+        "conditional_conclusion": "_usecs_to_jiffies(u)=floor((u+999)/1000)，在有效非溢出域等于向上取整",
+        "first_unverified_step": "long与uint通常算术转换"
+      },
+      {
+        "id": "U02",
+        "source_ids": [
+          "DT108-E041"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L167-L170"
+        ],
+        "premise": "常量分支且u≤jiffies_to_usecs(MAX_JIFFY_OFFSET)",
+        "conditional_conclusion": "usecs_to_jiffies直接调用_usecs_to_jiffies",
+        "first_unverified_step": "上界uint返回已窄化"
+      },
+      {
+        "id": "U03",
+        "source_ids": [
+          "DT108-E042",
+          "DT108-E043"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L171-L173",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L116-L118"
+        ],
+        "premise": "非常量分支且未触上界",
+        "conditional_conclusion": "__usecs_to_jiffies同样调用_usecs_to_jiffies",
+        "first_unverified_step": "编译器分支"
+      },
+      {
+        "id": "U04",
+        "source_ids": [
+          "DT108-E046",
+          "DT108-E032"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L83-L83"
+        ],
+        "premise": "long64、ulong64、uint32，正常乘积模2^64",
+        "conditional_conclusion": "jiffies_to_usecs(MAX_JIFFY_OFFSET)返回uint低32位4294965296，不是无限精度毫秒值",
+        "first_unverified_step": "实际ABI与整数通常算术转换"
+      },
+      {
+        "id": "U05",
+        "source_ids": [
+          "DT108-E040",
+          "DT108-E041",
+          "DT108-E043"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L167-L170",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L116-L118"
+        ],
+        "premise": "u=999且正常值域",
+        "conditional_conclusion": "ceil(999/1000)=1 tick，经jiffies_to_usecs返回1000us，差+1us",
+        "first_unverified_step": "实机唤醒时间"
+      },
+      {
+        "id": "U06",
+        "source_ids": [
+          "DT108-E040",
+          "DT108-E041",
+          "DT108-E043"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L167-L170",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L116-L118"
+        ],
+        "premise": "u=1000且正常值域",
+        "conditional_conclusion": "精确1 tick，反向1000us，差0",
+        "first_unverified_step": "实机唤醒时间"
+      },
+      {
+        "id": "U07",
+        "source_ids": [
+          "DT108-E040",
+          "DT108-E041",
+          "DT108-E043"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L167-L170",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L116-L118"
+        ],
+        "premise": "u=1001且正常值域",
+        "conditional_conclusion": "向上到2 ticks，反向2000us，差+999us",
+        "first_unverified_step": "实机唤醒时间"
+      },
+      {
+        "id": "U08",
+        "source_ids": [
+          "DT108-E041",
+          "DT108-E043",
+          "DT108-E046"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L167-L170",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L116-L118",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+        ],
+        "premise": "u是非负且远低于大值特殊区",
+        "conditional_conclusion": "常量与非常量分支数值同一，注意先判断返回uint的上界",
+        "first_unverified_step": "真实参数宏折叠"
+      }
+    ],
+    "jiffies_back_to_msec_usec": [
+      {
+        "id": "R01",
+        "source_ids": [
+          "DT108-E044",
+          "DT108-E021",
+          "DT108-E024"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L170-L171",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L27-L27",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9"
+        ],
+        "premise": "HZ1000且j转换可表示uint",
+        "conditional_conclusion": "jiffies_to_msecs(j)=(1000/1000)*j并返回uint",
+        "first_unverified_step": "大j返回窄化"
+      },
+      {
+        "id": "R02",
+        "source_ids": [
+          "DT108-E045"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L172-L176"
+        ],
+        "premise": "HZ1000时其他#elif/else不选",
+        "conditional_conclusion": "不能将未选的分子分母通用路径当作当前公式",
+        "first_unverified_step": "实际配置/预处理"
+      },
+      {
+        "id": "R03",
+        "source_ids": [
+          "DT108-E046",
+          "DT108-E022",
+          "DT108-E024"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L31-L31",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9"
+        ],
+        "premise": "HZ1000，BUILD_BUG_ON条件为假",
+        "conditional_conclusion": "jiffies_to_usecs(j)=(1000000/1000)*j并返回uint",
+        "first_unverified_step": "uint截断与算术宽度"
+      },
+      {
+        "id": "R04",
+        "source_ids": [
+          "DT108-E047"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L197-L198"
+        ],
+        "premise": "HZ1000时else公式未选",
+        "conditional_conclusion": "通用乘除式不替代活动整数乘法",
+        "first_unverified_step": "真实编译"
+      },
+      {
+        "id": "R05",
+        "source_ids": [
+          "DT108-E044",
+          "DT108-E046"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L170-L171",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+        ],
+        "premise": "j=0且返回值可表示",
+        "conditional_conclusion": "0 ticks分别转0ms和0us",
+        "first_unverified_step": "输出函数实际调用"
+      },
+      {
+        "id": "R06",
+        "source_ids": [
+          "DT108-E044",
+          "DT108-E046"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L170-L171",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+        ],
+        "premise": "j=1",
+        "conditional_conclusion": "1 tick得到1ms和1000us",
+        "first_unverified_step": "用户/调度真正计时"
+      },
+      {
+        "id": "R07",
+        "source_ids": [
+          "DT108-E044",
+          "DT108-E046"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L170-L171",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+        ],
+        "premise": "j=2",
+        "conditional_conclusion": "2 ticks得到2ms和2000us",
+        "first_unverified_step": "实际接口消费者"
+      },
+      {
+        "id": "R08",
+        "source_ids": [
+          "DT108-E046",
+          "DT108-E032"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L83-L83"
+        ],
+        "premise": "j=MAX_JIFFY_OFFSET及LP64假设",
+        "conditional_conclusion": "无穷精度1000*j不可直接当成uint返回；量化阈值4294965296",
+        "first_unverified_step": "实际编译器宽度和截断"
+      }
+    ],
+    "timespec64_to_tick_and_back": [
+      {
+        "id": "T01",
+        "source_ids": [
+          "DT108-E054",
+          "DT108-E049"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc_types.h#L7-L10",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145"
+        ],
+        "premise": "非负tv_sec、tv_nsec在0..1e9-1",
+        "conditional_conclusion": "u64 sec从tv_sec读取，long nsec预加TICK_NSEC−1=999999",
+        "first_unverified_step": "任何负秒或大值不在本模型"
+      },
+      {
+        "id": "T02",
+        "source_ids": [
+          "DT108-E050",
+          "DT108-E033"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L147-L150",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L177-L179"
+        ],
+        "premise": "sec≥MAX_SEC_IN_JIFFIES",
+        "conditional_conclusion": "sec钳制到上限，nsec清零；不直接输出MAX_JIFFY_OFFSET",
+        "first_unverified_step": "宏实际范围与有效对象"
+      },
+      {
+        "id": "T03",
+        "source_ids": [
+          "DT108-E051",
+          "DT108-E030",
+          "DT108-E031"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L162-L165",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L167-L170"
+        ],
+        "premise": "sec未钳制且中间乘加/移位有效",
+        "conditional_conclusion": "返回ulong定点整数tick，秒和纳秒分别由两个比例贡献",
+        "first_unverified_step": "舍入在具体有限精度的数值边界"
+      },
+      {
+        "id": "T04",
+        "source_ids": [
+          "DT108-E052",
+          "DT108-E053"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218",
+          "time@a039d9803ade:mykernel/include/linux/kernel/math64.h#L43-L44"
+        ],
+        "premise": "jiffies非负且(u64)j*TICK_NSEC不溢出",
+        "conditional_conclusion": "div_u64_rem给秒商及u32余数，分别写timespec64字段",
+        "first_unverified_step": "调用者结果对象有效性"
+      },
+      {
+        "id": "T05",
+        "source_ids": [
+          "DT108-E054",
+          "DT108-E053"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc_types.h#L7-L10",
+          "time@a039d9803ade:mykernel/include/linux/kernel/math64.h#L43-L44"
+        ],
+        "premise": "divisor=NSEC_PER_SEC>0，输入正常",
+        "conditional_conclusion": "余数落0..1e9−1，字段秒与纳秒单位分离",
+        "first_unverified_step": "ABI/结构字节布局"
+      },
+      {
+        "id": "T06",
+        "source_ids": [
+          "DT108-E049",
+          "DT108-E051",
+          "DT108-E052"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+        ],
+        "premise": "时长0s+999999ns的已定义公式输入",
+        "conditional_conclusion": "换成1tick并回0s+1000000ns；差+1ns",
+        "first_unverified_step": "真实时钟调度"
+      },
+      {
+        "id": "T07",
+        "source_ids": [
+          "DT108-E049",
+          "DT108-E051",
+          "DT108-E052"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+        ],
+        "premise": "时长0s+1000000ns",
+        "conditional_conclusion": "换1tick并回相同1ms，误差0",
+        "first_unverified_step": "硬件节拍"
+      },
+      {
+        "id": "T08",
+        "source_ids": [
+          "DT108-E049",
+          "DT108-E051",
+          "DT108-E052"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+        ],
+        "premise": "时长0s+1000001ns",
+        "conditional_conclusion": "换2tick再回2ms，差+999999ns",
+        "first_unverified_step": "硬件定时"
+      },
+      {
+        "id": "T09",
+        "source_ids": [
+          "DT108-E049",
+          "DT108-E051",
+          "DT108-E052"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+        ],
+        "premise": "时长1s+1ns",
+        "conditional_conclusion": "1001 ticks，反向1s+1000000ns，差+999999ns",
+        "first_unverified_step": "实机唤醒"
+      }
+    ],
+    "cross_path_examples_and_bounds": [
+      {
+        "id": "X01",
+        "source_ids": [
+          "DT108-E021",
+          "DT108-E022",
+          "DT108-E023",
+          "DT108-E024",
+          "DT108-E025"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L27-L27",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L31-L31",
+          "time@a039d9803ade:mykernel/time/misc/time_misc_const.h#L30-L30",
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L7-L7"
+        ],
+        "premise": "名义HZ1000",
+        "conditional_conclusion": "1tick=1ms=1000us=1000000ns，非真实等待保证",
+        "first_unverified_step": "实际周期中断"
+      },
+      {
+        "id": "X02",
+        "source_ids": [
+          "DT108-E036",
+          "DT108-E040",
+          "DT108-E044",
+          "DT108-E046"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L56-L56",
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L170-L171",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+        ],
+        "premise": "1ms和1000us分别提供",
+        "conditional_conclusion": "两种前向路径都得1tick，反向1ms及1000us",
+        "first_unverified_step": "目标机器真实函数"
+      },
+      {
+        "id": "X03",
+        "source_ids": [
+          "DT108-E040",
+          "DT108-E046"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+        ],
+        "premise": "输入999us",
+        "conditional_conclusion": "1tick后1000us，向上偏差1us",
+        "first_unverified_step": "大边界的类型/符号"
+      },
+      {
+        "id": "X04",
+        "source_ids": [
+          "DT108-E040",
+          "DT108-E046"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+        ],
+        "premise": "输入1001us",
+        "conditional_conclusion": "2tick后2000us，向上偏差999us",
+        "first_unverified_step": "真实调用"
+      },
+      {
+        "id": "X05",
+        "source_ids": [
+          "DT108-E049",
+          "DT108-E051",
+          "DT108-E052"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+        ],
+        "premise": "0s+999999ns",
+        "conditional_conclusion": "1tick后0s+1e6ns，向上偏差1ns",
+        "first_unverified_step": "源码公式的实际执行"
+      },
+      {
+        "id": "X06",
+        "source_ids": [
+          "DT108-E049",
+          "DT108-E051",
+          "DT108-E052"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+        ],
+        "premise": "0s+1e6ns",
+        "conditional_conclusion": "1tick往返精确，0误差",
+        "first_unverified_step": "CPU/硬件实际计时"
+      },
+      {
+        "id": "X07",
+        "source_ids": [
+          "DT108-E049",
+          "DT108-E051",
+          "DT108-E052"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+        ],
+        "premise": "0s+1000001ns",
+        "conditional_conclusion": "2tick后0s+2e6ns，向上偏差999999ns",
+        "first_unverified_step": "真实定时等待"
+      },
+      {
+        "id": "X08",
+        "source_ids": [
+          "DT108-E032",
+          "DT108-E033",
+          "DT108-E050"
+        ],
+        "source_locators": [
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L83-L83",
+          "time@a039d9803ade:mykernel/time/systick/systick_const.h#L177-L179",
+          "time@a039d9803ade:mykernel/time/misc/time_misc.c#L147-L150"
+        ],
+        "premise": "靠近秒数钳制上限",
+        "conditional_conclusion": "不能把极大时长转换视为无限精度的ceil，必须先执行源码钳制",
+        "first_unverified_step": "大数值预处理/类型"
+      }
+    ]
+  },
+  "matrix_row_counts": {
+    "units_and_selected_conditions": 8,
+    "fixed_point_scales": 8,
+    "milliseconds_to_jiffies": 8,
+    "microseconds_to_jiffies": 8,
+    "jiffies_back_to_msec_usec": 8,
+    "timespec64_to_tick_and_back": 9,
+    "cross_path_examples_and_bounds": 8
+  },
+  "total_bounded_rows": 57,
+  "paper_models": [
+    {
+      "id": "DT108-M01",
+      "name": "HZ/coefficients",
+      "premise": "HZ=1000、long/ulong/u64按LP64数学域",
+      "paper_integer_result": "TICK_NSEC=1000000ns；SHIFT_HZ=10；SEC_SC初21→22；NSEC_SC=51；SEC_CONVERSION=4194304000；NSEC_CONVERSION=2251799814",
+      "source_ids": [
+        "DT108-E024",
+        "DT108-E025",
+        "DT108-E026",
+        "DT108-E027",
+        "DT108-E028",
+        "DT108-E030",
+        "DT108-E031"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L7-L7",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L28-L30",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L156-L156",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L159-L159",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L162-L165",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L167-L170"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M02",
+      "name": "milliseconds zero",
+      "premise": "m=0, int cast非负，所选分支普通域",
+      "paper_integer_result": "msecs_to_jiffies(0)=0，jiffies_to_msecs(0)=0，0误差",
+      "source_ids": [
+        "DT108-E036",
+        "DT108-E037",
+        "DT108-E039",
+        "DT108-E044"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L56-L56",
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L116-L119",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L102-L104",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L170-L171"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M03",
+      "name": "milliseconds one",
+      "premise": "m=1, int cast非负",
+      "paper_integer_result": "msecs_to_jiffies(1)=1，回读1ms，0误差",
+      "source_ids": [
+        "DT108-E036",
+        "DT108-E037",
+        "DT108-E044"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L56-L56",
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L116-L119",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L170-L171"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M04",
+      "name": "microseconds 999",
+      "premise": "u=999，小于返回uint上界",
+      "paper_integer_result": "usecs_to_jiffies(999)=1，回读1000us，+1us",
+      "source_ids": [
+        "DT108-E040",
+        "DT108-E041",
+        "DT108-E043",
+        "DT108-E046"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L167-L170",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L116-L118",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M05",
+      "name": "microseconds 1000",
+      "premise": "u=1000，小于上界",
+      "paper_integer_result": "1tick，回读1000us，0误差",
+      "source_ids": [
+        "DT108-E040",
+        "DT108-E041",
+        "DT108-E046"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L167-L170",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M06",
+      "name": "microseconds 1001",
+      "premise": "u=1001，小于上界",
+      "paper_integer_result": "2tick，回读2000us，+999us",
+      "source_ids": [
+        "DT108-E040",
+        "DT108-E041",
+        "DT108-E046"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L129-L129",
+        "time@a039d9803ade:mykernel/time/systick/systick.h#L167-L170",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M07",
+      "name": "timespec before 1tick",
+      "premise": "sec=0,nsec=999999合法",
+      "paper_integer_result": "转1tick，反向(0s,1000000ns)，误差+1ns",
+      "source_ids": [
+        "DT108-E049",
+        "DT108-E051",
+        "DT108-E052"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M08",
+      "name": "timespec exactly 1tick",
+      "premise": "sec=0,nsec=1000000合法",
+      "paper_integer_result": "转1tick，反向相同1ms，0误差",
+      "source_ids": [
+        "DT108-E049",
+        "DT108-E051",
+        "DT108-E052"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M09",
+      "name": "timespec after 1tick",
+      "premise": "sec=0,nsec=1000001合法",
+      "paper_integer_result": "转2tick，反向(0s,2000000ns)，误差+999999ns",
+      "source_ids": [
+        "DT108-E049",
+        "DT108-E051",
+        "DT108-E052"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M10",
+      "name": "timespec with full second",
+      "premise": "sec=1,nsec=0",
+      "paper_integer_result": "转1000tick，反向(1s,0ns)，0误差",
+      "source_ids": [
+        "DT108-E049",
+        "DT108-E051",
+        "DT108-E052"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M11",
+      "name": "timespec second plus 1ns",
+      "premise": "sec=1,nsec=1",
+      "paper_integer_result": "转1001tick，反向(1s,1000000ns)，+999999ns",
+      "source_ids": [
+        "DT108-E049",
+        "DT108-E051",
+        "DT108-E052"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L144-L145",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L151-L153",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L214-L218"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "DT108-M12",
+      "name": "huge jiffies_to_usecs bound",
+      "premise": "LP64,long64/ulong64,uint32，MAX_JIFFY_OFFSET=(2^62-2)",
+      "paper_integer_result": "jiffies_to_usecs(MAX_JIFFY_OFFSET)的uint返回=4294965296；不是数学1000×MAX_JIFFY_OFFSET的无限精度值",
+      "source_ids": [
+        "DT108-E032",
+        "DT108-E035",
+        "DT108-E046"
+      ],
+      "source_locators": [
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L83-L83",
+        "time@a039d9803ade:mykernel/include/linux/kernel/limits.h#L33-L33",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L192-L195"
+      ],
+      "repository_code_executed": false
+    }
+  ],
+  "model_count": 12,
+  "math_assumptions": [
+    "HZ=1000, 1 tick nominal not actual hardware",
+    "int32, uint32 and LP64 long64 assumptions only where stated",
+    "normal inputs m,u within small ordinary range and s>=0 with 0<=nsec<1e9",
+    "u64/ulong intermediates legal, no inappropriate shift/overflow, output representable",
+    "C usual arithmetic conversions, branch-selection is source level only until preprocess/build"
+  ],
+  "old_artifacts_modified": false,
+  "full_local_P9": "NOT_RUN",
+  "runtime": "NOT_RUN",
+  "position_only_count": 25
+}

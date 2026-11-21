@@ -1,0 +1,398 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-VFS-MUTATION-GATES-58",
+  "record_type": "bounded_deferred_findings_and_pr57_documentary_correction",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "776297f1904b",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "prior_return_items": [
+    {
+      "id": "R57-01",
+      "kind": "documentation_only",
+      "original_status": "RETURN",
+      "correction_status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "notes": "A32 superseded for definition scope; old symbol alias and iobuf blob short12 corrected; no author self-closure",
+      "read_with": [
+        "R57-S01",
+        "R57-S02"
+      ],
+      "affected_originals": [
+        "57/evidence.md",
+        "57/facts-and-boundaries.yaml",
+        "57/MANIFEST.md"
+      ]
+    },
+    {
+      "id": "R57-02",
+      "kind": "documentation_only",
+      "original_status": "RETURN",
+      "correction_status": "CORRECTION_SUBMITTED_PENDING_MAINLINE",
+      "notes": "prior status stored as source_field/source_value, SB38 refs corrected, length33/negative off/N slots unit corrected, all 57 files and comment mapping in facts; no author self-closure",
+      "read_with": [
+        "R57-S01",
+        "R57-S02"
+      ],
+      "affected_originals": [
+        "57/fat-directory-mutation.md",
+        "57/facts-and-boundaries.yaml",
+        "57/deferred-findings.yaml",
+        "57/MANIFEST.md",
+        "57/fat-directory-mutation-paths.dot",
+        "57/evidence.md",
+        "PR17/6717903727"
+      ]
+    }
+  ],
+  "canonical_history_unchanged": {
+    "review57": "RETURN_DOCUMENTATION_ONLY",
+    "review56": "PASS_PENDING_LOCAL with R56-S01/S02",
+    "review35": "PASS_PENDING_LOCAL with R35-S01/S02",
+    "review38": "PASS_PENDING_LOCAL with R38-S01/S02",
+    "review55": "PASS_PENDING_LOCAL with R55-S01/S02",
+    "reviews52_53": "unchanged; reviewer 53 false line objection withdrawn"
+  },
+  "new_findings": [
+    {
+      "id": "NG58-F01",
+      "topic": "A/B/C",
+      "kind": "name_ERR_PTR_producer_consumer_mismatch",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "claim": "getname/getname_kernel可以返回ERR_PTR，但若该指针继续传入某个do_*后由filename_parentat转换错误，调用者依然在共同出口调用putname(name)，putname读取name->name；另__myos_getname失败后两个getname函数可在本身先消费其错误指针",
+      "premises": [
+        "selected getname/getname_kernel branch actually returns encoded pointer",
+        "no earlier undefined read, later do_* or kern_path_create follows documented calls",
+        "putname operates on same invalid filename pointer"
+      ],
+      "counterexample": "有效ordinary filename正常到达putname可发出kfree请求，不由此错误产生异常",
+      "earliest_stop": "__myos_getname failure may stop at getname assignment; pre-returned ERR_PTR may first fail in putname field dereference",
+      "anchors": [
+        "A01",
+        "A02",
+        "A03",
+        "A14",
+        "B03",
+        "B21"
+      ],
+      "prior": [],
+      "not_claimed": [
+        "all user path failures crash",
+        "actual memory fault was observed"
+      ],
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F01",
+      "resume_conditions": [
+        "Owner explicit future scoped authorization",
+        "new evidence for actually reachable paths and full object validity"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-F02",
+      "topic": "B",
+      "kind": "positive_cached_dentry_not_exclusivity_gate",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "claim": "filename_create设置LOOKUP_CREATE/EXCL后调用__lookup_hash；其__d_lookup命中时直接返回缓存dentry，filename_create未检查d_inode为正，也未在该前缀阻止后续do_creatat/do_mkdirat调用create/mkdir",
+      "premises": [
+        "valid cached positive dentry is returned; selected parent and methods valid",
+        "path type LAST_NORM",
+        "caller continues normally"
+      ],
+      "counterexample": "缓存未命中则flags传给filesystem lookup；其它未查路径/回调可决定额外拒绝",
+      "earliest_stop": "invalid parent/list/dentry or callback state can stop sooner",
+      "anchors": [
+        "A17",
+        "A18",
+        "B05",
+        "B08",
+        "B09",
+        "B12",
+        "B13"
+      ],
+      "prior": [
+        "CORE-USER-DENTRY-LOOKUP-33::DL33-F01"
+      ],
+      "not_claimed": [
+        "all existing files can be overwritten",
+        "global EXCL semantic breach reproduced"
+      ],
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F02",
+      "resume_conditions": [
+        "Owner explicit future scoped authorization",
+        "new evidence for actually reachable paths and full object validity"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-F03",
+      "topic": "B",
+      "kind": "direct_return_skips_shared_cleanup",
+      "status": "deferred_owner_not_ready",
+      "evidence_class": "source_conditional_candidate",
+      "claim": "do_creatat和do_mkdirat在filename_create成功且父dir有效时，若对应i_op回调为NULL，直接return -EPERM而跳过done_path_create与putname的活动语句",
+      "premises": [
+        "valid filename_create positive/negative target dentry returned normally",
+        "parent path and target dentry were acquired",
+        "dir->i_op valid but method absent"
+      ],
+      "counterexample": "方法存在时正常/负返回进入共同清理；filename_create失败也走out_putname但有效name仍是前提",
+      "earliest_stop": "dir->i_op invalid earlier; no legitimate -EPERM return guaranteed in that case",
+      "anchors": [
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13",
+        "B14",
+        "B15",
+        "B18",
+        "B21"
+      ],
+      "prior": [],
+      "not_claimed": [
+        "dput physically frees object",
+        "specific byte leak measured"
+      ],
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F03",
+      "resume_conditions": [
+        "Owner explicit future scoped authorization",
+        "new evidence for actually reachable paths and full object validity"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-F04",
+      "topic": "B",
+      "kind": "creat_LOOKUP_DIRECTORY_suppresses_slash_check",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "claim": "do_creatat传入LOOKUP_DIRECTORY，与do_mkdirat一样使filename_create在flags裁剪前保存is_dir=true，致使其条件`!is_dir && last.name[last.len] != '\\0'`对该直接creat路径不能成为尾斜线拒绝门",
+      "premises": [
+        "path parent reaches LAST_NORM and negative/other valid dentry",
+        "source term slash remains readable at last.name[last.len]",
+        "selected do_creatat path and flags unchanged"
+      ],
+      "counterexample": "独立filename_create(lookup_flags=0) helper会启动此门；更早name/path/lookup问题可挡住整个路径",
+      "earliest_stop": "filename_parentat or __lookup_hash failed before slash branch",
+      "anchors": [
+        "B01",
+        "B02",
+        "B06",
+        "B08",
+        "B12",
+        "B23"
+      ],
+      "prior": [],
+      "not_claimed": [
+        "real user creat trailing slash succeeds",
+        "full POSIX violation certified"
+      ],
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F04",
+      "resume_conditions": [
+        "Owner explicit future scoped authorization",
+        "new evidence for actually reachable paths and full object validity"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-F05",
+      "topic": "C",
+      "kind": "unlink_negative_dentry_null_inode_dereference",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "claim": "do_rmdir对有效negative dentry检查!d_inode并返回-ENOENT；do_unlinkat在IS_ERR为假后直接把d_inode赋给inode并于S_ISDIR(inode->i_mode)读取，没有对应的NULL门",
+      "premises": [
+        "valid LAST_NORM lookup produces ordinary dentry whose d_inode==NULL",
+        "execution reaches do_unlinkat branch with valid dentry and name",
+        "selected S_ISDIR macro evaluates its mode operand"
+      ],
+      "counterexample": "对实际positive且有效的非目录inode，进入vfs_unlink；编码错误dentry则在IS_ERR分支外退出",
+      "earliest_stop": "S_ISDIR的inode->i_mode访问；此后不得推算iput/返回值",
+      "anchors": [
+        "C04",
+        "C05",
+        "C14",
+        "C15",
+        "C16",
+        "A24"
+      ],
+      "prior": [
+        "CORE-USER-LOOKUP-CALLBACK-34::CB34-F03"
+      ],
+      "not_claimed": [
+        "every unlink crashes",
+        "kernel observed page fault"
+      ],
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F05",
+      "resume_conditions": [
+        "Owner explicit future scoped authorization",
+        "new evidence for actually reachable paths and full object validity"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-F06",
+      "topic": "C",
+      "kind": "selected_reference_helpers_noop",
+      "status": "deferred_owner_not_ready",
+      "evidence_class": "source_conditional_candidate",
+      "claim": "所选dget仅返回dentry，dput正文无实际操作，iput除NULL门外主要逻辑注释；vfs_rmdir和do_unlinkat确实调用这些helper，但不能据调用名称声明引用计数已经增减或inode已释放",
+      "premises": [
+        "selected inline/direct helper definitions active",
+        "no other external writer provides unexamined refcount effects",
+        "valid object input reaching helper calls"
+      ],
+      "counterexample": "putname实际调用kfree请求；来源对象仍可能由其它未查机制管理",
+      "earliest_stop": "invalid input/dentry->d_inode may precede helper; physical lifetime unproven",
+      "anchors": [
+        "C09",
+        "C11",
+        "C16",
+        "C17",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "B22"
+      ],
+      "prior": [
+        "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F07"
+      ],
+      "not_claimed": [
+        "double free",
+        "certain memory leak",
+        "POSIX open file reference semantics"
+      ],
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F06",
+      "resume_conditions": [
+        "Owner explicit future scoped authorization",
+        "new evidence for actually reachable paths and full object validity"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-F07",
+      "topic": "A",
+      "kind": "hash_allocator_ERR_PTR_NULL_only_gate",
+      "status": "needs_evidence",
+      "evidence_class": "source_conditional_candidate",
+      "claim": "__myos_d_alloc对分配失败可产ERR_PTR(-ENOMEM)；__lookup_hash仅以`if (!dentry)`检查该结果，非NULL编码错误指针有机会在dentry->d_parent存储之前失去合法性",
+      "premises": [
+        "cache miss and nondead parent",
+        "__myos_d_alloc selected allocation failure and returns coded pointer",
+        "no prior invalid parent/list access"
+      ],
+      "counterexample": "正常分配返回可写dentry会继续设置父和子链",
+      "earliest_stop": "dentry->d_parent store; 不冒称后面的filename_create IS_ERR得到这个错误",
+      "anchors": [
+        "A19",
+        "A22",
+        "A23"
+      ],
+      "prior": [
+        "CORE-USER-DENTRY-LOOKUP-33::DL33-F03"
+      ],
+      "not_claimed": [
+        "d_alloc与__lookup_hash是同一函数",
+        "real allocation failure injected"
+      ],
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-F07",
+      "resume_conditions": [
+        "Owner explicit future scoped authorization",
+        "new evidence for actually reachable paths and full object validity"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "NG58-U01",
+      "topic": "A",
+      "status": "needs_evidence",
+      "kind": "name_copy_source_and_return",
+      "detail": "strlen_user/strncpy_from_user的实际深层定义及返回约定未全部展开；name->len为int且中途size_t→int的边界不作为运行定理。",
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-U01",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-U02",
+      "topic": "A",
+      "status": "needs_evidence",
+      "kind": "zero_terminator_and_input_bounds",
+      "detail": "__myos_d_alloc分配len+1并发送__GFP_ZERO；其真正清零、len+1溢出和所有cache命中名字来源/缓冲可读性仍须核。",
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-U02",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-U03",
+      "topic": "A/B",
+      "status": "needs_evidence",
+      "kind": "lookup_object_state_and_flags",
+      "detail": "__lookup_hash缓存列表、FAT lookup回调、parent生命周期与flag内部消费未全面证明；不能签实际用户已存在文件错误处理。",
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-U03",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-U04",
+      "topic": "B",
+      "status": "needs_evidence",
+      "kind": "syscall_macros_and_fd",
+      "detail": "MYOS_SYSCALL_DEFINE1/2未预处理；当前do_creatat源码返回error但不核syscall table或fd分配安装，也不与open(O_CREAT)混同。",
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-U04",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-U05",
+      "topic": "C",
+      "status": "needs_evidence",
+      "kind": "S_ISDIR_and_mode_provenance",
+      "detail": "模式宏及上游FAT inode容器实际构造未全面验证，R38与R34限定继续有效；NULL dereference仅在对应前提成立时推演。",
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-U05",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-U06",
+      "topic": "C",
+      "status": "needs_evidence",
+      "kind": "reference_and_lifecycle",
+      "detail": "dget/dput/iput选定体的局部无操作不等于全系统没有其它引用或回收管理；SMP、open file生命周期和挂载效果未审。",
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-U06",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "NG58-U07",
+      "topic": "A",
+      "status": "needs_evidence",
+      "kind": "ECHILD_retry_producer",
+      "detail": "filename_parentat在-ECHILD时再次用同一nd调用path_parentat；path_init会重置路径部分状态，真实-ECHILD生产者/副作用/最终恢复未证。",
+      "qualified_id": "CORE-USER-VFS-MUTATION-GATES-58::NG58-U07",
+      "owner_action_now": "none"
+    }
+  ],
+  "candidate_count": 7,
+  "gap_count": 7,
+  "not_runtime_vulnerability_count": true,
+  "not_run": [
+    "repository C/ASM/scripts",
+    "preprocessing/compile/link",
+    "existing fixtures",
+    "QEMU/hardware",
+    "real file/mount/dcache/refcount system",
+    "Graphviz full parser",
+    "full local P9"
+  ],
+  "not_authorized": [
+    "modify kernel",
+    "repair prior files",
+    "close R57 items",
+    "issue batch58 PASS",
+    "start batch59",
+    "merge/close/force push"
+  ]
+}

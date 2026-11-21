@@ -1,0 +1,1400 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FILE-SEEK-POSITION-114",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-17",
+  "date": "2026-11-20",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "41b2c2f955c6",
+  "parent_pin_short12": "41697d76ae5e",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "prior_review_states": {
+    "R110_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R110_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch110": "PASS_PENDING_LOCAL",
+    "R111_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R111_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch111": "PASS_PENDING_LOCAL",
+    "R112_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R112_02": "OPEN",
+    "batch112": "RETURN",
+    "R113_01": "OPEN",
+    "batch113": "RETURN"
+  },
+  "D00": {
+    "R112_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "old_field": "113 facts D00.R112_02.roundtrip.models[original_model==C01..C06].caveat",
+      "five_nonzero_models": [
+        {
+          "model": "C02",
+          "scalar_ns": "1",
+          "q": "0",
+          "rem": "1",
+          "branch": "positive",
+          "result": {
+            "tv_sec": "0",
+            "tv_nsec": "1"
+          },
+          "back_to_ktime": "1",
+          "back_to_ns": "1",
+          "old_caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion",
+          "new_caveat": "Positive branch only: s32* local remainder address passed to u32* helper; assume valid remainder store. No negative quotient/signed target conversion applies.",
+          "source_ids": [
+            "FS114-E049",
+            "FS114-E052",
+            "FS114-E051"
+          ],
+          "actual_C_runtime": "NOT_RUN"
+        },
+        {
+          "model": "C03",
+          "scalar_ns": "-1",
+          "q": "0",
+          "rem": "0",
+          "branch": "negative",
+          "result": {
+            "tv_sec": "-1",
+            "tv_nsec": "999999999"
+          },
+          "back_to_ktime": "-1",
+          "back_to_ns": "-1",
+          "old_caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion",
+          "new_caveat": "Negative branch: assumes compatible result when s32* address is passed as u32* remainder; signed inner -nsec-1 representable; helper returns u64 q; outer -q-1 calculated modulo2^64, stored in signed time64_t under implementation-defined target conversion to the expected negative value.",
+          "source_ids": [
+            "FS114-E047",
+            "FS114-E050",
+            "FS114-E052",
+            "FS114-E051"
+          ],
+          "actual_C_runtime": "NOT_RUN"
+        },
+        {
+          "model": "C04",
+          "scalar_ns": "1000000000",
+          "q": "1",
+          "rem": "0",
+          "branch": "positive",
+          "result": {
+            "tv_sec": "1",
+            "tv_nsec": "0"
+          },
+          "back_to_ktime": "1000000000",
+          "back_to_ns": "1000000000",
+          "old_caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion",
+          "new_caveat": "Positive branch only: s32* local remainder address passed to u32* helper; assume valid remainder store. No negative quotient/signed target conversion applies.",
+          "source_ids": [
+            "FS114-E049",
+            "FS114-E052",
+            "FS114-E051"
+          ],
+          "actual_C_runtime": "NOT_RUN"
+        },
+        {
+          "model": "C05",
+          "scalar_ns": "-1000000000",
+          "q": "0",
+          "rem": "999999999",
+          "branch": "negative",
+          "result": {
+            "tv_sec": "-1",
+            "tv_nsec": "0"
+          },
+          "back_to_ktime": "-1000000000",
+          "back_to_ns": "-1000000000",
+          "old_caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion",
+          "new_caveat": "Negative branch: assumes compatible result when s32* address is passed as u32* remainder; signed inner -nsec-1 representable; helper returns u64 q; outer -q-1 calculated modulo2^64, stored in signed time64_t under implementation-defined target conversion to the expected negative value.",
+          "source_ids": [
+            "FS114-E047",
+            "FS114-E050",
+            "FS114-E052",
+            "FS114-E051"
+          ],
+          "actual_C_runtime": "NOT_RUN"
+        },
+        {
+          "model": "C06",
+          "scalar_ns": "-1000000001",
+          "q": "1",
+          "rem": "0",
+          "branch": "negative",
+          "result": {
+            "tv_sec": "-2",
+            "tv_nsec": "999999999"
+          },
+          "back_to_ktime": "-1000000001",
+          "back_to_ns": "-1000000001",
+          "old_caveat": "s32* remainder address passed to helper expecting u32*; not compiler-verified; negative q additionally requires signed target conversion",
+          "new_caveat": "Negative branch: assumes compatible result when s32* address is passed as u32* remainder; signed inner -nsec-1 representable; helper returns u64 q; outer -q-1 calculated modulo2^64, stored in signed time64_t under implementation-defined target conversion to the expected negative value.",
+          "source_ids": [
+            "FS114-E047",
+            "FS114-E050",
+            "FS114-E052",
+            "FS114-E051"
+          ],
+          "actual_C_runtime": "NOT_RUN"
+        }
+      ],
+      "zero_model_unchanged": {
+        "model": "C01",
+        "scalar_ns": "0",
+        "q": null,
+        "rem": null,
+        "branch": "zero",
+        "result": {
+          "tv_sec": "0",
+          "tv_nsec": "0"
+        },
+        "back_to_ktime": "0",
+        "back_to_ns": "0",
+        "old_caveat": "No div_u64_rem call; zero initializes pair directly",
+        "new_caveat": "Zero: initializer {0,0} returned without div_u64_rem or subsequent member writes.",
+        "source_ids": [
+          "FS114-E048",
+          "FS114-E051"
+        ],
+        "actual_C_runtime": "NOT_RUN"
+      },
+      "data_columns_12_preserved": true,
+      "unsigned_outer": {
+        "q_type": "u64",
+        "q0_mod2_64": "18446744073709551615",
+        "q1_mod2_64": "18446744073709551614",
+        "assumed_signed_tv_sec": "q0->-1, q1->-2 implementation-defined target conversion",
+        "pointer_param": "local s32 rem address passed as s32* to helper requiring u32*",
+        "unsafe_minimum": "signed -nsec first can overflow at INT64_MIN",
+        "sources": [
+          "FS114-E047",
+          "FS114-E048",
+          "FS114-E050",
+          "FS114-E052"
+        ]
+      },
+      "graph_repairs": [
+        {
+          "old_line": 114,
+          "old": "nsts -> negative [label=\"CONDITION | TS113-E051\"];",
+          "new_edges": [
+            "ns_to_timespec64 -> negative_test CONTROL_CONDITION using time_misc.c:58",
+            "negative_test -> negative_math CONDITION_TRUE using time_misc.c:64-65"
+          ],
+          "source_ids": [
+            "FS114-E047",
+            "FS114-E050"
+          ]
+        },
+        {
+          "old_line": 122,
+          "old": "zero -> fields [label=\"RETURN_INITIALIZED_PAIR | TS113-E052\"];",
+          "new_edges": [
+            "zero_initialized_pair -> returned_timespec ZERO_RETURN (L52 and L68)",
+            "nonzero positive/negative field writes -> field_write_node (L55-57,64-65)"
+          ],
+          "source_ids": [
+            "FS114-E048",
+            "FS114-E051",
+            "FS114-E049",
+            "FS114-E050"
+          ]
+        }
+      ],
+      "previous_eight_old112_graph_deltas_preserved": true
+    },
+    "R113_01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+      "old": "113 graph line137, facts ABC.C.bounded_examples C04/C05/C06, candidate TS113-CAND-07",
+      "graph_repairs": [
+        {
+          "old_line": 137,
+          "old": "clkret -> outguard [label=\"CONTROL_ONLY_ON_SUCCESS | TS113-E029\"];",
+          "new_edges": [
+            "clock_callback_return -> if_not_error CHECK_ALWAYS_AFTER_NORMAL_CALLBACK_RETURN",
+            "if_not_error -> put_timespec64 RIGHT_OPERAND_ONLY_IF_ZERO"
+          ],
+          "source_ids": [
+            "FS114-E053",
+            "FS114-E054"
+          ],
+          "line138_original_direct_call_kept": "clock -> put [label=\"DIRECT_CALL_IF_ZERO | TS113-E029\"];"
+        }
+      ],
+      "three_model_sources": [
+        {
+          "model": "C04",
+          "unchanged": {
+            "id": "C04",
+            "inputs": [
+              {
+                "sec": 1,
+                "nsec": 999999999
+              },
+              {
+                "sec": 2,
+                "nsec": 0
+              }
+            ],
+            "equal": false,
+            "compare": -1,
+            "reason": "seconds comparison first even though nanosecond is larger",
+            "source_ids": [
+              "TS113-E040"
+            ]
+          },
+          "equal_false": [
+            "TS113-E039",
+            "FS114-E055"
+          ],
+          "compare_minus1": [
+            "TS113-E040",
+            "FS114-E056"
+          ]
+        },
+        {
+          "model": "C05",
+          "unchanged": {
+            "id": "C05",
+            "inputs": [
+              {
+                "sec": 2,
+                "nsec": 0
+              },
+              {
+                "sec": 1,
+                "nsec": 999999999
+              }
+            ],
+            "equal": false,
+            "compare": 1,
+            "reason": "seconds greater gate",
+            "source_ids": [
+              "TS113-E041"
+            ]
+          },
+          "equal_false": [
+            "TS113-E039",
+            "FS114-E055"
+          ],
+          "compare_plus1": [
+            "TS113-E041",
+            "FS114-E057"
+          ]
+        },
+        {
+          "model": "C06",
+          "unchanged": {
+            "id": "C06",
+            "inputs": [
+              {
+                "sec": 0,
+                "nsec": 1000000000
+              },
+              {
+                "sec": 1,
+                "nsec": 0
+              }
+            ],
+            "raw_equal": false,
+            "raw_compare": -1,
+            "normalize_left_to": {
+              "sec": 1,
+              "nsec": 0
+            },
+            "normalized_equal": true,
+            "normalized_compare": 0,
+            "source_ids": [
+              "TS113-E039",
+              "TS113-E040",
+              "TS113-E043",
+              "TS113-E044",
+              "TS113-E046"
+            ],
+            "reason": "raw fields differ; one carry gives equal canonical pair; raw left invalid under B"
+          },
+          "raw_equal_false": [
+            "TS113-E039",
+            "FS114-E055"
+          ],
+          "raw_compare_minus1": [
+            "TS113-E040",
+            "FS114-E056"
+          ],
+          "normalized_equal_true": [
+            "TS113-E039",
+            "FS114-E055"
+          ],
+          "normalized_compare_zero": [
+            "TS113-E042",
+            "FS114-E058"
+          ]
+        }
+      ],
+      "cand07": {
+        "original": {
+          "id": "TS113-CAND-07",
+          "root": "C",
+          "kind": "COMPARISON_DOMAIN",
+          "premise": "timespec64_equal compares both fields, compare tests seconds then returns integer nsec difference",
+          "evidence": [
+            "TS113-E039–E042"
+          ],
+          "candidate": "canonical same-second delta ±7 returned as ±7 and different-second branch as ±1",
+          "first_unverified_step": "noncanonical input subtraction may overflow long/int; caller domain and compiled behavior",
+          "status": "CONDITIONAL_SOURCE_ANALYSIS"
+        },
+        "corrected": "Two independent hazards: (1) signed long subtraction overflow (undefined behavior) vs (2) subtraction representable as long but return int cannot represent it (implementation-defined signed conversion or implementation-defined signal).",
+        "example_long_overflow": "equal seconds, lhs.tv_nsec=LONG_MAX, rhs=-1; computed difference 9223372036854775808 outside LP64 long",
+        "example_int_outside": "equal seconds, lhs.tv_nsec=2147483648, rhs=0; difference fits LP64 long but exceeds 32bit int",
+        "normalized_domain": "0..999999999 both nanos -> diff [-999999999,999999999], fits both",
+        "different_secs": "returns -1 or +1 before subtracting nanoseconds",
+        "source_ids": [
+          "FS114-E055",
+          "FS114-E056",
+          "FS114-E057",
+          "FS114-E058"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    }
+  },
+  "A": {
+    "syscall_number": 8,
+    "dispatch_chain": [
+      "FS114-E002",
+      "FS114-E003",
+      "FS114-E004",
+      "FS114-E005",
+      "FS114-E006",
+      "FS114-E008"
+    ],
+    "entry_signature": "MYOS_SYSCALL_DEFINE3(lseek,unsigned int fd,off_t offset,unsigned int whence)",
+    "callback_signature": "loff_t (*llseek)(file_s*,loff_t,int)",
+    "entry_types": {
+      "fd": "unsigned int",
+      "offset": "off_t = __kernel_off_t = signed long",
+      "whence": "unsigned int",
+      "ret": "ulong initialized 0",
+      "method_return": "loff_t = __kernel_loff_t = long long",
+      "syscall_return": "long"
+    },
+    "fd_gate": {
+      "source": "FS114-E010",
+      "test": "fd<0 || fd>=fd_count",
+      "negative_part": "false for unsigned fd",
+      "upper_inclusive": true,
+      "rejected": "-EBADF",
+      "no_pointer_dereference_before_return": true
+    },
+    "whence_gate": {
+      "source": "FS114-E011",
+      "test": "whence<0 || whence>=SEEK_MAX",
+      "negative_part": "false for unsigned whence",
+      "SEEK_MAX": "SEEK_HOLE=4",
+      "upper_inclusive": true,
+      "values": [
+        {
+          "n": 0,
+          "name": "SEEK_SET",
+          "entry": "PASS",
+          "FAT": "PASS"
+        },
+        {
+          "n": 1,
+          "name": "SEEK_CUR",
+          "entry": "PASS",
+          "FAT": "PASS"
+        },
+        {
+          "n": 2,
+          "name": "SEEK_END",
+          "entry": "PASS",
+          "FAT": "PASS"
+        },
+        {
+          "n": 3,
+          "name": "SEEK_DATA",
+          "entry": "PASS",
+          "FAT": "DEFAULT_-EINVAL"
+        },
+        {
+          "n": 4,
+          "name": "SEEK_HOLE",
+          "entry": "REJECT_-EINVAL",
+          "FAT": "NOT_CALLED"
+        }
+      ],
+      "macro_ids": [
+        "FS114-E015",
+        "FS114-E016",
+        "FS114-E017",
+        "FS114-E018",
+        "FS114-E019",
+        "FS114-E020"
+      ]
+    },
+    "dispatch": {
+      "file_lookup": "FS114-E012",
+      "call": "FS114-E013",
+      "return": "FS114-E014",
+      "if_missing_f_op_or_llseek": "ret stays 0 and lseek body never writes f_pos; valid file object assumed",
+      "if_present": "ret from callback assigned to ulong"
+    },
+    "return_types": {
+      "premise": "x86-64 LP64, ordinary representable offsets",
+      "negative_errno": "loff_t negative returned by callback -> modulo2^64 conversion into ulong; returning ulong from long __do_sys invokes implementation-defined unsigned-to-signed conversion on value >LONG_MAX; common two's-complement target recovers negative number but not a portable guarantee",
+      "wrapper_source": [
+        "FS114-E007",
+        "FS114-E008"
+      ]
+    },
+    "models": [
+      {
+        "id": "A01",
+        "fd": "fd>=fd_count",
+        "whence": 0,
+        "returned": "-EBADF",
+        "calls_callback": false,
+        "writes_f_pos": false,
+        "source_ids": [
+          "FS114-E010"
+        ]
+      },
+      {
+        "id": "A02",
+        "fd": "valid",
+        "whence": 4,
+        "returned": "-EINVAL",
+        "calls_callback": false,
+        "writes_f_pos": false,
+        "source_ids": [
+          "FS114-E020",
+          "FS114-E011"
+        ]
+      },
+      {
+        "id": "A03",
+        "fd": "valid",
+        "whence": 3,
+        "returned": "depends on f_op; FAT -EINVAL",
+        "calls_callback": "if llseek present",
+        "source_ids": [
+          "FS114-E013",
+          "FS114-E029"
+        ]
+      },
+      {
+        "id": "A04",
+        "fd": "valid",
+        "whence": 1,
+        "initial_f_pos": 9,
+        "method": "f_op==NULL",
+        "returned": 0,
+        "calls_callback": false,
+        "writes_f_pos": false,
+        "final_f_pos": 9,
+        "source_ids": [
+          "FS114-E009",
+          "FS114-E013",
+          "FS114-E014"
+        ]
+      },
+      {
+        "id": "A05",
+        "fd": "valid",
+        "whence": 1,
+        "initial_f_pos": 9,
+        "method": "f_op->llseek==NULL",
+        "returned": 0,
+        "calls_callback": false,
+        "writes_f_pos": false,
+        "final_f_pos": 9,
+        "source_ids": [
+          "FS114-E009",
+          "FS114-E013",
+          "FS114-E014"
+        ]
+      },
+      {
+        "id": "A06",
+        "fd": "valid",
+        "whence": 0,
+        "method": "FAT32_lseek",
+        "returned": "loff_t method return via ulong ret to long syscall; negative errors conditional on target signed conversion",
+        "calls_callback": true,
+        "source_ids": [
+          "FS114-E013",
+          "FS114-E014",
+          "FS114-E008"
+        ]
+      }
+    ]
+  },
+  "B": {
+    "file_binding_chain": {
+      "regular_inode": [
+        "FS114-E021",
+        "FS114-E022"
+      ],
+      "opening_file": [
+        "FS114-E023"
+      ],
+      "fat_ops": [
+        "FS114-E024"
+      ],
+      "premise": "valid regular FAT inode and open path; source-level binding, no successful runtime open proven"
+    },
+    "backend": {
+      "pos_local": "long pos=0",
+      "switch": {
+        "SET": "offset",
+        "CUR": "f_pos+offset",
+        "END": "i_size+offset",
+        "default": "-EINVAL"
+      },
+      "range": "reject pos<0 || pos>i_size with -EOVERFLOW",
+      "write": "f_pos=pos only after range passes",
+      "return_success": "pos",
+      "sources": [
+        "FS114-E025",
+        "FS114-E026",
+        "FS114-E027",
+        "FS114-E028",
+        "FS114-E029",
+        "FS114-E030",
+        "FS114-E031",
+        "FS114-E032"
+      ],
+      "large_values": "addition before check; signed overflow and loff_t -> long narrowing not justified; small cases only"
+    },
+    "initial": {
+      "size": 100,
+      "f_pos": 40
+    },
+    "bounded_cases": [
+      {
+        "id": "B01",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 0,
+        "offset": 0,
+        "entry": "ACCEPT",
+        "backend_case": "SET",
+        "return_value": 0,
+        "write_f_pos": true,
+        "final_f_pos": 0,
+        "source_ids": [
+          "FS114-E026",
+          "FS114-E030",
+          "FS114-E031",
+          "FS114-E032"
+        ],
+        "note": "SET exact beginning",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B02",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 1,
+        "offset": 5,
+        "entry": "ACCEPT",
+        "backend_case": "CUR",
+        "return_value": 45,
+        "write_f_pos": true,
+        "final_f_pos": 45,
+        "source_ids": [
+          "FS114-E027",
+          "FS114-E030",
+          "FS114-E031",
+          "FS114-E032"
+        ],
+        "note": "CUR+5",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B03",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 1,
+        "offset": -40,
+        "entry": "ACCEPT",
+        "backend_case": "CUR",
+        "return_value": 0,
+        "write_f_pos": true,
+        "final_f_pos": 0,
+        "source_ids": [
+          "FS114-E027",
+          "FS114-E030",
+          "FS114-E031",
+          "FS114-E032"
+        ],
+        "note": "CUR exactly start",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B04",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 2,
+        "offset": 0,
+        "entry": "ACCEPT",
+        "backend_case": "END",
+        "return_value": 100,
+        "write_f_pos": true,
+        "final_f_pos": 100,
+        "source_ids": [
+          "FS114-E028",
+          "FS114-E030",
+          "FS114-E031",
+          "FS114-E032"
+        ],
+        "note": "END+0 exact EOF",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B05",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 2,
+        "offset": 1,
+        "entry": "ACCEPT",
+        "backend_case": "END",
+        "return_value": "-EOVERFLOW",
+        "write_f_pos": false,
+        "final_f_pos": 40,
+        "source_ids": [
+          "FS114-E028",
+          "FS114-E030"
+        ],
+        "note": "END+1 > i_size",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B06",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 0,
+        "offset": -1,
+        "entry": "ACCEPT",
+        "backend_case": "SET",
+        "return_value": "-EOVERFLOW",
+        "write_f_pos": false,
+        "final_f_pos": 40,
+        "source_ids": [
+          "FS114-E026",
+          "FS114-E030"
+        ],
+        "note": "SET -1 negative",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B07",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 1,
+        "offset": -41,
+        "entry": "ACCEPT",
+        "backend_case": "CUR",
+        "return_value": "-EOVERFLOW",
+        "write_f_pos": false,
+        "final_f_pos": 40,
+        "source_ids": [
+          "FS114-E027",
+          "FS114-E030"
+        ],
+        "note": "CUR -41 negative",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B08",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 3,
+        "offset": 0,
+        "entry": "ACCEPT",
+        "backend_case": "DEFAULT",
+        "return_value": "-EINVAL",
+        "write_f_pos": false,
+        "final_f_pos": 40,
+        "source_ids": [
+          "FS114-E011",
+          "FS114-E029"
+        ],
+        "note": "SEEK_DATA entry passes, FAT default rejects",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B09",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 4,
+        "offset": 0,
+        "entry": "REJECT_-EINVAL",
+        "backend_case": "NOT_REACHED",
+        "return_value": "-EINVAL",
+        "write_f_pos": false,
+        "final_f_pos": 40,
+        "source_ids": [
+          "FS114-E011",
+          "FS114-E020"
+        ],
+        "note": "SEEK_HOLE=SEEK_MAX entry rejects",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B10",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 0,
+        "offset": 100,
+        "entry": "ACCEPT",
+        "backend_case": "SET",
+        "return_value": 100,
+        "write_f_pos": true,
+        "final_f_pos": 100,
+        "source_ids": [
+          "FS114-E026",
+          "FS114-E030",
+          "FS114-E031",
+          "FS114-E032"
+        ],
+        "note": "SET==EOF permitted",
+        "execution": "PAPER_ONLY"
+      },
+      {
+        "id": "B11",
+        "initial_i_size": 100,
+        "initial_f_pos": 40,
+        "whence": 0,
+        "offset": 101,
+        "entry": "ACCEPT",
+        "backend_case": "SET",
+        "return_value": "-EOVERFLOW",
+        "write_f_pos": false,
+        "final_f_pos": 40,
+        "source_ids": [
+          "FS114-E026",
+          "FS114-E030"
+        ],
+        "note": "SET beyond EOF",
+        "execution": "PAPER_ONLY"
+      }
+    ]
+  },
+  "C": {
+    "aliases": {
+      "zero_first": [
+        42,
+        "FS114-E033"
+      ],
+      "zero_second": [
+        111,
+        "FS114-E036"
+      ],
+      "both_expand": "zero_lseek => null_lseek",
+      "full_first": [
+        43,
+        "FS114-E034"
+      ],
+      "full_second": [
+        112,
+        "FS114-E037"
+      ]
+    },
+    "tables": {
+      "null_fops": "FS114-E038",
+      "zero_fops": "FS114-E039",
+      "full_fops": "line152 .llseek=full_lseek is commented",
+      "devlist_null_minor3": "FS114-E040",
+      "devlist_zero_minor5": "FS114-E041",
+      "devlist_full_minor7": "FS114-E042",
+      "init_attempt": "FS114-E046"
+    },
+    "noop": {
+      "source": "FS114-E043",
+      "returns": "file->f_pos",
+      "does_write": false,
+      "default_fops_binding": "FS114-E044",
+      "opening_replaces_f_op": "FS114-E045",
+      "scope": "def_chr_fops binds noop but not proved to remain after a normal chrdev_open"
+    },
+    "state_cases": [
+      {
+        "id": "C01",
+        "fop": "null_fops",
+        "whence": 1,
+        "offset": 2,
+        "start": 9,
+        "callback": "null_lseek",
+        "result": 0,
+        "writes": true,
+        "end": 0,
+        "source_ids": [
+          "FS114-E038",
+          "FS114-E040",
+          "FS114-E035"
+        ]
+      },
+      {
+        "id": "C02",
+        "fop": "zero_fops",
+        "whence": 1,
+        "offset": 2,
+        "start": 9,
+        "callback": "zero_lseek->null_lseek",
+        "result": 0,
+        "writes": true,
+        "end": 0,
+        "source_ids": [
+          "FS114-E039",
+          "FS114-E041",
+          "FS114-E033",
+          "FS114-E036",
+          "FS114-E035"
+        ]
+      },
+      {
+        "id": "C03",
+        "fop": "def_chr_fops",
+        "whence": 1,
+        "offset": 2,
+        "start": 9,
+        "callback": "noop_llseek",
+        "result": 9,
+        "writes": false,
+        "end": 9,
+        "source_ids": [
+          "FS114-E044",
+          "FS114-E043"
+        ],
+        "premise": "only if file retains default fops; chrdev_open may replace with p->ops"
+      },
+      {
+        "id": "C04",
+        "fop": "full_fops",
+        "whence": 1,
+        "offset": 2,
+        "start": 9,
+        "callback": "absent (.llseek commented)",
+        "result": 0,
+        "writes": false,
+        "end": 9,
+        "source_ids": [
+          "FS114-E042",
+          "FS114-E013",
+          "FS114-E014"
+        ],
+        "premise": "hypothetical valid file with full_fops; not observed opened"
+      },
+      {
+        "id": "C05",
+        "fop": "NULL",
+        "whence": 1,
+        "offset": 2,
+        "start": 9,
+        "callback": "absent",
+        "result": 0,
+        "writes": false,
+        "end": 9,
+        "source_ids": [
+          "FS114-E009",
+          "FS114-E013",
+          "FS114-E014"
+        ]
+      }
+    ],
+    "distinction": "same entry return0: null/zero write f_pos 0, absent method returns0 but f_pos remains9; noop returns9 and no write",
+    "runtime": "NOT_RUN"
+  },
+  "evidence_ledger": [
+    {
+      "id": "FS114-E001",
+      "key": "CONFIG_BUG",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "set(CMAKE_C_FLAGS)",
+      "start": 66,
+      "end": 66
+    },
+    {
+      "id": "FS114-E002",
+      "key": "NR_LSEEK",
+      "path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+      "symbol": "__NR_lseek",
+      "start": 13,
+      "end": 13
+    },
+    {
+      "id": "FS114-E003",
+      "key": "NR_MAP",
+      "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+      "symbol": "__SYSCALL(__NR_lseek, sys_lseek)",
+      "start": 11,
+      "end": 11
+    },
+    {
+      "id": "FS114-E004",
+      "key": "SWITCH_MAP",
+      "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+      "symbol": "__SYSCALL",
+      "start": 26,
+      "end": 26
+    },
+    {
+      "id": "FS114-E005",
+      "key": "SWITCH_INC",
+      "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+      "symbol": "x64_sys_call",
+      "start": 29,
+      "end": 31
+    },
+    {
+      "id": "FS114-E006",
+      "key": "SYSCALL_DEFINE",
+      "path": "mykernel/include/linux/kernel/syscalls.h",
+      "symbol": "MYOS_SYSCALL_DEFINE3",
+      "start": 1386,
+      "end": 1386
+    },
+    {
+      "id": "FS114-E007",
+      "key": "WRAP_DECLARE",
+      "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h",
+      "symbol": "__MYOS_SYSCALL_DEFINEx",
+      "start": 241,
+      "end": 244
+    },
+    {
+      "id": "FS114-E008",
+      "key": "WRAP_RETURN",
+      "path": "mykernel/arch/x86_64/include/asm/syscall_wrapper.h",
+      "symbol": "__MYOS_SYSCALL_DEFINEx",
+      "start": 245,
+      "end": 249
+    },
+    {
+      "id": "FS114-E009",
+      "key": "A_LOCALS",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "lseek",
+      "start": 78,
+      "end": 80
+    },
+    {
+      "id": "FS114-E010",
+      "key": "A_FD_REJECT",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "lseek",
+      "start": 82,
+      "end": 83
+    },
+    {
+      "id": "FS114-E011",
+      "key": "A_WHENCE_REJECT",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "lseek",
+      "start": 84,
+      "end": 85
+    },
+    {
+      "id": "FS114-E012",
+      "key": "A_FILE_LOOKUP",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "lseek",
+      "start": 87,
+      "end": 87
+    },
+    {
+      "id": "FS114-E013",
+      "key": "A_CALLBACK",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "lseek",
+      "start": 88,
+      "end": 89
+    },
+    {
+      "id": "FS114-E014",
+      "key": "A_RETURN",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "lseek",
+      "start": 90,
+      "end": 90
+    },
+    {
+      "id": "FS114-E015",
+      "key": "SEEK_SET",
+      "path": "mykernel/include/uapi/linux/fs.h",
+      "symbol": "SEEK_SET",
+      "start": 43,
+      "end": 43
+    },
+    {
+      "id": "FS114-E016",
+      "key": "SEEK_CUR",
+      "path": "mykernel/include/uapi/linux/fs.h",
+      "symbol": "SEEK_CUR",
+      "start": 44,
+      "end": 44
+    },
+    {
+      "id": "FS114-E017",
+      "key": "SEEK_END",
+      "path": "mykernel/include/uapi/linux/fs.h",
+      "symbol": "SEEK_END",
+      "start": 45,
+      "end": 45
+    },
+    {
+      "id": "FS114-E018",
+      "key": "SEEK_DATA",
+      "path": "mykernel/include/uapi/linux/fs.h",
+      "symbol": "SEEK_DATA",
+      "start": 46,
+      "end": 46
+    },
+    {
+      "id": "FS114-E019",
+      "key": "SEEK_HOLE",
+      "path": "mykernel/include/uapi/linux/fs.h",
+      "symbol": "SEEK_HOLE",
+      "start": 47,
+      "end": 47
+    },
+    {
+      "id": "FS114-E020",
+      "key": "SEEK_MAX",
+      "path": "mykernel/include/uapi/linux/fs.h",
+      "symbol": "SEEK_MAX",
+      "start": 48,
+      "end": 48
+    },
+    {
+      "id": "FS114-E021",
+      "key": "B_INODE_SIZE",
+      "path": "mykernel/fs/fat/inode.c",
+      "symbol": "fat_fill_inode",
+      "start": 175,
+      "end": 175
+    },
+    {
+      "id": "FS114-E022",
+      "key": "B_INODE_FOPS",
+      "path": "mykernel/fs/fat/inode.c",
+      "symbol": "fat_fill_inode",
+      "start": 178,
+      "end": 180
+    },
+    {
+      "id": "FS114-E023",
+      "key": "B_OPEN_FOPS",
+      "path": "mykernel/fs/vfs/open.c",
+      "symbol": "myos_do_dentry_open",
+      "start": 53,
+      "end": 55
+    },
+    {
+      "id": "FS114-E024",
+      "key": "B_FAT_FOPS",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_file_ops",
+      "start": 359,
+      "end": 359
+    },
+    {
+      "id": "FS114-E025",
+      "key": "B_FAT_LOCAL",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start": 280,
+      "end": 281
+    },
+    {
+      "id": "FS114-E026",
+      "key": "B_FAT_SET",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start": 285,
+      "end": 287
+    },
+    {
+      "id": "FS114-E027",
+      "key": "B_FAT_CUR",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start": 289,
+      "end": 291
+    },
+    {
+      "id": "FS114-E028",
+      "key": "B_FAT_END",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start": 293,
+      "end": 295
+    },
+    {
+      "id": "FS114-E029",
+      "key": "B_FAT_DEFAULT",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start": 297,
+      "end": 299
+    },
+    {
+      "id": "FS114-E030",
+      "key": "B_FAT_RANGE",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start": 302,
+      "end": 303
+    },
+    {
+      "id": "FS114-E031",
+      "key": "B_FAT_WRITE",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start": 305,
+      "end": 305
+    },
+    {
+      "id": "FS114-E032",
+      "key": "B_FAT_RETURN",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start": 308,
+      "end": 308
+    },
+    {
+      "id": "FS114-E033",
+      "key": "C_ZERO_ALIAS_EARLY",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "zero_lseek",
+      "start": 42,
+      "end": 42
+    },
+    {
+      "id": "FS114-E034",
+      "key": "C_FULL_ALIAS_EARLY",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "full_lseek",
+      "start": 43,
+      "end": 43
+    },
+    {
+      "id": "FS114-E035",
+      "key": "C_NULL_LSEEK",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "null_lseek",
+      "start": 55,
+      "end": 55
+    },
+    {
+      "id": "FS114-E036",
+      "key": "C_ZERO_ALIAS_LATE",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "zero_lseek",
+      "start": 111,
+      "end": 111
+    },
+    {
+      "id": "FS114-E037",
+      "key": "C_FULL_ALIAS_LATE",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "full_lseek",
+      "start": 112,
+      "end": 112
+    },
+    {
+      "id": "FS114-E038",
+      "key": "C_NULL_FOPS",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "null_fops",
+      "start": 126,
+      "end": 126
+    },
+    {
+      "id": "FS114-E039",
+      "key": "C_ZERO_FOPS",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "zero_fops",
+      "start": 142,
+      "end": 142
+    },
+    {
+      "id": "FS114-E040",
+      "key": "C_DEV_NULL",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "devlist",
+      "start": 170,
+      "end": 170
+    },
+    {
+      "id": "FS114-E041",
+      "key": "C_DEV_ZERO",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "devlist",
+      "start": 174,
+      "end": 174
+    },
+    {
+      "id": "FS114-E042",
+      "key": "C_DEV_FULL",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "devlist",
+      "start": 175,
+      "end": 175
+    },
+    {
+      "id": "FS114-E043",
+      "key": "C_NOOP_RETURN",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "noop_llseek",
+      "start": 44,
+      "end": 44
+    },
+    {
+      "id": "FS114-E044",
+      "key": "C_DEFAULT_NOOP",
+      "path": "mykernel/drivers/char/char_dev.c",
+      "symbol": "def_chr_fops",
+      "start": 95,
+      "end": 98
+    },
+    {
+      "id": "FS114-E045",
+      "key": "C_CHR_SWAP",
+      "path": "mykernel/drivers/char/char_dev.c",
+      "symbol": "chrdev_open",
+      "start": 75,
+      "end": 78
+    },
+    {
+      "id": "FS114-E046",
+      "key": "C_REGISTER",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "chr_dev_init",
+      "start": 199,
+      "end": 203
+    },
+    {
+      "id": "FS114-E047",
+      "key": "D_NEG_GATE",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 58,
+      "end": 58
+    },
+    {
+      "id": "FS114-E048",
+      "key": "D_ZERO_INIT",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 52,
+      "end": 53
+    },
+    {
+      "id": "FS114-E049",
+      "key": "D_POS_BODY",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 55,
+      "end": 57
+    },
+    {
+      "id": "FS114-E050",
+      "key": "D_NEG_BODY",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 64,
+      "end": 65
+    },
+    {
+      "id": "FS114-E051",
+      "key": "D_RETURN",
+      "path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "start": 68,
+      "end": 68
+    },
+    {
+      "id": "FS114-E052",
+      "key": "D_DIV_BODY",
+      "path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "div_u64_rem",
+      "start": 43,
+      "end": 44
+    },
+    {
+      "id": "FS114-E053",
+      "key": "D_CLK_RETURN",
+      "path": "mykernel/time/syscall.c",
+      "symbol": "clock_gettime",
+      "start": 44,
+      "end": 44
+    },
+    {
+      "id": "FS114-E054",
+      "key": "D_CLK_GUARD",
+      "path": "mykernel/time/syscall.c",
+      "symbol": "clock_gettime",
+      "start": 46,
+      "end": 47
+    },
+    {
+      "id": "FS114-E055",
+      "key": "D_EQUAL",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_equal",
+      "start": 47,
+      "end": 47
+    },
+    {
+      "id": "FS114-E056",
+      "key": "D_CMP_SEC_LT",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_compare",
+      "start": 58,
+      "end": 59
+    },
+    {
+      "id": "FS114-E057",
+      "key": "D_CMP_SEC_GT",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_compare",
+      "start": 60,
+      "end": 61
+    },
+    {
+      "id": "FS114-E058",
+      "key": "D_CMP_NSEC",
+      "path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_compare",
+      "start": 62,
+      "end": 62
+    }
+  ],
+  "new_anchors": 58,
+  "ordinary_positions": 28,
+  "verification": {
+    "new_quotes": "58/58 literal and each within one definition",
+    "full_local_P9": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "link": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "kernel": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_io": "NOT_RUN",
+    "models": "PAPER_ONLY",
+    "counts": {
+      "A": 6,
+      "B": 11,
+      "C": 5,
+      "D00_nonzero": 5,
+      "old_roundtrip_results": 12
+    }
+  }
+}

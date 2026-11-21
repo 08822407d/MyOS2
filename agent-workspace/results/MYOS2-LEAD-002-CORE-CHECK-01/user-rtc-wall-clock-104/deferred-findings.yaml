@@ -1,0 +1,272 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-RTC-WALL-CLOCK-104",
+  "record_type": "static_rtc_conditional_findings_and_gaps",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "R102_01": "CLOSED_DOCUMENTATION_ONLY",
+  "R102_02": "OPEN",
+  "R102_03": "OPEN",
+  "R103_01": "OPEN",
+  "R103_02": "OPEN",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "new_conditional_candidates": [
+    {
+      "id": "RTC104-F01",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-F01",
+      "title": "six sequential RTC reads without active UIP protection",
+      "classification": "STATIC_CONDITIONAL_SNAPSHOT_RISK",
+      "source": "The six CMOS_READ expressions occur separately; mc146818_avoid_UIP branch and CMOS lock calls are commented",
+      "conditional_consequence": "If an RTC update intervenes the fields might not belong to a coherent instant; no such event observed",
+      "evidence_ids": [
+        "RTC104-E032",
+        "RTC104-E033",
+        "RTC104-E036",
+        "RTC104-E037",
+        "RTC104-E038",
+        "RTC104-E055"
+      ],
+      "first_stop_gate": "Need exact hardware/config/real execution evidence or later focused audit before saying race occurred",
+      "observed_real_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-F02",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-F02",
+      "title": "unconditional BCD transformation without active format/century check",
+      "classification": "STATIC_CONDITIONAL_ENCODING_RISK",
+      "source": "bcd2bin applies to all six fields while RTC_CONTROL binary/24h and century reads are commented",
+      "conditional_consequence": "Binary encoding or 12h data could produce different number; 69/70 two-digit window cannot determine a stored century",
+      "evidence_ids": [
+        "RTC104-E049",
+        "RTC104-E050",
+        "RTC104-E051",
+        "RTC104-E052",
+        "RTC104-E053",
+        "RTC104-E054",
+        "RTC104-E067",
+        "RTC104-E072",
+        "RTC104-E073",
+        "RTC104-E074"
+      ],
+      "first_stop_gate": "Need actual RTC mode, century and raw bytes; no hardware specification accepted by memory alone",
+      "observed_real_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-F03",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-F03",
+      "title": "calendar validity function not used in direct persistent clock chain",
+      "classification": "STATIC_CONDITIONAL_UNVALIDATED_DATE",
+      "source": "rtc_valid_tm exists with day month time and leap check; current getter/converter only sample/decode and call mktime64",
+      "conditional_consequence": "Bad bytes/calendar could be mapped to seconds without direct checker, but no invalid real sample has been observed",
+      "evidence_ids": [
+        "RTC104-E063",
+        "RTC104-E064",
+        "RTC104-E079",
+        "RTC104-E080",
+        "RTC104-E081",
+        "RTC104-E082",
+        "RTC104-E085"
+      ],
+      "first_stop_gate": "Need actual accepted values and selected linked call graph; no code edit authorized",
+      "observed_real_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-F04",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-F04",
+      "title": "January Gregorian computation has unsigned subtraction then int conversion",
+      "classification": "STATIC_IMPLEMENTATION_DEFINED_C_DOMAIN",
+      "source": "mktime64 uint mon -=2 then casts to int to branch; mon0=1 produces UINT_MAX and out-of-range uint-to-int conversion",
+      "conditional_consequence": "Under common representation this selects January adjustment; standard C does not unconditionally prescribe that implementation choice",
+      "evidence_ids": [
+        "RTC104-E086",
+        "RTC104-E087",
+        "RTC104-E088",
+        "RTC104-E089",
+        "RTC104-E103"
+      ],
+      "first_stop_gate": "Need actual compiler/target C convention and linked binary evidence; do not run repository implementation",
+      "observed_real_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-F05",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-F05",
+      "title": "mc146818_get_time return0 not consumed by persistent caller",
+      "classification": "STATIC_STATUS_VS_VALIDITY_GAP",
+      "source": "direct caller ignores status and writes resulting calendar seconds even though getter's fallback/error and UIP check commented",
+      "conditional_consequence": "Returning zero and assigning fields do not establish RTC validity or snapshot quality",
+      "evidence_ids": [
+        "RTC104-E038",
+        "RTC104-E062",
+        "RTC104-E063",
+        "RTC104-E064"
+      ],
+      "first_stop_gate": "Need actual error semantics and normal return evidence before claiming observed failure",
+      "observed_real_failure": false,
+      "status": "NEEDS_EVIDENCE"
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "RTC104-U01",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-U01",
+      "topic": "actual index/data port hardware response",
+      "missing_evidence": "x86 BUILDIO requests and static RTC_PORT values do not produce observed CMOS bytes",
+      "evidence_ids": [
+        "RTC104-E032",
+        "RTC104-E034",
+        "RTC104-E056",
+        "RTC104-E057",
+        "RTC104-E058",
+        "RTC104-E059",
+        "RTC104-E060"
+      ],
+      "first_stop_gate": "No real port I/O permitted",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-U02",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-U02",
+      "topic": "six-field same-instant acquisition and UIP state",
+      "missing_evidence": "neither active UIP synchronization nor real device state is present in bounded read path",
+      "evidence_ids": [
+        "RTC104-E036",
+        "RTC104-E037",
+        "RTC104-E038",
+        "RTC104-E048",
+        "RTC104-E055"
+      ],
+      "first_stop_gate": "Need authorized device behavior or formal concurrency evidence",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-U03",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-U03",
+      "topic": "RTC mode, BCD validity, two-digit year century and 12/24h status",
+      "missing_evidence": "mode and century reads are commented, and bcd_is_valid isn't invoked",
+      "evidence_ids": [
+        "RTC104-E049",
+        "RTC104-E050",
+        "RTC104-E051",
+        "RTC104-E052",
+        "RTC104-E053",
+        "RTC104-E054",
+        "RTC104-E067",
+        "RTC104-E070",
+        "RTC104-E071"
+      ],
+      "first_stop_gate": "Retain conditional format models, not hardware certification",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-U04",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-U04",
+      "topic": "whether calendar field validator actually processed these values",
+      "missing_evidence": "rtc_valid_tm exists but direct time64 path doesn't invoke it; invalid byte/date sample not observed",
+      "evidence_ids": [
+        "RTC104-E079",
+        "RTC104-E080",
+        "RTC104-E081",
+        "RTC104-E082",
+        "RTC104-E085"
+      ],
+      "first_stop_gate": "Keep not-called statement bounded to inspected functions",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-U05",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-U05",
+      "topic": "actual toolchain's January unsigned-to-int conversion and math overflow",
+      "missing_evidence": "C expression has uint intermediates and implementation-defined conversion for mon0=1",
+      "evidence_ids": [
+        "RTC104-E086",
+        "RTC104-E087",
+        "RTC104-E088",
+        "RTC104-E089",
+        "RTC104-E103"
+      ],
+      "first_stop_gate": "Source-only formula conditions; no compile/run authorized",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-U06",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-U06",
+      "topic": "local_clock u64 input and followup timekeeper writers",
+      "missing_evidence": "local_clock/native_sched_clock remains opaque; out-of-s64 conversion and subsequent wall_to_monotonic writers not established",
+      "evidence_ids": [
+        "RTC104-E027",
+        "RTC104-E028",
+        "RTC104-E093",
+        "RTC104-E094",
+        "RTC104-E096",
+        "RTC104-E097",
+        "RTC104-E098"
+      ],
+      "first_stop_gate": "Carry TK103-U02 and A-F09 only for narrowed persistent-clock aspect",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "RTC104-U07",
+      "qualified_id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-U07",
+      "topic": "actual source selection, linked ELF and RTC correctness",
+      "missing_evidence": "the source-level wall_time writes not prove HPET selected or real calendar time correct",
+      "evidence_ids": [
+        "RTC104-E095",
+        "RTC104-E096",
+        "RTC104-E097",
+        "RTC104-E099"
+      ],
+      "first_stop_gate": "Retain old CA-05/V14/FM96 identities, no new hardware/root assertion",
+      "status": "NEEDS_EVIDENCE"
+    }
+  ],
+  "counts": {
+    "conditional_candidates": 5,
+    "unproven_gaps": 7,
+    "actual_runtime_failures_observed": 0
+  },
+  "inherited_followups": [
+    {
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U02",
+      "status": "PARTIAL_NARROWING_PERSISTENT_CLOCK_ONLY",
+      "boundary": "local_clock, real device, actual boot time and clock output still unproved"
+    },
+    {
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F01",
+      "status": "KEEP_OLD_ROOT",
+      "boundary": "wall_to_mono helper assignment commented, no new independent root claimed"
+    },
+    {
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F02",
+      "status": "KEEP_OLD_ROOT",
+      "boundary": "oldclock shift conversion is D00 doc correction, not a new RTC bug"
+    },
+    {
+      "qualified_id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-F06",
+      "status": "KEEP_OLD_ROOT",
+      "boundary": "negative ns and unsigned quotient correction, not an RTC new independent root"
+    }
+  ],
+  "historical_boundaries": [
+    "MYOS2-LEAD-002::CA-05",
+    "MYOS2-LEAD-002-CORE-CHECK-01::V14",
+    "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03/U08",
+    "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F08/U05"
+  ],
+  "not_executed": [
+    "RTC port access",
+    "C/C++ compiler",
+    "kernel scripts",
+    "finite executable models",
+    "QEMU/real machine",
+    "Graphviz",
+    "actual hardware/IRQ/time/concurrency"
+  ],
+  "owner_decisions_requested_now": []
+}

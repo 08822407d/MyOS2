@@ -1,0 +1,630 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-FILE-COMMANDS-120",
+  "record_type": "phase2_bounded_models_and_D00",
+  "produced_by": "GPT-6（后端不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-18",
+  "date": "2026-11-21",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_contract_pin_short12": "9df81502ae54",
+  "execution_parent_pin_short12": "9957ff1d927f",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "open_items": [
+      "R117-02",
+      "R118-02",
+      "R119-01"
+    ],
+    "prior_closed": {
+      "R118-01": "CLOSED_DOCUMENTATION_ONLY"
+    },
+    "R117_02": {
+      "historic": {
+        "batch117": {
+          "pin": "52c51a3752d3",
+          "file_occurrences": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            88
+          ],
+          "literal_total": 89,
+          "original_windows": 88,
+          "exception": "MANIFEST.md:113"
+        },
+        "batch118": {
+          "pin": "cb96288abb8b",
+          "file_occurrences": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            92
+          ],
+          "literal_total": 92,
+          "original_windows": 91,
+          "disqualified_ids": [
+            "CW118-E051",
+            "CW118-E052"
+          ],
+          "eligible_candidate_windows": 89,
+          "exception": "evidence.md:3"
+        },
+        "batch119": {
+          "pin": "9957ff1d927f",
+          "file_occurrences": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            46
+          ],
+          "literal_total": 46,
+          "original_windows": 46,
+          "disqualified_ids": [
+            "IN119-E020",
+            "IN119-E021",
+            "IN119-E022"
+          ],
+          "eligible_candidate_windows": 43,
+          "remaining_eligible_struct_id": "IN119-E019"
+        }
+      },
+      "batch120": {
+        "file_occurrences": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          81
+        ],
+        "literal_total": 81,
+        "qualified_windows": 81,
+        "self_check": {
+          "verified_claims": 81,
+          "quotes_reconfirmed": 81,
+          "downgraded_to_inferred": 0
+        }
+      }
+    },
+    "R118_02": {
+      "prior_graph_short12": "aa2d14324cc5",
+      "new_graph_clusters": [
+        "cluster_D00A",
+        "cluster_D00B",
+        "cluster_D00C"
+      ],
+      "mandatory_path": [
+        "d_cd",
+        "d_success",
+        "d_cachezero",
+        "d_getcwd",
+        "d_kernelgetcwd",
+        "d_lencheck",
+        "d_sizefail",
+        "d_no_usercopy",
+        "d_empty_cache",
+        "d_pwd_printf"
+      ],
+      "mandatory_path_prompt_last": "d_prompt_printf",
+      "copy_failure": "UNKNOWN_POTENTIAL_PARTIAL_WRITE",
+      "success": "REQUIRES_CORRECT_FULL_NUL_TERMINATED_COPY",
+      "a_backspace_zero_case_conditional": true,
+      "cat_uses_actual_callees": [
+        "strcpy",
+        "strcat"
+      ]
+    },
+    "R119_01": {
+      "cases": [
+        {
+          "id": "D120-C01",
+          "raw_input": "  cd  docs  ",
+          "normalized_tokens": [
+            "cd",
+            "docs"
+          ],
+          "argc": 2,
+          "find_called": true,
+          "strcmp_count": 1,
+          "find_return": 0,
+          "parse_return": 0,
+          "main_direct_call": "run_cmd",
+          "main_indirect_target": "cd_command",
+          "prior_main_post_read_LF_request": "\n",
+          "branch_output_request": "NONE_IF_CD_SUCCESS_OTHERWISE_CONDITIONAL",
+          "branch_output_format_if_error": "cd: %s: %s\n",
+          "source": [
+            "myshell.c:94-102",
+            "myshell.c:139-151",
+            "myshell.c:188-211"
+          ]
+        },
+        {
+          "id": "D120-C02",
+          "raw_input": "pwd",
+          "normalized_tokens": [
+            "pwd"
+          ],
+          "argc": 1,
+          "find_called": true,
+          "strcmp_count": 3,
+          "find_return": 2,
+          "parse_return": 2,
+          "main_direct_call": "run_cmd",
+          "main_indirect_target": "pwd_command",
+          "prior_main_post_read_LF_request": "\n",
+          "branch_output_request": "format_cache_current_dir_plus_LF",
+          "source": [
+            "myshell.c:98-102",
+            "myshell.c:139-151",
+            "myshell.c:245-249"
+          ]
+        },
+        {
+          "id": "D120-C03",
+          "raw_input": "nope",
+          "normalized_tokens": [
+            "nope"
+          ],
+          "argc": 1,
+          "find_called": true,
+          "strcmp_count": 10,
+          "find_return": -1,
+          "parse_return": -1,
+          "main_direct_call": "printf",
+          "main_indirect_target": null,
+          "prior_main_post_read_LF_request": "\n",
+          "branch_output_request": "Input Error, No Command Found!\n",
+          "source": [
+            "myshell.c:98-102",
+            "myshell.c:144-151"
+          ]
+        },
+        {
+          "id": "D120-C04",
+          "raw_input": "",
+          "normalized_tokens": [],
+          "argc": 0,
+          "find_called": false,
+          "strcmp_count": 0,
+          "find_return": null,
+          "parse_return": -1,
+          "main_direct_call": "printf",
+          "main_indirect_target": null,
+          "prior_main_post_read_LF_request": "\n",
+          "branch_output_request": "Input Error, No Command Found!\n",
+          "source": [
+            "myshell.c:166-170",
+            "myshell.c:98-102"
+          ]
+        },
+        {
+          "id": "D120-C05",
+          "raw_input": "   ",
+          "normalized_tokens": [],
+          "argc": 0,
+          "find_called": false,
+          "strcmp_count": 0,
+          "find_return": null,
+          "parse_return": -1,
+          "main_direct_call": "printf",
+          "main_indirect_target": null,
+          "prior_main_post_read_LF_request": "\n",
+          "branch_output_request": "Input Error, No Command Found!\n",
+          "source": [
+            "myshell.c:159-170",
+            "myshell.c:98-102"
+          ]
+        }
+      ],
+      "case_ids_unique": true,
+      "raw_input_distinguished_from_tokens": true,
+      "find_return_null_if_not_called": true,
+      "main_direct_call_conditioned_on_index": true
+    }
+  },
+  "mode_derivation": {
+    "touch": {
+      "name": "creat",
+      "user_bit_components_octal": [
+        "0400",
+        "0200",
+        "0040",
+        "0020",
+        "0004",
+        "0002"
+      ],
+      "mode_octal": "0666",
+      "mode_decimal": 438
+    },
+    "mkdir": {
+      "name": "mkdir",
+      "user_bit_components_octal": [
+        "0700",
+        "0070",
+        "0007"
+      ],
+      "mode_octal": "0777",
+      "mode_decimal": 511
+    },
+    "execute_difference_octal": "0111",
+    "kernel_mask_octal": "01777",
+    "touch_after_kernel_mask_octal": "0666",
+    "mkdir_after_kernel_mask_octal": "0777",
+    "actual_FAT_stored_permissions": "UNKNOWN",
+    "umask_active_in_namei": "COMMENTED_OUT"
+  },
+  "builtin_table": [
+    {
+      "index": 0,
+      "name": "cd",
+      "callee": "cd_command"
+    },
+    {
+      "index": 1,
+      "name": "ls",
+      "callee": "ls_command"
+    },
+    {
+      "index": 2,
+      "name": "pwd",
+      "callee": "pwd_command"
+    },
+    {
+      "index": 3,
+      "name": "cat",
+      "callee": "cat_command"
+    },
+    {
+      "index": 4,
+      "name": "touch",
+      "callee": "touch_command"
+    },
+    {
+      "index": 5,
+      "name": "rm",
+      "callee": "rm_command"
+    },
+    {
+      "index": 6,
+      "name": "mkdir",
+      "callee": "mkdir_command"
+    },
+    {
+      "index": 7,
+      "name": "rmdir",
+      "callee": "rmdir_command"
+    },
+    {
+      "index": 8,
+      "name": "exec",
+      "callee": "exec_command"
+    },
+    {
+      "index": 9,
+      "name": "reboot",
+      "callee": "reboot_command"
+    }
+  ],
+  "A_touch": {
+    "cases": [
+      {
+        "id": "A120-01",
+        "raw_input": "touch",
+        "argc": 1,
+        "argv1": null,
+        "mode": null,
+        "creat_called": false,
+        "method_result": null,
+        "user_stub_return": null,
+        "builtin_return": -1,
+        "command_printf_request": null
+      },
+      {
+        "id": "A120-02",
+        "raw_input": "touch note",
+        "argc": 2,
+        "argv1": "note",
+        "mode": 438,
+        "mode_octal": "0666",
+        "creat_called": true,
+        "callback_result_given": 0,
+        "user_stub_return_given": 0,
+        "builtin_local_err": 0,
+        "builtin_return": 0,
+        "command_printf_request": null
+      },
+      {
+        "id": "A120-03",
+        "raw_input": "touch note",
+        "argc": 2,
+        "argv1": "note",
+        "mode": 438,
+        "mode_octal": "0666",
+        "creat_called": true,
+        "callback_result_given": -5,
+        "user_stub_return_given": -5,
+        "builtin_local_err": -5,
+        "builtin_return": 0,
+        "command_printf_request": null
+      },
+      {
+        "id": "A120-04",
+        "raw_input": "touch note extra",
+        "argc": 3,
+        "argv1": "note",
+        "mode": null,
+        "creat_called": false,
+        "method_result": null,
+        "user_stub_return": null,
+        "builtin_return": -1,
+        "command_printf_request": null
+      }
+    ],
+    "source_anchors": [
+      "FC120-E008",
+      "FC120-E009",
+      "FC120-E018",
+      "FC120-E019",
+      "FC120-E020",
+      "FC120-E021",
+      "FC120-E022",
+      "FC120-E023",
+      "FC120-E027",
+      "FC120-E028",
+      "FC120-E029",
+      "FC120-E030",
+      "FC120-E032",
+      "FC120-E038"
+    ],
+    "creat_return_source": "dir->i_op->create result in error",
+    "fd_install_in_observed_do_creatat": false,
+    "full_creat_POSIX_semantics_certified": false
+  },
+  "B_mkdir": {
+    "cases": [
+      {
+        "id": "B120-01",
+        "raw_input": "mkdir",
+        "argc": 1,
+        "mkdir_called": false,
+        "filename_create": "NOT_CALLED",
+        "iop_called": false,
+        "kernel_return": null,
+        "done_path_create": false,
+        "putname": false,
+        "builtin_return": -1
+      },
+      {
+        "id": "B120-02",
+        "raw_input": "mkdir docs",
+        "argc": 2,
+        "mkdir_called": true,
+        "filename_create": "VALID_DENTRY",
+        "iop_called": true,
+        "callback_result_given": 0,
+        "kernel_return": 0,
+        "mode_before": 511,
+        "mode_after_mask": 511,
+        "done_path_create": true,
+        "putname": true,
+        "builtin_return": 0
+      },
+      {
+        "id": "B120-03",
+        "raw_input": "mkdir docs",
+        "argc": 2,
+        "mkdir_called": true,
+        "filename_create": "VALID_DENTRY",
+        "iop_called": true,
+        "callback_result_given": -5,
+        "kernel_return": -5,
+        "mode_before": 511,
+        "mode_after_mask": 511,
+        "done_path_create": true,
+        "putname": true,
+        "builtin_return": 0
+      },
+      {
+        "id": "B120-04",
+        "raw_input": "mkdir docs",
+        "argc": 2,
+        "mkdir_called": true,
+        "filename_create": "ERR_PTR(-2)",
+        "iop_called": false,
+        "kernel_return": -2,
+        "mode_after_mask": null,
+        "done_path_create": false,
+        "putname": true,
+        "builtin_return": 0,
+        "valid_name_assumption": true
+      },
+      {
+        "id": "B120-05",
+        "raw_input": "mkdir docs",
+        "argc": 2,
+        "mkdir_called": true,
+        "filename_create": "VALID_DENTRY",
+        "iop_called": false,
+        "iop_available": false,
+        "kernel_return": "-EPERM",
+        "mode_after_mask": null,
+        "done_path_create": false,
+        "putname": false,
+        "builtin_return": 0
+      },
+      {
+        "id": "B120-06",
+        "raw_input": "mkdir docs extra",
+        "argc": 3,
+        "mkdir_called": false,
+        "filename_create": "NOT_CALLED",
+        "iop_called": false,
+        "kernel_return": null,
+        "done_path_create": false,
+        "putname": false,
+        "builtin_return": -1
+      }
+    ],
+    "source_anchors": [
+      "FC120-E010",
+      "FC120-E011",
+      "FC120-E024",
+      "FC120-E025",
+      "FC120-E026",
+      "FC120-E043",
+      "FC120-E046",
+      "FC120-E047",
+      "FC120-E048",
+      "FC120-E049",
+      "FC120-E050"
+    ],
+    "kernel_direct_callee": "dir->i_op->mkdir",
+    "vfs_mkdir_called_by_do_mkdirat": false
+  },
+  "C_deletes": {
+    "cases": [
+      {
+        "id": "C120-01",
+        "raw_input": "rm",
+        "argc": 1,
+        "command": "rm_command",
+        "syscall_target": null,
+        "given_return": null,
+        "command_printf": false,
+        "builtin_return": -1
+      },
+      {
+        "id": "C120-02",
+        "raw_input": "rm note",
+        "argc": 2,
+        "command": "rm_command",
+        "syscall_target": "unlink",
+        "given_return": 0,
+        "command_printf": false,
+        "builtin_return": 0
+      },
+      {
+        "id": "C120-03",
+        "raw_input": "rm note",
+        "argc": 2,
+        "command": "rm_command",
+        "syscall_target": "unlink",
+        "given_return": -5,
+        "command_printf": true,
+        "format": "rm: %s: %s\n",
+        "format_args": [
+          "strerror(errno)",
+          "note"
+        ],
+        "builtin_return": -5,
+        "errno_derived_from_negative_return": "NOT_PROVEN",
+        "precondition_to_print_exact_text": "preexisting_errno_and_strerror_result_independently_specified"
+      },
+      {
+        "id": "C120-04",
+        "raw_input": "rmdir",
+        "argc": 1,
+        "command": "rmdir_command",
+        "syscall_target": null,
+        "given_return": null,
+        "command_printf": false,
+        "builtin_return": -1
+      },
+      {
+        "id": "C120-05",
+        "raw_input": "rmdir docs",
+        "argc": 2,
+        "command": "rmdir_command",
+        "syscall_target": "rmdir",
+        "given_return": 0,
+        "command_printf": false,
+        "builtin_return": 0
+      },
+      {
+        "id": "C120-06",
+        "raw_input": "rmdir docs",
+        "argc": 2,
+        "command": "rmdir_command",
+        "syscall_target": "rmdir",
+        "given_return": -5,
+        "command_printf": true,
+        "format": "rmdir: %s: %s\n",
+        "format_args": [
+          "strerror(errno)",
+          "docs"
+        ],
+        "builtin_return": -5,
+        "errno_derived_from_negative_return": "NOT_PROVEN",
+        "precondition_to_print_exact_text": "preexisting_errno_and_strerror_result_independently_specified"
+      },
+      {
+        "id": "C120-07",
+        "raw_input": "rmdir docs extra",
+        "argc": 3,
+        "command": "rmdir_command",
+        "syscall_target": null,
+        "given_return": null,
+        "command_printf": false,
+        "builtin_return": -1
+      }
+    ],
+    "source_anchors": [
+      "FC120-E012",
+      "FC120-E013",
+      "FC120-E014",
+      "FC120-E015",
+      "FC120-E016",
+      "FC120-E017",
+      "FC120-E056",
+      "FC120-E066"
+    ],
+    "user_syscall_numbers": {
+      "rmdir": 84,
+      "unlink": 87
+    },
+    "negative_errno_to_text_proven": false,
+    "assumed_error_string_example": "EXAMPLE_ERROR",
+    "examples": [
+      {
+        "case_id": "C120-03",
+        "given_strerror": "EXAMPLE_ERROR",
+        "request": "rm: EXAMPLE_ERROR: note\n"
+      },
+      {
+        "case_id": "C120-06",
+        "given_strerror": "EXAMPLE_ERROR",
+        "request": "rmdir: EXAMPLE_ERROR: docs\n"
+      }
+    ],
+    "main_independent_lf_request": "\n",
+    "shell_error_message_for_unknown_command": "Input Error, No Command Found!\n"
+  },
+  "conditions": {
+    "read_only_static_models": true,
+    "malloc_success_for_argv_model": true,
+    "valid_path_and_inode_objects_for_kernel_normal_cases": true,
+    "callback_result_given_not_actual": true,
+    "full_local_P9": "NOT_RUN",
+    "build": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_file_actions": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

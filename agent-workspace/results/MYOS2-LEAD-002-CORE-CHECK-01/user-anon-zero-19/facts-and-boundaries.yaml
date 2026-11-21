@@ -1,0 +1,1615 @@
+{
+  "task_id": "CORE-USER-ANON-ZERO-19",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "facts_and_boundaries",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra (Owner selected; backend unverified)",
+  "date": "2026-11-01",
+  "source_pin_short12": "a039d9803ade",
+  "instruction_short12": "d4bffc1a4816",
+  "result_base_short12": "15a162f13089",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "read_channel": "connector",
+  "nodes": [
+    {
+      "id": "AZ19-N01",
+      "name": "do_user_addr_fault",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N02",
+      "name": "myos_handle_mm_fault",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N03",
+      "name": "vmf.orig_pte",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N04",
+      "name": "vmf.pte_ptr",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N05",
+      "name": "handle_pte_fault",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N06",
+      "name": "do_pte_missing",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N07",
+      "name": "vma_is_anonymous",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N08",
+      "name": "vma.vm_ops",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N09",
+      "name": "simple_mmap_region",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N10",
+      "name": "vm_area_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N11",
+      "name": "vma_init",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N12",
+      "name": "vma_set_anonymous",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N13",
+      "name": "vm_get_page_prot",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N14",
+      "name": "protection_map",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N15",
+      "name": "vma.vm_flags",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N16",
+      "name": "vma.vm_page_prot",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N17",
+      "name": "do_anonymous_page",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N18",
+      "name": "pte_alloc",
+      "kind": "macro"
+    },
+    {
+      "id": "AZ19-N19",
+      "name": "pgtble_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N20",
+      "name": "zero_pfn",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N21",
+      "name": "my_zero_pfn",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N22",
+      "name": "init_zero_pfn",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N23",
+      "name": "ZERO_PAGE",
+      "kind": "macro"
+    },
+    {
+      "id": "AZ19-N24",
+      "name": "empty_zero_page",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N25",
+      "name": "clear_bss",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N26",
+      "name": "pfn_pte",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N27",
+      "name": "pte_mkspecial",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N28",
+      "name": "entry",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N29",
+      "name": "set_pte_at",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N30",
+      "name": "set_pte",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N31",
+      "name": "PTE_slot",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N32",
+      "name": "alloc_anon_folio",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N33",
+      "name": "folio_prealloc",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N34",
+      "name": "folio_alloc_noprof",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N35",
+      "name": "alloc_page",
+      "kind": "macro"
+    },
+    {
+      "id": "AZ19-N36",
+      "name": "alloc_pages",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N37",
+      "name": "anon_folio_local",
+      "kind": "data"
+    },
+    {
+      "id": "AZ19-N38",
+      "name": "mk_pte",
+      "kind": "macro"
+    },
+    {
+      "id": "AZ19-N39",
+      "name": "pte_mkwrite",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N40",
+      "name": "pte_mkdirty",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N41",
+      "name": "IS_ERR",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N42",
+      "name": "folio_put",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N43",
+      "name": "__folio_put",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N44",
+      "name": "return_fault",
+      "kind": "control"
+    },
+    {
+      "id": "AZ19-N45",
+      "name": "vmf_pte_changed",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N46",
+      "name": "do_wp_page",
+      "kind": "function"
+    },
+    {
+      "id": "AZ19-N47",
+      "name": "page_data",
+      "kind": "data"
+    }
+  ],
+  "edges": [
+    {
+      "id": "AZ19-E01",
+      "from": "AZ19-N01",
+      "to": "AZ19-N02",
+      "kind": "call",
+      "meaning": "user address fault dispatch",
+      "condition": "do_user_addr_fault reached and VMA checks permit call",
+      "anchors": [
+        "AZ19-A043"
+      ]
+    },
+    {
+      "id": "AZ19-E02",
+      "from": "AZ19-N01",
+      "to": "AZ19-N44",
+      "kind": "effect",
+      "meaning": "nonzero return fed to no-work while loop",
+      "condition": "fault != ENOERR",
+      "anchors": [
+        "AZ19-A043"
+      ]
+    },
+    {
+      "id": "AZ19-E03",
+      "from": "AZ19-N02",
+      "to": "AZ19-N05",
+      "kind": "call",
+      "meaning": "dispatch after mapping PTE pointer",
+      "condition": "pte_ptr nonnull",
+      "anchors": [
+        "AZ19-A003",
+        "AZ19-A004"
+      ]
+    },
+    {
+      "id": "AZ19-E04",
+      "from": "AZ19-N02",
+      "to": "AZ19-N03",
+      "kind": "effect",
+      "meaning": "reads saved orig_pte from PTE slot",
+      "condition": "pte_ptr nonnull",
+      "anchors": [
+        "AZ19-A004"
+      ]
+    },
+    {
+      "id": "AZ19-E05",
+      "from": "AZ19-N02",
+      "to": "AZ19-N04",
+      "kind": "effect",
+      "meaning": "obtains candidate PTE pointer",
+      "condition": "pmd and PTE mapping valid",
+      "anchors": [
+        "AZ19-A003"
+      ]
+    },
+    {
+      "id": "AZ19-E06",
+      "from": "AZ19-N05",
+      "to": "AZ19-N06",
+      "kind": "call",
+      "meaning": "PTE none dispatch",
+      "condition": "pte_none(orig_pte)",
+      "anchors": [
+        "AZ19-A001"
+      ]
+    },
+    {
+      "id": "AZ19-E07",
+      "from": "AZ19-N06",
+      "to": "AZ19-N07",
+      "kind": "call",
+      "meaning": "select anonymous path",
+      "condition": "do_pte_missing entered",
+      "anchors": [
+        "AZ19-A002",
+        "AZ19-A031"
+      ]
+    },
+    {
+      "id": "AZ19-E08",
+      "from": "AZ19-N07",
+      "to": "AZ19-N08",
+      "kind": "data",
+      "meaning": "checks whether vm_ops pointer is NULL",
+      "condition": "valid VMA",
+      "anchors": [
+        "AZ19-A031"
+      ]
+    },
+    {
+      "id": "AZ19-E09",
+      "from": "AZ19-N06",
+      "to": "AZ19-N17",
+      "kind": "call",
+      "meaning": "anonymous branch",
+      "condition": "vma_is_anonymous == true",
+      "anchors": [
+        "AZ19-A002",
+        "AZ19-A031"
+      ]
+    },
+    {
+      "id": "AZ19-E10",
+      "from": "AZ19-N10",
+      "to": "AZ19-N11",
+      "kind": "call",
+      "meaning": "initialize new VMA",
+      "condition": "allocation succeeded",
+      "anchors": [
+        "AZ19-A035",
+        "AZ19-A033"
+      ]
+    },
+    {
+      "id": "AZ19-E11",
+      "from": "AZ19-N09",
+      "to": "AZ19-N12",
+      "kind": "call",
+      "meaning": "set anonymous mapping for no-file private case",
+      "condition": "file==NULL and !VM_SHARED",
+      "anchors": [
+        "AZ19-A038",
+        "AZ19-A032"
+      ]
+    },
+    {
+      "id": "AZ19-E12",
+      "from": "AZ19-N12",
+      "to": "AZ19-N08",
+      "kind": "effect",
+      "meaning": "set vm_ops=NULL",
+      "condition": "called",
+      "anchors": [
+        "AZ19-A032"
+      ]
+    },
+    {
+      "id": "AZ19-E13",
+      "from": "AZ19-N09",
+      "to": "AZ19-N13",
+      "kind": "call",
+      "meaning": "obtain VMA protection",
+      "condition": "new VMA and valid vm_flags",
+      "anchors": [
+        "AZ19-A036",
+        "AZ19-A051"
+      ]
+    },
+    {
+      "id": "AZ19-E14",
+      "from": "AZ19-N13",
+      "to": "AZ19-N14",
+      "kind": "data",
+      "meaning": "lookup mask of VM_READ/WRITE/EXEC/SHARED",
+      "condition": "valid vm_flags",
+      "anchors": [
+        "AZ19-A048",
+        "AZ19-A049",
+        "AZ19-A050",
+        "AZ19-A051"
+      ]
+    },
+    {
+      "id": "AZ19-E15",
+      "from": "AZ19-N09",
+      "to": "AZ19-N16",
+      "kind": "effect",
+      "meaning": "store returned pgprot",
+      "condition": "new VMA",
+      "anchors": [
+        "AZ19-A036"
+      ]
+    },
+    {
+      "id": "AZ19-E16",
+      "from": "AZ19-N09",
+      "to": "AZ19-N15",
+      "kind": "effect",
+      "meaning": "store VM flags",
+      "condition": "new VMA",
+      "anchors": [
+        "AZ19-A036"
+      ]
+    },
+    {
+      "id": "AZ19-E17",
+      "from": "AZ19-N17",
+      "to": "AZ19-N15",
+      "kind": "data",
+      "meaning": "shared reject and VM_WRITE check",
+      "condition": "valid VMA",
+      "anchors": [
+        "AZ19-A008",
+        "AZ19-A016"
+      ]
+    },
+    {
+      "id": "AZ19-E18",
+      "from": "AZ19-N17",
+      "to": "AZ19-N18",
+      "kind": "call",
+      "meaning": "redundant PTE allocation attempt",
+      "condition": "!VM_SHARED and reached",
+      "anchors": [
+        "AZ19-A009",
+        "AZ19-A044"
+      ]
+    },
+    {
+      "id": "AZ19-E19",
+      "from": "AZ19-N18",
+      "to": "AZ19-N19",
+      "kind": "call",
+      "meaning": "macro binding",
+      "condition": "pte_alloc evaluated",
+      "anchors": [
+        "AZ19-A044",
+        "AZ19-A045"
+      ]
+    },
+    {
+      "id": "AZ19-E20",
+      "from": "AZ19-N17",
+      "to": "AZ19-N21",
+      "kind": "call",
+      "meaning": "obtain zero PFN for read",
+      "condition": "!FAULT_FLAG_WRITE and pte_alloc success",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A071"
+      ]
+    },
+    {
+      "id": "AZ19-E21",
+      "from": "AZ19-N21",
+      "to": "AZ19-N20",
+      "kind": "data",
+      "meaning": "return current zero_pfn global",
+      "condition": "called",
+      "anchors": [
+        "AZ19-A071",
+        "AZ19-A026"
+      ]
+    },
+    {
+      "id": "AZ19-E22",
+      "from": "AZ19-N22",
+      "to": "AZ19-N23",
+      "kind": "call",
+      "meaning": "evaluate ZERO_PAGE(0) macro",
+      "condition": "init_zero_pfn called",
+      "anchors": [
+        "AZ19-A027",
+        "AZ19-A069"
+      ]
+    },
+    {
+      "id": "AZ19-E23",
+      "from": "AZ19-N23",
+      "to": "AZ19-N24",
+      "kind": "data",
+      "meaning": "derive page_s for shared BSS object",
+      "condition": "valid direct-map identity",
+      "anchors": [
+        "AZ19-A069",
+        "AZ19-A072"
+      ]
+    },
+    {
+      "id": "AZ19-E24",
+      "from": "AZ19-N25",
+      "to": "AZ19-N24",
+      "kind": "effect",
+      "meaning": "zero BSS range including object",
+      "condition": "linked BSS and x86_64_start_kernel runs",
+      "anchors": [
+        "AZ19-A072",
+        "AZ19-A073",
+        "AZ19-A074",
+        "AZ19-A075"
+      ]
+    },
+    {
+      "id": "AZ19-E25",
+      "from": "AZ19-N22",
+      "to": "AZ19-N20",
+      "kind": "effect",
+      "meaning": "store page_to_pfn(ZERO_PAGE(0))",
+      "condition": "init_zero_pfn reached and mapping valid",
+      "anchors": [
+        "AZ19-A027"
+      ]
+    },
+    {
+      "id": "AZ19-E26",
+      "from": "AZ19-N17",
+      "to": "AZ19-N26",
+      "kind": "call",
+      "meaning": "construct PTE for zero PFN",
+      "condition": "read branch",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A059"
+      ]
+    },
+    {
+      "id": "AZ19-E27",
+      "from": "AZ19-N17",
+      "to": "AZ19-N27",
+      "kind": "call",
+      "meaning": "add SPECIAL to zero page entry",
+      "condition": "read branch",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A058"
+      ]
+    },
+    {
+      "id": "AZ19-E28",
+      "from": "AZ19-N17",
+      "to": "AZ19-N28",
+      "kind": "effect",
+      "meaning": "assign read PTE from nested pfn_pte+pte_mkspecial",
+      "condition": "read branch",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A057",
+        "AZ19-A058",
+        "AZ19-A059"
+      ]
+    },
+    {
+      "id": "AZ19-E29",
+      "from": "AZ19-N17",
+      "to": "AZ19-N16",
+      "kind": "data",
+      "meaning": "consume initial pgprot on both paths",
+      "condition": "VMA valid",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A016",
+        "AZ19-A036",
+        "AZ19-A040"
+      ]
+    },
+    {
+      "id": "AZ19-E30",
+      "from": "AZ19-N17",
+      "to": "AZ19-N04",
+      "kind": "data",
+      "meaning": "check nonnull then use PTE pointer",
+      "condition": "read/write branch separately",
+      "anchors": [
+        "AZ19-A011",
+        "AZ19-A017",
+        "AZ19-A020"
+      ]
+    },
+    {
+      "id": "AZ19-E31",
+      "from": "AZ19-N17",
+      "to": "AZ19-N32",
+      "kind": "call",
+      "meaning": "allocate private anonymous folio",
+      "condition": "FAULT_FLAG_WRITE and pte_alloc success",
+      "anchors": [
+        "AZ19-A014",
+        "AZ19-A023"
+      ]
+    },
+    {
+      "id": "AZ19-E32",
+      "from": "AZ19-N32",
+      "to": "AZ19-N33",
+      "kind": "call",
+      "meaning": "request need_zero=true",
+      "condition": "write allocation path",
+      "anchors": [
+        "AZ19-A023",
+        "AZ19-A025"
+      ]
+    },
+    {
+      "id": "AZ19-E33",
+      "from": "AZ19-N33",
+      "to": "AZ19-N34",
+      "kind": "call",
+      "meaning": "folio_alloc macro resolves to actual wrapper",
+      "condition": "helper returns folio_alloc(GFP_HIGHUSER_MOVABLE,0)",
+      "anchors": [
+        "AZ19-A025",
+        "AZ19-A081",
+        "AZ19-A080"
+      ]
+    },
+    {
+      "id": "AZ19-E34",
+      "from": "AZ19-N34",
+      "to": "AZ19-N35",
+      "kind": "call",
+      "meaning": "evaluate alloc_page constant GFP",
+      "condition": "wrapper entered",
+      "anchors": [
+        "AZ19-A080",
+        "AZ19-A081"
+      ]
+    },
+    {
+      "id": "AZ19-E35",
+      "from": "AZ19-N35",
+      "to": "AZ19-N36",
+      "kind": "call",
+      "meaning": "macro expands to alloc_pages(mask,0)",
+      "condition": "valid macro invocation",
+      "anchors": [
+        "AZ19-A081"
+      ]
+    },
+    {
+      "id": "AZ19-E36",
+      "from": "AZ19-N17",
+      "to": "AZ19-N37",
+      "kind": "effect",
+      "meaning": "do_anonymous_page assigns its local folio variable from alloc_anon_folio; underlying wrapper performs page_folio conversion",
+      "condition": "nonnull page and valid descriptor",
+      "anchors": [
+        "AZ19-A014",
+        "AZ19-A023",
+        "AZ19-A080",
+        "AZ19-A082",
+        "AZ19-A083"
+      ]
+    },
+    {
+      "id": "AZ19-E37",
+      "from": "AZ19-N17",
+      "to": "AZ19-N41",
+      "kind": "call",
+      "meaning": "test whether returned folio is encoded error",
+      "condition": "write branch after assignment",
+      "anchors": [
+        "AZ19-A014",
+        "AZ19-A090"
+      ]
+    },
+    {
+      "id": "AZ19-E38",
+      "from": "AZ19-N17",
+      "to": "AZ19-N38",
+      "kind": "call",
+      "meaning": "construct PTE from new folio",
+      "condition": "valid new folio and not IS_ERR",
+      "anchors": [
+        "AZ19-A016",
+        "AZ19-A065"
+      ]
+    },
+    {
+      "id": "AZ19-E39",
+      "from": "AZ19-N17",
+      "to": "AZ19-N40",
+      "kind": "call",
+      "meaning": "mark dirty before writable",
+      "condition": "VM_WRITE true on write branch",
+      "anchors": [
+        "AZ19-A016",
+        "AZ19-A062"
+      ]
+    },
+    {
+      "id": "AZ19-E40",
+      "from": "AZ19-N17",
+      "to": "AZ19-N39",
+      "kind": "call",
+      "meaning": "add RW bit",
+      "condition": "VM_WRITE true on write branch",
+      "anchors": [
+        "AZ19-A016",
+        "AZ19-A061"
+      ]
+    },
+    {
+      "id": "AZ19-E41",
+      "from": "AZ19-N17",
+      "to": "AZ19-N28",
+      "kind": "effect",
+      "meaning": "assign write entry from mk_pte and possible flag ORs",
+      "condition": "valid new folio",
+      "anchors": [
+        "AZ19-A016",
+        "AZ19-A065"
+      ]
+    },
+    {
+      "id": "AZ19-E42",
+      "from": "AZ19-N17",
+      "to": "AZ19-N29",
+      "kind": "call",
+      "meaning": "publish generated entry",
+      "condition": "ptr nonnull and goto/flow reaches setpte",
+      "anchors": [
+        "AZ19-A011",
+        "AZ19-A017",
+        "AZ19-A020",
+        "AZ19-A063",
+        "AZ19-A064"
+      ]
+    },
+    {
+      "id": "AZ19-E43",
+      "from": "AZ19-N29",
+      "to": "AZ19-N30",
+      "kind": "call",
+      "meaning": "delegate real PTE installation",
+      "condition": "called",
+      "anchors": [
+        "AZ19-A063",
+        "AZ19-A064"
+      ]
+    },
+    {
+      "id": "AZ19-E44",
+      "from": "AZ19-N30",
+      "to": "AZ19-N31",
+      "kind": "effect",
+      "meaning": "WRITE_ONCE overwrites PTE slot",
+      "condition": "valid pte_ptr",
+      "anchors": [
+        "AZ19-A064"
+      ]
+    },
+    {
+      "id": "AZ19-E45",
+      "from": "AZ19-N17",
+      "to": "AZ19-N42",
+      "kind": "call",
+      "meaning": "release new folio on ptr NULL branch",
+      "condition": "write branch folio valid and ptr NULL",
+      "anchors": [
+        "AZ19-A017",
+        "AZ19-A039",
+        "AZ19-A087"
+      ]
+    },
+    {
+      "id": "AZ19-E46",
+      "from": "AZ19-N42",
+      "to": "AZ19-N43",
+      "kind": "call",
+      "meaning": "only if ref dec reaches zero",
+      "condition": "valid folio and count hits zero",
+      "anchors": [
+        "AZ19-A087",
+        "AZ19-A088",
+        "AZ19-A089"
+      ]
+    },
+    {
+      "id": "AZ19-E47",
+      "from": "AZ19-N17",
+      "to": "AZ19-N44",
+      "kind": "effect",
+      "meaning": "0, VM_FAULT_SIGBUS or OOM; error producer conditional",
+      "condition": "control path reaches return",
+      "anchors": [
+        "AZ19-A007",
+        "AZ19-A008",
+        "AZ19-A009",
+        "AZ19-A014",
+        "AZ19-A021",
+        "AZ19-A022",
+        "AZ19-A046"
+      ]
+    },
+    {
+      "id": "AZ19-E48",
+      "from": "AZ19-N05",
+      "to": "AZ19-N46",
+      "kind": "call",
+      "meaning": "subsequent write fault on an existing nonwritable PTE enters WP17, not initial anonymous missing-PTE branch",
+      "condition": "orig PTE not none, same snapshot, FAULT_FLAG_WRITE and !pte_write(current)",
+      "anchors": [
+        "AZ19-A001",
+        "AZ19-A030",
+        "AZ19-A070"
+      ]
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "id": "AZ19-M01",
+      "scenario": "anonymous VMA predicate true",
+      "premise": "vm_ops=NULL; valid VMA, orig PTE none",
+      "result": "do_anonymous_page selected",
+      "identity": "none yet",
+      "pte": "no",
+      "reference": "none",
+      "ret": "conditional",
+      "limits": "anon production supported for private no-file VMA",
+      "anchors": [
+        "AZ19-A001",
+        "AZ19-A002",
+        "AZ19-A031",
+        "AZ19-A032",
+        "AZ19-A038"
+      ]
+    },
+    {
+      "id": "AZ19-M02",
+      "scenario": "anonymous predicate false",
+      "premise": "vm_ops nonNULL (e.g. dummy)",
+      "result": "do_fault rather than do_anonymous_page",
+      "identity": "outside 19",
+      "pte": "no",
+      "reference": "none",
+      "ret": "conditional",
+      "limits": "do_fault may reject empty vm_ops, not analyzed",
+      "anchors": [
+        "AZ19-A002",
+        "AZ19-A031",
+        "AZ19-A034"
+      ]
+    },
+    {
+      "id": "AZ19-M03",
+      "scenario": "VM_SHARED with anonymous predicate true",
+      "premise": "vm_ops=NULL but VM_SHARED set",
+      "result": "early VM_FAULT_SIGBUS",
+      "identity": "no folio or zero PTE",
+      "pte": "no",
+      "reference": "none",
+      "ret": "VM_FAULT_SIGBUS",
+      "limits": "normal no-file shared producer uses shmem path, so this case may require other producer",
+      "anchors": [
+        "AZ19-A008",
+        "AZ19-A037"
+      ]
+    },
+    {
+      "id": "AZ19-M04",
+      "scenario": "private read fault default VM_READ",
+      "premise": "!WRITE, !VM_SHARED, default vm_page_prot=PAGE_READONLY, initialized zero_pfn",
+      "result": "pfn_pte→pte_mkspecial",
+      "identity": "shared zero PFN",
+      "pte": "if pte_ptr valid",
+      "reference": "none locally",
+      "ret": "0",
+      "limits": "RW absent in default template; not runtime zero observation",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A011",
+        "AZ19-A048",
+        "AZ19-A053",
+        "AZ19-A058",
+        "AZ19-A059"
+      ]
+    },
+    {
+      "id": "AZ19-M05",
+      "scenario": "private read fault default VM_WRITE",
+      "premise": "!FAULT_FLAG_WRITE, VM_WRITE VMA, private protection_map=PAGE_COPY",
+      "result": "special PTE inherits PAGE_COPY",
+      "identity": "shared zero PFN",
+      "pte": "if ptr valid",
+      "reference": "none locally",
+      "ret": "0",
+      "limits": "RW not automatically added by special; may fault on later write",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A048",
+        "AZ19-A053",
+        "AZ19-A058"
+      ]
+    },
+    {
+      "id": "AZ19-M06",
+      "scenario": "read fault with arbitrary pgprot RW=1",
+      "premise": "anon VMA, read branch, vm_page_prot already RW",
+      "result": "pte_mkspecial OR SPECIAL preserving RW",
+      "identity": "shared zero PFN",
+      "pte": "if ptr valid",
+      "reference": "no local get",
+      "ret": "0",
+      "limits": "source does not show a producer for this nonstandard private protection state; writeable zero page only conditional",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A053",
+        "AZ19-A057",
+        "AZ19-A058",
+        "AZ19-A059"
+      ]
+    },
+    {
+      "id": "AZ19-M07",
+      "scenario": "read fault with VM_NONE template",
+      "premise": "vm_page_prot has no hardware PRESENT",
+      "result": "pfn_pte plus SPECIAL; no force PRESENT",
+      "identity": "zero PFN",
+      "pte": "if ptr valid",
+      "reference": "none locally",
+      "ret": "0 if path reached",
+      "limits": "pte_is_none and software pte_is_present semantics differ; access validity unverified",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A054",
+        "AZ19-A067",
+        "AZ19-A066"
+      ]
+    },
+    {
+      "id": "AZ19-M08",
+      "scenario": "zero_pfn before init_zero_pfn evidence",
+      "premise": "read path invoked before observed initializer",
+      "result": "my_zero_pfn returns current global",
+      "identity": "unknown/initial BSS value",
+      "pte": "if ptr valid",
+      "reference": "none locally",
+      "ret": "0 possible",
+      "limits": "direct initializer exists but scheduling all faults after it not proven",
+      "anchors": [
+        "AZ19-A026",
+        "AZ19-A027",
+        "AZ19-A069",
+        "AZ19-A071",
+        "AZ19-A077",
+        "AZ19-A078"
+      ]
+    },
+    {
+      "id": "AZ19-M09",
+      "scenario": "second pte_alloc nonzero",
+      "premise": "PMD state and allocation cause nonzero pgtble_alloc",
+      "result": "returns OOM before read/write split",
+      "identity": "no",
+      "pte": "no",
+      "reference": "no local data folio",
+      "ret": "VM_FAULT_OOM",
+      "limits": "prior first pte_alloc already occurred; stable present PMD makes this case unlikely",
+      "anchors": [
+        "AZ19-A006",
+        "AZ19-A009",
+        "AZ19-A044",
+        "AZ19-A045",
+        "AZ19-A046"
+      ]
+    },
+    {
+      "id": "AZ19-M10",
+      "scenario": "read pte_ptr NULL",
+      "premise": "read path reached with ptr NULL despite top-level check",
+      "result": "goto unlock with ret=0",
+      "identity": "zero local entry computed",
+      "pte": "no",
+      "reference": "none",
+      "ret": "0",
+      "limits": "top-level NULL exits before do_anonymous_page in stable path",
+      "anchors": [
+        "AZ19-A003",
+        "AZ19-A010",
+        "AZ19-A011",
+        "AZ19-A021"
+      ]
+    },
+    {
+      "id": "AZ19-M11",
+      "scenario": "read PTE changes after orig snapshot",
+      "premise": "write by another actor between orig and setpte",
+      "result": "commented vmf_pte_changed, unconditional set",
+      "identity": "shared zero PFN",
+      "pte": "yes if ptr stays valid",
+      "reference": "none locally",
+      "ret": "0",
+      "limits": "conditional overwrite risk; no actual concurrency observed",
+      "anchors": [
+        "AZ19-A004",
+        "AZ19-A012",
+        "AZ19-A020",
+        "AZ19-A064"
+      ]
+    },
+    {
+      "id": "AZ19-M12",
+      "scenario": "anonymous write VM_WRITE true, valid folio",
+      "premise": "private anon, folio_alloc succeeds; no mutation",
+      "result": "mk_pte→dirty→RW→set_pte_at",
+      "identity": "new allocated data page",
+      "pte": "yes if ptr nonnull",
+      "reference": "allocator ref increment; no extra get",
+      "ret": "0",
+      "limits": "new page zero bytes not certified; rmap/LRU commented",
+      "anchors": [
+        "AZ19-A014",
+        "AZ19-A016",
+        "AZ19-A019",
+        "AZ19-A020",
+        "AZ19-A025",
+        "AZ19-A084",
+        "AZ19-A085",
+        "AZ19-A086"
+      ]
+    },
+    {
+      "id": "AZ19-M13",
+      "scenario": "anonymous write VM_WRITE false",
+      "premise": "FAULT_FLAG_WRITE true but VMA VM_WRITE false, branch somehow reached",
+      "result": "mk_pte without explicit dirty/RW setting",
+      "identity": "new allocated page",
+      "pte": "ptr conditional",
+      "reference": "allocator ref",
+      "ret": "0 if installed",
+      "limits": "does not actively clear RW from vm_page_prot; upstream access_error commented",
+      "anchors": [
+        "AZ19-A016",
+        "AZ19-A042",
+        "AZ19-A014",
+        "AZ19-A053"
+      ]
+    },
+    {
+      "id": "AZ19-M14",
+      "scenario": "write encoded error folio",
+      "premise": "IS_ERR(folio) true",
+      "result": "return 0 before PTE installation",
+      "identity": "none valid",
+      "pte": "no",
+      "reference": "unknown",
+      "ret": "0",
+      "limits": "observed allocator wrappers do not generate ERR_PTR; no reachability claim",
+      "anchors": [
+        "AZ19-A014",
+        "AZ19-A080",
+        "AZ19-A090"
+      ]
+    },
+    {
+      "id": "AZ19-M15",
+      "scenario": "allocator returns NULL",
+      "premise": "alloc_page returns NULL",
+      "result": "page_folio(NULL) may read page field before outer !folio check",
+      "identity": "not valid",
+      "pte": "not proven",
+      "reference": "none",
+      "ret": "undefined / outer OOM syntactic",
+      "limits": "no deterministic kernel crash/error claim; outer OOM reachability uncertain",
+      "anchors": [
+        "AZ19-A014",
+        "AZ19-A080",
+        "AZ19-A081",
+        "AZ19-A082",
+        "AZ19-A083"
+      ]
+    },
+    {
+      "id": "AZ19-M16",
+      "scenario": "write pte_ptr NULL after folio acquired",
+      "premise": "valid newly allocated folio, ptr NULL when retested",
+      "result": "goto release→folio_put→unlock",
+      "identity": "new folio not installed",
+      "pte": "no",
+      "reference": "folio_put decrement, no known physical free",
+      "ret": "0",
+      "limits": "upstream earlier nonNULL guard makes stable path unlikely; no extra ref proof",
+      "anchors": [
+        "AZ19-A003",
+        "AZ19-A017",
+        "AZ19-A022",
+        "AZ19-A087",
+        "AZ19-A088",
+        "AZ19-A089"
+      ]
+    },
+    {
+      "id": "AZ19-M17",
+      "scenario": "write PTE changes between snapshot and install",
+      "premise": "other actor changes PTE, ptr nonnull",
+      "result": "commented recheck, direct WRITE_ONCE",
+      "identity": "new data page",
+      "pte": "yes if ptr valid",
+      "reference": "no rmap/LRU",
+      "ret": "0",
+      "limits": "conditional overwrite/race; cannot claim hardware manifestation",
+      "anchors": [
+        "AZ19-A004",
+        "AZ19-A018",
+        "AZ19-A019",
+        "AZ19-A020",
+        "AZ19-A064"
+      ]
+    },
+    {
+      "id": "AZ19-M18",
+      "scenario": "write private but page protection has RW initially",
+      "premise": "valid folio, VM_WRITE false, vm_page_prot RW preexisting",
+      "result": "mk_pte inherits RW unchanged",
+      "identity": "new data page",
+      "pte": "if ptr valid",
+      "reference": "allocator ref only",
+      "ret": "0",
+      "limits": "no actual producer or reachability shown; not a proven permission bypass",
+      "anchors": [
+        "AZ19-A016",
+        "AZ19-A053",
+        "AZ19-A061",
+        "AZ19-A065"
+      ]
+    },
+    {
+      "id": "AZ19-M19",
+      "scenario": "read zero-PTE then later write",
+      "premise": "read produced PRESENT=1, RW=0 private default; later WRITE fault reaches existing PTE path",
+      "result": "handle_pte_fault→do_wp_page conditional",
+      "identity": "shared zero PFN then private copy per 17 limits",
+      "pte": "second PTE change outside 19",
+      "reference": "old zero PFN handling unclosed",
+      "ret": "not analyzed after handoff",
+      "limits": "requires page validity, PTE same, VM flags and CPU fault; no replay of WP17",
+      "anchors": [
+        "AZ19-A001",
+        "AZ19-A030",
+        "AZ19-A053",
+        "AZ19-A058",
+        "AZ19-A069",
+        "AZ19-A070",
+        "AZ19-A071"
+      ]
+    },
+    {
+      "id": "AZ19-M20",
+      "scenario": "higher level nonzero fault result",
+      "premise": "VM_SHARED or OOM branch returns nonzero to do_user_addr_fault",
+      "result": "while(fault!=ENOERR) without rerun",
+      "identity": "none guaranteed",
+      "pte": "no",
+      "reference": "path dependent",
+      "ret": "nonzero before loop",
+      "limits": "cannot call this a functional retry",
+      "anchors": [
+        "AZ19-A008",
+        "AZ19-A009",
+        "AZ19-A022",
+        "AZ19-A043",
+        "AZ19-A046"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "AZ19-X01",
+      "target": "VMA.vm_ops",
+      "action": "assign NULL",
+      "when": "no-file private VMA producer",
+      "result": "anon predicate becomes true if no other writer",
+      "anchors": [
+        "AZ19-A031",
+        "AZ19-A032",
+        "AZ19-A038"
+      ]
+    },
+    {
+      "id": "AZ19-X02",
+      "target": "VMA.vm_page_prot",
+      "action": "store vm_get_page_prot(vm_flags)",
+      "when": "new VMA from simple_mmap_region or do_brk_flags",
+      "result": "private READ/WRITE map uses PAGE_READONLY/PAGE_COPY default, no RW",
+      "anchors": [
+        "AZ19-A036",
+        "AZ19-A040",
+        "AZ19-A048",
+        "AZ19-A051",
+        "AZ19-A053"
+      ]
+    },
+    {
+      "id": "AZ19-X03",
+      "target": "zero_pfn",
+      "action": "page_to_pfn(ZERO_PAGE(0)) assignment",
+      "when": "init_zero_pfn executes",
+      "result": "identifier derives from empty_zero_page descriptor, not literal PFN 0",
+      "anchors": [
+        "AZ19-A027",
+        "AZ19-A069",
+        "AZ19-A071"
+      ]
+    },
+    {
+      "id": "AZ19-X04",
+      "target": "empty_zero_page data bytes",
+      "action": "clear_bss memset for BSS region",
+      "when": "architecture startup and linker coverage",
+      "result": "source-level zero fill of BSS object; runtime unobserved",
+      "anchors": [
+        "AZ19-A072",
+        "AZ19-A073",
+        "AZ19-A074",
+        "AZ19-A075"
+      ]
+    },
+    {
+      "id": "AZ19-X05",
+      "target": "read local entry",
+      "action": "pfn_pte then pte_mkspecial",
+      "when": "!FAULT_FLAG_WRITE and PTE alloc succeeds",
+      "result": "set SPECIAL; inherits original vm_page_prot RW status",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A057",
+        "AZ19-A058",
+        "AZ19-A059"
+      ]
+    },
+    {
+      "id": "AZ19-X06",
+      "target": "write new folio",
+      "action": "alloc_anon_folio→folio_prealloc",
+      "when": "FAULT_FLAG_WRITE and nonshared",
+      "result": "need_zero=true ignored in active allocator",
+      "anchors": [
+        "AZ19-A023",
+        "AZ19-A024",
+        "AZ19-A025",
+        "AZ19-A080",
+        "AZ19-A084",
+        "AZ19-A085"
+      ]
+    },
+    {
+      "id": "AZ19-X07",
+      "target": "write new folio bytes",
+      "action": "conditional allocator clear_page",
+      "when": "gfp & __GFP_ZERO",
+      "result": "GFP_HIGHUSER_MOVABLE lacks ZERO, initialization not established",
+      "anchors": [
+        "AZ19-A084",
+        "AZ19-A085"
+      ]
+    },
+    {
+      "id": "AZ19-X08",
+      "target": "write new folio reference",
+      "action": "__rmqueue_smallest atomic_inc",
+      "when": "allocator obtained page and valid descriptor",
+      "result": "increment relative to previous count; no extra get in do_anonymous_page success",
+      "anchors": [
+        "AZ19-A086",
+        "AZ19-A019",
+        "AZ19-A020"
+      ]
+    },
+    {
+      "id": "AZ19-X09",
+      "target": "write local entry flags",
+      "action": "pte_mkdirty then pte_mkwrite",
+      "when": "VM_WRITE true",
+      "result": "OR DIRTY/SOFT_DIRTY macro/RW; false branch preserves existing pgprot bits",
+      "anchors": [
+        "AZ19-A016",
+        "AZ19-A061",
+        "AZ19-A062"
+      ]
+    },
+    {
+      "id": "AZ19-X10",
+      "target": "PTE slot",
+      "action": "set_pte_at→set_pte→WRITE_ONCE",
+      "when": "valid pte_ptr and branch reaches setpte",
+      "result": "entry written without active repeated pte_same or lock in do_anonymous_page",
+      "anchors": [
+        "AZ19-A011",
+        "AZ19-A012",
+        "AZ19-A017",
+        "AZ19-A018",
+        "AZ19-A020",
+        "AZ19-A063",
+        "AZ19-A064"
+      ]
+    },
+    {
+      "id": "AZ19-X11",
+      "target": "new folio reference",
+      "action": "folio_put",
+      "when": "write folio valid and vmf.pte_ptr==NULL",
+      "result": "conditional decrement and empty __folio_put at zero; returns0 via unlock",
+      "anchors": [
+        "AZ19-A017",
+        "AZ19-A021",
+        "AZ19-A022",
+        "AZ19-A087",
+        "AZ19-A088",
+        "AZ19-A089"
+      ]
+    },
+    {
+      "id": "AZ19-X12",
+      "target": "zero-page reference",
+      "action": "no local ref increment",
+      "when": "read entry construction",
+      "result": "read branch uses PFN but no folio_get; no full-system no-ref proof",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A020",
+        "AZ19-A071"
+      ]
+    },
+    {
+      "id": "AZ19-X13",
+      "target": "folio rmap/LRU/counters",
+      "action": "none (commented)",
+      "when": "write success path",
+      "result": "PTE install does not prove mapping/ownership accounting was updated",
+      "anchors": [
+        "AZ19-A019",
+        "AZ19-A020"
+      ]
+    },
+    {
+      "id": "AZ19-X14",
+      "target": "return_fault",
+      "action": "return 0 with no PTE installation",
+      "when": "read ptr NULL / write ptr NULL / encoded-error pointer",
+      "result": "successful numeric return not sufficient proof of completed mapping",
+      "anchors": [
+        "AZ19-A011",
+        "AZ19-A014",
+        "AZ19-A017",
+        "AZ19-A021",
+        "AZ19-A022"
+      ]
+    },
+    {
+      "id": "AZ19-X15",
+      "target": "PTE slot race check",
+      "action": "vmf_pte_changed blocks commented",
+      "when": "between snapshot and installation",
+      "result": "no active second equality gate in selected anonymous read/write branches",
+      "anchors": [
+        "AZ19-A012",
+        "AZ19-A018",
+        "AZ19-A029",
+        "AZ19-A004"
+      ]
+    },
+    {
+      "id": "AZ19-X16",
+      "target": "fault status",
+      "action": "return SIGBUS/OOM bits",
+      "when": "VM_SHARED or second pte_alloc error or reachable write oom",
+      "result": "upper fault value nonzero enters no-work while, not retry",
+      "anchors": [
+        "AZ19-A008",
+        "AZ19-A009",
+        "AZ19-A022",
+        "AZ19-A043",
+        "AZ19-A046"
+      ]
+    },
+    {
+      "id": "AZ19-X17",
+      "target": "physical ref on success",
+      "action": "no folio_put in selected success tail",
+      "when": "write new entry installed",
+      "result": "allocator ownership may be retained but no rmap or next lifecycle closure",
+      "anchors": [
+        "AZ19-A019",
+        "AZ19-A020",
+        "AZ19-A021",
+        "AZ19-A086",
+        "AZ19-A087"
+      ]
+    }
+  ],
+  "conclusions": [
+    {
+      "claim": "AZ19-C01",
+      "kind": "verified_source",
+      "text": "anon discrimination is vm_ops==NULL; private no-file VMA producers call vma_set_anonymous",
+      "anchors": [
+        "AZ19-A002",
+        "AZ19-A031",
+        "AZ19-A032",
+        "AZ19-A035",
+        "AZ19-A038",
+        "AZ19-A039",
+        "AZ19-A040"
+      ]
+    },
+    {
+      "claim": "AZ19-C02",
+      "kind": "conditional_inference",
+      "text": "BSS-backed empty_zero_page is covered by clear_bss path and init_zero_pfn derives its PFN; no physical readback or guarantee no later writers",
+      "anchors": [
+        "AZ19-A026",
+        "AZ19-A027",
+        "AZ19-A069",
+        "AZ19-A071",
+        "AZ19-A072",
+        "AZ19-A073",
+        "AZ19-A074",
+        "AZ19-A075",
+        "AZ19-A077"
+      ]
+    },
+    {
+      "claim": "AZ19-C03",
+      "kind": "verified_source",
+      "text": "pte_mkspecial ORs SPECIAL without clearing RW; default private PAGE_COPY/READONLY does not carry RW",
+      "anchors": [
+        "AZ19-A048",
+        "AZ19-A051",
+        "AZ19-A053",
+        "AZ19-A057",
+        "AZ19-A058",
+        "AZ19-A059"
+      ]
+    },
+    {
+      "claim": "AZ19-C04",
+      "kind": "conditional_gap",
+      "text": "anonymous write folio request sets need_zero=true but active preallocator ignores it and GFP does not set __GFP_ZERO",
+      "anchors": [
+        "AZ19-A023",
+        "AZ19-A024",
+        "AZ19-A025",
+        "AZ19-A080",
+        "AZ19-A084",
+        "AZ19-A085"
+      ]
+    },
+    {
+      "claim": "AZ19-C05",
+      "kind": "conditional_gap",
+      "text": "both read/write anon PTE recheck expressions disabled; potential lost update on valid pointer if simultaneous changes occur",
+      "anchors": [
+        "AZ19-A004",
+        "AZ19-A012",
+        "AZ19-A018",
+        "AZ19-A020",
+        "AZ19-A064"
+      ]
+    },
+    {
+      "claim": "AZ19-C06",
+      "kind": "bounded_partial",
+      "text": "successful new PTE write and zero numeric return are not proofs of data initialization, rmap, TLB consistency, or CPU resume",
+      "anchors": [
+        "AZ19-A019",
+        "AZ19-A020",
+        "AZ19-A021",
+        "AZ19-A036",
+        "AZ19-A043"
+      ]
+    }
+  ],
+  "node_count": 47,
+  "edge_count": 48,
+  "scenario_count": 20,
+  "effect_count": 17,
+  "source_anchor_count": 90,
+  "object_ledger": [
+    {
+      "object": "empty_zero_page",
+      "kind": "static_page_bytes",
+      "identity": "PAGE_SIZE BSS object; not PFN0 constant",
+      "producer": "head_64.S, kernel.lds, clear_bss",
+      "anchors": [
+        "AZ19-A069",
+        "AZ19-A072",
+        "AZ19-A073",
+        "AZ19-A074",
+        "AZ19-A075"
+      ]
+    },
+    {
+      "object": "zero_pfn",
+      "kind": "PFN_integer",
+      "identity": "page_to_pfn(ZERO_PAGE(0)) if init reached; my_zero_pfn returns current value",
+      "producer": "init_zero_pfn; not the page bytes",
+      "anchors": [
+        "AZ19-A026",
+        "AZ19-A027",
+        "AZ19-A069",
+        "AZ19-A071"
+      ]
+    },
+    {
+      "object": "read_entry",
+      "kind": "local_PTE_value",
+      "identity": "pte_mkspecial(pfn_pte(zero_pfn,vma.vm_page_prot))",
+      "producer": "do_anonymous_page read branch",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A057",
+        "AZ19-A058",
+        "AZ19-A059",
+        "AZ19-A071"
+      ]
+    },
+    {
+      "object": "new_folio",
+      "kind": "allocated_folio",
+      "identity": "folio_alloc_noprof returns page_folio(alloc_page(...)) if defined and valid",
+      "producer": "alloc_anon_folio -> folio_prealloc",
+      "anchors": [
+        "AZ19-A023",
+        "AZ19-A025",
+        "AZ19-A080",
+        "AZ19-A081",
+        "AZ19-A082",
+        "AZ19-A083"
+      ]
+    },
+    {
+      "object": "write_entry",
+      "kind": "local_PTE_value",
+      "identity": "mk_pte(new_folio.page,vm_page_prot), optional dirty/RW",
+      "producer": "do_anonymous_page write branch",
+      "anchors": [
+        "AZ19-A016",
+        "AZ19-A065",
+        "AZ19-A061",
+        "AZ19-A062"
+      ]
+    },
+    {
+      "object": "PTE_slot",
+      "kind": "actual_mutable_entry",
+      "identity": "*vmf.pte_ptr modified only at set_pte_at -> WRITE_ONCE",
+      "producer": "myos_handle_mm_fault pointer, do_anonymous_page setpte",
+      "anchors": [
+        "AZ19-A003",
+        "AZ19-A020",
+        "AZ19-A063",
+        "AZ19-A064"
+      ]
+    },
+    {
+      "object": "refcount_vs_mapping",
+      "kind": "separate_semantics",
+      "identity": "allocation reference increment versus mapping accounting comments; read zero PFN no local ref increment",
+      "producer": "__rmqueue_smallest and do_anonymous_page",
+      "anchors": [
+        "AZ19-A010",
+        "AZ19-A019",
+        "AZ19-A020",
+        "AZ19-A086",
+        "AZ19-A087",
+        "AZ19-A088"
+      ]
+    }
+  ],
+  "limitations": [
+    "Source baseline time @ a039d9803ade; no use of default branch source content in claims.",
+    "R18-S01/S02/S03, R17-S01/S02/S03, R16-S01/S02 and R12 bounded returns mandatory.",
+    "No actual CPU fault replay, memory access, physical zero-page contents or COW isolation certified.",
+    "No source edits, build, QEMU, dynamic execution, or full MM/loader audit.",
+    "A read-zero PTE's SPECIAL bit is not a permissions sanitization; default private template is separate premise.",
+    "Result=0 need not mean set_pte_at executed; other writers, invalid pointers, and error pointer source can alter outcomes.",
+    "Call edges are direct invocations or defined macro bindings; call_path lists actual intermediate helpers; data consumer->provider; layout type alias only."
+  ]
+}

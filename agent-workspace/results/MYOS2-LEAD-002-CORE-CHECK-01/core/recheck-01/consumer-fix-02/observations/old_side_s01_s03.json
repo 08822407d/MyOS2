@@ -1,0 +1,869 @@
+{
+ "check": "OLD_SIDE_S01_S03",
+ "workdir": "/tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/dev-oldside/old-side-yg3q_ak8",
+ "frozen_programs": "b843d475367a recheck-01/fixtures (extraction /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/dev-frozen)",
+ "input_label": "HARNESS_META_TEST (altered copies of the b843 observations; originals untouched)",
+ "S01": {
+  "case": "fx_sched/v04_noncurrent_wake",
+  "deleted_run_keys": [
+   "collect_timed_out",
+   "terminal_state",
+   "reaped_confirmed",
+   "stderr"
+  ],
+  "control_unmodified": {
+   "input": {
+    "bytes": 84088,
+    "sha256_segments": [
+     "ac12a3f154938951",
+     "c534e715513ef693",
+     "5def0811d58e9cba",
+     "dba82863337a570b"
+    ]
+   },
+   "returncode": 0,
+   "timed_out": false,
+   "returned": {
+    "status": "VALID",
+    "result": "OBSERVED_AS_PREDICTED",
+    "constituents": {
+     "v04_noncurrent_wake": "VALID"
+    },
+    "reasons": [
+     null
+    ],
+    "checks": [
+     [
+      "ret",
+      0,
+      0,
+      true
+     ],
+     [
+      "state_after(RUNNING)",
+      0,
+      0,
+      true
+     ],
+     [
+      "queued_once",
+      1,
+      1,
+      true
+     ],
+     [
+      "rq0.count",
+      1,
+      1,
+      true
+     ],
+     [
+      "preempt_balanced",
+      0,
+      0,
+      true
+     ]
+    ]
+   },
+   "stderr_tail": []
+  },
+  "keys_left_in_run": [
+   "cmd",
+   "elapsed_s",
+   "group_members_after",
+   "kill",
+   "output_lost",
+   "pgid",
+   "pgid_differs_from_own",
+   "pid",
+   "returncode",
+   "stdout",
+   "timed_out",
+   "timeout_s"
+  ],
+  "deleted_four_keys": {
+   "input": {
+    "bytes": 83992,
+    "sha256_segments": [
+     "598318596209f1d5",
+     "c94e254f754002d9",
+     "2b464fbb2f5cebfc",
+     "a282c6d0c8075e27"
+    ]
+   },
+   "returncode": 0,
+   "timed_out": false,
+   "returned": {
+    "status": "VALID",
+    "result": "OBSERVED_AS_PREDICTED",
+    "constituents": {
+     "v04_noncurrent_wake": "VALID"
+    },
+    "reasons": [
+     null
+    ],
+    "checks": [
+     [
+      "ret",
+      0,
+      0,
+      true
+     ],
+     [
+      "state_after(RUNNING)",
+      0,
+      0,
+      true
+     ],
+     [
+      "queued_once",
+      1,
+      1,
+      true
+     ],
+     [
+      "rq0.count",
+      1,
+      1,
+      true
+     ],
+     [
+      "preempt_balanced",
+      0,
+      0,
+      true
+     ]
+    ]
+   },
+   "stderr_tail": []
+  },
+  "lead_prediction": [
+   "VALID",
+   "OBSERVED_AS_PREDICTED"
+  ],
+  "reproduced": true
+ },
+ "S02": {
+  "stage_rec_from_run_json": {
+   "returncode": 0,
+   "timed_out": false
+  },
+  "control_unmodified": {
+   "input": {
+    "bytes": 5079,
+    "sha256_segments": [
+     "e3c9dc8c0ef6f432",
+     "9e027f763a0cdb41",
+     "090bb9d748460020",
+     "a47d461cec3486d1"
+    ]
+   },
+   "returncode": 0,
+   "timed_out": false,
+   "returned": {
+    "status": "VALID",
+    "result": "NO_FAILURE_IN_SCOPE",
+    "constituents": null,
+    "reasons": [
+     null
+    ],
+    "checks": [
+     [
+      "all_six_parse",
+      true,
+      true,
+      true
+     ],
+     [
+      "issue_ids_CA01_CA07",
+      true,
+      true,
+      true
+     ],
+     [
+      "anchor_refs_dangling",
+      [],
+      [],
+      true
+     ],
+     [
+      "anchor_dups_within_issue",
+      {},
+      {},
+      true
+     ],
+     [
+      "case_refs_dangling",
+      [],
+      [],
+      true
+     ],
+     [
+      "contract09_anchor_refs_dangling",
+      [],
+      [],
+      true
+     ],
+     [
+      "referenced_paths_exist",
+      true,
+      true,
+      true
+     ],
+     [
+      "report_inputs_read_exist",
+      true,
+      true,
+      true
+     ],
+     [
+      "self_check_automated_equals_declared",
+      true,
+      true,
+      true
+     ],
+     [
+      "self_check_arithmetic",
+      true,
+      true,
+      true
+     ],
+     [
+      "startup_selfcheck_quote",
+      true,
+      true,
+      true
+     ],
+     [
+      "no_whole_completion_claims",
+      [
+       false,
+       false,
+       false,
+       false
+      ],
+      [
+       false,
+       false,
+       false,
+       false
+      ],
+      true
+     ],
+     [
+      "hex40_hits",
+      0,
+      0,
+      true
+     ]
+    ]
+   },
+   "stderr_tail": []
+  },
+  "variants": {
+   "empty_referenced_paths": {
+    "input": {
+     "bytes": 4725,
+     "sha256_segments": [
+      "ce89f54466ea9a95",
+      "5f3d08c03d1a3357",
+      "4f0726f5aea7a014",
+      "b9bb77c92ac1958d"
+     ]
+    },
+    "returncode": 0,
+    "timed_out": false,
+    "returned": {
+     "status": "VALID",
+     "result": "NO_FAILURE_IN_SCOPE",
+     "constituents": null,
+     "reasons": [
+      null
+     ],
+     "checks": [
+      [
+       "all_six_parse",
+       true,
+       true,
+       true
+      ],
+      [
+       "issue_ids_CA01_CA07",
+       true,
+       true,
+       true
+      ],
+      [
+       "anchor_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "anchor_dups_within_issue",
+       {},
+       {},
+       true
+      ],
+      [
+       "case_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "contract09_anchor_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "referenced_paths_exist",
+       true,
+       true,
+       true
+      ],
+      [
+       "report_inputs_read_exist",
+       true,
+       true,
+       true
+      ],
+      [
+       "self_check_automated_equals_declared",
+       true,
+       true,
+       true
+      ],
+      [
+       "self_check_arithmetic",
+       true,
+       true,
+       true
+      ],
+      [
+       "startup_selfcheck_quote",
+       true,
+       true,
+       true
+      ],
+      [
+       "no_whole_completion_claims",
+       [
+        false,
+        false,
+        false,
+        false
+       ],
+       [
+        false,
+        false,
+        false,
+        false
+       ],
+       true
+      ],
+      [
+       "hex40_hits",
+       0,
+       0,
+       true
+      ]
+     ]
+    },
+    "stderr_tail": []
+   },
+   "empty_report_inputs_read": {
+    "input": {
+     "bytes": 2870,
+     "sha256_segments": [
+      "f99555f06b0f21ca",
+      "3801672f69bc96e9",
+      "327599963c796395",
+      "c8ebc8f6ac827e51"
+     ]
+    },
+    "returncode": 0,
+    "timed_out": false,
+    "returned": {
+     "status": "VALID",
+     "result": "NO_FAILURE_IN_SCOPE",
+     "constituents": null,
+     "reasons": [
+      null
+     ],
+     "checks": [
+      [
+       "all_six_parse",
+       true,
+       true,
+       true
+      ],
+      [
+       "issue_ids_CA01_CA07",
+       true,
+       true,
+       true
+      ],
+      [
+       "anchor_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "anchor_dups_within_issue",
+       {},
+       {},
+       true
+      ],
+      [
+       "case_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "contract09_anchor_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "referenced_paths_exist",
+       true,
+       true,
+       true
+      ],
+      [
+       "report_inputs_read_exist",
+       true,
+       true,
+       true
+      ],
+      [
+       "self_check_automated_equals_declared",
+       true,
+       true,
+       true
+      ],
+      [
+       "self_check_arithmetic",
+       true,
+       true,
+       true
+      ],
+      [
+       "startup_selfcheck_quote",
+       true,
+       true,
+       true
+      ],
+      [
+       "no_whole_completion_claims",
+       [
+        false,
+        false,
+        false,
+        false
+       ],
+       [
+        false,
+        false,
+        false,
+        false
+       ],
+       true
+      ],
+      [
+       "hex40_hits",
+       0,
+       0,
+       true
+      ]
+     ]
+    },
+    "stderr_tail": []
+   },
+   "empty_hex40_hits_in_scope_files": {
+    "input": {
+     "bytes": 4865,
+     "sha256_segments": [
+      "79b71cbfc051ce33",
+      "80284220f2895681",
+      "4f8365c8d0f5dc56",
+      "90b0615e4495fdb3"
+     ]
+    },
+    "returncode": 0,
+    "timed_out": false,
+    "returned": {
+     "status": "VALID",
+     "result": "NO_FAILURE_IN_SCOPE",
+     "constituents": null,
+     "reasons": [
+      null
+     ],
+     "checks": [
+      [
+       "all_six_parse",
+       true,
+       true,
+       true
+      ],
+      [
+       "issue_ids_CA01_CA07",
+       true,
+       true,
+       true
+      ],
+      [
+       "anchor_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "anchor_dups_within_issue",
+       {},
+       {},
+       true
+      ],
+      [
+       "case_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "contract09_anchor_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "referenced_paths_exist",
+       true,
+       true,
+       true
+      ],
+      [
+       "report_inputs_read_exist",
+       true,
+       true,
+       true
+      ],
+      [
+       "self_check_automated_equals_declared",
+       true,
+       true,
+       true
+      ],
+      [
+       "self_check_arithmetic",
+       true,
+       true,
+       true
+      ],
+      [
+       "startup_selfcheck_quote",
+       true,
+       true,
+       true
+      ],
+      [
+       "no_whole_completion_claims",
+       [
+        false,
+        false,
+        false,
+        false
+       ],
+       [
+        false,
+        false,
+        false,
+        false
+       ],
+       true
+      ],
+      [
+       "hex40_hits",
+       0,
+       0,
+       true
+      ]
+     ]
+    },
+    "stderr_tail": []
+   },
+   "empty_all_three": {
+    "input": {
+     "bytes": 2302,
+     "sha256_segments": [
+      "cbb1d773c0efe848",
+      "020946fe8a48485b",
+      "79a230dad8c1859f",
+      "d17c0b13b787b4bb"
+     ]
+    },
+    "returncode": 0,
+    "timed_out": false,
+    "returned": {
+     "status": "VALID",
+     "result": "NO_FAILURE_IN_SCOPE",
+     "constituents": null,
+     "reasons": [
+      null
+     ],
+     "checks": [
+      [
+       "all_six_parse",
+       true,
+       true,
+       true
+      ],
+      [
+       "issue_ids_CA01_CA07",
+       true,
+       true,
+       true
+      ],
+      [
+       "anchor_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "anchor_dups_within_issue",
+       {},
+       {},
+       true
+      ],
+      [
+       "case_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "contract09_anchor_refs_dangling",
+       [],
+       [],
+       true
+      ],
+      [
+       "referenced_paths_exist",
+       true,
+       true,
+       true
+      ],
+      [
+       "report_inputs_read_exist",
+       true,
+       true,
+       true
+      ],
+      [
+       "self_check_automated_equals_declared",
+       true,
+       true,
+       true
+      ],
+      [
+       "self_check_arithmetic",
+       true,
+       true,
+       true
+      ],
+      [
+       "startup_selfcheck_quote",
+       true,
+       true,
+       true
+      ],
+      [
+       "no_whole_completion_claims",
+       [
+        false,
+        false,
+        false,
+        false
+       ],
+       [
+        false,
+        false,
+        false,
+        false
+       ],
+       true
+      ],
+      [
+       "hex40_hits",
+       0,
+       0,
+       true
+      ]
+     ]
+    },
+    "stderr_tail": []
+   }
+  },
+  "lead_prediction": [
+   "VALID",
+   "NO_FAILURE_IN_SCOPE"
+  ],
+  "reproduced": {
+   "empty_referenced_paths": true,
+   "empty_report_inputs_read": true,
+   "empty_hex40_hits_in_scope_files": true,
+   "empty_all_three": true
+  }
+ },
+ "S03": {
+  "entry": "frozen make_results2.py CLI (generate -> _load -> build_doc -> render)",
+  "control_complete_copy": {
+   "argv": [
+    "make_results2.py",
+    "<obs>",
+    "<out.yaml>"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "stdout_tail": [
+    "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/dev-oldside/old-side-yg3q_ak8/08_s03_control_complete/results.yaml (39525 bytes); generator_errors=0"
+   ],
+   "stderr_tail": [],
+   "report_written": true,
+   "report": {
+    "status": "generated_from_run_status_COMPLETE",
+    "run_status": "COMPLETE",
+    "V08": {
+     "evidence_status": "VALID",
+     "result": "COUNTEREVIDENCE",
+     "layers": {
+      "host_original_slice_function_level": "EXECUTED",
+      "limited_model_reachability": "EXECUTED",
+      "global_reachability": "NOT_RUN"
+     },
+     "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+    },
+    "V14": {
+     "evidence_status": "VALID",
+     "result": "OBSERVED_AS_PREDICTED",
+     "layers": {
+      "source_and_build_reference": "EXECUTED",
+      "host_link_model": "EXECUTED",
+      "existing_elf": "NOT_RUN"
+     }
+    },
+    "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+    "CA-05": "SUPPORTED_AT_HOST_LINK_MODEL_AND_SOURCE_AND_BUILD_REFERENCE",
+    "generator_errors": [],
+    "counts_evidence_status": {
+     "VALID": 15
+    }
+   },
+   "report_file": {
+    "bytes": 39525,
+    "sha256_segments": [
+     "e45e07b5a66bd919",
+     "c59164563be73ee4",
+     "fd564a0f8b09acb2",
+     "65ab18b3c242d592"
+    ]
+   },
+   "report_identical_to_efb_results_yaml": true
+  },
+  "static_omitted": {
+   "argv": [
+    "make_results2.py",
+    "<obs>",
+    "<out.yaml>"
+   ],
+   "returncode": 0,
+   "timed_out": false,
+   "stdout_tail": [
+    "wrote /tmp/claude-0/-home-user-MyOS2/e3ce16b3-588b-596b-86aa-5e369173435c/scratchpad/recheck02/dev-oldside/old-side-yg3q_ak8/09_s03_static_omitted/results.yaml (39004 bytes); generator_errors=0"
+   ],
+   "stderr_tail": [],
+   "report_written": true,
+   "report": {
+    "status": "generated_from_run_status_COMPLETE",
+    "run_status": "COMPLETE",
+    "V08": {
+     "evidence_status": "VALID",
+     "result": "COUNTEREVIDENCE",
+     "layers": {
+      "host_original_slice_function_level": "EXECUTED",
+      "limited_model_reachability": "EXECUTED",
+      "global_reachability": "NOT_RUN"
+     },
+     "limited_model_reachability": "COUNTEREVIDENCE_IN_LIMITED_MODEL"
+    },
+    "V14": {
+     "evidence_status": "INCOMPLETE_EVIDENCE",
+     "result": null,
+     "layers": {
+      "source_and_build_reference": "INCOMPLETE_EVIDENCE",
+      "host_link_model": "EXECUTED",
+      "existing_elf": "NOT_RUN"
+     }
+    },
+    "CA-02": "FUNCTION_LEVEL_SUPPORTED; LIMITED_MODEL_REACHABILITY=COUNTEREVIDENCE_IN_LIMITED_MODEL; GLOBAL_REACHABILITY=NOT_ESTABLISHED_BY_THIS_CHECK",
+    "CA-05": "UNDETERMINED_MISSING_EVIDENCE",
+    "generator_errors": [],
+    "counts_evidence_status": {
+     "VALID": 14,
+     "INCOMPLETE_EVIDENCE": 1
+    }
+   },
+   "report_file": {
+    "bytes": 39004,
+    "sha256_segments": [
+     "ecace02b89b37816",
+     "3723925aba68666d",
+     "fc50560f4d5a69bd",
+     "a99d327d1b45b972"
+    ]
+   },
+   "inputs_present": [
+    "a46.json",
+    "meta_tests.json",
+    "old_counterexamples.json",
+    "run.json",
+    "v00.json",
+    "v01.json"
+   ]
+  },
+  "static_truncated_json": {
+   "argv": [
+    "make_results2.py",
+    "<obs>",
+    "<out.yaml>"
+   ],
+   "returncode": 1,
+   "timed_out": false,
+   "stdout_tail": [],
+   "stderr_tail": [
+    "    obj, end = self.scan_once(s, idx)",
+    "               ^^^^^^^^^^^^^^^^^^^^^^",
+    "json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+   ],
+   "report_written": false,
+   "report": null,
+   "report_file": null,
+   "static_json_content": "{"
+  },
+  "lead_prediction": {
+   "static_omitted": "V14 source layer missing evidence, V08 still cached VALID with limited-model verdict",
+   "static_truncated_json": "JSONDecodeError before section error collection; no partial report"
+  },
+  "reproduced": {
+   "static_omitted": true,
+   "static_truncated_json": true
+  }
+ },
+ "all_three_reproduced": true
+}

@@ -1,0 +1,1068 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-CLONE-GROUP-72",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (model self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "backend_identity": "unknown_or_not_attestable",
+  "date": "2026-11-11",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "contract_short12": "becd64744d51",
+  "execution_parent_short12": "5f3b00d9436f",
+  "D00": "NOT_APPLICABLE",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "upstream_disposition": {
+    "batch71": "PASS_PENDING_LOCAL_WITH_R71-S01/S02/S03",
+    "batch70": "PASS_PENDING_LOCAL_WITH_R70-S01/S02/S03",
+    "R69_01": "CLOSED_DOCUMENTATION_ONLY",
+    "history": [
+      "R11 §3 PID number/allocation/attach/wake distinct",
+      "R44-S01/S02 cleanup labels and files/fs rollback",
+      "R45-S01/S02 path/files vs fs ownership",
+      "R71-S01 alloc_fd failure producer not inferred",
+      "R71-S02 distinct task/fs/MM identities"
+    ],
+    "D00_required": false
+  },
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-14",
+      "status": "needs_evidence",
+      "provenance": "user-vfs-baseline-05/deferred-findings.yaml; R44-S01 consumed",
+      "role": "sighand not installed and late cleanup may decrement inherited static init_sighand; do not renumber, no runtime bug signed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-F01",
+      "status": "needs_evidence",
+      "role": "de_thread group isolation not implemented on selected source; new clone group producers only refine premises"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U01",
+      "status": "needs_evidence",
+      "role": "real live thread group/leader state remains open"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-F03",
+      "status": "needs_evidence",
+      "role": "fs.in_exec concurrency producer remains outside clone signal group subject"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-COMMIT-GATES-71::EC71-U03",
+      "status": "needs_evidence",
+      "role": "shared fs writer not proven by clone flags"
+    },
+    {
+      "review_id": "CORE-USER-PID-LIFETIME-11-REVIEW-001",
+      "scope": "§3",
+      "role": "numeric PID, IDR slot replacement, attach and wake separate; historical return status not reopened"
+    },
+    {
+      "review_id": "CORE-USER-FORK-FILES-ROLLBACK-44-REVIEW-001",
+      "scope": "§2–4",
+      "role": "conditional cleanup and prior UV-14 caveats"
+    },
+    {
+      "review_id": "CORE-USER-FS-CONTEXT-45-REVIEW-001",
+      "scope": "§2–3",
+      "role": "fs users != files refcount, valid source object prerequisite"
+    }
+  ],
+  "source_ledger": [
+    {
+      "path": "mykernel/sched/syscall.c",
+      "blob_sha_short12": "9ca3b8355003",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "A01",
+        "A02"
+      ]
+    },
+    {
+      "path": "mykernel/sched/misc/sched_misc_types.h",
+      "blob_sha_short12": "d37cc3bb7045",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "A03",
+        "A04",
+        "A05",
+        "A06"
+      ]
+    },
+    {
+      "path": "mykernel/sched/sched_type_declaration.h",
+      "blob_sha_short12": "0db68faa0fcf",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "A07"
+      ]
+    },
+    {
+      "path": "mykernel/sched/forkexec/fork.c",
+      "blob_sha_short12": "2b705f35ced8",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15",
+        "A16",
+        "A17",
+        "A18",
+        "A19",
+        "A20",
+        "A21",
+        "A22",
+        "A23",
+        "A24",
+        "A25",
+        "A26",
+        "A27",
+        "A28",
+        "A29",
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B09",
+        "B10",
+        "B11",
+        "B12",
+        "B13",
+        "B14",
+        "B15",
+        "B16",
+        "B17",
+        "B18",
+        "B19",
+        "B33",
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C26",
+        "C27",
+        "C28",
+        "C29",
+        "C30",
+        "C31",
+        "C32",
+        "C33",
+        "C34",
+        "C35",
+        "C36",
+        "C37",
+        "C38",
+        "C39",
+        "C40"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+      "blob_sha_short12": "a21461322a9f",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "A30",
+        "A31",
+        "A32"
+      ]
+    },
+    {
+      "path": "mykernel/include/uapi/linux/sched.h",
+      "blob_sha_short12": "883e874a7792",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "A33",
+        "A34",
+        "A35",
+        "A36",
+        "A37",
+        "A38",
+        "A39",
+        "A40",
+        "A41"
+      ]
+    },
+    {
+      "path": "mykernel/lock_IPC/signal/signal_types.h",
+      "blob_sha_short12": "e715cf681555",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "B20",
+        "B21",
+        "B22",
+        "B23",
+        "B24",
+        "B25"
+      ]
+    },
+    {
+      "path": "mykernel/lock_IPC/signal/signal.h",
+      "blob_sha_short12": "09a5f6ad3c48",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "B26",
+        "B27",
+        "C09",
+        "C10"
+      ]
+    },
+    {
+      "path": "mykernel/sched/task/task_types.h",
+      "blob_sha_short12": "87518a05fa49",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "B28",
+        "B29",
+        "C11",
+        "C12",
+        "C13",
+        "C14"
+      ]
+    },
+    {
+      "path": "mykernel/init/init_task.c",
+      "blob_sha_short12": "7124adc92a41",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "B30",
+        "B31",
+        "B32"
+      ]
+    },
+    {
+      "path": "mykernel/sched/task/pid.c",
+      "blob_sha_short12": "2e6b8a1510d7",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [
+        "C24",
+        "C25"
+      ]
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+      "blob_sha_short12": "544cfdb93d7e",
+      "read_channel": "connector",
+      "source_pin_short12": "a039d9803ade",
+      "source_anchor_ids": [],
+      "role": "full 80-line x86 syscall entry data; current active fork entry, commented vfork entry, no clone entry found in this selected header; no new source anchor claimed"
+    }
+  ],
+  "caller_flag_matrix": [
+    {
+      "caller": "MYOS_SYSCALL_DEFINE0(fork)",
+      "ids": [
+        "A01",
+        "A02",
+        "A03",
+        "A04"
+      ],
+      "explicit_fields": {
+        "exit_signal": "SIGCHLD"
+      },
+      "flags": "no explicit .flags initializer in shown aggregate, C zero initialization of omitted member conditional on standard C semantics",
+      "kthread": "omitted and hence zero under same aggregate premise",
+      "result": "kernel_clone(&args)",
+      "scope": "this actual selected syscall only"
+    },
+    {
+      "caller": "kernel_thread(fn,arg,name,flags)",
+      "ids": [
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12"
+      ],
+      "explicit_fields": {
+        "flags": "(lower_32_bits(flags)|CLONE_VM|CLONE_UNTRACED)&~CSIGNAL",
+        "exit_signal": "lower_32_bits(flags)&CSIGNAL",
+        "fn": "fn",
+        "fn_arg": "arg",
+        "name": "name",
+        "kthread": 1,
+        "stack": "(unsigned long)fn",
+        "stack_size": "(unsigned long)arg"
+      },
+      "note": "does not itself synthesize CLONE_THREAD, CLONE_SIGHAND, or a user clone syscall"
+    },
+    {
+      "caller": "kernel_clone(any kclone_args_s*)",
+      "ids": [
+        "A07",
+        "A13",
+        "A14",
+        "A15"
+      ],
+      "flags": "reads args.flags; checks one PIDFD/PARENT_SETTID overlapping output-pointer condition; passes same args to copy_process",
+      "result": "PTR_ERR on IS_ERR child else eventually pid number subject to valid producers"
+    },
+    {
+      "caller": "x86_64 selected dispatch",
+      "ids": [
+        "A30",
+        "A31",
+        "A32",
+        "A01"
+      ],
+      "entry_context": "syscall_64.c x64_sys_call switch generated from syscalls_64.h, selected 80-line list inspected directly; fork active, vfork commented, no clone mapping in that list",
+      "scope": "not an exhaustive proof over all configs or alternative dispatch paths",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "clone_admission_matrix": [
+    {
+      "order": 1,
+      "condition": "(CLONE_NEWNS & CLONE_FS)==both",
+      "ids": [
+        "A22"
+      ],
+      "result": "ERR_PTR(-EINVAL)",
+      "first_stop": "valid args/current and flags before task allocation"
+    },
+    {
+      "order": 2,
+      "condition": "(CLONE_NEWUSER & CLONE_FS)==both",
+      "ids": [
+        "A22"
+      ],
+      "result": "ERR_PTR(-EINVAL)",
+      "first_stop": "same early gate"
+    },
+    {
+      "order": 3,
+      "condition": "CLONE_THREAD true but CLONE_SIGHAND false",
+      "ids": [
+        "A23",
+        "A39",
+        "A35"
+      ],
+      "result": "ERR_PTR(-EINVAL)",
+      "first_stop": "no dup_task_struct call"
+    },
+    {
+      "order": 4,
+      "condition": "CLONE_SIGHAND true but CLONE_VM false",
+      "ids": [
+        "A24",
+        "A35",
+        "A34"
+      ],
+      "result": "ERR_PTR(-EINVAL)",
+      "first_stop": "no task allocation"
+    },
+    {
+      "order": 5,
+      "condition": "CLONE_PARENT and current.signal.flags SIGNAL_UNKILLABLE",
+      "ids": [
+        "A25"
+      ],
+      "result": "ERR_PTR(-EINVAL)",
+      "first_stop": "requires valid current.signal"
+    },
+    {
+      "order": 6,
+      "condition": "CLONE_THREAD and (NEWUSER or NEWPID or active_pid_ns != nsproxy pid_ns_for_children)",
+      "ids": [
+        "A26",
+        "A40",
+        "A41"
+      ],
+      "result": "ERR_PTR(-EINVAL)",
+      "first_stop": "valid nsproxy, pointers and namespace evaluation"
+    },
+    {
+      "order": 7,
+      "condition": "CLONE_PIDFD with CLONE_DETACHED or CLONE_THREAD",
+      "ids": [
+        "A27",
+        "A28",
+        "A36",
+        "A39"
+      ],
+      "result": "ERR_PTR(-EINVAL)",
+      "first_stop": "PIDFD block"
+    },
+    {
+      "order": 8,
+      "condition": "CLONE_PIDFD + CLONE_PARENT_SETTID and pidfd==parent_tid",
+      "ids": [
+        "A14"
+      ],
+      "result": "-EINVAL from kernel_clone",
+      "first_stop": "before copy_process; only identical output addresses"
+    },
+    {
+      "order": 9,
+      "condition": "all listed rejection conditions false",
+      "ids": [
+        "A15",
+        "A20",
+        "A21",
+        "A29"
+      ],
+      "result": "may proceed to dup_task_struct and later resource steps; not sufficient for valid task/thread",
+      "first_stop": "node/alloc, sched_fork, copy_files/fs/sighand/signal/mm, namespace, pid and publication prerequisites"
+    },
+    {
+      "order": 10,
+      "condition": "CLONE_VFORK true",
+      "ids": [
+        "A16",
+        "A18",
+        "A37"
+      ],
+      "result": "vfork completion object set, but selected wait_for_vfork_done code commented",
+      "first_stop": "no claim parent waited or woke"
+    }
+  ],
+  "signal_ownership_matrix": [
+    {
+      "stage": "structure predecessor",
+      "ids": [
+        "B01",
+        "B02",
+        "B28",
+        "B30",
+        "B31",
+        "B32"
+      ],
+      "object": "p copied from current by *tsk=*orig; original init_task binds init_signals and init_sighand with count1",
+      "claim": "pointer-value inheritance alone does not acquire independent count; current/orig identity and no intervening mutation required"
+    },
+    {
+      "stage": "CLONE_SIGHAND path",
+      "ids": [
+        "B06"
+      ],
+      "object": "p.sighand inherited pointer",
+      "action": "refcount_inc(&current.sighand.count) then return0",
+      "claim": "no explicit field write; depends on predecessor copied pointer identity and refcount validity"
+    },
+    {
+      "stage": "not CLONE_SIGHAND path",
+      "ids": [
+        "B07",
+        "B08",
+        "B09",
+        "B10"
+      ],
+      "object": "new allocated sighand_s sig vs p.sighand inherited old",
+      "action": "alloc sig, set sig.count=1, memcpy sig.action; publication RCU_INIT_POINTER(tsk.sighand,sig) commented; then return0",
+      "claim": "new object not installed in selected active path; old qualified UV-14 and related DR-04 roots not renumbered"
+    },
+    {
+      "stage": "sighand cleanup",
+      "ids": [
+        "B11",
+        "B12",
+        "C38"
+      ],
+      "object": "p.sighand passed to __cleanup_sighand",
+      "action": "refcount_dec_and_test then conditional kmem_cache_free",
+      "claim": "if p still inherits static init_sighand and original count1, first decrement may request free of static object; stop once object validity is unknown"
+    },
+    {
+      "stage": "CLONE_THREAD copy_signal",
+      "ids": [
+        "B13",
+        "B02",
+        "B20",
+        "C20"
+      ],
+      "object": "p.signal inherited signal_s pointer",
+      "action": "copy_signal immediately returns0; no local sigcnt/nr_threads increment here; separate group-else increments commented",
+      "claim": "no independent signal_s refcount acquisition established; actual thread path must pass admission and other earlier stages"
+    },
+    {
+      "stage": "non-thread copy_signal",
+      "ids": [
+        "B14",
+        "B15",
+        "B17",
+        "B18",
+        "B19"
+      ],
+      "object": "new signal_s sig",
+      "action": "kmem_cache_zalloc then tsk.signal=sig before NULL check, new sig.nr_threads=1 and sigcnt=1, curr_target=tsk, shared_pending list initialized, rlim copied",
+      "claim": "if allocation failure, tsk.signal becomes NULL; later cleanup enters sighand branch if caller valid"
+    },
+    {
+      "stage": "pending identities",
+      "ids": [
+        "B17",
+        "B25",
+        "B26",
+        "B29",
+        "B33"
+      ],
+      "object": "task.pending vs signal.shared_pending",
+      "action": "copy_process invokes init_sigpending on p.pending; copy_signal for non-thread invokes on shared_pending; helper initializes list, bitset clear statement commented",
+      "claim": "separate locations; new signal is zalloc, task.pending was structure copied; cannot claim both bitsets were independently cleared by helper"
+    },
+    {
+      "stage": "sighand vs signal types",
+      "ids": [
+        "B20",
+        "B21",
+        "B22",
+        "B23",
+        "B24",
+        "B27"
+      ],
+      "object": "signal_s nr_threads/sigcnt/curr_target/shared_pending/pids/rlim; sighand_s count/action/siglock",
+      "claim": "same_thread_group tests p.signal pointer equality; not equivalent to same action array, same tgid, same pid link or actual group membership"
+    }
+  ],
+  "group_publication_matrix": [
+    {
+      "order": 1,
+      "source": "copy_process",
+      "ids": [
+        "C01",
+        "C02",
+        "C11"
+      ],
+      "writes": "p.pid = pid_nr(pid_struct); if THREAD p.tgid=current.tgid else p.tgid=p.pid",
+      "not_proved": "identity in pid namespace or group membership"
+    },
+    {
+      "order": 2,
+      "source": "copy_process",
+      "ids": [
+        "C04",
+        "C05",
+        "C06",
+        "C12"
+      ],
+      "writes": "real_parent=current.real_parent for CLONE_PARENT|THREAD else current; p.exit_signal assignments remain comments",
+      "not_proved": "exit_signal equals args.exit_signal or -1 when THREAD"
+    },
+    {
+      "order": 3,
+      "source": "thread_group_leader",
+      "ids": [
+        "C09",
+        "C05",
+        "B02"
+      ],
+      "writes": "none",
+      "predicate": "p.exit_signal >= 0; neither flag CLONE_THREAD nor p.pid==p.tgid is tested by this function",
+      "not_proved": "intermediate sched_fork/other writers did not change exit_signal"
+    },
+    {
+      "order": 4,
+      "source": "init_task_pid_links/init_task_pid",
+      "ids": [
+        "C07",
+        "C08",
+        "C15",
+        "C14"
+      ],
+      "writes": "reset task.pid_links and init task.thread_pid for PIDTYPE_PID else signal.pids category pointer",
+      "not_proved": "physical PID hash published yet"
+    },
+    {
+      "order": 5,
+      "source": "leader branch",
+      "ids": [
+        "C16",
+        "C17",
+        "C18",
+        "C19"
+      ],
+      "writes": "conditionally init TGID PGID SID source pointer, add to real_parent.children and all_task, attach TGID/PGID/SID",
+      "not_proved": "tasklist lock, parent list object, active group identity valid"
+    },
+    {
+      "order": 6,
+      "source": "nonleader branch",
+      "ids": [
+        "C20",
+        "C21",
+        "B13"
+      ],
+      "writes": "nr_threads/live/sigcnt increments and thread_group/thread_node linkage all comments in shown branch",
+      "not_proved": "signal_s group membership/number actually maintained"
+    },
+    {
+      "order": 7,
+      "source": "general link",
+      "ids": [
+        "C22",
+        "C24",
+        "C25"
+      ],
+      "writes": "attach_pid PID then global nr_threads++ (not signal.nr_threads); attach_pid uses pid->tasks[type]",
+      "not_proved": "valid pid pointer, lock/RCU discipline, completed IDR producer"
+    },
+    {
+      "order": 8,
+      "source": "success handoff",
+      "ids": [
+        "C23",
+        "C26",
+        "C27",
+        "C28",
+        "C29",
+        "C30",
+        "C31"
+      ],
+      "writes": "copy_process returns p; kernel_clone checks IS_ERR, gets PID number, calls wake_up_new_task, put_pid then returns nr",
+      "not_proved": "actual scheduler dispatch, thread executed or reader safe"
+    },
+    {
+      "order": 9,
+      "source": "thread-group identity contrast",
+      "ids": [
+        "C01",
+        "C09",
+        "C20",
+        "C22",
+        "B27"
+      ],
+      "writes": "tgid scalar, signal pointer identity, nr_threads values and link insertions occur at separate sites",
+      "not_proved": "one field sufficient to certify a real valid thread group"
+    }
+  ],
+  "failure_ownership_matrix": [
+    {
+      "entry": "copy_sighand returns negative",
+      "ids": [
+        "B04",
+        "B07",
+        "B08",
+        "C39"
+      ],
+      "next": "goto bad_fork_cleanup_fs -> exit_fs -> exit_files",
+      "skip": "does not run explicit __cleanup_sighand from the later label on this path",
+      "stop": "preceding files/fs must have succeeded and exit_fs valid"
+    },
+    {
+      "entry": "copy_signal returns negative",
+      "ids": [
+        "B05",
+        "B14",
+        "C32",
+        "C38",
+        "C39"
+      ],
+      "next": "goto bad_fork_cleanup_sighand -> __cleanup_sighand(p.sighand) -> exit_fs -> exit_files if each returns",
+      "stop": "UV-14 previously identifies inherited sighand count and possible invalid static free; p.signal NULL on local alloc failure"
+    },
+    {
+      "entry": "copy_mm returns negative",
+      "ids": [
+        "C33",
+        "C37",
+        "C38"
+      ],
+      "next": "goto bad_fork_cleanup_signal; free_signal_struct(p.signal) commented; __cleanup_sighand active",
+      "stop": "valid newly allocated signal may have no local free request; do not assume physical leak or external cleanup absent"
+    },
+    {
+      "entry": "copy_namespaces returns negative",
+      "ids": [
+        "C33",
+        "C37",
+        "C38",
+        "C39"
+      ],
+      "next": "goto cleanup_mm -> if(p.mm) mmput -> cleanup_signal(comment) -> cleanup_sighand",
+      "stop": "mmput if entered must return and all objects valid"
+    },
+    {
+      "entry": "copy_thread returns negative",
+      "ids": [
+        "C34",
+        "C37",
+        "C38"
+      ],
+      "next": "goto cleanup_io, not first enter cleanup_thread; then conditional mm and sighand cleanup",
+      "stop": "opaque/invalid prior callees stop cascade"
+    },
+    {
+      "entry": "alloc_pid returns IS_ERR",
+      "ids": [
+        "C35",
+        "C36",
+        "C37",
+        "C38"
+      ],
+      "next": "goes straight to cleanup_thread -> exit_thread -> cleanup_io/mm/signal/sighand; does not jump backwards to free_pid",
+      "stop": "pid error value/other callees require valid provenance"
+    },
+    {
+      "entry": "all success",
+      "ids": [
+        "C23",
+        "C26",
+        "C29"
+      ],
+      "next": "return p before error labels; kernel_clone may request wake",
+      "stop": "no automatic cleanup and no scheduler run certified"
+    },
+    {
+      "entry": "early flags reject",
+      "ids": [
+        "A22",
+        "A23",
+        "A24",
+        "A25",
+        "A26",
+        "A28"
+      ],
+      "next": "ERR_PTR(-EINVAL) without reaching new task's copy_sighand/copy_signal",
+      "stop": "valid args/current/namespace evaluation for each test"
+    }
+  ],
+  "finite_model_cases": [
+    {
+      "id": "FLAGS_FORK_DEFAULT",
+      "flags_hex": "0x0",
+      "thread": false,
+      "sighand": false,
+      "vm": false,
+      "pidfd": false,
+      "newuser": false,
+      "first_local_reject": "NOT_FROM_THIS_SUBSET",
+      "other_earlier_gates": "namespace/PARENT/parent_tid and valid args not modeled",
+      "runtime": false
+    },
+    {
+      "id": "FLAGS_THREAD_ONLY",
+      "flags_hex": "0x10000",
+      "thread": true,
+      "sighand": false,
+      "vm": false,
+      "pidfd": false,
+      "newuser": false,
+      "first_local_reject": "THREAD_REQUIRES_SIGHAND",
+      "other_earlier_gates": "namespace/PARENT/parent_tid and valid args not modeled",
+      "runtime": false
+    },
+    {
+      "id": "FLAGS_THREAD_SIGHAND",
+      "flags_hex": "0x10800",
+      "thread": true,
+      "sighand": true,
+      "vm": false,
+      "pidfd": false,
+      "newuser": false,
+      "first_local_reject": "SIGHAND_REQUIRES_VM",
+      "other_earlier_gates": "namespace/PARENT/parent_tid and valid args not modeled",
+      "runtime": false
+    },
+    {
+      "id": "FLAGS_THREAD_SH_VM",
+      "flags_hex": "0x10900",
+      "thread": true,
+      "sighand": true,
+      "vm": true,
+      "pidfd": false,
+      "newuser": false,
+      "first_local_reject": "NOT_FROM_THIS_SUBSET",
+      "other_earlier_gates": "namespace/PARENT/parent_tid and valid args not modeled",
+      "runtime": false
+    },
+    {
+      "id": "FLAGS_THREAD_SH_VM_PIDFD",
+      "flags_hex": "0x11900",
+      "thread": true,
+      "sighand": true,
+      "vm": true,
+      "pidfd": true,
+      "newuser": false,
+      "first_local_reject": "PIDFD_THREAD",
+      "other_earlier_gates": "namespace/PARENT/parent_tid and valid args not modeled",
+      "runtime": false
+    },
+    {
+      "id": "FLAGS_SIGHAND_VMLESS",
+      "flags_hex": "0x800",
+      "thread": false,
+      "sighand": true,
+      "vm": false,
+      "pidfd": false,
+      "newuser": false,
+      "first_local_reject": "SIGHAND_REQUIRES_VM",
+      "other_earlier_gates": "namespace/PARENT/parent_tid and valid args not modeled",
+      "runtime": false
+    },
+    {
+      "id": "FLAGS_THREAD_SH_VM_NEWUSER",
+      "flags_hex": "0x10010900",
+      "thread": true,
+      "sighand": true,
+      "vm": true,
+      "pidfd": false,
+      "newuser": true,
+      "first_local_reject": "THREAD_NEWUSER",
+      "other_earlier_gates": "namespace/PARENT/parent_tid and valid args not modeled",
+      "runtime": false
+    },
+    {
+      "id": "FLAGS_KTHREAD_VM_UNTRACED",
+      "flags_hex": "0x800100",
+      "thread": false,
+      "sighand": false,
+      "vm": true,
+      "pidfd": false,
+      "newuser": false,
+      "first_local_reject": "NOT_FROM_THIS_SUBSET",
+      "other_earlier_gates": "namespace/PARENT/parent_tid and valid args not modeled",
+      "runtime": false
+    },
+    {
+      "id": "LEADER_T0_EXIT-1",
+      "clone_thread": false,
+      "inherited_exit_signal": -1,
+      "p_tgid_source": "p.pid",
+      "leader_predicate_if_unchanged": false,
+      "contradiction_candidate": false,
+      "precondition": "no intervening task->exit_signal writer; valid copied task, source path reaches publishing",
+      "runtime": false
+    },
+    {
+      "id": "LEADER_T0_EXIT0",
+      "clone_thread": false,
+      "inherited_exit_signal": 0,
+      "p_tgid_source": "p.pid",
+      "leader_predicate_if_unchanged": true,
+      "contradiction_candidate": false,
+      "precondition": "no intervening task->exit_signal writer; valid copied task, source path reaches publishing",
+      "runtime": false
+    },
+    {
+      "id": "LEADER_T0_EXIT17",
+      "clone_thread": false,
+      "inherited_exit_signal": 17,
+      "p_tgid_source": "p.pid",
+      "leader_predicate_if_unchanged": true,
+      "contradiction_candidate": false,
+      "precondition": "no intervening task->exit_signal writer; valid copied task, source path reaches publishing",
+      "runtime": false
+    },
+    {
+      "id": "LEADER_T1_EXIT-1",
+      "clone_thread": true,
+      "inherited_exit_signal": -1,
+      "p_tgid_source": "current.tgid",
+      "leader_predicate_if_unchanged": false,
+      "contradiction_candidate": false,
+      "precondition": "no intervening task->exit_signal writer; valid copied task, source path reaches publishing",
+      "runtime": false
+    },
+    {
+      "id": "LEADER_T1_EXIT0",
+      "clone_thread": true,
+      "inherited_exit_signal": 0,
+      "p_tgid_source": "current.tgid",
+      "leader_predicate_if_unchanged": true,
+      "contradiction_candidate": true,
+      "precondition": "no intervening task->exit_signal writer; valid copied task, source path reaches publishing",
+      "runtime": false
+    },
+    {
+      "id": "LEADER_T1_EXIT17",
+      "clone_thread": true,
+      "inherited_exit_signal": 17,
+      "p_tgid_source": "current.tgid",
+      "leader_predicate_if_unchanged": true,
+      "contradiction_candidate": true,
+      "precondition": "no intervening task->exit_signal writer; valid copied task, source path reaches publishing",
+      "runtime": false
+    },
+    {
+      "id": "SIGHAND_N1_SH0",
+      "initial_count": 1,
+      "requested_clone_sighand": false,
+      "source_copy_branch": "allocate fresh sighand with count1 but does not publish tsk.sighand",
+      "p_pointer_if_unchanged": "inherited_old",
+      "cleanup_on_late_error_if_valid": "dec inherited 1->0",
+      "stop": "if initial static count reaches zero, do not continue past possible invalidation; physical free not proven",
+      "runtime": false
+    },
+    {
+      "id": "SIGHAND_N1_SH1",
+      "initial_count": 1,
+      "requested_clone_sighand": true,
+      "source_copy_branch": "refcount_inc 1->2",
+      "p_pointer_if_unchanged": "inherited_old",
+      "cleanup_on_late_error_if_valid": "dec 2->1",
+      "stop": "if initial static count reaches zero, do not continue past possible invalidation; physical free not proven",
+      "runtime": false
+    },
+    {
+      "id": "SIGHAND_N2_SH0",
+      "initial_count": 2,
+      "requested_clone_sighand": false,
+      "source_copy_branch": "allocate fresh sighand with count1 but does not publish tsk.sighand",
+      "p_pointer_if_unchanged": "inherited_old",
+      "cleanup_on_late_error_if_valid": "dec inherited 2->1",
+      "stop": "if initial static count reaches zero, do not continue past possible invalidation; physical free not proven",
+      "runtime": false
+    },
+    {
+      "id": "SIGHAND_N2_SH1",
+      "initial_count": 2,
+      "requested_clone_sighand": true,
+      "source_copy_branch": "refcount_inc 2->3",
+      "p_pointer_if_unchanged": "inherited_old",
+      "cleanup_on_late_error_if_valid": "dec 3->2",
+      "stop": "if initial static count reaches zero, do not continue past possible invalidation; physical free not proven",
+      "runtime": false
+    },
+    {
+      "id": "SIGHAND_N3_SH0",
+      "initial_count": 3,
+      "requested_clone_sighand": false,
+      "source_copy_branch": "allocate fresh sighand with count1 but does not publish tsk.sighand",
+      "p_pointer_if_unchanged": "inherited_old",
+      "cleanup_on_late_error_if_valid": "dec inherited 3->2",
+      "stop": "if initial static count reaches zero, do not continue past possible invalidation; physical free not proven",
+      "runtime": false
+    },
+    {
+      "id": "SIGHAND_N3_SH1",
+      "initial_count": 3,
+      "requested_clone_sighand": true,
+      "source_copy_branch": "refcount_inc 3->4",
+      "p_pointer_if_unchanged": "inherited_old",
+      "cleanup_on_late_error_if_valid": "dec 4->3",
+      "stop": "if initial static count reaches zero, do not continue past possible invalidation; physical free not proven",
+      "runtime": false
+    },
+    {
+      "id": "SIGNAL_THREAD_0",
+      "clone_thread": false,
+      "copy_signal_returns": "0 if zalloc and memcpy valid; -ENOMEM if NULL allocation",
+      "signal_pointer_after_success": "new",
+      "nr_threads_after_source_copy": "new signal nr_threads=1",
+      "sigcnt_source_increment_for_shared_thread": false,
+      "runtime": false
+    },
+    {
+      "id": "SIGNAL_THREAD_1",
+      "clone_thread": true,
+      "copy_signal_returns": 0,
+      "signal_pointer_after_success": "inherited",
+      "nr_threads_after_source_copy": "not incremented in copy_signal",
+      "sigcnt_source_increment_for_shared_thread": false,
+      "runtime": false
+    }
+  ],
+  "source_context": [
+    {
+      "path": "mykernel/arch/x86_64/include/asm/syscalls_64.h",
+      "mode": "context_full_file_not_claimed_as_own_definition",
+      "notes": "80-line selected x86_64 mapping: fork active, vfork commented, no clone entry in this header; conditional on direct source, no preprocessing or all-path search"
+    },
+    {
+      "path": "mykernel/lock_IPC/signal/signal.h",
+      "mode": "direct",
+      "notes": "thread_group_leader uses exit_signal>=0; group membership and tgid differ"
+    },
+    {
+      "path": "mykernel/init/init_task.c",
+      "mode": "direct",
+      "notes": "initial static signal, sighand binding and count1; actual child inheritance must pass dup_task_struct"
+    }
+  ],
+  "new_conditional_ids": [
+    "CG72-F01",
+    "CG72-F02"
+  ],
+  "new_gap_ids": [
+    "CG72-U01",
+    "CG72-U02",
+    "CG72-U03",
+    "CG72-U04",
+    "CG72-U05",
+    "CG72-U06",
+    "CG72-U07",
+    "CG72-U08"
+  ],
+  "actual_methods": {
+    "github_connector": "DIRECT_READ",
+    "pure_boolean_in_dialog": "YES",
+    "repository_C_or_ASM": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "full_local_P9": "NOT_RUN"
+  },
+  "P9_text_subchecks": {
+    "1": "no 40-digit lowercase hex in all six new files",
+    "2": "114 directly re-read short quotes, nonempty and single definition; full local P9 NOT_RUN",
+    "3": "source paths pinned time, newly published fixed/branch dual reads required",
+    "4": "line ranges directly checked but path::symbol primary",
+    "5": "six new files raw matching prefix must equal 114 genuine source tags and MANIFEST triple 114/114/0",
+    "6": "no unverified external manuals",
+    "7": "time/master two real canary lines",
+    "8": "conventions item2 full exact quote and read_channel",
+    "9": "N/A no code artifact",
+    "10": "N/A no diff",
+    "11": "NOT_RUN preprocess/compile/QEMU/hardware",
+    "12": "N/A no degraded chat files",
+    "13": "A flags/real caller, B signal+sighand, C group predicates+attach/cleanup directly anchored"
+  },
+  "source_budget": {
+    "core_source_files": 11,
+    "context_header_files": 1,
+    "total_direct_source_files": 12,
+    "soft_limit": 14,
+    "search_batches": "bounded only, <=8",
+    "source_directories": [
+      "mykernel/sched",
+      "mykernel/sched/misc",
+      "mykernel/sched/forkexec",
+      "mykernel/arch/x86_64/entry",
+      "mykernel/include/uapi/linux",
+      "mykernel/lock_IPC/signal",
+      "mykernel/sched/task",
+      "mykernel/init",
+      "mykernel/arch/x86_64/include/asm"
+    ],
+    "reason": "direct syscall type, signal type, task fields and PID producer definitions span paths; no directory-wide audit"
+  }
+}

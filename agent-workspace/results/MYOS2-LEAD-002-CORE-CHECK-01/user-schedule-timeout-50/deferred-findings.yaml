@@ -1,0 +1,85 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-SCHEDULE-TIMEOUT-50",
+  "record_type": "incremental_deferred_findings",
+  "prior_R49": {
+    "verdict": "RETURN",
+    "status": "OPEN",
+    "closure_request": "R49-01_DOCUMENTATION_CLOSURE_REQUESTED",
+    "self_certified_closed": false
+  },
+  "new_independent_findings": [],
+  "new_findings_count": 0,
+  "dedup": {
+    "id": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-03",
+    "case_id": "V09",
+    "status": "SUPPORTED_IN_SCOPE",
+    "note": "same finite-timeout nonprogress; older bounded host fixture not rerun, no duplicate ST50-F"
+  },
+  "carried": [
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U01",
+      "status": "needs_evidence",
+      "note": "old state unchanged; U01 local source gap narrowed but runtime opaque"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U02",
+      "status": "needs_evidence",
+      "note": "old state unchanged; U01 local source gap narrowed but runtime opaque"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U03",
+      "status": "needs_evidence",
+      "note": "old state unchanged; U01 local source gap narrowed but runtime opaque"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U04",
+      "status": "needs_evidence",
+      "note": "old state unchanged; U01 local source gap narrowed but runtime opaque"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-VFS-BASELINE-05::UV-01",
+      "status": "deferred_owner_not_ready"
+    }
+  ],
+  "new_scope_gaps": [
+    {
+      "id": "ST50-U01",
+      "status": "needs_evidence",
+      "kind": "timer_deeper",
+      "detail": "__mod_timer/delete_sync/callback dispatch opaque"
+    },
+    {
+      "id": "ST50-U02",
+      "status": "needs_evidence",
+      "kind": "clock_and_ABI",
+      "detail": "jiffies, signed/unsigned conversion actual width and time progress unknown"
+    },
+    {
+      "id": "ST50-U03",
+      "status": "needs_evidence",
+      "kind": "consumer_runtime",
+      "detail": "completion/msleep real execution and global caller reachability not tested"
+    }
+  ],
+  "code_fix_authorized": false,
+  "owner_action_now": [],
+  "next_batch_started": false,
+  "runtime_evidence": "NOT_RUN"
+}

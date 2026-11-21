@@ -1,0 +1,82 @@
+// CN95 fixed time@a039d9803ade; conditional STATIC graph, not a complete CFG.
+// Edge labels CALL: an actual direct source-level call only; INDIRECT_CALL conditional function-pointer dispatch.
+// MACRO_EXPANSION, DATA, SOURCE_ORDER, MEMBER_BINDING and NON_ACTION not calls.
+// Red STOP are first proof gates, not actual runtime faults.
+// No Graphviz execution; no build or runtime evidence.
+digraph CN95_Console {
+  graph [rankdir=LR, labelloc=t, fontsize=13, label="CN95: boot / console list / built-in callback / text glyph (fixed time static)"];
+  node [shape=box,fontsize=10];
+  edge [fontsize=9];
+
+  subgraph cluster_A {
+    label="A  console objects and publication";
+    console_init [label="console_init\nVIDEO before INIT_LIST before REGISTER\nthen pr_info"];
+    register [label="register_console(void)\ncontains(node) else add_tail\nno setup/replay active"];
+    list [label="console_list_hdr\ncount + anchor; INIT_LIST_S\ncontains / add_to_tail\nfor_each_console"];
+    temp [label="myos_tempcon static\nname, write and read nonNULL\nnode initialized at console_init"];
+    iterate [label="__call_console_drivers\nfor_each_console then con->write\nno active optional-write filter"];
+    adapter [label="myos_tempcon_write\nvoid; s,count -> tty(s,count,WHITE,BLACK)"];
+    unregister [label="unregister_console(int)\nno active unlink and no active return"];
+    read [label="myos_tempcon_read(int)\nempty body; no active return"];
+  }
+  subgraph cluster_B {
+    label="B  direct format and actual byte consumption";
+    color [label="color_printk\nstatic char buf[4096]\nvsnprintf(PAGE_SIZE), i -> tty length"];
+    tty [label="myos_tty_write_color\nspin_lock; for int count/line\nLF, BS, TAB, ordinary/NUL"];
+    glyph [label="kputchar\nfont_ascii[byte][16]\n16 rows x 8 pixels; u32* fb"];
+    font [label="font_ascii[256][16]\nfixed read-only byte glyph table"];
+    printk [label="pr_info / printk vprintk\nLOG_BUF / LF / console_unlock\nold PK94 conditions retained"];
+    pos [label="position_t Pos (unsigned coords)\nFB_addr, X/Y resolution, 8x16\nspinlock and cursor"];
+  }
+  subgraph cluster_C {
+    label="C  startup video, producer and first-output timing";
+    boot [label="start_kernel\nsetup_arch ... timekeeping\nconsole_init before late_time_init"];
+    fbprod [label="parse_tag->get_framebuffer_info\nif FRAMEBUFFER tag\nphy/virt/size/width/height/pitch"];
+    fb [label="framebuffer_s\nFB_virbase,FB_size,PixperScanline\nmode and mapping NOT certified"];
+    video [label="myos_init_video\nPos fields / spin_lock_init\nlinebuf[4096], color_printk x2\npr_info before registration"];
+  }
+  subgraph cluster_STOP {
+    label="Conditional first proof gates (red): never runtime claims";
+    node [shape=octagon,color=red];
+    stop_callback [label="UNKNOWN optional con->write\nactual temp callback NONNULL"];
+    stop_span [label="PK94 F05/F06 ring span/prefix\nnot necessarily a linear C buffer"];
+    stop_count [label="vsnprintf logical i vs buf[4096]\nKN91-U01/PF92-U06 FIRST"];
+    stop_geo [label="BS unsigned wrap before glyph\nint overflow/ptr validity"];
+    stop_linebuf [label="cols >= 4096\nno NUL at ==4096, OOB write if >4096"];
+    stop_fb [label="FB tag / mapping / pitch / bpp\nreal C object and hardware NOT_RUN"];
+  }
+
+  boot -> console_init [color=blue,label="CALL start_kernel"];
+  fbprod -> fb [label="DATA_WRITE only if FB tag"];
+  fb -> video [label="DATA_READ geometry/address"];
+  console_init -> video [color=blue,label="CALL"];
+  video -> pos [label="DATA_WRITE fields and lock init"];
+  video -> color [color=blue,label="CALL twice"];
+  video -> printk [style=dashed,color=green,label="MACRO_EXPANSION pr_info (before register)"];
+  video -> register [style=dotted,color=gray,label="SOURCE_ORDER: returns then console_init registers"];
+  console_init -> register [color=blue,label="CALL after INIT_LIST_S"];
+  console_init -> temp [label="DATA: initialize temp.node"];
+  console_init -> printk [style=dashed,color=green,label="MACRO_EXPANSION pr_info after registration"];
+  register -> list [color=blue,label="CALL contains / conditional add_to_tail"];
+  temp -> list [label="DATA node address"];
+  list -> iterate [label="DATA: list traversal"];
+  printk -> iterate [style=dotted,color=gray,label="SOURCE_CHAIN via console_unlock and dispatch (NOT direct CALL)"];
+  temp -> adapter [label="MEMBER_BINDING .write"];
+  iterate -> adapter [color=blue,label="INDIRECT_CALL con->write if actual temp node"];
+  adapter -> tty [color=blue,label="CALL"];
+  color -> tty [color=blue,label="CALL (independent direct format path)"];
+  tty -> pos [label="DATA state and lock"];
+  tty -> glyph [color=blue,label="CALL on printable, TAB or BS (not LF)"];
+  glyph -> font [label="DATA_READ glyph table"];
+  glyph -> fb [label="DATA_WRITE 16x8 u32 pixels"];
+  unregister -> list [style=dotted,color=gray,label="NON_ACTION: no active remove/count update"];
+  read -> temp [label="MEMBER_BINDING .read (no consumer proven)"];
+  register -> stop_callback [style=dashed,color=red,label="HYPOTHETICAL other console NULL write"];
+  iterate -> stop_span [style=dashed,color=red,label="FIRST_GATE before tty, if ring span invalid"];
+  color -> stop_count [style=dashed,color=red,label="FIRST_GATE before using truncated result"];
+  tty -> stop_geo [style=dashed,color=red,label="FIRST_GATE BS/geometry before glyph"];
+  video -> stop_linebuf [style=dashed,color=red,label="FIRST_GATE cols boundary"];
+  fb -> stop_fb [style=dashed,color=red,label="MISSING mode/object/map proof"];
+  glyph -> stop_fb [style=dashed,color=red,label="MISSING pitch/size/actual pixel write"];
+  stop_span -> stop_count [style=dotted,color=red,label="independent proof branches; no causal CALL",constraint=false];
+}

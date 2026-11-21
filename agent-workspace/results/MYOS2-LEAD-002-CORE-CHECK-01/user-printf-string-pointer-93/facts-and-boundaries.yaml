@@ -1,0 +1,1549 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PRINTF-STRING-POINTER-93",
+  "record_type": "bounded_string_pointer_static_facts_and_finite_models",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "GPT-6 (visible family, backend UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-16",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "phase": 2,
+  "status": "AUTHOR_STATIC_PRE_G04_PENDING_MAINLINE_PRO",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "2d3517914f13",
+  "exec_parent_short12": "dbd0ee1684d4",
+  "G00": {
+    "decision": "PASS_READ_ONLY_PREWRITE",
+    "lead": "2d3517914f13",
+    "exec": "dbd0ee1684d4",
+    "master": "e8e60cd19540",
+    "time": "a039d9803ade",
+    "pr16": "OPEN",
+    "pr17": "OPEN_DRAFT",
+    "only_open_prs": [
+      16,
+      17
+    ],
+    "new93_files": "ABSENT",
+    "new93_formal_comment": "ABSENT",
+    "write_scope": "SIX_ADDED_PLUS_ONE_PR17_TOP_COMMENT",
+    "full_P9": "NOT_RUN"
+  },
+  "D00": "NOT_REQUIRED",
+  "prior_acceptance": {
+    "batch90": "PASS_PENDING_LOCAL_R90_01_02_CLOSED",
+    "batch91": "PASS_PENDING_LOCAL_WITH_R91_S01_S02_S03",
+    "batch92": "PASS_PENDING_LOCAL_WITH_R92_S01_S02_S03",
+    "R90C_S01": "DIRECT_VS_INDIRECT_CAPACITY_REFERENCE_PRESERVED",
+    "batch93": "PENDING_AUTHOR_DELIVERY_AND_C06_REVIEW"
+  },
+  "reading_account": {
+    "fresh_this_turn": [
+      "131 contract full",
+      "110 Owner communication full",
+      "124 routing full",
+      "92 independent review full",
+      "93 checkpoint full",
+      "PR17 92 author comment6909800484 full",
+      "PR17 C06 formal publication comment6910693379 full",
+      "63 safe writes full",
+      "79 sizing full",
+      "protocol v2 P1–P13 full",
+      "time options_flags CMake full before source assertions",
+      "conventions exact sentence and time/master panic/options canaries",
+      "fixed time vsprintf pointer/string/padding/format_decode/vsnprintf relevant complete definitions",
+      "fixed time string.c memmove/memset, lib and uapi string headers",
+      "fixed time err.h,ctype.h,ctype.c, x86 page_const_arch.h, generic page route",
+      "fixed time one workqueue create_worker %pe producer navigation"
+    ],
+    "same_current_EXEC12_conversation_reuse": [
+      "nine other MyOS2 rules at unchanged relevant fixed objects read by EXEC12 in prior turns",
+      "128 reception and applicable Mnemosyne guidance previously refreshed in same live C06c; not redone",
+      "91 independent review R91-S01/S02/S03 previously read by this same C06c",
+      "90 doc closure R90C-S01 previously read by this same C06c",
+      "92 six author artifacts originally created/read by this same C06c; unchanged head; no new full loading falsely claimed",
+      "53 closure correction of two mainline whitespace misreadings, 68 exit qualification from this C06c"
+    ],
+    "not_read": [
+      "all pointer formatting extensions' active implementations; switch body is commented",
+      "complete printk/pr_err_once call chain",
+      "entire kernel architecture memmove selection or compiler output",
+      "full Linux printf standard, full fork/scheduler, hardware runtime, any extra project governance"
+    ],
+    "read_caution": "GitHub search default branch only for locating ctype.c and PAGE_SIZE; all source assertions freshly fetched from fixed time. Expected path 404s are not read evidence; mainline prior directory typo not reused."
+  },
+  "scope": {
+    "fixed_time_source_quote_file_count": 7,
+    "other_direct_context_files": [
+      "mykernel/include/linux/lib/string.h",
+      "mykernel/include/uapi/linux/string.h",
+      "mykernel/include/linux/kernel/asm-generic/page.h"
+    ],
+    "source_soft_limit": 24,
+    "search_query_count": 6,
+    "unresolved_preprocessor_selection": "generic memmove/memset behind __HAVE_ARCH_* gates, no actual binary selection claim",
+    "excluded": [
+      "float",
+      "binary printf",
+      "scanf",
+      "whole printk/logging",
+      "all pointer variants",
+      "complete fork/scheduler"
+    ]
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/lib/printf/vsprintf.c",
+      "evidence_ids": [
+        "SP93-E001",
+        "SP93-E002",
+        "SP93-E003",
+        "SP93-E004",
+        "SP93-E005",
+        "SP93-E006",
+        "SP93-E007",
+        "SP93-E008",
+        "SP93-E009",
+        "SP93-E010",
+        "SP93-E011",
+        "SP93-E016",
+        "SP93-E017",
+        "SP93-E018",
+        "SP93-E019",
+        "SP93-E020",
+        "SP93-E021",
+        "SP93-E022",
+        "SP93-E027",
+        "SP93-E028",
+        "SP93-E029",
+        "SP93-E030",
+        "SP93-E031",
+        "SP93-E032",
+        "SP93-E033",
+        "SP93-E034",
+        "SP93-E035",
+        "SP93-E036",
+        "SP93-E037",
+        "SP93-E038",
+        "SP93-E039",
+        "SP93-E040",
+        "SP93-E041",
+        "SP93-E042",
+        "SP93-E043",
+        "SP93-E044",
+        "SP93-E045",
+        "SP93-E046",
+        "SP93-E047",
+        "SP93-E048",
+        "SP93-E049",
+        "SP93-E050",
+        "SP93-E051",
+        "SP93-E061",
+        "SP93-E062"
+      ],
+      "scope": "related complete active definitions at fixed time, not build selection"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "evidence_ids": [
+        "SP93-E012",
+        "SP93-E013"
+      ],
+      "scope": "related complete active definitions at fixed time, not build selection"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/err.h",
+      "evidence_ids": [
+        "SP93-E014",
+        "SP93-E015"
+      ],
+      "scope": "related complete active definitions at fixed time, not build selection"
+    },
+    {
+      "path": "mykernel/lib/string/string.c",
+      "evidence_ids": [
+        "SP93-E023",
+        "SP93-E024",
+        "SP93-E025",
+        "SP93-E026"
+      ],
+      "scope": "related complete active definitions at fixed time, not build selection"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/ctype.h",
+      "evidence_ids": [
+        "SP93-E052",
+        "SP93-E053",
+        "SP93-E054",
+        "SP93-E055",
+        "SP93-E056",
+        "SP93-E057"
+      ],
+      "scope": "related complete active definitions at fixed time, not build selection"
+    },
+    {
+      "path": "mykernel/lib/ctype.c",
+      "evidence_ids": [
+        "SP93-E058",
+        "SP93-E059",
+        "SP93-E060"
+      ],
+      "scope": "related complete active definitions at fixed time, not build selection"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "evidence_ids": [
+        "SP93-E063",
+        "SP93-E064"
+      ],
+      "scope": "related complete active definitions at fixed time, not build selection"
+    }
+  ],
+  "fact_to_evidence_ids": {
+    "string_checks": [
+      "SP93-E001",
+      "SP93-E002",
+      "SP93-E003",
+      "SP93-E004",
+      "SP93-E005",
+      "SP93-E006",
+      "SP93-E007",
+      "SP93-E012",
+      "SP93-E013",
+      "SP93-E014",
+      "SP93-E015"
+    ],
+    "string_scan": [
+      "SP93-E008",
+      "SP93-E009",
+      "SP93-E010",
+      "SP93-E011"
+    ],
+    "string_width": [
+      "SP93-E016",
+      "SP93-E017",
+      "SP93-E018",
+      "SP93-E019",
+      "SP93-E020",
+      "SP93-E021",
+      "SP93-E022"
+    ],
+    "memory_helpers": [
+      "SP93-E023",
+      "SP93-E024",
+      "SP93-E025",
+      "SP93-E026"
+    ],
+    "precision_parser": [
+      "SP93-E027",
+      "SP93-E028",
+      "SP93-E029",
+      "SP93-E030",
+      "SP93-E031",
+      "SP93-E032",
+      "SP93-E033",
+      "SP93-E034",
+      "SP93-E037",
+      "SP93-E038",
+      "SP93-E039",
+      "SP93-E040"
+    ],
+    "character": [
+      "SP93-E031",
+      "SP93-E041",
+      "SP93-E042",
+      "SP93-E043"
+    ],
+    "percent": [
+      "SP93-E034",
+      "SP93-E044"
+    ],
+    "pointer_return_barrier": [
+      "SP93-E033",
+      "SP93-E045",
+      "SP93-E046",
+      "SP93-E049",
+      "SP93-E050",
+      "SP93-E051"
+    ],
+    "suffix_classification": [
+      "SP93-E052",
+      "SP93-E053",
+      "SP93-E054",
+      "SP93-E055",
+      "SP93-E056",
+      "SP93-E057",
+      "SP93-E058",
+      "SP93-E059",
+      "SP93-E060"
+    ],
+    "outer_capacity_and_return": [
+      "SP93-E035",
+      "SP93-E036",
+      "SP93-E037",
+      "SP93-E047",
+      "SP93-E048"
+    ],
+    "actual_worker_log_nav": [
+      "SP93-E063",
+      "SP93-E064"
+    ]
+  },
+  "matrices": {
+    "string_input_classification_matrix": [
+      {
+        "id": "A-INPUT01",
+        "scenario": "NULL字符串",
+        "preconditions": "s=NULL;合法输出对象",
+        "source_operations": "check_pointer_msg首先if(!ptr)选择'(null)'，check_pointer用error_string推进*buf并返回-EFAULT；string测试非零返回更新buf",
+        "conditional_result": "这是占位字符输出的局部路径，不是vsnprintf返回-EFAULT",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E001",
+          "SP93-E004",
+          "SP93-E006",
+          "SP93-E007",
+          "SP93-E040",
+          "SP93-E047",
+          "SP93-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-INPUT02",
+        "scenario": "低地址非NULL",
+        "preconditions": "x86 PAGE_SHIFT=12/PAGE_SIZE=4096且ptr=0x1",
+        "source_operations": "低地址比较为真，选择'(efault)'，不读调用者原地址",
+        "conditional_result": "低地址门不等于完整映射检查",
+        "first_stop_gate": "地址数值转换/架构选择先行有效",
+        "evidence_ids": [
+          "SP93-E002",
+          "SP93-E012",
+          "SP93-E013",
+          "SP93-E004"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-INPUT03",
+        "scenario": "错误值高地址",
+        "preconditions": "size_t64，ptr数值在最后4095个地址区间，且非NULL",
+        "source_operations": "IS_ERR_VALUE比较为真，输出'(efault)'",
+        "conditional_result": "不是直接解码指针错误码，也不是%pe活动实现",
+        "first_stop_gate": "高地址指针构造及转换的目标实现前提",
+        "evidence_ids": [
+          "SP93-E002",
+          "SP93-E014",
+          "SP93-E015"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-INPUT04",
+        "scenario": "非NULL高于PAGE_SIZE",
+        "preconditions": "合法ptr数值>=PAGE_SIZE且非错误区间",
+        "source_operations": "check_pointer_msg返回NULL;check_pointer返回0;string调用string_nocheck",
+        "conditional_result": "源源码未见内存映射/可读性检查；若s不可读在第一次*s++处止证",
+        "first_stop_gate": "实际s指向可读对象且有足够精度/NUL终止",
+        "evidence_ids": [
+          "SP93-E003",
+          "SP93-E005",
+          "SP93-E007",
+          "SP93-E009"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-INPUT05",
+        "scenario": "错误占位长度",
+        "preconditions": "默认precision=-1且sizeof(void*)=8",
+        "source_operations": "error_string将精度设16再string_nocheck处理固定替代字面",
+        "conditional_result": "'(null)'有效6个字符，额外可读取末尾NUL；带width时仍走widen_string",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E001",
+          "SP93-E006",
+          "SP93-E008",
+          "SP93-E009",
+          "SP93-E011"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-INPUT06",
+        "scenario": "check_pointer内部负状态",
+        "preconditions": "按source选择错误占位,err_msg有效",
+        "source_operations": "check_pointer返回-EFAULT但string仅测试非0并return buf",
+        "conditional_result": "vsnprintf层是char*推进和其正常需求长度语义，不是直接向上返回-EFAULT",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E004",
+          "SP93-E007",
+          "SP93-E040",
+          "SP93-E048"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "precision_and_read_footprint_matrix": [
+      {
+        "id": "A-PREC01",
+        "scenario": "默认精度-1",
+        "preconditions": "合法s='AB\\0',正确初始化spec.precision=-1",
+        "source_operations": "int lim=-1,while(lim--)逐次读取A,B,NUL；只对前2字节写和计数",
+        "conditional_result": "读取3字节，写2字符，未把NUL算入len",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E008",
+          "SP93-E009",
+          "SP93-E010",
+          "SP93-E011",
+          "SP93-E028"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-PREC02",
+        "scenario": "精度恰好等于字符串长度",
+        "preconditions": "s='ABC\\0', precision=3，源3字节可读",
+        "source_operations": "循环恰执行3次，读取A/B/C后lim为0；下一次while(0--)不入体",
+        "conditional_result": "源读取恰3字节，未读第4字节NUL；输出3字符",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E008",
+          "SP93-E009",
+          "SP93-E010",
+          "SP93-E011",
+          "SP93-E028"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-PREC03",
+        "scenario": "精度大于长度",
+        "preconditions": "s='ABC\\0',precision=4,4字节可读",
+        "source_operations": "读取A/B/C/NUL第四字节;遇!c break",
+        "conditional_result": "源读取4字节，输出/逻辑计数3",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E009",
+          "SP93-E010"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-PREC04",
+        "scenario": "精度0",
+        "preconditions": "s合法但源字节未要求被解引用,precision=0",
+        "source_operations": "while(lim--)条件为0，函数不进入*s++读取；只进入widen_string",
+        "conditional_result": "无源字符读取；若字段宽度>0仍可能输出空格",
+        "first_stop_gate": "先行check_pointer_msg仍求值并分类s的指针表示",
+        "evidence_ids": [
+          "SP93-E008",
+          "SP93-E009",
+          "SP93-E011",
+          "SP93-E020",
+          "SP93-E021"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-PREC05",
+        "scenario": "负动态精度",
+        "preconditions": "fmt='%.*s',int精度=-2, s有效",
+        "source_operations": "解析先PRECISION并由外层取int；重入设负精度为0；string_nocheck不入读取体",
+        "conditional_result": "不能凭外部C库习惯把负精度还原为无限制读取",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E029",
+          "SP93-E030",
+          "SP93-E039",
+          "SP93-E009"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "A-PREC06",
+        "scenario": "额外很长有效无NUL",
+        "preconditions": "默认lim=-1且每次所读字节均非零，理论跨有符号int边界",
+        "source_operations": "lim--会一直递减；在达到int负下界后再次递减需有定义算术",
+        "conditional_result": "实际字符串对象、连续可读范围及lim下溢先止证，不声明已经发生",
+        "first_stop_gate": "必须先有极大且实际可读的非零序列和有符号范围条件",
+        "evidence_ids": [
+          "SP93-E008",
+          "SP93-E009"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "padding_and_move_interval_matrix": [
+      {
+        "id": "B-PAD01",
+        "scenario": "字段宽度不大于长度",
+        "preconditions": "fmt='%2s',s='ABC',size充足",
+        "source_operations": "string_nocheck读3字符输出3；widen_string当n>=width直接return buf",
+        "conditional_result": "无补空格，需求3，[AB C]按顺序写入",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E009",
+          "SP93-E010",
+          "SP93-E020"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PAD02",
+        "scenario": "%5s右侧对齐",
+        "preconditions": "fmt='%5s',s='AB',dest至少6字节有效,选用通用memmove",
+        "source_operations": "初始写dest[0]='A',dest[1]='B'; move_right(base0,end6,len2,spaces3)逆向拷贝至[3],[4];memset[0..2]=' '；末尾NUL[5]",
+        "conditional_result": "最终[space,space,space,A,B,NUL]；目的被多次写入、源读3（含NUL）",
+        "first_stop_gate": "必须确认buffer起点合法，通用memmove为选中实现（未执行配置/预处理）",
+        "evidence_ids": [
+          "SP93-E009",
+          "SP93-E010",
+          "SP93-E018",
+          "SP93-E019",
+          "SP93-E021",
+          "SP93-E024",
+          "SP93-E025",
+          "SP93-E026",
+          "SP93-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PAD03",
+        "scenario": "%-5s尾侧补齐",
+        "preconditions": "fmt='%-5s',s='AB',dest6字节",
+        "source_operations": "初始写AB; LEFT直接逐字节输出3个space至[2..4];vsnprintf尾NUL[5]",
+        "conditional_result": "最终[A,B,space,space,space,NUL]，未调用move_right",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E010",
+          "SP93-E022",
+          "SP93-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PAD04",
+        "scenario": "%5.2s正向读取和搬移",
+        "preconditions": "fmt='%5.2s',s='ABC\\0',dest6字节",
+        "source_operations": "读取2源字节AB（不读取C/NUL）;把2字节临时已写输出搬到dest[3..4]; memset[0..2]空格",
+        "conditional_result": "最终'   AB\\0'，逻辑需求5，物理还包含先写AB和memmove两字节",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E009",
+          "SP93-E010",
+          "SP93-E011",
+          "SP93-E019",
+          "SP93-E021",
+          "SP93-E024",
+          "SP93-E025",
+          "SP93-E026",
+          "SP93-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PAD05",
+        "scenario": "目标容量恰好等于字段宽度",
+        "preconditions": "fmt='%5s',s='AB',size5,源有效,字符输出前提满足",
+        "source_operations": "初始写AB，move_right右移至[3,4]，填3空格，逻辑游标5;vsnprintf尾NUL覆盖[4]",
+        "conditional_result": "需求5，最终'   A\\0'，不是所有曾写字节；带NUL至少需6字节才能完整显示",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E016",
+          "SP93-E019",
+          "SP93-E021",
+          "SP93-E024",
+          "SP93-E025",
+          "SP93-E026",
+          "SP93-E047",
+          "SP93-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PAD06",
+        "scenario": "move_right剩余容量不够空格",
+        "preconditions": "单独调用move_right(buf0,end2,len3,spaces3),合法2B目的对象",
+        "source_operations": "size=end-buf=2<=spaces3，memset(buf,' ',2)后返回，不调用memmove",
+        "conditional_result": "仅改写当前2字节为空格；不能直接把它扩成完整vsnprintf正常返回",
+        "first_stop_gate": "此为直接helper受限调用，不含widen_string随后buf+spaces可能越界",
+        "evidence_ids": [
+          "SP93-E016",
+          "SP93-E017",
+          "SP93-E026"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PAD07",
+        "scenario": "move_right部分裁剪",
+        "preconditions": "单独move_right(base0,end4,len3,spaces2),有效4B初态['A','B','C','?']",
+        "source_operations": "size4>spaces2,len裁至2；从后向前memmove(dst[2..3],src[0..1],2)，再memset(dst[0..1],' ')",
+        "conditional_result": "局部最终[' ',' ','A','B']；widen_string整体若逻辑指针跑出对象须另行止证",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E018",
+          "SP93-E019",
+          "SP93-E024",
+          "SP93-E025",
+          "SP93-E026"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-PAD08",
+        "scenario": "源已经逻辑越界时不能靠条件保护",
+        "preconditions": "string_nocheck需求n>实际可写，输出buf可能超过end",
+        "source_operations": "widen_string执行buf-n、可能buf+spaces，以及move_right的buf/end比较和end-buf",
+        "conditional_result": "若指针已超合法对象范围，最早无定义指针表达式处停止，不称已被memmove裁剪拯救",
+        "first_stop_gate": "延续CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01及R91-S01",
+        "evidence_ids": [
+          "SP93-E010",
+          "SP93-E011",
+          "SP93-E016",
+          "SP93-E018",
+          "SP93-E021"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "character_and_embedded_nul_matrix": [
+      {
+        "id": "B-CHAR01",
+        "scenario": "%3c前导空格",
+        "preconditions": "fmt='%3c', int实参为'Q',至少4B目的对象",
+        "source_operations": "非LEFT时width3->2->1先写两空格；unsigned char读取Q,写字节Q;尾宽循环0",
+        "conditional_result": "写[space,space,Q,NUL],需求3",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E031",
+          "SP93-E041",
+          "SP93-E042",
+          "SP93-E043",
+          "SP93-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CHAR02",
+        "scenario": "%-3c尾补",
+        "preconditions": "fmt='%-3c',int实参为'Q',至少4B",
+        "source_operations": "LEFT跳过前导补齐;写Q;尾while递减width3->2->1再写两空格;写NUL",
+        "conditional_result": "写[Q,space,space,NUL],需求3",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E041",
+          "SP93-E042",
+          "SP93-E043",
+          "SP93-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CHAR03",
+        "scenario": "字符值零与内嵌NUL",
+        "preconditions": "fmt='%3c',int实参0,至少4B",
+        "source_operations": "前写2空格;字符窄化0并物理写NUL于index2;末尾另外写终止NUL于index3",
+        "conditional_result": "输出4字节[space,space,NUL,NUL]，需求返回3，但C字符串strlen只有2的前提",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E041",
+          "SP93-E042",
+          "SP93-E043",
+          "SP93-E047",
+          "SP93-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CHAR04",
+        "scenario": "有普通字面接在NUL字符后",
+        "preconditions": "fmt='%cX',int实参0,目的3B有效",
+        "source_operations": "第0字节写NUL,逻辑游标1；后续字面分支写X至index1，末尾NUL index2",
+        "conditional_result": "内存[NUL,X,NUL]，返回2而非strlen(0)",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E042",
+          "SP93-E027",
+          "SP93-E037",
+          "SP93-E047",
+          "SP93-E048",
+          "SP93-E061"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CHAR05",
+        "scenario": "size不足的%3c",
+        "preconditions": "fmt='%3c',arg0,dest2字节",
+        "source_operations": "在2字节目标中，前导空格先写索引0/1且逻辑str到合法one-past；字符int0不会被写入（str<end假），紧随的++str会从one-past再推进到对象外，必须在此C指针算术门停止。",
+        "conditional_result": "不能签正常vsnprintf尾NUL或返回3；只有明确脱离C合法执行的数学最终像假设，才可描述继续到out会覆盖最后一字节为NUL，绝不是代码已完成这一动作。",
+        "first_stop_gate": "在CHAR分支对one-past指针再执行++str时停止正常C轨迹；不能以最终像或缓冲写入guard证明后续执行定义良好。",
+        "evidence_ids": [
+          "SP93-E035",
+          "SP93-E036",
+          "SP93-E041",
+          "SP93-E042",
+          "SP93-E043",
+          "SP93-E047",
+          "SP93-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "B-CHAR06",
+        "scenario": "转义%%不消耗va_arg",
+        "preconditions": "fmt='%%',至少2B目标",
+        "source_operations": "format_decode设PERCENT_CHAR,vsnprintf只写'%'/++str,末尾NUL",
+        "conditional_result": "[%,NUL],需求1；它不经过pointer也不消费int参数",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E034",
+          "SP93-E044",
+          "SP93-E047"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "pointer_dispatch_and_return_gate_matrix": [
+      {
+        "id": "C-PTR01",
+        "scenario": "普通%p与缺失返回",
+        "preconditions": "fmt='%p',传入匹配void*实参，合法fmt和buffer",
+        "source_operations": "format_decode置PTR并消费%p；外层va_arg(void*)后调用pointer(fmt,str,end,ptr,spec)。pointer实际函数体只有被注释switch/return，无活动return；赋给str是首次返回值消费。",
+        "conditional_result": "正常值流在该点无法建立：不能声称打印地址、返回buf、空串或返回长度",
+        "first_stop_gate": "非void函数落到结尾且调用方使用返回值，无定义良好返回契约；不进正常后继",
+        "evidence_ids": [
+          "SP93-E033",
+          "SP93-E045",
+          "SP93-E049",
+          "SP93-E050",
+          "SP93-E051"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PTR02",
+        "scenario": "错误后缀%pe",
+        "preconditions": "fmt='%pe',一个void*实参",
+        "source_operations": "pointer得到fmt指向字符'e'，注释内case e/err_ptr不是活动路径",
+        "conditional_result": "不能声称错误码字符串或哈希；同样停在str=pointer消费处",
+        "first_stop_gate": "注释不构成函数返回",
+        "evidence_ids": [
+          "SP93-E045",
+          "SP93-E049",
+          "SP93-E050",
+          "SP93-E051"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PTR03",
+        "scenario": "字符串的check_pointer不能搬给%p",
+        "preconditions": "fmt='%p'，ptr=NULL或低地址",
+        "source_operations": "%s实际经string→check_pointer; %p实际经pointer，其活动body无对应check_pointer调用",
+        "conditional_result": "不同分支不能共享指针检查语义或从%s推出%p会输出'(null)'",
+        "first_stop_gate": "实际返回未定义，所有%p输出结论停止",
+        "evidence_ids": [
+          "SP93-E001",
+          "SP93-E002",
+          "SP93-E007",
+          "SP93-E040",
+          "SP93-E045",
+          "SP93-E049",
+          "SP93-E050"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-PTR04",
+        "scenario": "指针形参信息流",
+        "preconditions": "fmt='%pZ9_'，合法va_arg(void*)，buf/end有效",
+        "source_operations": "pointer函数签名有fmt、buf、end、ptr、spec，调用方str接其char*返回；实际body只有注释",
+        "conditional_result": "数据作为形参传入≠打印或写输出；不能从形参存在推出输出长度",
+        "first_stop_gate": "缺少return，唯一可直接确认的是静态调用和参数类型",
+        "evidence_ids": [
+          "SP93-E045",
+          "SP93-E049",
+          "SP93-E051"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "format_suffix_consumption_matrix": [
+      {
+        "id": "C-SFX01",
+        "scenario": "格式游标的静态后继规则",
+        "preconditions": "fmt='%pe:rest'，假设pointer返回合法char*的额外非现实前提",
+        "source_operations": "若控制回到调用方，while(isalnum(*fmt))可能跳过'e'并在':'停止",
+        "conditional_result": "这是独立词法条件模型，不表示本快照真实%pe路径走完",
+        "first_stop_gate": "第一实际未证门仍是pointer缺失返回",
+        "evidence_ids": [
+          "SP93-E033",
+          "SP93-E045",
+          "SP93-E046",
+          "SP93-E057",
+          "SP93-E058",
+          "SP93-E059",
+          "SP93-E060"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-SFX02",
+        "scenario": "字母数字与下划线",
+        "preconditions": "fmt='%pA1_tail',只审fmt字节",
+        "source_operations": "若跳到扫描，isalnum('A')和('1')真，'_'假；后续格式文本从下划线开始",
+        "conditional_result": "只说明条件分类和游标移动，不证明str产生了什么",
+        "first_stop_gate": "指针调用返回契约缺失",
+        "evidence_ids": [
+          "SP93-E045",
+          "SP93-E046",
+          "SP93-E052",
+          "SP93-E053",
+          "SP93-E054",
+          "SP93-E055",
+          "SP93-E056",
+          "SP93-E057",
+          "SP93-E058",
+          "SP93-E059",
+          "SP93-E060"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-SFX03",
+        "scenario": "标点停止",
+        "preconditions": "fmt='%p-'或'%p.e'，只审fmt序列",
+        "source_operations": "若在后缀扫描，首字节'-'或'.'是标点，while不推进它",
+        "conditional_result": "不能声称format_decode之后一定再执行普通字面复制",
+        "first_stop_gate": "返回值消费前置不可证明",
+        "evidence_ids": [
+          "SP93-E045",
+          "SP93-E046",
+          "SP93-E055",
+          "SP93-E057",
+          "SP93-E058",
+          "SP93-E059",
+          "SP93-E060",
+          "SP93-E061"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-SFX04",
+        "scenario": "变参消费与格式后缀分开",
+        "preconditions": "fmt='%pX'，一次匹配void*实参",
+        "source_operations": "在表达式中va_arg(void*)提供指针参数；在函数返回之后才可能消费X字面",
+        "conditional_result": "X并不要求额外va_arg；不能把后缀长度当作打印字符长度",
+        "first_stop_gate": "编译器求值顺序和非void返回未获运行认证",
+        "evidence_ids": [
+          "SP93-E033",
+          "SP93-E045",
+          "SP93-E046"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "C-SFX05",
+        "scenario": "worker错误日志中的%pe只是调用来源",
+        "preconditions": "create_worker部分错误分支有pr_err_once('%pe')调用语句",
+        "source_operations": "所读分支只证明格式串及参数在该位置提供给pr_err_once，未读取跨宏日志路由到vsnprintf的全部链",
+        "conditional_result": "不宣称该格式已到pointer，也不扩成日志系统审计",
+        "first_stop_gate": "需要完整pr_err_once→日志格式化的有界调用链才可证明",
+        "evidence_ids": [
+          "SP93-E063",
+          "SP93-E064"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC01",
+        "scenario": "A字符串格式→B宽度",
+        "preconditions": "fmt='%5s',s='AB',size6且可读有效",
+        "source_operations": "format_decode STR后string_nocheck读取A/B/NUL→widen_string→move_right→memmove+memset→vsnprintf末尾NUL",
+        "conditional_result": "最终'   AB',需求5；独立记录源读取3、初写2、move写2+3、尾NUL1",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E009",
+          "SP93-E010",
+          "SP93-E011",
+          "SP93-E018",
+          "SP93-E019",
+          "SP93-E021",
+          "SP93-E024",
+          "SP93-E025",
+          "SP93-E026",
+          "SP93-E032",
+          "SP93-E040",
+          "SP93-E047",
+          "SP93-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC02",
+        "scenario": "A精度限制→B空字段补齐",
+        "preconditions": "fmt='%5.0s',只给已通过指针形状检查的合法s；输出size6",
+        "source_operations": "precision0不读取s字符, n0；widen_string有spaces5并调用move_right(base,end,0,5)填空格5；尾NUL",
+        "conditional_result": "最终5空格+NUL，需求5；精度0不等于输出0字符（宽度仍输出）",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E009",
+          "SP93-E011",
+          "SP93-E017",
+          "SP93-E021",
+          "SP93-E028",
+          "SP93-E032",
+          "SP93-E047"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC03",
+        "scenario": "C pointer首次返回门",
+        "preconditions": "fmt='%pX',匹配void*实参",
+        "source_operations": "解析PTR→va_arg void*→pointer()活动体无return→str赋值",
+        "conditional_result": "在PTR返回契约处停止，suffix X/末尾NUL/最终长度只能列为不可推导，不冒称真实执行",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E033",
+          "SP93-E045",
+          "SP93-E046",
+          "SP93-E049",
+          "SP93-E050",
+          "SP93-E051",
+          "SP93-E047",
+          "SP93-E048"
+        ],
+        "runtime": "NOT_RUN"
+      },
+      {
+        "id": "ABC04",
+        "scenario": "旧证据边界延续",
+        "preconditions": "旧R92-S01/S02/S03和R91-S01/S02/S03适用",
+        "source_operations": "最终像、实际字节写、pointer地址运算、日志路由、宏选用分别有止证门",
+        "conditional_result": "本批新增风险与旧KN91-U01/PF92-U06等按原qualified ID关联，不签运行PASS",
+        "first_stop_gate": "合法对象与类型、调用前序及所选实现条件成立；仓库运行 NOT_RUN",
+        "evidence_ids": [
+          "SP93-E010",
+          "SP93-E021",
+          "SP93-E035",
+          "SP93-E036",
+          "SP93-E045",
+          "SP93-E047",
+          "SP93-E048"
+        ],
+        "runtime": "NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows": 39,
+  "finite_models": [
+    {
+      "id": "SP93-M01",
+      "topic": "A",
+      "scenario": "默认精度短串",
+      "input": "s='AB\\0',precision=-1",
+      "intermediate_state": [
+        "lim=-1",
+        "读A写A len1",
+        "读B写B len2",
+        "第三次读NUL且break"
+      ],
+      "conditional_result": "读3字节，输出2个可见字符（宽度另算）",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E008",
+        "SP93-E009",
+        "SP93-E010"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M02",
+      "topic": "A",
+      "scenario": "精度刚好3",
+      "input": "s='ABC\\0',precision=3",
+      "intermediate_state": [
+        "第一次读A",
+        "第二次读B",
+        "第三次读C",
+        "下次while条件0不读取NUL"
+      ],
+      "conditional_result": "读3字节，输出3字节",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E008",
+        "SP93-E009",
+        "SP93-E010"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M03",
+      "topic": "A",
+      "scenario": "精度4读NUL",
+      "input": "s='ABC\\0',precision=4",
+      "intermediate_state": [
+        "读A/B/C三字节",
+        "第四次读NUL",
+        "检测!c break"
+      ],
+      "conditional_result": "读4字节，输出3字节",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E009",
+        "SP93-E010"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M04",
+      "topic": "A",
+      "scenario": "精度0和width5",
+      "input": "合法s,presision0,field_width5,dest6字节",
+      "intermediate_state": [
+        "while(0--)不进入s读取",
+        "len0,width5产生spaces5",
+        "move_right size6>spaces5, len0跳过memmove,memset5空格",
+        "NUL写在index5"
+      ],
+      "conditional_result": "最终五空格与NUL；源读取0字节",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E009",
+        "SP93-E011",
+        "SP93-E017",
+        "SP93-E021",
+        "SP93-E026",
+        "SP93-E047"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M05",
+      "topic": "A",
+      "scenario": "NULL替代默认",
+      "input": "s=NULL,precision=-1,无width,sizeof(void*)=8",
+      "intermediate_state": [
+        "check_pointer_msg返回'(null)'",
+        "error_string precision设16",
+        "依次读6字符及第7字节NUL",
+        "check_pointer内部返回-EFAULT但string返回已推进buf"
+      ],
+      "conditional_result": "vsnprintf正常返回数学需求6，而非-EFAULT",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E001",
+        "SP93-E004",
+        "SP93-E006",
+        "SP93-E007",
+        "SP93-E009",
+        "SP93-E010",
+        "SP93-E040",
+        "SP93-E048"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M06",
+      "topic": "A",
+      "scenario": "低地址替代",
+      "input": "ptr=1,x86 PAGE_SIZE4096;precision3",
+      "intermediate_state": [
+        "本地低地址门为真,替代'(efault)'",
+        "precision3读取'(','e','f'",
+        "不读取替代字符串的第4字节"
+      ],
+      "conditional_result": "可见'(ef'，不是实际对地址1解引用成功",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E002",
+        "SP93-E012",
+        "SP93-E014",
+        "SP93-E015",
+        "SP93-E006",
+        "SP93-E009"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M07",
+      "topic": "B",
+      "scenario": "%5s正常右补",
+      "input": "s='AB\\0',size6,通用memmove被选择",
+      "intermediate_state": [
+        "读A/B/NUL源3",
+        "先写dest0,1为A,B",
+        "反向memmove将A,B写至dest3,4",
+        "memset dest0..2空格",
+        "NUL dest5"
+      ],
+      "conditional_result": "最终'   AB\\0'；逻辑返回5；有重复目标写",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E009",
+        "SP93-E010",
+        "SP93-E018",
+        "SP93-E019",
+        "SP93-E024",
+        "SP93-E025",
+        "SP93-E026",
+        "SP93-E047"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M08",
+      "topic": "B",
+      "scenario": "%-5s左补",
+      "input": "s='AB\\0',size6",
+      "intermediate_state": [
+        "读3源字节",
+        "写AB于dest0,1",
+        "LEFT添加3空格至dest2..4",
+        "NUL dest5"
+      ],
+      "conditional_result": "最终'AB   \\0'，逻辑返回5",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E009",
+        "SP93-E010",
+        "SP93-E022",
+        "SP93-E047"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M09",
+      "topic": "B",
+      "scenario": "%5.2s精度边界",
+      "input": "s='ABC\\0',precision2,size6",
+      "intermediate_state": [
+        "仅读A B两字节",
+        "初写AB",
+        "搬移到dest3,4",
+        "填前三个空格,NUL dest5"
+      ],
+      "conditional_result": "最终'   AB\\0'，不读取C或NUL",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E009",
+        "SP93-E010",
+        "SP93-E018",
+        "SP93-E019",
+        "SP93-E024",
+        "SP93-E025",
+        "SP93-E026",
+        "SP93-E047"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M10",
+      "topic": "B",
+      "scenario": "宽度5缓冲size5",
+      "input": "s='AB\\0',width5,size5",
+      "intermediate_state": [
+        "原先写AB",
+        "搬移2字节到dest3,4",
+        "填前三格空格",
+        "NUL覆盖dest4的B"
+      ],
+      "conditional_result": "最终'   A\\0'，数学需求5而非最终C串长度5",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E009",
+        "SP93-E010",
+        "SP93-E018",
+        "SP93-E019",
+        "SP93-E047",
+        "SP93-E048"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M11",
+      "topic": "B",
+      "scenario": "move_right空间不够",
+      "input": "单独合法调用move_right(base0,end2,len3,spaces3)",
+      "intermediate_state": [
+        "size2<=spaces3",
+        "memset dest0,1为空格",
+        "没有memmove"
+      ],
+      "conditional_result": "该helper局部写2个空格，并返回void；不外推widen指针",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E016",
+        "SP93-E017",
+        "SP93-E026"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M12",
+      "topic": "B",
+      "scenario": "部分搬移逆向",
+      "input": "单独合法move_right(base0,end4,len3,spaces2),初态ABCD",
+      "intermediate_state": [
+        "size4>spaces2",
+        "len被裁为2",
+        "dest2..3从src0..1按反向复制",
+        "dest0..1填空格"
+      ],
+      "conditional_result": "局部末态'  AB'，但不代表对应完整格式正常C返回",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E018",
+        "SP93-E019",
+        "SP93-E024",
+        "SP93-E025",
+        "SP93-E026"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M13",
+      "topic": "B",
+      "scenario": "%3c普通字符",
+      "input": "fmt='%3c',int实参ASCII Q, size4",
+      "intermediate_state": [
+        "前导宽度先写2空格",
+        "va_arg(int)窄化Q",
+        "写Q于index2",
+        "NUL index3"
+      ],
+      "conditional_result": "最终'  Q\\0'，需求3",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E031",
+        "SP93-E041",
+        "SP93-E042",
+        "SP93-E043",
+        "SP93-E047"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M14",
+      "topic": "B",
+      "scenario": "%3c内嵌NUL",
+      "input": "fmt='%3c',int实参0,size4",
+      "intermediate_state": [
+        "写两个空格",
+        "写字符NUL于index2",
+        "逻辑游标从2进3",
+        "结尾另写NUL于index3"
+      ],
+      "conditional_result": "字节[0x20,0x20,0,0], 返回3；普通C字符串长度2",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E041",
+        "SP93-E042",
+        "SP93-E043",
+        "SP93-E047",
+        "SP93-E048"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M15",
+      "topic": "B",
+      "scenario": "%cX内嵌NUL后字面",
+      "input": "fmt='%cX',int0,size3",
+      "intermediate_state": [
+        "第0字节写NUL",
+        "后续正常文字分支将X写index1",
+        "结尾NUL index2"
+      ],
+      "conditional_result": "字节[NUL,'X',NUL]，返回2；strlen从第0字节为0",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E027",
+        "SP93-E042",
+        "SP93-E047",
+        "SP93-E048",
+        "SP93-E061"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M16",
+      "topic": "C",
+      "scenario": "%pe分类后继但返回未证",
+      "input": "fmt='%pe:rest',匹配void*arg",
+      "intermediate_state": [
+        "format_decode消耗%p、fmt指向'e'",
+        "外层调用pointer，其活动体没有return",
+        "str赋值首个无法建立正常契约",
+        "若额外假设合法返回则e可被isalnum消费，':'停止"
+      ],
+      "conditional_result": "不声称真实执行到后缀或输出错误文本",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E033",
+        "SP93-E045",
+        "SP93-E046",
+        "SP93-E049",
+        "SP93-E050",
+        "SP93-E051",
+        "SP93-E057"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M17",
+      "topic": "C",
+      "scenario": "后缀字母数字与下划线",
+      "input": "fmt='%pA1_tail',只做独立词法",
+      "intermediate_state": [
+        "假设进入while扫描",
+        "A为_U，1为_D，依次推进2",
+        "_为_P而非_U/_L/_D停止"
+      ],
+      "conditional_result": "条件词法上留下'_tail'，但真实%p在pointer返回门停止",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E045",
+        "SP93-E046",
+        "SP93-E052",
+        "SP93-E053",
+        "SP93-E054",
+        "SP93-E055",
+        "SP93-E056",
+        "SP93-E057",
+        "SP93-E058",
+        "SP93-E059",
+        "SP93-E060"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M18",
+      "topic": "C",
+      "scenario": "直接%p首个返回门",
+      "input": "fmt='%p',传匹配void*",
+      "intermediate_state": [
+        "进入FORMAT_TYPE_PTR",
+        "va_arg(void*)作为pointer入参",
+        "pointer返回类型char*但无活动return",
+        "caller试图将结果赋给str"
+      ],
+      "conditional_result": "停止于返回值消费，不给出正常可见地址/NUL/返回长度",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E033",
+        "SP93-E045",
+        "SP93-E049",
+        "SP93-E050",
+        "SP93-E051"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    },
+    {
+      "id": "SP93-M19",
+      "topic": "C",
+      "scenario": "%%无需调用pointer",
+      "input": "fmt='%%',size2",
+      "intermediate_state": [
+        "解析器选择PERCENT_CHAR",
+        "条件写一个'%'并推进str",
+        "正常到out写NUL"
+      ],
+      "conditional_result": "最终['%',NUL]，需求1，无va_arg消费",
+      "first_unproved_gate": "纯文本有限输入模型；没有执行仓库程序、编译器或真实并发",
+      "evidence_ids": [
+        "SP93-E034",
+        "SP93-E044",
+        "SP93-E047",
+        "SP93-E048"
+      ],
+      "execution": "PURE_STATIC_FINITE_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 19,
+  "historical_qualified_ids": [
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "status": "RETAINED",
+      "new_relation": "logical output pointer beyond end and C pointer movement remains unproved"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U02",
+      "status": "PARTIAL_SCOPE_ALREADY_IN_BATCH92",
+      "new_relation": "generic printf and pointer extensibility remains outside 91/92"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U06",
+      "status": "RETAINED_AS_EXTENSION_NOT_NEW_ROOT",
+      "new_relation": "C output pointer/size gates shared"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F03",
+      "status": "RETAINED",
+      "new_relation": "get_kthread_comm void return truncation is not vsnprintf %s internal -EFAULT"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-F03",
+      "status": "RETAINED",
+      "new_relation": "skip_atoi overflow not reopened by string precision examples"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-01",
+      "status": "CLOSED",
+      "new_relation": "no D00"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-02",
+      "status": "CLOSED",
+      "new_relation": "no D00"
+    },
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::CO53-F01",
+      "status": "HISTORICAL_NEEDS_EVIDENCE",
+      "new_relation": "53 reviewer retracted whitespace allegations; source candidate not therefore closed"
+    }
+  ],
+  "verification_limits": {
+    "source_anchor_count": 64,
+    "full_local_P9": "NOT_RUN",
+    "repo_programs_compilation_graphviz_qemu_hardware_real_concurrency": "NOT_RUN",
+    "C_real_pointer_object_and_return_certification": "NOT_RUN",
+    "independent_C06_Pro": "PENDING",
+    "publication": "PENDING_G04"
+  },
+  "graph_alignment": {
+    "file": "printf-string-pointer-paths.dot",
+    "node_to_fact_row": {
+      "fmt": [
+        "A-INPUT01",
+        "C-PTR01"
+      ],
+      "parse": [
+        "A-PREC05",
+        "B-CHAR06",
+        "C-PTR01"
+      ],
+      "strCase": [
+        "A-INPUT01"
+      ],
+      "strFn": [
+        "A-INPUT01",
+        "A-INPUT04"
+      ],
+      "check": [
+        "A-INPUT01",
+        "A-INPUT06"
+      ],
+      "msg": [
+        "A-INPUT01",
+        "A-INPUT02",
+        "A-INPUT03"
+      ],
+      "errstr": [
+        "A-INPUT05"
+      ],
+      "nocheck": [
+        "A-PREC01",
+        "A-PREC03"
+      ],
+      "astatus": [
+        "A-INPUT06"
+      ],
+      "widen": [
+        "B-PAD01",
+        "B-PAD03"
+      ],
+      "shift": [
+        "B-PAD02",
+        "B-PAD06",
+        "B-PAD07"
+      ],
+      "move": [
+        "B-PAD02",
+        "B-PAD07"
+      ],
+      "fill": [
+        "B-PAD06"
+      ],
+      "bstatus": [
+        "B-PAD08"
+      ],
+      "charCase": [
+        "B-CHAR01",
+        "B-CHAR03"
+      ],
+      "leading": [
+        "B-CHAR01"
+      ],
+      "cval": [
+        "B-CHAR03"
+      ],
+      "trailing": [
+        "B-CHAR02"
+      ],
+      "pctCase": [
+        "B-CHAR06"
+      ],
+      "out": [
+        "A-INPUT06",
+        "B-CHAR03"
+      ],
+      "ptrCase": [
+        "C-PTR01",
+        "C-PTR04"
+      ],
+      "ptrFn": [
+        "C-PTR01"
+      ],
+      "noReturn": [
+        "C-PTR01"
+      ],
+      "suffix": [
+        "C-SFX01",
+        "C-SFX02"
+      ],
+      "cat": [
+        "C-SFX02"
+      ],
+      "table": [
+        "C-SFX02"
+      ],
+      "nextFmt": [
+        "C-SFX03"
+      ],
+      "producer": [
+        "C-SFX05"
+      ],
+      "limit": [
+        "ABC04"
+      ]
+    },
+    "semantic_edges": {
+      "blue_solid": "CALL actual function invocation with source branch preconditions, NOT guaranteed runtime reachability",
+      "black_solid": "DATA or macro operand flow, not a CALL",
+      "dotted": "local source order or active function body closure, not global happens-before",
+      "dashed": "conditional or isolated hypothetical / incompletely proven return; explicit gate",
+      "purple_dashed": "return and data flow through caller, not function invocation",
+      "orange_dashed": "MISSING pointer return contract, STOP; not a valid normal return edge"
+    },
+    "verified_static_nodes": 29,
+    "static_edges": 35,
+    "critical_gate": "ptrCase assigns result of pointer() to str; no active return in callee; suffix only hypothetical, never convert to actual CALL/reachable normal path",
+    "Graphviz": "NOT_RUN",
+    "source_version": "time@a039d9803ade"
+  }
+}

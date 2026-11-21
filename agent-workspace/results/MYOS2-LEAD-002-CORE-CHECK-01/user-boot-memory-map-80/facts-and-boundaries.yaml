@@ -1,0 +1,1475 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOT-MEMORY-MAP-80",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "record_type": "bounded_static_analysis_facts",
+  "model_per_owner": "GPT-6 + Extra",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "lead_fixed_short12": "f4a3b437cb44",
+  "execution_parent_short12": "c10d0447940e",
+  "runtime_evidence": "NOT_RUN",
+  "phase": 2,
+  "source_ledger": [
+    {
+      "path": "mykernel/arch/x86_64/myos/pre_init.c",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "A: parse_tag/ram_map"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/head64.c",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "A: earlier kernel C copy only"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/setup.c",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "A/B/C: boot globals, consumers and early reservation order"
+    },
+    {
+      "path": "myloader/uefi/multiboot2.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "A: shared nearest tag/entry definitions only"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/early/e820.c",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "A/B/C: e820 intake PFN/handoff"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/early/e820_types.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "A: target struct"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/early/e820_const.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "A/B/C: capacity and types"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/early/earlymem_api_arch.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "B: wrapper and MAX_ARCH_PFN"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/pgtable/pgtable_const_arch.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "B: MAXMEM"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/mmzone_const_arch.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "B: MAX_PHYSMEM_BITS"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "B: PAGE_SHIFT/SIZE"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_macro_arch.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "B/C: __va/__pa_symbol"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/mmzone.c",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "B/C: direct zone consumer"
+    },
+    {
+      "path": "mykernel/mm/early/memblock.c",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "D/C: constrained APIs and 79 stop"
+    },
+    {
+      "path": "mykernel/mm/early/memblock_const.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "D/C: macro corrections"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "C: phys/resource typedefs"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/sizes.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "C: SZ values"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/sections.h",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "C: brk linker symbol extern only; no quote"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "source_pin_short12": "a039d9803ade",
+      "scope": "C: linker symbolic addresses only; no executed linker"
+    }
+  ],
+  "prior_return_disposition": {
+    "R78_01": "CLOSED_DOCUMENTATION_ONLY_BY_C06_DO_NOT_REOPEN",
+    "batch78_composite": "PASS_PENDING_LOCAL",
+    "batch79_current": "RETURN_DOCUMENTATION_ONLY_R79_01_R79_02",
+    "submitted_correction_status": "DOCUMENTATION_CORRECTION_SUBMITTED_PENDING_C06",
+    "mainline_closure_authority": "MYOS2-A-C06 Pro",
+    "historical79_manifest_supplement": {
+      "original_commit_short12": "c10d0447940e",
+      "original_contract_short12": "ed8b3ac237f6",
+      "original_source_short12": "a039d9803ade",
+      "original_source_label_counts": {
+        "D": 13,
+        "A": 23,
+        "B": 24,
+        "C": 35,
+        "total": 95
+      },
+      "original_raw_prefix_across_six_files": 95,
+      "original_author_recheck_claim": "95/95 literal source quote rechecks, not full P2 certification",
+      "C06_79_review": "95 readable literal labels; two known definition boundary failures A06 A07; full mechanical P9 NOT_RUN",
+      "missing_MANIFEST_fields_exact": [
+        "track_id",
+        "produced_by",
+        "model_per_owner",
+        "base_snapshot",
+        "read_channel",
+        "inputs_read",
+        "status",
+        "open_questions",
+        "startup_selfcheck_quote",
+        "branch_canary_quotes",
+        "self_check"
+      ],
+      "new_observation_date": "2026-11-13",
+      "supplement_only_not_original_rewrite": true,
+      "original_reports": "NOT_AVAILABLE_CURRENT_RUNTIME",
+      "author_summary_location": "original79/MANIFEST.md §1, historic author statement only",
+      "not_backfilled_original_g00": true
+    },
+    "original79_replacement_map": [
+      {
+        "item": "R79-02/A06",
+        "old": "79/evidence.md A06 two lines: #ifndef plus macro define",
+        "new": "80/evidence.md D01 single actual macro definition",
+        "macroselection": "conditional; ifndef outside definition",
+        "old_count_preserved": true
+      },
+      {
+        "item": "R79-02/A07",
+        "old": "79/evidence.md A07 two lines: #ifndef plus macro define",
+        "new": "80/evidence.md D02 single actual macro definition",
+        "macroselection": "conditional; ifndef outside definition",
+        "old_count_preserved": true
+      },
+      {
+        "item": "original 79 MANIFEST §4/evidence intro/body",
+        "old": "claim all95 short quotes satisfy single definition",
+        "new": "95 raw labels; A06 A07 failed definition boundary; new D01/D02 replacement; remaining original mechanical P9 NOT_RUN"
+      },
+      {
+        "item": "original 79 facts.methods",
+        "old": "all_short_quotes_fixed_source_exact:true and 95 source confirmations",
+        "new": "literal presence/rechecks separate from semantic scope; source confirmations cannot mean 95 P2 qualified"
+      },
+      {
+        "item": "original PR17 issue comment 6828422617",
+        "old": "states 95/95 and all within one definition",
+        "new": "historic claim superseded as above; old comment immutable"
+      }
+    ],
+    "R79_S01": {
+      "M23": "finder-only candidate112 invalid when fed to outer alloc_range with PAGE_SIZE floor; new constrained example free[4096,8192), size0, align16, cand4096, reserve(4096,0) returns0 with no region bytes if all iterator/size gates hold",
+      "M25": "initial first pass zero only implies retry when min_addr nonzero; final0 required for NULL",
+      "C24": "MEMBLOCK_NONE does not exclude MIRROR merely by region MIRROR bit; requested MIRROR excludes non-MIRROR",
+      "finite_models": "29 source/conditional + 1 D00 documentary = 30 historical records; not 30 kernel examples",
+      "anchors": [
+        "D03",
+        "D04",
+        "D05",
+        "D07"
+      ]
+    },
+    "R79_S02": {
+      "add_insert_merge": "common caller sequence, not insert callee merge",
+      "alloc_range": "align/end/PAGE_SIZE followed by finder within same caller",
+      "internal": "first zero and min_addr0 => final NULL; retry possible if min_addr nonzero; direct alloc_node_mem_map path distinct and may translate phys0",
+      "membership": "separate search callers, no fake is_memory->is_map_memory",
+      "goto": "case4 ordinary reach not established under stable idx/rbase preconditions",
+      "iterator_sentinel": "80/D06 supports ULLONG_MAX assignment; should also preserve __for_each_mem_range guard; full 79 graph unmodified"
+    },
+    "R79_S03": {
+      "arithmetics": "intermediate subtraction uses true operands' types before cast to size_t",
+      "signedness": "idx-1 into ulong, then start_rgn-1 into int i; each conversion and comparison evaluated separately",
+      "pointer": "pointer formation and dereference must be separate stop gates; no post-guard retroactive legalization",
+      "root_cause": "8 conditional candidate records not 8 runtime bugs or independent roots",
+      "prior_status": "MR79-F01..F08, MR79-U01..U10 all needs_evidence"
+    },
+    "historical_mnemosyne": {
+      "old_receive_transient_file": "NOT_AVAILABLE",
+      "old_guidance_transient_file": "NOT_AVAILABLE",
+      "old_author_claim": "79/MANIFEST §1 says receive was formed before nine MyOS2 rules and a separate guidance refresh; no original report fields independently recovered",
+      "old_claimed_handoff_id": "MYOS2-C05c-EXEC09-TO-C06a-EXEC10-HANDOFF-20261112",
+      "current_supplement_date": "2026-11-13",
+      "current_nine_MyOS2_rule_paths": [
+        "agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md",
+        "agent-workspace/README.md",
+        "agent-workspace/conventions.md",
+        "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+        "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md",
+        "agent-workspace/lead/MYOS2-LEAD-002/24-chatgpt-specialist-conversation-separation.md",
+        "agent-workspace/lead/MYOS2-LEAD-002/28-review-and-next-batch-same-turn.md",
+        "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+        "agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md"
+      ],
+      "owner110": "agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md",
+      "current_mnemosyne_refresh": {
+        "date": "2026-11-13",
+        "repo": "08822407d/Mnemosyne",
+        "read_channel": "connector",
+        "ref": "master",
+        "direct_head_short12": "b6c1bd9ee2db",
+        "read_file_paths": [
+          "README.md",
+          "current/human-approved-spec.md",
+          "commands/load-mnemosyne-guidance.md",
+          "current/user-operation-next-step-capability-and-intent-guard.md",
+          "current/model-tier-and-subtask-cost-routing-guard.md",
+          "current/github-single-active-pr-lineage-guard.md",
+          "current/run-context-and-pr-provenance-guard.md",
+          "current/artifact-delivery-and-direct-generation-guard.md",
+          "current/cross-conversation-execution-intent-and-operator-flow-guard.md",
+          "current/next-step-repository-write-visibility-guard.md"
+        ],
+        "actual_scope": "owner intent, context provenance, model cost, PR lineage, delivery visibility; no Mnemosyne or cross project writes",
+        "not_a_new_handoff": true
+      }
+    },
+    "mandatory_supplements_preserved": [
+      "R79-S01",
+      "R79-S02",
+      "R79-S03",
+      "R78-S01",
+      "R78-S02",
+      "R78-S03"
+    ],
+    "legacy_preserved": [
+      "R77-01 CLOSED",
+      "MR-02 narrowed",
+      "58/63 withdrawal",
+      "75–78 historical physical reclaim bounds"
+    ]
+  },
+  "G01": {
+    "tag_intake_matrix": [
+      {
+        "id": "A-T01",
+        "decision": "magic != 0x36d76289 => return without resetting ram_map",
+        "source_anchors": [
+          "A04",
+          "A12",
+          "A02"
+        ],
+        "prerequisite": "valid read of passed magic",
+        "stop": "at first branch"
+      },
+      {
+        "id": "A-T02",
+        "decision": "addr&7 != 0 => early return",
+        "source_anchors": [
+          "A05"
+        ],
+        "prerequisite": "valid numeric addr",
+        "stop": "at alignment gate"
+      },
+      {
+        "id": "A-T03",
+        "decision": "total_size read but not used in termination/stride; END type decides loop",
+        "source_anchors": [
+          "A06",
+          "A13",
+          "A16",
+          "A17"
+        ],
+        "prerequisite": "mbi_tag_header readable and arithmetic well-defined",
+        "stop": "stop at first out-of-extent tag"
+      },
+      {
+        "id": "A-T04",
+        "decision": "tag.size rounded by ((size+7)&~7), can be 0 and can wrap",
+        "source_anchors": [
+          "A06",
+          "A17"
+        ],
+        "prerequisite": "tag pointer and tag header readable",
+        "stop": "at nonprogress or invalid next pointer"
+      },
+      {
+        "id": "A-T05",
+        "decision": "MMAP case sets ram_map=&entries[0], entry_size/version not consumed",
+        "source_anchors": [
+          "A07",
+          "A18"
+        ],
+        "prerequisite": "tag sufficiently large for referenced structure",
+        "stop": "at invalid entries address"
+      },
+      {
+        "id": "A-T06",
+        "decision": "missing MMAP tag leaves previous ram_map; multiple labels retain last published pointer",
+        "source_anchors": [
+          "A02",
+          "A07"
+        ],
+        "prerequisite": "valid traversal through END and previous state known",
+        "stop": "before e820 read if ram_map invalid"
+      }
+    ],
+    "ram_map_provenance_matrix": [
+      {
+        "id": "A-P01",
+        "decision": "caller parse_tag(mbi_magic,(ulong)&multiboot_MBI)",
+        "source_anchors": [
+          "A01",
+          "A08"
+        ],
+        "prerequisite": "mbi_magic and target initialized",
+        "stop": "before parse_tag guards"
+      },
+      {
+        "id": "A-P02",
+        "decision": "multiboot_MBI is [32*PAGE_SIZE] in .data; contents depend on earlier producer",
+        "source_anchors": [
+          "A08",
+          "B06"
+        ],
+        "prerequisite": "fixed source and memory layout",
+        "stop": "capacity alone cannot prove source extent"
+      },
+      {
+        "id": "A-P03",
+        "decision": "__startup_64 conditional memcpy copies sizeof target, not total_size",
+        "source_anchors": [
+          "A09",
+          "A10"
+        ],
+        "prerequisite": "__startup_64 reached, mbi_base readable for full size",
+        "stop": "before first invalid memcpy read"
+      },
+      {
+        "id": "A-P04",
+        "decision": "ram_map global is zero-initialized under valid C static initialization unless another write; parse_tag does not reset it",
+        "source_anchors": [
+          "A02",
+          "A07"
+        ],
+        "prerequisite": "valid program linkage, no extra external writes",
+        "stop": "stop on first undefined/null consumer dereference"
+      },
+      {
+        "id": "A-P05",
+        "decision": "mbi_tag_header pointer stores addr; total_size not used after read",
+        "source_anchors": [
+          "A03",
+          "A06"
+        ],
+        "prerequisite": "addr points to valid header extent",
+        "stop": "no assumption about actual firmware length"
+      },
+      {
+        "id": "A-P06",
+        "decision": "shared multiboot2.h is nearest C structure/constant definition, not proof of external protocol conformance",
+        "source_anchors": [
+          "A12",
+          "A16",
+          "A18"
+        ],
+        "prerequisite": "headers reflect build inclusion",
+        "stop": "external schema remains U01"
+      }
+    ],
+    "e820_copy_capacity_matrix": [
+      {
+        "id": "A-C01",
+        "decision": "e820_table_init static; e820_table points to it; nr_entries cleared before copy",
+        "source_anchors": [
+          "A21",
+          "A22",
+          "A25"
+        ],
+        "prerequisite": "object and pointer initialized",
+        "stop": "after table initialization"
+      },
+      {
+        "id": "A-C02",
+        "decision": "entry fields addr/len/type copied with i++ per record while len && type",
+        "source_anchors": [
+          "A26",
+          "A27"
+        ],
+        "prerequisite": "each source entry has full object extent",
+        "stop": "at earliest invalid source read"
+      },
+      {
+        "id": "A-C03",
+        "decision": "E820_MAX_ENTRIES=128; at i=128 target entries[128] forms invalid pointer before writing; nr_entries still 0",
+        "source_anchors": [
+          "A23",
+          "A24",
+          "A25",
+          "A27"
+        ],
+        "prerequisite": "128 preceding valid records; 129th positive record exists",
+        "stop": "stop before forming out-of-array pointer"
+      },
+      {
+        "id": "A-C04",
+        "decision": "valid N<=128 followed by accessible zero sentinel => nr_entries=N",
+        "source_anchors": [
+          "A26",
+          "A28"
+        ],
+        "prerequisite": "all N source records contiguous with C sizeof stride",
+        "stop": "conditional finite result only"
+      },
+      {
+        "id": "A-C05",
+        "decision": "record len==0 or type==0 immediately terminates, not merely skips record",
+        "source_anchors": [
+          "A26"
+        ],
+        "prerequisite": "source pointer and fields readable",
+        "stop": "before body"
+      },
+      {
+        "id": "A-C06",
+        "decision": "tag entry_size != sizeof(mbi_mmap_ent_s) not read; mmap_entp++ advances by C object stride",
+        "source_anchors": [
+          "A18",
+          "A19",
+          "A20",
+          "A26"
+        ],
+        "prerequisite": "C object array suitably laid out",
+        "stop": "stop on invalid source object"
+      },
+      {
+        "id": "A-C07",
+        "decision": "print_table consumes nr_entries and computes addr+size-1 for output; no upstream validation follows from print",
+        "source_anchors": [
+          "A28",
+          "A29"
+        ],
+        "prerequisite": "copy completed and entries valid",
+        "stop": "do not infer firmware correctness"
+      }
+    ],
+    "earliest_stop_matrix": [
+      {
+        "id": "A-X01",
+        "decision": "tag header invalid => total_size read is first unproved dereference",
+        "source_anchors": [
+          "A06"
+        ],
+        "prerequisite": "magic and alignment passed",
+        "stop": "do not evaluate loop"
+      },
+      {
+        "id": "A-X02",
+        "decision": "non-END tag0 stride0 => no progress, do not infer later MMAP",
+        "source_anchors": [
+          "A06"
+        ],
+        "prerequisite": "current tag readable",
+        "stop": "nonprogress"
+      },
+      {
+        "id": "A-X03",
+        "decision": "ram_map null/stale => e820 for-condition reads len first",
+        "source_anchors": [
+          "A02",
+          "A26"
+        ],
+        "prerequisite": "prior parse did not publish valid pointer",
+        "stop": "before any target write"
+      },
+      {
+        "id": "A-X04",
+        "decision": "N=129 => target entries[128] formed outside fixed table",
+        "source_anchors": [
+          "A23",
+          "A24",
+          "A27"
+        ],
+        "prerequisite": "all source records valid",
+        "stop": "before destination write or nr_entries publication"
+      },
+      {
+        "id": "A-X05",
+        "decision": "no external sentinel => stop at first unproved source object",
+        "source_anchors": [
+          "A26"
+        ],
+        "prerequisite": "finite tag extent",
+        "stop": "no claimed successful nr_entries"
+      }
+    ]
+  },
+  "G02": {
+    "pfn_limit_selection_matrix": [
+      {
+        "id": "B-L01",
+        "decision": "e820__end_of_ram_pfn() macro calls e820__end_ram_pfn(MAX_ARCH_PFN)",
+        "source_anchors": [
+          "B01",
+          "B02"
+        ],
+        "prerequisite": "macro selection fixed to time",
+        "stop": "not external Linux behavior"
+      },
+      {
+        "id": "B-L02",
+        "decision": "MAX_ARCH_PFN expands MAXMEM >> PAGE_SHIFT; MAXMEM=(1UL<<46), PAGE_SHIFT=12",
+        "source_anchors": [
+          "B01",
+          "B03",
+          "B04",
+          "B05"
+        ],
+        "prerequisite": "x86-64 ulong width is sufficient, expression as function argument",
+        "stop": "numeric cap 2^34 PFNs under declared type model"
+      },
+      {
+        "id": "B-L03",
+        "decision": "only RAM=1 and ACPI=3 count in this particular computation",
+        "source_anchors": [
+          "B07",
+          "B10"
+        ],
+        "prerequisite": "valid e820 table entries",
+        "stop": "separate memblock admission"
+      },
+      {
+        "id": "B-L04",
+        "decision": "start>=limit skipped; end>limit sets last=limit and breaks; otherwise max",
+        "source_anchors": [
+          "B12",
+          "B13",
+          "B14"
+        ],
+        "prerequisite": "endpoints already valid in their types",
+        "stop": "do not carry across wrapped endpoint"
+      },
+      {
+        "id": "B-L05",
+        "decision": "return additionally capped to MAX_ARCH_PFN",
+        "source_anchors": [
+          "B15",
+          "B16"
+        ],
+        "prerequisite": "reached return from valid loop",
+        "stop": "not memory quantity"
+      }
+    ],
+    "typed_endpoint_matrix": [
+      {
+        "id": "B-E01",
+        "decision": "entry.addr and size are u64; their addition occurs before >>12 and can wrap",
+        "source_anchors": [
+          "A23",
+          "B11"
+        ],
+        "prerequisite": "bounded C unsigned arithmetic",
+        "stop": "wrapped values are not physical end"
+      },
+      {
+        "id": "B-E02",
+        "decision": "end_pfn uses floor((addr+size)/4096), not ceil; partial endpoint behavior",
+        "source_anchors": [
+          "B05",
+          "B11"
+        ],
+        "prerequisite": "unwrapped sum, numeric model only",
+        "stop": "not a claim of actual present pages"
+      },
+      {
+        "id": "B-E03",
+        "decision": "start_pfn and end_pfn declared ulong, u64 shift result converted to ulong",
+        "source_anchors": [
+          "B09",
+          "B11",
+          "B22"
+        ],
+        "prerequisite": "target C integer width",
+        "stop": "size-of not experimentally compiled"
+      },
+      {
+        "id": "B-E04",
+        "decision": "input order not necessary for numeric max for all valid, unwrapped entries; a cross-limit entry saturates to limit",
+        "source_anchors": [
+          "B13",
+          "B14"
+        ],
+        "prerequisite": "stable valid set and limit, all comparison operations valid",
+        "stop": "not proof of E820 producer ordering"
+      },
+      {
+        "id": "B-E05",
+        "decision": "empty map leaves last_pfn0",
+        "source_anchors": [
+          "B08",
+          "B09"
+        ],
+        "prerequisite": "nr_entries=0 legally published",
+        "stop": "later high_memory safety not established"
+      }
+    ],
+    "upper_bound_consumption_matrix": [
+      {
+        "id": "B-U01",
+        "decision": "setup_arch assigns max_pfn then max_possible_pfn",
+        "source_anchors": [
+          "B17"
+        ],
+        "prerequisite": "all earlier calls returned",
+        "stop": "does not establish direct map"
+      },
+      {
+        "id": "B-U02",
+        "decision": "max_low_pfn=max_pfn then high_memory based on __va(max_pfn*PAGE_SIZE-1)+1",
+        "source_anchors": [
+          "B18",
+          "B19"
+        ],
+        "prerequisite": "numeric multiplication, subtraction, pointer formation valid",
+        "stop": "if max_pfn=0 stop at candidate underflow/pointer formation"
+      },
+      {
+        "id": "B-U03",
+        "decision": "zone_sizes_init uses max_low_pfn for DMA/DMA32/NORMAL bound arrays",
+        "source_anchors": [
+          "B20"
+        ],
+        "prerequisite": "setup sequence reached and allocator returned",
+        "stop": "not number of RAM pages and not evidence of holes filled"
+      },
+      {
+        "id": "B-U04",
+        "decision": "free_area_init consumes zone bounds, outside 80's 78 bootstrap reanalysis",
+        "source_anchors": [
+          "B21"
+        ],
+        "prerequisite": "earlier memory path valid",
+        "stop": "do not reopen PB78"
+      },
+      {
+        "id": "B-U05",
+        "decision": "prior early_reserve_memory and e820 copy are prerequisites to calling the PFN calculation",
+        "source_anchors": [
+          "C15",
+          "B17"
+        ],
+        "prerequisite": "setup_arch reached both calls",
+        "stop": "don't imply success merely from source order"
+      }
+    ]
+  },
+  "G03": {
+    "early_reservation_matrix": [
+      {
+        "id": "C-R01",
+        "decision": "kernel reserve base=__pa_symbol(_text), length=(ulong)__end_of_kernel_reserve-(ulong)_text",
+        "source_anchors": [
+          "C01",
+          "C06"
+        ],
+        "prerequisite": "link symbols ordered and mapped, physical translation defined",
+        "stop": "do not guess actual image address"
+      },
+      {
+        "id": "C-R02",
+        "decision": "low memory reserve [0,0x10000)",
+        "source_anchors": [
+          "C02",
+          "C04"
+        ],
+        "prerequisite": "simple_mmblk_reserve legitimate and returned",
+        "stop": "the request is not proof of reserved set"
+      },
+      {
+        "id": "C-R03",
+        "decision": "BIOS reserve [0x9F000,0x100000), length0x61000",
+        "source_anchors": [
+          "C03",
+          "C05"
+        ],
+        "prerequisite": "unsigned subtraction well-defined",
+        "stop": "separate from external map type"
+      },
+      {
+        "id": "C-R04",
+        "decision": "early_reserve_memory called before e820__memory_setup",
+        "source_anchors": [
+          "C15"
+        ],
+        "prerequisite": "setup_arch reaches calls in sequence",
+        "stop": "callee return not proved"
+      },
+      {
+        "id": "C-R05",
+        "decision": "requests may be issued before memory.add; distinct reserved set already has own cnt",
+        "source_anchors": [
+          "C33",
+          "C34",
+          "C26"
+        ],
+        "prerequisite": "memblock underlying add_range valid",
+        "stop": "stop on first 79 invalid pointer candidate"
+      }
+    ],
+    "brk_transition_matrix": [
+      {
+        "id": "C-B01",
+        "decision": "_brk_start/_brk_end initialized to (ulong)__brk_base",
+        "source_anchors": [
+          "C07",
+          "C08"
+        ],
+        "prerequisite": "linker symbol resolved",
+        "stop": "unknown runtime layout"
+      },
+      {
+        "id": "C-B02",
+        "decision": "extend_brk computes mask=align-1 before BUG_ON(align&mask)",
+        "source_anchors": [
+          "C09",
+          "C10"
+        ],
+        "prerequisite": "size_t arithmetic behavior",
+        "stop": "align=0 not rejected at this gate; no actual panic claim"
+      },
+      {
+        "id": "C-B03",
+        "decision": "_brk_end aligned then pointer upper comparison, then ret/end increment/memset",
+        "source_anchors": [
+          "C11",
+          "C12"
+        ],
+        "prerequisite": "no unsigned overflow, valid formed pointer, valid writable bytes",
+        "stop": "stop on first invalid arithmetic/pointer"
+      },
+      {
+        "id": "C-B04",
+        "decision": "reserve_brk if positive requests physical interval and ignores int return",
+        "source_anchors": [
+          "C13",
+          "C26"
+        ],
+        "prerequisite": "__pa_symbol conversion valid and request returns",
+        "stop": "cannot infer success from request"
+      },
+      {
+        "id": "C-B05",
+        "decision": "_brk_start set to0 after branch regardless of reserve result",
+        "source_anchors": [
+          "C14"
+        ],
+        "prerequisite": "reserve_brk code reaches assignment",
+        "stop": "state clear does not prove reserve"
+      },
+      {
+        "id": "C-B06",
+        "decision": "early_alloc_pgt_buf precedes reserve_brk precedes e820 handoff",
+        "source_anchors": [
+          "C16",
+          "C17",
+          "C18"
+        ],
+        "prerequisite": "called functions return",
+        "stop": "mapping not audited"
+      }
+    ],
+    "e820_type_handoff_matrix": [
+      {
+        "id": "C-H01",
+        "decision": "SOFT_RESERVED enum 0xefffffff => simple_mmblk_reserve",
+        "source_anchors": [
+          "C31",
+          "C23"
+        ],
+        "prerequisite": "entry valid and endpoint gate continues",
+        "stop": "reserve return ignored"
+      },
+      {
+        "id": "C-H02",
+        "decision": "RAM enum1 => simple_mmblk_add",
+        "source_anchors": [
+          "B07",
+          "C24",
+          "C27"
+        ],
+        "prerequisite": "entry valid and endpoint gate continues",
+        "stop": "add return ignored"
+      },
+      {
+        "id": "C-H03",
+        "decision": "ACPI3, RESERVED2, NVS4, other enum => no add; SOFT has only reserve",
+        "source_anchors": [
+          "B07",
+          "C23",
+          "C24"
+        ],
+        "prerequisite": "valid e820 record",
+        "stop": "type count != available memory"
+      },
+      {
+        "id": "C-H04",
+        "decision": "u64 end=addr+size then resource_size_t cast; typedef aliases u64 so cast does not detect wrap",
+        "source_anchors": [
+          "C22",
+          "C29",
+          "C30"
+        ],
+        "prerequisite": "unsigned operands and typedefs from current source",
+        "stop": "stop after overflow event"
+      },
+      {
+        "id": "C-H05",
+        "decision": "after loop memblock_trim_memory(PAGE_SIZE) acts on memory only",
+        "source_anchors": [
+          "C25",
+          "C32"
+        ],
+        "prerequisite": "all earlier memory intervals satisfy old79 gates",
+        "stop": "not proof trim's tally or reverse iteration"
+      },
+      {
+        "id": "C-H06",
+        "decision": "memblock's two initialized types have cnt0, max values selected by conditional macros",
+        "source_anchors": [
+          "C33",
+          "C34",
+          "D01",
+          "D02"
+        ],
+        "prerequisite": "selected macro variants and static initialization",
+        "stop": "capacity is not proof of all inserts"
+      }
+    ],
+    "cross_layer_boundary_matrix": [
+      {
+        "id": "C-X01",
+        "decision": "A input tag -> ram_map -> e820 copy: first unproved read at tag extent/sentinel/capacity",
+        "source_anchors": [
+          "A06",
+          "A07",
+          "A26",
+          "A27"
+        ],
+        "prerequisite": "header/tags valid",
+        "stop": "no later actual path after stop"
+      },
+      {
+        "id": "C-X02",
+        "decision": "B e820 table -> PFN: entry addition/types/limit separately validated",
+        "source_anchors": [
+          "B10",
+          "B11",
+          "B13"
+        ],
+        "prerequisite": "successful bounded e820 copy",
+        "stop": "an upper bound not admitted memory"
+      },
+      {
+        "id": "C-X03",
+        "decision": "C early reserve / brk -> E820 RAM memory & SOFT reserved route",
+        "source_anchors": [
+          "C01",
+          "C13",
+          "C23",
+          "C24"
+        ],
+        "prerequisite": "all callers return, bounds valid",
+        "stop": "not actual reservation success"
+      },
+      {
+        "id": "C-X04",
+        "decision": "memory minus reserved depends on memblock add/trim correctness from 79",
+        "source_anchors": [
+          "C26",
+          "C27",
+          "C32"
+        ],
+        "prerequisite": "79 initial count/iterators/insert branches legal",
+        "stop": "stop at first 79 unproved gate"
+      },
+      {
+        "id": "C-X05",
+        "decision": "setup_arch later init_mem_mapping/zone_sizes_init not validated as completed",
+        "source_anchors": [
+          "C19",
+          "C20",
+          "B21"
+        ],
+        "prerequisite": "all prior return and pointer gates",
+        "stop": "no boot success claim"
+      }
+    ]
+  },
+  "finite_model_cases": [
+    {
+      "id": "BM80-M01",
+      "kind": "A",
+      "inputs": {
+        "magic": "wrong",
+        "addr": "aligned"
+      },
+      "expected": "parse_tag returns; no reset of ram_map",
+      "anchors": [
+        "A04",
+        "A02"
+      ],
+      "earliest_stop": "magic gate",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M02",
+      "kind": "A",
+      "inputs": {
+        "magic": "match",
+        "addr": "misaligned"
+      },
+      "expected": "parse_tag returns",
+      "anchors": [
+        "A05"
+      ],
+      "earliest_stop": "alignment gate",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M03",
+      "kind": "A",
+      "inputs": {
+        "tag": {
+          "type": 6,
+          "size": 0
+        }
+      },
+      "expected": "rounded step0, cannot infer progress",
+      "anchors": [
+        "A06"
+      ],
+      "earliest_stop": "next iteration/nonprogress",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M04",
+      "kind": "A",
+      "inputs": {
+        "MMAP_tags": 2,
+        "both_valid": true
+      },
+      "expected": "last matching MMAP publishes ram_map",
+      "anchors": [
+        "A07"
+      ],
+      "earliest_stop": "prior storage validity",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M05",
+      "kind": "A",
+      "inputs": {
+        "MMAP_tags": 0,
+        "ram_map_initial": "null"
+      },
+      "expected": "ram_map unmodified, e820 len dereference not certified",
+      "anchors": [
+        "A02",
+        "A26"
+      ],
+      "earliest_stop": "e820 for-condition",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M06",
+      "kind": "A",
+      "inputs": {
+        "valid_records": 1,
+        "sentinel": "len=0"
+      },
+      "expected": "i=1 then nr_entries=1",
+      "anchors": [
+        "A26",
+        "A28"
+      ],
+      "earliest_stop": "requires valid source extent",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M07",
+      "kind": "A",
+      "inputs": {
+        "valid_records": 128,
+        "sentinel": "type=0"
+      },
+      "expected": "i=128 fits target then publish",
+      "anchors": [
+        "A24",
+        "A26",
+        "A27"
+      ],
+      "earliest_stop": "requires intact objects and sentinel",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M08",
+      "kind": "A",
+      "inputs": {
+        "valid_records": 129,
+        "all_len_and_type_nonzero": true
+      },
+      "expected": "at i=128 target entries[128] out of bounds",
+      "anchors": [
+        "A23",
+        "A24",
+        "A27"
+      ],
+      "earliest_stop": "before that write and nr_entries update",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M09",
+      "kind": "A",
+      "inputs": {
+        "first_record": {
+          "len": 4096,
+          "type": 0
+        }
+      },
+      "expected": "i=0; record treated as terminator",
+      "anchors": [
+        "A26"
+      ],
+      "earliest_stop": "before body",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M10",
+      "kind": "A",
+      "inputs": {
+        "tag_entry_size": 32,
+        "C_struct_stride": 24
+      },
+      "expected": "mmap_entp++ uses 24, not 32",
+      "anchors": [
+        "A18",
+        "A19",
+        "A20",
+        "A26"
+      ],
+      "earliest_stop": "on first unproved source object",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M11",
+      "kind": "B",
+      "inputs": {
+        "entries": []
+      },
+      "expected": "last_pfn=0",
+      "anchors": [
+        "B08",
+        "B09"
+      ],
+      "earliest_stop": "caller high_memory not certified",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M12",
+      "kind": "B",
+      "inputs": {
+        "entries": [
+          {
+            "type": "RAM",
+            "addr": 0,
+            "size": 4096
+          }
+        ],
+        "page_shift": 12
+      },
+      "expected": "last_pfn=1",
+      "anchors": [
+        "B10",
+        "B11",
+        "B14"
+      ],
+      "earliest_stop": "assuming nonwrapping u64 sum",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M13",
+      "kind": "B",
+      "inputs": {
+        "entries": [
+          {
+            "type": "RAM",
+            "addr": 0,
+            "size": 4096
+          },
+          {
+            "type": "RAM",
+            "addr": 12288,
+            "size": 4096
+          }
+        ]
+      },
+      "expected": "last_pfn=4, present RAM pages only2",
+      "anchors": [
+        "B11",
+        "B14"
+      ],
+      "earliest_stop": "numeric upper bound only",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M14",
+      "kind": "B",
+      "inputs": {
+        "entries": [
+          {
+            "type": "ACPI",
+            "addr": 8192,
+            "size": 4096
+          }
+        ]
+      },
+      "expected": "last_pfn=3 despite ACPI not RAM add",
+      "anchors": [
+        "B10",
+        "C24"
+      ],
+      "earliest_stop": "valid fixed table",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M15",
+      "kind": "B",
+      "inputs": {
+        "entries": [
+          {
+            "type": "RESERVED",
+            "addr": 4096,
+            "size": 32768
+          }
+        ]
+      },
+      "expected": "last_pfn=0",
+      "anchors": [
+        "B10"
+      ],
+      "earliest_stop": "enum matches current source",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M16",
+      "kind": "B",
+      "inputs": {
+        "start_pfn": 17179869184,
+        "limit_pfn": 17179869184
+      },
+      "expected": "entry skipped by >= limit",
+      "anchors": [
+        "B12",
+        "B01"
+      ],
+      "earliest_stop": "no other entries",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M17",
+      "kind": "B",
+      "inputs": {
+        "start_pfn": 17179869183,
+        "end_pfn": 17179869185,
+        "limit_pfn": 17179869184
+      },
+      "expected": "last_pfn=limit and loop breaks",
+      "anchors": [
+        "B13"
+      ],
+      "earliest_stop": "unwrapped endpoints",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M18",
+      "kind": "B",
+      "inputs": {
+        "addr": 0,
+        "size": 4097
+      },
+      "expected": "floor(end/4096)=1, not ceil2",
+      "anchors": [
+        "B05",
+        "B11"
+      ],
+      "earliest_stop": "unwrapped sum",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M19",
+      "kind": "B",
+      "inputs": {
+        "addr": "2^64-4096",
+        "size": 8192
+      },
+      "expected": "u64 end wraps to4096, right shift yields1 but physical endpoint cannot be certified",
+      "anchors": [
+        "B11"
+      ],
+      "earliest_stop": "at unsigned endpoint wrap",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M20",
+      "kind": "B",
+      "inputs": {
+        "unordered_end_pfns": [
+          7,
+          3,
+          5
+        ],
+        "each_below_limit": true
+      },
+      "expected": "last_pfn=max=7; sorting not needed for pure maximum",
+      "anchors": [
+        "B14"
+      ],
+      "earliest_stop": "all valid entries and types",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M21",
+      "kind": "C",
+      "inputs": {
+        "start": 0,
+        "size": "SZ_64K"
+      },
+      "expected": "request interval [0,65536)",
+      "anchors": [
+        "C02",
+        "C04"
+      ],
+      "earliest_stop": "reserve return unknown",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M22",
+      "kind": "C",
+      "inputs": {
+        "start": "0x9F000",
+        "limit": "0x100000"
+      },
+      "expected": "size=0x61000; reserve request",
+      "anchors": [
+        "C03",
+        "C05"
+      ],
+      "earliest_stop": "reserve return unknown",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M23",
+      "kind": "C",
+      "inputs": {
+        "kernel_start": "_text",
+        "kernel_end": "__end_of_kernel_reserve"
+      },
+      "expected": "symbolic span; physical start=__pa_symbol(_text)",
+      "anchors": [
+        "C01",
+        "C06"
+      ],
+      "earliest_stop": "linker positions unspecified",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M24",
+      "kind": "C",
+      "inputs": {
+        "_brk_end": 4096,
+        "size": 0,
+        "align": 1
+      },
+      "expected": "mask0; _brk_end unchanged if all gates pass",
+      "anchors": [
+        "C09",
+        "C12"
+      ],
+      "earliest_stop": "pointer validity/BUG_ON behavior",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M25",
+      "kind": "C",
+      "inputs": {
+        "_brk_end": 4096,
+        "size": 64,
+        "align": 0
+      },
+      "expected": "mask=SIZE_MAX, align&mask0, alignment expression can yield0 modulo size_t",
+      "anchors": [
+        "C09",
+        "C10",
+        "C11"
+      ],
+      "earliest_stop": "C arithmetic/pointer formation after aligned end",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M26",
+      "kind": "C",
+      "inputs": {
+        "_brk_end": 4096,
+        "size": 16,
+        "align": 3
+      },
+      "expected": "align & (align-1)=2, nonzero BUG_ON condition",
+      "anchors": [
+        "C09",
+        "C10"
+      ],
+      "earliest_stop": "at BUG_ON condition; no runtime outcome",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M27",
+      "kind": "C",
+      "inputs": {
+        "_brk_end": 4097,
+        "size": 16,
+        "align": 16
+      },
+      "expected": "aligned _brk_end=4112 under no overflow assumption",
+      "anchors": [
+        "C11"
+      ],
+      "earliest_stop": "before formed pointer and memset",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M28",
+      "kind": "C",
+      "inputs": {
+        "_brk_start": 4096,
+        "_brk_end": 4096
+      },
+      "expected": "no reserve requested; _brk_start then0",
+      "anchors": [
+        "C13",
+        "C14"
+      ],
+      "earliest_stop": "only if reserve_brk reached",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M29",
+      "kind": "C",
+      "inputs": {
+        "_brk_start": 4096,
+        "_brk_end": 8192,
+        "reserve_result": "failure"
+      },
+      "expected": "int return ignored; _brk_start becomes0 if callee returns",
+      "anchors": [
+        "C13",
+        "C14"
+      ],
+      "earliest_stop": "after callee return, no assertion of successful reservation",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M30",
+      "kind": "C",
+      "inputs": {
+        "types": [
+          "RAM",
+          "SOFT_RESERVED",
+          "ACPI"
+        ]
+      },
+      "expected": "RAM->memory.add, SOFT->reserved, ACPI->neither; ACPI can still raise PFN",
+      "anchors": [
+        "C23",
+        "C24",
+        "B10"
+      ],
+      "earliest_stop": "memblock functions must independently be valid",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    },
+    {
+      "id": "BM80-M31",
+      "kind": "C",
+      "inputs": {
+        "addr": "2^64-4096",
+        "size": 8192,
+        "resource_size_t": "u64"
+      },
+      "expected": "u64 sum wraps to4096; (resource_size_t)end still4096, guard cannot detect wrap",
+      "anchors": [
+        "C22",
+        "C29",
+        "C30"
+      ],
+      "earliest_stop": "stop when physical endpoint validity fails",
+      "status": "ISOLATED_FINITE_CONDITIONAL_NOT_RUN"
+    }
+  ],
+  "finite_model_count": 31,
+  "finite_model_count_by_topic": {
+    "A": 10,
+    "B": 10,
+    "C": 11
+  },
+  "finite_model_prerequisite": "each case isolated numeric/conditional model, never executed code or a proof of reachability; stop before unproved pointer/extent",
+  "technical_matrix_count": 61,
+  "technical_matrix_count_by_section": {
+    "G01": 24,
+    "G02": 15,
+    "G03": 22
+  },
+  "prior_findings_links": {
+    "batch79": "MR79-F01..F08 and MR79-U01..U10 not closed",
+    "batch78": "PB78-F01..F06/U01..U08 unaffected",
+    "batch77": "PA77-F01/F02 unaffected",
+    "baseline": "MC-01/MC-05/LB-01/LB-08/GAP-M08 unaffected"
+  },
+  "methods": {
+    "fixed_kernel_source": "time@a039d9803ade",
+    "source_ledger_count": 19,
+    "evidence_new_short_anchor_count": 92,
+    "evidence_by_topic": {
+      "D00": 7,
+      "A": 29,
+      "B": 22,
+      "C": 34
+    },
+    "original_79_raw_prefix_count_separate": 95,
+    "source_conditions_not_actual_defects": true,
+    "models_run": "NOT_RUN",
+    "local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "runtime": "NOT_RUN",
+    "direct_kernel_source_comment_not_external_spec": true
+  },
+  "owner_decisions_requested_now": [],
+  "kernel_change_authorized": false,
+  "merge_authorized": false,
+  "mainline_acceptance": "PENDING",
+  "acceptance_ceiling": "PASS_PENDING_LOCAL",
+  "status": "READY_FOR_MAINLINE_REVIEW"
+}

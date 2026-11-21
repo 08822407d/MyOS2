@@ -1,0 +1,228 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DEVTMPFS-SETUP-48",
+  "record_type": "incremental_deferred_findings_with_source_and_counterevidence",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "source_pin_short12": "a039d9803ade",
+  "date": "2026-11-06",
+  "read_channel": "connector",
+  "new_finding_count": 3,
+  "owner_action_now": "none",
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F01",
+      "id": "DS48-F01",
+      "title": "工作线程init_mount正常报错时跳过setup_done通知，使创建方等待缺少本工作线程的完成事件",
+      "kind": [
+        "direct_control_source_fact",
+        "bounded_conditional_completion_handshake_gap"
+      ],
+      "status": "needs_evidence",
+      "evidence": [
+        "DS48-A005",
+        "DS48-A007",
+        "DS48-A012",
+        "DS48-A014",
+        "DS48-A015",
+        "DS48-A019",
+        "DS48-A028",
+        "DS48-A029",
+        "DS48-A033",
+        "DS48-A045",
+        "DS48-A046"
+      ],
+      "source_ref": {
+        "pin": "time@a039d9803ade",
+        "paths": [
+          "mykernel/drivers/base/devtmpfs.c",
+          "mykernel/kactive/completion/completion_macro.h",
+          "mykernel/kactive/completion/completion.c"
+        ]
+      },
+      "claim": "在devtmpfs_init从kthread_run获得非IS_ERR结果时，它调用wait_for_completion(&setup_done)。setup_done由静态DECLARE_COMPLETION宏使用点创建，选定宏初始done文本为0。devtmpfsd则在其局部init_mount返回非零时goto out，绕过稍后的complete(&setup_done)并返回本地err。若实际有效线程在启动后走这条正常错误分支、调用方已在等待且没有其它完成事件，则该worker没有为等待者发出setup_done通知。",
+      "premises": [
+        "kthread_run实际返回一个有效可供运行的task指针，devtmpfs_init正常到达setup_done等待",
+        "worker被实际调度并且init_mount正常返回非零，先行对象均有效",
+        "选定DECLARE_COMPLETION初始化在目标编译配置有效且初始完成状态为0",
+        "本次等待依赖setup_done且没有另一个合法通知者或预先未消费的完成事件",
+        "其具体等待/唤醒语义来自更深实现，未做完整审计"
+      ],
+      "possible_impact": "创建方可能无法在这一失败模式中靠工作线程自身的setup_done通知解除等待；不声称真实机器已死锁、一直阻塞或导致系统启动失败。",
+      "counter_evidence": [
+        "worker init_mount成功且后续目录函数均正常返回时，源码确实调用complete(&setup_done)",
+        "kthread_run返回编码创建错误时，调用方直接走else，不进入setup_done等待",
+        "其它预先通知者、实际等待状态、调度及运行时路径未得到全局排除；不能保证一定卡住",
+        "工作函数中两个目录函数正常返回非零虽被忽略，源码仍调用complete，与本条init_mount早退是不同来源"
+      ],
+      "unknown": [
+        "实际init_mount非零生产者和可达性",
+        "完整wait_for_common、swake_up_locked的运行语义和调度时序",
+        "真实线程是否启动/是否退出，是否还有通知事件",
+        "用户可见启动后果"
+      ],
+      "related": [
+        "CORE-USER-DEVTMPFS-SETUP-48::DS48-F03",
+        "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01"
+      ],
+      "future_verification": {
+        "requires_owner_approval": true,
+        "read_only": "后续授权单独核真实失败条件和所有setup_done信号来源",
+        "runtime": "明确测试许可后可考虑受控失败注入；本批禁止"
+      }
+    },
+    {
+      "qualified_id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F02",
+      "id": "DS48-F02",
+      "title": "kthread_run编码创建错误经err赋值后遇到while(err)空循环，后续注销/错误return无正常源级贯穿路径",
+      "kind": [
+        "direct_source_control_fact",
+        "bounded_conditional_error_cleanup_barrier"
+      ],
+      "status": "needs_evidence",
+      "evidence": [
+        "DS48-A005",
+        "DS48-A006",
+        "DS48-A008",
+        "DS48-A009",
+        "DS48-A035",
+        "DS48-A036",
+        "DS48-A037",
+        "DS48-A042",
+        "DS48-A043",
+        "DS48-A044"
+      ],
+      "source_ref": {
+        "pin": "time@a039d9803ade",
+        "path": "mykernel/drivers/base/devtmpfs.c"
+      },
+      "claim": "devtmpfs_init在IS_ERR(thread)真分支将err设为PTR_ERR(thread)，同时将thread=NULL，跳过wait，接着无条件遇到while(err);。对于代表合法、可表示、稳定非零错误的err，该空循环本体没有写err的活动语句，循环之后的if(err){unregister_filesystem;return err;}和正常success return均无法沿该条件的正常源控制流被认证执行。",
+      "premises": [
+        "前置挂载和register_filesystem已经正常返回成功",
+        "kthread_run正常返回IS_ERR编码的有效错误指针且PTR_ERR到int转换有定义并产生非零值",
+        "while被正常执行且err值稳定、没有已认证的其它异步修改",
+        "只讨论所选固定源控制而非经编译优化或机器时序实测"
+      ],
+      "possible_impact": "创建出错时预期的后续错误处理、注销和向上返回可能无法通过该稳定非零源级循环到达；没有实证物理自旋或真实资源泄漏。",
+      "counter_evidence": [
+        "早期vfs_kern_mount和register_filesystem正常返回非零错误时各自直接return，根本未到while(err)；本问题限创建之后",
+        "若进入while时err==0，源条件为假，可以继续到成功路径",
+        "若存在真实外部写者改变err或其它控制变化，本稳定值模型需另行建模；本轮未认证其存在",
+        "后面确实有unregister_filesystem调用语句，但这不证明它能越过此前的while"
+      ],
+      "unknown": [
+        "实际kthread_run是否产生该编码错误返回及频度",
+        "实机编译时loop行为及并发可见性",
+        "挂载、注册副作用和清理是否必要/实际发生"
+      ],
+      "related": [
+        "CORE-USER-VFS-BASELINE-05::UV-01",
+        "CORE-USER-DEVTMPFS-SETUP-48::DS48-F01"
+      ],
+      "future_verification": {
+        "requires_owner_approval": true,
+        "read_only": "日后独立确认创建错误生产者与源码之后的错误控制契约",
+        "runtime": "需额外显式许可，不在本次执行"
+      }
+    },
+    {
+      "qualified_id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F03",
+      "id": "DS48-F03",
+      "title": "devtmpfs_init的&err线程数据参数与devtmpfsd独立局部err/完成通知间不存在选定源码内的错误回写连线",
+      "kind": [
+        "source_pointer_and_stack_identity_fact",
+        "bounded_conditional_status_handoff_gap"
+      ],
+      "status": "needs_evidence",
+      "evidence": [
+        "DS48-A001",
+        "DS48-A005",
+        "DS48-A011",
+        "DS48-A012",
+        "DS48-A014",
+        "DS48-A015",
+        "DS48-A025",
+        "DS48-A026",
+        "DS48-A027",
+        "DS48-A033",
+        "DS48-A041",
+        "DS48-A045"
+      ],
+      "source_ref": {
+        "pin": "time@a039d9803ade",
+        "paths": [
+          "mykernel/drivers/base/devtmpfs.c",
+          "mykernel/sched/forkexec/forkexec_macro.h",
+          "mykernel/kactive/completion/completion.c"
+        ]
+      },
+      "claim": "调用方传给kthread_run的是自己的自动int err的地址；kthread_run/kthread_create宏只将data指针传向下层创建接口。devtmpfsd完整活动函数体不读取/解引用参数p，而是另建局部int err并用它接收init_mount结果，之后return该局部int。setup_done完成接口传completion对象指针，wait_for_completion返回void；所选路径没有把工作err写给调用方err，工作函数的int return并不等于调用方局部err的值。",
+      "premises": [
+        "devtmpfsd确实通过kthread宏作为预期worker，且工作函数与调用方栈身份分开",
+        "只声称所读devtmpfsd、直接宏和completion接口中无数据回写，不排除更深框架内部其他结果机制",
+        "要把状态通道缺席定为实际故障还需证明调用方有消费工作错误的契约且错误真实发生"
+      ],
+      "possible_impact": "即使等待正常解除，创建方局部err不会从这里自动反映工作函数返回或路径切换错误；若调用方依其err报告初始化状态，可能缺少工作端状态凭据。本条不同于IP47-F01（worker内部两个目录返回被丢弃）。",
+      "counter_evidence": [
+        "调用方在IS_ERR(thread)时能从创建结果ERR_PTR/PTR_ERR赋值自身err；该创建错误通道存在，但不是worker运行错误通道",
+        "工作函数的init_mount成功且目录操作成功时，未回写错误不一定影响调用方正常0结果",
+        "work函数的int返回可能由更深的kthread框架另行处理，本轮没有审完整框架；只否认它在所读源码直接写caller.err",
+        "setup_done的调用确实会修改completion状态并请求唤醒，不能称完成对象本身完全无活动效果"
+      ],
+      "unknown": [
+        "kthread框架是否还有其他明确状态保存/回收消费者",
+        "调用方对工作函数错误是否有完整预期契约",
+        "正常错误是否实际发生及最终系统影响"
+      ],
+      "related": [
+        "CORE-USER-DEVTMPFS-SETUP-48::DS48-F01",
+        "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01"
+      ],
+      "future_verification": {
+        "requires_owner_approval": true,
+        "read_only": "后续专项可核线程创建数据及返回结果在框架中的完整消费者链",
+        "runtime": "不在本轮授权"
+      }
+    }
+  ],
+  "historical_preserved": [
+    {
+      "qualified_id": "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01",
+      "status": "needs_evidence",
+      "increment": "工作函数忽略init_chdir/init_chroot返回仍是47独立问题；48仅观察即使两个目录返回非零，线程仍可能发setup_done（正常返回前提），不重编号或关闭"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-01",
+      "status": "deferred_owner_not_ready",
+      "increment": "历史启动链中其它根切换、exec等错误消费属于不同函数和阶段；本轮只扩devtmpfs_init创建/通知，避免把相似文字自动合并"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-PATH-ACCESS-46-DOC-CLOSURE-REVIEW-001::R46C-S01",
+      "status": "mandatory_supplement",
+      "increment": "46文档已由C04闭合，48不再重做；单宏与预处理/类型/引用限定继续适用"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-PATH-SWITCH-47-REVIEW-001::R47-S01",
+      "status": "mandatory_supplement",
+      "increment": "原47对init_mount/目录错误、完整worker_loop的无已证正常出口、合法参数与有效输出限制继续适用"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-PATH-SWITCH-47-REVIEW-001::R47-S02",
+      "status": "mandatory_supplement",
+      "increment": "调用/返回必须匹配；原47遗漏的init_mount早退RETURN补充关系继续适用"
+    }
+  ],
+  "non_new_observations": [
+    "req_s.done与setup_done不同，req.err与caller.err/worker.err也不是同一字段；仅作为两条协议对象身份分隔",
+    "complete源码有done增加及swake_up_locked调用，但不携带worker errno；完整等待唤醒/锁时序不在本轮",
+    "devtmpfs_work_loop选定完整活动体有while(1)无break/return，不假称worker正常走到函数后半out返回",
+    "IS_ERR(mnt)/IS_ERR(thread)只识别编码错误指针，不验证NULL或任意失效对象的活性",
+    "devtmpfsd仍对两次目录切换返回不保存，按旧IP47-F01消费，非DS48新增根因"
+  ],
+  "no_old_files_modified": true,
+  "owner_repair_not_authorized": true,
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "complete_scheduler_audit": "NOT_RUN",
+  "full_local_P9": "NOT_RUN"
+}

@@ -1,0 +1,121 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-WAIT-WAKE-CONSISTENCY-52",
+  "record_type": "incremental_deferred_finding_disposition",
+  "historical": [
+    {
+      "id": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-04",
+      "prior_status": "SUPPORTED_IN_SCOPE",
+      "basis": "V02/V03/V11 counted list stale count and anchor container",
+      "new_work": "source direct-member/count helper and completion consumer integration",
+      "not_new_defect": true
+    },
+    {
+      "id": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-03",
+      "prior_status": "SUPPORTED_IN_SCOPE",
+      "basis": "V09/V10 finite timeout return",
+      "new_work": "timer mod/delete and caller contracts",
+      "not_new_defect": true
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U04",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SEMAPHORE-TIMEOUT-51::SM51-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SEMAPHORE-TIMEOUT-51::SM51-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SEMAPHORE-TIMEOUT-51::SM51-U03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-VFS-BASELINE-05::UV-01",
+      "status": "deferred_not_ready"
+    }
+  ],
+  "new_distinct_findings": [],
+  "new_distinct_findings_count": 0,
+  "new_defect_ids": [],
+  "new_local_boundaries": [
+    {
+      "id": "WW52-U01",
+      "topic": "A",
+      "status": "needs_evidence",
+      "issue": "stale counted list header after plain unlink is source supported and already CA-04; actual memory/CPU consequence untested"
+    },
+    {
+      "id": "WW52-U02",
+      "topic": "B",
+      "status": "needs_evidence",
+      "issue": "running timer cancellation and rearm/stack lifetime under real callbacks and SMP not inspected"
+    },
+    {
+      "id": "WW52-U03",
+      "topic": "C",
+      "status": "needs_evidence",
+      "issue": "fixed .c call coverage complete but fixed .h/assembly/preprocessor and actual linked entrypoint coverage incomplete"
+    },
+    {
+      "id": "WW52-U04",
+      "topic": "C",
+      "status": "needs_evidence",
+      "issue": "devtmpfs req.complete+kfree vs waiter read req.err requires independent ownership and lifetime audit, not closed here"
+    }
+  ],
+  "not_done": [
+    "real timer expiration or execution",
+    "kernel compilation/preprocess/links",
+    "QEMU/hardware/races",
+    "complete fixed-tree .h macro code index",
+    "real caller reachability across build configs",
+    "full local P9"
+  ],
+  "mainline_ownership": "C04 alone accepts and selects next package",
+  "code_modification_authorized": false,
+  "acceptance": "PENDING"
+}

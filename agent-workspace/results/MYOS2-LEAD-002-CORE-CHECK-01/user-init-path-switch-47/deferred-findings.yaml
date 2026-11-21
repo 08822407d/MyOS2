@@ -1,0 +1,172 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-INIT-PATH-SWITCH-47",
+  "record_type": "R46_01_document_closure_request_separated_from_47_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-06",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "prior46_documentation_return": {
+    "review_record": "CORE-USER-FS-PATH-ACCESS-46-REVIEW-001",
+    "review_verdict": "RETURN",
+    "returned_scope": [
+      "R46-01"
+    ],
+    "R46_01_current_state": "OPEN_PENDING_C04",
+    "closure_requested_by_executor": true,
+    "closed_by_executor": false,
+    "errata_evidence_ids": [
+      "R46-C001",
+      "R46-C002",
+      "R46-C003",
+      "R46-C004",
+      "R46-C005",
+      "R46-C006"
+    ],
+    "scope": "single macro quotations and conditional context, getter void signatures, corrected G14/C01/C04/D09 support mapping, old 59-label claim limitations",
+    "original46_files_unchanged": true,
+    "historical59_reverified_completely": false,
+    "C04_independent_review_required": true
+  },
+  "new_finding_count": 1,
+  "new_findings": [
+    {
+      "id": "IP47-F01",
+      "qualified_id": "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01",
+      "title": "devtmpfsd未保存或检查两个初始化目录切换接口的int返回值",
+      "kind": [
+        "verified_local_call_result_discard",
+        "bounded_conditional_continuation_risk"
+      ],
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "source_ref": {
+        "pin": "time@a039d9803ade",
+        "path": "mykernel/drivers/base/devtmpfs.c",
+        "symbol": "devtmpfsd",
+        "anchors": [
+          "IP47-A040",
+          "IP47-A041",
+          "IP47-A042",
+          "IP47-A043",
+          "IP47-A045",
+          "IP47-A046"
+        ]
+      },
+      "claim": "devtmpfsd把init_mount返回值写入err，并在非零时goto out。该门正常通过后依次调用int init_chdir(\"/..\")和int init_chroot(\".\")，两次结果均没有赋给err、没有if门或向上透传，正常结束的目录切换无论返回何种整数都继续到complete与devtmpfs_work_loop。若后者也正常返回，则devtmpfsd返回先前init_mount的err值，目录切换结果不影响它。",
+      "premises": [
+        "init_mount正常返回0且devtmpfsd继续通过唯一if(err)门",
+        "至少一次目录切换调用正常返回非零int（实际生产者和是否可达尚未证明）",
+        "若声称已经到complete，前面的两个调用必须正常返回且关联对象访问有效",
+        "若声称实际return0，还需complete与devtmpfs_work_loop都正常返回；不审其循环或阻塞"
+      ],
+      "possible_impact": "如果目录切换确实失败而函数仍正常返回，后续设置完成与工作循环可能在未证pwd/root处于预期路径的状态下推进；没有运行故障或持有对象错误的直接实证。",
+      "counter_evidence": [
+        "init_mount的正常非零错误**确实被检查**并直接跳out，该问题仅是后续两个切换调用的int返回未消费",
+        "两个目录切换均正常成功时忽略返回值在所选局部路径上不改变成功控制",
+        "任何切换函数不正常返回、内部无效访问或devtmpfs_work_loop不返回时，不能声称完成或devtmpfsd正常return0",
+        "字面/..和.的实际路径结果无法由字符串或注释认证"
+      ],
+      "unknown": [
+        "初始化内核真实运行中是否出现init_chdir/init_chroot的非零返回",
+        "成功的kern_path是否确实产生有效目录/引用对象",
+        "complete及work loop的实际执行和返回",
+        "错误路径影响的真实用户可见后果"
+      ],
+      "related": [
+        "CORE-USER-PATH-INIT-31::PI31-F05",
+        "CORE-USER-LAST-COMPONENT-32::LC32-F04",
+        "CORE-USER-PATHNAME-COPY-29::PN29-F02",
+        "CORE-USER-VFS-BASELINE-05::UV-01",
+        "CORE-USER-FS-CONTEXT-45::FS45-F02"
+      ],
+      "ai_suggestion": "未来获Owner授权后先核真实目录切换失败生产者和启动后继依赖，再设计错误处理；本批不选择或实施修复",
+      "reopen_conditions": "Owner授权独立初始化错误传播/启动路径专项，按届时源码和真实调用条件重新验证；不直接修内核或运行"
+    }
+  ],
+  "bounded_nonnew_observations": [
+    {
+      "id": "IP47-O01",
+      "note": "init_chdir中的!error是已正常经过if(error)return之后的第二道分支，期间权限行被注释且error无活动重新赋值，不能当成新错误生产者",
+      "anchors": [
+        "IP47-A002",
+        "IP47-A003",
+        "IP47-A004"
+      ]
+    },
+    {
+      "id": "IP47-O02",
+      "note": "init_chroot的dput_and_out是活动顺序贯穿标签，权限相关goto均在注释内；不能由标签名补出正常安全检查/权限失败或回滚路径",
+      "anchors": [
+        "IP47-A007",
+        "IP47-A008",
+        "IP47-A009"
+      ]
+    },
+    {
+      "id": "IP47-O03",
+      "note": "LOOKUP_FOLLOW/DIRECTORY作为真实两个宏被传给kern_path，不证明下游成功执行完整目录验证、符号链接和安全语义，属已保留31/32路径限定",
+      "anchors": [
+        "IP47-A010",
+        "IP47-A011",
+        "IP47-A047",
+        "IP47-A048"
+      ]
+    },
+    {
+      "id": "IP47-O04",
+      "note": "kern_path/filename_lookup和path_lookupat的整数成功门与输出path有效性不同；只有path_lookupat err==0分支实际执行*path=nd.path，存在前序失效则停止，不另立与PI31-F05同义项",
+      "anchors": [
+        "IP47-A015",
+        "IP47-A018",
+        "IP47-A024",
+        "IP47-A025",
+        "IP47-A026"
+      ]
+    }
+  ],
+  "history_preserved": [
+    {
+      "qualified_id": "CORE-USER-PATHNAME-COPY-29::PN29-F02",
+      "status": "needs_evidence",
+      "append": "getname_kernel在分配之后超长输入的早返资源责任属旧29，47只读必要入口，未展开新分配器专项"
+    },
+    {
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F05",
+      "status": "needs_evidence",
+      "append": "nameidata/path_lookupat的局部输出与清理限制仍对kern_path成立；不把输出0等同已取得路径引用"
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F04",
+      "status": "deferred_owner_not_ready",
+      "append": "lookup_last指针结果和link_path_walk整数结果必须分层；47不复核完整末分量判定"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F01",
+      "status": "needs_evidence",
+      "append": "静态init_fs最后持有者/缓存释放条件与本次内部路径切换返回值不同，不关闭"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F02",
+      "status": "needs_evidence",
+      "append": "path_get/path_put到空的dget/dput活动体以及mnt操作注释的旧源事实继续约束47成功path_put请求"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-10",
+      "status": "deferred_owner_not_ready",
+      "append": "旧close绕过f_count事项未修；原路径引用只增不减措辞按R45-S01收窄；与本次init_chdir错误消费不同"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-PATH-ACCESS-46-REVIEW-001::R46-01",
+      "status": "OPEN_UNTIL_C04",
+      "append": "仅在第47批新件提出文档闭合申请，不改变第46批RETURN或旧工件"
+    }
+  ],
+  "no_new_security_verdict": "init_chroot中的权限/CAP注释不是活动代码，但本批仅证明内核初始化内部调用，不认证普通用户提权或隔离漏洞",
+  "old_records_modified": false,
+  "full_local_P9": "NOT_RUN",
+  "runtime_evidence": "NOT_RUN",
+  "kernel_change_authorized": false,
+  "new_batch47_acceptance": "PENDING",
+  "R46_closure_verdict": "PENDING_C04"
+}

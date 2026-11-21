@@ -1,0 +1,2274 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-CAT-FILE-DISPLAY-117",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-17",
+  "record_type": "user_shell_cat_file_display_bounded_source_facts",
+  "date": "2026-11-21",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "master_direct_short12": "e8e60cd19540",
+  "lead_release_short12": "b2f563a67814",
+  "execution_parent_short12": "145d6781c75e",
+  "author_state": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_state": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "history": {
+    "batch112": "PASS_PENDING_LOCAL",
+    "batch113": "PASS_PENDING_LOCAL",
+    "batch114": "PASS_PENDING_LOCAL",
+    "R115_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R115_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R115_03": "OPEN",
+    "batch115": "RETURN",
+    "R116_01": "OPEN",
+    "R116_02": "OPEN",
+    "batch116": "RETURN"
+  },
+  "G00": {
+    "direct_heads": {
+      "lead": "b2f563a67814",
+      "exec": "145d6781c75e",
+      "time": "a039d9803ade",
+      "master": "e8e60cd19540"
+    },
+    "pr16": {
+      "state": "open",
+      "draft": false,
+      "merged": false,
+      "base": "master"
+    },
+    "pr17": {
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "base": "master",
+      "original_title_unchanged": true
+    },
+    "only_open_pr_numbers": [
+      16,
+      17
+    ],
+    "fixed116_six_equals_live": "6/6 full text and Git blob identical",
+    "target117_six_paths": "ALL_ABSENT",
+    "pr17_initial_top_level_comments": 220,
+    "pr17_initial_pagination": [
+      100,
+      100,
+      20,
+      0
+    ],
+    "publisher165_comment": 7056268192,
+    "author116_comment": 7056533291,
+    "publisher166_comment": 7056768574,
+    "author117_formal_initial_count": 0,
+    "git_direct_master_convention_checked": true,
+    "time_master_two_branch_canaries_checked": true
+  },
+  "D00": {
+    "R115-03": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "old_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-memdev-scalar-io-115/memdev-scalar-io-paths.dot",
+      "old_stage": "116 facts.D00.R115-03 listed six intended repairs, but 116 actual DOT leaves ksys_read and ksys_write as sink nodes",
+      "actual_new_graph": "117 shell-cat-file-display-paths.dot cluster_R115, with reachable edges from syscalls through both ksys owners and zero_fops/read_zero to all Z0/ZP/ZP1 return nodes",
+      "typed_repairs": [
+        {
+          "old": "115:83 mapping→stub incomplete",
+          "new": "syscall mapping macro definition distinct from syscalls_64.h invocation; add wrapper call owner",
+          "ids": [
+            "CT117-E049",
+            "DS116-P10",
+            "MD115-E004"
+          ]
+        },
+        {
+          "old": "115:84–89 syscall→fd helper directly",
+          "new": "sys_read→ksys_read→myos_fdget_pos/file_ppos/vfs_read; sys_write→ksys_write→fdget_pos/file_ppos/vfs_write",
+          "ids": [
+            "CT117-E001",
+            "CT117-E002",
+            "CT117-E003",
+            "CT117-E004"
+          ]
+        },
+        {
+          "old": "115:97 verify→cap without VFS owner",
+          "new": "vfs_read/vfs_write call rw_verify_area and then clip count (distinct source E006/E007), before callback",
+          "ids": [
+            "CT117-E005",
+            "CT117-E006",
+            "CT117-E007"
+          ]
+        },
+        {
+          "old": "115:107 stack→f_pos incorrect write owner",
+          "new": "read and write ksys wrappers own outer f_pos assignment if ret>=0 and ppos nonnull",
+          "ids": [
+            "CT117-E002",
+            "CT117-E004"
+          ]
+        },
+        {
+          "old": "115:109–120 missing zero n=0 exit/one-page/cross-page",
+          "new": "read_zero while(count) false n0→return0; n4096 one memset→break→return0; n4097 first chunk4096→accumulate→next chunk1→break→return4096",
+          "ids": [
+            "CT117-E016",
+            "CT117-E017",
+            "CT117-E018",
+            "CT117-E019"
+          ]
+        },
+        {
+          "old": "115:132 readzero→zero false direct call",
+          "new": "zero_fops.read binds the single read_zero function; no self-call; read_zero body branches model flow",
+          "ids": [
+            "CT117-E015",
+            "CT117-E016"
+          ]
+        }
+      ],
+      "iter_queued_special": {
+        "read": "read_iter returns; BUG_ON(-EIOCBQUEUED) before writeback; after gate, if ppos store even for other negative ret; ksys on negative does not commit",
+        "write": "write_iter returns; BUG_ON(-EIOCBQUEUED) before if ret>0&&ppos local store; then ksys outer nonnegative commit",
+        "source_ids": [
+          "CT117-E012",
+          "CT117-E013",
+          "CT117-E014"
+        ],
+        "legacy_constant": "EIOCBQUEUED=529 from kernel errno.h:31; ordinary POSITION_ONLY",
+        "does_not_apply_to_read_zero": "zero scalar method; does not call new_sync_read"
+      },
+      "checks": [
+        {
+          "id": "Z0",
+          "n": 0,
+          "old_model": "B01",
+          "pages": 0,
+          "loop_iterations": [],
+          "actually_zeroed": 0,
+          "read_return": 0,
+          "initial_f_pos": 9,
+          "ksys_commit_same_value": true,
+          "final_f_pos": 9,
+          "legacy_source_ids": [
+            "MD115-E051",
+            "MD115-E052",
+            "MD115-E053",
+            "MD115-E054",
+            "MD115-E055",
+            "MD115-E056"
+          ],
+          "new_source_ids": [
+            "CT117-E002",
+            "CT117-E015",
+            "CT117-E016",
+            "CT117-E017",
+            "CT117-E018",
+            "CT117-E019"
+          ],
+          "statement": "paper: READ mode and access valid, scalar .read is read_zero, no callback ppos mutation, no concurrency, no runtime"
+        },
+        {
+          "id": "ZP",
+          "n": 4096,
+          "old_model": "B04",
+          "pages": 1,
+          "loop_iterations": [
+            {
+              "iteration": 1,
+              "memset_offset": 0,
+              "chunk": 4096,
+              "remaining_after": 0,
+              "break": true,
+              "cleared_after": 0
+            }
+          ],
+          "actually_zeroed": 4096,
+          "read_return": 0,
+          "initial_f_pos": 9,
+          "ksys_commit_same_value": true,
+          "final_f_pos": 9,
+          "legacy_source_ids": [
+            "MD115-E051",
+            "MD115-E052",
+            "MD115-E053",
+            "MD115-E054",
+            "MD115-E055",
+            "MD115-E056"
+          ],
+          "new_source_ids": [
+            "CT117-E002",
+            "CT117-E015",
+            "CT117-E016",
+            "CT117-E017",
+            "CT117-E018",
+            "CT117-E019"
+          ],
+          "statement": "paper: READ mode and access valid, scalar .read is read_zero, no callback ppos mutation, no concurrency, no runtime"
+        },
+        {
+          "id": "ZP1",
+          "n": 4097,
+          "old_model": "B05",
+          "pages": 2,
+          "loop_iterations": [
+            {
+              "iteration": 1,
+              "memset_offset": 0,
+              "chunk": 4096,
+              "remaining_after": 1,
+              "break": false,
+              "cleared_after": 4096
+            },
+            {
+              "iteration": 2,
+              "memset_offset": 4096,
+              "chunk": 1,
+              "remaining_after": 0,
+              "break": true,
+              "cleared_after": 4096
+            }
+          ],
+          "actually_zeroed": 4097,
+          "read_return": 4096,
+          "initial_f_pos": 9,
+          "ksys_commit_same_value": true,
+          "final_f_pos": 9,
+          "legacy_source_ids": [
+            "MD115-E051",
+            "MD115-E052",
+            "MD115-E053",
+            "MD115-E054",
+            "MD115-E055",
+            "MD115-E056"
+          ],
+          "new_source_ids": [
+            "CT117-E002",
+            "CT117-E015",
+            "CT117-E016",
+            "CT117-E017",
+            "CT117-E018",
+            "CT117-E019"
+          ],
+          "statement": "paper: READ mode and access valid, scalar .read is read_zero, no callback ppos mutation, no concurrency, no runtime"
+        }
+      ],
+      "closing_condition": "actual 117 DOT R115 subgraph has zero nonempty paths, 0/P/P1 terminal ret and fpos with edges anchored to correct ksys/vfs/mem functions, C08 Pro to close"
+    },
+    "R116-01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "old_consumers": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-dir-stream-ls-116/dir-stream-ls.md#L95",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-dir-stream-ls-116/facts-and-boundaries.yaml:B.syscall.tail_d_off",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-dir-stream-ls-116/facts-and-boundaries.yaml:B.batch_model.d_off_status",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-dir-stream-ls-116/deferred-findings.yaml:DS116-CAND-07"
+      ],
+      "tail_record_models": [
+        {
+          "id": "ONE",
+          "accepted": 1,
+          "record_lens": [
+            24
+          ],
+          "prev_reclen_initial": 0,
+          "writes": [
+            {
+              "record_index": 0,
+              "writer_actor": 1,
+              "source": "prev=current when prev_reclen=0",
+              "d_off": 0
+            }
+          ],
+          "d_off_for_last": "0, if actor offset0 and direct store succeeds",
+          "user_filepos_after_all": 0,
+          "source_ids": [
+            "CT117-E032",
+            "CT117-E036",
+            "CT117-E039",
+            "CT117-E035"
+          ]
+        },
+        {
+          "id": "TWO",
+          "accepted": 2,
+          "record_lens": [
+            24,
+            24
+          ],
+          "prev_reclen_initial": 0,
+          "writes": [
+            {
+              "record_index": 0,
+              "writer_actor": 1,
+              "offset": 0
+            },
+            {
+              "record_index": 0,
+              "writer_actor": 2,
+              "offset": 0
+            }
+          ],
+          "d_off_for_last": "record #2 tail not written by filldir64; requires separately initialized D2",
+          "user_filepos_after_all": "D2 if readable and known",
+          "source_ids": [
+            "CT117-E036",
+            "CT117-E038",
+            "CT117-E034"
+          ]
+        },
+        {
+          "id": "THREE",
+          "accepted": 3,
+          "record_lens": [
+            24,
+            24,
+            32
+          ],
+          "prev_reclen_initial": 0,
+          "writes": [
+            {
+              "record_index": 0,
+              "writer_actor": 1,
+              "offset": 0
+            },
+            {
+              "record_index": 0,
+              "writer_actor": 2,
+              "offset": 0
+            },
+            {
+              "record_index": 1,
+              "writer_actor": 3,
+              "offset": 0
+            }
+          ],
+          "d_off_for_last": "record #3 tail not written by filldir64; only read with independent initialized D3",
+          "user_filepos_after_all": "D3 if readable and known",
+          "source_ids": [
+            "CT117-E036",
+            "CT117-E038",
+            "CT117-E034",
+            "CT117-E039"
+          ]
+        }
+      ],
+      "kernel_conditions": "callback buffer other members initialized0 by static initializer; prev_reclen0, current_dir starts user pointer; every accepted actor computes prev=(current_dir-prev_reclen), stores prev.d_off=actor offset (FAT passes0) before current data; each successful record increments current_dir by reclen and sets prev_reclen; final tail d_off patch in kernel exit is commented",
+      "actor_source_ids": [
+        "CT117-E032",
+        "CT117-E036",
+        "CT117-E038",
+        "CT117-E039",
+        "CT117-E035"
+      ],
+      "consumer": "readdir writes DIR.filepos=dp->d_off on each delivered record, so final tail entry must have initialized d_off to read safely; no default zero inferred for two/three records",
+      "evidence_corrections": [
+        {
+          "old": "DS116-P29 referenced three times but absent in 116 evidence; DS116-P01 was indexed",
+          "replace": "CT117-P19 is repo-root relative closedir.c#L26–51, CT117-P02 close interface and DS116-E058 ls actual call; P29 not carried forward"
+        },
+        {
+          "old": "facts.C.libc.closedir.source missing repository root",
+          "replace": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/closedir.c#L26–51 (CT117-P19)"
+        },
+        {
+          "old": "116 E045/P24 shared asm range mixed call/exit labels",
+          "replace": "CT117-E046 covers LABEL_SYSCALL syscall instruction at syscall.c:70–74; CT117-E047/E048 and CT117-P24 cover sysexit_ret_addr compare/jump/ret; no implied errno update"
+        },
+        {
+          "old": "syscall intermediary macro omitted",
+          "replace": "CT117-E042 SYSFUNC_DEF → CT117-E043 _SYSFUNC_DEF_ → CT117-E044/E045 __SYSFUNC_DEF__"
+        },
+        {
+          "old": "invalid_name true return cited alone",
+          "replace": "CT117-E040 returns true on empty; CT117-E041 returns false otherwise; complete body CT117-P20"
+        }
+      ],
+      "closing_condition": "C08 checks one/two/three actor writes with source and all old consumer IDs reclassified. Old 116 data/graph untouched."
+    },
+    "R116-02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "old_graph": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-dir-stream-ls-116/dir-stream-ls-paths.dot#L56–95",
+      "actual_new_graph": "117 shell-cat-file-display-paths.dot cluster_R116, executable call source goes run_cmd→ls_command etc, no table/printf nodes misidentified as callers",
+      "six_corrections": [
+        "shell_internal_cmd is binding data, run_cmd executes shell_internal_cmd[index].function(argc,argv); no table→ls direct CALL edge",
+        "ls_command calls opendir; opendir first evaluates invalid_name, then open; after open returns opendir calls __alloc_dir; __alloc_dir calls malloc and decides success/fail",
+        "readdir owns maxread=min(allocation,INT_MAX) before GETDENTS; refill is only if offset>=size, cached path bypasses syscall",
+        "kernel getdents64 with prev_reclen positive returns count-buf.count; if prev_reclen zero returns error path, not unconditional bytes",
+        "ls_command directly calls printf for skipped/ordinary names and newline after NULL, then directly calls closedir; newline/printf are not callers",
+        "from readdir pointer shell decides filter; dot/dotdot skips then LOOP, ordinary alpha calls printf then LOOP; only NULL breaks to newline"
+      ],
+      "A03": {
+        "old_116": {
+          "id": "A03",
+          "input": "argc>1",
+          "selected_path": "/missing",
+          "open_return": -2,
+          "malloc": "nonNULL",
+          "opendir_returns": "DIR* even with fd=-2",
+          "fd_held": -2,
+          "DIR_fields": {
+            "allocation": 32768,
+            "size": 0,
+            "offset": 0,
+            "filepos": 0,
+            "errcode": 0
+          },
+          "calls_open": true,
+          "calls_malloc": true,
+          "calls_close": false,
+          "calls_free": false,
+          "errno_assigned_by_code": false,
+          "stop": "do not pass invalid fd into readdir/getdents64",
+          "source_ids": [
+            "DS116-E022",
+            "DS116-E025",
+            "DS116-E027",
+            "DS116-E028",
+            "DS116-E029"
+          ]
+        },
+        "actual_saved_DIR_fd": -2,
+        "live_valid_fd_count_held": 0,
+        "open_return": -2,
+        "allocation": "nonNULL",
+        "stop": "no invalid fd passed to syscall, paper stops at opendir return"
+      },
+      "A04": {
+        "old_116": {
+          "id": "A04",
+          "input": "argc>1",
+          "selected_path": "/valid",
+          "open_return": 7,
+          "malloc": "NULL",
+          "opendir_returns": "NULL",
+          "fd_held": "fd7 remains not closed by examined opendir/__alloc_dir",
+          "DIR_fields": null,
+          "calls_open": true,
+          "calls_malloc": true,
+          "calls_close": false,
+          "calls_free": false,
+          "errno_assigned_by_code": false,
+          "stop": "malloc failure; errno from malloc not proven",
+          "source_ids": [
+            "DS116-E022",
+            "DS116-E025",
+            "DS116-E026"
+          ]
+        },
+        "actual_opened_fd": 7,
+        "live_valid_fd_count_held": 1,
+        "allocation": "NULL",
+        "opendir_result": "NULL",
+        "active_close_in_examined_functions": false
+      },
+      "corrected_B_trace": [
+        {
+          "id": "B01",
+          "name": ".",
+          "syscall_new": 1,
+          "cumulative": 1,
+          "record_start": 0,
+          "reclen": 24,
+          "offset_after": 24,
+          "size_after": 80,
+          "filepos_after": "D1",
+          "shell_action": "跳过并继续",
+          "source_ids": [
+            "CT117-E030",
+            "CT117-E031"
+          ]
+        },
+        {
+          "id": "B02",
+          "name": "..",
+          "syscall_new": 0,
+          "cumulative": 1,
+          "record_start": 24,
+          "reclen": 24,
+          "offset_after": 48,
+          "size_after": 80,
+          "filepos_after": "D2",
+          "shell_action": "跳过并继续",
+          "source_ids": [
+            "CT117-E030",
+            "CT117-E031"
+          ]
+        },
+        {
+          "id": "B03",
+          "name": "alpha",
+          "syscall_new": 0,
+          "cumulative": 1,
+          "record_start": 48,
+          "reclen": 32,
+          "offset_after": 80,
+          "size_after": 80,
+          "filepos_after": "D3",
+          "shell_action": "printf alpha\\t 后继续",
+          "source_ids": [
+            "CT117-E030",
+            "CT117-E031"
+          ]
+        },
+        {
+          "id": "B04",
+          "name": null,
+          "syscall_new": 1,
+          "cumulative": 2,
+          "record_start": null,
+          "reclen": null,
+          "offset_after": 80,
+          "size_after": 80,
+          "filepos_after": "D3",
+          "shell_action": "NULL 才退出，printf \\n，调用 closedir，ls 返回1",
+          "source_ids": [
+            "CT117-E028",
+            "CT117-E029"
+          ]
+        }
+      ],
+      "additional_paths": {
+        "cached": "DIR.offset 24<size80 means no new syscall; '..' skipped and loop continues",
+        "positive": "80 refill then dot/dotdot skip, alpha print+continue, next refill on exhaustion",
+        "zero": "next refill returns0 -> readdir NULL -> ls prints newline, calls closedir, returns1",
+        "negative": "next refill returns-5 -> identical shell branch with no claimed errno correction",
+        "open_failure": "invalid name or malloc fail -> opendir NULL -> ls error line and return-1"
+      },
+      "closing_condition": "actual DOT R116 contains typed conditional edges and every traced caller; table and facts agree on A03/A04 and B01/B02 skip vs NULL stop"
+    }
+  },
+  "A": {
+    "call_path": {
+      "table": "shell_internal_cmd cat maps to cat_command",
+      "table_source": "CT117-E050",
+      "indirect_owner": "run_cmd calls shell_internal_cmd[index].function(argc,argv) without using returned int",
+      "source": "CT117-E020"
+    },
+    "preconditions": "current_dir NUL-terminated, argv[1] present and NUL-terminated; short names; filename malloc succeeds, no overlap/overflow; no filesystem resolution beyond open",
+    "algorithm": {
+      "len": "strlen(current_dir)",
+      "i": "len + strlen(argv[1])",
+      "filename_alloc": "malloc(i+2)",
+      "filename_clear": "memset(filename,0,i+2)",
+      "prefix": "strcpy(filename,current_dir), includes original NUL",
+      "slash": "if(len>1) filename[len]='/' (overwrites prefix NUL)",
+      "append": "strcat(filename,argv[1]) starts at first NUL after conditional slash",
+      "source_ids": [
+        "CT117-E051",
+        "CT117-E052",
+        "CT117-E053",
+        "CT117-E054",
+        "CT117-E057",
+        "CT117-E058"
+      ]
+    },
+    "models": [
+      {
+        "id": "A01",
+        "current_dir": "/",
+        "argv1": "note",
+        "current_dir_strlen": 1,
+        "argv1_strlen": 4,
+        "i_before_seek": 5,
+        "filename_malloc_bytes": 7,
+        "zeroed_range": "[0,7)",
+        "strcpy_written_range": "[0,2) (including NUL at index 1)",
+        "buffer_after_strcpy_bytes": [
+          47,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conditional_slash": false,
+        "slash_index": null,
+        "buffer_after_slash_bytes": [
+          47,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "strcat_destination_index": 1,
+        "strcat_copied_bytes": 5,
+        "strcat_written_range": "[1,6)",
+        "final_terminated_path": "/note",
+        "final_length": 5,
+        "final_bytes": [
+          47,
+          110,
+          111,
+          116,
+          101,
+          0,
+          0
+        ],
+        "open_arguments": {
+          "path": "/note",
+          "flags": "O_RDONLY",
+          "third_argument": 0
+        },
+        "source_ids": [
+          "CT117-E052",
+          "CT117-E053",
+          "CT117-E054",
+          "CT117-E057",
+          "CT117-E058",
+          "CT117-E055"
+        ],
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A02",
+        "current_dir": "/docs",
+        "argv1": "note",
+        "current_dir_strlen": 5,
+        "argv1_strlen": 4,
+        "i_before_seek": 9,
+        "filename_malloc_bytes": 11,
+        "zeroed_range": "[0,11)",
+        "strcpy_written_range": "[0,6) (including NUL at index 5)",
+        "buffer_after_strcpy_bytes": [
+          47,
+          100,
+          111,
+          99,
+          115,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conditional_slash": true,
+        "slash_index": 5,
+        "buffer_after_slash_bytes": [
+          47,
+          100,
+          111,
+          99,
+          115,
+          47,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "strcat_destination_index": 6,
+        "strcat_copied_bytes": 5,
+        "strcat_written_range": "[6,11)",
+        "final_terminated_path": "/docs/note",
+        "final_length": 10,
+        "final_bytes": [
+          47,
+          100,
+          111,
+          99,
+          115,
+          47,
+          110,
+          111,
+          116,
+          101,
+          0
+        ],
+        "open_arguments": {
+          "path": "/docs/note",
+          "flags": "O_RDONLY",
+          "third_argument": 0
+        },
+        "source_ids": [
+          "CT117-E052",
+          "CT117-E053",
+          "CT117-E054",
+          "CT117-E057",
+          "CT117-E058",
+          "CT117-E055"
+        ],
+        "status": "PAPER_ONLY"
+      },
+      {
+        "id": "A03",
+        "current_dir": "/docs",
+        "argv1": "/note",
+        "current_dir_strlen": 5,
+        "argv1_strlen": 5,
+        "i_before_seek": 10,
+        "filename_malloc_bytes": 12,
+        "zeroed_range": "[0,12)",
+        "strcpy_written_range": "[0,6) (including NUL at index 5)",
+        "buffer_after_strcpy_bytes": [
+          47,
+          100,
+          111,
+          99,
+          115,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "conditional_slash": true,
+        "slash_index": 5,
+        "buffer_after_slash_bytes": [
+          47,
+          100,
+          111,
+          99,
+          115,
+          47,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "strcat_destination_index": 6,
+        "strcat_copied_bytes": 6,
+        "strcat_written_range": "[6,12)",
+        "final_terminated_path": "/docs//note",
+        "final_length": 11,
+        "final_bytes": [
+          47,
+          100,
+          111,
+          99,
+          115,
+          47,
+          47,
+          110,
+          111,
+          116,
+          101,
+          0
+        ],
+        "open_arguments": {
+          "path": "/docs//note",
+          "flags": "O_RDONLY",
+          "third_argument": 0
+        },
+        "source_ids": [
+          "CT117-E052",
+          "CT117-E053",
+          "CT117-E054",
+          "CT117-E057",
+          "CT117-E058",
+          "CT117-E055"
+        ],
+        "status": "PAPER_ONLY"
+      }
+    ],
+    "open": {
+      "source": "CT117-E055",
+      "args": "open(filename,O_RDONLY,0)",
+      "success": {
+        "premise": "fd returned7",
+        "after": "continue to lseek twice then buf allocation; caller owns filename pointer and fd7 before close",
+        "source": "CT117-E055"
+      },
+      "negative": {
+        "fd": -2,
+        "branch": "fd<0",
+        "source": "CT117-E056",
+        "printf_format": "ls: %s: %s\\n",
+        "printf_first_arg": "strerror(errno)",
+        "printf_second_arg": "filename",
+        "literal_prefix": "ls:",
+        "result": -1,
+        "close_called": false,
+        "filename_free_called": false,
+        "buf_allocated": false,
+        "errno_string": "not known without additional errno premise",
+        "active_allocated_objects": {
+          "filename": 1,
+          "buf": 0
+        },
+        "stop": "at return -1"
+      },
+      "important": "failure prefix is ls: despite cat command; failure path does not call close or free filename; no buf yet"
+    }
+  },
+  "B": {
+    "premise": "valid FAT32 regular file with i_size 0–32, both lseek calls succeed, no narrowing overflow when storing offset to int i, buffer allocated and writable, no concurrent changes, read's return and prefix bytes are conditional models, fmt result fits 4K; stdout actual write and kernel execution NOT_RUN",
+    "types": {
+      "lseek": "user __off_t lseek(int,__off_t,int), P01",
+      "read": "user ssize_t read(int,void*,size_t), P03",
+      "write": "user ssize_t write(int,const void*,size_t), P03",
+      "i": "cat int; first stores lseek END return, then used malloc and read",
+      "len": "cat int; initially current_dir length then overwritten by read return; not used in printf"
+    },
+    "call_chain": {
+      "seek1": "lseek(fd,0,SEEK_END) computes pos=i_size under successful FAT binding and range",
+      "seek2": "lseek(fd,0,SEEK_SET) writes file f_pos=0 if successful; return ignored by cat",
+      "buffer": "malloc(i+1), memset all i+1 bytes zero; i is file length returned by seek1",
+      "read": "read(fd,buf,i) exactly one call; len captures return, no branch on len",
+      "read_vfs": "ksys_read→vfs_read requires READ/access_ok, generic .read_iter preferred over scalar .read",
+      "fat_fops": "FAT32_file_ops .read = FAT32_read, .read_iter = generic_file_read_iter; read_iter preferred by vfs",
+      "generic_filemap": "generic_file_read_iter count=iter->count, if zero return 0, else delegates to simple_filemap_read; stop before page-cache internals",
+      "writeout": "cat calls printf(%s followed by newline), vsnprintf uses strlen to first NUL, copies chars and literal newline, printf calls write(stdout->_fileno,buffer,rv), ignores write result, returns rv",
+      "source_ids": [
+        "CT117-E059",
+        "CT117-E060",
+        "CT117-E061",
+        "CT117-E062",
+        "CT117-E070",
+        "CT117-E073",
+        "CT117-E074",
+        "CT117-E075",
+        "CT117-E076",
+        "CT117-E085",
+        "CT117-E081"
+      ]
+    },
+    "models": [
+      {
+        "id": "B01",
+        "label": "ASCII ABC full",
+        "source_file_bytes": [
+          65,
+          66,
+          67
+        ],
+        "expected_length_from_seek_end": 3,
+        "seek_end": {
+          "offset": 0,
+          "whence": "SEEK_END",
+          "assumed_return": 3,
+          "stored_as_int_i": 3
+        },
+        "seek_set": {
+          "offset": 0,
+          "whence": "SEEK_SET",
+          "assumed_return": 0,
+          "return_consumed": false,
+          "assumed_f_pos_after": 0
+        },
+        "buf_allocation": 4,
+        "preclear_indices": "[0,4)",
+        "read": {
+          "requested_length": 3,
+          "assumed_return": 3,
+          "bytes_written_into_buf": [
+            65,
+            66,
+            67
+          ],
+          "no_write_assumption_for_nonpositive": false
+        },
+        "len_after_read": 3,
+        "len_used_for_printf": false,
+        "buf_after_read": [
+          65,
+          66,
+          67,
+          0
+        ],
+        "first_NUL_index": 3,
+        "still_initial_zero_count": 1,
+        "vsnprintf_format": "%s\\n",
+        "requested_stdout_bytes": [
+          65,
+          66,
+          67,
+          10
+        ],
+        "requested_stdout_length": 4,
+        "visible_escaped_output_request": "ABC\\n",
+        "printf_return_on_normal_small_format": 4,
+        "underlying_write_result_consumed": false,
+        "actual_stdout_result": "NOT_OBSERVED",
+        "cat_return": 1,
+        "close_called": true,
+        "close_return_consumed": false,
+        "filename_freed": false,
+        "read_buffer_freed": false,
+        "evidence": [
+          "CT117-E059",
+          "CT117-E060",
+          "CT117-E061",
+          "CT117-E062",
+          "CT117-E077",
+          "CT117-E078"
+        ],
+        "model_status": "PAPER_ONLY"
+      },
+      {
+        "id": "B02",
+        "label": "A NUL B full",
+        "source_file_bytes": [
+          65,
+          0,
+          66
+        ],
+        "expected_length_from_seek_end": 3,
+        "seek_end": {
+          "offset": 0,
+          "whence": "SEEK_END",
+          "assumed_return": 3,
+          "stored_as_int_i": 3
+        },
+        "seek_set": {
+          "offset": 0,
+          "whence": "SEEK_SET",
+          "assumed_return": 0,
+          "return_consumed": false,
+          "assumed_f_pos_after": 0
+        },
+        "buf_allocation": 4,
+        "preclear_indices": "[0,4)",
+        "read": {
+          "requested_length": 3,
+          "assumed_return": 3,
+          "bytes_written_into_buf": [
+            65,
+            0,
+            66
+          ],
+          "no_write_assumption_for_nonpositive": false
+        },
+        "len_after_read": 3,
+        "len_used_for_printf": false,
+        "buf_after_read": [
+          65,
+          0,
+          66,
+          0
+        ],
+        "first_NUL_index": 1,
+        "still_initial_zero_count": 1,
+        "vsnprintf_format": "%s\\n",
+        "requested_stdout_bytes": [
+          65,
+          10
+        ],
+        "requested_stdout_length": 2,
+        "visible_escaped_output_request": "A\\n",
+        "printf_return_on_normal_small_format": 2,
+        "underlying_write_result_consumed": false,
+        "actual_stdout_result": "NOT_OBSERVED",
+        "cat_return": 1,
+        "close_called": true,
+        "close_return_consumed": false,
+        "filename_freed": false,
+        "read_buffer_freed": false,
+        "evidence": [
+          "CT117-E059",
+          "CT117-E060",
+          "CT117-E061",
+          "CT117-E062",
+          "CT117-E077",
+          "CT117-E078"
+        ],
+        "model_status": "PAPER_ONLY"
+      },
+      {
+        "id": "B03",
+        "label": "file ABCD short AB",
+        "source_file_bytes": [
+          65,
+          66,
+          67,
+          68
+        ],
+        "expected_length_from_seek_end": 4,
+        "seek_end": {
+          "offset": 0,
+          "whence": "SEEK_END",
+          "assumed_return": 4,
+          "stored_as_int_i": 4
+        },
+        "seek_set": {
+          "offset": 0,
+          "whence": "SEEK_SET",
+          "assumed_return": 0,
+          "return_consumed": false,
+          "assumed_f_pos_after": 0
+        },
+        "buf_allocation": 5,
+        "preclear_indices": "[0,5)",
+        "read": {
+          "requested_length": 4,
+          "assumed_return": 2,
+          "bytes_written_into_buf": [
+            65,
+            66
+          ],
+          "no_write_assumption_for_nonpositive": false
+        },
+        "len_after_read": 2,
+        "len_used_for_printf": false,
+        "buf_after_read": [
+          65,
+          66,
+          0,
+          0,
+          0
+        ],
+        "first_NUL_index": 2,
+        "still_initial_zero_count": 3,
+        "vsnprintf_format": "%s\\n",
+        "requested_stdout_bytes": [
+          65,
+          66,
+          10
+        ],
+        "requested_stdout_length": 3,
+        "visible_escaped_output_request": "AB\\n",
+        "printf_return_on_normal_small_format": 3,
+        "underlying_write_result_consumed": false,
+        "actual_stdout_result": "NOT_OBSERVED",
+        "cat_return": 1,
+        "close_called": true,
+        "close_return_consumed": false,
+        "filename_freed": false,
+        "read_buffer_freed": false,
+        "evidence": [
+          "CT117-E059",
+          "CT117-E060",
+          "CT117-E061",
+          "CT117-E062",
+          "CT117-E077",
+          "CT117-E078"
+        ],
+        "model_status": "PAPER_ONLY"
+      },
+      {
+        "id": "B04",
+        "label": "file A LF full",
+        "source_file_bytes": [
+          65,
+          10
+        ],
+        "expected_length_from_seek_end": 2,
+        "seek_end": {
+          "offset": 0,
+          "whence": "SEEK_END",
+          "assumed_return": 2,
+          "stored_as_int_i": 2
+        },
+        "seek_set": {
+          "offset": 0,
+          "whence": "SEEK_SET",
+          "assumed_return": 0,
+          "return_consumed": false,
+          "assumed_f_pos_after": 0
+        },
+        "buf_allocation": 3,
+        "preclear_indices": "[0,3)",
+        "read": {
+          "requested_length": 2,
+          "assumed_return": 2,
+          "bytes_written_into_buf": [
+            65,
+            10
+          ],
+          "no_write_assumption_for_nonpositive": false
+        },
+        "len_after_read": 2,
+        "len_used_for_printf": false,
+        "buf_after_read": [
+          65,
+          10,
+          0
+        ],
+        "first_NUL_index": 2,
+        "still_initial_zero_count": 1,
+        "vsnprintf_format": "%s\\n",
+        "requested_stdout_bytes": [
+          65,
+          10,
+          10
+        ],
+        "requested_stdout_length": 3,
+        "visible_escaped_output_request": "A\\n\\n",
+        "printf_return_on_normal_small_format": 3,
+        "underlying_write_result_consumed": false,
+        "actual_stdout_result": "NOT_OBSERVED",
+        "cat_return": 1,
+        "close_called": true,
+        "close_return_consumed": false,
+        "filename_freed": false,
+        "read_buffer_freed": false,
+        "evidence": [
+          "CT117-E059",
+          "CT117-E060",
+          "CT117-E061",
+          "CT117-E062",
+          "CT117-E077",
+          "CT117-E078"
+        ],
+        "model_status": "PAPER_ONLY"
+      },
+      {
+        "id": "B05",
+        "label": "empty file",
+        "source_file_bytes": [],
+        "expected_length_from_seek_end": 0,
+        "seek_end": {
+          "offset": 0,
+          "whence": "SEEK_END",
+          "assumed_return": 0,
+          "stored_as_int_i": 0
+        },
+        "seek_set": {
+          "offset": 0,
+          "whence": "SEEK_SET",
+          "assumed_return": 0,
+          "return_consumed": false,
+          "assumed_f_pos_after": 0
+        },
+        "buf_allocation": 1,
+        "preclear_indices": "[0,1)",
+        "read": {
+          "requested_length": 0,
+          "assumed_return": 0,
+          "bytes_written_into_buf": [],
+          "no_write_assumption_for_nonpositive": true
+        },
+        "len_after_read": 0,
+        "len_used_for_printf": false,
+        "buf_after_read": [
+          0
+        ],
+        "first_NUL_index": 0,
+        "still_initial_zero_count": 1,
+        "vsnprintf_format": "%s\\n",
+        "requested_stdout_bytes": [
+          10
+        ],
+        "requested_stdout_length": 1,
+        "visible_escaped_output_request": "\\n",
+        "printf_return_on_normal_small_format": 1,
+        "underlying_write_result_consumed": false,
+        "actual_stdout_result": "NOT_OBSERVED",
+        "cat_return": 1,
+        "close_called": true,
+        "close_return_consumed": false,
+        "filename_freed": false,
+        "read_buffer_freed": false,
+        "evidence": [
+          "CT117-E059",
+          "CT117-E060",
+          "CT117-E061",
+          "CT117-E062",
+          "CT117-E077",
+          "CT117-E078"
+        ],
+        "model_status": "PAPER_ONLY"
+      },
+      {
+        "id": "B06",
+        "label": "4-byte file read returns zero",
+        "source_file_bytes": [
+          65,
+          66,
+          67,
+          68
+        ],
+        "expected_length_from_seek_end": 4,
+        "seek_end": {
+          "offset": 0,
+          "whence": "SEEK_END",
+          "assumed_return": 4,
+          "stored_as_int_i": 4
+        },
+        "seek_set": {
+          "offset": 0,
+          "whence": "SEEK_SET",
+          "assumed_return": 0,
+          "return_consumed": false,
+          "assumed_f_pos_after": 0
+        },
+        "buf_allocation": 5,
+        "preclear_indices": "[0,5)",
+        "read": {
+          "requested_length": 4,
+          "assumed_return": 0,
+          "bytes_written_into_buf": [],
+          "no_write_assumption_for_nonpositive": true
+        },
+        "len_after_read": 0,
+        "len_used_for_printf": false,
+        "buf_after_read": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_NUL_index": 0,
+        "still_initial_zero_count": 5,
+        "vsnprintf_format": "%s\\n",
+        "requested_stdout_bytes": [
+          10
+        ],
+        "requested_stdout_length": 1,
+        "visible_escaped_output_request": "\\n",
+        "printf_return_on_normal_small_format": 1,
+        "underlying_write_result_consumed": false,
+        "actual_stdout_result": "NOT_OBSERVED",
+        "cat_return": 1,
+        "close_called": true,
+        "close_return_consumed": false,
+        "filename_freed": false,
+        "read_buffer_freed": false,
+        "evidence": [
+          "CT117-E059",
+          "CT117-E060",
+          "CT117-E061",
+          "CT117-E062",
+          "CT117-E077",
+          "CT117-E078"
+        ],
+        "model_status": "PAPER_ONLY"
+      },
+      {
+        "id": "B07",
+        "label": "3-byte file read negative",
+        "source_file_bytes": [
+          65,
+          66,
+          67
+        ],
+        "expected_length_from_seek_end": 3,
+        "seek_end": {
+          "offset": 0,
+          "whence": "SEEK_END",
+          "assumed_return": 3,
+          "stored_as_int_i": 3
+        },
+        "seek_set": {
+          "offset": 0,
+          "whence": "SEEK_SET",
+          "assumed_return": 0,
+          "return_consumed": false,
+          "assumed_f_pos_after": 0
+        },
+        "buf_allocation": 4,
+        "preclear_indices": "[0,4)",
+        "read": {
+          "requested_length": 3,
+          "assumed_return": -5,
+          "bytes_written_into_buf": [],
+          "no_write_assumption_for_nonpositive": true
+        },
+        "len_after_read": -5,
+        "len_used_for_printf": false,
+        "buf_after_read": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "first_NUL_index": 0,
+        "still_initial_zero_count": 4,
+        "vsnprintf_format": "%s\\n",
+        "requested_stdout_bytes": [
+          10
+        ],
+        "requested_stdout_length": 1,
+        "visible_escaped_output_request": "\\n",
+        "printf_return_on_normal_small_format": 1,
+        "underlying_write_result_consumed": false,
+        "actual_stdout_result": "NOT_OBSERVED",
+        "cat_return": 1,
+        "close_called": true,
+        "close_return_consumed": false,
+        "filename_freed": false,
+        "read_buffer_freed": false,
+        "evidence": [
+          "CT117-E059",
+          "CT117-E060",
+          "CT117-E061",
+          "CT117-E062",
+          "CT117-E077",
+          "CT117-E078"
+        ],
+        "model_status": "PAPER_ONLY"
+      }
+    ]
+  },
+  "C": {
+    "printf": {
+      "format": "%s\\n",
+      "source": "myinitramfs/mylib/myglibc/stdio/printf.c and vsnprintf.c",
+      "vsnprintf": "printf computes rv=vsnprintf(stack4k,...), then invokes write(stdout->_fileno,buf,rv), does not read back result; printf returns rv",
+      "percent_s": "vsnprintf uses strlen(sarg) and copies that many bytes before its format literal LF; stop at first NUL",
+      "emitter": "EMIT stores if o<n and increments o; all modeled outputs <=4 so no truncation",
+      "source_ids": [
+        "CT117-E079",
+        "CT117-E080",
+        "CT117-E081",
+        "CT117-E082",
+        "CT117-E084",
+        "CT117-E085",
+        "CT117-E086",
+        "CT117-E087",
+        "CT117-E088"
+      ]
+    },
+    "output_cases": [
+      {
+        "id": "B01",
+        "expected_file_length": 3,
+        "read_return": 3,
+        "first_NUL_at": 3,
+        "buffer_after_read": [
+          65,
+          66,
+          67,
+          0
+        ],
+        "write_request_bytes_decimal": [
+          65,
+          66,
+          67,
+          10
+        ],
+        "write_request_escaped": "ABC\\n",
+        "write_request_length": 4,
+        "printf_return": 4,
+        "actual_stdout_write_result": "NOT_RUN/NOT_OBSERVED"
+      },
+      {
+        "id": "B02",
+        "expected_file_length": 3,
+        "read_return": 3,
+        "first_NUL_at": 1,
+        "buffer_after_read": [
+          65,
+          0,
+          66,
+          0
+        ],
+        "write_request_bytes_decimal": [
+          65,
+          10
+        ],
+        "write_request_escaped": "A\\n",
+        "write_request_length": 2,
+        "printf_return": 2,
+        "actual_stdout_write_result": "NOT_RUN/NOT_OBSERVED"
+      },
+      {
+        "id": "B03",
+        "expected_file_length": 4,
+        "read_return": 2,
+        "first_NUL_at": 2,
+        "buffer_after_read": [
+          65,
+          66,
+          0,
+          0,
+          0
+        ],
+        "write_request_bytes_decimal": [
+          65,
+          66,
+          10
+        ],
+        "write_request_escaped": "AB\\n",
+        "write_request_length": 3,
+        "printf_return": 3,
+        "actual_stdout_write_result": "NOT_RUN/NOT_OBSERVED"
+      },
+      {
+        "id": "B04",
+        "expected_file_length": 2,
+        "read_return": 2,
+        "first_NUL_at": 2,
+        "buffer_after_read": [
+          65,
+          10,
+          0
+        ],
+        "write_request_bytes_decimal": [
+          65,
+          10,
+          10
+        ],
+        "write_request_escaped": "A\\n\\n",
+        "write_request_length": 3,
+        "printf_return": 3,
+        "actual_stdout_write_result": "NOT_RUN/NOT_OBSERVED"
+      },
+      {
+        "id": "B05",
+        "expected_file_length": 0,
+        "read_return": 0,
+        "first_NUL_at": 0,
+        "buffer_after_read": [
+          0
+        ],
+        "write_request_bytes_decimal": [
+          10
+        ],
+        "write_request_escaped": "\\n",
+        "write_request_length": 1,
+        "printf_return": 1,
+        "actual_stdout_write_result": "NOT_RUN/NOT_OBSERVED"
+      },
+      {
+        "id": "B06",
+        "expected_file_length": 4,
+        "read_return": 0,
+        "first_NUL_at": 0,
+        "buffer_after_read": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "write_request_bytes_decimal": [
+          10
+        ],
+        "write_request_escaped": "\\n",
+        "write_request_length": 1,
+        "printf_return": 1,
+        "actual_stdout_write_result": "NOT_RUN/NOT_OBSERVED"
+      },
+      {
+        "id": "B07",
+        "expected_file_length": 3,
+        "read_return": -5,
+        "first_NUL_at": 0,
+        "buffer_after_read": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "write_request_bytes_decimal": [
+          10
+        ],
+        "write_request_escaped": "\\n",
+        "write_request_length": 1,
+        "printf_return": 1,
+        "actual_stdout_write_result": "NOT_RUN/NOT_OBSERVED"
+      }
+    ],
+    "resource_cases": [
+      {
+        "id": "OPEN_FAIL",
+        "filename_allocated": true,
+        "buf_allocated": false,
+        "fd_value": -2,
+        "valid_fd": false,
+        "close_called": false,
+        "free_filename": false,
+        "free_buffer": false,
+        "returns": -1,
+        "error_prefix": "ls:",
+        "source": "CT117-E056"
+      },
+      {
+        "id": "NORMAL",
+        "filename_allocated": true,
+        "buf_allocated": true,
+        "fd_value": 7,
+        "valid_fd": true,
+        "close_called": true,
+        "close_return_consumed": false,
+        "free_filename": false,
+        "free_buffer": false,
+        "returns": 1,
+        "source": "CT117-E078"
+      },
+      {
+        "id": "READ_NEGATIVE",
+        "filename_allocated": true,
+        "buf_allocated": true,
+        "fd_value": 7,
+        "valid_fd": true,
+        "read_ret": -5,
+        "buffer_no_write_premise": true,
+        "printf_request": "\\n",
+        "close_called": true,
+        "free_filename": false,
+        "free_buffer": false,
+        "returns": 1,
+        "source": "CT117-E078"
+      }
+    ],
+    "caller": "run_cmd invokes cat_command but does not collect its integer return",
+    "source_ids": [
+      "CT117-E020",
+      "CT117-E078",
+      "CT117-E081"
+    ],
+    "actual_terminal_result": "NOT_RUN",
+    "actual_close_effect": "NOT_RUN; only call recorded"
+  },
+  "evidence_ledger": [
+    {
+      "id": "CT117-E001",
+      "key": "D_KSYS_READ_FD",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_read",
+      "start_line": 180,
+      "end_line": 184
+    },
+    {
+      "id": "CT117-E002",
+      "key": "D_KSYS_READ_CALL",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_read",
+      "start_line": 191,
+      "end_line": 194
+    },
+    {
+      "id": "CT117-E003",
+      "key": "D_KSYS_WRITE_FD",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_write",
+      "start_line": 319,
+      "end_line": 323
+    },
+    {
+      "id": "CT117-E004",
+      "key": "D_KSYS_WRITE_CALL",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_write",
+      "start_line": 331,
+      "end_line": 334
+    },
+    {
+      "id": "CT117-E005",
+      "key": "D_VERIFY_ZERO",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "rw_verify_area",
+      "start_line": 49,
+      "end_line": 51
+    },
+    {
+      "id": "CT117-E006",
+      "key": "D_VFS_READ_LIMIT",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 154,
+      "end_line": 158
+    },
+    {
+      "id": "CT117-E007",
+      "key": "D_VFS_WRITE_LIMIT",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 298,
+      "end_line": 302
+    },
+    {
+      "id": "CT117-E008",
+      "key": "D_VFS_READ_METHOD",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 160,
+      "end_line": 163
+    },
+    {
+      "id": "CT117-E009",
+      "key": "D_VFS_READ_MISSING",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 164,
+      "end_line": 165
+    },
+    {
+      "id": "CT117-E010",
+      "key": "D_VFS_WRITE_METHOD",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 304,
+      "end_line": 307
+    },
+    {
+      "id": "CT117-E011",
+      "key": "D_VFS_WRITE_MISSING",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_write",
+      "start_line": 308,
+      "end_line": 309
+    },
+    {
+      "id": "CT117-E012",
+      "key": "D_ITER_READ_BUG",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "new_sync_read",
+      "start_line": 88,
+      "end_line": 92
+    },
+    {
+      "id": "CT117-E013",
+      "key": "D_ITER_WRITE_BUG",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "new_sync_write",
+      "start_line": 212,
+      "end_line": 216
+    },
+    {
+      "id": "CT117-E014",
+      "key": "D_BUG_MACRO",
+      "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+      "symbol": "BUG_ON",
+      "start_line": 66,
+      "end_line": 66
+    },
+    {
+      "id": "CT117-E015",
+      "key": "D_ZERO_FOPS",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "zero_fops",
+      "start_line": 141,
+      "end_line": 145
+    },
+    {
+      "id": "CT117-E016",
+      "key": "D_ZERO_LOOP",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 85,
+      "end_line": 88
+    },
+    {
+      "id": "CT117-E017",
+      "key": "D_ZERO_MEMSET",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 90,
+      "end_line": 93
+    },
+    {
+      "id": "CT117-E018",
+      "key": "D_ZERO_ACCUM",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 95,
+      "end_line": 95
+    },
+    {
+      "id": "CT117-E019",
+      "key": "D_ZERO_RETURN",
+      "path": "mykernel/drivers/char/mem.c",
+      "symbol": "read_zero",
+      "start_line": 108,
+      "end_line": 108
+    },
+    {
+      "id": "CT117-E020",
+      "key": "D_RUN_CMD",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "run_cmd",
+      "start_line": 139,
+      "end_line": 142
+    },
+    {
+      "id": "CT117-E021",
+      "key": "D_OPENDIR_GATE",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "opendir",
+      "start_line": 63,
+      "end_line": 66
+    },
+    {
+      "id": "CT117-E022",
+      "key": "D_OPENDIR_OPEN",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "opendir",
+      "start_line": 68,
+      "end_line": 70
+    },
+    {
+      "id": "CT117-E023",
+      "key": "D_DIR_ALLOC",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 100,
+      "end_line": 103
+    },
+    {
+      "id": "CT117-E024",
+      "key": "D_DIR_FAIL",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 103,
+      "end_line": 107
+    },
+    {
+      "id": "CT117-E025",
+      "key": "D_DIR_INIT",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "__alloc_dir",
+      "start_line": 114,
+      "end_line": 118
+    },
+    {
+      "id": "CT117-E026",
+      "key": "D_READDIR_GATE",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 39,
+      "end_line": 43
+    },
+    {
+      "id": "CT117-E027",
+      "key": "D_READDIR_CALL",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 47,
+      "end_line": 49
+    },
+    {
+      "id": "CT117-E028",
+      "key": "D_READDIR_NONPOS",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 49,
+      "end_line": 51
+    },
+    {
+      "id": "CT117-E029",
+      "key": "D_READDIR_NULL",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 61,
+      "end_line": 64
+    },
+    {
+      "id": "CT117-E030",
+      "key": "D_READDIR_DATA",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 71,
+      "end_line": 73
+    },
+    {
+      "id": "CT117-E031",
+      "key": "D_READDIR_ADVANCE",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/readdir64.c",
+      "symbol": "readdir",
+      "start_line": 73,
+      "end_line": 77
+    },
+    {
+      "id": "CT117-E032",
+      "key": "D_GETDENTS_INIT",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 135,
+      "end_line": 139
+    },
+    {
+      "id": "CT117-E033",
+      "key": "D_GETDENTS_POS",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 150,
+      "end_line": 152
+    },
+    {
+      "id": "CT117-E034",
+      "key": "D_GETDENTS_RETBRANCH",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 155,
+      "end_line": 157
+    },
+    {
+      "id": "CT117-E035",
+      "key": "D_GETDENTS_RETURN",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(getdents64)",
+      "start_line": 165,
+      "end_line": 168
+    },
+    {
+      "id": "CT117-E036",
+      "key": "D_FILL_PREV",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "filldir64",
+      "start_line": 109,
+      "end_line": 113
+    },
+    {
+      "id": "CT117-E037",
+      "key": "D_FILL_NOW",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "filldir64",
+      "start_line": 114,
+      "end_line": 118
+    },
+    {
+      "id": "CT117-E038",
+      "key": "D_FILL_ACCOUNT",
+      "path": "mykernel/fs/vfs/readdir.c",
+      "symbol": "filldir64",
+      "start_line": 120,
+      "end_line": 123
+    },
+    {
+      "id": "CT117-E039",
+      "key": "D_FAT_ACTOR",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_getdents64",
+      "start_line": 340,
+      "end_line": 344
+    },
+    {
+      "id": "CT117-E040",
+      "key": "D_INVALID_TRUE",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "invalid_name",
+      "start_line": 42,
+      "end_line": 43
+    },
+    {
+      "id": "CT117-E041",
+      "key": "D_INVALID_FALSE",
+      "path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/opendir.c",
+      "symbol": "invalid_name",
+      "start_line": 49,
+      "end_line": 49
+    },
+    {
+      "id": "CT117-E042",
+      "key": "D_SYSMACRO1",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "SYSFUNC_DEF",
+      "start_line": 13,
+      "end_line": 14
+    },
+    {
+      "id": "CT117-E043",
+      "key": "D_SYSMACRO2",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "_SYSFUNC_DEF_",
+      "start_line": 16,
+      "end_line": 17
+    },
+    {
+      "id": "CT117-E044",
+      "key": "D_SYSMACRO3",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "__SYSFUNC_DEF__",
+      "start_line": 19,
+      "end_line": 23
+    },
+    {
+      "id": "CT117-E045",
+      "key": "D_SYSMACRO_NUM",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "__SYSFUNC_DEF__",
+      "start_line": 24,
+      "end_line": 27
+    },
+    {
+      "id": "CT117-E046",
+      "key": "D_SYSCALL_INSTR",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "LABEL_SYSCALL",
+      "start_line": 70,
+      "end_line": 74
+    },
+    {
+      "id": "CT117-E047",
+      "key": "D_SYSCALL_TEST",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "sysexit_ret_addr",
+      "start_line": 75,
+      "end_line": 76
+    },
+    {
+      "id": "CT117-E048",
+      "key": "D_SYSCALL_RET",
+      "path": "myinitramfs/mylib/myglibc/syscall/syscall.c",
+      "symbol": "sysexit_ret_addr",
+      "start_line": 79,
+      "end_line": 81
+    },
+    {
+      "id": "CT117-E049",
+      "key": "D_SWITCH_DEF",
+      "path": "mykernel/arch/x86_64/entry/syscall_64.c",
+      "symbol": "__SYSCALL",
+      "start_line": 26,
+      "end_line": 26
+    },
+    {
+      "id": "CT117-E050",
+      "key": "A_CAT_BIND",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "shell_internal_cmd",
+      "start_line": 47,
+      "end_line": 50
+    },
+    {
+      "id": "CT117-E051",
+      "key": "A_CAT_LOCALS",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 254,
+      "end_line": 258
+    },
+    {
+      "id": "CT117-E052",
+      "key": "A_CAT_LENGTHS",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 260,
+      "end_line": 262
+    },
+    {
+      "id": "CT117-E053",
+      "key": "A_CAT_INIT",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 263,
+      "end_line": 264
+    },
+    {
+      "id": "CT117-E054",
+      "key": "A_CAT_SLASH",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 265,
+      "end_line": 267
+    },
+    {
+      "id": "CT117-E055",
+      "key": "A_CAT_OPEN",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 270,
+      "end_line": 270
+    },
+    {
+      "id": "CT117-E056",
+      "key": "A_CAT_FAIL",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 271,
+      "end_line": 275
+    },
+    {
+      "id": "CT117-E057",
+      "key": "A_STRCAT",
+      "path": "myinitramfs/mylib/myglibc/string/strcat.c",
+      "symbol": "STRCAT",
+      "start_line": 28,
+      "end_line": 31
+    },
+    {
+      "id": "CT117-E058",
+      "key": "A_STRCPY",
+      "path": "myinitramfs/mylib/myglibc/string/strcpy.c",
+      "symbol": "STRCPY",
+      "start_line": 28,
+      "end_line": 32
+    },
+    {
+      "id": "CT117-E059",
+      "key": "B_SEEK_END",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 276,
+      "end_line": 276
+    },
+    {
+      "id": "CT117-E060",
+      "key": "B_SEEK_SET",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 277,
+      "end_line": 277
+    },
+    {
+      "id": "CT117-E061",
+      "key": "B_ALLOC_BUF",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 278,
+      "end_line": 279
+    },
+    {
+      "id": "CT117-E062",
+      "key": "B_READ_ONCE",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 280,
+      "end_line": 280
+    },
+    {
+      "id": "CT117-E063",
+      "key": "B_LSEEK_DEF",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(lseek)",
+      "start_line": 75,
+      "end_line": 79
+    },
+    {
+      "id": "CT117-E064",
+      "key": "B_LSEEK_GATES",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(lseek)",
+      "start_line": 82,
+      "end_line": 85
+    },
+    {
+      "id": "CT117-E065",
+      "key": "B_LSEEK_CALL",
+      "path": "mykernel/fs/syscall.c",
+      "symbol": "MYOS_SYSCALL_DEFINE3(lseek)",
+      "start_line": 87,
+      "end_line": 90
+    },
+    {
+      "id": "CT117-E066",
+      "key": "B_FAT_END",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start_line": 293,
+      "end_line": 295
+    },
+    {
+      "id": "CT117-E067",
+      "key": "B_FAT_SET",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start_line": 285,
+      "end_line": 287
+    },
+    {
+      "id": "CT117-E068",
+      "key": "B_FAT_RANGE",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start_line": 302,
+      "end_line": 305
+    },
+    {
+      "id": "CT117-E069",
+      "key": "B_FAT_RET",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_lseek",
+      "start_line": 308,
+      "end_line": 308
+    },
+    {
+      "id": "CT117-E070",
+      "key": "B_FAT_FOPS",
+      "path": "mykernel/fs/fat/myos_fat32.c",
+      "symbol": "FAT32_file_ops",
+      "start_line": 356,
+      "end_line": 360
+    },
+    {
+      "id": "CT117-E071",
+      "key": "B_KSYS_LOCAL",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "ksys_read",
+      "start_line": 185,
+      "end_line": 189
+    },
+    {
+      "id": "CT117-E072",
+      "key": "B_VFS_READ_MODE",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 147,
+      "end_line": 150
+    },
+    {
+      "id": "CT117-E073",
+      "key": "B_VFS_READ_ITER",
+      "path": "mykernel/fs/vfs/read_write.c",
+      "symbol": "vfs_read",
+      "start_line": 160,
+      "end_line": 163
+    },
+    {
+      "id": "CT117-E074",
+      "key": "B_FILEMAP_ENTER",
+      "path": "mykernel/mm/vm_map/filemap.c",
+      "symbol": "generic_file_read_iter",
+      "start_line": 263,
+      "end_line": 267
+    },
+    {
+      "id": "CT117-E075",
+      "key": "B_FILEMAP_ZERO",
+      "path": "mykernel/mm/vm_map/filemap.c",
+      "symbol": "generic_file_read_iter",
+      "start_line": 269,
+      "end_line": 270
+    },
+    {
+      "id": "CT117-E076",
+      "key": "B_FILEMAP_TO_SIMPLE",
+      "path": "mykernel/mm/vm_map/filemap.c",
+      "symbol": "generic_file_read_iter",
+      "start_line": 305,
+      "end_line": 305
+    },
+    {
+      "id": "CT117-E077",
+      "key": "C_PRINTF_CALL",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 280,
+      "end_line": 282
+    },
+    {
+      "id": "CT117-E078",
+      "key": "C_CAT_RETURN",
+      "path": "myinitramfs/myshell/myshell.c",
+      "symbol": "cat_command",
+      "start_line": 282,
+      "end_line": 285
+    },
+    {
+      "id": "CT117-E079",
+      "key": "C_PRINTF_LOCAL",
+      "path": "myinitramfs/mylib/myglibc/stdio/printf.c",
+      "symbol": "printf",
+      "start_line": 11,
+      "end_line": 15
+    },
+    {
+      "id": "CT117-E080",
+      "key": "C_PRINTF_VSN",
+      "path": "myinitramfs/mylib/myglibc/stdio/printf.c",
+      "symbol": "printf",
+      "start_line": 17,
+      "end_line": 19
+    },
+    {
+      "id": "CT117-E081",
+      "key": "C_PRINTF_WRITE",
+      "path": "myinitramfs/mylib/myglibc/stdio/printf.c",
+      "symbol": "printf",
+      "start_line": 21,
+      "end_line": 25
+    },
+    {
+      "id": "CT117-E082",
+      "key": "C_VS_EMIT",
+      "path": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+      "symbol": "EMIT",
+      "start_line": 39,
+      "end_line": 39
+    },
+    {
+      "id": "CT117-E083",
+      "key": "C_VS_NORMAL",
+      "path": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+      "symbol": "vsnprintf",
+      "start_line": 557,
+      "end_line": 561
+    },
+    {
+      "id": "CT117-E084",
+      "key": "C_VS_LITERAL",
+      "path": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+      "symbol": "vsnprintf",
+      "start_line": 570,
+      "end_line": 574
+    },
+    {
+      "id": "CT117-E085",
+      "key": "C_VS_STRLEN",
+      "path": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+      "symbol": "vsnprintf",
+      "start_line": 783,
+      "end_line": 787
+    },
+    {
+      "id": "CT117-E086",
+      "key": "C_VS_COPY",
+      "path": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+      "symbol": "vsnprintf",
+      "start_line": 805,
+      "end_line": 809
+    },
+    {
+      "id": "CT117-E087",
+      "key": "C_VS_NUL",
+      "path": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+      "symbol": "vsnprintf",
+      "start_line": 871,
+      "end_line": 874
+    },
+    {
+      "id": "CT117-E088",
+      "key": "C_VS_RET",
+      "path": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+      "symbol": "vsnprintf",
+      "start_line": 876,
+      "end_line": 876
+    }
+  ],
+  "new_P2_anchors": 88,
+  "ordinary_positions": 35,
+  "graph": {
+    "subgraphs": [
+      "R115",
+      "R116",
+      "CAT117"
+    ],
+    "expected_nodes": 153,
+    "expected_edges": 193,
+    "graphviz": "NOT_RUN",
+    "R115_model_reachability": [
+      "Z0",
+      "ZP",
+      "ZP1"
+    ],
+    "R116_tail_cases": [
+      "ONE",
+      "TWO",
+      "THREE"
+    ]
+  },
+  "verification": {
+    "new_quotes_exact": "88/88",
+    "new_windows_single_definition_claimed": "88/88",
+    "historical_refs": "MD115-E and DS116-E as prior fixed sources; do not count new",
+    "scope": "source-only bounded paper models, not evidence of actual device/terminal behavior"
+  },
+  "execution": {
+    "full_local_P9": "NOT_RUN",
+    "repo_scripts": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "kernel": "NOT_RUN",
+    "real_hardware": "NOT_RUN",
+    "real_ls": "NOT_RUN",
+    "real_cat": "NOT_RUN",
+    "real_vfs": "NOT_RUN",
+    "concurrency": "NOT_RUN",
+    "paper_counts": {
+      "D00_R115_cases": 3,
+      "D00_R116_tail_cases": 3,
+      "D00_R116_trace_rows": 4,
+      "A_path_models": 3,
+      "A_open_branches": 2,
+      "B_read_models": 7,
+      "C_output_models": 7
+    }
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FS-CONTEXT-45",
+  "record_type": "incremental_deferred_findings_and_historical_boundary",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-06",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "new_finding_count": 2,
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F01",
+      "id": "FS45-F01",
+      "title": "静态init_fs在最后users归还条件下进入fs_cachep释放请求的对象来源不匹配",
+      "kind": [
+        "source_fact",
+        "bounded_conditional_inference",
+        "object_allocation_origin_gap"
+      ],
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "source_ref": {
+        "path": [
+          "mykernel/init/init_task.c",
+          "mykernel/sched/misc/fs_struct.c",
+          "mykernel/sched/forkexec/fork.c"
+        ],
+        "source_pin": "time@a039d9803ade",
+        "anchors": [
+          "FS45-A001",
+          "FS45-A002",
+          "FS45-A031",
+          "FS45-A032",
+          "FS45-A033",
+          "FS45-A036",
+          "FS45-A042",
+          "FS45-A043",
+          "FS45-A050"
+        ]
+      },
+      "claim": "init_fs为全局定义、users初值1，init_task.fs静态绑定其地址；exit_fs在users前减后为零时调用free_fs_struct，该函数在两次path_put之后不区分来源地调用kmem_cache_free(fs_cachep,fs)。fs_cachep是为动态taskfs_s对象创建的cache。因此如果一个有效task拥有静态init_fs对象的最后一个合法users，且前序锁与两次path_put都正常完成，则会把静态对象地址传入动态cache释放函数。",
+      "premises": [
+        "实际某个task.fs仍指向静态init_fs且具有合法最后一次users持有",
+        "users原值1且没有未建模并发修改、计数溢出或对象失效",
+        "task/fs锁调用成功、tsk.fs正常摘除，两次path_put以有效root/pwd参数正常返回",
+        "目标选定源定义/调用在编译配置中确实有效；不声称真实机器已运行此路径"
+      ],
+      "possible_impact": "若上述条件真实到达，fs_cachep释放请求与静态对象来源有条件不匹配；不证明kmem_cache_free物理回收、实际slab崩溃或运行中存在最后释放。",
+      "counter_evidence": [
+        "静态绑定与初始users=1不证明某个任务真的以最后users退出",
+        "正常CLONE_FS共享有效模型1→2，子任务一次exit_fs后2→1，不到最后free",
+        "动态copy_fs_struct成功的newfs由fs_cachep分配，其归还来源正常匹配",
+        "若path_put(root)或path_put(pwd)先失效/不返回，就不能声明已到kmem_cache_free"
+      ],
+      "unknown": [
+        "完整启动、其它task共享/替换静态init_fs后的真实users变动",
+        "root/pwd的实际有效性和dput行为",
+        "真实最后一次exit_fs能否到达cachefree调用",
+        "缓存释放器处理该输入的物理效果"
+      ],
+      "related": [
+        "CORE-USER-FD-CLOSE-42::CL42-F01",
+        "CORE-USER-VFS-BASELINE-05::UV-14",
+        "CORE-USER-VFS-BASELINE-05::UV-15"
+      ],
+      "future_verification": {
+        "first_step": "独立获准后定点追实机task.fs来源与最后一次users归还是否可达；仍先重核届时源码",
+        "expanded_review_requires_authorization": true,
+        "runtime_requires_authorization": true
+      },
+      "reopen_condition": "Owner明确准许后续来源/退出或运行专项；本次仅登记静态条件，不实施修复"
+    },
+    {
+      "qualified_id": "CORE-USER-FS-CONTEXT-45::FS45-F02",
+      "id": "FS45-F02",
+      "title": "root/pwd路径持有包装层只调用dget/dput，挂载引用取得与归还被注释",
+      "kind": [
+        "source_fact",
+        "bounded_lifetime_evidence_gap"
+      ],
+      "status": "needs_evidence",
+      "owner_action_now": "none",
+      "source_ref": {
+        "path": [
+          "mykernel/include/linux/fs/path.h",
+          "mykernel/fs/vfs/namei.c",
+          "mykernel/sched/misc/fs_struct.c"
+        ],
+        "source_pin": "time@a039d9803ade",
+        "anchors": [
+          "FS45-A006",
+          "FS45-A026",
+          "FS45-A027",
+          "FS45-A033",
+          "FS45-A037",
+          "FS45-A038",
+          "FS45-A039",
+          "FS45-A040",
+          "FS45-A041"
+        ]
+      },
+      "claim": "path_s同时承载vfsmount_s* mnt与dentry_s* dentry；copy_fs_struct两次按值复制后对root和pwd分别请求path_get，free_fs_struct对二者分别请求path_put。选定namei.c的path_get实际仅调用dget(path->dentry)，mntget(path->mnt)被注释；path_put实际仅调用dput(path->dentry)，mntput(path->mnt)被注释。因而在这两个包装层内未看到活动mount引用操作。",
+      "premises": [
+        "两个包装层是所选copy_fs_struct/free_fs_struct调用路径中的真实实现",
+        "root/pwd携带有效挂载指针，且对相关场景的完整生存期需要此处额外持有或归还",
+        "要把此事实升级为行为错误，须独立建立真实挂载所有权契约及其他路径引用来源"
+      ],
+      "possible_impact": "若该路径语义需要独立挂载引用取得，包装层没有提供；不能据此直接断言挂载引用泄漏、过早释放或UAF，因为全局mnt持有来源/销毁协议未审。",
+      "counter_evidence": [
+        "path_get/path_put的dentry方向活动调用仍在，两次root/pwd请求不是完全空壳",
+        "挂载对象可能另有合法拥有引用或生命周期保障，本轮未检查",
+        "path_get/path_put包装层两端的mnt分支均为注释，不能只称取得缺失而归还存在导致不平衡",
+        "31::PI31-F05仅涉及nameidata局部清理/路径输出，没有直接等同本包装层mount腿的证据"
+      ],
+      "unknown": [
+        "vfsmount_s引用的真实创建与销毁规则",
+        "dget/dput实际计数/NULL处理与对mount的间接影响",
+        "init_fs与动态fs在根/pwd设置时是否另有持有者",
+        "完整挂载命名空间、锁与并发行为"
+      ],
+      "related": [
+        "CORE-USER-PATH-INIT-31::PI31-F05",
+        "CORE-USER-VFS-BASELINE-05::UV-10"
+      ],
+      "future_verification": {
+        "first_step": "获授权的单独mount/path引用专项先确认需要的所有权契约，及实际mntget/mntput生产者与消费者",
+        "runtime_requires_authorization": true
+      },
+      "reopen_condition": "Owner明确准许挂载/路径引用深层审查；本轮不重做全仓路径生命周期"
+    }
+  ],
+  "history_preserved": [
+    {
+      "qualified_id": "CORE-USER-PATH-INIT-31::PI31-F05",
+      "status": "needs_evidence",
+      "increment": "31批针对nameidata/path_lookupat的局部清理空壳与路径引用未知；本批独立核copy_fs_struct/exit_fs调用path_get/put包装层，仍未审路径解析、锁和dget/dput深层生命周期，不作重复根因或CLOSED"
+    },
+    {
+      "qualified_id": "CORE-USER-FD-CLOSE-42::CL42-F01",
+      "status": "needs_evidence",
+      "increment": "42批静态init_files经files_cachep的条件来源问题，45批是不同静态对象init_fs经fs_cachep的潜在释放请求，不能合并或将任一项改CLOSED"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-10",
+      "status": "deferred_owner_not_ready",
+      "increment": "旧file对象fput/path引用契约与本批root/pwd路径持有不同，未重做open/file缓存审计"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-14",
+      "status": "needs_evidence",
+      "increment": "copy_fs正常成功后更后错误先经__cleanup_sighand，其已登记可能形成更早失效/不返回；只在它及exit_fs有效时才能继续到exit_files"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-15",
+      "status": "deferred_owner_not_ready",
+      "increment": "广义退出/回收缺口存在，本批只证单一exit_fs/free_fs_struct活动体，不重复升级广义资源生命周期问题"
+    },
+    {
+      "qualified_id": "CORE-USER-FILES-COPY-SHARE-43::FT43-F01",
+      "status": "deferred_owner_not_ready",
+      "increment": "dup_fd内层NULL失败属于文件表复制独立路径；本批copy_fs_struct外层NULL分配会正常返回NULL，不借此宣称旧项已修复"
+    },
+    {
+      "qualified_id": "CORE-USER-FORK-FILES-ROLLBACK-44-REVIEW-001::R44-S01",
+      "status": "mandatory_supplement",
+      "increment": "前序失败、返回码实际生产、对象有效性、预置指针不等于已取得引用等限定继续适用"
+    },
+    {
+      "qualified_id": "CORE-USER-FORK-FILES-ROLLBACK-44-REVIEW-001::R44-S02",
+      "status": "mandatory_supplement",
+      "increment": "错误跳转、前序分流、分析STOP非源码return、调用返回类型及计数初值时点等消费规则继续适用"
+    }
+  ],
+  "non_new_observations": [
+    "copy_fs CLONE_FS当前fs=NULL时在fs->in_exec首次成员读取处缺少有效对象前提：只有输入模型，不证真实生产者，未单列根因",
+    "copy_fs_struct分配成功时会在锁旧对象之前读取old->umask：是源码顺序，缺少并发证据，不签竞态",
+    "root与pwd指向同一dentry时有两次dget及两次dput请求：按路径事件而非按唯一指针合并",
+    "copy_fs_struct分配返回NULL时tsk.fs先置NULL且return-ENOMEM：清理跳过exit_fs与已取得持有状态一致，不强行判漏",
+    "exit_fs users=0/负值/溢出模型缺少合法所有权前提，不输出确定的物理内存结果"
+  ],
+  "reopen_policy": "已有qualified_id与状态保留，当前不进行完整fork/exec/exit、mount/dentry/slab审计、不修内核、不编译运行",
+  "original_artifacts_modified": false,
+  "runtime_evidence": "NOT_RUN",
+  "mainline_acceptance": "PENDING",
+  "kernel_change_authorized": false,
+  "phase3_authorized": false
+}

@@ -1,0 +1,215 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-ALLOCATOR-ENTRY-75",
+  "record_type": "bounded_allocator_entry_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-09",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "1ba6acf132a0",
+  "D00": "documentation_disposition_submitted",
+  "R74_01": "OPEN_PENDING_C05_DOCUMENTATION_ACCEPTANCE",
+  "R73_01": "CLOSED_DOCUMENTATION_ONLY_BY_C05",
+  "batch73": "PASS_PENDING_LOCAL",
+  "prior74": "RETURN_DOCUMENTATION_WITH_R74-S01/S02/S03",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_findings": [],
+  "new_findings_count": 0,
+  "evidence_gaps": [
+    {
+      "id": "AE75-U01",
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U01",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "`sizeof(task_s)` remains symbolic at alloc_task_struct_node, so the task allocation size class/large route is unknown without object-layout evidence; stack THREAD_SIZE numeric projection has no preprocessed/linked result.",
+      "anchors": [
+        "A26",
+        "A01",
+        "D01",
+        "D02",
+        "D03",
+        "D04",
+        "D05"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AE75-U02",
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U02",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "kmalloc_caches table declaration and create_kmalloc_caches loop do not prove every selected cache pointer already initialized when arbitrary callers arrive; boot-time ordering and valid s->node are still conditional.",
+      "anchors": [
+        "A10",
+        "A13",
+        "A14",
+        "A17",
+        "A03",
+        "A28"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AE75-U03",
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U03",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "kzalloc appends __GFP_ZERO but exact zeroing requires valid allocated object/cache, nonNULL pointer and hook return; cache object_size and request length differ. Large local memset uses size; allocator/page residual bytes and final CPU contents are not certified.",
+      "anchors": [
+        "B01",
+        "B10",
+        "B11",
+        "B16",
+        "B07",
+        "B23"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AE75-U04",
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U04",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Direct __kmalloc > PAGE_SIZE has a while gate (historical MC-09); source size_to_index invalid-input loop and fls/get_order selection do not prove compiler/preprocessor ABI/real machine behavior. No run was authorized.",
+      "anchors": [
+        "A02",
+        "A07",
+        "A18",
+        "A20",
+        "A21",
+        "A22"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AE75-U05",
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U05",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "kfree's folio_test_slab bit is only a classification step, not proof that a nonNULL pointer was returned by kmalloc, that it is an object start, or that its cache/order metadata are valid. Static init_stack, interior pointers, and stale/unmapped addresses stay outside certified free cases.",
+      "anchors": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C09",
+        "C15"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AE75-U06",
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U06",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Direct kmem_cache_free lacks the selected kfree(NULL) early return and source has commented cache_from_obj; invalid/null/mismatched explicit cache or x can stop at s->node/virt_to_folio or subsequent metadata; the task/stack owner graph and double put/ABA remain unresolved.",
+      "anchors": [
+        "C24",
+        "C10",
+        "C11",
+        "C16",
+        "C17"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AE75-U07",
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U07",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "kfree -> free_large_kmalloc or slab_free/free_slab reaches __free_pages as a request. Physical reclamation, min_partial/MC-07 correctness, allocator bookkeeping, locking/last holders and buddy coalescing are not proved by this bounded entry study.",
+      "anchors": [
+        "C07",
+        "C08",
+        "C12",
+        "C13",
+        "C19"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "AE75-U08",
+      "qualified_id": "CORE-USER-ALLOCATOR-ENTRY-75::AE75-U08",
+      "kind": "bounded_evidence_gap",
+      "status": "needs_evidence",
+      "detail": "Complete P9 on local checkout, preprocessing, compilation/linking, real cache population, tests, QEMU/hardware, graph rendering, concurrent memory safety and end-to-end lifecycle behavior are all NOT_RUN.",
+      "anchors": [
+        "D01",
+        "A01",
+        "B01",
+        "C01"
+      ],
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "observed_runtime_bugs": 0,
+  "existing_qualified_ids_preserved": [
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-07",
+      "status": "static_concern",
+      "disposition": "conditional slab_free release with live objects historical issue; not new bug or closed"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-08",
+      "status": "static_concern",
+      "disposition": "ctor/free pointer historical risk; RF-02 refutation still applies"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-09",
+      "status": "static_concern",
+      "disposition": "direct __kmalloc oversize busy wait conditional historical issue, not normal kmalloc"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::DR-04",
+      "disposition": "copy_sighand constructor allocation condition remains history; not examined anew"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::RF-02",
+      "status": "refuted_historical_original_claim",
+      "disposition": "no reactivation of 'fork first siglock always fails' claim"
+    },
+    {
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-U04",
+      "status": "needs_evidence",
+      "disposition": "entry source now linked; allocator physical free/ABA/last owner unresolved, no automatic closure"
+    },
+    {
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74::TSL74-F01",
+      "status": "needs_evidence",
+      "disposition": "task.tasks overwrite timing out of scope, retain unchanged"
+    },
+    {
+      "qualified_id": "CORE-USER-TASK-STORAGE-LIFETIME-74-REVIEW-001::R74-01",
+      "status": "OPEN_PENDING_C05",
+      "disposition": "D00 documented only"
+    },
+    {
+      "qualified_id": "CORE-USER-EXIT-REAP-73-DOC-CLOSURE-001",
+      "status": "CLOSED_DOCUMENTATION_ONLY",
+      "disposition": "C05 closed R73-01; never reopened"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-01",
+      "status": "CLOSED_DOCUMENTATION_ONLY",
+      "disposition": "05 review disposition retained"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04-REVIEW-001::MR-02",
+      "status": "CLOSED_BY_EXPLICIT_NARROWING",
+      "disposition": "05 review disposition retained"
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "change_scope": "no old artifacts, comments, PR metadata or kernel changes",
+  "tests": "NOT_RUN",
+  "phase": 2
+}

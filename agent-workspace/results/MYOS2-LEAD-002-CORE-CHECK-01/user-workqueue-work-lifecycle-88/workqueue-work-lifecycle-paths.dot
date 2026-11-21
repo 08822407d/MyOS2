@@ -1,0 +1,105 @@
+// task_id: MYOS2-LEAD-002-CORE-CHECK-01
+// track_id: MYOS2-LEAD-002
+// followup_id: CORE-USER-WORKQUEUE-WORK-LIFECYCLE-88
+// date: 2026-11-15 ; produced_by: GPT-6 ; model_per_owner: GPT-6 + Extra
+// base_snapshot: time ; read_channel: connector ; runtime_evidence: NOT_RUN
+// Edge conventions: blue solid = actual direct C call; black solid = macro/data/object relation;
+// dotted = local same-caller source statement order; dashed = assumed callee return or runtime reachability.
+// A function-pointer callback is separately labeled as indirect invocation.
+// No Graphviz, compilation, scheduler, QEMU or actual work execution.
+digraph WQ88_Source_Lifecycle {
+  graph [rankdir=LR, labelloc=t,label="88 static work submission / pool notification / scheduled callback gates",fontsize=15];
+  node [shape=box,fontsize=10]; edge [fontsize=9];
+  subgraph cluster_A {
+    label="G01/A: submit, return and object-state";
+    Q [label="queue_work(wq,work)"];
+    Qon [label="queue_work_on(cpu,wq,work)\nirq_save; call lower; ret=true on return"];
+    pending [label="pending test-and-set wrapper\ncommented, not an active guard",shape=note];
+    Internal [label="__simple_queue_work\nreturns void"];
+    cpu [label="cpu sentinel WORK_CPU_UNBOUND=NR_CPUS\nactive smp_processor_id() selection"];
+    wpwq [label="pwq=*per_cpu_ptr(wq->cpu_pwq,cpu)\nthen pool=pwq->pool\n87 address gate"];
+    state [label="work_struct: atomic data, entry, func\nreal initialization producer unproved",shape=note];
+    check [label="WARN_ON(!list_empty(work->entry))\nif linked goto out"];
+    ret [label="outer ret=true\nNOT an insertion or callback certificate"];
+    Q -> Qon [color=blue,label="direct inline call"];
+    Qon -> Internal [color=blue,label="direct C call"];
+    pending -> Qon [style=dashed,label="inactive source"];
+    Internal -> cpu [label="conditional CPU expression"];
+    cpu -> wpwq [style=dotted,label="inside same function"];
+    wpwq -> check [style=dotted,label="after spin_lock"];
+    state -> check [label="work.entry"];
+    Internal -> ret [style=dashed,label="only if lower returns"];
+    check -> ret [style=dashed,label="linked branch may skip add"];
+  }
+  subgraph cluster_B {
+    label="G02/B: valid pool list publication vs kick";
+    add [label="list_header_add_to_tail(pool.worklist,entry)\nif list helper returns, links and count++"];
+    addval [label="__list_add_valid\ncan stay in while on invalid neighbor links",shape=note];
+    kick [label="kick_pool(pool)"];
+    idle [label="first_idle_worker\nempty idle count => NULL"];
+    need [label="need_more_worker\nwork_count>0 && nr_running==0"];
+    no [label="return false: no need or no idle"];
+    bh [label="POOL_BH and need+idle\nwhile(1), no normal return proven",shape=note];
+    wake [label="wake_up_process(worker->task)\nreturn int ignored; kick returns true"];
+    unlock [label="spin_unlock(pool.lock)\nthen queue_work_on irq_restore if returned"];
+    check -> add [style=dotted,label="only if entry self-linked"];
+    add -> addval [label="internal helper dependency"];
+    add -> kick [style=dotted,label="source order after add returns"];
+    kick -> idle [color=blue,label="direct C call"];
+    kick -> need [color=blue,label="direct C call"];
+    idle -> no [style=dashed,label="if NULL"];
+    need -> no [style=dashed,label="if false"];
+    kick -> bh [style=dotted,label="if POOL_BH and need"];
+    kick -> wake [color=blue,label="conditional C call"];
+    wake -> unlock [style=dashed,label="wake callee returns, kick exits"];
+    no -> unlock [style=dashed,label="kick false return"];
+    check -> unlock [style=dotted,label="linked branch direct out"];
+  }
+  subgraph cluster_C {
+    label="G03/C: worker loop, scheduled handoff, PWQ gate and callback";
+    create [label="create_worker -> attach -> worker_enter_idle\nthread creation and wake request sources"];
+    th [label="simple_worker_thread\nlock, leave idle, need_more/managing"];
+    keep [label="keep_working\nworklist count>0 && nr_running<=1"];
+    first [label="list_headr_first_container(pool.worklist)\nrequires nonempty/valid header"];
+    assign [label="simple_assign_work\ndelete pool.worklist; add worker.scheduled\nreturns true on caller return"];
+    scheduled [label="process_scheduled_works\nwhile(first-container(scheduled))"];
+    empty [label="EMPTY scheduled?\nmacro computes container_of(anchor)\nNOT a NULL-safe first element",shape=note];
+    process [label="process_one_work(worker,work)"];
+    decode [label="get_work_pwq(work)\natomic_long_read(data), PWQ bit+mask\ncan return NULL"];
+    current [label="worker.current_work/func/pwq assignments"];
+    desc [label="strscpy(worker.desc,pwq->wq->name)\nneeds valid PWQ and WQ"];
+    del [label="delete scheduled entry"];
+    pre [label="CPU_INTENSIVE flag, kick, spin_unlock_irq"];
+    call [label="worker->current_func(work)\nINDIRECT callback invocation"];
+    post [label="if callback returns: spin_lock_irq\nclear CPU_INTENSIVE and current* fields"];
+    sleep [label="enter idle; set TASK_IDLE\nunlock, schedule(); loop on return"];
+    wake -> th [style=dashed,label="wake is NOT execution proof"];
+    create -> th [style=dashed,label="worker task actual entry unknown"];
+    th -> keep [color=blue,label="source helper"];
+    keep -> first [style=dotted,label="if true"];
+    first -> assign [color=blue,label="direct call when valid work"];
+    assign -> scheduled [style=dotted,label="caller checks bool"];
+    th -> scheduled [color=blue,label="direct C call"];
+    scheduled -> empty [style=dashed,label="empty header hazard"];
+    scheduled -> process [color=blue,label="per loop iteration"];
+    process -> decode [color=blue,label="direct C call"];
+    decode -> current [style=dotted,label="if returned"];
+    current -> desc [style=dotted,label="PWQ must be valid"];
+    desc -> del [style=dotted,label="if strscpy returns"];
+    del -> pre [style=dotted,label="after node removal"];
+    pre -> call [style=dotted,label="after unlock and kick return"];
+    call -> post [style=dashed,label="only if callback returns"];
+    post -> scheduled [style=dashed,label="if loop repeats and work still valid"];
+    th -> sleep [style=dotted,label="need_more false or keep_working false"];
+  }
+  subgraph cluster_history {
+    label="fixed historical and review gates";
+    h87 [label="R87-S01/S02/S03\n87 perCPU WQ slot/PWQ init not certified",shape=note];
+    h86 [label="R86-01 CLOSED\n86 composite and 87 PASS_PENDING_LOCAL",shape=note];
+    review [label="88 static author only\nC06 Pro acceptance PENDING\nSTOP_WRITING after delivery",shape=note];
+    h87 -> wpwq [style=dashed,label="address validity"];
+    h87 -> decode [style=dashed,label="PWQ object validity"];
+    h86 -> review [style=dotted,label="bounded history"];
+  }
+}
+// Source arrows do not imply physical CPU scheduling, memory safety, measured wakeup, or completed work callback.

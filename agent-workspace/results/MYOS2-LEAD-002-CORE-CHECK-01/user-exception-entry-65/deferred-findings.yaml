@@ -1,0 +1,213 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXCEPTION-ENTRY-65",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "R64-01 documentation_disposition_submitted; only C05 can close",
+  "prior63": "PASS_PENDING_LOCAL_WITH_R63C-S01; original blank-line allegations retracted",
+  "new_findings": [
+    {
+      "id": "EE65-F01",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F01",
+      "title": "STI precedes the outer #PF CR2 read",
+      "kind": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "claim": "When an actual nested exception writes CR2 between entry sti and exc_page_fault::read_cr2, the original address could be lost",
+      "premises": [
+        "time@a039d9803ade selected source and relevant branch reached",
+        "valid entry stack/frames, objects and normal earlier callee returns",
+        "no translation or runtime tests performed"
+      ],
+      "counter_evidence": "No nested event/CR2 overwrite or interrupt-delivery behavior is observed",
+      "first_stop": "Before assuming nested exception or hardware IF state",
+      "related": [
+        "CORE-USER-UACCESS-RECOVERY-64::UR64-U03"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-F02",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F02",
+      "title": "entry/exit independently test saved CS",
+      "kind": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "claim": "The source selects optional swapgs twice using CS(%rsp) at different times; changed frame CS invalidates automatic paired-swap claims",
+      "premises": [
+        "time@a039d9803ade selected source and relevant branch reached",
+        "valid entry stack/frames, objects and normal earlier callee returns",
+        "no translation or runtime tests performed"
+      ],
+      "counter_evidence": "No malicious frame modification or real GS mismatch observed",
+      "first_stop": "At non-returning C callee, modified CS, or switched frame",
+      "related": [
+        "CORE-USER-UACCESS-RECOVERY-64::UR64-U03"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-F03",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F03",
+      "title": "conditional schedule before return",
+      "kind": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "claim": "If C exception handler returns and in_atomic()==false, excep_hwint_context calls schedule(); this analysis has no proof of same frame on resume",
+      "premises": [
+        "time@a039d9803ade selected source and relevant branch reached",
+        "valid entry stack/frames, objects and normal earlier callee returns",
+        "no translation or runtime tests performed"
+      ],
+      "counter_evidence": "Schedule may safely return without task switch; call itself is conditional",
+      "first_stop": "At opaque schedule implementation",
+      "related": [
+        "CORE-USER-UACCESS-RECOVERY-64::UR64-U03"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-F04",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F04",
+      "title": "STI source adjacent to IRETQ",
+      "kind": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "claim": "The assembly epilogue writes sti before iretq; real interrupt window/GS/iret behavior requires CPU-specific verification",
+      "premises": [
+        "time@a039d9803ade selected source and relevant branch reached",
+        "valid entry stack/frames, objects and normal earlier callee returns",
+        "no translation or runtime tests performed"
+      ],
+      "counter_evidence": "Actual STI shadow, interrupts and delivered nested events not verified; do not label as exploitable defect",
+      "first_stop": "At hardware behavior beyond assembly text",
+      "related": [
+        "CORE-USER-UACCESS-RECOVERY-64::UR64-U03"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-F05",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F05",
+      "title": "zero MM result does not prove successful fault replay",
+      "kind": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "claim": "A low-address PF with valid mm/VMA and zero myos_handle_mm_fault may allow source return, but does not establish PTE, accepted iret or restarted faulting instruction",
+      "premises": [
+        "time@a039d9803ade selected source and relevant branch reached",
+        "valid entry stack/frames, objects and normal earlier callee returns",
+        "no translation or runtime tests performed"
+      ],
+      "counter_evidence": "Zero can be genuine success; no runtime reproduction",
+      "first_stop": "At opaque MM/PTE or CPU acceptance boundary",
+      "related": [
+        "CORE-USER-MM-FAULT-12::MF12-F04"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-F06",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-F06",
+      "title": "selected #GP diagnostic loop",
+      "kind": "source_conditional_candidate",
+      "status": "needs_evidence",
+      "claim": "In the selected vector13 handler, if diagnostic memory/callees are valid and normal execution reaches while(1), it cannot normally return via sa_entintr_retp",
+      "premises": [
+        "time@a039d9803ade selected source and relevant branch reached",
+        "valid entry stack/frames, objects and normal earlier callee returns",
+        "no translation or runtime tests performed"
+      ],
+      "counter_evidence": "No actual CPU freeze observed; earlier invalid pointers or callee behavior can stop first",
+      "first_stop": "At earliest invalid diagnostic or nonreturning call",
+      "related": [
+        "CORE-USER-UACCESS-RECOVERY-64::UR64-U03"
+      ],
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_findings_count": 6,
+  "evidence_gaps": [
+    {
+      "id": "EE65-U01",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U01",
+      "status": "needs_evidence",
+      "detail": "real IDTR and resolved IDT gates",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-U02",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U02",
+      "status": "needs_evidence",
+      "detail": "CPU exception frame, privilege and error-code normative behavior",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-U03",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U03",
+      "status": "needs_evidence",
+      "detail": "reg_t/pt_regs generated header independently recompiled ABI",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-U04",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U04",
+      "status": "needs_evidence",
+      "detail": "nested CR2-writing event and actual STI/IF timing",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-U05",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U05",
+      "status": "needs_evidence",
+      "detail": "schedule, current frame identity and stack safety",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-U06",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U06",
+      "status": "needs_evidence",
+      "detail": "GS state, iretq acceptance and saved selectors",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-U07",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U07",
+      "status": "needs_evidence",
+      "detail": "MM/PTE/extable actual fault recovery and user reexecution",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EE65-U08",
+      "qualified_id": "CORE-USER-EXCEPTION-ENTRY-65::EE65-U08",
+      "status": "needs_evidence",
+      "detail": "assembler machine stub byte lengths and fully linked IDT vector layout",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "runtime_confirmed_count": 0,
+  "existing_findings_and_statuses_unchanged": true,
+  "forbidden_actions": [
+    "modify old batches",
+    "patch kernel",
+    "preprocess or build",
+    "QEMU or actual hardware",
+    "self-close R64-01",
+    "self-sign 65 PASS",
+    "start 66"
+  ]
+}

@@ -1,0 +1,515 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-BOOT-ELF-LOAD-98",
+  "record_type": "batch98_source_candidate_and_evidence_gap_increment",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-14",
+  "produced_by": "GPT-6（visible, backend UNATTESTED）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-17",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_COMPLETE_PENDING_C06_PRO",
+  "mainline_acceptance": "PENDING",
+  "D00": "NOT_REQUIRED",
+  "runtime_evidence": "NOT_RUN",
+  "new_candidates": [
+    {
+      "id": "BE98-F01",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F01",
+      "topic": "A",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "UEFI文件获取专属状态与资源后缀",
+      "statement": "LoadFile取得协议/根句柄、分配FileInfo、查询GetInfo、申请raw页、Read并调用FreePool/Close；仅Open结果进入显式失败返回，其他状态未被保存，失败分支也绕开RootFs后部Close。",
+      "preconditions": [
+        "先前协议/句柄有效、相关API实际调用有返回且未在外部抛异常",
+        "不把源级无检验升级为实际泄漏或固件失败"
+      ],
+      "first_proof_gate": "在第一个未证服务结果或句柄访问停止；正常后缀才可谈Close调用",
+      "evidence_ids": [
+        "BE98-E002",
+        "BE98-E006",
+        "BE98-E007",
+        "BE98-E008",
+        "BE98-E011",
+        "BE98-E012"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F05",
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U04"
+      ],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "BE98-F02",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F02",
+      "topic": "A/ABC",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "文件真实Read长度与ELF表推算长度失配的独立输入契约",
+      "statement": "LoadFile的请求长度来自size或FileInfo.FileSize，Read可使用&bufsize作为in/out，但未上报实际读取字节；Parse的FileSize仅来自section和header末尾字段，二者没有相等的实际校验。",
+      "preconditions": [
+        "原始raw地址是有效缓冲且文件服务提供明确字节数",
+        "ELF相关section表和字段有效、端点算术无溢出"
+      ],
+      "first_proof_gate": "最早在真实raw对象不足以读取ELF header或后续p_offset+p_filesz时停止",
+      "evidence_ids": [
+        "BE98-E008",
+        "BE98-E009",
+        "BE98-E011",
+        "BE98-E015",
+        "BE98-E069",
+        "BE98-E073",
+        "BE98-E074",
+        "BE98-E075",
+        "BE98-E076"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U02"
+      ],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "BE98-F03",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F03",
+      "topic": "B",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "ELF魔数字节测试漏掉EI_MAG3",
+      "statement": "IsElfFormat的魔数条件对EI_MAG1重复判断两次，仅检查EI_MAG0/1/2，未以EI_MAG3和ELFMAG3校验第4个字节；其余class/machine/type/version分支仍各自存在。",
+      "preconditions": [
+        "有足够ELF64头部可读对象",
+        "被输入的第四字节不同于F，但其它门可能通过的隔离模式"
+      ],
+      "first_proof_gate": "只证明局部布尔谓词接受域变宽，不证明现实文件已通过完整装入",
+      "evidence_ids": [
+        "BE98-E019",
+        "BE98-E020",
+        "BE98-E028",
+        "BE98-E029",
+        "BE98-E030",
+        "BE98-E031",
+        "BE98-E100",
+        "BE98-E101",
+        "BE98-E102",
+        "BE98-E103"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "BE98-F04",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F04",
+      "topic": "B",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "ELF64索引计数门未覆盖字节存储范围",
+      "statement": "GetElf64SectionByIndex和GetElf64SegmentByIndex只用e_shnum/e_phnum做索引范围门，再以off+Index*entsize构造地址；Parse所需e_shstrndx和段读取依赖实际raw span，但下级未接收Read实际长度。",
+      "preconditions": [
+        "Header和表区的物理C对象、条目大小与索引值均有效"
+      ],
+      "first_proof_gate": "不能由Index<num推定字节可读，最早在非法地址形成/解引用停止",
+      "evidence_ids": [
+        "BE98-E039",
+        "BE98-E040",
+        "BE98-E041",
+        "BE98-E051",
+        "BE98-E052",
+        "BE98-E053",
+        "BE98-E054",
+        "BE98-E060",
+        "BE98-E061"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "BE98-F05",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F05",
+      "topic": "B",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "ELF内部FileSize计算返回与ParseStatus未保持同一状态",
+      "statement": "ParseElfImage无检查地调用CalculateElfFileSize后将ParseStatus赋EFI_SUCCESS；CalculateElfFileSize本身可因ShNum-1索引失败返回UNSUPPORTED，且FileSize数值由section字段推算。",
+      "preconditions": [
+        "之前IsElfFormat及section-name解析已经通过，解析能够正常到达计算调用",
+        "库错误返回不自动表示真实文件读取不足"
+      ],
+      "first_proof_gate": "此处只能识别源码的未消费状态通道，不能宣称硬件实测错误",
+      "evidence_ids": [
+        "BE98-E069",
+        "BE98-E072",
+        "BE98-E073",
+        "BE98-E074",
+        "BE98-E075",
+        "BE98-E076",
+        "BE98-E077",
+        "BE98-E078"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "BE98-F06",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F06",
+      "topic": "B",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "ELF64载入范围的初始化哨兵与整数端点条件",
+      "statement": "Parse的Base初始MAX_UINT32而不是目标UINTN最大，End初值0，只在PT_LOAD循环被更新；无LOAD段或最低p_paddr不小于4GB等输入下Base/End可能保留不适合所需span的值，随后仍计算ImageSize。",
+      "preconditions": [
+        "ELF头/段表访问合法",
+        "EFI_PAGE_SIZE/ALIGN_VALUE语义与UINTN/地址域按明示假设"
+      ],
+      "first_proof_gate": "先停于section索引、ASSERT、段字段、整数或目标对象；不从ImageSize数值证明后续分配",
+      "evidence_ids": [
+        "BE98-E063",
+        "BE98-E064",
+        "BE98-E067",
+        "BE98-E068",
+        "BE98-E069"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "BE98-F07",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F07",
+      "topic": "C",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "目标分配请求位置与实际PT_LOAD写入地址的独立来源冲突",
+      "statement": "load_elf_kernel在ElfCtx.ImageAddress初值清零后将其复制到loaded_addr，然后才把ImageAddress改成PreferredImageAddress；AllocatePages(AllocateAddress,...,&loaded_addr)的目标与LoadElf64Image的ImageAddress+Delta写目标不是同一个变量。",
+      "preconditions": [
+        "Parse成功、ZeroMem生效且调用正常到达分配",
+        "真实EFI AllocateAddress目标与输出地址可核"
+      ],
+      "first_proof_gate": "必须先证明成功申请的物理页确实覆盖Preferred范围，否则停止装入可写结论",
+      "evidence_ids": [
+        "BE98-E056",
+        "BE98-E081",
+        "BE98-E082",
+        "BE98-E084",
+        "BE98-E088",
+        "BE98-E090"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "BE98-F08",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F08",
+      "topic": "C",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "PT_LOAD文件和内存长度的独立合法性缺口",
+      "statement": "LoadElf64Image以p_filesz发CopyMem，随后以p_memsz-p_filesz发ZeroMem，所读路径未显示p_filesz<=p_memsz或所有段互不重叠的校验。",
+      "preconditions": [
+        "ProgramHeader条目有效，所有源/目标指针和p_paddr-Preferred算术有定义",
+        "CopyMem、ZeroMem外部库可用"
+      ],
+      "first_proof_gate": "p_filesz>p_memsz时先在拷贝目标范围合法性停，不能跳到负差值后宣称实际巨大清零",
+      "evidence_ids": [
+        "BE98-E044",
+        "BE98-E045",
+        "BE98-E088",
+        "BE98-E089",
+        "BE98-E090"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    },
+    {
+      "id": "BE98-F09",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-F09",
+      "topic": "C",
+      "kind": "STATIC_SOURCE_CONDITIONAL_CANDIDATE",
+      "status": "needs_evidence",
+      "distinct_root": "入口提前发布与内外多层成功状态隔离",
+      "statement": "load_elf_kernel在AllocatePages/LoadElfImage前写*entry_addr=ElfCtx.EntryPoint，后续结果不更新status，LoadElf64Image内部未消费重定位返回且最后直接返回EFI_SUCCESS；UefiMain把k_load_addr装配为callq目标。",
+      "preconditions": [
+        "原始镜像与解析已合法",
+        "后续页对象、段写和指令可执行属性另证"
+      ],
+      "first_proof_gate": "不能以*entry_addr被赋值、日志或EFI_SUCCESS认定最终装入/CPU成功启动",
+      "evidence_ids": [
+        "BE98-E079",
+        "BE98-E081",
+        "BE98-E082",
+        "BE98-E090",
+        "BE98-E091",
+        "BE98-E095",
+        "BE98-E097",
+        "BE98-E098",
+        "BE98-E099"
+      ],
+      "prior_related_qualified_ids": [],
+      "actual_runtime_confirmed": false,
+      "implementation_changed": false,
+      "owner_decision_requested": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "BE98-U01",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U01",
+      "topic": "A",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "HandleProtocol/OpenVolume/RootFs.Open/GetInfo/AllocatePool/AllocatePages/Read/FreePool/Close的真实返回、句柄身份及资源所有权；仅已读服务调用形状不等于EFI状态保证",
+      "first_proof_gate": "第一个真实错误或无效句柄前停止，未知状态不转为已成功资源释放",
+      "evidence_ids": [
+        "BE98-E002",
+        "BE98-E006",
+        "BE98-E007",
+        "BE98-E008",
+        "BE98-E011",
+        "BE98-E012"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U04"
+      ],
+      "no_automatic_implementation": true
+    },
+    {
+      "id": "BE98-U02",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U02",
+      "topic": "A/ABC",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "真实文件长度、GetInfo所需缓冲、Read前后字节数与实际已读raw字节区间；raw img是否确实在0x2000000",
+      "first_proof_gate": "不把FileInfo.FileSize或ELF CalculateFileSize视为Read返回值",
+      "evidence_ids": [
+        "BE98-E008",
+        "BE98-E009",
+        "BE98-E011",
+        "BE98-E015",
+        "BE98-E069",
+        "BE98-E073",
+        "BE98-E074",
+        "BE98-E075",
+        "BE98-E076"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U02"
+      ],
+      "no_automatic_implementation": true
+    },
+    {
+      "id": "BE98-U03",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U03",
+      "topic": "B",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "真实输入是否ELFCLASS64，魔数与整张ELF64 header的可读性、机器类型/版本/ABI合约",
+      "first_proof_gate": "每个IsElfFormat内ELF header字段访问前必须有真实源对象",
+      "evidence_ids": [
+        "BE98-E019",
+        "BE98-E021",
+        "BE98-E022",
+        "BE98-E024",
+        "BE98-E025",
+        "BE98-E026",
+        "BE98-E039"
+      ],
+      "prior_related_qualified_ids": [],
+      "no_automatic_implementation": true
+    },
+    {
+      "id": "BE98-U04",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U04",
+      "topic": "B",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "e_shoff/e_phoff、e_shentsize/e_phentsize、e_shnum/e_phnum、shstrndx及section、segment每个真实字节范围",
+      "first_proof_gate": "只查Index<num不能证明整个表在Read已得范围内",
+      "evidence_ids": [
+        "BE98-E040",
+        "BE98-E041",
+        "BE98-E051",
+        "BE98-E052",
+        "BE98-E053",
+        "BE98-E054",
+        "BE98-E060",
+        "BE98-E061",
+        "BE98-E064"
+      ],
+      "prior_related_qualified_ids": [],
+      "no_automatic_implementation": true
+    },
+    {
+      "id": "BE98-U05",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U05",
+      "topic": "B/C",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "EFI_PAGE_SIZE/ALIGN_VALUE、UINTN实际构建宽度、MAX_UINT32/UINT64、指针转换和数值算术域；编译预处理均未运行",
+      "first_proof_gate": "有限对齐/回绕模型必须带类型和使用阶段前提，不借loader PAGE_SIZE直接等同EFI_PAGE_SIZE",
+      "evidence_ids": [
+        "BE98-E013",
+        "BE98-E014",
+        "BE98-E063",
+        "BE98-E067",
+        "BE98-E068",
+        "BE98-E069",
+        "BE98-E081",
+        "BE98-E082"
+      ],
+      "prior_related_qualified_ids": [],
+      "no_automatic_implementation": true
+    },
+    {
+      "id": "BE98-U06",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U06",
+      "topic": "C",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "实际原始镜像和目标物理页面请求是否获得成功返回；AllocateAddress中的loaded_addr与PreferredImageAddress/segment write真实映射关系",
+      "first_proof_gate": "只有页区与合法可写范围证实才可继续PT_LOAD写实际效果",
+      "evidence_ids": [
+        "BE98-E011",
+        "BE98-E015",
+        "BE98-E056",
+        "BE98-E081",
+        "BE98-E082",
+        "BE98-E084",
+        "BE98-E090"
+      ],
+      "prior_related_qualified_ids": [],
+      "no_automatic_implementation": true
+    },
+    {
+      "id": "BE98-U07",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U07",
+      "topic": "C",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "PT_LOAD的真实p_offset+p_filesz源范围、p_paddr-Preferred及p_memsz目标范围、段重叠、CopyMem/ZeroMem外部操作结果",
+      "first_proof_gate": "先行非法源/目的指针停止，不能声称已执行清零或真实崩溃",
+      "evidence_ids": [
+        "BE98-E044",
+        "BE98-E045",
+        "BE98-E053",
+        "BE98-E054",
+        "BE98-E088",
+        "BE98-E089",
+        "BE98-E090"
+      ],
+      "prior_related_qualified_ids": [],
+      "no_automatic_implementation": true
+    },
+    {
+      "id": "BE98-U08",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U08",
+      "topic": "C",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "RelocateElf64Sections在非本调用形态时的返回状态和算法，DYN/EXEC各重定位条目实现未审计",
+      "first_proof_gate": "本caller把ImageAddress强设Preferred时不进入该分支，不用隐藏算法填现有结论",
+      "evidence_ids": [
+        "BE98-E081",
+        "BE98-E082",
+        "BE98-E091",
+        "BE98-E092",
+        "BE98-E093",
+        "BE98-E094"
+      ],
+      "prior_related_qualified_ids": [],
+      "no_automatic_implementation": true
+    },
+    {
+      "id": "BE98-U09",
+      "qualified_id": "CORE-USER-BOOT-ELF-LOAD-98::BE98-U09",
+      "topic": "C/ABC",
+      "kind": "EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "missing_evidence": "实际k_load_addr是否映射到成功复制且可执行的入口、UefiMain assembler调用是否在正确机器状态成功交接",
+      "first_proof_gate": "源级callq只能证明尝试，旧BT97 EFI service阶段和BM80早期MBI有效性仍保留",
+      "evidence_ids": [
+        "BE98-E003",
+        "BE98-E079",
+        "BE98-E081",
+        "BE98-E082",
+        "BE98-E095",
+        "BE98-E096",
+        "BE98-E097",
+        "BE98-E098",
+        "BE98-E099"
+      ],
+      "prior_related_qualified_ids": [
+        "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09"
+      ],
+      "no_automatic_implementation": true
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F01",
+      "disposition": "retain_shared_MBI_arena_capacity_distinct_from_ELF_raw_and_target_pages"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F05",
+      "disposition": "retain_general_EFI_call_status_unchecked_in_mmap; BE98_F01_scopes_to_file_acquisition"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-F08",
+      "disposition": "retain_stage_dependency_ExitBootServices_vs_later_protocol_calls"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U01",
+      "disposition": "retain_UEFI_original_page_allocation_state"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U02",
+      "disposition": "retain_UEFI_ABI_and_valid_dynamic_tag_capacity"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U04",
+      "disposition": "retain_UEFI_GetMemoryMap_DescriptorSize_status_not_in_ELF_file_subject"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U07",
+      "disposition": "retain_ACPI_external_EFI_provenance_separate"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOTINFO-TAG-BUILD-97::BT97-U09",
+      "disposition": "retain_ExitBootServices_and_handoff_proof_gate"
+    },
+    {
+      "qualified_id": "CORE-USER-BOOT-MEMORY-MAP-80::BM80-F03",
+      "disposition": "retain_R80_S01_one_past_pointer_versus_invalid_member_access; not_a_new_ELF_root"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 9,
+    "new_gaps": 9,
+    "confirmed_runtime_defects": 0,
+    "code_edits": 0,
+    "patches": 0,
+    "Owner_actions_now": 0
+  },
+  "limits": [
+    "没有真实EFI文件/服务/目标内存与硬件，条件性源码候选不代表已发生故障",
+    "源级Read长度与内部FileSize、ImageSize及页分配成功为不同命题",
+    "本轮ELF32及重定位条目算法未审，旧96/97不重做"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "owner_decisions_requested_now": []
+}

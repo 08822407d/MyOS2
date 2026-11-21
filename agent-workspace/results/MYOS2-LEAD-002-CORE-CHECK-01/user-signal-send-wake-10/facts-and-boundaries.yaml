@@ -1,0 +1,686 @@
+task_id: MYOS2-LEAD-002-CORE-CHECK-01
+followup_id: CORE-USER-SIGNAL-SEND-WAKE-10
+record_type: bounded_signal_send_wake_facts
+produced_by: "ChatGPT普通对话，Owner选择GPT-6 / Extra；backend未独立认证"
+date: "2026-10-31"
+base_snapshot: "time @ a039d9803ade"
+read_channel: connector
+status: READY_FOR_MAINLINE_REVIEW
+mainline_acceptance: PENDING
+runtime_evidence: NOT_RUN
+edge_direction: {call: "caller -> callee", data: "consumer -> provider except explicit write edges", init_order: "later user -> prerequisite"}
+coverage: "有界sys_kill、PID解析、pending、siginfo、接收与唤醒接口；不展开完整PID、调度、异常、硬件或libc"
+unknown:
+  - "override_rlimit在__send_signal_locked活动路径没有赋值，却被传给__sigqueue_alloc；不承诺后续定义良好的行为"
+  - "sig=0、负数或超过64在sigaddset中触发不合法移位/索引前提；不推断固定结果"
+  - "发送方锁/RCU的获取未见于所读当前链，指针生存与并发安全未知"
+  - "信号到用户处理函数的时机与结果、slab/调度器整体语义NOT_RUN"
+queries:
+  - {id: SW10-Q01, paths: "mykernel/lock_IPC/signal/signal.c", words: "complete_signal,signal_wake_up", result: "在当前__send_signal_locked内只有注释掉的complete_signal调用；其他间接入口未穷尽"}
+  - {id: SW10-Q02, paths: "mykernel/lock_IPC/signal/signal.c", words: "check_kill_permission,lock_task_sighand,rcu_read_lock", result: "此直接发送链的权限/锁语句是注释；没有做全树否定检索"}
+  - {id: SW10-Q03, paths: "mykernel/lock_IPC/signal/signal.c", words: "legacy_queue,SIGRTMIN,override_rlimit", result: "去重和实时分支为注释，override_rlimit读取前无活动赋值"}
+  - {id: SW10-Q04, paths: "mykernel/lock_IPC/signal/signal.c;signal.h", words: "dequeue_signal,collect_signal,sigaddset", result: "固定文件定点核对位图与队列并非同一对象"}
+  - {id: SW10-Q05, paths: "mykernel/sched/scheduler/scheduler_core.c", words: "wake_up_state,kick_process,try_to_wake_up", result: "唤醒实现只作潜伏路径的定点阅读，不扩充成调度器验收"}
+nodes:
+  - {id: SW10-N01, label: "sys_kill(62)"}
+  - {id: SW10-N02, label: "prepare_kill_siginfo"}
+  - {id: SW10-N03, label: "kill_something_info"}
+  - {id: SW10-N04, label: "kill_proc_info"}
+  - {id: SW10-N05, label: "find_vpid"}
+  - {id: SW10-N06, label: "pid_task"}
+  - {id: SW10-N07, label: "group_send_sig_info"}
+  - {id: SW10-N08, label: "send_signal_locked"}
+  - {id: SW10-N09, label: "__send_signal_locked"}
+  - {id: SW10-N10, label: "__sigqueue_alloc"}
+  - {id: SW10-N11, label: "kmem_cache_alloc"}
+  - {id: SW10-N12, label: "sigaddset"}
+  - {id: SW10-N13, label: "complete_signal (latent)"}
+  - {id: SW10-N14, label: "signal_wake_up_state (latent)"}
+  - {id: SW10-N15, label: "wake_up_state (latent)"}
+  - {id: SW10-N16, label: "kick_process (latent)"}
+  - {id: SW10-N17, label: "try_to_wake_up (latent)"}
+  - {id: SW10-N18, label: "get_signal receiver"}
+  - {id: SW10-N19, label: "dequeue_signal"}
+  - {id: SW10-N20, label: "collect_signal"}
+  - {id: SW10-N21, label: "shared_pending"}
+  - {id: SW10-N22, label: "private_pending"}
+  - {id: SW10-N23, label: "signals_init"}
+  - {id: SW10-N24, label: "start_kernel"}
+  - {id: SW10-N25, label: "current pid namespace"}
+edges:
+  - {id: SW10-E01, from: SW10-N01, to: SW10-N02, kind: call, status: active, condition: "prepare info before pid branch", anchors: [SW10-A03]}
+  - {id: SW10-E02, from: SW10-N01, to: SW10-N03, kind: call, status: active, condition: "kill_something_info after info", anchors: [SW10-A03b]}
+  - {id: SW10-E03, from: SW10-N03, to: SW10-N04, kind: call, status: conditional, condition: "pid >0; otherwise while(1)", anchors: [SW10-A07]}
+  - {id: SW10-E04, from: SW10-N04, to: SW10-N05, kind: call, status: conditional, condition: "find_vpid lookup", anchors: [SW10-A08]}
+  - {id: SW10-E05, from: SW10-N04, to: SW10-N06, kind: call, status: conditional, condition: "pid_task lookup with PIDTYPE_PID", anchors: [SW10-A08]}
+  - {id: SW10-E06, from: SW10-N05, to: SW10-N25, kind: data, status: active, condition: "namespace from current", anchors: [SW10-A10]}
+  - {id: SW10-E07, from: SW10-N04, to: SW10-N07, kind: call, status: conditional, condition: "only when task pointer non-NULL", anchors: [SW10-A08]}
+  - {id: SW10-E08, from: SW10-N07, to: SW10-N08, kind: call, status: active, condition: "permission/sig-0 guards commented", anchors: [SW10-A13]}
+  - {id: SW10-E09, from: SW10-N08, to: SW10-N09, kind: call, status: active, condition: "force=false", anchors: [SW10-A14]}
+  - {id: SW10-E10, from: SW10-N09, to: SW10-N21, kind: data, status: active_kill, condition: "PIDTYPE_TGID selects shared pending", anchors: [SW10-A16]}
+  - {id: SW10-E11, from: SW10-N09, to: SW10-N22, kind: data, status: conditional_other_caller, condition: "type PIDTYPE_PID selects private", anchors: [SW10-A16]}
+  - {id: SW10-E12, from: SW10-N09, to: SW10-N10, kind: call, status: conditional, condition: "not SIGKILL/PF_KTHREAD; uninit override_rlimit", anchors: [SW10-A18]}
+  - {id: SW10-E13, from: SW10-N10, to: SW10-N11, kind: call, status: conditional, condition: "indeterminate override_rlimit passed", anchors: [SW10-A21]}
+  - {id: SW10-E14, from: SW10-N09, to: SW10-N12, kind: call, status: conditional, condition: "out_set reached", anchors: [SW10-A25]}
+  - {id: SW10-E15, from: SW10-N09, to: SW10-N13, kind: call, status: commented, condition: "no active call to complete_signal in current sender", anchors: [SW10-A26]}
+  - {id: SW10-E16, from: SW10-N13, to: SW10-N14, kind: call, status: latent, condition: "complete_signal body uses wake macro", anchors: [SW10-A34]}
+  - {id: SW10-E17, from: SW10-N14, to: SW10-N15, kind: call, status: latent, condition: "wake_up_state call", anchors: [SW10-A37]}
+  - {id: SW10-E18, from: SW10-N14, to: SW10-N16, kind: call, status: latent_conditional, condition: "if wake_up_state false", anchors: [SW10-A37]}
+  - {id: SW10-E19, from: SW10-N15, to: SW10-N17, kind: call, status: latent, condition: "scheduler wrapper only", anchors: [SW10-A38]}
+  - {id: SW10-E20, from: SW10-N18, to: SW10-N19, kind: call, status: conditional, condition: "after synchronous selection misses", anchors: [SW10-A33]}
+  - {id: SW10-E21, from: SW10-N19, to: SW10-N20, kind: call, status: conditional, condition: "when next_signal found signum", anchors: [SW10-A29]}
+  - {id: SW10-E22, from: SW10-N19, to: SW10-N22, kind: data, status: active_receiver, condition: "private pending first", anchors: [SW10-A29]}
+  - {id: SW10-E23, from: SW10-N19, to: SW10-N21, kind: data, status: active_receiver, condition: "shared pending second", anchors: [SW10-A29]}
+  - {id: SW10-E24, from: SW10-N09, to: SW10-N21, kind: data, status: conditional, condition: "queue node append to selected shared pending", anchors: [SW10-A23]}
+  - {id: SW10-E25, from: SW10-N10, to: SW10-N23, kind: init_order, status: required, condition: "cache needs prior signals_init", anchors: [SW10-A41]}
+  - {id: SW10-E26, from: SW10-N24, to: SW10-N23, kind: call, status: active, condition: "start_kernel initializes cache", anchors: [SW10-A42]}
+branch_matrix:
+  - id: SW10-M01
+    input: "positive pid exists"
+    condition: "PIDTYPE_PID lookup then TGID shared pending"
+    reach: conditional
+    local_return: "0 if send returns normally"
+    effect: "queue and bit conditional, no active wake"
+    anchors: [SW10-A08, SW10-A16, SW10-A26]
+  - id: SW10-M02
+    input: "positive pid absent"
+    condition: "pid_task NULL; -ESRCH initial"
+    reach: no_send
+    local_return: "-ESRCH"
+    effect: "no queue"
+    anchors: [SW10-A08, SW10-A09, SW10-A11]
+  - id: SW10-M03
+    input: "positive pid for self"
+    condition: "same resolution; no self shortcut"
+    reach: conditional
+    local_return: "same as M01"
+    effect: "no active wake"
+    anchors: [SW10-A08, SW10-A16, SW10-A26]
+  - id: SW10-M04
+    input: "pid=0"
+    condition: "else while(1)"
+    reach: no_send
+    local_return: "does not return"
+    effect: "no queue"
+    anchors: [SW10-A07]
+  - id: SW10-M05
+    input: "pid=-1"
+    condition: "else while(1); broadcast disabled"
+    reach: no_send
+    local_return: "does not return"
+    effect: "no queue"
+    anchors: [SW10-A07]
+  - id: SW10-M06
+    input: "pid<-1"
+    condition: "else while(1); pgrp disabled"
+    reach: no_send
+    local_return: "does not return"
+    effect: "no queue"
+    anchors: [SW10-A07]
+  - id: SW10-M07
+    input: "sig=0, positive found"
+    condition: "no check; sig-1 shift index invalid"
+    reach: undefined
+    local_return: "unknown"
+    effect: "undefined shift, no stable bit/return"
+    anchors: [SW10-A25, SW10-A27, SW10-A28]
+  - id: SW10-M08
+    input: "negative sig"
+    condition: "no active signal range validation; bad shift"
+    reach: undefined
+    local_return: "unknown"
+    effect: "invalid shift/INT_MIN subtraction risk"
+    anchors: [SW10-A25, SW10-A27, SW10-A28]
+  - id: SW10-M09
+    input: "sig=1"
+    condition: "not special; attempts alloc"
+    reach: conditional_uninit_arg
+    local_return: "0 only if normally returns"
+    effect: "q and bit under defined premises"
+    anchors: [SW10-A19, SW10-A25, SW10-A27]
+  - id: SW10-M10
+    input: "sig=64"
+    condition: "upper nominal bound, bit index63 for 64-bit build"
+    reach: conditional_uninit_arg
+    local_return: "0 only if normally returns"
+    effect: "same as ordinary; no explicit validation"
+    anchors: [SW10-A25, SW10-A27, SW10-A28]
+  - id: SW10-M11
+    input: "sig>=65"
+    condition: "out of _NSIG=64; bit shift invalid"
+    reach: undefined
+    local_return: "unknown"
+    effect: "no reliable result"
+    anchors: [SW10-A25, SW10-A27, SW10-A28]
+  - id: SW10-M12
+    input: "SIGKILL=9"
+    condition: "goto out_set bypasses allocation"
+    reach: conditional
+    local_return: "0 on normal return"
+    effect: "bit only; no new node/wake"
+    anchors: [SW10-A18, SW10-A25, SW10-A26]
+  - id: SW10-M13
+    input: "ordinary SIGTERM=15"
+    condition: "legacy dedup check commented"
+    reach: conditional_uninit_arg
+    local_return: "0 on normal return"
+    effect: "can append duplicate nodes conditionally"
+    anchors: [SW10-A17, SW10-A19, SW10-A23]
+  - id: SW10-M14
+    input: "realtime SIGRTMIN=32"
+    condition: "RT distinction in allocation commented"
+    reach: conditional_uninit_arg
+    local_return: "0 on normal return"
+    effect: "same pending attempt; no RT-specific failure"
+    anchors: [SW10-A19, SW10-A20, SW10-A50]
+  - id: SW10-M15
+    input: "PF_KTHREAD target"
+    condition: "skip queue alloc"
+    reach: conditional
+    local_return: "0 on normal return"
+    effect: "bit only"
+    anchors: [SW10-A18, SW10-A25]
+  - id: SW10-M16
+    input: "q alloc NULL"
+    condition: "still follows out_set"
+    reach: conditional
+    local_return: "0 if defined return"
+    effect: "bit may exist without current node, receiver synth info"
+    anchors: [SW10-A21, SW10-A25, SW10-A32]
+  - id: SW10-M17
+    input: "q non-NULL"
+    condition: "list append precedes info assignment"
+    reach: conditional_uninit_arg
+    local_return: "0 on normal return"
+    effect: "q->info gets sys_kill's prepared info"
+    anchors: [SW10-A23, SW10-A24]
+  - id: SW10-M18
+    input: "SEND_SIG_NOINFO/SEND_SIG_PRIV"
+    condition: "special branch; sys_kill uses &info"
+    reach: not_sys_kill
+    local_return: "not applicable"
+    effect: "conditional only for other callers"
+    anchors: [SW10-A03b, SW10-A47, SW10-A49]
+anchors:
+  - id: SW10-A01
+    path: "mykernel/arch/x86_64/include/asm/syscalls_64.h"
+    symbol: "__NR_kill"
+    observed_lines: [33, 36]
+    quote: |
+      __SYSCALL(__NR_execve, sys_execve)
+      __SYSCALL(__NR_exit, sys_exit)
+      __SYSCALL(__NR_wait4, sys_wait4)
+      __SYSCALL(__NR_kill, sys_kill)
+  - id: SW10-A02
+    path: "mykernel/arch/x86_64/include/asm/syscall_wrapper.h"
+    symbol: "__X86_64_MAP2"
+    observed_lines: [17, 18]
+    quote: |
+      	#define __X86_64_MAP2(m, t1, a1, t2, a2)									\
+      				m(t1, regs->di), m(t2, regs->si)
+  - id: SW10-A03
+    path: "mykernel/lock_IPC/syscall.c"
+    symbol: "MYOS_SYSCALL_DEFINE2(kill)"
+    observed_lines: [91, 95]
+    quote: |
+      MYOS_SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
+      {
+      	ALERT_DUMMY_SYSCALL(kill, IF_ALERT_DUMMY_SYSCALL);
+      
+      	kernel_siginfo_t info;
+  - id: SW10-A03b
+    path: "mykernel/lock_IPC/syscall.c"
+    symbol: "MYOS_SYSCALL_DEFINE2(kill)"
+    observed_lines: [96, 99]
+    quote: |
+      
+      	prepare_kill_siginfo(sig, &info, PIDTYPE_TGID);
+      
+      	return kill_something_info(sig, &info, pid);
+  - id: SW10-A04
+    path: "mykernel/include/linux/kernel/syscalls.h"
+    symbol: "ALERT_DUMMY_SYSCALL"
+    observed_lines: [1392, 1395]
+    quote: |
+      	#define IF_ALERT_DUMMY_SYSCALL 0
+      	#define ALERT_DUMMY_SYSCALL(syscall_name, show_alert)		\
+      			if (show_alert) {									\
+      				pr_alert("\t!!! Dummy Syscall --- %s ---\n",	\
+  - id: SW10-A05
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "prepare_kill_siginfo"
+    observed_lines: [1076, 1080]
+    quote: |
+      	clear_siginfo(info);
+      	info->si_signo = sig;
+      	info->si_errno = 0;
+      	info->si_code = (type == PIDTYPE_PID) ? SI_TKILL : SI_USER;
+      	info->si_pid = task_tgid_vnr(current);
+  - id: SW10-A06
+    path: "mykernel/lock_IPC/signal/signal.h"
+    symbol: "clear_siginfo"
+    observed_lines: [156, 160]
+    quote: |
+      		PREFIX_STATIC_INLINE
+      		void
+      		clear_siginfo(kernel_siginfo_t *info) {
+      			memset(info, 0, sizeof(*info));
+      		}
+  - id: SW10-A07
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "kill_something_info"
+    observed_lines: [762, 766]
+    quote: |
+      	if (pid > 0)
+      		return kill_proc_info(sig, info, pid);
+      	// 目前不支持pid <= 0的情形
+      	else
+      		while (1);
+  - id: SW10-A08
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "kill_proc_info"
+    observed_lines: [729, 733]
+    quote: |
+      	for (;;) {
+      		// rcu_read_lock();
+      		p = pid_task(find_vpid(pid), PIDTYPE_PID);
+      		if (p)
+      			error = group_send_sig_info(sig, info, p, type);
+  - id: SW10-A09
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "kill_proc_info"
+    observed_lines: [733, 737]
+    quote: |
+      			error = group_send_sig_info(sig, info, p, type);
+      		// rcu_read_unlock();
+      		if (likely(!p || error != -ESRCH))
+      			// return error;
+      			break;
+  - id: SW10-A10
+    path: "mykernel/sched/task/pid.c"
+    symbol: "find_vpid"
+    observed_lines: [310, 312]
+    quote: |
+      pid_s *find_vpid(int nr) {
+      	return find_pid_ns(nr, task_active_pid_ns(current));
+      }
+  - id: SW10-A11
+    path: "mykernel/sched/task/pid.c"
+    symbol: "pid_task"
+    observed_lines: [371, 375]
+    quote: |
+      		first = hlist_first_rcu(&pid->tasks[type]);
+      		if (first)
+      			result = hlist_entry(first, task_s, pid_links[(type)]);
+      	}
+      	return result;
+  - id: SW10-A12
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "group_send_sig_info"
+    observed_lines: [675, 677]
+    quote: |
+      	// rcu_read_lock();
+      	// ret = check_kill_permission(sig, info, p);
+      	// rcu_read_unlock();
+  - id: SW10-A13
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "group_send_sig_info"
+    observed_lines: [679, 683]
+    quote: |
+      	// if (!ret && sig) {
+      		// ret = do_send_sig_info(sig, info, p, type);
+      		// if (lock_task_sighand(p, &flags)) {
+      			ret = send_signal_locked(sig, info, p, type);
+      		// 	unlock_task_sighand(p, &flags);
+  - id: SW10-A14
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "send_signal_locked"
+    observed_lines: [657, 660]
+    quote: |
+      	// 		force = true;
+      	// 	}
+      	// }
+      	return __send_signal_locked(sig, info, t, type, force);
+  - id: SW10-A15
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [486, 490]
+    quote: |
+      	sigpending_s *pending;
+      	sigqueue_s *q;
+      	int override_rlimit;
+      	int ret = 0, result;
+      
+  - id: SW10-A16
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [493, 497]
+    quote: |
+      	// result = TRACE_SIGNAL_IGNORED;
+      	// if (!prepare_signal(sig, t, force))
+      	// 	goto ret;
+      
+      	pending = (type != PIDTYPE_PID) ? &t->signal->shared_pending : &t->pending;
+  - id: SW10-A17
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [503, 505]
+    quote: |
+      	// result = TRACE_SIGNAL_ALREADY_PENDING;
+      	// if (legacy_queue(pending, sig))
+      	// 	goto ret;
+  - id: SW10-A18
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [509, 512]
+    quote: |
+      	 * Skip useless siginfo allocation for SIGKILL and kernel threads.
+      	 */
+      	if ((sig == SIGKILL) || (t->flags & PF_KTHREAD))
+      		goto out_set;
+  - id: SW10-A19
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [528, 528]
+    quote: |
+      	q = __sigqueue_alloc(sig, t, GFP_ATOMIC, override_rlimit, 0);
+  - id: SW10-A20
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__sigqueue_alloc"
+    observed_lines: [23, 27]
+    quote: |
+      		int override_rlimit, const uint sigqueue_flags) {
+      
+      	sigqueue_s *q = NULL;
+      	// struct ucounts *ucounts;
+      	long sigpending = 0;
+  - id: SW10-A21
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__sigqueue_alloc"
+    observed_lines: [44, 45]
+    quote: |
+      	if (override_rlimit || likely(sigpending <= task_rlimit(t, RLIMIT_SIGPENDING))) {
+      		q = kmem_cache_alloc(sigqueue_cachep, gfp_flags);
+  - id: SW10-A22
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__sigqueue_alloc"
+    observed_lines: [53, 56]
+    quote: |
+      		INIT_LIST_HEAD(&q->list);
+      		q->flags = sigqueue_flags;
+      		// q->ucounts = ucounts;
+      	}
+  - id: SW10-A23
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [530, 534]
+    quote: |
+      	if (q) {
+      		// list_add_tail(&q->list, &pending->list);
+      		list_header_add_to_tail(&pending->list, &q->list);
+      		switch ((ulong) info) {
+      		case (ulong) SEND_SIG_NOINFO:
+  - id: SW10-A24
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [557, 559]
+    quote: |
+      		default:
+      			copy_siginfo(&q->info, info);
+      			break;
+  - id: SW10-A25
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [579, 581]
+    quote: |
+      out_set:
+      	// signalfd_notify(t, sig);
+      	sigaddset(&pending->signal, sig);
+  - id: SW10-A26
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [596, 600]
+    quote: |
+      
+      	// complete_signal(sig, t, type);
+      ret:
+      	// trace_signal_generate(sig, info, t, type != PIDTYPE_PID, result);
+      	return ret;
+  - id: SW10-A27
+    path: "mykernel/lock_IPC/signal/signal.h"
+    symbol: "sigaddset"
+    observed_lines: [247, 250]
+    quote: |
+      		sigaddset(sigset_t *set, int _sig) {
+      			ulong sig = _sig - 1;
+      			if (_NSIG_WORDS == 1)
+      				set->sig[0] |= 1UL << sig;
+  - id: SW10-A28
+    path: "mykernel/include/uapi/asm-generic/signal.h"
+    symbol: "_NSIG"
+    observed_lines: [7, 9]
+    quote: |
+      	#define _NSIG		64
+      	#define _NSIG_BPW	__BITS_PER_LONG
+      	#define _NSIG_WORDS	(_NSIG / _NSIG_BPW)
+  - id: SW10-A29
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "dequeue_signal"
+    observed_lines: [236, 240]
+    quote: |
+      	*type = PIDTYPE_PID;
+      	signr = __dequeue_signal(&tsk->pending, mask, info, &resched_timer);
+      	if (!signr) {
+      		*type = PIDTYPE_TGID;
+      		signr = __dequeue_signal(&tsk->signal->shared_pending,
+  - id: SW10-A30
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "collect_signal"
+    observed_lines: [175, 179]
+    quote: |
+      	list_header_for_each_container(q, &pending->list, list) {
+      		if (q->info.si_signo == sig) {
+      			if (first != NULL)
+      				goto still_pending;
+      			first = q;
+  - id: SW10-A31
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "collect_signal"
+    observed_lines: [183, 187]
+    quote: |
+      	sigdelset(&pending->signal, sig);
+      
+      	if (first) {
+      still_pending:
+      		list_header_delete_node(&pending->list, &first->list);
+  - id: SW10-A32
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "collect_signal"
+    observed_lines: [203, 207]
+    quote: |
+      		info->si_signo = sig;
+      		info->si_errno = 0;
+      		info->si_code = SI_USER;
+      		info->si_pid = 0;
+      		info->si_uid = 0;
+  - id: SW10-A33
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "get_signal"
+    observed_lines: [915, 919]
+    quote: |
+      		type = PIDTYPE_PID;
+      		signr = dequeue_synchronous_signal(&ksig->info);
+      		if (signr == 0)
+      			signr = dequeue_signal(curr, &curr->blocked,
+      							&ksig->info, &type);
+  - id: SW10-A34
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "complete_signal"
+    observed_lines: [473, 477]
+    quote: |
+      	/*
+      	 * The signal is already in the shared-pending queue.
+      	 * Tell the chosen thread to wake up and dequeue it.
+      	 */
+      	signal_wake_up(t, sig == SIGKILL);
+  - id: SW10-A35
+    path: "mykernel/lock_IPC/signal/signal_macro.h"
+    symbol: "signal_wake_up"
+    observed_lines: [197, 198]
+    quote: |
+      	#define signal_wake_up(t, resume)	\
+      			signal_wake_up_state(t, resume ? TASK_WAKEKILL : 0)
+  - id: SW10-A36
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "signal_wake_up_state"
+    observed_lines: [364, 368]
+    quote: |
+      void signal_wake_up_state(task_s *t, unsigned int state)
+      {
+      	// lockdep_assert_held(&t->sighand->siglock);
+      
+      	set_tsk_thread_flag(t, TIF_SIGPENDING);
+  - id: SW10-A37
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "signal_wake_up_state"
+    observed_lines: [377, 379]
+    quote: |
+      	if (!wake_up_state(t, state | TASK_INTERRUPTIBLE))
+      		kick_process(t);
+      }
+  - id: SW10-A38
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "wake_up_state"
+    observed_lines: [562, 565]
+    quote: |
+      int wake_up_state(task_s *p, uint state)
+      {
+      	return try_to_wake_up(p, state, 0);
+      }
+  - id: SW10-A39
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "kick_process"
+    observed_lines: [200, 204]
+    quote: |
+      	int cpu = task_cpu(p);
+      
+      	// if ((cpu != smp_processor_id()) && task_curr(p))
+      	// 	smp_send_reschedule(cpu);
+      }
+  - id: SW10-A40
+    path: "mykernel/sched/scheduler/scheduler_core.c"
+    symbol: "try_to_wake_up"
+    observed_lines: [478, 482]
+    quote: |
+      	// if (success)
+      	// 	ttwu_stat(p, task_cpu(p), wake_flags);
+      	preempt_enable();
+      
+      	return success;
+  - id: SW10-A41
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "signals_init"
+    observed_lines: [1232, 1235]
+    quote: |
+      void __init signals_init(void)
+      {
+      	// siginfo_buildtime_checks();
+      	sigqueue_cachep = KMEM_CACHE(sigqueue, SLAB_PANIC | SLAB_ACCOUNT);
+  - id: SW10-A42
+    path: "mykernel/init/main.c"
+    symbol: "start_kernel"
+    observed_lines: [184, 188]
+    quote: |
+      	myos_devices_init();
+      
+      	proc_caches_init();
+      	vfs_caches_init();
+      	signals_init();
+  - id: SW10-A43
+    path: "mykernel/lock_IPC/signal/signal.h"
+    symbol: "init_sigpending"
+    observed_lines: [388, 391]
+    quote: |
+      		init_sigpending(sigpending_s *sig) {
+      			// sigemptyset(&sig->signal);
+      			INIT_LIST_HEADER_S(&sig->list);
+      		}
+  - id: SW10-A44
+    path: "mykernel/sched/forkexec/fork.c"
+    symbol: "copy_signal"
+    observed_lines: [793, 797]
+    quote: |
+      		return 0;
+      
+      	sig = kmem_cache_zalloc(signal_cachep, GFP_KERNEL);
+      	tsk->signal = sig;
+      	if (!sig)
+  - id: SW10-A45
+    path: "mykernel/sched/task/pid_api.h"
+    symbol: "task_active_pid_ns"
+    observed_lines: [12, 12]
+    quote: |
+      	#define task_active_pid_ns(tsk)	ns_of_pid(task_pid(tsk))
+  - id: SW10-A46
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "get_signal"
+    observed_lines: [936, 940]
+    quote: |
+      		if (ka->sa.sa_handler == SIG_IGN) /* Do nothing.  */
+      			continue;
+      		if (ka->sa.sa_handler != SIG_DFL) {
+      			/* Run the handler.  */
+      			ksig->ka = *ka;
+  - id: SW10-A47
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [533, 537]
+    quote: |
+      		switch ((ulong) info) {
+      		case (ulong) SEND_SIG_NOINFO:
+      			clear_siginfo(&q->info);
+      			q->info.si_signo	= sig;
+      			q->info.si_errno	= 0;
+  - id: SW10-A48
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [541, 542]
+    quote: |
+      			q->info.si_pid		= __task_pid_nr_ns(current,
+      					PIDTYPE_TGID, task_active_pid_ns(t));
+  - id: SW10-A49
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [549, 553]
+    quote: |
+      		case (ulong) SEND_SIG_PRIV:
+      			clear_siginfo(&q->info);
+      			q->info.si_signo	= sig;
+      			q->info.si_errno	= 0;
+      			q->info.si_code		= SI_KERNEL;
+  - id: SW10-A50
+    path: "mykernel/include/uapi/asm-generic/signal.h"
+    symbol: "SIGRTMIN"
+    observed_lines: [49, 53]
+    quote: |
+      	/* These should not be considered constants from userland.  */
+      	#define SIGRTMIN	32
+      	#ifndef SIGRTMAX
+      	#  define SIGRTMAX		_NSIG
+      	#endif
+  - id: SW10-A51
+    path: "mykernel/lock_IPC/signal/signal.c"
+    symbol: "__send_signal_locked"
+    observed_lines: [579, 581]
+    quote: |
+      out_set:
+      	// signalfd_notify(t, sig);
+      	sigaddset(&pending->signal, sig);
+self_check:
+  anchor_quotes_from_fixed_source: 52
+  distinct_quote_source_paths: 13
+  graph_nodes: 25
+  graph_edges: 26
+  matrix_cases: 18
+  initial_09_checker: NOT_RUN
+  compile_and_runtime: NOT_RUN

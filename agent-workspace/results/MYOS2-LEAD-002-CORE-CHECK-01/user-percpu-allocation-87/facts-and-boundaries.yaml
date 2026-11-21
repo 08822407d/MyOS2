@@ -1,0 +1,3654 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PERCPU-ALLOCATION-87",
+  "record_type": "percpu_allocation_routing_return_pointer_workqueue_bounded_static_facts",
+  "produced_by": "GPT-6 (model visible; backend not independently certified)",
+  "model_per_owner": "GPT-6 + Extra (Owner specified)",
+  "date": "2026-11-14",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "source_pin_short12": "a039d9803ade",
+  "mainline_release_short12": "fc14432f2a56",
+  "execution_start_short12": "596fb3d7e1a5",
+  "status": "AUTHOR_STATIC_PACKAGE_READY_FOR_MAINLINE_REVIEW_AFTER_PUBLICATION",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "compile_and_link": "NOT_RUN",
+  "phase": 2,
+  "open_questions": [
+    "PA87-U01",
+    "PA87-U02",
+    "PA87-U03",
+    "PA87-U04",
+    "PA87-U05",
+    "PA87-U06",
+    "PA87-U07",
+    "PA87-U08",
+    "PA87-U09"
+  ],
+  "G00": {
+    "result": "PASS",
+    "lead_direct": "fc14432f2a56",
+    "exec_direct": "596fb3d7e1a5",
+    "master_direct": "e8e60cd19540",
+    "time_direct": "a039d9803ade",
+    "PR16": "OPEN_UNMERGED",
+    "PR17": "OPEN_DRAFT_UNMERGED",
+    "open_pr_count": 2,
+    "target_dir_preflight": "EXPECTED_404",
+    "marker_preflight": 0,
+    "old86_comment": 6870949847,
+    "startup_convention": "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。",
+    "write_before_gate": "NONE"
+  },
+  "D00": {
+    "prior": "CORE-USER-PERCPU-BOOTSTRAP-86",
+    "prior_review": "R86-01",
+    "prior_verdict": "RETURN_DOCUMENTATION_ONLY",
+    "correction_state": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "authority_to_close": "MYOS2-A-C06 Pro only",
+    "scope": "APPEND_ONLY_P9_5_RAW_PREFIX_COUNT_DOCUMENTATION_NOT_TECHNICAL_REANALYSIS",
+    "frozen_author_self_check": {
+      "verified_claims": 77,
+      "quotes_reconfirmed": 77,
+      "downgraded_to_inferred": 0,
+      "remain_untouched": true
+    },
+    "original_recount": {
+      "method": "Independent read of all six original GitHub file text objects at fixed execution commit; literal raw-prefix appearances counted in current review, NOT a reconstruction of original author local P9",
+      "definition_anchor_count": 77,
+      "explanatory_literal_count": 1,
+      "raw_prefix_count_total": 78,
+      "filename_counts": [
+        {
+          "file": "MANIFEST.md",
+          "raw_prefixes": 0,
+          "source_definition_tags": 0,
+          "contextual_literals": 0
+        },
+        {
+          "file": "percpu-bootstrap.md",
+          "raw_prefixes": 0,
+          "source_definition_tags": 0,
+          "contextual_literals": 0
+        },
+        {
+          "file": "facts-and-boundaries.yaml",
+          "raw_prefixes": 1,
+          "source_definition_tags": 0,
+          "contextual_literals": 1,
+          "location": "source_ledger entry path=mykernel/include/linux/kernel/asm-generic/sections.h, field=extent",
+          "character_offset_zero_based": 11879,
+          "context": "A bracket+reserved-word literal in explanation that an extern declaration is not an evidentiary definition anchor; not a new proof"
+        },
+        {
+          "file": "percpu-bootstrap-paths.dot",
+          "raw_prefixes": 0,
+          "source_definition_tags": 0,
+          "contextual_literals": 0
+        },
+        {
+          "file": "deferred-findings.yaml",
+          "raw_prefixes": 0,
+          "source_definition_tags": 0,
+          "contextual_literals": 0
+        },
+        {
+          "file": "evidence.md",
+          "raw_prefixes": 77,
+          "source_definition_tags": 77,
+          "contextual_literals": 0
+        }
+      ]
+    },
+    "original_author_global_claim": "RETRACTED: 77/77/0 was a correct count of definition headers, not of all six-file raw prefix appearances. Do not retroactively call it a compliant all-file selfcheck.",
+    "closure_limits": [
+      "Do not modify any original 86 file or its PR17 delivery comment",
+      "Do not fabricate an 86th-source tag E078",
+      "86 technical core retained only under R86-S01/S02/S03",
+      "R84-01 remains CLOSED; batch85 retains qualified PASS_PENDING_LOCAL",
+      "The new87 package raw prefix selfcheck is entirely separate from old86 counts"
+    ]
+  },
+  "reading_account": {
+    "new_read_full_current_turn": [
+      "agent-workspace/lead/MYOS2-LEAD-002/123-user-percpu-allocation-contract.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-PERCPU-BOOTSTRAP-86-review.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-11-14-percpu86-reviewed-allocation87-ready.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+      "agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md",
+      "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+      "Original86 fixed six files individually fetched/recounted",
+      "PR17 original86 formal comment 6870949847 read full",
+      "time and master options_flags.cmake full independently fetched",
+      "time/master panic.c branch line read",
+      "agent-workspace/conventions.md direct selfcheck line independent read"
+    ],
+    "new_read_source_files_bounded": [
+      "mykernel/mm/misc/percpu.c",
+      "mykernel/include/linux/smp/percpu_chunk.h",
+      "mykernel/include/linux/kernel/align.h",
+      "mykernel/include/uapi/linux/const.h",
+      "mykernel/include/linux/kernel/math.h",
+      "mykernel/include/uapi/asm-generic/errno-base.h",
+      "mykernel/lib/list/double_list_macro.h",
+      "mykernel/lib/list/double_list.h",
+      "mykernel/mm/kmalloc/slub.h",
+      "mykernel/mm/kmalloc/slub.c",
+      "mykernel/mm/page_alloc/buddy_const.h",
+      "mykernel/kactive/workqueue/workqueue.c",
+      "mykernel/kactive/workqueue/workqueue_types.h",
+      "mykernel/kactive/workqueue/workqueue_const.h",
+      "mykernel/include/linux/smp/percpu.h",
+      "mykernel/arch/x86_64/include/asm/percpu.h",
+      "mykernel/include/linux/compiler/compiler.h",
+      "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "mykernel/include/linux/kernel/cpumask.h",
+      "mykernel/kactive/workqueue/workqueue.h",
+      "mykernel/mm/kmalloc/kmalloc_api.h",
+      "mykernel/kactive/workqueue/workqueue_macro.h",
+      "mykernel/kactive/kactive_type_declaration.h",
+      "mykernel/mm/misc/mm_misc.h",
+      "mykernel/mm/misc/mm_misc_types.h"
+    ],
+    "same_active_C06b_conversation_read_reused": [
+      "Original 119 genuine receiver read and nine MyOS2 project rules, before this batch in same executor conversation",
+      "Mnemosyne receive report and separately refreshed guidance from original 84, no re-imported guidance maintenance",
+      "Original 84,85,86 materials/technical constraints previously authored and read in this same executor chat",
+      "Mainline R85-S01/S02/S03 and R84-S01/S02/S03 in fixed review receipts already completely read in this valid chat",
+      "R86-S01/S02/S03 newly fully read in 86-review at fixed123 commit; 81–83 historical limits only insofar as prior valid chat and concrete consumer relevance"
+    ],
+    "not_read": [
+      "all dynamic perCPU freeing/reclaim",
+      "full source writer audit of perCPU offset or concurrent list operations",
+      "entire slab/buddy/memblock allocator",
+      "full workqueue enqueue/scheduling/destruction/rescuer lifecycle",
+      "real ELF/compile command and C ABI backend",
+      "live virtual-memory map, CPU MSR values or SMP/AP/hardware execution",
+      "full local P9 suite or actual repository scripts"
+    ],
+    "status_accuracy": [
+      "C06 mainline reviewer read claims are not inherited as this executor's tool calls",
+      "No new Mnemosyne handoff ritual or fabricated original loading logs",
+      "R86-01 is document-only; prior 86 all-file 78 count newly observed, no historical P9 execution certified",
+      "R85-S01 parser double-space correction held; R86-S01 mod/void-pointer, S02 link/width, S03 early CPU setup limits held"
+    ]
+  },
+  "source_ledger": [
+    {
+      "path": "mykernel/mm/misc/percpu.c",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E001",
+        "PA87-E002",
+        "PA87-E003",
+        "PA87-E004",
+        "PA87-E005",
+        "PA87-E006",
+        "PA87-E007",
+        "PA87-E010",
+        "PA87-E011",
+        "PA87-E012",
+        "PA87-E013",
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E016",
+        "PA87-E017",
+        "PA87-E023",
+        "PA87-E024",
+        "PA87-E025",
+        "PA87-E026",
+        "PA87-E027",
+        "PA87-E028",
+        "PA87-E029",
+        "PA87-E030",
+        "PA87-E031",
+        "PA87-E032",
+        "PA87-E033",
+        "PA87-E034",
+        "PA87-E035",
+        "PA87-E036",
+        "PA87-E037",
+        "PA87-E038",
+        "PA87-E039",
+        "PA87-E040",
+        "PA87-E041",
+        "PA87-E042",
+        "PA87-E043",
+        "PA87-E044",
+        "PA87-E097"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/include/linux/smp/percpu_chunk.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E008",
+        "PA87-E009"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/align.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E018"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/const.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E019",
+        "PA87-E020"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/math.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E021"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/errno-base.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E022"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E045",
+        "PA87-E046",
+        "PA87-E047",
+        "PA87-E048",
+        "PA87-E049",
+        "PA87-E050"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/lib/list/double_list.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E051",
+        "PA87-E052",
+        "PA87-E053"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E054"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/slub.c",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E055",
+        "PA87-E100"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/mm/page_alloc/buddy_const.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E056"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E057",
+        "PA87-E058",
+        "PA87-E059",
+        "PA87-E060",
+        "PA87-E061",
+        "PA87-E062",
+        "PA87-E063",
+        "PA87-E064",
+        "PA87-E065",
+        "PA87-E066",
+        "PA87-E067",
+        "PA87-E068",
+        "PA87-E069",
+        "PA87-E070",
+        "PA87-E071",
+        "PA87-E072",
+        "PA87-E073",
+        "PA87-E074",
+        "PA87-E075",
+        "PA87-E076",
+        "PA87-E077",
+        "PA87-E078",
+        "PA87-E079",
+        "PA87-E102"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E080",
+        "PA87-E081",
+        "PA87-E082",
+        "PA87-E083"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E084",
+        "PA87-E085",
+        "PA87-E086",
+        "PA87-E101"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/include/linux/smp/percpu.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E087",
+        "PA87-E088",
+        "PA87-E089",
+        "PA87-E090"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E091",
+        "PA87-E092",
+        "PA87-E093",
+        "PA87-E095"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/include/linux/compiler/compiler.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E094"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E096"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/cpumask.h",
+      "read_class": "NEW_READ_THIS_TURN_GITHUB_FIXED_TIME",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [
+        "PA87-E098",
+        "PA87-E099"
+      ],
+      "relevant_definition_range": "actual 1-5 line anchors indexed in evidence; file content fetched from fixed source; no build output"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue.h",
+      "read_class": "NEW_READ_CONTEXT_ONLY_NO_SOURCE_TAG",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [],
+      "limit": "Viewed for bounded include/type/algorithm vicinity, not used as independent strong definition evidence"
+    },
+    {
+      "path": "mykernel/mm/kmalloc/kmalloc_api.h",
+      "read_class": "NEW_READ_CONTEXT_ONLY_NO_SOURCE_TAG",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [],
+      "limit": "Viewed for bounded include/type/algorithm vicinity, not used as independent strong definition evidence"
+    },
+    {
+      "path": "mykernel/kactive/workqueue/workqueue_macro.h",
+      "read_class": "NEW_READ_CONTEXT_ONLY_NO_SOURCE_TAG",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [],
+      "limit": "Viewed for bounded include/type/algorithm vicinity, not used as independent strong definition evidence"
+    },
+    {
+      "path": "mykernel/kactive/kactive_type_declaration.h",
+      "read_class": "NEW_READ_CONTEXT_ONLY_NO_SOURCE_TAG",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [],
+      "limit": "Viewed for bounded include/type/algorithm vicinity, not used as independent strong definition evidence"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc.h",
+      "read_class": "NEW_READ_CONTEXT_ONLY_NO_SOURCE_TAG",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [],
+      "limit": "Viewed for bounded include/type/algorithm vicinity, not used as independent strong definition evidence"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc_types.h",
+      "read_class": "NEW_READ_CONTEXT_ONLY_NO_SOURCE_TAG",
+      "source_pin_short12": "a039d9803ade",
+      "quote_ids": [],
+      "limit": "Viewed for bounded include/type/algorithm vicinity, not used as independent strong definition evidence"
+    }
+  ],
+  "source_soft_limit": {
+    "allowed": 24,
+    "actual": 25,
+    "over": 1,
+    "reason": "One additional direct-neighbor context file was read to distinguish workqueue/declaration interfaces and allocator wrappers. 19 files carry exact short anchors; six extra bounded type/header contexts were read without independent strong-anchor claims. No full-tree survey; soft not hard cap."
+  },
+  "short_anchor_ledger": [
+    {
+      "id": "PA87-E001",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "PCPU_GFP",
+      "start": 78,
+      "end": 78,
+      "claim": "backing GFP whitelist expression",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E002",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "chunk_size",
+      "start": 90,
+      "end": 90,
+      "claim": "rounded chunk size has size_t type",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E003",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "pcpu_base_addr",
+      "start": 93,
+      "end": 93,
+      "claim": "first runtime base address object",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E004",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "pcpu_unit_offsets",
+      "start": 96,
+      "end": 96,
+      "claim": "source CPU offset array object",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E005",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "pcpu_first_chunk",
+      "start": 103,
+      "end": 103,
+      "claim": "first chunk published global",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E006",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "pcpu_reserved_chunk",
+      "start": 110,
+      "end": 110,
+      "claim": "reserved chunk published global",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E007",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "pcpu_chunk_lists",
+      "start": 115,
+      "end": 115,
+      "claim": "shared chunk list declared",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E008",
+      "path": "mykernel/include/linux/smp/percpu_chunk.h",
+      "symbol": "simple_pcpu_chunk",
+      "start": 13,
+      "end": 16,
+      "claim": "int metadata and list field",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E009",
+      "path": "mykernel/include/linux/smp/percpu_chunk.h",
+      "symbol": "simple_pcpu_chunk",
+      "start": 21,
+      "end": 24,
+      "claim": "relative base address and data pointers",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E010",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_create_chunk",
+      "start": 121,
+      "end": 125,
+      "claim": "late create metadata allocation and null test",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E011",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_create_chunk",
+      "start": 127,
+      "end": 130,
+      "claim": "late create list/init/zeroing-data request",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E012",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_create_chunk",
+      "start": 130,
+      "end": 134,
+      "claim": "data pointer, base difference and insertion before return",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E013",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "early_pcpu_create_chunk",
+      "start": 144,
+      "end": 148,
+      "claim": "early first/reserved chunk data/list",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E014",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_find_block_fit",
+      "start": 173,
+      "end": 176,
+      "claim": "fit ALIGN and need_size formula",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E015",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_find_block_fit",
+      "start": 176,
+      "end": 180,
+      "claim": "fit condition and return",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E016",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_area",
+      "start": 205,
+      "end": 207,
+      "claim": "allocation commit function starts with empty while",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E017",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_area",
+      "start": 209,
+      "end": 211,
+      "claim": "commit updates free_offset/free_bytes and returns start",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E018",
+      "path": "mykernel/include/linux/kernel/align.h",
+      "symbol": "ALIGN",
+      "start": 8,
+      "end": 8,
+      "claim": "alignment wrapper power-of-two expectation",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E019",
+      "path": "mykernel/include/uapi/linux/const.h",
+      "symbol": "__ALIGN_KERNEL",
+      "start": 30,
+      "end": 30,
+      "claim": "alignment converts mask to typeof offset",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E020",
+      "path": "mykernel/include/uapi/linux/const.h",
+      "symbol": "__ALIGN_KERNEL_MASK",
+      "start": 31,
+      "end": 31,
+      "claim": "alignment mask arithmetic",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E021",
+      "path": "mykernel/include/linux/kernel/math.h",
+      "symbol": "round_up",
+      "start": 24,
+      "end": 24,
+      "claim": "different round_up macro named separately",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E022",
+      "path": "mykernel/include/uapi/asm-generic/errno-base.h",
+      "symbol": "ENOMEM",
+      "start": 18,
+      "end": 18,
+      "claim": "negative ENOMEM error constant source",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E023",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 231,
+      "end": 233,
+      "claim": "public allocation request size_t alignment/gfp",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E024",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 234,
+      "end": 238,
+      "claim": "local int off/cpu/ret versus size_t params",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E025",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 240,
+      "end": 241,
+      "claim": "pcpu_gfp masking in real function",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E026",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_setup_first_chunk",
+      "start": 350,
+      "end": 353,
+      "claim": "first chunk initial free fields for prior qualified setup",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E027",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_setup_first_chunk",
+      "start": 360,
+      "end": 363,
+      "claim": "unit offset source i times static_size",
+      "topic": "A"
+    },
+    {
+      "id": "PA87-E028",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 246,
+      "end": 250,
+      "claim": "reserved candidate selection and attempted fit",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E029",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 250,
+      "end": 254,
+      "claim": "reserved failed fit jumps to failure rather than normal list",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E030",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 254,
+      "end": 258,
+      "claim": "reserved commit success/failure two exits",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E031",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 261,
+      "end": 265,
+      "claim": "normal list traversal enters fit",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E032",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 266,
+      "end": 270,
+      "claim": "normal fit and commit routing",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E033",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 268,
+      "end": 271,
+      "claim": "normal successful area and loop end",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E034",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 275,
+      "end": 278,
+      "claim": "expansion create and metadata failure test",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E035",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 280,
+      "end": 282,
+      "claim": "new chunk goes back to restart",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E036",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 284,
+      "end": 285,
+      "claim": "shared area_found is label and commented lock action",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E037",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 289,
+      "end": 293,
+      "claim": "return relative pointer and inactive perCPU clear comments",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E038",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 292,
+      "end": 294,
+      "claim": "raw return encoding assignment and commented conversion",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E039",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 300,
+      "end": 304,
+      "claim": "area_found return pointer",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E040",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 306,
+      "end": 309,
+      "claim": "failure and commented unlock label",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E041",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 328,
+      "end": 330,
+      "claim": "failed allocator returns NULL",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E042",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 244,
+      "end": 244,
+      "claim": "lock acquisition is commented",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E043",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 273,
+      "end": 274,
+      "claim": "lock release around expansion is commented",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E044",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_alloc_noprof",
+      "start": 280,
+      "end": 280,
+      "claim": "lock reentry around restart is commented",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E045",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "LIST_HEADER_INIT",
+      "start": 9,
+      "end": 12,
+      "claim": "list header anchor and count initializer",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E046",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "DECLARE_LIST_HDR_S",
+      "start": 16,
+      "end": 17,
+      "claim": "list head global declaration macro",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E047",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_first_entry",
+      "start": 37,
+      "end": 38,
+      "claim": "first-entry extraction expression",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E048",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_entry_is_head",
+      "start": 164,
+      "end": 165,
+      "claim": "head sentinel termination",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E049",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_for_each_entry",
+      "start": 173,
+      "end": 176,
+      "claim": "list iteration true macro",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E050",
+      "path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_header_for_each_container",
+      "start": 346,
+      "end": 347,
+      "claim": "wrapper traverses anchor list",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E051",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "INIT_LIST_HEAD",
+      "start": 125,
+      "end": 125,
+      "claim": "list head init synonym macro",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E052",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "INIT_LIST_S",
+      "start": 149,
+      "end": 152,
+      "claim": "list node self links on init",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E053",
+      "path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_header_add_to_tail",
+      "start": 663,
+      "end": 667,
+      "claim": "list insertion increments header count",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E054",
+      "path": "mykernel/mm/kmalloc/slub.h",
+      "symbol": "kzalloc",
+      "start": 168,
+      "end": 172,
+      "claim": "kzalloc appends __GFP_ZERO and forwards kmalloc",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E055",
+      "path": "mykernel/mm/kmalloc/slub.c",
+      "symbol": "kmem_cache_alloc",
+      "start": 227,
+      "end": 229,
+      "claim": "slab cache allocator forwards to slab_alloc",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E056",
+      "path": "mykernel/mm/page_alloc/buddy_const.h",
+      "symbol": "GFP_KERNEL",
+      "start": 309,
+      "end": 309,
+      "claim": "kernel GFP macro as a flag expression",
+      "topic": "B"
+    },
+    {
+      "id": "PA87-E057",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "pwq_cache",
+      "start": 36,
+      "end": 36,
+      "claim": "workqueue pool workqueue cache pointer",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E058",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueues",
+      "start": 39,
+      "end": 39,
+      "claim": "global workqueue list header",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E059",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 797,
+      "end": 801,
+      "claim": "caller creates perCPU slots for pwq pointer type",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E060",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 801,
+      "end": 803,
+      "claim": "perCPU allocation failure branches to cleanup",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E061",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 805,
+      "end": 809,
+      "claim": "bounded versus unbound and BH pool selection",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E062",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 807,
+      "end": 810,
+      "claim": "BH/CPU perCPU worker pools choice",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E063",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 812,
+      "end": 815,
+      "claim": "perCPU loop and local pointer roles",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E064",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 817,
+      "end": 820,
+      "claim": "perCPU slot and pool address then slab request",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E065",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 820,
+      "end": 823,
+      "claim": "slab allocation null check per slot",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E066",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 824,
+      "end": 826,
+      "claim": "PWQ pool and owning workqueue assignment",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E067",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 828,
+      "end": 832,
+      "claim": "list publication and successful return",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E068",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 831,
+      "end": 835,
+      "claim": "success path and unbound ret read",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E069",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 837,
+      "end": 841,
+      "claim": "cleanup traverses all CPU slots and frees nonnull PWQ",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E070",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 840,
+      "end": 844,
+      "claim": "cleanup free and disabled perCPU release",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E071",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_and_link_pwqs",
+      "start": 843,
+      "end": 846,
+      "claim": "failure resets cpu_pwq and returns ENOMEM",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E072",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_workqueue",
+      "start": 871,
+      "end": 873,
+      "claim": "outer workqueue object kzalloc and NULL exit",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E073",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_workqueue",
+      "start": 883,
+      "end": 886,
+      "claim": "workqueue flags/list initialization",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E074",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_workqueue",
+      "start": 899,
+      "end": 902,
+      "claim": "caller discards alloc_and_link return status",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E075",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_workqueue",
+      "start": 905,
+      "end": 907,
+      "claim": "global list publication despite ignored status",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E076",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "simple_alloc_workqueue",
+      "start": 917,
+      "end": 917,
+      "claim": "outer caller returns workqueue pointer",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E077",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 953,
+      "end": 954,
+      "claim": "source of slab cache before actual wq allocations",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E078",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 975,
+      "end": 976,
+      "claim": "first named simple workqueue call",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E079",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "workqueue_init_early",
+      "start": 983,
+      "end": 984,
+      "claim": "BH named simple workqueue call",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E080",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "pool_workqueue",
+      "start": 233,
+      "end": 235,
+      "claim": "PWQ pool/owner fields",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E081",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "pool_workqueue",
+      "start": 262,
+      "end": 262,
+      "claim": "linked pwqs_node member",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E082",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "workqueue_struct",
+      "start": 282,
+      "end": 284,
+      "claim": "workqueue two header/link fields",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E083",
+      "path": "mykernel/kactive/workqueue/workqueue_types.h",
+      "symbol": "workqueue_struct",
+      "start": 325,
+      "end": 327,
+      "claim": "workqueue flags and typed perCPU cpu_pwq pointer",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E084",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "wq_flags",
+      "start": 176,
+      "end": 178,
+      "claim": "workqueue enum BH and UNBOUND bits",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E085",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "wq_flags",
+      "start": 179,
+      "end": 181,
+      "claim": "workqueue HIGHPRI enum bit",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E086",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "wq_flags",
+      "start": 218,
+      "end": 218,
+      "claim": "BH compatible flags enum entry",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E087",
+      "path": "mykernel/include/linux/smp/percpu.h",
+      "symbol": "pcpu_alloc_noprof",
+      "start": 27,
+      "end": 27,
+      "claim": "alloc function name alias",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E088",
+      "path": "mykernel/include/linux/smp/percpu.h",
+      "symbol": "__alloc_percpu",
+      "start": 31,
+      "end": 33,
+      "claim": "normal allocation wrapper passes reserved false",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E089",
+      "path": "mykernel/include/linux/smp/percpu.h",
+      "symbol": "alloc_percpu",
+      "start": 42,
+      "end": 45,
+      "claim": "typed slot allocation uses sizeof and alignof type",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E090",
+      "path": "mykernel/include/linux/smp/percpu.h",
+      "symbol": "__alloc_reserved_percpu",
+      "start": 34,
+      "end": 36,
+      "claim": "reserved allocation wrapper passes reserved true",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E091",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "symbol": "per_cpu_offset",
+      "start": 34,
+      "end": 34,
+      "claim": "index into fixed CPU offset array",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E092",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "symbol": "SHIFT_PERCPU_PTR",
+      "start": 239,
+      "end": 242,
+      "claim": "percpu pointer shift via RELOC_HIDE",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E093",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "symbol": "per_cpu_ptr",
+      "start": 244,
+      "end": 248,
+      "claim": "perCPU pointer instance decoding",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E094",
+      "path": "mykernel/include/linux/compiler/compiler.h",
+      "symbol": "RELOC_HIDE",
+      "start": 166,
+      "end": 169,
+      "claim": "unsigned long pointer integer add and cast",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E095",
+      "path": "mykernel/arch/x86_64/include/asm/percpu.h",
+      "symbol": "per_cpu",
+      "start": 251,
+      "end": 251,
+      "claim": "named perCPU dereference macro",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E096",
+      "path": "mykernel/arch/x86_64/smp/setup_percpu.c",
+      "symbol": "setup_per_cpu_areas",
+      "start": 75,
+      "end": 79,
+      "claim": "runtime delta and CPU offset published",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E097",
+      "path": "mykernel/mm/misc/percpu.c",
+      "symbol": "simple_pcpu_setup_first_chunk",
+      "start": 366,
+      "end": 369,
+      "claim": "reserved backing chunk base encoding",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E098",
+      "path": "mykernel/include/linux/kernel/cpumask.h",
+      "symbol": "for_each_cpu",
+      "start": 19,
+      "end": 20,
+      "claim": "dense contiguous CPU iteration",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E099",
+      "path": "mykernel/include/linux/kernel/cpumask.h",
+      "symbol": "for_each_possible_cpu",
+      "start": 22,
+      "end": 22,
+      "claim": "possible CPU alias dense loop",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E100",
+      "path": "mykernel/mm/kmalloc/slub.c",
+      "symbol": "kmem_cache_free",
+      "start": 310,
+      "end": 314,
+      "claim": "cleanup slab cache free wrapper",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E101",
+      "path": "mykernel/kactive/workqueue/workqueue_const.h",
+      "symbol": "NR_STD_WORKER_POOLS",
+      "start": 54,
+      "end": 54,
+      "claim": "two standard worker pools per CPU",
+      "topic": "C"
+    },
+    {
+      "id": "PA87-E102",
+      "path": "mykernel/kactive/workqueue/workqueue.c",
+      "symbol": "__simple_queue_work",
+      "start": 121,
+      "end": 122,
+      "claim": "workqueue consumer reads cpu_pwq slot to pool",
+      "topic": "C"
+    }
+  ],
+  "short_anchor_count": 102,
+  "fact_support_map": {
+    "request_fit_alignment": [
+      "PA87-E014",
+      "PA87-E015",
+      "PA87-E018",
+      "PA87-E019",
+      "PA87-E020"
+    ],
+    "allocation_commit": [
+      "PA87-E016",
+      "PA87-E017"
+    ],
+    "chunk_metadata_and_create": [
+      "PA87-E008",
+      "PA87-E009",
+      "PA87-E010",
+      "PA87-E011",
+      "PA87-E012"
+    ],
+    "reserved_vs_normal": [
+      "PA87-E028",
+      "PA87-E029",
+      "PA87-E030",
+      "PA87-E031",
+      "PA87-E034",
+      "PA87-E035"
+    ],
+    "list_and_lock": [
+      "PA87-E042",
+      "PA87-E043",
+      "PA87-E044",
+      "PA87-E045",
+      "PA87-E046",
+      "PA87-E049",
+      "PA87-E050",
+      "PA87-E053"
+    ],
+    "encoded_return": [
+      "PA87-E038",
+      "PA87-E039",
+      "PA87-E091",
+      "PA87-E092",
+      "PA87-E093",
+      "PA87-E094",
+      "PA87-E096",
+      "PA87-E097"
+    ],
+    "workqueue_allocation": [
+      "PA87-E059",
+      "PA87-E060",
+      "PA87-E063",
+      "PA87-E064",
+      "PA87-E065",
+      "PA87-E089"
+    ],
+    "workqueue_failure_and_outer_publish": [
+      "PA87-E069",
+      "PA87-E070",
+      "PA87-E071",
+      "PA87-E074",
+      "PA87-E075",
+      "PA87-E076"
+    ],
+    "workqueue_flags_and_early_call": [
+      "PA87-E061",
+      "PA87-E062",
+      "PA87-E068",
+      "PA87-E078",
+      "PA87-E079",
+      "PA87-E084",
+      "PA87-E085"
+    ]
+  },
+  "matrices": {
+    "allocation_request_and_fit_matrix": [
+      {
+        "row_id": "PA87-A-REQ01",
+        "subject": "request type",
+        "input": "simple_pcpu_alloc_noprof(size_t size,size_t align,bool reserved,gfp_t)",
+        "source_expression": "find fit receives int size",
+        "conditional_conclusion": "request above INT_MAX requires a conversion with implementation-dependent result; cannot assume modulo 2^32",
+        "first_unproven_gate": "selected C ABI, exact compiler and actual caller size",
+        "evidence_ids": [
+          "PA87-E023",
+          "PA87-E024",
+          "PA87-E014"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-REQ02",
+        "subject": "GFP selection",
+        "input": "caller gfp=GFP_KERNEL or additional flags",
+        "source_expression": "pcpu_gfp=gfp&(GFP_KERNEL|__GFP_NORETRY|__GFP_NOWARN)",
+        "conditional_conclusion": "only whitelisted flag bits forwarded to new backing allocator",
+        "first_unproven_gate": "flag definitions/allocator effect not fully audited",
+        "evidence_ids": [
+          "PA87-E001",
+          "PA87-E025",
+          "PA87-E056"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-REQ03",
+        "subject": "fit input",
+        "input": "chunk.free_offset is int and align size_t",
+        "source_expression": "alloc_offset=ALIGN(free_offset,align)",
+        "conditional_conclusion": "fit produces a candidate aligned start only under supported positive power-of-two align and valid int operations",
+        "first_unproven_gate": "type cast to int, signed overflow/zero/nonpower2 align",
+        "evidence_ids": [
+          "PA87-E008",
+          "PA87-E014",
+          "PA87-E018",
+          "PA87-E019",
+          "PA87-E020"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-REQ04",
+        "subject": "need expression",
+        "input": "alloc_offset>=free_offset, size>=0, all int representable",
+        "source_expression": "need_size=alloc_offset+size-free_offset",
+        "conditional_conclusion": "need=padding+requested bytes, independent of chunk total C",
+        "first_unproven_gate": "value-range and original free_bytes invariant",
+        "evidence_ids": [
+          "PA87-E014",
+          "PA87-E015"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-REQ05",
+        "subject": "rejection",
+        "input": "free_bytes<need_size after valid fit calculation",
+        "source_expression": "return -ENOMEM from fit",
+        "conditional_conclusion": "no area commit on this rejection path, branch caller treats off<0 as failure",
+        "first_unproven_gate": "allocation and exit context must be followed",
+        "evidence_ids": [
+          "PA87-E015",
+          "PA87-E022",
+          "PA87-E029",
+          "PA87-E031"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-REQ06",
+        "subject": "new chunk baseline",
+        "input": "metadata allocation succeeded",
+        "source_expression": "free_offset=0, free_bytes=chunk_size (int)",
+        "conditional_conclusion": "initial free units are bytes, but size_t to int narrowing possible",
+        "first_unproven_gate": "chunk_size within int range and zero allocation success",
+        "evidence_ids": [
+          "PA87-E010",
+          "PA87-E011",
+          "PA87-E008"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-REQ07",
+        "subject": "first chunk baseline",
+        "input": "post86 valid first chunk",
+        "source_expression": "free_offset=size_sum, free_bytes=chunk_size-size_sum",
+        "conditional_conclusion": "first chunk initial free region starts past template and reservation (source metadata)",
+        "first_unproven_gate": "first chunk success, valid sum, int conversion, real mapped bytes",
+        "evidence_ids": [
+          "PA87-E026",
+          "PA87-E008"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      }
+    ],
+    "alignment_and_capacity_matrix": [
+      {
+        "row_id": "PA87-A-AL01",
+        "subject": "power-of-two align",
+        "input": "x>=0, a=2^k positive, int sums in range",
+        "source_expression": "ALIGN(x,a)=((x+(a-1))&~(a-1))",
+        "conditional_conclusion": "candidate is nondecreasing aligned integer within declared range",
+        "first_unproven_gate": "full C usual arithmetic and cast preconditions",
+        "evidence_ids": [
+          "PA87-E018",
+          "PA87-E019",
+          "PA87-E020"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-AL02",
+        "subject": "padding charge comparison",
+        "input": "gap=align(free_offset,a)-free_offset, request q>=0",
+        "source_expression": "need_size=gap+q; reject if free_bytes<need",
+        "conditional_conclusion": "fit correctly includes padding in required capacity under valid int arithmetic",
+        "first_unproven_gate": "does not imply commit decrements same amount",
+        "evidence_ids": [
+          "PA87-E014",
+          "PA87-E015",
+          "PA87-E017"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-AL03",
+        "subject": "zero alignment condition",
+        "input": "a=0, free_offset=1, q=1, int mask -1 under selected type",
+        "source_expression": "ALIGN returns 0 with sourced mask expression in this isolated case",
+        "conditional_conclusion": "start can be below free_offset; area contains empty while guard",
+        "first_unproven_gate": "not evidence real alloc_percpu ever supplies a=0, and C overflow/typing assumptions matter",
+        "evidence_ids": [
+          "PA87-E016",
+          "PA87-E018",
+          "PA87-E019",
+          "PA87-E020"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-AL04",
+        "subject": "non-power-of-two alignment",
+        "input": "x=5, a=3, int valid",
+        "source_expression": "mask=2; (5+2)&~2=5",
+        "conditional_conclusion": "result5 is not a multiple of3; bit-mask macro is not arbitrary ALIGN",
+        "first_unproven_gate": "actual caller type alignment generally a valid power of two but other inputs unknown",
+        "evidence_ids": [
+          "PA87-E018",
+          "PA87-E019",
+          "PA87-E020"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-AL05",
+        "subject": "signed arithmetic boundary",
+        "input": "free_offset+align-1 or alloc_offset+size exceeds INT_MAX",
+        "source_expression": "int operations and int metadata",
+        "conditional_conclusion": "do not continue finite model through C undefined signed overflow",
+        "first_unproven_gate": "actual compile ABI and link values not observed",
+        "evidence_ids": [
+          "PA87-E008",
+          "PA87-E014",
+          "PA87-E015",
+          "PA87-E019",
+          "PA87-E020"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-AL06",
+        "subject": "capacity bound",
+        "input": "C=16384, current off16384 and reported free3",
+        "source_expression": "new 3-byte request align1 passes free_bytes>=need",
+        "conditional_conclusion": "source accepts a candidate off=16384 with end16387 beyond C in accumulated-padding model",
+        "first_unproven_gate": "not a physical memory write; actual caller/states and backing mapping unknown",
+        "evidence_ids": [
+          "PA87-E014",
+          "PA87-E015",
+          "PA87-E017",
+          "PA87-E011"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      }
+    ],
+    "area_commit_and_failure_matrix": [
+      {
+        "row_id": "PA87-A-CM01",
+        "subject": "empty while",
+        "input": "start<chunk.free_offset",
+        "source_expression": "while (start < free_offset);",
+        "conditional_conclusion": "empty-loop has no visible state mutation; normal fit with valid align and no wrap returns start>=free_offset",
+        "first_unproven_gate": "optimizer/concurrency semantics and reachability not certified",
+        "evidence_ids": [
+          "PA87-E016",
+          "PA87-E014",
+          "PA87-E018"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-CM02",
+        "subject": "offset advancement",
+        "input": "start>=old_free_offset, int addition representable",
+        "source_expression": "free_offset=start+size",
+        "conditional_conclusion": "total consumed tail span includes padding+request",
+        "first_unproven_gate": "valid start and size; no actual memory store by this line",
+        "evidence_ids": [
+          "PA87-E017"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-CM03",
+        "subject": "free byte accounting",
+        "input": "old free_bytes=F",
+        "source_expression": "free_bytes-=size (no subtraction of padding)",
+        "conditional_conclusion": "new reported free=F-q, rather than F-gap-q; overstates physical tail by gap if initial invariant held",
+        "first_unproven_gate": "comparison and valid C arithmetic assumptions",
+        "evidence_ids": [
+          "PA87-E017",
+          "PA87-E015"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-CM04",
+        "subject": "short sequential witness",
+        "input": "C16384, first free_offset0/free_bytes16384; requests (1,1),(16380,4),(3,1)",
+        "source_expression": "first returns0 -> off1/free16383; second returns4 -> off16384/free3; third fit returns16384 -> off16387",
+        "conditional_conclusion": "conditional acceptance of offset extending 3 bytes beyond nominal C despite finite-accounting success",
+        "first_unproven_gate": "not a demonstrated invalid store or real workqueue request",
+        "evidence_ids": [
+          "PA87-E014",
+          "PA87-E015",
+          "PA87-E017",
+          "PA87-E011"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-CM05",
+        "subject": "fit error boundary",
+        "input": "free_bytes<need",
+        "source_expression": "fit returns -ENOMEM and reserved/normal caller branches before area commit",
+        "conditional_conclusion": "ordinary list can keep scanning, reserved path can fail immediately",
+        "first_unproven_gate": "caller route and valid chunk are separate conditions",
+        "evidence_ids": [
+          "PA87-E015",
+          "PA87-E029",
+          "PA87-E031"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      },
+      {
+        "row_id": "PA87-A-CM06",
+        "subject": "return-pointer phase",
+        "input": "after successful accounting",
+        "source_expression": "area_found encodes ptr=chunk->base_addr+off then returns it",
+        "conditional_conclusion": "value is returned pointer encoding, not a memcopy or verified memory write",
+        "first_unproven_gate": "GNU void pointer arithmetic assumption, final pointer decoding and object range",
+        "evidence_ids": [
+          "PA87-E038",
+          "PA87-E039",
+          "PA87-E009"
+        ],
+        "execution": "STATIC_TEXT_ONLY"
+      }
+    ],
+    "reserved_normal_routing_matrix": [
+      {
+        "row_id": "PA87-B-R01",
+        "subject": "reserved existing",
+        "input": "reserved=true, pcpu_reserved_chunk !=NULL",
+        "source_expression": "if(reserved&&pcpu_reserved_chunk) then fit reserved",
+        "conditional_conclusion": "only reserved chunk considered before goto exits; does not scan normal list in this arm",
+        "first_unproven_gate": "successful chunk object and valid type conversions",
+        "evidence_ids": [
+          "PA87-E028",
+          "PA87-E029",
+          "PA87-E030",
+          "PA87-E006"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-R02",
+        "subject": "reserved insufficient",
+        "input": "reserved pointer exists, off<0",
+        "source_expression": "goto fail_unlock -> fail -> return NULL",
+        "conditional_conclusion": "no fallback to normal list or new chunk under this branch",
+        "first_unproven_gate": "source-level not actual failure outcome",
+        "evidence_ids": [
+          "PA87-E029",
+          "PA87-E040",
+          "PA87-E041"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-R03",
+        "subject": "reserved absent",
+        "input": "reserved=true, pcpu_reserved_chunk == NULL",
+        "source_expression": "if condition false -> restart label",
+        "conditional_conclusion": "normal chunk traversal/new chunk path is used, not unconditional NULL",
+        "first_unproven_gate": "list may be empty/invalid, later failures unknown",
+        "evidence_ids": [
+          "PA87-E028",
+          "PA87-E031",
+          "PA87-E034"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-R04",
+        "subject": "ordinary request",
+        "input": "reserved=false",
+        "source_expression": "skip reserved if, scan pcpu_chunk_lists",
+        "conditional_conclusion": "first, reserved and later chunks can all be on shared list if helpers inserted them",
+        "first_unproven_gate": "actual insertion/list validity and ordering unknown",
+        "evidence_ids": [
+          "PA87-E028",
+          "PA87-E031",
+          "PA87-E007",
+          "PA87-E012",
+          "PA87-E013"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-R05",
+        "subject": "ordinary first hit",
+        "input": "one list chunk passes fit and commit",
+        "source_expression": "off>=0 -> area_found",
+        "conditional_conclusion": "does not need new chunk on that successful iteration",
+        "first_unproven_gate": "pointer encoding and backing access not proved",
+        "evidence_ids": [
+          "PA87-E031",
+          "PA87-E032",
+          "PA87-E033",
+          "PA87-E038"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-R06",
+        "subject": "empty/no fit",
+        "input": "all current list chunks fail or list empty",
+        "source_expression": "simple_pcpu_create_chunk(pcpu_gfp)",
+        "conditional_conclusion": "normal request can grow via newly allocated chunk",
+        "first_unproven_gate": "new metadata/data and restart progress unknown",
+        "evidence_ids": [
+          "PA87-E031",
+          "PA87-E034",
+          "PA87-E035"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-R07",
+        "subject": "reserved success",
+        "input": "reserved chunk fits and area commit returns off>=0",
+        "source_expression": "goto area_found",
+        "conditional_conclusion": "returns encoded base+off from that reserved chunk",
+        "first_unproven_gate": "GNU pointer arithmetic assumption, offset decode may mismatch address",
+        "evidence_ids": [
+          "PA87-E030",
+          "PA87-E038",
+          "PA87-E039",
+          "PA87-E097"
+        ],
+        "execution": "NOT_RUN"
+      }
+    ],
+    "chunk_creation_publication_matrix": [
+      {
+        "row_id": "PA87-B-CH01",
+        "subject": "new metadata",
+        "input": "GFP selected and requested",
+        "source_expression": "chunk=kzalloc(sizeof(*chunk),gfp); if(!chunk) return NULL",
+        "conditional_conclusion": "NULL metadata has explicit error return before any list insertion",
+        "first_unproven_gate": "lower kmalloc/slab behavior not exhausted",
+        "evidence_ids": [
+          "PA87-E001",
+          "PA87-E010",
+          "PA87-E054",
+          "PA87-E056"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-CH02",
+        "subject": "new chunk initialization",
+        "input": "metadata nonNULL",
+        "source_expression": "INIT_LIST_HEAD then free_offset=0, free_bytes=chunk_size",
+        "conditional_conclusion": "free_bytes int receives size_t chunk_size; conversion is conditional",
+        "first_unproven_gate": "actual chunk size, int range and object validity",
+        "evidence_ids": [
+          "PA87-E011",
+          "PA87-E008"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-CH03",
+        "subject": "backing allocation",
+        "input": "metadata nonNULL",
+        "source_expression": "data=kzalloc(nr_cpu_ids*chunk_size,gfp)",
+        "conditional_conclusion": "requested zeroing data allocation follows metadata; size multiplication may overflow selected width",
+        "first_unproven_gate": "real N, allocation/zero success unknown",
+        "evidence_ids": [
+          "PA87-E011",
+          "PA87-E054"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-CH04",
+        "subject": "data allocation failure",
+        "input": "metadata exists, data=NULL",
+        "source_expression": "base_addr=data-(ulong)pcpu_base_addr; list insertion then return chunk",
+        "conditional_conclusion": "helper has no data-null check before pointer arithmetic and list publication",
+        "first_unproven_gate": "C/GNU extension, NULL pointer math, list insertion and actual effect not observed",
+        "evidence_ids": [
+          "PA87-E012",
+          "PA87-E009",
+          "PA87-E053"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-CH05",
+        "subject": "list storage",
+        "input": "list_header_add_to_tail(&pcpu_chunk_lists,&chunk->list)",
+        "source_expression": "wrapper adds to anchor and increments count",
+        "conditional_conclusion": "new chunks join same list as two earlier early chunks when all insertions completed",
+        "first_unproven_gate": "list helper, allocation and concurrent validity not certified",
+        "evidence_ids": [
+          "PA87-E007",
+          "PA87-E012",
+          "PA87-E053",
+          "PA87-E045",
+          "PA87-E046"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-CH06",
+        "subject": "chunk identity",
+        "input": "early first/reserved and late use distinct creation calls",
+        "source_expression": "early helper likewise inserts into pcpu_chunk_lists; late initializes free_offset=0",
+        "conditional_conclusion": "first/reserved/new are different objects even if sharing list",
+        "first_unproven_gate": "actual object count depends on prior early allocations",
+        "evidence_ids": [
+          "PA87-E013",
+          "PA87-E010",
+          "PA87-E011",
+          "PA87-E007"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-CH07",
+        "subject": "late kzalloc vs early memblock",
+        "input": "new helper uses kzalloc, early helper memblock",
+        "source_expression": "kzalloc passes __GFP_ZERO to kmalloc",
+        "conditional_conclusion": "different allocation paths/zeroing preconditions; no per-CPU per-area clear inferred",
+        "first_unproven_gate": "lower allocator/hardware mapping not audited",
+        "evidence_ids": [
+          "PA87-E010",
+          "PA87-E011",
+          "PA87-E013",
+          "PA87-E054",
+          "PA87-E037"
+        ],
+        "execution": "NOT_RUN"
+      }
+    ],
+    "restart_lock_and_failure_matrix": [
+      {
+        "row_id": "PA87-B-X01",
+        "subject": "normal traversal",
+        "input": "list_header_for_each_container macro",
+        "source_expression": "list_first_entry/list_for_each_entry anchor walk",
+        "conditional_conclusion": "on valid list, each observed chunk may be considered for fit; no guaranteed suitable chunk",
+        "first_unproven_gate": "list implementation, empty list and concurrent mutation still gated",
+        "evidence_ids": [
+          "PA87-E031",
+          "PA87-E047",
+          "PA87-E048",
+          "PA87-E049",
+          "PA87-E050"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-X02",
+        "subject": "new chunk restart",
+        "input": "no old chunk fits, new metadata nonNULL",
+        "source_expression": "goto restart without resetting size,align or changing test",
+        "conditional_conclusion": "new chunk may also be unsuitable if request exceeds capacity",
+        "first_unproven_gate": "resource availability and data validity, not a proof of infinite execution",
+        "evidence_ids": [
+          "PA87-E034",
+          "PA87-E035",
+          "PA87-E014",
+          "PA87-E015"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-X03",
+        "subject": "new meta failure",
+        "input": "simple_pcpu_create_chunk returns NULL",
+        "source_expression": "goto fail -> NULL",
+        "conditional_conclusion": "normal path stops with NULL under that return",
+        "first_unproven_gate": "actual allocator failure not performed",
+        "evidence_ids": [
+          "PA87-E034",
+          "PA87-E041"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-X04",
+        "subject": "new data failure",
+        "input": "new metadata nonNULL but data=NULL",
+        "source_expression": "helper still returns metadata nonNULL after list insertion",
+        "conditional_conclusion": "caller may restart against unusable data; cannot infer safe ptr return",
+        "first_unproven_gate": "C pointer validity at base_addr construction and subsequent actions unknown",
+        "evidence_ids": [
+          "PA87-E010",
+          "PA87-E011",
+          "PA87-E012",
+          "PA87-E035"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-X05",
+        "subject": "locking in this function",
+        "input": "spin_lock_irqsave/spin_unlock_irqrestore lines commented",
+        "source_expression": "no active lock invocation at these locations",
+        "conditional_conclusion": "static path shows no lock operations here, not whole-system lock absence",
+        "first_unproven_gate": "other wrappers/external callers and actual concurrency unreviewed",
+        "evidence_ids": [
+          "PA87-E042",
+          "PA87-E043",
+          "PA87-E044"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-X06",
+        "subject": "return failure",
+        "input": "fit fail reserved or expansion meta fail",
+        "source_expression": "fail_unlock/fail flow returns NULL",
+        "conditional_conclusion": "no replacement object, no automatic fallback after reserved fit failure",
+        "first_unproven_gate": "pointer/cleanup of previously inserted chunks not audited",
+        "evidence_ids": [
+          "PA87-E029",
+          "PA87-E034",
+          "PA87-E040",
+          "PA87-E041"
+        ],
+        "execution": "NOT_RUN"
+      },
+      {
+        "row_id": "PA87-B-X07",
+        "subject": "list publication hazards",
+        "input": "new data allocation NULL; list writes",
+        "source_expression": "list insertion before return even without data success test",
+        "conditional_conclusion": "cannot equate metadata success with valid perCPU backing data",
+        "first_unproven_gate": "outer allocator, linked list behavior and lifetime unknown",
+        "evidence_ids": [
+          "PA87-E012",
+          "PA87-E053"
+        ],
+        "execution": "NOT_RUN"
+      }
+    ],
+    "returned_pointer_decode_matrix": [
+      {
+        "row_id": "PA87-C-DEC01",
+        "subject": "workqueue type",
+        "input": "alloc_percpu(pool_workqueue_s *)",
+        "source_expression": "alloc_percpu(type) forwards sizeof(type),alignof(type),false,GFP_KERNEL",
+        "conditional_conclusion": "perCPU allocated object is a slot holding a PWQ pointer, not a pool_workqueue_s struct itself",
+        "first_unproven_gate": "size/align actual ABI and later pointer validity",
+        "evidence_ids": [
+          "PA87-E059",
+          "PA87-E087",
+          "PA87-E088",
+          "PA87-E089"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-DEC02",
+        "subject": "returned encoding",
+        "input": "fit and area commit succeed",
+        "source_expression": "ptr=chunk->base_addr+off; return ptr",
+        "conditional_conclusion": "the returned value is an encoded relative perCPU pointer from chunk, not a raw CPU0 data pointer",
+        "first_unproven_gate": "GNU void pointer arithmetic and NULL/object provenance must be separately justified",
+        "evidence_ids": [
+          "PA87-E038",
+          "PA87-E039",
+          "PA87-E009"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-DEC03",
+        "subject": "per_cpu_ptr decoding",
+        "input": "encoded ptr P, index i",
+        "source_expression": "SHIFT_PERCPU_PTR(P,per_cpu_offset(i)) via RELOC_HIDE unsigned long add",
+        "conditional_conclusion": "integer address is (P+O_i) mod 2^w under LP64/type assumptions",
+        "first_unproven_gate": "integer-pointer cast, actual object/mapping/indices unverified",
+        "evidence_ids": [
+          "PA87-E091",
+          "PA87-E092",
+          "PA87-E093",
+          "PA87-E094"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-DEC04",
+        "subject": "offset provenance",
+        "input": "B=pcpu_base_addr,T=__per_cpu_start,S=static_size",
+        "source_expression": "O_i=(B-T+i*S) mod 2^w in qualified R86 formula",
+        "conditional_conclusion": "substituting the actual offset source into decoded address yields P+B-T+i*S",
+        "first_unproven_gate": "86 S01 modular caveat; memory/cpu index must be valid",
+        "evidence_ids": [
+          "PA87-E096",
+          "PA87-E027",
+          "PA87-E004"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-DEC05",
+        "subject": "first chunk",
+        "input": "first->base_addr=0, off accepted",
+        "source_expression": "P=off as numeric encoding; decode=off+B-T+i*S",
+        "conditional_conclusion": "differs from desired physical backing numeric B+off+i*S by -T unless T=0 mod 2^w",
+        "first_unproven_gate": "NULL-base pointer arithmetic not certified; T and B are link/runtime values",
+        "evidence_ids": [
+          "PA87-E026",
+          "PA87-E038",
+          "PA87-E039",
+          "PA87-E093",
+          "PA87-E094"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-DEC06",
+        "subject": "reserved chunk",
+        "input": "reserved->data=R, base_addr=R-B under numeric GNU extension",
+        "source_expression": "P=R-B+off; decode=R+off-T+i*S",
+        "conditional_conclusion": "does not automatically equal R+off+i*S; source lacks explicit +T in encoding",
+        "first_unproven_gate": "C pointer arithmetic and underlying mapped object unverified",
+        "evidence_ids": [
+          "PA87-E097",
+          "PA87-E038",
+          "PA87-E093",
+          "PA87-E094"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-DEC07",
+        "subject": "new ordinary chunk",
+        "input": "late data=Q, base_addr=Q-B numeric GNU assumption",
+        "source_expression": "P=Q-B+off; decode=Q+off-T+i*S",
+        "conditional_conclusion": "new chunk has same relative-offset discrepancy under the hypothesis",
+        "first_unproven_gate": "actual Q allocation, initialization and pointer validity unknown",
+        "evidence_ids": [
+          "PA87-E012",
+          "PA87-E038",
+          "PA87-E093",
+          "PA87-E094",
+          "PA87-E096"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-DEC08",
+        "subject": "pointer value vs object",
+        "input": "any successful-looking numerical equality",
+        "source_expression": "RELOC_HIDE casts value through unsigned long back to pointer",
+        "conditional_conclusion": "arithmetic mod result does not prove legal C pointer, allocation ownership, alignment or writable slot",
+        "first_unproven_gate": "actual compiler, memory map and runtime operation NOT_RUN",
+        "evidence_ids": [
+          "PA87-E094",
+          "PA87-E093",
+          "PA87-E008"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      }
+    ],
+    "workqueue_alloc_use_cleanup_matrix": [
+      {
+        "row_id": "PA87-C-WQ01",
+        "subject": "outer field type",
+        "input": "workqueue_struct.cpu_pwq",
+        "source_expression": "typed perCPU pointer to pool_workqueue_s* slots",
+        "conditional_conclusion": "slot storage and pointed-to pwq heap objects are distinct allocations",
+        "first_unproven_gate": "pointer-size ABI and actual perCPU address valid",
+        "evidence_ids": [
+          "PA87-E083",
+          "PA87-E089",
+          "PA87-E080"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ02",
+        "subject": "outer allocate failure",
+        "input": "alloc_percpu returns NULL",
+        "source_expression": "if(!wq->cpu_pwq) goto enomem",
+        "conditional_conclusion": "helper returns -ENOMEM through failure branch without perCPU cleanup if pointer null",
+        "first_unproven_gate": "caller must check return separately",
+        "evidence_ids": [
+          "PA87-E059",
+          "PA87-E060",
+          "PA87-E071"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ03",
+        "subject": "bound pool selection",
+        "input": "!(flags&WQ_UNBOUND)",
+        "source_expression": "WQ_BH chooses bh_worker_pools else cpu_worker_pools; highpri used as index",
+        "conditional_conclusion": "bounded CPU pool chosen conditionally; flags are enum bits not proof requested by actual caller",
+        "first_unproven_gate": "perCPU worker pool templates, CPU indices, effective config",
+        "evidence_ids": [
+          "PA87-E061",
+          "PA87-E062",
+          "PA87-E084",
+          "PA87-E085",
+          "PA87-E101"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ04",
+        "subject": "perCPU slot allocation",
+        "input": "N>0, valid decoded slot address",
+        "source_expression": "pwq_p=per_cpu_ptr(wq->cpu_pwq,cpu); *pwq_p=kmem_cache_alloc(pwq_cache,GFP_KERNEL)",
+        "conditional_conclusion": "allocates a pwq object per visited CPU and puts its pointer in the CPU slot",
+        "first_unproven_gate": "decoded slot belongs to backing buffer and slab allocator returns valid object",
+        "evidence_ids": [
+          "PA87-E063",
+          "PA87-E064",
+          "PA87-E065",
+          "PA87-E055"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ05",
+        "subject": "PWQ linkage",
+        "input": "successful cache alloc and pool lookup",
+        "source_expression": "pwq->pool=pool,pwq->wq=wq, list_header_add_to_tail(wq->pwqs,pwqs_node)",
+        "conditional_conclusion": "linked PWQ object becomes member of wq's pwqs list",
+        "first_unproven_gate": "list node and header valid, no concurrency/reentrancy tested",
+        "evidence_ids": [
+          "PA87-E066",
+          "PA87-E067",
+          "PA87-E081",
+          "PA87-E082",
+          "PA87-E053"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ06",
+        "subject": "bound success",
+        "input": "wq has no WQ_UNBOUND and all N allocations succeed",
+        "source_expression": "return 0 after CPU loop",
+        "conditional_conclusion": "helper returns zero even though actual worker operation not started",
+        "first_unproven_gate": "real call chain/allocator/CPU loop completion unknown",
+        "evidence_ids": [
+          "PA87-E067",
+          "PA87-E068",
+          "PA87-E098",
+          "PA87-E099"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ07",
+        "subject": "unbound branch",
+        "input": "WQ_UNBOUND set, perCPU allocation succeeded",
+        "source_expression": "skip bound loop and execute return ret; ret local int has no assignment in read function",
+        "conditional_conclusion": "potential indeterminate return read for unbound scope; not immediate named events0/BH caller",
+        "first_unproven_gate": "actual caller flags and compiler C behavior not executed",
+        "evidence_ids": [
+          "PA87-E059",
+          "PA87-E061",
+          "PA87-E068",
+          "PA87-E084"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ08",
+        "subject": "partial slot failure",
+        "input": "one or more earlier PWQ objects linked; later cache returns NULL",
+        "source_expression": "enomem iterates all slots and kmem_cache_free for nonNULL objects",
+        "conditional_conclusion": "cleanup has conditional frees but the shown function does not remove earlier pwqs_node links",
+        "first_unproven_gate": "slot initialization/validity and list lifetime afterward not certified",
+        "evidence_ids": [
+          "PA87-E065",
+          "PA87-E066",
+          "PA87-E067",
+          "PA87-E069",
+          "PA87-E070",
+          "PA87-E100"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ09",
+        "subject": "perCPU storage cleanup",
+        "input": "failure after wq->cpu_pwq nonnull",
+        "source_expression": "free_percpu line commented, then cpu_pwq=NULL, return -ENOMEM",
+        "conditional_conclusion": "perCPU slot allocation is not visibly released in this scoped function",
+        "first_unproven_gate": "other owner reclaim paths not exhausted; no actual leak measured",
+        "evidence_ids": [
+          "PA87-E070",
+          "PA87-E071"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ10",
+        "subject": "outer ignores helper failure",
+        "input": "simple_alloc_workqueue created wq then calls helper",
+        "source_expression": "simple_alloc_and_link_pwqs(wq); no return assignment/test; list_header_add_to_tail(workqueues)",
+        "conditional_conclusion": "even if inner returns -ENOMEM, outer source proceeds to publish and return wq if all preceding operations return",
+        "first_unproven_gate": "earlier memory writes/list calls and actual reachability conditional",
+        "evidence_ids": [
+          "PA87-E072",
+          "PA87-E073",
+          "PA87-E074",
+          "PA87-E075",
+          "PA87-E076"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ11",
+        "subject": "caller first alloc null",
+        "input": "outer wq=kzalloc(sizeof(*wq),GFP_KERNEL) returns NULL",
+        "source_expression": "if(!wq) return NULL",
+        "conditional_conclusion": "one earlier failure branch exits before inner perCPU allocation",
+        "first_unproven_gate": "actual allocated object state/flags not established",
+        "evidence_ids": [
+          "PA87-E072",
+          "PA87-E054"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ12",
+        "subject": "named early caller",
+        "input": "workqueue_init_early source",
+        "source_expression": "pwq_cache=KMEM_CACHE; simple_alloc_workqueue(\"events\",0,0) and (\"events_bh\",WQ_BH,0)",
+        "conditional_conclusion": "source contains two direct calls with ordinary and BH flags; not an actual boot execution log",
+        "first_unproven_gate": "workqueue_init_early call reachability, needed cache setup and system initialization unknown",
+        "evidence_ids": [
+          "PA87-E077",
+          "PA87-E078",
+          "PA87-E079",
+          "PA87-E084"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-WQ13",
+        "subject": "representative work consumer",
+        "input": "bounded workqueue has stored PWQ slots",
+        "source_expression": "__simple_queue_work uses *per_cpu_ptr(wq->cpu_pwq,cpu), then pwq->pool",
+        "conditional_conclusion": "later consumer depends on perCPU pointer validity and nonNULL PWQ; this batch does not audit enqueue/schedule",
+        "first_unproven_gate": "actual queue work start and synchronization unknown",
+        "evidence_ids": [
+          "PA87-E102",
+          "PA87-E083",
+          "PA87-E093"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      }
+    ],
+    "cross_stage_proof_gates_matrix": [
+      {
+        "row_id": "PA87-C-X01",
+        "subject": "86 static first chunk",
+        "input": "R86 technical core under S01-S03",
+        "source_expression": "S, B, T, N, pcpu_unit_offsets source constraints feed O_i",
+        "conditional_conclusion": "86 RETURN doc issue does not invalidate static source facts but is not standalone PASS",
+        "first_unproven_gate": "R86-01 pending C06 and no real build/startup",
+        "evidence_ids": [
+          "PA87-E026",
+          "PA87-E027",
+          "PA87-E096"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-X02",
+        "subject": "align bookkeeping to pointer",
+        "input": "padded fit followed by more allocations",
+        "source_expression": "fit may approve off>=C while free_bytes overestimates tail",
+        "conditional_conclusion": "numerical accepted off not proof legal pointer or actual memory overwrite",
+        "first_unproven_gate": "selected ABI, caller request and backing region validity",
+        "evidence_ids": [
+          "PA87-E014",
+          "PA87-E015",
+          "PA87-E017",
+          "PA87-E038"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-X03",
+        "subject": "new chunk failure to consumer",
+        "input": "data kzalloc=NULL but metadata succeeds",
+        "source_expression": "new chunk inserted; subsequent fit/area may return encoded pointer",
+        "conditional_conclusion": "non-null metadata does not prove valid perCPU slot backing or PWQ writes",
+        "first_unproven_gate": "C/GNU pointer arithmetic and real allocation unknown",
+        "evidence_ids": [
+          "PA87-E010",
+          "PA87-E011",
+          "PA87-E012",
+          "PA87-E064"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-X04",
+        "subject": "loop and cleanup dependency",
+        "input": "for_each_possible_cpu dense loop and decoded perCPU slots",
+        "source_expression": "partial failure cleanup scans N slots and frees nonNULL values",
+        "conditional_conclusion": "requires all slots readable and initialized; cannot derive cleanup success solely from branch text",
+        "first_unproven_gate": "actual ABI, CPU count, earlier template/new chunk zeroing",
+        "evidence_ids": [
+          "PA87-E069",
+          "PA87-E098",
+          "PA87-E099"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-X05",
+        "subject": "publication and caller return",
+        "input": "inner helper result ignored",
+        "source_expression": "outer workqueue global list receives object and returns wq",
+        "conditional_conclusion": "one source-level publication path may continue despite inner failure",
+        "first_unproven_gate": "do not assert real linked workqueue usable or actual worker execution",
+        "evidence_ids": [
+          "PA87-E074",
+          "PA87-E075",
+          "PA87-E076",
+          "PA87-E058"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-C-X06",
+        "subject": "historic qualifications",
+        "input": "R86-S01/S02/S03, R85-S01/S02/S03 and R84 closure remain",
+        "source_expression": "pointer modular arithmetic, prior source state and boot-CPU assumptions separate",
+        "conditional_conclusion": "no old root cause reclassified by this analysis",
+        "first_unproven_gate": "local P9, compiled ABI, CPU memory and full workqueue lifecycle all NOT_RUN",
+        "evidence_ids": [
+          "PA87-E094",
+          "PA87-E096",
+          "PA87-E102"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "row_id": "PA87-ABC-J01",
+        "subject": "first fit to consumer",
+        "input": "size=sizeof(pool_workqueue_s*), align=alignof(pointer)",
+        "source_expression": "fit computes aligned off and need, commit then ptr base+off, per_cpu_ptr adds O_i",
+        "conditional_conclusion": "complete numeric chain only under checked types/width and valid backing",
+        "first_unproven_gate": "source does not prove pointer is a legal lvalue",
+        "evidence_ids": [
+          "PA87-E014",
+          "PA87-E015",
+          "PA87-E017",
+          "PA87-E059",
+          "PA87-E089",
+          "PA87-E093"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-ABC-J02",
+        "subject": "routing into workqueue",
+        "input": "normal alloc_percpu passes reserved=false",
+        "source_expression": "normal list scan/extend may use first, early reserved or new chunk",
+        "conditional_conclusion": "workqueue cannot assume its perCPU slot came exclusively from first chunk",
+        "first_unproven_gate": "list and allocation success not measured",
+        "evidence_ids": [
+          "PA87-E088",
+          "PA87-E031",
+          "PA87-E034",
+          "PA87-E013",
+          "PA87-E012"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-ABC-J03",
+        "subject": "error propagation break",
+        "input": "allocator NULL or pwq slab failure",
+        "source_expression": "helper returns -ENOMEM while outer ignores call result",
+        "conditional_conclusion": "the outer global WQ publication decision is independent of inner status",
+        "first_unproven_gate": "actual memory writes and caller receipt unknown",
+        "evidence_ids": [
+          "PA87-E041",
+          "PA87-E060",
+          "PA87-E065",
+          "PA87-E071",
+          "PA87-E074",
+          "PA87-E075"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-ABC-J04",
+        "subject": "cleanup not complete ownership",
+        "input": "linked PWQs followed by slab allocation fail",
+        "source_expression": "conditional kmem_cache_free, commented perCPU slot free and no list unlink in shown path",
+        "conditional_conclusion": "allocated PWQ pointers and perCPU slot block have distinct cleanup requirements",
+        "first_unproven_gate": "other cleanup and actual workqueue lifespan not exhausted",
+        "evidence_ids": [
+          "PA87-E067",
+          "PA87-E069",
+          "PA87-E070",
+          "PA87-E071",
+          "PA87-E100"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      },
+      {
+        "row_id": "PA87-ABC-J05",
+        "subject": "encoding for three chunks",
+        "input": "first base0, reserved data-B, new data-B",
+        "source_expression": "all are passed as chunk.base_addr+off into same per_cpu_ptr decode",
+        "conditional_conclusion": "with T nonzero numeric formulas include -T, not automatically backed address",
+        "first_unproven_gate": "real compiler/link/runtime layout unknown",
+        "evidence_ids": [
+          "PA87-E026",
+          "PA87-E097",
+          "PA87-E012",
+          "PA87-E038",
+          "PA87-E093",
+          "PA87-E094"
+        ],
+        "execution": "STATIC_NOT_RUN"
+      }
+    ]
+  },
+  "matrix_groups": 10,
+  "matrix_rows": 72,
+  "matrix_sizes": {
+    "allocation_request_and_fit_matrix": 7,
+    "alignment_and_capacity_matrix": 6,
+    "area_commit_and_failure_matrix": 6,
+    "reserved_normal_routing_matrix": 7,
+    "chunk_creation_publication_matrix": 7,
+    "restart_lock_and_failure_matrix": 7,
+    "returned_pointer_decode_matrix": 8,
+    "workqueue_alloc_use_cleanup_matrix": 13,
+    "cross_stage_proof_gates_matrix": 6,
+    "ABC_join_matrix": 5
+  },
+  "finite_models": [
+    {
+      "model_id": "PA87-M01",
+      "topic": "A",
+      "configuration": "zero-size request, align1",
+      "input_units": "int byte offsets, C16",
+      "initial_state": {
+        "C": 16,
+        "free_offset": 0,
+        "free_bytes": 16,
+        "requested_size": 0,
+        "align": 1
+      },
+      "intermediate": {
+        "alloc_offset": 0,
+        "pad": 0,
+        "need": 0,
+        "fit": true
+      },
+      "conditional_result": {
+        "new_free_offset": 0,
+        "new_free_bytes": 16,
+        "returned_off": 0
+      },
+      "assumptions": "valid chunk, no hidden size==0 rejection in selected function, no integer overflow",
+      "first_unproven_gate": "zero-byte pointer/actual caller validity untested",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E017"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M02",
+      "topic": "A",
+      "configuration": "C16384 first small request",
+      "input_units": "bytes",
+      "initial_state": {
+        "C": 16384,
+        "free_offset": 0,
+        "free_bytes": 16384,
+        "size": 1,
+        "align": 1
+      },
+      "intermediate": {
+        "start": 0,
+        "pad": 0,
+        "need": 1,
+        "rejected": false,
+        "after": {
+          "free_offset": 1,
+          "free_bytes": 16383
+        }
+      },
+      "conditional_result": {
+        "after": {
+          "free_offset": 1,
+          "free_bytes": 16383
+        },
+        "returned_off": 0
+      },
+      "assumptions": "valid positive align, malloc bytes exist",
+      "first_unproven_gate": "no real heap allocation made",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E017"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M03",
+      "topic": "A",
+      "configuration": "same chunk next padded large request",
+      "input_units": "bytes",
+      "initial_state": {
+        "C": 16384,
+        "free_offset": 1,
+        "free_bytes": 16383,
+        "size": 16380,
+        "align": 4
+      },
+      "intermediate": {
+        "start": 4,
+        "pad": 3,
+        "need": 16383,
+        "rejected": false,
+        "after": {
+          "free_offset": 16384,
+          "free_bytes": 3
+        }
+      },
+      "conditional_result": {
+        "after": {
+          "free_offset": 16384,
+          "free_bytes": 3
+        },
+        "physical_tail_bytes": 0,
+        "overstated_free_bytes": 3
+      },
+      "assumptions": "previous step M02 completed, int operations legal; C16384 source-sized chunk",
+      "first_unproven_gate": "no actual memory access or observed caller request",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E017"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M04",
+      "topic": "A",
+      "configuration": "same chunk third request from overstated free count",
+      "input_units": "bytes",
+      "initial_state": {
+        "C": 16384,
+        "free_offset": 16384,
+        "free_bytes": 3,
+        "size": 3,
+        "align": 1
+      },
+      "intermediate": {
+        "start": 16384,
+        "pad": 0,
+        "need": 3,
+        "rejected": false,
+        "after": {
+          "free_offset": 16387,
+          "free_bytes": 0
+        }
+      },
+      "conditional_result": {
+        "after": {
+          "free_offset": 16387,
+          "free_bytes": 0
+        },
+        "overrun_beyond_nominal_C": 3,
+        "accepted_offset": 16384
+      },
+      "assumptions": "M02 and M03 succeeded, no source resets chunk, all values within signed int",
+      "first_unproven_gate": "accepted offset is not proof of actual invalid memory write",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E017",
+        "PA87-E038"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M05",
+      "topic": "A",
+      "configuration": "exact fit no padding",
+      "input_units": "bytes",
+      "initial_state": {
+        "C": 16,
+        "free_offset": 8,
+        "free_bytes": 8,
+        "size": 8,
+        "align": 1
+      },
+      "intermediate": {
+        "start": 8,
+        "pad": 0,
+        "need": 8,
+        "rejected": false,
+        "after": {
+          "free_offset": 16,
+          "free_bytes": 0
+        }
+      },
+      "conditional_result": {
+        "new_free_offset": 16,
+        "new_free_bytes": 0
+      },
+      "assumptions": "abstract valid chunk with invariant F=C-x",
+      "first_unproven_gate": "not certified as real boot chunk state",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E017"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M06",
+      "topic": "A",
+      "configuration": "insufficient fit",
+      "input_units": "bytes",
+      "initial_state": {
+        "C": 16,
+        "free_offset": 8,
+        "free_bytes": 7,
+        "size": 8,
+        "align": 1
+      },
+      "intermediate": {
+        "start": 8,
+        "pad": 0,
+        "need": 8,
+        "rejected": true,
+        "after": null
+      },
+      "conditional_result": {
+        "fit_return": "-ENOMEM=-12",
+        "accounting_mutated_by_fit": false
+      },
+      "assumptions": "valid arithmetic; simulated object state",
+      "first_unproven_gate": "caller may choose reserved fail or normal continue; not evaluated here",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E022"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M07",
+      "topic": "A",
+      "configuration": "zero alignment violates power-of-two precondition",
+      "input_units": "int bytes",
+      "initial_state": {
+        "free_offset": 1,
+        "free_bytes": 7,
+        "size": 1,
+        "align": 0
+      },
+      "intermediate": {
+        "mask_int": -1,
+        "align_result": 0,
+        "need": 0,
+        "fit_pass": true,
+        "area_loop_test": "0<1 true"
+      },
+      "conditional_result": {
+        "area_while_body": "empty",
+        "normal_return": "not established"
+      },
+      "assumptions": "selected signed int mask arithmetic, no overflow; a=0 intentionally outside macro contract",
+      "first_unproven_gate": "no real client known to pass align0; C compiler/liveness effects not run",
+      "evidence_ids": [
+        "PA87-E016",
+        "PA87-E018",
+        "PA87-E019",
+        "PA87-E020"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M08",
+      "topic": "A",
+      "configuration": "non-power-of-two align3",
+      "input_units": "int bytes",
+      "initial_state": {
+        "free_offset": 5,
+        "free_bytes": 11,
+        "size": 2,
+        "align": 3
+      },
+      "intermediate": {
+        "mask": 2,
+        "arith_and": 5,
+        "need": 2,
+        "fit_pass": true
+      },
+      "conditional_result": {
+        "new_free_offset": 7,
+        "new_free_bytes": 9,
+        "returned_start": 5,
+        "start_mod3": 2
+      },
+      "assumptions": "int safe, a3 intentionally outside power2 macro precondition",
+      "first_unproven_gate": "not a demonstrated caller alignment; no real allocation",
+      "evidence_ids": [
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E017",
+        "PA87-E018",
+        "PA87-E020"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M09",
+      "topic": "A",
+      "configuration": "size_t to int bound",
+      "input_units": "size_t request / int callee",
+      "initial_state": {
+        "requested_size": "INT_MAX+1",
+        "align": 8
+      },
+      "intermediate": {
+        "before_call": "size_t accepted in outer function",
+        "parameter_conversion": "out-of-int-range"
+      },
+      "conditional_result": {
+        "fit_size_value": "NOT_CERTIFIED",
+        "need_size": "NOT_EVALUATED"
+      },
+      "assumptions": "C implementation-defined narrowing possible; no compiler/ABI verified",
+      "first_unproven_gate": "stop at conversion, do not assume two's-complement wrap",
+      "evidence_ids": [
+        "PA87-E023",
+        "PA87-E024",
+        "PA87-E014"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M10",
+      "topic": "A",
+      "configuration": "signed int ALIGN overflow",
+      "input_units": "int bytes",
+      "initial_state": {
+        "free_offset": "INT_MAX-1",
+        "align": 8,
+        "size": 1
+      },
+      "intermediate": {
+        "mask": 7,
+        "int_expression": "free_offset+7 exceeds INT_MAX"
+      },
+      "conditional_result": {
+        "fit_return": "NO_DEFINED_NUMERIC_MODEL"
+      },
+      "assumptions": "signed int 32 model, compiler and actual state not established",
+      "first_unproven_gate": "stop before signed overflow; no continued commit",
+      "evidence_ids": [
+        "PA87-E019",
+        "PA87-E020",
+        "PA87-E014"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M11",
+      "topic": "B",
+      "configuration": "reserved chunk fits",
+      "input_units": "bytes",
+      "initial_state": {
+        "reserved": true,
+        "has_reserved": true,
+        "free_offset": 0,
+        "free_bytes": 16,
+        "size": 8,
+        "align": 8
+      },
+      "intermediate": {
+        "fit": {
+          "start": 0,
+          "pad": 0,
+          "need": 8,
+          "rejected": false,
+          "after": {
+            "free_offset": 8,
+            "free_bytes": 8
+          }
+        },
+        "route": [
+          "reserved if",
+          "area_found"
+        ]
+      },
+      "conditional_result": {
+        "return": "encoded reserved base+0",
+        "new_free_offset": 8,
+        "new_free_bytes": 8
+      },
+      "assumptions": "metadata and data valid, all called helpers return",
+      "first_unproven_gate": "GNU pointer expression/real encoded pointer unresolved",
+      "evidence_ids": [
+        "PA87-E028",
+        "PA87-E029",
+        "PA87-E030",
+        "PA87-E038"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M12",
+      "topic": "B",
+      "configuration": "reserved chunk insufficient although normal has room",
+      "input_units": "bytes",
+      "initial_state": {
+        "reserved": true,
+        "has_reserved": true,
+        "reserved_free_bytes": 4,
+        "normal_free_bytes": 4096,
+        "size": 8,
+        "align": 8
+      },
+      "intermediate": {
+        "reserved_fit_need": 8,
+        "reserved_fit_result": -12,
+        "route": [
+          "goto fail_unlock",
+          "return NULL"
+        ]
+      },
+      "conditional_result": {
+        "normal_scanned": false,
+        "returned": "NULL"
+      },
+      "assumptions": "valid reserved meta, no C overflow",
+      "first_unproven_gate": "not proof real reserved underflow happened",
+      "evidence_ids": [
+        "PA87-E028",
+        "PA87-E029",
+        "PA87-E040",
+        "PA87-E041"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M13",
+      "topic": "B",
+      "configuration": "reserved requested but no reserved chunk",
+      "input_units": "flag and list state",
+      "initial_state": {
+        "reserved": true,
+        "has_reserved": false,
+        "ordinary_chunk_free": 64,
+        "size": 8,
+        "align": 8
+      },
+      "intermediate": {
+        "branch": "reserved if false",
+        "route": "normal list",
+        "fit_need": 8
+      },
+      "conditional_result": {
+        "normal_can_return_encoded_ptr": true
+      },
+      "assumptions": "valid list with one matching chunk, pointers valid",
+      "first_unproven_gate": "no observed initialized reserved pointer in machine",
+      "evidence_ids": [
+        "PA87-E028",
+        "PA87-E031",
+        "PA87-E032",
+        "PA87-E038"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M14",
+      "topic": "B",
+      "configuration": "normal list contains early reserved chunk",
+      "input_units": "list order and bytes",
+      "initial_state": {
+        "reserved": false,
+        "first_free_bytes": 0,
+        "reserved_free_bytes": 32,
+        "size": 8,
+        "align": 8
+      },
+      "intermediate": {
+        "first": "fit -ENOMEM/continue",
+        "second": "reserved chunk fit success",
+        "normal_path": "area_found"
+      },
+      "conditional_result": {
+        "may_choose_reserved_object": true
+      },
+      "assumptions": "both chunks inserted on same valid list; first doesn't fit; no other ordering or locks",
+      "first_unproven_gate": "source does not guarantee this runtime list order",
+      "evidence_ids": [
+        "PA87-E013",
+        "PA87-E031",
+        "PA87-E032",
+        "PA87-E033",
+        "PA87-E007"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M15",
+      "topic": "B",
+      "configuration": "ordinary extension metadata fails",
+      "input_units": "pointer statuses",
+      "initial_state": {
+        "reserved": false,
+        "all_existing_chunks_unfit": true,
+        "new_meta": "NULL"
+      },
+      "intermediate": {
+        "flow": [
+          "normal scan no fit",
+          "simple_pcpu_create_chunk returns NULL",
+          "goto fail"
+        ]
+      },
+      "conditional_result": {
+        "returned": "NULL",
+        "new_list_entry": false
+      },
+      "assumptions": "new kzalloc fails in hypothetical allocator; list loop returns",
+      "first_unproven_gate": "not an actual exhaustion experiment",
+      "evidence_ids": [
+        "PA87-E010",
+        "PA87-E034",
+        "PA87-E035",
+        "PA87-E041"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M16",
+      "topic": "B",
+      "configuration": "new metadata success but data fails",
+      "input_units": "pointer statuses",
+      "initial_state": {
+        "new_meta": "NONNULL",
+        "new_data": "NULL",
+        "base_addr_before": "UNASSIGNED"
+      },
+      "intermediate": {
+        "steps": [
+          "chunk->data=NULL",
+          "evaluate NULL-B pointer arithmetic",
+          "list add source after base expression"
+        ]
+      },
+      "conditional_result": {
+        "safe_new_chunk_return": "NOT_CERTIFIED"
+      },
+      "assumptions": "if pointer arithmetic could be evaluated, subsequent add is in source; strict validity not assumed",
+      "first_unproven_gate": "stop at NULL void-pointer arithmetic; no real list insertion certified",
+      "evidence_ids": [
+        "PA87-E010",
+        "PA87-E011",
+        "PA87-E012"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M17",
+      "topic": "B",
+      "configuration": "new chunk repeatedly cannot fit request",
+      "input_units": "bytes",
+      "initial_state": {
+        "C": 16384,
+        "size": 16385,
+        "align": 1,
+        "existing_chunks_unfit": true
+      },
+      "intermediate": {
+        "per_new_chunk": {
+          "free_offset": 0,
+          "free_bytes": 16384,
+          "need": 16385,
+          "fit": false
+        },
+        "next": "create another chunk & restart"
+      },
+      "conditional_result": {
+        "if_kth_metadata_fails": "returns NULL at k",
+        "if_every_metadata_success": "no finite termination proven"
+      },
+      "assumptions": "valid pointer/allocator for each iteration, no quantity or alignment change",
+      "first_unproven_gate": "no actual infinite-resource execution or machine infinite loop claimed",
+      "evidence_ids": [
+        "PA87-E011",
+        "PA87-E014",
+        "PA87-E015",
+        "PA87-E034",
+        "PA87-E035"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M18",
+      "topic": "B",
+      "configuration": "ordinary first matching chunk",
+      "input_units": "bytes",
+      "initial_state": {
+        "reserved": false,
+        "first_chunk": {
+          "free_offset": 0,
+          "free_bytes": 32
+        },
+        "size": 16,
+        "align": 8
+      },
+      "intermediate": {
+        "fit": {
+          "start": 0,
+          "pad": 0,
+          "need": 16,
+          "rejected": false,
+          "after": {
+            "free_offset": 16,
+            "free_bytes": 16
+          }
+        },
+        "branch": "area_found immediately"
+      },
+      "conditional_result": {
+        "new_chunk_created": false,
+        "returned": "base_addr+0 encoding"
+      },
+      "assumptions": "list valid, source returns normally",
+      "first_unproven_gate": "not actual decoded pointer validity",
+      "evidence_ids": [
+        "PA87-E031",
+        "PA87-E032",
+        "PA87-E033",
+        "PA87-E038"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M19",
+      "topic": "C",
+      "configuration": "normal workqueue pointer-size slot allocated from first chunk",
+      "input_units": "LP64 virtual byte addresses",
+      "initial_state": {
+        "S": 4096,
+        "N": 2,
+        "C": 16384,
+        "first_free_offset": 12288,
+        "first_free_bytes": 4096,
+        "request": 8,
+        "align": 8,
+        "T": "0x100000",
+        "B": "0x200000"
+      },
+      "intermediate": {
+        "start": 12288,
+        "padding": 0,
+        "need": 8,
+        "after": {
+          "free_offset": 12296,
+          "free_bytes": 4088
+        },
+        "encoded_P": "0x3000",
+        "O0": "0x100000"
+      },
+      "conditional_result": {
+        "decoded_CPU0": "0x103000",
+        "expected_backing_CPU0": "0x203000",
+        "difference_bytes": -1048576
+      },
+      "assumptions": "LP64 pointer8, first base_addr numeric zero, valid fit and all memory steps hypothetically return; arithmetic model only",
+      "first_unproven_gate": "NULL base pointer arithmetic, mapped lvalue and actual template link address unverified",
+      "evidence_ids": [
+        "PA87-E026",
+        "PA87-E059",
+        "PA87-E089",
+        "PA87-E093",
+        "PA87-E094",
+        "PA87-E096"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M20",
+      "topic": "C",
+      "configuration": "same encoded slot for CPU1",
+      "input_units": "LP64 virtual byte addresses",
+      "initial_state": {
+        "P": "0x3000",
+        "O0": "0x100000",
+        "S": "0x1000",
+        "T": "0x100000",
+        "B": "0x200000"
+      },
+      "intermediate": {
+        "O1": "0x101000",
+        "decoded_CPU1": "0x104000",
+        "expected_backing_CPU1": "0x204000"
+      },
+      "conditional_result": {
+        "difference_bytes": -1048576
+      },
+      "assumptions": "N>=2, valid offset array and pointer arithmetic under model",
+      "first_unproven_gate": "does not prove second unit is initialized or mapped",
+      "evidence_ids": [
+        "PA87-E027",
+        "PA87-E091",
+        "PA87-E093",
+        "PA87-E094",
+        "PA87-E098"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M21",
+      "topic": "C",
+      "configuration": "reserved chunk pointer encoding",
+      "input_units": "LP64 virtual byte addresses",
+      "initial_state": {
+        "B": "0x200000",
+        "T": "0x100000",
+        "Rdata": "0x300000",
+        "off": 8
+      },
+      "intermediate": {
+        "base_numeric": "0x100000",
+        "P_numeric": "0x100008",
+        "O0": "0x100000"
+      },
+      "conditional_result": {
+        "decoded_CPU0": "0x200008",
+        "expected_Rdata_plus_off": "0x300008",
+        "difference_bytes": -1048576
+      },
+      "assumptions": "hypothetical defined numeric equivalent of GNU void-pointer operations; earlier allocation valid",
+      "first_unproven_gate": "not a proof C cross-object pointer difference legal",
+      "evidence_ids": [
+        "PA87-E097",
+        "PA87-E038",
+        "PA87-E093",
+        "PA87-E094"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M22",
+      "topic": "C",
+      "configuration": "late ordinary chunk pointer encoding",
+      "input_units": "LP64 virtual byte addresses",
+      "initial_state": {
+        "B": "0x200000",
+        "T": "0x100000",
+        "Qdata": "0x400000",
+        "off": 8
+      },
+      "intermediate": {
+        "base_numeric": "0x200000",
+        "P_numeric": "0x200008",
+        "O0": "0x100000"
+      },
+      "conditional_result": {
+        "decoded_CPU0": "0x300008",
+        "expected_Qdata_plus_off": "0x400008",
+        "difference_bytes": -1048576
+      },
+      "assumptions": "hypothetical numeric model of late chunk data allocation, no unsigned wrap",
+      "first_unproven_gate": "actual Qdata existence/typed C pointer arithmetic not certified",
+      "evidence_ids": [
+        "PA87-E012",
+        "PA87-E038",
+        "PA87-E093",
+        "PA87-E094"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M23",
+      "topic": "C",
+      "configuration": "special case linker template address zero",
+      "input_units": "LP64 virtual byte addresses",
+      "initial_state": {
+        "T": "0x0",
+        "B": "0x200000",
+        "P": "0x3000",
+        "off": 12288
+      },
+      "intermediate": {
+        "O0": "0x200000",
+        "decoded_CPU0": "0x203000"
+      },
+      "conditional_result": {
+        "expected_backing": "0x203000",
+        "numeric_match": true
+      },
+      "assumptions": "hypothetical T=0, successful prior allocations; does not assert real kernel linker sets T0",
+      "first_unproven_gate": "even numeric agreement not a legal object write certificate",
+      "evidence_ids": [
+        "PA87-E038",
+        "PA87-E093",
+        "PA87-E094"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M24",
+      "topic": "C",
+      "configuration": "inner perCPU slot allocation NULL, outer ignores",
+      "input_units": "return flow",
+      "initial_state": {
+        "outer_wq_kzalloc": "NONNULL",
+        "inner_alloc_percpu": "NULL",
+        "flags": 0
+      },
+      "intermediate": {
+        "inner": [
+          "cpu_pwq=NULL",
+          "goto enomem",
+          "return -ENOMEM"
+        ],
+        "outer": [
+          "call return ignored",
+          "global workqueues list add",
+          "return wq"
+        ]
+      },
+      "conditional_result": {
+        "outer_return": "wq nonnull conditional",
+        "cpu_pwq": "NULL"
+      },
+      "assumptions": "all outer list operations return and no intervening failure; source-level argument only",
+      "first_unproven_gate": "not an actual published broken workqueue observed",
+      "evidence_ids": [
+        "PA87-E060",
+        "PA87-E071",
+        "PA87-E074",
+        "PA87-E075",
+        "PA87-E076"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M25",
+      "topic": "C",
+      "configuration": "second CPU PWQ slab failure after first link",
+      "input_units": "return flow",
+      "initial_state": {
+        "N": 2,
+        "flags": 0,
+        "CPU0_slab": "SUCCESS",
+        "CPU1_slab": "NULL",
+        "percpu_slots": "VALID_AND_INIT_ZERO"
+      },
+      "intermediate": {
+        "sequence": [
+          "CPU0 alloc/link PWQ0",
+          "CPU1 slot assigned NULL",
+          "goto enomem",
+          "free CPU0 PWQ0",
+          "free_percpu disabled",
+          "cpu_pwq=NULL",
+          "inner return -ENOMEM",
+          "outer ignores result"
+        ]
+      },
+      "conditional_result": {
+        "old_pwqs_node_link_removal_in_scoped_cleanup": false,
+        "outer_may_publish_wq": true
+      },
+      "assumptions": "legal perCPU addresses and slab/list operations return as stipulated",
+      "first_unproven_gate": "no runtime UAF/leak result and other cleanup paths not audited",
+      "evidence_ids": [
+        "PA87-E065",
+        "PA87-E067",
+        "PA87-E069",
+        "PA87-E070",
+        "PA87-E071",
+        "PA87-E074",
+        "PA87-E075"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M26",
+      "topic": "C",
+      "configuration": "WQ_UNBOUND set with successful cpu_pwq allocation",
+      "input_units": "flag and return flow",
+      "initial_state": {
+        "wq_flags": "WQ_UNBOUND",
+        "inner_percpu_alloc": "NONNULL"
+      },
+      "intermediate": {
+        "branch": "!(flags&WQ_UNBOUND) false",
+        "next": "return ret",
+        "ret_initialization_in_scoped_function": "none"
+      },
+      "conditional_result": {
+        "determinate_return_value": "NOT_CERTIFIED"
+      },
+      "assumptions": "source function read full; ret local int, no mutation in function",
+      "first_unproven_gate": "indeterminate read C behavior; no immediate actual named events caller uses unbound",
+      "evidence_ids": [
+        "PA87-E059",
+        "PA87-E061",
+        "PA87-E068",
+        "PA87-E084"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M27",
+      "topic": "C",
+      "configuration": "early BH named call",
+      "input_units": "flags and CPU index",
+      "initial_state": {
+        "source_call": "simple_alloc_workqueue(events_bh,WQ_BH,0)",
+        "N": 2,
+        "pwq_slab_allocs": "all nonNULL"
+      },
+      "intermediate": {
+        "unbound": false,
+        "BH": true,
+        "highpri": false,
+        "pools": "bh_worker_pools",
+        "slot_index": [
+          0,
+          1
+        ]
+      },
+      "conditional_result": {
+        "inner_success_return": 0,
+        "outer_global_list_append": "conditional"
+      },
+      "assumptions": "workqueue_init_early invoked, pwq_cache initialized and memory valid; only source calls known",
+      "first_unproven_gate": "not proof actual boot reaches workqueue_init_early",
+      "evidence_ids": [
+        "PA87-E078",
+        "PA87-E079",
+        "PA87-E061",
+        "PA87-E062",
+        "PA87-E067",
+        "PA87-E075"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    },
+    {
+      "model_id": "PA87-M28",
+      "topic": "C",
+      "configuration": "outer workqueue kzalloc fails before perCPU call",
+      "input_units": "pointer return",
+      "initial_state": {
+        "outer_kzalloc": "NULL"
+      },
+      "intermediate": {
+        "wq_check": "if(!wq) return NULL",
+        "percpu_alloc_called": false
+      },
+      "conditional_result": {
+        "outer_return": "NULL"
+      },
+      "assumptions": "early validation flags accepted, actual C branch hypothetical",
+      "first_unproven_gate": "no actual slab failure/recovery measured",
+      "evidence_ids": [
+        "PA87-E072",
+        "PA87-E054"
+      ],
+      "execution": "NOT_RUN_PURE_CONDITIONAL_MODEL"
+    }
+  ],
+  "finite_model_count": 28,
+  "finite_models_by_topic": {
+    "A": 10,
+    "B": 8,
+    "C": 10
+  },
+  "prior_findings_links": [
+    {
+      "prior": "R86-01",
+      "state": "RETURN_DOCUMENTATION_ONLY",
+      "action": "D00 appended in 87 new artifacts only; C06 closure pending, not a new source bug"
+    },
+    {
+      "prior": "R86-S01/S02/S03",
+      "state": "MANDATORY_CONSUMPTION",
+      "action": "Use fixed-width unsigned modulo, pointer arithmetic gates, historic model reachability and early initialization conditions"
+    },
+    {
+      "prior": "R84-01",
+      "state": "CLOSED_DOCUMENTATION_ONLY_BY_C06",
+      "action": "No reopening; composite 84 PASS_PENDING_LOCAL"
+    },
+    {
+      "prior": "R85-S01/S02/S03",
+      "state": "PASS_PENDING_LOCAL_QUALIFIED",
+      "action": "Do not reuse incorrect parser/source/ABI assertions from prior author"
+    },
+    {
+      "prior": "PC86-F05/U09",
+      "state": "CONDITIONAL_OLD_IDS",
+      "action": "87 models test dynamic uses but preserve source-root identity; distinct new accounting/encoding claims must state overlap"
+    },
+    {
+      "prior": "BM80/PT81/DM82/TI83/ER84/BB85",
+      "state": "PRIOR_QUALIFIED_IDS_UNCHANGED",
+      "action": "No historical issues silently closed/recounted as new"
+    }
+  ],
+  "formula_ledger": {
+    "request_type": "size_t size, size_t align -> int size for fit/commit",
+    "fit": "start=ALIGN(free_offset,align); need=start + (int)size - old_free_offset; accept iff free_bytes>=need under valid signed operations",
+    "commit": "free_offset=start+(int)size; free_bytes -= (int)size",
+    "pad": "start-old_free_offset; after one accepted padded request reported_free exceeds physical-tail by pad, assuming initial invariant",
+    "chunk_new": "metadata kzalloc(sizeof(*chunk)); data kzalloc(nr_cpu_ids * chunk_size); base_addr=data - (ulong)pcpu_base_addr (void* pointer subtraction source)",
+    "return_ptr": "ptr=chunk->base_addr+off (void* arithmetic) then return as __percpu encoded pointer",
+    "cpu_decode": "per_cpu_ptr(P,cpu) -> RELOC_HIDE(P,per_cpu_offset(cpu)) with modulus w under LP64 assumptions",
+    "old86_cpu_offset": "O_i = (B - T + i*S) mod 2^w, B=pcpu_base_addr, T=__per_cpu_start, S=static_size",
+    "decoded_first": "P=off; A_i=(off+B-T+i*S) mod2^w (hypothetical numeric encoding)",
+    "decoded_new_reserved": "P=data-B+off; A_i=(data+off-T+i*S) mod2^w (hypothetical GNU pointer arithmetic)",
+    "expected_backing": "data + off + i*S for static unit stride model, conditional not a validated C lvalue",
+    "scope": "The signed fit/commit and unsigned pointer encoding are different layers, type overflow/valid pointer provenance separate; no exact machine instructions"
+  },
+  "failure_prefixes": [
+    {
+      "id": "PA87-FP01",
+      "condition": "reserved exists and fit returns negative",
+      "next": "goto fail_unlock -> NULL",
+      "not_proven": "normal fallback never attempted in this arm",
+      "evidence_ids": [
+        "PA87-E029",
+        "PA87-E040",
+        "PA87-E041"
+      ]
+    },
+    {
+      "id": "PA87-FP02",
+      "condition": "ordinary scan none fits and new metadata kzalloc returns NULL",
+      "next": "goto fail -> NULL",
+      "not_proven": "list has no newly completed chunk",
+      "evidence_ids": [
+        "PA87-E010",
+        "PA87-E034",
+        "PA87-E041"
+      ]
+    },
+    {
+      "id": "PA87-FP03",
+      "condition": "late metadata nonNULL but data kzalloc NULL",
+      "next": "pointer arithmetic and list publication text",
+      "not_proven": "safe C pointer/valid list state or actual memory",
+      "evidence_ids": [
+        "PA87-E011",
+        "PA87-E012"
+      ]
+    },
+    {
+      "id": "PA87-FP04",
+      "condition": "workqueue alloc_percpu returns NULL",
+      "next": "inner -ENOMEM then outer ignores result and might publish wq",
+      "not_proven": "valid global WQ object & all callees return",
+      "evidence_ids": [
+        "PA87-E060",
+        "PA87-E071",
+        "PA87-E074",
+        "PA87-E075"
+      ]
+    },
+    {
+      "id": "PA87-FP05",
+      "condition": "one or more PWQ linked, later kmem_cache_alloc NULL",
+      "next": "inner cleanup free for readable nonNULL slots, perCPU free commented",
+      "not_proven": "list consistent/free safe/later use",
+      "evidence_ids": [
+        "PA87-E065",
+        "PA87-E067",
+        "PA87-E069",
+        "PA87-E070"
+      ]
+    }
+  ],
+  "selfcheck_prepublication": {
+    "original86_counts_from_new_read": "per-file 0,0,1,0,0,77; total raw78; source labels77",
+    "new87_source_definition_anchors": 102,
+    "new87_raw_prefix_expected": 102,
+    "new87_cross_text_reference_ids_only": "not counted as labels",
+    "all_quote_readbacks": "COMPLETE: 102/102 exact source lines matched after independent GitHub fetch of each of 19 anchored paths in three batches (51+39+12), no mismatches; not the full local P9",
+    "full_local_P9": "NOT_RUN",
+    "actual_compile": "NOT_RUN",
+    "actual_hardware": "NOT_RUN",
+    "source_quote_reconfirmed": 102,
+    "original86_recounted_raw_prefixes": 78,
+    "three_integers": {
+      "verified_claims": 102,
+      "quotes_reconfirmed": 102,
+      "downgraded_to_inferred": 0
+    }
+  },
+  "execution_context": {
+    "actor": "MYOS2-LEAD-002-CHAT-EXEC-11",
+    "conversation": "MYOS2-A-C06b 代码分析执行",
+    "branch": "claude/dazzling-cori-q0dnyt",
+    "pr": 17,
+    "write_scope": "exactly six new files in user-percpu-allocation-87 + one PR17 top-level comment",
+    "reviewer": "MYOS2-A-C06 Pro independent, pending",
+    "excluded": [
+      "kernel modifications",
+      "old results/PR metadata",
+      "build/run/repo script execution",
+      "additional models/subagents/paid APIs",
+      "new branches or PRs",
+      "merge and stage3"
+    ]
+  }
+}

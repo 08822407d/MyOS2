@@ -1,0 +1,182 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-OPEN-COMPLETION-39",
+  "record_type": "bounded_open_completion_deferred_observations",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-05",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "61a95d13dcb6",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "new_findings": [
+    {
+      "id": "OC39-F01",
+      "kind": "f_mode_vs_O_bit_domain_mismatch",
+      "fact": "Selected __alloc_file sets f_mode=OPEN_FMODE(flags), yielding only low O_ACCMODE bits plus optional FMODE_NONOTIFY; myos_do_dentry_open uses f_mode & O_TRUNC or f_mode & O_APPEND rather than f_flags. Under fixed selected macro values both predicates are false for this producer.",
+      "premises": [
+        "selected __alloc_file completed with valid allocation",
+        "file.f_mode not rewritten between allocation and this gate",
+        "fixed O_TRUNC=octal01000, O_APPEND=octal02000 and OPEN_FMODE selected definitions",
+        "all preceding path and callback actions return normally"
+      ],
+      "counterevidence": [
+        "raw helper could construct a file with manually-set f_mode outside the actual producer; that would not prove the selected producer emits those bits",
+        "O_TRUNC/O_APPEND might be consumed elsewhere outside selected finish body; no whole-tree absence claim",
+        "no actual user truncate/append run observed"
+      ],
+      "anchors": [
+        "OC39-A004",
+        "OC39-A028",
+        "OC39-A029",
+        "OC39-A053",
+        "OC39-A061",
+        "OC39-A062"
+      ],
+      "possible_impact": "conditional disabled truncate/append assignments in selected normal file construction; does not prove physical disk or cache state",
+      "resume_conditions": [
+        "authorized consumer/runtime case if future scope",
+        "new actual f_mode writer or preprocessing proof if relevant"
+      ],
+      "status": "needs_evidence",
+      "qualified_id": "CORE-USER-OPEN-COMPLETION-39::OC39-F01",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "OC39-F02",
+      "kind": "optional_open_callback_result_not_checked_or_forwarded",
+      "fact": "myos_do_dentry_open stores f_op->open result in local ulong error but never tests, returns or uses it in the selected complete body; it executes subsequent mode predicates after any normal callback return, regardless of 0 or nonzero return category. FAT32_open selected callback writes f_pos=0 and returns literal1.",
+      "premises": [
+        "valid file/inode/op and fop.open assigned and called",
+        "open callback returns normally, possibly nonzero",
+        "earlier path_get and pointer dereferences valid"
+      ],
+      "counterevidence": [
+        "when no f_op or no .open the callback is not called but the function still falls off its end",
+        "callback return1 may be intentional under local conventions; cannot independently call it failure",
+        "UV-04 already separately records nonvoid functions missing return, so do not duplicate that as a fresh failure",
+        "no guarantee a user path reaches this FAT callback due SB38 root/child gaps"
+      ],
+      "anchors": [
+        "OC39-A026",
+        "OC39-A027",
+        "OC39-A028",
+        "OC39-A029",
+        "OC39-A063",
+        "OC39-A064"
+      ],
+      "possible_impact": "local callback result discarded before outer return; actual error propagation unestablished rather than known error code",
+      "resume_conditions": [
+        "examine actual alternative callbacks only under explicit new scope",
+        "authorized runtime or repair inquiry later"
+      ],
+      "status": "needs_evidence",
+      "qualified_id": "CORE-USER-OPEN-COMPLETION-39::OC39-F02",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "OC39-F03",
+      "kind": "FMODE_OPENED_transition_not_locally_bound",
+      "fact": "The selected __alloc_file writes OPEN_FMODE only and the full myos_do_dentry_open/vfs_open/do_open bodies contain no active FMODE_OPENED assignment; path_openat has an if(file->f_mode & FMODE_OPENED) gate commented out, so the selected return-file branch is guarded solely by error==0 (whose do_open producer is undefined).",
+      "premises": [
+        "only selected functions are considered, not full-tree assignment producers",
+        "valid file and path branch reaches the commented-gate area",
+        "a downstream observer may care about FMODE_OPENED state, not demonstrated"
+      ],
+      "counterevidence": [
+        "FMODE_OPENED has a valid macro definition but no proof all file paths must set it",
+        "comments do not execute, so this is not a live gate that rejects file",
+        "UV-04 already covers do_open return gap, and no second independent return-register bug is being counted",
+        "actual f_mode initial value from cache zalloc is a request, not whole allocator zeroing certification"
+      ],
+      "anchors": [
+        "OC39-A004",
+        "OC39-A017",
+        "OC39-A051",
+        "OC39-A053",
+        "OC39-A013"
+      ],
+      "possible_impact": "bounded open-completion state provenance gap, not a proof that fd_install cannot occur",
+      "resume_conditions": [
+        "identify an actual consumer requiring FMODE_OPENED",
+        "future owner-authorized multi-function state audit"
+      ],
+      "status": "needs_evidence",
+      "qualified_id": "CORE-USER-OPEN-COMPLETION-39::OC39-F03",
+      "owner_action_now": "none"
+    }
+  ],
+  "historical_links": [
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-04",
+      "disposition": "RETAINED_NOT_DUPLICATED",
+      "note": "Both myos_do_dentry_open and do_open have int declarations with no return; new field/callback facts stop before the missing-return consumption; do not invent register value or deterministic error."
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F01",
+      "disposition": "RETAINED_NOT_DUPLICATED",
+      "note": "do_sys_openat2 ignores build_open_flags error and overwrites fd; only source-bound consequences, no user success proof."
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F02",
+      "disposition": "RETAINED",
+      "note": "op.open_flag snapshot and local flags may diverge; lookup_flags remain separate from open flags."
+    },
+    {
+      "qualified_id": "CORE-USER-FILE-CACHE-13::FC13-F04",
+      "disposition": "GATE_REFINED",
+      "note": "Truncate assignment depends on actual f_mode & O_TRUNC, not merely user O_TRUNC; new OPEN_FMODE producer restricts that gate for normal file allocation."
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F02",
+      "disposition": "RETAINED",
+      "note": "A route child standalone inode vs MSDOS_I embedding prerequisite not proven; no actual user file open claimed."
+    },
+    {
+      "qualified_id": "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F03",
+      "disposition": "RETAINED",
+      "note": "A route root mapping source remains unknown; downstream f_mapping=inode->i_mapping needs valid mapping pointer."
+    },
+    {
+      "qualified_id": "CORE-USER-INODE-INIT-37::NI37-F01",
+      "disposition": "RETAINED",
+      "note": "Selected earlier mapping.nrpages/page_array provenance not closed by f_mapping assignment."
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F02",
+      "disposition": "RETAINED",
+      "note": "lookup_flags passed to open_last_lookups and its O_CREAT gate does not prove actual O_CREAT producer."
+    },
+    {
+      "qualified_id": "CORE-USER-LAST-COMPONENT-32::LC32-F03",
+      "disposition": "RETAINED",
+      "note": "Upper slow lookup encoded error remains independent of open completion."
+    },
+    {
+      "qualified_id": "CORE-USER-LOOKUP-CALLBACK-34::CB34-F05",
+      "disposition": "RETAINED",
+      "note": "FAT directory size/mapping prerequisites remain scoped by actual superblock path."
+    },
+    {
+      "qualified_id": "CORE-USER-DENTRY-LOOKUP-33::DL33-F02",
+      "disposition": "RETAINED",
+      "note": "file open completion assumes valid dentry/inode/mapping; earlier callback success not proved."
+    },
+    {
+      "qualified_id": "CORE-USER-OPEN-FLAGS-30::OF30-F04",
+      "disposition": "RETAINED",
+      "note": "no permissions or access-control conclusion in this batch."
+    }
+  ],
+  "candidate_count_not_confirmed_vulnerabilities": true,
+  "candidate_dependencies": "F01 and F02 are distinct selected body observations, F03 is a state/return provenance question; UV04/OF30 defects remain historical rather than new IDs",
+  "exclusions": [
+    "no patch, build or runtime",
+    "no whole fd table, mount, driver, permissions, refcount or pagecache audit",
+    "no real erroneous user open returned",
+    "no actual measured memory, disk or FD lifecycle issue"
+  ]
+}

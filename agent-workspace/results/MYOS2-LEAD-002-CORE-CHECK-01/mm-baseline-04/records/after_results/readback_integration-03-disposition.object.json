@@ -1,0 +1,58 @@
+{
+ "mode": "object",
+ "target_commit_short12": "eb75b3100601",
+ "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/integration-03-disposition.md",
+ "field": null,
+ "expected_blob_available": true,
+ "expected_bytes": 14400,
+ "expected_sha256_segments": [
+  "e98ae269b6818397",
+  "9f08cf26c283a545",
+  "a9957c83f5d2f8ab",
+  "a0887ca993454cad"
+ ],
+ "channels": [
+  {
+   "channel": "raw.githubusercontent.com",
+   "url": "https://raw.githubusercontent.com/08822407d/MyOS2/<commit:eb75b3100601>/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/integration-03-disposition.md",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 14400,
+   "sha256_segments": [
+    "e98ae269b6818397",
+    "9f08cf26c283a545",
+    "a9957c83f5d2f8ab",
+    "a0887ca993454cad"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_ok": true,
+   "ok": true
+  },
+  {
+   "channel": "api.github.com_contents_raw",
+   "url": "https://api.github.com/repos/08822407d/MyOS2/contents/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/mm-baseline-04/integration-03-disposition.md?ref=<commit:eb75b3100601>",
+   "curl_exit": 0,
+   "timed_out": false,
+   "terminal_state": "exited",
+   "http_code": "200",
+   "curl_stderr": "",
+   "bytes": 14400,
+   "sha256_segments": [
+    "e98ae269b6818397",
+    "9f08cf26c283a545",
+    "a9957c83f5d2f8ab",
+    "a0887ca993454cad"
+   ],
+   "transport_ok": true,
+   "byte_identical": true,
+   "field_ok": true,
+   "ok": true
+  }
+ ],
+ "binding": "fetched at the target commit itself",
+ "ok": true
+}

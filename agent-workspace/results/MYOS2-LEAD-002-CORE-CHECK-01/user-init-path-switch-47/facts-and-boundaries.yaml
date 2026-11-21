@@ -1,0 +1,877 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-INIT-PATH-SWITCH-47",
+  "record_type": "separate_R46_01_document_correction_and_47_static_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "date": "2026-11-06",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "encoding": "JSON syntax YAML1.2 compatible",
+  "historical_batch46": {
+    "verdict": "RETURN",
+    "returned_scope": [
+      "R46-01"
+    ],
+    "R46_01": "OPEN_UNTIL_C04_REVIEWS",
+    "old_claims_historical": 59,
+    "old_claims_unaffected_not_recertified": true,
+    "original_artifacts_frozen": true
+  },
+  "correction_evidence_count": 6,
+  "correction_evidence_ids": [
+    "R46-C001",
+    "R46-C002",
+    "R46-C003",
+    "R46-C004",
+    "R46-C005",
+    "R46-C006"
+  ],
+  "correction_map": [
+    {
+      "id": "A050",
+      "historical": "FP46-A050",
+      "defect": "mixed #ifndef and two distinct macros",
+      "replacement": [
+        "R46-C001"
+      ],
+      "context": [
+        "myos_debug_option.h:6 #ifndef DEBUG",
+        "myos_debug_option.h:11 #else"
+      ],
+      "effect": "single macro supports static inline branch, not selection alone"
+    },
+    {
+      "id": "A051",
+      "historical": "FP46-A051",
+      "defect": "mixed else and two macros",
+      "replacement": [
+        "R46-C002"
+      ],
+      "context": [
+        "myos_debug_option.h:11 #else"
+      ],
+      "effect": "single empty PREFIX macro supports DEBUG-defined branch"
+    },
+    {
+      "id": "A052",
+      "historical": "FP46-A052",
+      "defect": "old get_root_void title not supported by one-line name excerpt",
+      "replacement": [
+        "R46-C003"
+      ],
+      "effect": "two-line void and root getter declaration"
+    },
+    {
+      "id": "A053",
+      "historical": "FP46-A053",
+      "defect": "old get_pwd_void title not supported by one-line name excerpt",
+      "replacement": [
+        "R46-C004"
+      ],
+      "effect": "two-line void and pwd getter declaration"
+    },
+    {
+      "id": "G14",
+      "historical": "facts.finite_models[G14]",
+      "defect": "A019/A023/A005 are function/helper quotes, not DEBUG choice",
+      "replacement": [
+        "R46-C001",
+        "R46-C002"
+      ],
+      "context": [
+        "fs_struct.h:12 #ifdef DEBUG",
+        "fs_struct.h:22 #if defined(FS_STRUCT_DEFINATION) || !(DEBUG)"
+      ],
+      "effect": "macro definition source and external condition context, not compiled/link attestation"
+    },
+    {
+      "id": "C01",
+      "historical": "facts.finite_models[C01], DOT C3",
+      "defect": "prior quotes omit actual while1",
+      "replacement": [
+        "R46-C005"
+      ],
+      "context": [
+        "namespace.c:655 if(IS_ERR(mnt))"
+      ],
+      "effect": "color_printk normal return then while1; no setter on this branch"
+    },
+    {
+      "id": "C04",
+      "historical": "facts.finite_models[C04], DOT T5",
+      "defect": "namespace file citations cannot evidence a search-result absence",
+      "replacement": [],
+      "method_record": {
+        "query": [
+          "get_fs_root(",
+          "get_fs_pwd("
+        ],
+        "scope": "GitHub indexed code search on repository default branch",
+        "result": "definition locations returned; no independent caller found",
+        "exhaustive_fixed_time": false
+      },
+      "effect": "method record only, absence of getter callers NOT_CERTIFIED"
+    },
+    {
+      "id": "D09",
+      "historical": "facts.finite_models[D09], DOT T1/T2",
+      "defect": "old anchors dget/dput functions not actual dentry struct field",
+      "replacement": [
+        "R46-C006"
+      ],
+      "context": [
+        "FP46-A004 has original dentry struct excerpt",
+        "dget/dput activity requires separate function evidence"
+      ],
+      "effect": "T1 field comment vs T2 direct function no-op are distinct claims"
+    },
+    {
+      "id": "cross_document",
+      "historical": "original46正文/facts/DOT/MANIFEST/PR17 delivery",
+      "defect": "59 verified labels conflated byte matching with single-definition/support eligibility",
+      "replacement": [
+        "R46-C001",
+        "R46-C002",
+        "R46-C003",
+        "R46-C004",
+        "R46-C005",
+        "R46-C006"
+      ],
+      "effect": "historical 59/59 retained but not fully revalidated; R46-01 OPEN until C04 review"
+    }
+  ],
+  "macro_selection_models": [
+    {
+      "debug": "undefined",
+      "prefix": "static inline",
+      "fs_struct_defination": false,
+      "getter_source_condition": true,
+      "reason": "#ifndef DEBUG true; #if !(DEBUG) treats undefined identifier as 0"
+    },
+    {
+      "debug": "defined_0",
+      "prefix": "empty",
+      "fs_struct_defination": false,
+      "getter_source_condition": true,
+      "reason": "#ifndef DEBUG false despite !(DEBUG) true"
+    },
+    {
+      "debug": "defined_nonzero",
+      "prefix": "empty",
+      "fs_struct_defination": false,
+      "getter_source_condition": false,
+      "reason": "#ifndef DEBUG false and !(nonzero) false"
+    },
+    {
+      "debug": "defined_nonzero",
+      "prefix": "empty",
+      "fs_struct_defination": true,
+      "getter_source_condition": true,
+      "reason": "FS_STRUCT_DEFINATION defined branch suffices; actual linkage not certified"
+    }
+  ],
+  "new47_source_evidence_count": 49,
+  "new47_source_evidence_ids": [
+    "IP47-A001",
+    "IP47-A002",
+    "IP47-A003",
+    "IP47-A004",
+    "IP47-A005",
+    "IP47-A006",
+    "IP47-A007",
+    "IP47-A008",
+    "IP47-A009",
+    "IP47-A010",
+    "IP47-A011",
+    "IP47-A012",
+    "IP47-A013",
+    "IP47-A014",
+    "IP47-A015",
+    "IP47-A016",
+    "IP47-A017",
+    "IP47-A018",
+    "IP47-A019",
+    "IP47-A020",
+    "IP47-A021",
+    "IP47-A022",
+    "IP47-A023",
+    "IP47-A024",
+    "IP47-A025",
+    "IP47-A026",
+    "IP47-A027",
+    "IP47-A028",
+    "IP47-A029",
+    "IP47-A030",
+    "IP47-A031",
+    "IP47-A032",
+    "IP47-A033",
+    "IP47-A034",
+    "IP47-A035",
+    "IP47-A036",
+    "IP47-A037",
+    "IP47-A038",
+    "IP47-A039",
+    "IP47-A040",
+    "IP47-A041",
+    "IP47-A042",
+    "IP47-A043",
+    "IP47-A044",
+    "IP47-A045",
+    "IP47-A046",
+    "IP47-A047",
+    "IP47-A048",
+    "IP47-A049"
+  ],
+  "objects": [
+    {
+      "name": "init local path",
+      "type": "struct path",
+      "initialization": "declared, no explicit initializer before kern_path",
+      "output_validity": "must be established on successful lookup",
+      "source": [
+        "IP47-A001",
+        "IP47-A006"
+      ]
+    },
+    {
+      "name": "taskfs current.fs",
+      "type": "taskfs_s*",
+      "effect": "set_fs_pwd changes pwd; set_fs_root changes root",
+      "getter_setter_precondition": "valid object",
+      "source": [
+        "IP47-A003",
+        "IP47-A008"
+      ]
+    },
+    {
+      "name": "name",
+      "type": "filename_s*",
+      "producer": "getname_kernel(name)",
+      "error_gate": "filename_lookup IS_ERR only",
+      "source": [
+        "IP47-A015",
+        "IP47-A018",
+        "IP47-A028"
+      ]
+    },
+    {
+      "name": "path_s",
+      "type": "vfsmount_s*,dentry_s* value",
+      "ownership": "not certified by integer success or value-copy",
+      "source": [
+        "IP47-A025",
+        "IP47-A026"
+      ]
+    },
+    {
+      "name": "devtmpfsd err",
+      "type": "int",
+      "writer": "init_mount result, no later assignment from chdir/chroot",
+      "source": [
+        "IP47-A041",
+        "IP47-A043",
+        "IP47-A046"
+      ]
+    }
+  ],
+  "source_contracts": [
+    {
+      "function": "init_chdir",
+      "return_type": "int",
+      "lookup": "kern_path(filename,LOOKUP_FOLLOW|LOOKUP_DIRECTORY,&path)",
+      "first_gate": "if(error) return error (all nonzero)",
+      "secondary_gate": "if(!error) after no active reassignment",
+      "success_side_effect": "set_fs_pwd(current->fs,&path)",
+      "cleanup_request": "path_put(&path) only after lookup returned zero and setter normal",
+      "status_on_normal_success": 0,
+      "source": [
+        "IP47-A001",
+        "IP47-A002",
+        "IP47-A003",
+        "IP47-A004"
+      ]
+    },
+    {
+      "function": "init_chroot",
+      "return_type": "int",
+      "lookup": "same kern_path flags",
+      "first_gate": "if(error) return error",
+      "success_side_effect": "set_fs_root(current->fs,&path)",
+      "cleanup_request": "dput_and_out label then path_put(&path), no active goto to label in full body",
+      "permission_statements": "COMMENT_ONLY",
+      "status_on_normal_success": 0,
+      "source": [
+        "IP47-A006",
+        "IP47-A007",
+        "IP47-A008",
+        "IP47-A009"
+      ]
+    },
+    {
+      "function": "kern_path",
+      "return_type": "int",
+      "body": "return filename_lookup(AT_FDCWD,getname_kernel(name),flags,path,NULL)",
+      "AT_FDCWD": -100,
+      "source": [
+        "IP47-A015",
+        "IP47-A016",
+        "IP47-A049"
+      ]
+    },
+    {
+      "function": "filename_lookup",
+      "return_type": "int",
+      "gate": "IS_ERR(name) early returns PTR_ERR(name)",
+      "normal_path": [
+        "set_nameidata(&nd,dfd,name,NULL)",
+        "retval=path_lookupat(&nd,flags,path)",
+        "putname(name)",
+        "return retval"
+      ],
+      "source": [
+        "IP47-A017",
+        "IP47-A018",
+        "IP47-A019",
+        "IP47-A020",
+        "IP47-A021"
+      ]
+    },
+    {
+      "function": "path_lookupat",
+      "return_type": "int",
+      "output_gate": "err==0 after link_path_walk/lookup_last and complete_walk",
+      "on_valid_output": [
+        "*path=nd.path",
+        "nd.path.mnt=NULL",
+        "nd.path.dentry=NULL"
+      ],
+      "tail": [
+        "terminate_walk(nd)",
+        "return err"
+      ],
+      "source": [
+        "IP47-A022",
+        "IP47-A023",
+        "IP47-A024",
+        "IP47-A025",
+        "IP47-A026",
+        "IP47-A027"
+      ]
+    },
+    {
+      "function": "init_mount",
+      "return_type": "int",
+      "first": "ret=kern_path(dir_name,LOOKUP_FOLLOW,&path)",
+      "gate": "if(ret) return ret",
+      "next": "ret=path_mount(...)",
+      "last": "path_put(&path); return ret",
+      "source": [
+        "IP47-A012",
+        "IP47-A013",
+        "IP47-A014"
+      ]
+    },
+    {
+      "function": "devtmpfsd",
+      "return_type": "int",
+      "init": "err=0; err=init_mount(...)",
+      "gate": "if(err)goto out",
+      "ignored_int_calls": [
+        "init_chdir(\"/..\")",
+        "init_chroot(\".\")"
+      ],
+      "later_opaque": [
+        "complete(&setup_done)",
+        "devtmpfs_work_loop()"
+      ],
+      "return_on_reached_out": "err (unchanged by directory calls)",
+      "source": [
+        "IP47-A040",
+        "IP47-A041",
+        "IP47-A042",
+        "IP47-A043",
+        "IP47-A045",
+        "IP47-A046"
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "symbol": "LOOKUP_FOLLOW",
+      "number": 1,
+      "evidence": "IP47-A047"
+    },
+    {
+      "symbol": "LOOKUP_DIRECTORY",
+      "number": 2,
+      "evidence": "IP47-A048"
+    },
+    {
+      "symbol": "AT_FDCWD",
+      "number": -100,
+      "evidence": "IP47-A049"
+    }
+  ],
+  "finite_models": [
+    {
+      "id": "M01",
+      "stage": "init_chdir",
+      "input": "kern_path returns nonzero int",
+      "source_outcome": "if(error) return same int, skips pwd setter and path_put",
+      "stop_or_unproven": "no proof path was acquired or leaked",
+      "evidence": [
+        "IP47-A002",
+        "IP47-A005"
+      ]
+    },
+    {
+      "id": "M02",
+      "stage": "init_chdir",
+      "input": "kern_path returns 0 and produces valid writable path, current.fs valid",
+      "source_outcome": "if(!error) true, set_fs_pwd; path_put; return0 if calls normal",
+      "stop_or_unproven": "directory/mount actual path valid still bounded",
+      "evidence": [
+        "IP47-A002",
+        "IP47-A003",
+        "IP47-A004"
+      ]
+    },
+    {
+      "id": "M03",
+      "stage": "init_chdir",
+      "input": "kern_path returns0 but path output not established valid",
+      "source_outcome": "setter attempts path_get on path member then current.fs",
+      "stop_or_unproven": "STOP before claiming pwd publication/normal return",
+      "evidence": [
+        "IP47-A002",
+        "IP47-A003"
+      ]
+    },
+    {
+      "id": "M04",
+      "stage": "init_chdir",
+      "input": "kern_path returns positive nonzero int hypothetically",
+      "source_outcome": "same if(error) true, return that int",
+      "stop_or_unproven": "positive errno producer not evidenced",
+      "evidence": [
+        "IP47-A002"
+      ]
+    },
+    {
+      "id": "M05",
+      "stage": "init_chdir",
+      "input": "kern_path callee fails to return normally",
+      "source_outcome": "no local if(error) branch completed",
+      "stop_or_unproven": "STOP at kern_path",
+      "evidence": [
+        "IP47-A002"
+      ]
+    },
+    {
+      "id": "M06",
+      "stage": "init_chdir",
+      "input": "kern_path returned0, no other assignment to error",
+      "source_outcome": "commented permission call does not modify error; if(!error) true",
+      "stop_or_unproven": "no second independent permission gate",
+      "evidence": [
+        "IP47-A003"
+      ]
+    },
+    {
+      "id": "M07",
+      "stage": "init_chroot",
+      "input": "kern_path returns nonzero int",
+      "source_outcome": "if(error) return same int; no root setter and no local path_put",
+      "stop_or_unproven": "requires proof of acquired path before leak claim",
+      "evidence": [
+        "IP47-A007"
+      ]
+    },
+    {
+      "id": "M08",
+      "stage": "init_chroot",
+      "input": "kern_path returns0 and path/current.fs valid",
+      "source_outcome": "set_fs_root; fall through dput_and_out; path_put; return0",
+      "stop_or_unproven": "no pwd mutation from this function body",
+      "evidence": [
+        "IP47-A008",
+        "IP47-A009"
+      ]
+    },
+    {
+      "id": "M09",
+      "stage": "init_chroot",
+      "input": "kern_path returns0 but path invalid",
+      "source_outcome": "set_fs_root attempts input path_get, no valid publication guarantee",
+      "stop_or_unproven": "STOP at earliest invalid path field",
+      "evidence": [
+        "IP47-A008"
+      ]
+    },
+    {
+      "id": "M10",
+      "stage": "init_chroot",
+      "input": "source contains dput_and_out label and commented gotos",
+      "source_outcome": "successful path normally falls into label",
+      "stop_or_unproven": "not an active additional failure exit",
+      "evidence": [
+        "IP47-A008",
+        "IP47-A009"
+      ]
+    },
+    {
+      "id": "M11",
+      "stage": "init_chroot",
+      "input": "commented CAP/security permission lines",
+      "source_outcome": "no active permission check from these lines",
+      "stop_or_unproven": "not proof of user-accessible privilege bypass",
+      "evidence": [
+        "IP47-A008"
+      ]
+    },
+    {
+      "id": "M12",
+      "stage": "shared",
+      "input": "LOOKUP_FOLLOW=1, LOOKUP_DIRECTORY=2",
+      "source_outcome": "bitwise OR=3, passed to kern_path",
+      "stop_or_unproven": "downstream policy enforcement NOT_CERTIFIED",
+      "evidence": [
+        "IP47-A010",
+        "IP47-A011",
+        "IP47-A047",
+        "IP47-A048"
+      ]
+    },
+    {
+      "id": "M13",
+      "stage": "kern_path",
+      "input": "valid kernel pathname and path output pointer",
+      "source_outcome": "getname_kernel passed to filename_lookup with AT_FDCWD, flags, root=NULL",
+      "stop_or_unproven": "not a successful path lookup by name alone",
+      "evidence": [
+        "IP47-A015",
+        "IP47-A016",
+        "IP47-A049"
+      ]
+    },
+    {
+      "id": "M14",
+      "stage": "kern_path",
+      "input": "getname_kernel returns encoded error pointer normally",
+      "source_outcome": "filename_lookup IS_ERR then PTR_ERR before set_nameidata",
+      "stop_or_unproven": "return int encoded error if normal and representable",
+      "evidence": "name producer already limited by PN29"
+    },
+    {
+      "id": "M15",
+      "stage": "kern_path",
+      "input": "getname_kernel fails internally with invalid object before normal return",
+      "source_outcome": "no certified filename_lookup return value",
+      "stop_or_unproven": "STOP at invalid producer",
+      "evidence": [
+        "IP47-A028",
+        "IP47-A030"
+      ]
+    },
+    {
+      "id": "M16",
+      "stage": "filename_lookup",
+      "input": "name is a defined IS_ERR-coded pointer",
+      "source_outcome": "returns PTR_ERR; no path_lookupat or putname on this early branch",
+      "stop_or_unproven": "cannot assume allocated resources on this path",
+      "evidence": [
+        "IP47-A018",
+        "IP47-A020"
+      ]
+    },
+    {
+      "id": "M17",
+      "stage": "filename_lookup",
+      "input": "name valid and path_lookupat normally returns nonzero",
+      "source_outcome": "set_nameidata, path_lookupat, putname, return retval",
+      "stop_or_unproven": "output path status unknown",
+      "evidence": [
+        "IP47-A018",
+        "IP47-A019",
+        "IP47-A021"
+      ]
+    },
+    {
+      "id": "M18",
+      "stage": "filename_lookup",
+      "input": "name valid and path_lookupat normally returns0",
+      "source_outcome": "calls putname then returns 0",
+      "stop_or_unproven": "path output validity needs path_lookupat success gate and valid members",
+      "evidence": [
+        "IP47-A018",
+        "IP47-A019",
+        "IP47-A025"
+      ]
+    },
+    {
+      "id": "M19",
+      "stage": "filename_lookup",
+      "input": "name=NULL not recognized by IS_ERR numeric check",
+      "source_outcome": "may attempt set_nameidata/path_init later",
+      "stop_or_unproven": "no normal safe result certified",
+      "evidence": "valid filename object separate premise"
+    },
+    {
+      "id": "M20",
+      "stage": "path_lookupat",
+      "input": "link_path_walk and lookup_last sequence gives err nonzero",
+      "source_outcome": "skip complete_walk/output branch, reach terminate/return if normal",
+      "stop_or_unproven": "no path write proven",
+      "evidence": [
+        "IP47-A023",
+        "IP47-A024",
+        "IP47-A027"
+      ]
+    },
+    {
+      "id": "M21",
+      "stage": "path_lookupat",
+      "input": "last integer err=0, complete_walk normal returns0, valid path output",
+      "source_outcome": "copy nd.path value, clear nd.path.mnt/dentry, terminate and return0",
+      "stop_or_unproven": "no new ref from value-copy",
+      "evidence": [
+        "IP47-A024",
+        "IP47-A025",
+        "IP47-A026",
+        "IP47-A027"
+      ]
+    },
+    {
+      "id": "M22",
+      "stage": "path_lookupat",
+      "input": "err0 but output path pointer invalid",
+      "source_outcome": "attempts *path=nd.path",
+      "stop_or_unproven": "STOP at invalid destination; no successful output",
+      "evidence": [
+        "IP47-A025"
+      ]
+    },
+    {
+      "id": "M23",
+      "stage": "path_lookupat",
+      "input": "path_init or link_path_walk fails to return normally",
+      "source_outcome": "no valid output/final return",
+      "stop_or_unproven": "STOP before output branch",
+      "evidence": [
+        "IP47-A022",
+        "IP47-A023"
+      ]
+    },
+    {
+      "id": "M24",
+      "stage": "path_lookupat",
+      "input": "s pointer returned by lookup_last is nonNULL",
+      "source_outcome": "loop returns to link_path_walk for next iteration under zero err",
+      "stop_or_unproven": "do not confuse pointer with integer error code",
+      "evidence": [
+        "IP47-A023"
+      ]
+    },
+    {
+      "id": "M25",
+      "stage": "path_lookupat",
+      "input": "LOOKUP_DIRECTORY passed by caller",
+      "source_outcome": "path_init writes flags, selects root/pwd from pathname",
+      "stop_or_unproven": "actual terminal directory checks not established in this read",
+      "evidence": [
+        "IP47-A037",
+        "IP47-A038"
+      ]
+    },
+    {
+      "id": "M26",
+      "stage": "init_mount",
+      "input": "kern_path returns nonzero",
+      "source_outcome": "init_mount returns ret without path_mount or path_put",
+      "stop_or_unproven": "no acquired path ownership presumed",
+      "evidence": [
+        "IP47-A013"
+      ]
+    },
+    {
+      "id": "M27",
+      "stage": "init_mount",
+      "input": "kern_path returns0 with valid path",
+      "source_outcome": "path_mount returns ret; path_put; return ret if normal",
+      "stop_or_unproven": "mount success not implied solely by lookup0",
+      "evidence": [
+        "IP47-A013",
+        "IP47-A014"
+      ]
+    },
+    {
+      "id": "M28",
+      "stage": "init_mount",
+      "input": "path_mount returns nonzero after valid lookup",
+      "source_outcome": "path_put then return nonzero ret",
+      "stop_or_unproven": "devtmpfsd then tests this err",
+      "evidence": [
+        "IP47-A014",
+        "IP47-A042"
+      ]
+    },
+    {
+      "id": "M29",
+      "stage": "devtmpfsd",
+      "input": "init_mount returns nonzero",
+      "source_outcome": "if(err) goto out; return err",
+      "stop_or_unproven": "no chdir/chroot or complete on this source edge",
+      "evidence": [
+        "IP47-A041",
+        "IP47-A042",
+        "IP47-A046"
+      ]
+    },
+    {
+      "id": "M30",
+      "stage": "devtmpfsd",
+      "input": "init_mount returns0; init_chdir returns normally negative",
+      "source_outcome": "init_chroot still called",
+      "stop_or_unproven": "failure of first switch unconsumed",
+      "evidence": [
+        "IP47-A041",
+        "IP47-A043"
+      ]
+    },
+    {
+      "id": "M31",
+      "stage": "devtmpfsd",
+      "input": "init_mount returns0; first switch returns0, second nonzero normally",
+      "source_outcome": "complete and work loop still follow",
+      "stop_or_unproven": "second switch failure unconsumed",
+      "evidence": [
+        "IP47-A043",
+        "IP47-A045"
+      ]
+    },
+    {
+      "id": "M32",
+      "stage": "devtmpfsd",
+      "input": "init_mount returns0; both switch calls normally return nonzero values",
+      "source_outcome": "err local remains0; complete/work loop reached if calls normal",
+      "stop_or_unproven": "not proof work loop returned or root/pwd valid",
+      "evidence": [
+        "IP47-A041",
+        "IP47-A043",
+        "IP47-A045"
+      ]
+    },
+    {
+      "id": "M33",
+      "stage": "devtmpfsd",
+      "input": "init_chdir does not return",
+      "source_outcome": "no second init_chroot call certified",
+      "stop_or_unproven": "STOP at first switch",
+      "evidence": [
+        "IP47-A043"
+      ]
+    },
+    {
+      "id": "M34",
+      "stage": "devtmpfsd",
+      "input": "init_chroot does not return",
+      "source_outcome": "no complete setup_done certified",
+      "stop_or_unproven": "STOP at second switch",
+      "evidence": [
+        "IP47-A043",
+        "IP47-A045"
+      ]
+    },
+    {
+      "id": "M35",
+      "stage": "devtmpfsd",
+      "input": "complete returns normally; devtmpfs_work_loop does not return",
+      "source_outcome": "out label not reached",
+      "stop_or_unproven": "no normal devtmpfsd return0 proof",
+      "evidence": [
+        "IP47-A045",
+        "IP47-A046"
+      ]
+    },
+    {
+      "id": "M36",
+      "stage": "devtmpfsd",
+      "input": "mount returns0; both directory calls normal; work loop returns normally",
+      "source_outcome": "out returns same local err=0",
+      "stop_or_unproven": "not actual proof that work loop ever returns",
+      "evidence": [
+        "IP47-A041",
+        "IP47-A046"
+      ]
+    },
+    {
+      "id": "M37",
+      "stage": "devtmpfsd",
+      "input": "literal path /.. and . supplied",
+      "source_outcome": "call expressions use those exact strings",
+      "stop_or_unproven": "path traversal/overmount/root outcome not demonstrated",
+      "evidence": [
+        "IP47-A043"
+      ]
+    },
+    {
+      "id": "M38",
+      "stage": "devtmpfsd",
+      "input": "init_mount returns0 but path switch outputs unverified",
+      "source_outcome": "later complete may still be invoked after normal int return",
+      "stop_or_unproven": "setup readiness semantic not certified",
+      "evidence": [
+        "IP47-A043",
+        "IP47-A045"
+      ]
+    },
+    {
+      "id": "M39",
+      "stage": "early input",
+      "input": "getname_kernel normal nonzero allocation error",
+      "source_outcome": "early error may propagate via filename_lookup only if IS_ERR recognized",
+      "stop_or_unproven": "PN29 historical limits and invalid producer stop still apply",
+      "evidence": [
+        "IP47-A028",
+        "IP47-A030",
+        "IP47-A020"
+      ]
+    },
+    {
+      "id": "M40",
+      "stage": "two phase",
+      "input": "old46 RETURN plus new47 analysis delivered in same commit",
+      "source_outcome": "request independent C04 close R46-01 and accept47 separately",
+      "stop_or_unproven": "do not self-CLOSE or PASS old46",
+      "evidence": [
+        "R46-C001",
+        "R46-C002",
+        "R46-C003",
+        "R46-C004",
+        "R46-C005",
+        "R46-C006"
+      ]
+    }
+  ],
+  "finite_model_count": 40,
+  "new_candidate_ids": [
+    "IP47-F01"
+  ],
+  "old_qualified_ids_unchanged": [
+    "CORE-USER-PATHNAME-COPY-29::PN29-F02",
+    "CORE-USER-PATH-INIT-31::PI31-F05",
+    "CORE-USER-LAST-COMPONENT-32::LC32-F04",
+    "CORE-USER-FS-CONTEXT-45::FS45-F01",
+    "CORE-USER-FS-CONTEXT-45::FS45-F02",
+    "CORE-USER-VFS-BASELINE-05::UV-10",
+    "CORE-USER-FS-PATH-ACCESS-46-REVIEW-001::R46-S01",
+    "CORE-USER-FS-PATH-ACCESS-46-REVIEW-001::R46-S02",
+    "CORE-USER-FS-CONTEXT-45-REVIEW-001::R45-S01",
+    "CORE-USER-FS-CONTEXT-45-REVIEW-001::R45-S02"
+  ],
+  "context": "C04 may later close R46-01 only after independent check; this execution cannot",
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "graphviz": "NOT_RUN",
+  "original46_entire_59_auto_rescan": "NOT_RUN"
+}

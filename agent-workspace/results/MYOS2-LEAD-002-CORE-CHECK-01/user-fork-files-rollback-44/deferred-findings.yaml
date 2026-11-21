@@ -1,0 +1,157 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FORK-FILES-ROLLBACK-44",
+  "record_type": "append_only_deferred_scope_and_history",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-05",
+  "source_pin_short12": "a039d9803ade",
+  "date": "2026-11-05",
+  "read_channel": "connector",
+  "new_finding_count": 0,
+  "new_findings": [],
+  "new_finding_scope_note": "本批仅发现实际控制边与持有阶段的可证区分，未在选定局部分析中证成与既有UV/US/FT/CL问题不同的新根因；不设置数量配额、不虚构漏洞或修复完成。",
+  "bounded_observations": [
+    {
+      "id": "FR44-O01",
+      "kind": "verified_source_path",
+      "title": "copy_files正常失败直达semundo而不调用exit_files",
+      "source": [
+        "FR44-A010",
+        "FR44-A027",
+        "FR44-A028"
+      ],
+      "premises": [
+        "copy_files正常返回非零",
+        "copy_process的if(retval)按源码执行"
+      ],
+      "counter_evidence": [
+        "若copy_files成功则可继续进入copy_fs及更后错误门",
+        "在选定实际错误跳转里未授权其他callee的隐式file归还审计"
+      ],
+      "outcome": "为没有新增表持有的外层失败避免本次直接归还；不证明完整失败路径整体正确"
+    },
+    {
+      "id": "FR44-O02",
+      "kind": "verified_source_path",
+      "title": "后续阶段错误条件性贯穿files清理标签",
+      "source": [
+        "FR44-A011",
+        "FR44-A012",
+        "FR44-A013",
+        "FR44-A014",
+        "FR44-A015",
+        "FR44-A016",
+        "FR44-A017",
+        "FR44-A023",
+        "FR44-A025",
+        "FR44-A026",
+        "FR44-A027"
+      ],
+      "premises": [
+        "copy_files已正常完成",
+        "先于exit_files的各个opaque清理正常返回",
+        "p.files及表对象在这些阶段仍有效"
+      ],
+      "counter_evidence": [
+        "copy_files自己的非零错误直达semundo",
+        "内层kzalloc NULL失效无正常返回",
+        "旧UV-14可能使sighand清理先失效"
+      ],
+      "outcome": "说明源标签存在且有条件可到达exit_files；不签释放动作必然完成"
+    },
+    {
+      "id": "FR44-O03",
+      "kind": "bounded_reference_count_model",
+      "title": "共享表成功获取+1后单次正常回滚-1",
+      "source": [
+        "FR44-A038",
+        "FR44-A049",
+        "FR44-A050",
+        "FR44-A046"
+      ],
+      "premises": [
+        "valid preseed p.files equals same oldf",
+        "n>0且无其它计数写者",
+        "退出链正常到达exit_files/put_files_struct"
+      ],
+      "counter_evidence": [
+        "新表复制成功属于不同对象，不能用同一增减模型",
+        "static init_files是否真实最终归零旧CL42-F01未证"
+      ],
+      "outcome": "n->n+1->n仅本地计数模型，不认证全局生命周期"
+    }
+  ],
+  "history_preserved": [
+    {
+      "id": "CORE-USER-FILES-COPY-SHARE-43::FT43-F01",
+      "status": "deferred_owner_not_ready",
+      "new_evidence": [
+        "FR44-A010",
+        "FR44-A039",
+        "FR44-A044"
+      ],
+      "append": "dup_fd内层kzalloc失效没有正常返回，不能让copy_process消费虚构的copy_files(-ENOMEM)或goto semundo/清理后果；不修改历史问题"
+    },
+    {
+      "id": "CORE-USER-FD-CLOSE-42::CL42-F01",
+      "status": "needs_evidence",
+      "new_evidence": [
+        "FR44-A038",
+        "FR44-A049",
+        "FR44-A050",
+        "FR44-A057"
+      ],
+      "append": "若静态init_files参与有效共享且在失败路径通过exit_files，局部表引用n->n+1->n，不构成最后归零；真实运行中最后一次归还仍未证"
+    },
+    {
+      "id": "CORE-USER-VFS-BASELINE-05::UV-09",
+      "status": "needs_evidence",
+      "new_evidence": [
+        "FR44-A040",
+        "FR44-A042",
+        "FR44-A044",
+        "FR44-A047",
+        "FR44-A048"
+      ],
+      "append": "非共享dup_fd的新表在后续失败时可到达exit_files并开始遍历，然而未明确初始化的空槽/按值file副本和跨cache归还限制依旧成立；不签完整释放"
+    },
+    {
+      "id": "CORE-USER-VFS-BASELINE-05::UV-10",
+      "status": "deferred_owner_not_ready",
+      "append": "本批只观察文件表exit_files通过filp_close的局部归还，不重审sys_close绕过f_count问题"
+    },
+    {
+      "id": "CORE-USER-VFS-BASELINE-05::UV-11",
+      "status": "deferred_owner_not_ready",
+      "append": "fd_count和256固定槽界限仍影响最后表遍历；并不由错误标签保证表或槽合法"
+    },
+    {
+      "id": "CORE-USER-VFS-BASELINE-05::UV-14",
+      "status": "needs_evidence",
+      "new_evidence": [
+        "FR44-A013",
+        "FR44-A026",
+        "FR44-A027"
+      ],
+      "append": "copy_signal及更后阶段失败会先走__cleanup_sighand，再经过exit_fs/exit_files；旧UV-14可能使其失去更后路径有效性的证明，不把exit_files记为无条件必达"
+    },
+    {
+      "id": "CORE-USER-SYSCALL-STDIO-08::US-01",
+      "status": "deferred_owner_not_ready",
+      "append": "files表共享refcount与单file的f_count不同，fork失败清理并不修复write/fcntl额外fput旧问题"
+    }
+  ],
+  "remaining_unknowns": [
+    "copy_fs/copy_sighand/.../alloc_pid实际失败生产者和errno范围",
+    "每个前置或中途opaque清理是否正常返回及其对象副作用",
+    "成功copy_files之前task.files预置指针来自有效dup_task_struct且node条件正确",
+    "新表空槽的实际初值、file副本引用/分配器归还（旧UV-09）",
+    "所有任务、文件表和file引用是否全局配平、实际last put以及物理释放"
+  ],
+  "reopen_conditions": "任何新增工作须由Owner和C04设独立范围，按更新的源码重新核；本次不修内核、不编译运行、不自动关闭旧qualified_id",
+  "owner_action_now": "none",
+  "original_artifacts_modified": false,
+  "runtime_evidence": "NOT_RUN",
+  "kernel_change_authorized": false,
+  "mainline_acceptance": "PENDING"
+}

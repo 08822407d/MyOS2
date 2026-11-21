@@ -1,0 +1,96 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-SEMAPHORE-TIMEOUT-51",
+  "source_pin_short12": "a039d9803ade",
+  "record_type": "incremental_deferred",
+  "new_findings": [],
+  "new_findings_count": 0,
+  "existing_root": {
+    "id": "MYOS2-LEAD-002-CORE-CHECK-01/core/results.yaml::CA-03",
+    "prior_status": "SUPPORTED_IN_SCOPE",
+    "case": "V09",
+    "effect": "semaphore direct timeout consumer within fixed source only; same root not renumbered"
+  },
+  "old_statuses": [
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::R49-01",
+      "status": "CLOSED_DOCUMENTATION_ONLY_BY_C04"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50",
+      "status": "PASS_PENDING_LOCAL_BY_C04"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-COMPLETION-WAIT-49::CW49-U04",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U02",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-SCHEDULE-TIMEOUT-50::ST50-U03",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "CORE-USER-VFS-BASELINE-05::UV-01",
+      "status": "deferred_owner_not_ready"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "SM51-U01",
+      "kind": "limited_search",
+      "status": "needs_evidence",
+      "scope": "fixed-time direct external callers not exhaustively indexed"
+    },
+    {
+      "id": "SM51-U02",
+      "kind": "runtime_boundary",
+      "status": "needs_evidence",
+      "scope": "actual timer/scheduler/wakeup/lock effects untested"
+    },
+    {
+      "id": "SM51-U03",
+      "kind": "lifetime_boundary",
+      "status": "needs_evidence",
+      "scope": "stack waiter/ordinary list concurrency and object lifespan unaudited"
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "code_fix_authorized": false,
+  "next_batch_authorized": false,
+  "runtime_evidence": "NOT_RUN"
+}

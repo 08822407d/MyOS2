@@ -1,0 +1,1740 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-REALTIME-READOUT-ABI-107",
+  "record_type": "conditional_static_analysis_and_D00_consumer_corrections",
+  "date": "2026-11-19",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "GitHub connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "R105_01": "OPEN",
+  "R105_02": "CLOSED_DOCUMENTATION_ONLY",
+  "R106_01": "OPEN",
+  "R106_02": "OPEN",
+  "source_registry": {
+    "local_source_anchors_count": 90,
+    "source_index": "user-realtime-readout-abi-107/evidence.md",
+    "phase_2_no_runtime": true
+  },
+  "D00_R105_01_remaining": [
+    {
+      "item": "R105-01.a",
+      "old_105_consumers": [
+        "integer_conversion_and_continuity-09",
+        "frequency_source_and_units-14",
+        "SC105-F08"
+      ],
+      "old_evidence": [
+        "SC105-E053",
+        "BD106-E007"
+      ],
+      "new_distinct_objects": [
+        "RT107-E001",
+        "RT107-E002"
+      ],
+      "new_macro_support": [
+        "BD106-E008",
+        "BD106-E009",
+        "RT107-E040"
+      ],
+      "source_path": "mykernel/arch/x86_64/kernel/tsc.c#L36,L38",
+      "conditional_result": "cpu_khz和tsc_khz分别是uint独立全局；unsigned减法后abs宏选signed int，转换及溢出另设门",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "item": "R105-01.b",
+      "old_105_consumers": [
+        "boot_offset_consumer-05",
+        "ABC_join-06",
+        "SC105-M15/M16",
+        "SC105-F07/U06"
+      ],
+      "old_evidence": [
+        "SC105-E103",
+        "SC105-E104",
+        "BD106-E012",
+        "BD106-E014"
+      ],
+      "new_evidence": [
+        "RT107-E003",
+        "RT107-E004",
+        "RT107-E005",
+        "RT107-E006",
+        "RT107-E007"
+      ],
+      "source_path": "mykernel/time/misc/time_misc.c#L50-L69",
+      "conditional_result": "nsec=0时正分支(nsec>0)与负分支(nsec<0)均不执行，ts初始{0,0}经return ts返回；与签名s64及div_u64_rem的u32*独立限制分账",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    }
+  ],
+  "D00_R106_01_exact_old_windows_and_replacements": [
+    {
+      "old_id": "BD106-E011",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/include/linux/sched/clock.h::local_clock",
+      "old_line_window": "L51-L54",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E008"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "BD106-U06",
+        "DOT:localclk -> clockvalue",
+        "D00-105:boot_offset_consumer-02/-03/-05;ABC_join-06;SC105-M15/M16;F07/U06"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E012",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/time/misc/time_misc.c::ns_to_timespec64",
+      "old_line_window": "L50-L53",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E003",
+        "RT107-E004",
+        "RT107-E005",
+        "RT107-E007"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "BD106-U06",
+        "D00-105:boot_offset_consumer-02/-03/-05;ABC_join-06;SC105-M15/M16;F07/U06"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E013",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/include/linux/kernel/math64.h::div_u64_rem",
+      "old_line_window": "L41-L45",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E009"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "BD106-U06",
+        "D00-105:boot_offset_consumer-02/-03/-05;ABC_join-06;SC105-M15/M16;F07/U06"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E016",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/kernel/tsc.c::__cycles_2_ns",
+      "old_line_window": "L123-L127",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E010"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "D00-105:read_path_and_fallback-03;ABC_join-03"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E020",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/mm/misc/percpu.c::simple_pcpu_setup_first_chunk",
+      "old_line_window": "L337-L341",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E011"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "BD106-U05",
+        "D00-105:per_cpu_scale_provenance-12",
+        "D00-105-GRAPH:pcpu_first -> percpu_copy / copy and publish"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E030",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/kernel/tsc.c::get_loops_per_jiffy",
+      "old_line_window": "L416-L420",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E012"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "frequency_and_units-01",
+        "frequency_and_units-02",
+        "frequency_and_units-05",
+        "cross_topic_timeline-06",
+        "BD106-U02",
+        "DOT:freq -> lpj_get",
+        "DOT:lpj_get -> lpj_formula",
+        "DOT:lpj_formula -> lpj_global"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E032",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/kernel/tsc.c::tsc_enable_sched_clock",
+      "old_line_window": "L423-L427",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E013"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "initial_lpj_and_writers-03",
+        "initial_lpj_and_writers-09",
+        "loop_and_dispatch-02",
+        "cross_topic_timeline-06",
+        "BD106-F04",
+        "BD106-U02",
+        "DOT:tsc_enable -> lpj_get",
+        "DOT:tsc_enable -> lpj_global",
+        "DOT:tsc_enable -> delayfn"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E037",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/cpu/vmware.c::vmware_platform_setup",
+      "old_line_window": "L153-L157",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E014"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "initial_lpj_and_writers-07",
+        "frequency_and_units-07",
+        "BD106-U02",
+        "DOT:vmsetup -> lpj_local"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E051",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::__sdelay",
+      "old_line_window": "L202-L204",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E015"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "macro_const_and_wrappers-02"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E052",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::__mdelay",
+      "old_line_window": "L206-L208",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E016"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "macro_const_and_wrappers-04"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E053",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::__udelay",
+      "old_line_window": "L210-L212",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E017"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "macro_const_and_wrappers-06",
+        "M02",
+        "DOT:udvar -> const_ud"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E054",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::__ndelay",
+      "old_line_window": "L214-L216",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E018"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "macro_const_and_wrappers-10"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E055",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::__const_udelay",
+      "old_line_window": "L189-L193",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E019"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "initial_lpj_and_writers-08",
+        "multiplication_and_width-01",
+        "multiplication_and_width-07",
+        "loop_and_dispatch-07",
+        "cross_topic_timeline-05",
+        "cross_topic_timeline-06",
+        "cross_topic_timeline-08",
+        "M04",
+        "BD106-F01",
+        "BD106-F03",
+        "BD106-U03",
+        "DOT:lpj_global -> const_ud",
+        "DOT:lpj_global -> lpj_hz"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E058",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::__delay",
+      "old_line_window": "L185-L187",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E020"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "loop_and_dispatch-03",
+        "loop_and_dispatch-07",
+        "BD106-F03",
+        "DOT:delay -> delayfn"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E059",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::delay_loop",
+      "old_line_window": "L37-L41",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E021",
+        "RT107-E033",
+        "RT107-E034"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "multiplication_and_width-09",
+        "loop_and_dispatch-04",
+        "M09",
+        "BD106-F05",
+        "DOT:delayloop -> loop_asm"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E064",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/kernel/hpet.c::myos_hpet_clkevt_set_state_periodic",
+      "old_line_window": "L203-L207",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E022"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "hpet_comparator_two_writes-05",
+        "DOT:mult -> delta"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E074",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/kernel/hpet.c::myos_HPET_init",
+      "old_line_window": "L539-L543",
+      "correction_kind": "FUNCTION_BODY_REANCHOR",
+      "new_p2_evidence": [
+        "RT107-E023"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "hpet_comparator_two_writes-03"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E007",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/kernel/tsc.c::cpu_khz/tsc_khz",
+      "old_line_window": "L36-L38",
+      "correction_kind": "SPLIT_DEFINITIONS_OR_POSITION_ONLY",
+      "new_p2_evidence": [
+        "RT107-E001",
+        "RT107-E002"
+      ],
+      "position_only": [],
+      "real_old_consumers": [
+        "frequency_and_units-01",
+        "frequency_and_units-08",
+        "BD106-F02",
+        "BD106-U06",
+        "DOT:freq -> uintdiff",
+        "D00-105:integer_conversion_and_continuity-09;frequency_source_and_units-14;SC105-F08"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E027",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/include/linux/kernel/delay.h::loops_per_jiffy",
+      "old_line_window": "L22-L26",
+      "correction_kind": "SPLIT_DEFINITIONS_OR_POSITION_ONLY",
+      "new_p2_evidence": [],
+      "position_only": [
+        "RT107-P09"
+      ],
+      "real_old_consumers": [
+        "initial_lpj_and_writers-02",
+        "BD106-U01"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E028",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/kernel/tsc.c::KHZ",
+      "old_line_window": "L40-L43",
+      "correction_kind": "SPLIT_DEFINITIONS_OR_POSITION_ONLY",
+      "new_p2_evidence": [
+        "RT107-E026"
+      ],
+      "position_only": [
+        "RT107-P11"
+      ],
+      "real_old_consumers": [
+        "frequency_and_units-02",
+        "frequency_and_units-05",
+        "frequency_and_units-06",
+        "multiplication_and_width-08",
+        "DOT:KHZ -> lpj_formula"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E029",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/include/linux/kernel/asm-generic/param.h::HZ",
+      "old_line_window": "L7-L9",
+      "correction_kind": "SPLIT_DEFINITIONS_OR_POSITION_ONLY",
+      "new_p2_evidence": [
+        "RT107-E027"
+      ],
+      "position_only": [
+        "RT107-P12"
+      ],
+      "real_old_consumers": [
+        "frequency_and_units-03",
+        "frequency_and_units-05",
+        "multiplication_and_width-03",
+        "DOT:HZ -> lpj_formula",
+        "DOT:HZ -> lpj_hz",
+        "DOT:HZ -> jiffiesbranch"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E042",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/include/linux/kernel/asm-generic/delay.h::__bad_*",
+      "old_line_window": "L6-L9",
+      "correction_kind": "SPLIT_DEFINITIONS_OR_POSITION_ONLY",
+      "new_p2_evidence": [
+        "RT107-E029",
+        "RT107-E030"
+      ],
+      "position_only": [
+        "RT107-P10"
+      ],
+      "real_old_consumers": [
+        "macro_const_and_wrappers-08",
+        "macro_const_and_wrappers-11",
+        "BD106-U01"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E026",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/init/main.c::loops_per_jiffy",
+      "old_line_window": "L67-L68",
+      "correction_kind": "ACTIVE_VS_COMMENT",
+      "new_p2_evidence": [
+        "RT107-E024"
+      ],
+      "position_only": [
+        "RT107-P13"
+      ],
+      "real_old_consumers": [
+        "initial_lpj_and_writers-01",
+        "initial_lpj_and_writers-04",
+        "multiplication_and_width-07",
+        "cross_topic_timeline-05",
+        "M08",
+        "BD106-F01",
+        "BD106-U02",
+        "DOT:lpj_static -> lpj_global",
+        "old106-main-report:BD106-E026"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E040",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::delay_fn",
+      "old_line_window": "L32-L33",
+      "correction_kind": "ACTIVE_VS_COMMENT",
+      "new_p2_evidence": [
+        "RT107-E025"
+      ],
+      "position_only": [
+        "RT107-P13"
+      ],
+      "real_old_consumers": [
+        "initial_lpj_and_writers-09",
+        "loop_and_dispatch-01",
+        "BD106-F04",
+        "DOT:delayfn -> delayloop"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "old_id": "BD106-E041",
+      "old_fixed_evidence_path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-boot-delay-accounting-106/evidence.md@11971296e4f3",
+      "old_symbol_locator": "mykernel/arch/x86_64/lib/delay.c::use_tsc_delay",
+      "old_line_window": "L162-L165",
+      "correction_kind": "ACTIVE_VS_COMMENT",
+      "new_p2_evidence": [
+        "RT107-E013"
+      ],
+      "position_only": [
+        "RT107-P14"
+      ],
+      "real_old_consumers": [
+        "initial_lpj_and_writers-09",
+        "loop_and_dispatch-02",
+        "BD106-F04"
+      ],
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    }
+  ],
+  "D00_R106_02_corrected_direct_consumers": [
+    {
+      "id": "R106-02-01",
+      "old_consumer": "multiplication_and_width-05",
+      "old_source": "BD106-E056",
+      "replacement_source_ids": [
+        "RT107-E031",
+        "RT107-E032"
+      ],
+      "corrected_claim": "先按C类型求xloops*4、lpj*(HZ/4)，对每个分别截低32成a,b；MUL高字=floor(a*b/2^32)，若回写合法，++后调用值高字+1",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-02",
+      "old_consumer": "M05-M08",
+      "old_source": "BD106-E056",
+      "replacement_source_ids": [
+        "RT107-E032"
+      ],
+      "corrected_claim": "四个模型++的直接依据必须附E032，不仅引用mull操作数",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-03",
+      "old_consumer": "M09 and loop_and_dispatch-04",
+      "old_source": "BD106-E059",
+      "replacement_source_ids": [
+        "RT107-E033",
+        "RT107-E034"
+      ],
+      "corrected_claim": "jz门、内部减一和标签3的末尾减一分别得到直接证据",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-04",
+      "old_consumer": "macro_const_and_wrappers-12",
+      "old_source": "BD106-E043,E047",
+      "replacement_source_ids": [
+        "RT107-E029",
+        "RT107-E030"
+      ],
+      "corrected_claim": "正常C整数域 n/20000>=1 与 n>=20000 等价，包括负数双方均假；unsigned long乘积才有不同的转换/回绕门",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-05",
+      "old_consumer": "udmacro -> bad_ud",
+      "old_source": "BD106-E047",
+      "replacement_source_ids": [
+        "RT107-E029",
+        "RT107-E030"
+      ],
+      "corrected_claim": "对常量1/20000=0，不可把泛型bad分支误写成这一实例可达",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-06",
+      "old_consumer": "start -> late; cross_topic_timeline-01",
+      "old_source": "BD106-E024",
+      "replacement_source_ids": [
+        "SC105-E014",
+        "SC105-E015",
+        "SC105-E016",
+        "RT107-E013"
+      ],
+      "corrected_claim": "start_kernel真正调用late由SC105-E015支持，setup_arch内部early和后面的timekeeping另有来源",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-07",
+      "old_consumer": "cross_topic_timeline-03",
+      "old_source": "SC105-E014",
+      "replacement_source_ids": [
+        "SC105-E014",
+        "SC105-E015"
+      ],
+      "corrected_claim": "单一start_kernel体内先timekeeping_init后late_time_init",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-08",
+      "old_consumer": "determine -> early_true",
+      "old_source": "BD106-E034",
+      "replacement_source_ids": [
+        "SC105-E053",
+        "SC105-E054",
+        "BD106-E034"
+      ],
+      "corrected_claim": "返回值真假的决定在被调determination体内，tsc_early_init检查后调用tsc_enable_sched_clock",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-09",
+      "old_consumer": "vmware callback binding",
+      "old_source": "BD106-E037",
+      "replacement_source_ids": [
+        "SC105-E030",
+        "SC105-E034",
+        "SC105-E035",
+        "BD106-E076",
+        "BD106-E077",
+        "BD106-E078"
+      ],
+      "corrected_claim": "VMware对象初始化与条件替换是两件事；determine内实际调用x86_platform回调是第三步",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-10",
+      "old_consumer": "vmsetup -> lpj_local",
+      "old_source": "BD106-E037",
+      "replacement_source_ids": [
+        "BD106-E038",
+        "RT107-E014"
+      ],
+      "corrected_claim": "局部定义和赋值必须分开；赋值应指旧BD106-E038而非只用签名及声明",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-11",
+      "old_consumer": "localclk -> clockvalue",
+      "old_source": "BD106-E011",
+      "replacement_source_ids": [
+        "SC105-E100",
+        "RT107-E008"
+      ],
+      "corrected_claim": "native_sched_clock的结果进入local_clock返回值，不能仅依据外层函数头画返值方向",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-12",
+      "old_consumer": "hpet_comparator_two_writes-05; mult -> delta",
+      "old_source": "BD106-E064",
+      "replacement_source_ids": [
+        "RT107-E022",
+        "RT107-E037"
+      ],
+      "corrected_claim": "clksrc->mult/shift活动读取在hpet.c208-209，不是旧版本注释所在的E064",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-13",
+      "old_consumer": "hpet_comparator_two_writes-06/-07; udmacro -> write2",
+      "old_source": "BD106-E065,E066,E067,E068,E069",
+      "replacement_source_ids": [
+        "RT107-E035",
+        "RT107-E036",
+        "RT107-E037"
+      ],
+      "corrected_claim": "在同一周期函数中CMP(cmp)后udelay(1)再CMP(delta)；直接调用和后续条件到达边分离",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-14",
+      "old_consumer": "delayloop -> loop_asm",
+      "old_source": "BD106-E059",
+      "replacement_source_ids": [
+        "RT107-E033",
+        "RT107-E034"
+      ],
+      "corrected_claim": "不能只以函数头及test声明最后dec，需再读2b、3f和末尾输入约束",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-15",
+      "old_consumer": "mdelay comment vs macro",
+      "old_source": "BD106-E046",
+      "replacement_source_ids": [
+        "RT107-E028",
+        "RT107-P15"
+      ],
+      "corrected_claim": "活动宏使用0x418938，旧注释0x418937只能单列位置",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-16",
+      "old_consumer": "include chain",
+      "old_source": "BD106-E027,E063",
+      "replacement_source_ids": [
+        "RT107-P09"
+      ],
+      "corrected_claim": "linux/kernel/delay.h→asm/delay.h→asm-generic/delay.h两条include各自定位；include路径由time flags给出",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-17",
+      "old_consumer": "sample count wording",
+      "old_source": "BD106-M01-M09",
+      "replacement_source_ids": [
+        "old106@11971296e4f3:facts-and-boundaries.yaml#bounded_paper_models/M01-M09",
+        "old106@11971296e4f3:MANIFEST.md#self_check.finite_models"
+      ],
+      "corrected_claim": "Original fact models explicitly M01–M09 (nine), while old prose says seven groups; distinguish seven matrices from nine models",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-18",
+      "old_consumer": "HPET delta preconditions",
+      "old_source": "BD106-E065",
+      "replacement_source_ids": [
+        "RT107-E022",
+        "RT107-E037"
+      ],
+      "corrected_claim": "mult/shift来自活动clocksource字段，右移shift+7须<64，u64乘法/截窄与实际clocksource有效性分层",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R106-02-19",
+      "old_consumer": "large lpj counterexample",
+      "old_source": "BD106-E056",
+      "replacement_source_ids": [
+        "RT107-E031",
+        "RT107-E032"
+      ],
+      "corrected_claim": "设unsigned long=64位、HZ=1000、lpj=2^31：lpj*250=125*2^32，低32位b=0，xloops*4的低32位a=17180，mull高字0，++后__delay实参1",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    }
+  ],
+  "seven_bounded_matrices": {
+    "syscall_numbers_and_mapping": [
+      {
+        "id": "t1-01",
+        "source_refs": [
+          "RT107-E041"
+        ],
+        "source_paths": [
+          "RT107-E041:time@a039d9803ade:mykernel/arch/x86_64/include/asm/unistd_64.h#L119-L119"
+        ],
+        "premise": "x86-64固定宏表被采用",
+        "conditional_result": "__NR_gettimeofday=96",
+        "first_unverified_step": "内核生成对象和用户调用约定"
+      },
+      {
+        "id": "t1-02",
+        "source_refs": [
+          "RT107-E042"
+        ],
+        "source_paths": [
+          "RT107-E042:time@a039d9803ade:mykernel/arch/x86_64/include/asm/unistd_64.h#L277-L277"
+        ],
+        "premise": "固定宏表被采用",
+        "conditional_result": "__NR_clock_gettime=228",
+        "first_unverified_step": "实际链接及运行"
+      },
+      {
+        "id": "t1-03",
+        "source_refs": [
+          "RT107-E043",
+          "RT107-P01"
+        ],
+        "source_paths": [
+          "RT107-E043:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L10-L10"
+        ],
+        "premise": "固定映射清单被多次#include",
+        "conditional_result": "__SYSCALL实例生成extern __x64_sys_gettimeofday",
+        "first_unverified_step": "预处理符号名与链接"
+      },
+      {
+        "id": "t1-04",
+        "source_refs": [
+          "RT107-E043",
+          "RT107-P02"
+        ],
+        "source_paths": [
+          "RT107-E043:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L10-L10"
+        ],
+        "premise": "同上",
+        "conditional_result": "__SYSCALL实例生成extern __x64_sys_clock_gettime",
+        "first_unverified_step": "预处理实际展开"
+      },
+      {
+        "id": "t1-05",
+        "source_refs": [
+          "RT107-E044",
+          "RT107-P01"
+        ],
+        "source_paths": [
+          "RT107-E044:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L19-L19"
+        ],
+        "premise": "同上",
+        "conditional_result": "同一清单产生sys_call_table[96]项",
+        "first_unverified_step": "表项实际符号地址"
+      },
+      {
+        "id": "t1-06",
+        "source_refs": [
+          "RT107-E044",
+          "RT107-P02"
+        ],
+        "source_paths": [
+          "RT107-E044:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L19-L19"
+        ],
+        "premise": "同上",
+        "conditional_result": "同一清单产生sys_call_table[228]项",
+        "first_unverified_step": "链接和实际取表"
+      },
+      {
+        "id": "t1-07",
+        "source_refs": [
+          "RT107-E045",
+          "RT107-E046",
+          "RT107-P01"
+        ],
+        "source_paths": [
+          "RT107-E045:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L26-L26",
+          "RT107-E046:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L29-L31"
+        ],
+        "premise": "x64_sys_call被运行且宏映射展开",
+        "conditional_result": "switch(96)可转发对应__x64_sys_gettimeofday(regs)",
+        "first_unverified_step": "实际汇编进入此函数"
+      },
+      {
+        "id": "t1-08",
+        "source_refs": [
+          "RT107-E045",
+          "RT107-E046",
+          "RT107-P02"
+        ],
+        "source_paths": [
+          "RT107-E045:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L26-L26",
+          "RT107-E046:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L29-L31"
+        ],
+        "premise": "同上",
+        "conditional_result": "switch(228)可转发对应__x64_sys_clock_gettime(regs)，未知编号落默认",
+        "first_unverified_step": "入口ABI/链接"
+      }
+    ],
+    "wrapper_and_arguments": [
+      {
+        "id": "t2-01",
+        "source_refs": [
+          "RT107-E047",
+          "RT107-P03"
+        ],
+        "source_paths": [
+          "RT107-E047:time@a039d9803ade:mykernel/include/linux/kernel/syscalls.h#L1385-L1385"
+        ],
+        "premise": "宏实例正常展开",
+        "conditional_result": "MYOS_SYSCALL_DEFINE2(gettimeofday)生成两形参包装",
+        "first_unverified_step": "预处理产物"
+      },
+      {
+        "id": "t2-02",
+        "source_refs": [
+          "RT107-E047",
+          "RT107-P04"
+        ],
+        "source_paths": [
+          "RT107-E047:time@a039d9803ade:mykernel/include/linux/kernel/syscalls.h#L1385-L1385"
+        ],
+        "premise": "宏实例正常展开",
+        "conditional_result": "MYOS_SYSCALL_DEFINE2(clock_gettime)生成两形参包装",
+        "first_unverified_step": "预处理产物"
+      },
+      {
+        "id": "t2-03",
+        "source_refs": [
+          "RT107-E048",
+          "RT107-E049",
+          "RT107-E050"
+        ],
+        "source_paths": [
+          "RT107-E048:time@a039d9803ade:mykernel/include/linux/kernel/syscalls.h#L115-L115",
+          "RT107-E049:time@a039d9803ade:mykernel/include/linux/kernel/syscalls.h#L122-L122",
+          "RT107-E050:time@a039d9803ade:mykernel/include/linux/kernel/syscalls.h#L128-L128"
+        ],
+        "premise": "给出两个type/name",
+        "conditional_result": "__MAP2展开两个声明，__SC_CAST在参数转发时强制类型",
+        "first_unverified_step": "实际编译类型警告/链接"
+      },
+      {
+        "id": "t2-04",
+        "source_refs": [
+          "RT107-E051",
+          "RT107-E052"
+        ],
+        "source_paths": [
+          "RT107-E051:time@a039d9803ade:mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L17-L18",
+          "RT107-E052:time@a039d9803ade:mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L30-L30"
+        ],
+        "premise": "x86-64宏路径被选",
+        "conditional_result": "两参数读regs->di和regs->si并转目标C类型",
+        "first_unverified_step": "用户现场寄存器数据"
+      },
+      {
+        "id": "t2-05",
+        "source_refs": [
+          "RT107-E053",
+          "RT107-E054",
+          "RT107-E055",
+          "RT107-E056"
+        ],
+        "source_paths": [
+          "RT107-E053:time@a039d9803ade:mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L104-L108",
+          "RT107-E054:time@a039d9803ade:mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L241-L245",
+          "RT107-E055:time@a039d9803ade:mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L246-L249",
+          "RT107-E056:time@a039d9803ade:mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L250-L251"
+        ],
+        "premise": "生成的符号合法",
+        "conditional_result": "__x64_sys_*→__se_sys_*→__do_sys_*为两级包装，long返回传递",
+        "first_unverified_step": "真实链接入口"
+      },
+      {
+        "id": "t2-06",
+        "source_refs": [
+          "RT107-E057",
+          "RT107-P03"
+        ],
+        "source_paths": [
+          "RT107-E057:time@a039d9803ade:mykernel/time/syscall.c#L16-L19"
+        ],
+        "premise": "tv可用且非NULL，tz可选",
+        "conditional_result": "第一参数tv为输出timeval指针，第二tz位置在本体中注释处理",
+        "first_unverified_step": "用户指针访问合法性"
+      },
+      {
+        "id": "t2-07",
+        "source_refs": [
+          "RT107-E060",
+          "RT107-P04"
+        ],
+        "source_paths": [
+          "RT107-E060:time@a039d9803ade:mykernel/time/syscall.c#L37-L41"
+        ],
+        "premise": "CLOCK_REALTIME且tp可写",
+        "conditional_result": "which_clock为时钟选择值，tp为用户timespec输出指针",
+        "first_unverified_step": "真实入参/字段对齐"
+      },
+      {
+        "id": "t2-08",
+        "source_refs": [
+          "RT107-E046",
+          "RT107-E053"
+        ],
+        "source_paths": [
+          "RT107-E046:time@a039d9803ade:mykernel/arch/x86_64/entry/syscall_64.c#L29-L31",
+          "RT107-E053:time@a039d9803ade:mykernel/arch/x86_64/include/asm/syscall_wrapper.h#L104-L108"
+        ],
+        "premise": "只消费source-level switch",
+        "conditional_result": "表项和switch两处来自同一映射，但不承诺运行时表驱动",
+        "first_unverified_step": "完整链接/CPU执行"
+      }
+    ],
+    "realtime_clock_dispatch": [
+      {
+        "id": "t3-01",
+        "source_refs": [
+          "RT107-E064"
+        ],
+        "source_paths": [
+          "RT107-E064:time@a039d9803ade:mykernel/include/uapi/linux/time.h#L49-L49"
+        ],
+        "premise": "固定UAPI宏生效",
+        "conditional_result": "CLOCK_REALTIME取值0",
+        "first_unverified_step": "实际头文件预处理"
+      },
+      {
+        "id": "t3-02",
+        "source_refs": [
+          "RT107-E067"
+        ],
+        "source_paths": [
+          "RT107-E067:time@a039d9803ade:mykernel/time/timer/posix-timers.c#L175-L175"
+        ],
+        "premise": "CLOCK_REALTIME=0，索引合法",
+        "conditional_result": "posix_clocks[0]初始化为&clock_realtime",
+        "first_unverified_step": "最终链接的静态对象"
+      },
+      {
+        "id": "t3-03",
+        "source_refs": [
+          "RT107-E066"
+        ],
+        "source_paths": [
+          "RT107-E066:time@a039d9803ade:mykernel/time/timer/posix-timers.c#L92-L92"
+        ],
+        "premise": "活动字段初始化被选",
+        "conditional_result": "clock_realtime.clock_get_timespec=posix_get_realtime_timespec",
+        "first_unverified_step": "指针非空及真实状态"
+      },
+      {
+        "id": "t3-04",
+        "source_refs": [
+          "RT107-E070"
+        ],
+        "source_paths": [
+          "RT107-E070:time@a039d9803ade:mykernel/time/timer/timer_types.h#L90-L92"
+        ],
+        "premise": "k_clock_s真实结构体布局",
+        "conditional_result": "clock_get_timespec字段为接clockid和timespec64*的int回调",
+        "first_unverified_step": "编译/ABI对齐"
+      },
+      {
+        "id": "t3-05",
+        "source_refs": [
+          "RT107-E068",
+          "RT107-E069"
+        ],
+        "source_paths": [
+          "RT107-E068:time@a039d9803ade:mykernel/time/timer/posix-timers.c#L190-L194",
+          "RT107-E069:time@a039d9803ade:mykernel/time/timer/posix-timers.c#L199-L203"
+        ],
+        "premise": "id为0，不进入负分支",
+        "conditional_result": "clockid_to_kclock(0)通过上界后返回posix_clocks[0]",
+        "first_unverified_step": "ARRAY_SIZE真实值和对象可访问"
+      },
+      {
+        "id": "t3-06",
+        "source_refs": [
+          "RT107-E060",
+          "RT107-E061"
+        ],
+        "source_paths": [
+          "RT107-E060:time@a039d9803ade:mykernel/time/syscall.c#L37-L41",
+          "RT107-E061:time@a039d9803ade:mykernel/time/syscall.c#L41-L44"
+        ],
+        "premise": "kc非空且字段可调",
+        "conditional_result": "clock_gettime通过kc->clock_get_timespec间接调用",
+        "first_unverified_step": "运行时指针一致性"
+      },
+      {
+        "id": "t3-07",
+        "source_refs": [
+          "RT107-E065"
+        ],
+        "source_paths": [
+          "RT107-E065:time@a039d9803ade:mykernel/time/timer/posix-timers.c#L30-L31"
+        ],
+        "premise": "posix_get_realtime_timespec被调用、tp合法",
+        "conditional_result": "直接调用ktime_get_real_ts64(tp)并返回0",
+        "first_unverified_step": "被调用取样有效"
+      },
+      {
+        "id": "t3-08",
+        "source_refs": [
+          "RT107-E057"
+        ],
+        "source_paths": [
+          "RT107-E057:time@a039d9803ade:mykernel/time/syscall.c#L16-L19"
+        ],
+        "premise": "tv非空",
+        "conditional_result": "gettimeofday省去clockid表，直接调用同一ktime_get_real_ts64",
+        "first_unverified_step": "当前请求真实执行"
+      }
+    ],
+    "internal_wallclock_sampling": [
+      {
+        "id": "t4-01",
+        "source_refs": [
+          "RT107-E071"
+        ],
+        "source_paths": [
+          "RT107-E071:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L75-L77"
+        ],
+        "premise": "固定timekeeper对象可达",
+        "conditional_result": "读者选用tk_core.timekeeper并声明u64 nsecs",
+        "first_unverified_step": "实际timekeeper初始化"
+      },
+      {
+        "id": "t4-02",
+        "source_refs": [
+          "RT107-E072"
+        ],
+        "source_paths": [
+          "RT107-E072:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L84-L85"
+        ],
+        "premise": "timekeeper字段有效",
+        "conditional_result": "ts->tv_sec接xtime_sec；nsecs接timekeeping_get_ns(&tkr_mono)",
+        "first_unverified_step": "时钟源选择/并发一致"
+      },
+      {
+        "id": "t4-03",
+        "source_refs": [
+          "RT107-E074"
+        ],
+        "source_paths": [
+          "RT107-E074:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L227-L229"
+        ],
+        "premise": "tkr有效且read回调可用",
+        "conditional_result": "timekeeping_get_ns通过tk_clock_read再进行cycles_to_ns",
+        "first_unverified_step": "实际clocksource绑定"
+      },
+      {
+        "id": "t4-04",
+        "source_refs": [
+          "RT107-E077"
+        ],
+        "source_paths": [
+          "RT107-E077:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.h#L81-L83"
+        ],
+        "premise": "tkr->clock指向可访问对象",
+        "conditional_result": "READ_ONCE取clock后调用clock->read(clock)",
+        "first_unverified_step": "真实读数/CPU设备"
+      },
+      {
+        "id": "t4-05",
+        "source_refs": [
+          "RT107-E075",
+          "RT107-E076"
+        ],
+        "source_paths": [
+          "RT107-E075:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L199-L200",
+          "RT107-E076:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L214-L218"
+        ],
+        "premise": "周期差及乘法/移位合法",
+        "conditional_result": "timekeeping_cycles_to_ns根据mask/delta和mult/xtime_nsec得到有界nsecs",
+        "first_unverified_step": "shift和溢出/当前clocksource"
+      },
+      {
+        "id": "t4-06",
+        "source_refs": [
+          "RT107-E073"
+        ],
+        "source_paths": [
+          "RT107-E073:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L87-L90"
+        ],
+        "premise": "返回的nsecs有效，调用到末尾",
+        "conditional_result": "tv_nsec先置0再用timespec64_add_ns归一化",
+        "first_unverified_step": "回调真正到达及数据竞态"
+      },
+      {
+        "id": "t4-07",
+        "source_refs": [
+          "RT107-E078",
+          "RT107-E079",
+          "RT107-E080"
+        ],
+        "source_paths": [
+          "RT107-E078:time@a039d9803ade:mykernel/time/misc/time_misc.h#L154-L156",
+          "RT107-E079:time@a039d9803ade:mykernel/include/linux/kernel/math64.h#L13-L14",
+          "RT107-E080:time@a039d9803ade:mykernel/include/linux/kernel/math64.h#L19-L23"
+        ],
+        "premise": "NSEC_PER_SEC非零，循环和u64加法合法",
+        "conditional_result": "每满十亿纳秒对tv_sec进1，tv_nsec存余数",
+        "first_unverified_step": "真实变量值及算术溢出"
+      },
+      {
+        "id": "t4-08",
+        "source_refs": [
+          "RT107-E073"
+        ],
+        "source_paths": [
+          "RT107-E073:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L87-L90"
+        ],
+        "premise": "seqcount do/while为注释",
+        "conditional_result": "不能凭这里声称读取是一致原子快照",
+        "first_unverified_step": "并发测量及构建"
+      },
+      {
+        "id": "t4-09",
+        "source_refs": [
+          "RT107-E072",
+          "RT107-E073"
+        ],
+        "source_paths": [
+          "RT107-E072:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L84-L85",
+          "RT107-E073:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L87-L90"
+        ],
+        "premise": "两接口使用同一预设tk字段样本",
+        "conditional_result": "归一化后可得到相同秒与纳秒",
+        "first_unverified_step": "两次系统调用实际采样时刻不同"
+      }
+    ],
+    "internal_and_user_abi_fields": [
+      {
+        "id": "t5-01",
+        "source_refs": [
+          "RT107-E081"
+        ],
+        "source_paths": [
+          "RT107-E081:time@a039d9803ade:mykernel/time/misc/time_misc_types.h#L8-L9"
+        ],
+        "premise": "time64_t用s64，long按本次编译语义",
+        "conditional_result": "内核timespec64_s含tv_sec和tv_nsec",
+        "first_unverified_step": "真实结构布局"
+      },
+      {
+        "id": "t5-02",
+        "source_refs": [
+          "RT107-E082"
+        ],
+        "source_paths": [
+          "RT107-E082:time@a039d9803ade:mykernel/include/uapi/linux/time_types.h#L26-L27"
+        ],
+        "premise": "__kernel_long_t为long",
+        "conditional_result": "老用户timeval的tv_sec/tv_usec均为该类型",
+        "first_unverified_step": "ABI位宽与对齐"
+      },
+      {
+        "id": "t5-03",
+        "source_refs": [
+          "RT107-E083",
+          "RT107-E085"
+        ],
+        "source_paths": [
+          "RT107-E083:time@a039d9803ade:mykernel/include/uapi/linux/time_types.h#L8-L9",
+          "RT107-E085:time@a039d9803ade:mykernel/include/uapi/asm-generic/posix_types.h#L94-L94"
+        ],
+        "premise": "__kernel_time64_t为long long",
+        "conditional_result": "用户__kernel_timespec.tv_sec使用time64_t64位域",
+        "first_unverified_step": "实际编译对象尺寸"
+      },
+      {
+        "id": "t5-04",
+        "source_refs": [
+          "RT107-E083"
+        ],
+        "source_paths": [
+          "RT107-E083:time@a039d9803ade:mykernel/include/uapi/linux/time_types.h#L8-L9"
+        ],
+        "premise": "long long64位",
+        "conditional_result": "用户__kernel_timespec.tv_nsec为long long纳秒字段",
+        "first_unverified_step": "编译对齐"
+      },
+      {
+        "id": "t5-05",
+        "source_refs": [
+          "RT107-E084"
+        ],
+        "source_paths": [
+          "RT107-E084:time@a039d9803ade:mykernel/include/uapi/asm-generic/posix_types.h#L16-L16"
+        ],
+        "premise": "__kernel_long_t定义被选择",
+        "conditional_result": "x86-64通常64位long，但这里仅条件声称",
+        "first_unverified_step": "实际ABI/预处理"
+      },
+      {
+        "id": "t5-06",
+        "source_refs": [
+          "RT107-E081",
+          "RT107-E082",
+          "RT107-E083"
+        ],
+        "source_paths": [
+          "RT107-E081:time@a039d9803ade:mykernel/time/misc/time_misc_types.h#L8-L9",
+          "RT107-E082:time@a039d9803ade:mykernel/include/uapi/linux/time_types.h#L26-L27",
+          "RT107-E083:time@a039d9803ade:mykernel/include/uapi/linux/time_types.h#L8-L9"
+        ],
+        "premise": "64位long/long long均8B、对齐8B且无额外填充",
+        "conditional_result": "两个UAPI结构在所设ABI各16B",
+        "first_unverified_step": "实际sizeof未经编译"
+      },
+      {
+        "id": "t5-07",
+        "source_refs": [
+          "RT107-E057",
+          "RT107-E058"
+        ],
+        "source_paths": [
+          "RT107-E057:time@a039d9803ade:mykernel/time/syscall.c#L16-L19",
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22"
+        ],
+        "premise": "tv指向可写old_timeval",
+        "conditional_result": "gettimeofday输出秒和微秒",
+        "first_unverified_step": "用户地址有效性"
+      },
+      {
+        "id": "t5-08",
+        "source_refs": [
+          "RT107-E086",
+          "RT107-E087"
+        ],
+        "source_paths": [
+          "RT107-E086:time@a039d9803ade:mykernel/time/misc/time_misc.c#L307-L310",
+          "RT107-E087:time@a039d9803ade:mykernel/time/misc/time_misc.c#L312-L312"
+        ],
+        "premise": "tp可写且sizeof(kts)合法",
+        "conditional_result": "clock_gettime输出相同语义秒和纳秒",
+        "first_unverified_step": "copy_to_user返回与真实内存"
+      },
+      {
+        "id": "t5-09",
+        "source_refs": [
+          "RT107-E065",
+          "RT107-E072",
+          "RT107-E083"
+        ],
+        "source_paths": [
+          "RT107-E065:time@a039d9803ade:mykernel/time/timer/posix-timers.c#L30-L31",
+          "RT107-E072:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L84-L85",
+          "RT107-E083:time@a039d9803ade:mykernel/include/uapi/linux/time_types.h#L8-L9"
+        ],
+        "premise": "内核源字段可表示到用户字段",
+        "conditional_result": "内核timespec到UAPI timespec按相应类型转换",
+        "first_unverified_step": "时间域/溢出"
+      }
+    ],
+    "output_steps_and_units": [
+      {
+        "id": "t6-01",
+        "source_refs": [
+          "RT107-E057"
+        ],
+        "source_paths": [
+          "RT107-E057:time@a039d9803ade:mykernel/time/syscall.c#L16-L19"
+        ],
+        "premise": "tv非NULL且有效",
+        "conditional_result": "gettimeofday才读取并填写时间",
+        "first_unverified_step": "tv==NULL下不走读时体"
+      },
+      {
+        "id": "t6-02",
+        "source_refs": [
+          "RT107-E058",
+          "RT107-E088"
+        ],
+        "source_paths": [
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22",
+          "RT107-E088:time@a039d9803ade:mykernel/arch/x86_64/include/asm/uaccess.h#L191-L194"
+        ],
+        "premise": "标量目标指针可写",
+        "conditional_result": "先put_user(ts.tv_sec)，后put_user(ts.tv_nsec/1000)",
+        "first_unverified_step": "任一步存储有效"
+      },
+      {
+        "id": "t6-03",
+        "source_refs": [
+          "RT107-E058"
+        ],
+        "source_paths": [
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22"
+        ],
+        "premise": "0<=tv_nsec<10^9",
+        "conditional_result": "微秒为整数floor(nsec/1000)，丢弃余数0..999ns",
+        "first_unverified_step": "输入已归一化"
+      },
+      {
+        "id": "t6-04",
+        "source_refs": [
+          "RT107-E058",
+          "RT107-E088"
+        ],
+        "source_paths": [
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22",
+          "RT107-E088:time@a039d9803ade:mykernel/arch/x86_64/include/asm/uaccess.h#L191-L194"
+        ],
+        "premise": "两个put_user都返回0",
+        "conditional_result": "正常分支不触发-EFAULT",
+        "first_unverified_step": "源级宏正常执行"
+      },
+      {
+        "id": "t6-05",
+        "source_refs": [
+          "RT107-E059"
+        ],
+        "source_paths": [
+          "RT107-E059:time@a039d9803ade:mykernel/time/syscall.c#L24-L28"
+        ],
+        "premise": "tz非NULL或NULL均可",
+        "conditional_result": "tz写入体当前为注释，正常函数返回0",
+        "first_unverified_step": "可能的其它未读写者"
+      },
+      {
+        "id": "t6-06",
+        "source_refs": [
+          "RT107-E060",
+          "RT107-E061"
+        ],
+        "source_paths": [
+          "RT107-E060:time@a039d9803ade:mykernel/time/syscall.c#L37-L41",
+          "RT107-E061:time@a039d9803ade:mykernel/time/syscall.c#L41-L44"
+        ],
+        "premise": "CLOCK_REALTIME选到kc且函数可调用",
+        "conditional_result": "先调用回调取内核timespec64，成功回零",
+        "first_unverified_step": "实际回调函数地址"
+      },
+      {
+        "id": "t6-07",
+        "source_refs": [
+          "RT107-E062",
+          "RT107-E063"
+        ],
+        "source_paths": [
+          "RT107-E062:time@a039d9803ade:mykernel/time/syscall.c#L44-L47",
+          "RT107-E063:time@a039d9803ade:mykernel/time/syscall.c#L49-L49"
+        ],
+        "premise": "error初始被回调设置为0",
+        "conditional_result": "成功时调用put_timespec64，最后返回error",
+        "first_unverified_step": "实际copy是否失败"
+      },
+      {
+        "id": "t6-08",
+        "source_refs": [
+          "RT107-E086"
+        ],
+        "source_paths": [
+          "RT107-E086:time@a039d9803ade:mykernel/time/misc/time_misc.c#L307-L310"
+        ],
+        "premise": "内核ts字段可表示UAPI类型",
+        "conditional_result": "put_timespec64构造kts，逐字段赋值秒和纳秒",
+        "first_unverified_step": "编译转换/目标对象"
+      },
+      {
+        "id": "t6-09",
+        "source_refs": [
+          "RT107-E087",
+          "RT107-E090"
+        ],
+        "source_paths": [
+          "RT107-E087:time@a039d9803ade:mykernel/time/misc/time_misc.c#L312-L312",
+          "RT107-E090:time@a039d9803ade:mykernel/include/linux/kernel/uaccess.h#L201-L201"
+        ],
+        "premise": "tp可写、对象size正确",
+        "conditional_result": "请求copy_to_user(tp,&kts,sizeof(kts))，失败返回-EFAULT",
+        "first_unverified_step": "复制实际边界"
+      },
+      {
+        "id": "t6-10",
+        "source_refs": [
+          "RT107-E089",
+          "RT107-E090"
+        ],
+        "source_paths": [
+          "RT107-E089:time@a039d9803ade:mykernel/include/linux/kernel/uaccess.h#L176-L180",
+          "RT107-E090:time@a039d9803ade:mykernel/include/linux/kernel/uaccess.h#L201-L201"
+        ],
+        "premise": "access_ok真且raw复制满足完整n合同",
+        "conditional_result": "正常copy_to_user返回0残量",
+        "first_unverified_step": "实际地址映射/执行"
+      },
+      {
+        "id": "t6-11",
+        "source_refs": [
+          "RT107-E088"
+        ],
+        "source_paths": [
+          "RT107-E088:time@a039d9803ade:mykernel/arch/x86_64/include/asm/uaccess.h#L191-L194"
+        ],
+        "premise": "ENOERR定义为0（固定errno-base）",
+        "conditional_result": "put_user宏正常存储后返回-ENOERR即0",
+        "first_unverified_step": "字节级写入成功前提"
+      },
+      {
+        "id": "t6-12",
+        "source_refs": [
+          "RT107-E057",
+          "RT107-E062"
+        ],
+        "source_paths": [
+          "RT107-E057:time@a039d9803ade:mykernel/time/syscall.c#L16-L19",
+          "RT107-E062:time@a039d9803ade:mykernel/time/syscall.c#L44-L47"
+        ],
+        "premise": "两条独立读取请求",
+        "conditional_result": "实时钟样本相同才可比较两格式字段，不能推跨调用同值",
+        "first_unverified_step": "真实内核调度时间"
+      }
+    ],
+    "cross_path_and_paper_examples": [
+      {
+        "id": "t7-01",
+        "source_refs": [
+          "RT107-E057",
+          "RT107-E065",
+          "RT107-E072"
+        ],
+        "source_paths": [
+          "RT107-E057:time@a039d9803ade:mykernel/time/syscall.c#L16-L19",
+          "RT107-E065:time@a039d9803ade:mykernel/time/timer/posix-timers.c#L30-L31",
+          "RT107-E072:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L84-L85"
+        ],
+        "premise": "给相同有效时间样本",
+        "conditional_result": "两个系统调用最终都经过ktime_get_real_ts64，前者直接后者回调",
+        "first_unverified_step": "回调/入参实际绑定"
+      },
+      {
+        "id": "t7-02",
+        "source_refs": [
+          "RT107-E058",
+          "RT107-E086"
+        ],
+        "source_paths": [
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22",
+          "RT107-E086:time@a039d9803ade:mykernel/time/misc/time_misc.c#L307-L310"
+        ],
+        "premise": "给秒=12,纳秒=999",
+        "conditional_result": "timeval=(12,0us)，timespec=(12,999ns)",
+        "first_unverified_step": "实际ABI字段写入"
+      },
+      {
+        "id": "t7-03",
+        "source_refs": [
+          "RT107-E058",
+          "RT107-E086"
+        ],
+        "source_paths": [
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22",
+          "RT107-E086:time@a039d9803ade:mykernel/time/misc/time_misc.c#L307-L310"
+        ],
+        "premise": "给秒=12,纳秒=1000",
+        "conditional_result": "timeval=(12,1us)，timespec=(12,1000ns)",
+        "first_unverified_step": "两独立调用是否同样本"
+      },
+      {
+        "id": "t7-04",
+        "source_refs": [
+          "RT107-E058",
+          "RT107-E086"
+        ],
+        "source_paths": [
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22",
+          "RT107-E086:time@a039d9803ade:mykernel/time/misc/time_misc.c#L307-L310"
+        ],
+        "premise": "给秒=12,纳秒=999999999",
+        "conditional_result": "timeval=(12,999999us)，timespec=(12,999999999ns)",
+        "first_unverified_step": "现实精度和获取时刻"
+      },
+      {
+        "id": "t7-05",
+        "source_refs": [
+          "RT107-E078",
+          "RT107-E080"
+        ],
+        "source_paths": [
+          "RT107-E078:time@a039d9803ade:mykernel/time/misc/time_misc.h#L154-L156",
+          "RT107-E080:time@a039d9803ade:mykernel/include/linux/kernel/math64.h#L19-L23"
+        ],
+        "premise": "原始nsecs使其满十亿并且u64加法合法",
+        "conditional_result": "归一化秒加一且纳秒归零（同一例12s+10^9ns→13s,0ns）",
+        "first_unverified_step": "真实读数及类型/进位"
+      },
+      {
+        "id": "t7-06",
+        "source_refs": [
+          "RT107-E058"
+        ],
+        "source_paths": [
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22"
+        ],
+        "premise": "0<=nanoseconds<10^9",
+        "conditional_result": "截断后微秒误差范围为0..999ns",
+        "first_unverified_step": "真实读数噪声/精度"
+      },
+      {
+        "id": "t7-07",
+        "source_refs": [
+          "RT107-E086",
+          "RT107-E087"
+        ],
+        "source_paths": [
+          "RT107-E086:time@a039d9803ade:mykernel/time/misc/time_misc.c#L307-L310",
+          "RT107-E087:time@a039d9803ade:mykernel/time/misc/time_misc.c#L312-L312"
+        ],
+        "premise": "kts结构可用且复制成功",
+        "conditional_result": "timespec传完整整数纳秒字段，不承诺1ns测量准确率",
+        "first_unverified_step": "实际硬件时钟精度"
+      },
+      {
+        "id": "t7-08",
+        "source_refs": [
+          "RT107-E058",
+          "RT107-E062"
+        ],
+        "source_paths": [
+          "RT107-E058:time@a039d9803ade:mykernel/time/syscall.c#L20-L22",
+          "RT107-E062:time@a039d9803ade:mykernel/time/syscall.c#L44-L47"
+        ],
+        "premise": "两个不同系统调用可有不同采样瞬间",
+        "conditional_result": "共享公式不代表它们每次返回完全一致",
+        "first_unverified_step": "并发/中断/调度"
+      },
+      {
+        "id": "t7-09",
+        "source_refs": [
+          "RT107-E072",
+          "RT107-E073"
+        ],
+        "source_paths": [
+          "RT107-E072:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L84-L85",
+          "RT107-E073:time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L87-L90"
+        ],
+        "premise": "壁钟校时与HPET忙等不同",
+        "conditional_result": "墙钟输出对象不由106的loops_per_jiffy循环数直接推出",
+        "first_unverified_step": "具体clocksource和运行时状态"
+      }
+    ]
+  },
+  "matrix_row_counts": {
+    "syscall_numbers_and_mapping": 8,
+    "wrapper_and_arguments": 8,
+    "realtime_clock_dispatch": 8,
+    "internal_wallclock_sampling": 9,
+    "internal_and_user_abi_fields": 9,
+    "output_steps_and_units": 12,
+    "cross_path_and_paper_examples": 9
+  },
+  "total_bounded_rows": 63,
+  "paper_models": [
+    {
+      "id": "RT107-M01",
+      "label": "sample_nsec_999",
+      "assumptions": "sec=12,nsec=999 normalized",
+      "paper_result": "gettimeofday=(12,0us); clock_gettime=(12,999ns)",
+      "source_refs": [
+        "RT107-E058",
+        "RT107-E086"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "RT107-M02",
+      "label": "sample_nsec_1000",
+      "assumptions": "sec=12,nsec=1000 normalized",
+      "paper_result": "(12,1us) versus (12,1000ns)",
+      "source_refs": [
+        "RT107-E058",
+        "RT107-E086"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "RT107-M03",
+      "label": "sample_nsec_max",
+      "assumptions": "sec=12,nsec=999999999 normalized",
+      "paper_result": "(12,999999us) versus (12,999999999ns); 999ns dropped",
+      "source_refs": [
+        "RT107-E058",
+        "RT107-E086"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "RT107-M04",
+      "label": "carry_boundary",
+      "assumptions": "sec=12, initial_nsec=0, nsecs=1000000000; unsigned addition safe",
+      "paper_result": "timespec64_add_ns yields sec=13, nsec=0 if loop terminates normally",
+      "source_refs": [
+        "RT107-E078",
+        "RT107-E080"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "RT107-M05",
+      "label": "clockid_real_zero",
+      "assumptions": "clockid=0 and table valid",
+      "paper_result": "posix_clocks[0]=&clock_realtime; callback points to posix_get_realtime_timespec",
+      "source_refs": [
+        "RT107-E064",
+        "RT107-E066",
+        "RT107-E067"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "RT107-M06",
+      "label": "microsecond_truncation",
+      "assumptions": "nsec=123456789 valid",
+      "paper_result": "tv_usec=123456 and remainder789ns omitted",
+      "source_refs": [
+        "RT107-E058"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "RT107-M07",
+      "label": "old_timeval_vs_timespec_size",
+      "assumptions": "x86-64 ABI with 64-bit long,long long and 8-byte alignment",
+      "paper_result": "old_timeval 16B; __kernel_timespec 16B, conditional not compiled sizeof",
+      "source_refs": [
+        "RT107-E082",
+        "RT107-E083",
+        "RT107-E084",
+        "RT107-E085"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "RT107-M08",
+      "label": "udelay_highword_counterexample",
+      "assumptions": "LPJ=2^31, unsigned long64, HZ=1000, low32MUL semantics",
+      "paper_result": "lpj*250=125*2^32; b=0; high32=0; ++ gives1; unlike untruncated infinite-product formula",
+      "source_refs": [
+        "RT107-E027",
+        "RT107-E031",
+        "RT107-E032"
+      ],
+      "repository_code_executed": false
+    },
+    {
+      "id": "RT107-M09",
+      "label": "zero_nanoseconds_constructor",
+      "assumptions": "ns_to_timespec64 input nsec=0, ordinary C and valid object",
+      "paper_result": "ts initialized {0,0}; positive and negative branches false; return ts",
+      "source_refs": [
+        "RT107-E003",
+        "RT107-E004",
+        "RT107-E005",
+        "RT107-E007"
+      ],
+      "repository_code_executed": false
+    }
+  ],
+  "model_count": 9,
+  "old_batch106_immutable": true,
+  "actual_compilation": "NOT_RUN",
+  "actual_build": "NOT_RUN",
+  "actual_kernel_or_hw": "NOT_RUN"
+}

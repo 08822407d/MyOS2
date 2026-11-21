@@ -1,0 +1,79 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-COMPLETION-WAIT-49",
+  "record_type": "deferred_findings_incremental",
+  "source_pin_short12": "a039d9803ade",
+  "new_findings": [],
+  "new_findings_count": 0,
+  "old_findings_closed_by_49": [],
+  "carry_forward": [
+    {
+      "qualified_id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F01",
+      "status": "needs_evidence",
+      "kind": "prior_conditional_wait_gap",
+      "update": "本批限定说明零done进入慢路、complete是生产者事件；当worker早退且无其他事件时仍缺少本worker的done生产；不证明实际死锁或永久阻塞"
+    },
+    {
+      "qualified_id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F02",
+      "status": "needs_evidence",
+      "kind": "prior_while_err_barrier",
+      "update": "与本批局部completion无直接因果闭合；不更改"
+    },
+    {
+      "qualified_id": "CORE-USER-DEVTMPFS-SETUP-48::DS48-F03",
+      "status": "needs_evidence",
+      "kind": "prior_error_propagation_gap",
+      "update": "wait_for_completion的void返回不产生worker int的错误回传；不更改"
+    },
+    {
+      "qualified_id": "CORE-USER-INIT-PATH-SWITCH-47::IP47-F01",
+      "status": "needs_evidence",
+      "kind": "prior_directory_result_gap",
+      "update": "仅引用，旧qualified_id/status冻结"
+    },
+    {
+      "qualified_id": "CORE-USER-VFS-BASELINE-05::UV-01",
+      "status": "deferred_owner_not_ready",
+      "kind": "prior_vfs_concern",
+      "update": "仅引用，旧qualified_id/status冻结"
+    }
+  ],
+  "new_non_defect_gaps": [
+    {
+      "id": "CW49-U01",
+      "status": "needs_evidence",
+      "kind": "scope_gap",
+      "detail": "schedule_timeout真实参数/返回及行动恢复未审；action返回模型只当条件值",
+      "blocking_to_source_delivery": false,
+      "blocking_to_runtime_certification": true
+    },
+    {
+      "id": "CW49-U02",
+      "status": "needs_evidence",
+      "kind": "runtime_gap",
+      "detail": "try_to_wake_up的成功/调度/锁内存序与真实FIFO公平未知",
+      "blocking_to_source_delivery": false,
+      "blocking_to_runtime_certification": true
+    },
+    {
+      "id": "CW49-U03",
+      "status": "needs_evidence",
+      "kind": "global_lifetime_gap",
+      "detail": "setup_done所有可能通知者、对象生存期和复用未全审，不关闭DS48-F01",
+      "blocking_to_source_delivery": false,
+      "blocking_to_runtime_certification": true
+    },
+    {
+      "id": "CW49-U04",
+      "status": "needs_evidence",
+      "kind": "build_gap",
+      "detail": "DEBUG/COMPLETION_DEFINATION真实预处理与链接路径未认证",
+      "blocking_to_source_delivery": false,
+      "blocking_to_runtime_certification": true
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "next_executor_batch_authorized": false,
+  "kernel_fix_authorized": false,
+  "runtime_evidence": "NOT_RUN"
+}

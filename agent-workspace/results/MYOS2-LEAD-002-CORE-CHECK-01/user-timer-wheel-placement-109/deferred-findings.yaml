@@ -1,0 +1,270 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMER-WHEEL-PLACEMENT-109",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "lead_contract_short12": "66576d5b78eb",
+  "record_type": "bounded_timer_wheel_conditional_deferral",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical_mainline_statuses": {
+    "R106_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R107_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R107_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R108_01": "OPEN",
+    "R108_02": "OPEN",
+    "batch108": "RETURN"
+  },
+  "old_roots_preserved": [
+    {
+      "source": "CORE-USER-SCHEDULE-TIMEOUT-50",
+      "fixed_review": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-SCHEDULE-TIMEOUT-50-review.md@66576d5b78eb",
+      "identity": "CA-03/V09 and ST50 concerns as documented in original mainline review",
+      "status": "historical fixed conditions retained; no new reproduction"
+    },
+    {
+      "source": "CORE-USER-WAIT-WAKE-CONSISTENCY-52",
+      "fixed_review": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-WAIT-WAKE-CONSISTENCY-52-review.md@66576d5b78eb",
+      "fixed_closure": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-WAIT-WAKE-CONSISTENCY-52-DOC-CLOSURE-review.md@66576d5b78eb",
+      "identity": "normal NOTPENDING and internal_add_timer/enqueue_timer handoff",
+      "status": "existing review and documentation closure retained"
+    },
+    {
+      "source": "CORE-USER-DURATION-TICK-CONVERSION-108",
+      "fixed_findings": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/deferred-findings.yaml@a8436da2c2b3",
+      "identity": "DT108-F01..F06 and DT108-U01..U06",
+      "status": "fixed original preserved; R108-01/02 pending C07 review"
+    },
+    {
+      "source": "CORE-USER-REALTIME-READOUT-ABI-107",
+      "fixed_review": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-DURATION-TICK-CONVERSION-108-D00-106-107-review.md@66576d5b78eb",
+      "identity": "R107-01 and R107-02",
+      "status": "CLOSED_DOCUMENTATION_ONLY by C07; no reopened items"
+    }
+  ],
+  "new_conditional_candidates": [
+    {
+      "id": "TW109-F01",
+      "title": "jiffies sample and base->clk are independent objects",
+      "kind": "STATIC_TIMING_PROVENANCE",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E015",
+        "TW109-E039",
+        "TW109-E065",
+        "TW109-E066",
+        "TW109-E067"
+      ],
+      "premise": "forward_timer_base may choose an advanced or next_expiry base clock",
+      "conditional_implication": "a sample using equal values does not establish the actual delta for another runtime call",
+      "first_unverified_step": "real base and jiffies snapshot under timer lock",
+      "actual_defect_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "TW109-F02",
+      "title": "calc_index adds one even on a granularity-aligned expires",
+      "kind": "DESIGNED_QUANTIZATION_BOUNDARY",
+      "source_ids": [
+        "TW109-E035",
+        "TW109-E023",
+        "TW109-E025"
+      ],
+      "premise": "level>0 and expires exactly divisible by its granularity",
+      "conditional_implication": "effective bucket_expiry can be one full granularity later than requested; do not equate bucket with callback firing time",
+      "first_unverified_step": "timer wheel expiry handling and actual callback execution",
+      "actual_defect_observed": false,
+      "status": "CONDITIONAL_SOURCE_OBSERVATION"
+    },
+    {
+      "id": "TW109-F03",
+      "title": "Wheel delta unsigned wrap, signed check and large timeout cap",
+      "kind": "INTEGER_RANGE_BOUNDARY",
+      "source_ids": [
+        "TW109-E016",
+        "TW109-E020",
+        "TW109-E021",
+        "TW109-E022",
+        "TW109-E033",
+        "TW109-E034"
+      ],
+      "premise": "expiry is behind clk or delta is near/above wheel cutoff",
+      "conditional_implication": "negative reinterpretation, cap and top-level placement differ from small forward finite delta model",
+      "first_unverified_step": "platform long signed conversion and actual high-range timer inputs",
+      "actual_defect_observed": false,
+      "status": "DEFERRED"
+    },
+    {
+      "id": "TW109-F04",
+      "title": "pending_map write in enqueue_timer is commented",
+      "kind": "STATIC_PENDING_STATE_SCOPE",
+      "source_ids": [
+        "TW109-E036",
+        "TW109-E040",
+        "TW109-E038"
+      ],
+      "premise": "bitmap elsewhere might be used for wheel traversal",
+      "conditional_implication": "this enqueue body does not set the commented bitmap; do not infer whole subsystem fails to find timers without reading other consumers",
+      "first_unverified_step": "independent full traversal and execution contract",
+      "actual_defect_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "TW109-F05",
+      "title": "trigger_dyntick_cpu requested only after earlier effective bucket",
+      "kind": "CPU_WAKEUP_BOUNDARY",
+      "source_ids": [
+        "TW109-E037",
+        "TW109-E038",
+        "TW109-P06"
+      ],
+      "premise": "new bucket_expiry strictly before current next_expiry",
+      "conditional_implication": "active function call exists but inspected body has only comments, not verified actual IPI or task wakeup",
+      "first_unverified_step": "link configuration, surrounding timer/IRQ path and real IPI trace",
+      "actual_defect_observed": false,
+      "status": "DEFERRED_NO_RUNTIME"
+    },
+    {
+      "id": "TW109-F06",
+      "title": "Finite schedule_timeout unregisters stack timer soon after registration in inspected body",
+      "kind": "HISTORICAL_TIMEOUT_BOUNDARY",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E064",
+        "TW109-P21"
+      ],
+      "premise": "the normal function continues past __mod_timer without entering its commented direct schedule call",
+      "conditional_implication": "being enqueued does not prove timer stayed enqueued until its effective deadline or current task slept",
+      "first_unverified_step": "deletion path, run context, asynchronous expiry and historical ST50 R50-S01/S02",
+      "actual_defect_observed": false,
+      "status": "HISTORICAL_ROOT_REFERENCE_NO_REPRODUCTION"
+    },
+    {
+      "id": "TW109-F07",
+      "title": "time_before comparator uses signed-long relative order",
+      "kind": "MODULO_ORDERING_RANGE",
+      "source_ids": [
+        "TW109-E037",
+        "TW109-E046",
+        "TW109-E047"
+      ],
+      "premise": "next_expiry versus effective bucket_expiry difference close to wrap/half-range",
+      "conditional_implication": "ordinary small positive comparison result cannot be extrapolated to all ULONG deltas",
+      "first_unverified_step": "target long ABI and intended wheel ordering domain",
+      "actual_defect_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    }
+  ],
+  "new_evidence_gaps": [
+    {
+      "id": "TW109-U01",
+      "topic": "Actual jiffies/clk snapshots and timer base selection",
+      "needed": "Runtime values and binding of jiffies, perCPU timer_base, initial next_expiry and forward_timer_base",
+      "source_ids": [
+        "TW109-E006",
+        "TW109-E011",
+        "TW109-E015",
+        "TW109-E039",
+        "TW109-E065",
+        "TW109-E067"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TW109-U02",
+      "topic": "Timer object and hlist validity under real concurrency",
+      "needed": "Actual stack timer initialization, lock and hlist lifetime, migration and index bounds",
+      "source_ids": [
+        "TW109-E010",
+        "TW109-E012",
+        "TW109-E036",
+        "TW109-E049",
+        "TW109-E050"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TW109-U03",
+      "topic": "Timer expiry and callback wakeup",
+      "needed": "Actual tick advancement, wheel traversal, timer expiration and callbacks, distinct from insertion",
+      "source_ids": [
+        "TW109-E035",
+        "TW109-E037",
+        "TW109-E038",
+        "TW109-P21"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TW109-U04",
+      "topic": "High-range arithmetic and mask wrap",
+      "needed": "Actual 64-bit ulong/long conversion, max cutoff and truncation effects, test only with future explicit authorization",
+      "source_ids": [
+        "TW109-E020",
+        "TW109-E021",
+        "TW109-E034",
+        "TW109-E046"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TW109-U05",
+      "topic": "Bitmap and dyntick trigger availability",
+      "needed": "Independent lifecycle of pending_map and actual IPI/CPU wake side effects",
+      "source_ids": [
+        "TW109-E036",
+        "TW109-E038",
+        "TW109-P06"
+      ],
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "TW109-U06",
+      "topic": "C07 Pro static documentation closure",
+      "needed": "Confirm R108-01 two selector gates, raw/bias remainders, positions 25 and valid consumers; R108-02 corrected edge classification and real cross-file navigation",
+      "source_ids": [
+        "TW109-E053",
+        "TW109-E054",
+        "TW109-E055",
+        "TW109-E056",
+        "TW109-E057",
+        "TW109-E059",
+        "TW109-E060",
+        "TW109-E061",
+        "TW109-E062",
+        "TW109-E063"
+      ],
+      "status": "PENDING_C07_REVIEW"
+    },
+    {
+      "id": "TW109-U07",
+      "topic": "Actual build, local P9 and hardware",
+      "needed": "Preprocessing, linking, non-script code execution, Graphviz, QEMU, hardware clock and scheduler observations under separate authorized workflow",
+      "source_ids": [
+        "TW109-E001",
+        "TW109-E002",
+        "TW109-E014",
+        "TW109-E036"
+      ],
+      "status": "NOT_RUN"
+    }
+  ],
+  "counts": {
+    "conditional_candidates": 7,
+    "evidence_gaps": 7
+  },
+  "execution_boundary": {
+    "GitHub_source_read": true,
+    "full_local_P9": "NOT_RUN",
+    "preprocess_compile_link": "NOT_RUN",
+    "repository_programs_scripts": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware_irq_and_scheduler": "NOT_RUN",
+    "extra_models_or_paid_APIs": "NOT_CALLED"
+  }
+}

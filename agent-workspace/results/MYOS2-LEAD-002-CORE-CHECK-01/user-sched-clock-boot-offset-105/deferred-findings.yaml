@@ -1,0 +1,354 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105",
+  "date": "2026-11-19",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "record_type": "static_sched_clock_conditional_findings_and_gaps",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical_statuses": {
+    "R102_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R102_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R102_03": "CLOSED_DOCUMENTATION_ONLY",
+    "R103_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R103_01": "OPEN_CONSUMER_MAPPING_ONLY",
+    "R104_01": "OPEN",
+    "R104_02": "OPEN",
+    "batch102": "PASS_PENDING_LOCAL",
+    "batch103": "RETURN",
+    "batch104": "RETURN"
+  },
+  "new_conditional_candidates": [
+    {
+      "id": "SC105-F01",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-F01",
+      "title": "CPU frequency helper guards one CPUID leaf and actively requests another",
+      "classification": "STATIC_CONDITIONAL_SOURCE_MISMATCH",
+      "source_basis": "cpu_khz_from_cpuid checks CPUID_LEAF_FREQ but active cpuid(CPUID_LEAF_TSC) then EAX*1000",
+      "conditional_implication": "no independent CPUID leaf semantics or hardware result; code can report a value not certified as CPU MHz",
+      "evidence_ids": [
+        "SC105-E040",
+        "SC105-E041",
+        "SC105-E042",
+        "SC105-E043"
+      ],
+      "actual_failure_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-F02",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-F02",
+      "title": "Early cyc2ns setup runs before perCPU first chunk setup",
+      "classification": "STATIC_CONDITIONAL_POINTER_PROVENANCE_GAP",
+      "source_basis": "tsc_early_init may call cyc2ns_init_boot_cpu which invokes this_cpu_ptr and per_cpu_ptr prior to start_kernel setup_per_cpu_areas",
+      "conditional_implication": "GS base, template object lifetime and CPU target identity need fixed86 conditions, not runtime corruption claim",
+      "evidence_ids": [
+        "SC105-E013",
+        "SC105-E016",
+        "SC105-E055",
+        "SC105-E056",
+        "SC105-E077",
+        "SC105-E079",
+        "SC105-E080",
+        "SC105-E082",
+        "SC105-E083",
+        "SC105-E111",
+        "SC105-E112",
+        "SC105-E113",
+        "SC105-E114"
+      ],
+      "actual_failure_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-F03",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-F03",
+      "title": "Three separate READ_ONCE fields and a later one-struct write",
+      "classification": "STATIC_CONDITIONAL_MULTIFIELD_COHERENCE_GAP",
+      "source_basis": "__simple_cyc2ns_read samples offset/mul/shift independently while seqcount guard commented and writer assignment unlatched",
+      "conditional_implication": "in concurrency hypothetical reader can combine different versions, but actual concurrency/migration untested",
+      "evidence_ids": [
+        "SC105-E067",
+        "SC105-E076",
+        "SC105-E070"
+      ],
+      "actual_failure_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-F04",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-F04",
+      "title": "Frequency conversion can truncate or wrap intermediate integer quantities",
+      "classification": "STATIC_CONDITIONAL_ARITHMETIC_BOUNDARY",
+      "source_basis": "CPUID ratio and cpu_khz result are uint, do_div truncates, clocks_calc writes u32 factors",
+      "conditional_implication": "only finite input models; no observed frequency error or hardware values",
+      "evidence_ids": [
+        "SC105-E043",
+        "SC105-E045",
+        "SC105-E046",
+        "SC105-E048",
+        "SC105-E050",
+        "SC105-E053",
+        "SC105-E084",
+        "SC105-E085",
+        "SC105-E086",
+        "SC105-E090"
+      ],
+      "actual_failure_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-F05",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-F05",
+      "title": "Non-INT128 mul_u64_u32_shr split path depends on shift and highword",
+      "classification": "STATIC_CONDITIONAL_INVALID_SHIFT_DOMAIN",
+      "source_basis": "fallback highword branch does a left shift by (32-shift) if ah nonzero; counts outside 0..32 can be invalid",
+      "conditional_implication": "requires compiler choosing fallback plus actual factors and high word, neither observed",
+      "evidence_ids": [
+        "SC105-E087",
+        "SC105-E088",
+        "SC105-E089"
+      ],
+      "actual_failure_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-F06",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-F06",
+      "title": "Scheduler TSC gate and clocksource availability state are separate",
+      "classification": "STATIC_CONDITIONAL_STATE_DIVERGENCE",
+      "source_basis": "TSC sched enabled after boot perCPU setup and tsc_init marks clocksource_tsc unstable; registration call commented in inspected tsc_init",
+      "conditional_implication": "one flag not evidence of actual timekeeper clock selection or scheduler disable",
+      "evidence_ids": [
+        "SC105-E055",
+        "SC105-E056",
+        "SC105-E059",
+        "SC105-E060",
+        "SC105-E061",
+        "SC105-E062",
+        "SC105-E091",
+        "SC105-E092"
+      ],
+      "actual_failure_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-F07",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-F07",
+      "title": "Jiffies wrap and unsigned-to-signed boot_offset argument remain conditional",
+      "classification": "STATIC_CONDITIONAL_NUMERIC_CONVERSION",
+      "source_basis": "native_sched_clock fallback computes unsigned difference times1e9/HZ, local_clock returns u64, ns_to_timespec64 accepts s64",
+      "conditional_implication": "overflow result or u64>S64_MAX requires implementation semantics, no observed output",
+      "evidence_ids": [
+        "SC105-E093",
+        "SC105-E095",
+        "SC105-E096",
+        "SC105-E098",
+        "SC105-E100",
+        "SC105-E101",
+        "SC105-E103"
+      ],
+      "actual_failure_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-F08",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-F08",
+      "title": "CPU/TSC kHz comparison uses unsigned subtraction before abs macro",
+      "classification": "STATIC_CONDITIONAL_SANITY_CHECK_TYPE",
+      "source_basis": "cpu_khz and tsc_khz are uint and code calls abs(cpu_khz - tsc_khz)*10 > tsc_khz",
+      "conditional_implication": "must not use signed mathematical absolute difference unless exact macro/ABI/values preconditions checked",
+      "evidence_ids": [
+        "SC105-E053"
+      ],
+      "actual_failure_observed": false,
+      "status": "NEEDS_EVIDENCE"
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "SC105-U01",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-U01",
+      "topic": "Which CPUID values and vendor callback actually supply early CPU and TSC kHz?",
+      "missing_evidence": "hardware fields and chosen hypervisor path not sampled; 0x15 vs0x16 distinction persists",
+      "evidence_ids": [
+        "SC105-E020",
+        "SC105-E023",
+        "SC105-E024",
+        "SC105-E030",
+        "SC105-E031",
+        "SC105-E034",
+        "SC105-E035",
+        "SC105-E040",
+        "SC105-E041",
+        "SC105-E042",
+        "SC105-E043",
+        "SC105-E044",
+        "SC105-E045"
+      ],
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-U02",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-U02",
+      "topic": "Does early boot CPU GS/current percpu pointer resolve a valid cyc2ns object before setup_per_cpu_areas?",
+      "missing_evidence": "source order early setup precedes template copy and GS runtime base request; consume PC86 boundaries",
+      "evidence_ids": [
+        "SC105-E013",
+        "SC105-E016",
+        "SC105-E055",
+        "SC105-E056",
+        "SC105-E077",
+        "SC105-E078",
+        "SC105-E079",
+        "SC105-E082",
+        "SC105-E083",
+        "SC105-E111",
+        "SC105-E112",
+        "SC105-E113",
+        "SC105-E114"
+      ],
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-U03",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-U03",
+      "topic": "Which mul_u64_u32_shr implementation does actual preprocessing select?",
+      "missing_evidence": "INT128 or split fallback depends on config; shift domains and exact C math await build context",
+      "evidence_ids": [
+        "SC105-E087",
+        "SC105-E088",
+        "SC105-E089"
+      ],
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-U04",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-U04",
+      "topic": "Does selected TSC ratio match hardware frequency and synchronize across CPUs?",
+      "missing_evidence": "no TSC/CPUID device result, no real timing, no cross CPU drift observation",
+      "evidence_ids": [
+        "SC105-E034",
+        "SC105-E043",
+        "SC105-E045",
+        "SC105-E046",
+        "SC105-E050",
+        "SC105-E068",
+        "SC105-E069",
+        "SC105-E074"
+      ],
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-U05",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-U05",
+      "topic": "Does exact kernel linker script create the jiffies alias at the expected address?",
+      "missing_evidence": "kernel.lds contains alias text and jiffies_64 initialized object but no actual ELF inspection",
+      "evidence_ids": [
+        "SC105-E095",
+        "SC105-E096",
+        "SC105-E097",
+        "SC105-E098",
+        "SC105-E099"
+      ],
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-U06",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-U06",
+      "topic": "Is the return u64 from native_sched_clock within signed s64 for ns_to_timespec64 and how is rem pointer handled?",
+      "missing_evidence": "u64->s64 may be implementation-defined, local s32 rem differs from div_u64_rem u32*",
+      "evidence_ids": [
+        "SC105-E100",
+        "SC105-E101",
+        "SC105-E103",
+        "SC105-E104",
+        "SC105-E105"
+      ],
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-U07",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-U07",
+      "topic": "Is the changing perCPU scale coherently published/read and does the timekeeper save offset or receive later writers?",
+      "missing_evidence": "independent reads/writes and tk_set_wall_to_mono active field assignment commented",
+      "evidence_ids": [
+        "SC105-E067",
+        "SC105-E070",
+        "SC105-E076",
+        "SC105-E106",
+        "SC105-E107",
+        "SC105-E108"
+      ],
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "SC105-U08",
+      "qualified_id": "CORE-USER-SCHED-CLOCK-BOOT-OFFSET-105::SC105-U08",
+      "topic": "What C07 independent verdict and true local P9 status apply to this batch?",
+      "missing_evidence": "author submits only, full local P9/build/runtime NOT_RUN",
+      "evidence_ids": [
+        "SC105-E001",
+        "SC105-E007",
+        "SC105-E008",
+        "SC105-E013",
+        "SC105-E016"
+      ],
+      "status": "NEEDS_EVIDENCE"
+    }
+  ],
+  "counts": {
+    "new_conditional_candidates": 8,
+    "evidence_gaps": 8,
+    "hardware_failures_observed": 0
+  },
+  "inherited_roots": [
+    {
+      "id": "CORE-USER-TIMEKEEPING-READOUT-103::TK103-U02",
+      "kind": "FOLLOWUP",
+      "status": "PARTIAL_SOURCE_NARROWING",
+      "boundary": "persistent input from104 and local_clock from105 now source traced; real value and future writes unknown"
+    },
+    {
+      "id": "CORE-USER-RTC-WALL-CLOCK-104::RTC104-U06",
+      "kind": "FOLLOWUP",
+      "status": "PARTIAL_SOURCE_NARROWING",
+      "boundary": "local_clock u64 origin and signed entry now bounded, no runtime certification"
+    },
+    {
+      "id": "CORE-USER-PERCPU-BOOTSTRAP-86::PC86-F09/U07",
+      "kind": "EXISTING_ROOT",
+      "status": "PRESERVE_86_REVIEW_AND_DOC_CLOSURE_BOUNDARIES",
+      "boundary": "GSbase and early perCPU mapping not reaudited or retested"
+    },
+    {
+      "id": "MYOS2-LEAD-002::CA-05",
+      "kind": "HISTORICAL_ID",
+      "status": "PRESERVED"
+    },
+    {
+      "id": "MYOS2-LEAD-002-CORE-CHECK-01::V14",
+      "kind": "HISTORICAL_ID",
+      "status": "PRESERVED"
+    },
+    {
+      "id": "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03/U08",
+      "kind": "HISTORICAL_ID",
+      "status": "PRESERVED"
+    }
+  ],
+  "not_executed": [
+    "CPU CPUID, rdtsc or real port calls",
+    "CMake/build/preprocess/compiler/ELF",
+    "runtime native_sched_clock",
+    "user finite model executable simulation",
+    "Graphviz",
+    "QEMU/VM/real physical hardware",
+    "concurrency and multicore execution",
+    "full local P9"
+  ],
+  "owner_decisions_requested_now": []
+}

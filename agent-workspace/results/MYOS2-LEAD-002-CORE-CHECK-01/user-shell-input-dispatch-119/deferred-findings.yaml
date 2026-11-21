@@ -1,0 +1,210 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-INPUT-DISPATCH-119",
+  "record_type": "bounded_deferred_findings_and_documentation_corrections",
+  "produced_by": "GPT-6（后端不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "date": "2026-11-21",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "legacy_closed_not_reopened": {
+    "R115-03": "CLOSED_DOCUMENTATION_ONLY",
+    "R116-01": "CLOSED_DOCUMENTATION_ONLY",
+    "R117-01": "CLOSED_DOCUMENTATION_ONLY",
+    "R117-03": "CLOSED_DOCUMENTATION_ONLY"
+  },
+  "items": [
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::R117-02",
+      "kind": "report_erratum",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_status": "OPEN",
+      "source_ref": {
+        "batch117": "52c51a3752d3",
+        "batch118": "cb96288abb8b",
+        "new_file": "shell-input-dispatch.md#D00-1"
+      },
+      "summary": "旧117真正88个定义体窗与字面89次分开；旧118真正91窗与字面92次分开；新119六件应46窗/46次，无说明位置误计",
+      "evidence": [
+        "117 MANIFEST.md:113",
+        "118 evidence.md:3",
+        "IN119-E001..E046"
+      ],
+      "reopen_or_close_condition": "C08独立从最终六件字节按每文件正式标签前缀重数，核全部46个短窗逐字/定义体/1-5行，MANIFEST三数46/46/0一致",
+      "blocked": "仅阻止旧117及本项的主线PASS；不阻止119独立A/B/C分析",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::R118-01",
+      "kind": "source_provenance_erratum",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_status": "OPEN",
+      "source_ref": {
+        "original": "cb96288abb8b",
+        "positions": [
+          "myshell.c:59 homedir",
+          "myshell.c:60 current_dir"
+        ],
+        "new_file": "shell-input-dispatch.md#D00-2"
+      },
+      "summary": "CW118-E051/E052退为普通位置IN119-P01/P02；main/cd/pwd/cat消费分别锚在函数定义体；open.c:277 lookup_flags独立锚；kernel getcwd pwd/root与PATH_MAX/分配/拼接/复制分开；转换与复制属于R60-S01第3项而非R60-S02",
+      "new_anchors": [
+        "IN119-E001",
+        "IN119-E002",
+        "IN119-E026",
+        "IN119-E028",
+        "IN119-E030",
+        "IN119-E031",
+        "IN119-E033",
+        "IN119-E036",
+        "IN119-E037",
+        "IN119-E038",
+        "IN119-E040",
+        "IN119-E044",
+        "IN119-E045"
+      ],
+      "reopen_or_close_condition": "C08重新按函数消费者和固定time源码验明新分类并核报告/facts/evidence/图对应，复核第60批正式§3第三项与§4",
+      "blocked": "此前118证据误读不能作为正式P2消费",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::R118-02",
+      "kind": "call_graph_erratum",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_status": "OPEN",
+      "source_ref": {
+        "original": "cb96288abb8b",
+        "new_file": "shell-input-dispatch-paths.dot"
+      },
+      "summary": "main拥有两次printf；cd_command分别直接调用memset和getcwd；kernel getcwd分别直接调用kzalloc及prepend；pwd/root为拼接数据，PATH_MAX为分配尺寸；旧错误边改为SEQUENCE或DATA",
+      "replacement_graph_clusters": [
+        "cluster_D00A",
+        "cluster_D00B",
+        "cluster_D00C"
+      ],
+      "reopen_or_close_condition": "C08从新DOT重抽唯一节点/真实端点/边类型/必经路径，核启动、cd早退成功失败、复制/未写、pwd/提示符/cat输出；旧错误直接调用不再存在",
+      "blocked": "旧118图错误边不可用作真实调用证明",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::A-LONG-INPUT",
+      "kind": "bounded_source_risk",
+      "status": "deferred_owner_not_ready",
+      "source_ref": {
+        "time": "a039d9803ade",
+        "symbol": "myshell.c::read_line",
+        "line_range": "106-137"
+      },
+      "assumption": "本批正常输入<=32字节；buf为4096字节且主循环每轮清零",
+      "observation": "可见函数以buf[count++]写入，没有在此体看见count与缓冲容量的比较",
+      "impact": "扩展至长输入时可能越过本批有界模型，不能从有限字节样例证明安全",
+      "counterevidence_or_unknown": "未执行长输入、未核terminal驱动何时截断；不能断言可达溢出",
+      "resume_gate": "Owner明确另行授权长输入专项取证/运行/修复；先核最新固定源码",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::A-FALLTHROUGH-RETURN",
+      "kind": "static_boundary",
+      "status": "needs_evidence",
+      "source_ref": {
+        "time": "a039d9803ade",
+        "symbol": "myshell.c::read_line",
+        "line_range": "111-137"
+      },
+      "assumption": "以字节4或read返回0终止而不走LF return",
+      "observation": "read_line尾部无显式return，main读取语句不保存其返回值",
+      "impact": "不可报告EOT/EOF情况下某个确定的int返回；纸面buf可保持已写内容",
+      "counterevidence_or_unknown": "具体ABI寄存器值/真实控制台操作未测，若调用者使用返回值须另立分析",
+      "resume_gate": "若下一任务消费read_line返回值，则定点C语言语义及调用点审查",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::B-MALLOC-CAPACITY",
+      "kind": "model_assumption",
+      "status": "needs_evidence",
+      "source_ref": {
+        "time": "a039d9803ade",
+        "symbol": "myshell.c::parse_command",
+        "line_range": "169-185"
+      },
+      "assumption": "malloc成功、8字节指针、全零表示NULL、短NUL字符串且清零空间充足",
+      "observation": "源码使用sizeof(char **) * (argc+1)，随后立即memset返回地址；没有在所读函数看到malloc失败检查",
+      "impact": "本批NULL末槽、16/24字节请求只在指定数据模型下成立；失败路径不能照常套用",
+      "counterevidence_or_unknown": "没有宿主构建ABI证明、malloc失败注入、运行前置状态",
+      "resume_gate": "需要评审其他ABI/分配失败时另取用户态库证据",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::B-ARGV-LIFETIME",
+      "kind": "bounded_lifecycle_observation",
+      "status": "deferred_owner_not_ready",
+      "source_ref": {
+        "time": "a039d9803ade",
+        "symbols": [
+          "myshell.c::main",
+          "myshell.c::parse_command",
+          "myshell.c::run_cmd"
+        ]
+      },
+      "assumption": "正常单线程循环及同步内建调用",
+      "observation": "argv指针向量经malloc分配，指向当前main栈buf；所读三个函数内没有显式free(argv)，main下轮清零复用buf",
+      "impact": "若有异步持有或循环内长期累计分配将跨出本批模型；不声称全仓库不存在释放或已有泄漏",
+      "counterevidence_or_unknown": "没有扩大到所有内建函数、内存分配器、线程及进程退出路径",
+      "resume_gate": "需要独立生命周期专项获授权后复核最新源码",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::C-OUTPUT",
+      "kind": "source_to_runtime_boundary",
+      "status": "needs_evidence",
+      "source_ref": {
+        "time": "a039d9803ade",
+        "symbols": [
+          "myshell.c::main",
+          "myshell.c::read_line",
+          "myshell.c::pwd_command"
+        ]
+      },
+      "assumption": "各printf/write调用以固定模型参数提交请求",
+      "observation": "请求流可从函数体读出；真实终端显示、缓冲与write成功量未在本批观察",
+      "impact": "不能把退格、下划线或换行请求直接认证为用户屏幕内容",
+      "counterevidence_or_unknown": "未读取设备驱动完整实现、未运行QEMU或实机",
+      "resume_gate": "将来用户明确授权实际I/O验证时分开观测write返回与终端现象",
+      "owner_action_now": "NONE"
+    },
+    {
+      "qualified_id": "CORE-USER-SHELL-INPUT-DISPATCH-119::GETCWD-COPY-RETURN",
+      "kind": "historical_constraint_carried",
+      "status": "deferred_owner_not_ready",
+      "source_ref": {
+        "time": "a039d9803ade",
+        "code": "d_path.c::MYOS_SYSCALL_DEFINE2(getcwd)",
+        "review": "CORE-USER-FS-CONTEXT-CWD-60-review.md §3 item3"
+      },
+      "assumption": "分离copy_to_user写入效果、内部int error表达式和用户库返回类型",
+      "observation": "成功路径的error=(long)buf会赋给int，随后kfree并返回；复制后的字节不是从这个数值推出来",
+      "impact": "32位截断/指针转换具体值依编译目标，不能当作通用成功标记或内容真相",
+      "counterevidence_or_unknown": "用户库与实际ABI未运行；R60-S02另管调用图",
+      "resume_gate": "后续需要ABI实测或修复时按第60批裁定及新源码重新核",
+      "owner_action_now": "NONE"
+    }
+  ],
+  "execution_limitations": {
+    "source_only": true,
+    "full_local_P9": "NOT_RUN",
+    "build": "NOT_RUN",
+    "C_program_execution": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "user_buffer_over_32": "OUT_OF_SCOPE",
+    "mainline_acceptance": "PENDING"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

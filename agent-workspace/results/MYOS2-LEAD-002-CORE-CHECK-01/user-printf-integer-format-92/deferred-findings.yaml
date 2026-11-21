@@ -1,0 +1,331 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92",
+  "record_type": "bounded_integer_format_incremental_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-12",
+  "produced_by": "GPT-6 (consumer-visible family, backend UNATTESTED)",
+  "model_per_owner": "GPT-6 + Extra",
+  "date": "2026-11-16",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "AUTHOR_STATIC_CANDIDATES_PENDING_PRO_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "new_candidates": [
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-F01",
+      "id": "PF92-F01",
+      "topic": "long long signed/unsigned va_arg selection",
+      "classification": "STATIC_CONDITIONAL_NEEDS_EVIDENCE_NOT_RUNTIME_BUG",
+      "claim": "format_decode把ll字形的整数转换统一设FORMAT_TYPE_LONG_LONG，vsnprintf不按SIGN切换，均va_arg(args,long long)。针对%llu、调用者实际提供unsigned long long的大值，该取参类型并非参数类型；不能直接把数学UINT64_MAX的可输出数字当成定义良好的C变参调用结果。另%tu一律读ptrdiff_t，属于同类受限资格/类型映射证据，不另造根因。",
+      "preconditions": [
+        "fmt=%llu",
+        "实际实参为unsigned long long,且值超出signed long long范围",
+        "目标实现对错配取参未独立认证"
+      ],
+      "evidence_ids": [
+        "PF92-E029",
+        "PF92-E030",
+        "PF92-E036",
+        "PF92-E037",
+        "PF92-E055",
+        "PF92-E058"
+      ],
+      "first_proof_gate": "C objects, actual va_arg agreement, compiler numeric semantics and every preceding call must be independently established",
+      "distinct_from_prior": "不同于KN91-U02数字helper未覆盖：此处发生在number调用之前的变参取出类型",
+      "owner_action_now": "none",
+      "kernel_fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-F02",
+      "id": "PF92-F02",
+      "topic": "signed long long minimum negation",
+      "classification": "STATIC_CONDITIONAL_NEEDS_EVIDENCE_NOT_RUNTIME_BUG",
+      "claim": "number在SIGN且(signed long long)num<0时执行num=-(signed long long)num；若对应最低signed long long值，数学绝对值超出了该signed类型正值域。对明确这个C值的前提须在取负处止证，不能用64位unsigned能够表示其幅度来替代signed表达式的合法性。",
+      "preconditions": [
+        "%lld与匹配long long实参",
+        "确为最低有符号long long值",
+        "先前类型转换/目标实现前提成立"
+      ],
+      "evidence_ids": [
+        "PF92-E055",
+        "PF92-E084",
+        "PF92-E085",
+        "PF92-E086"
+      ],
+      "first_proof_gate": "C objects, actual va_arg agreement, compiler numeric semantics and every preceding call must be independently established",
+      "distinct_from_prior": "不同于PF92-F01取参类型：本项即使va_arg类型正确也发生在number内部求幅度",
+      "owner_action_now": "none",
+      "kernel_fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-F03",
+      "id": "PF92-F03",
+      "topic": "literal width/precision skip_atoi unchecked signed arithmetic",
+      "classification": "STATIC_CONDITIONAL_NEEDS_EVIDENCE_NOT_RUNTIME_BUG",
+      "claim": "skip_atoi以signed int反复执行i=i*10+digit并立即存入field_width/precision位域；所读此函数未见整数溢出前的本地范围检查。足够长的字面十进制串在最早int不可表示的加法处停止正常C语义，不能声称后续set_field_width/clamp必能修正它。",
+      "preconditions": [
+        "格式字面有效NUL终止",
+        "一长串数字令中间i超出int可表示范围",
+        "没有在此分支被更早终止"
+      ],
+      "evidence_ids": [
+        "PF92-E010",
+        "PF92-E011",
+        "PF92-E012",
+        "PF92-E013",
+        "PF92-E014",
+        "PF92-E015",
+        "PF92-E025",
+        "PF92-E027",
+        "PF92-E040",
+        "PF92-E041"
+      ],
+      "first_proof_gate": "C objects, actual va_arg agreement, compiler numeric semantics and every preceding call must be independently established",
+      "distinct_from_prior": "区别于KN91-F02的kvasprintf first+1 unsigned计数：这里是在格式解析阶段使用有符号int累计",
+      "owner_action_now": "none",
+      "kernel_fix_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-F04",
+      "id": "PF92-F04",
+      "topic": "explicit precision and zero flag interaction",
+      "classification": "STATIC_CONDITIONAL_NEEDS_EVIDENCE_NOT_RUNTIME_BUG",
+      "claim": "在所读number的整数输出体中，显式precision未清除ZEROPAD；%08.3d/42会先依据剩余field_width输出5个'0'，再依据precision输出1个'0'，最后42，形成00000042。源码没有以已给precision为条件移除零补位。仅记录本版本有条件的格式组合语义，尚无官方标准对照或调用者需求可判定其是否违反预期。",
+      "preconditions": [
+        "匹配int值42",
+        "有效宽度8和精度3",
+        "ZERO flag保留",
+        "容量/指针条件有效"
+      ],
+      "evidence_ids": [
+        "PF92-E005",
+        "PF92-E025",
+        "PF92-E027",
+        "PF92-E085",
+        "PF92-E092",
+        "PF92-E096",
+        "PF92-E097",
+        "PF92-E098"
+      ],
+      "first_proof_gate": "C objects, actual va_arg agreement, compiler numeric semantics and every preceding call must be independently established",
+      "distinct_from_prior": "与旧KN91-F01等名字两遍分配根因不同；此处是当前number的补齐策略",
+      "owner_action_now": "none",
+      "kernel_fix_authorized": false
+    }
+  ],
+  "new_gaps": [
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U01",
+      "id": "PF92-U01",
+      "label": "format token极端值与位域",
+      "evidence_missing": "未运行编译器，对极长width/precision字面溢出、signed24/16位域溢出及WARN/clamp副作用未做全部数据类型/预处理证明。",
+      "first_proof_gate": "最早int算术或位域转换处停止正常推导",
+      "evidence_ids": [
+        "PF92-E010",
+        "PF92-E011",
+        "PF92-E012",
+        "PF92-E013",
+        "PF92-E014",
+        "PF92-E040",
+        "PF92-E041",
+        "PF92-E042",
+        "PF92-E043"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U02",
+      "id": "PF92-U02",
+      "label": "变参实参真实类型及ABI",
+      "evidence_missing": "只核va_arg源码类型和限定的资格输入；%llu和%tu在不匹配实际传参时的C语言/目标ABI后果未引用外部官方规范或实测。",
+      "first_proof_gate": "在参数读取处停止，不能保证取数或字符输出",
+      "evidence_ids": [
+        "PF92-E029",
+        "PF92-E030",
+        "PF92-E036",
+        "PF92-E037",
+        "PF92-E055",
+        "PF92-E058"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U03",
+      "id": "PF92-U03",
+      "label": "十进制近似与decpair全域证明",
+      "evidence_missing": "自写纯数学仅核少数固定输入和1e8/1e16分段。未对两个乘法近似全部适用域/所有table下标作形式证明；未编译测试。",
+      "first_proof_gate": "不将注释覆盖范围当自动证明，不声称完整64位值域已经动态通过",
+      "evidence_ids": [
+        "PF92-E065",
+        "PF92-E066",
+        "PF92-E067",
+        "PF92-E072",
+        "PF92-E073",
+        "PF92-E074",
+        "PF92-E075",
+        "PF92-E076",
+        "PF92-E077",
+        "PF92-E078",
+        "PF92-E079",
+        "PF92-E080",
+        "PF92-E082"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U04",
+      "id": "PF92-U04",
+      "label": "实际临时对象/对齐/别名和小端",
+      "evidence_missing": "tmp为24B且声明2B对齐，decpair写入u16，16位临时pair写物理2B可能大于返回游标增量；未认证编译器别名、实际设备、存储对象合法和x86端序运行。",
+      "first_proof_gate": "即使数学长度不超24，仍须实际对象和类型前提",
+      "evidence_ids": [
+        "PF92-E065",
+        "PF92-E066",
+        "PF92-E068",
+        "PF92-E069",
+        "PF92-E071",
+        "PF92-E075",
+        "PF92-E084",
+        "PF92-E101"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U05",
+      "id": "PF92-U05",
+      "label": "sign最低值和实现定义转换",
+      "evidence_missing": "signed到unsigned再cast回signed long long的目标转换及-LLONG_MIN没有经过编译/二进制证明；对int32与long long最低值单独限制。",
+      "first_proof_gate": "负号表达式前先证转换合法，最低值取负停止",
+      "evidence_ids": [
+        "PF92-E055",
+        "PF92-E061",
+        "PF92-E086"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U06",
+      "id": "PF92-U06",
+      "label": "输出指针与容量逻辑",
+      "evidence_missing": "number按逻辑需求递增buf，即使实际写入受end门限制；vsnprintf含buf+size、str-buf、end[-1]。size0/截断/超容量没有完整C指针范围证明，延续KN91-U01及R91-S01。",
+      "first_proof_gate": "最终字符串数学像不能代替源上真实指针访存轨迹",
+      "evidence_ids": [
+        "PF92-E045",
+        "PF92-E046",
+        "PF92-E048",
+        "PF92-E049",
+        "PF92-E063",
+        "PF92-E064",
+        "PF92-E092",
+        "PF92-E096",
+        "PF92-E098",
+        "PF92-E106"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U07",
+      "id": "PF92-U07",
+      "label": "num_to_str调用者/终止约定",
+      "evidence_missing": "num_to_str写出count字节后不补NUL，既有函数可返回0失败；本包没有展开全体消费者及其是否要求C字符串终止。",
+      "first_proof_gate": "不得据无NUL就宣称已出现越界读或违反既定接口约定",
+      "evidence_ids": [
+        "PF92-E101",
+        "PF92-E102",
+        "PF92-E103",
+        "PF92-E104",
+        "PF92-E105"
+      ],
+      "owner_action_now": "none"
+    },
+    {
+      "qualified_id": "CORE-USER-PRINTF-INTEGER-FORMAT-92::PF92-U08",
+      "id": "PF92-U08",
+      "label": "外部printf规范与真实控制路径",
+      "evidence_missing": "没有取外部具体C标准官方网页/版本，不能对%#x零值、%.0d零值、ZEROPAD+precision等直接签与通用标准兼容或不兼容。真实日志、fmt来源、模型字符与实际线程运行未审。",
+      "first_proof_gate": "只报固定time实现的条件性输出，不评价外部规范合规性",
+      "evidence_ids": [
+        "PF92-E025",
+        "PF92-E027",
+        "PF92-E034",
+        "PF92-E089",
+        "PF92-E094",
+        "PF92-E096",
+        "PF92-E097",
+        "PF92-E098",
+        "PF92-E109",
+        "PF92-E110"
+      ],
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_qualified_id_links": [
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U02",
+      "disposition": "SOURCE_GAP_PARTIALLY_FILLED",
+      "note": "整数number、put_dec、格式解析的限定定义已补；其它printf格式和完整执行仍需证据"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-U01",
+      "disposition": "RETAINED_AND_EXTENDED",
+      "note": "NULL零容量及截断逻辑指针前提未解决，PF92-U06仅追加输出阶段证据"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F01",
+      "disposition": "RETAINED",
+      "note": "kvasprintf两遍字符串内容变化另一个不变量，本批不重做"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F02",
+      "disposition": "RETAINED",
+      "note": "first+1的unsigned分配大小，非PF92-F03 signed解析器累加"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F03",
+      "disposition": "RETAINED",
+      "note": "get_kthread_comm截断结果不传播不同于整数包装的需求长度"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-NAME-STORAGE-91::KN91-F04",
+      "disposition": "RETAINED",
+      "note": "task.comm短名截断不被数字新候选覆盖"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-01",
+      "disposition": "CLOSED",
+      "note": "不再新增D00或重开旧文档"
+    },
+    {
+      "qualified_id": "MYOS2-LEAD-002::R90-02",
+      "disposition": "CLOSED",
+      "note": "R90C-S01区分直接与间接宏消费者"
+    },
+    {
+      "qualified_id": "CORE-USER-COMPLETION-OWNERSHIP-53::CO53-F01",
+      "disposition": "HISTORICAL_ONLY",
+      "note": "原53两处空行误判已在闭合撤回，不复制旧指控"
+    },
+    {
+      "qualified_id": "CORE-USER-KTHREAD-ENTRY-68::KT68-F02",
+      "disposition": "HISTORICAL_ONLY",
+      "note": "业务回调非空契约非printf主题"
+    }
+  ],
+  "tallies": {
+    "new_conditional_candidates": 4,
+    "new_evidence_gaps": 8,
+    "old_roots_reissued": 0,
+    "actual_runtime_proven_bugs": 0,
+    "repo_programs_executed": 0,
+    "fixes_implemented": 0,
+    "owner_immediate_action": 0
+  },
+  "limits": [
+    "No external C standard authentication; no compiler/runtime QEMU/hardware",
+    "No complete printf, printk, fork, scheduler or Linux libc audit",
+    "No branch/PR creation, legacy edits or comment mutation",
+    "No 92 independent review by author"
+  ]
+}

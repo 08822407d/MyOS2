@@ -1,0 +1,67 @@
+{
+ "check": "A46_CORRECTION",
+ "review_short12": "ec62453e76d2",
+ "review_sha256_segments": [
+  "9b2df8f723adead2",
+  "ec6caf77e4abcda7",
+  "97603ccc39b09eb5",
+  "670bf0c5c418fd61"
+ ],
+ "anchors": [
+  {
+   "id": "A46-C",
+   "path": "mykernel/CMakeLists.txt",
+   "symbol": "KERNEL_C_SRCS",
+   "quote_lines": 1,
+   "fence_ok": true,
+   "contiguous_hits": [
+    30
+   ],
+   "definition_candidates": [
+    [
+     30,
+     30
+    ]
+   ],
+   "within": [
+    {
+     "hit": 30,
+     "cand": [
+      30,
+      30
+     ]
+    }
+   ],
+   "partial": [],
+   "verdict_mech": "MATCH_IN_DEFINITION"
+  },
+  {
+   "id": "A46-ASM",
+   "path": "mykernel/CMakeLists.txt",
+   "symbol": "KERNEL_ASM_SRCS",
+   "quote_lines": 1,
+   "fence_ok": true,
+   "contiguous_hits": [
+    31
+   ],
+   "definition_candidates": [
+    [
+     31,
+     31
+    ]
+   ],
+   "within": [
+    {
+     "hit": 31,
+     "cand": [
+      31,
+      31
+     ]
+    }
+   ],
+   "partial": [],
+   "verdict_mech": "MATCH_IN_DEFINITION"
+  }
+ ],
+ "old_A46_verdict_in_frozen_v00": "OUTSIDE_OR_PARTIAL_DEFINITION"
+}

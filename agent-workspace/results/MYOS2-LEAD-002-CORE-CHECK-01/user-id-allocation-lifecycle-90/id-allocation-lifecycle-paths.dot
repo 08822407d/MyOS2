@@ -1,0 +1,114 @@
+// CORE-USER-ID-ALLOCATION-LIFECYCLE-90 | fixed time@a039d9803ade
+// EXEC12; graph is an authored static edge map. Graphviz/repository/runtime NOT_RUN.
+// blue solid = actual function call under defined source preconditions;
+// black solid = macro/data dependence; dotted = observed local source order;
+// dashed = hypothetical, guarded, historical/commented, or independent review edge.
+digraph IDA90_IdAllocationLifecycle {
+  graph [rankdir=LR,labelloc=t,label="90 IDA / IDR / PID and worker consumers: static-only evidence flow"];
+  node [shape=box,fontsize=10]; edge [fontsize=9];
+  subgraph cluster_D00 {
+    label="D00: R89-01/02 documentary corrections; C06 Pro closure pending";
+    old_macro [shape=note,label="WQP89-E010\nold combined possible/online"];
+    macro_cpu [label="IDA90-E001\nfor_each_cpu: dense nr_cpu_ids loop"];
+    macro_possible [label="IDA90-E002\nfor_each_possible_cpu one macro"];
+    macro_online [label="IDA90-E003\nfor_each_online_cpu another macro"];
+    old_null [shape=note,label="WQP89-M15 / B-FAIL04\nold stop at set_user_nice(NULL): retracted"];
+    errtest [label="IDA90-E059\nIS_ERR(NULL) false (conditional)"];
+    nice [label="IDA90-E004/E005\nset_user_nice active body:\nonly declarations; p use commented"];
+    attach [label="worker_attach_to_pool\nvalid predecessor/callees assumed"];
+    countidle [label="nr_workers++ / worker_enter_idle\nidle.count++"];
+    skipwake [label="if(worker.task=NULL) skip wake\nreturn worker conditionally"];
+    old_macro -> macro_possible [style=dotted,label="replace portion"];
+    old_macro -> macro_online [style=dotted,label="replace portion"];
+    macro_possible -> macro_cpu [label="macro expands to"];
+    macro_online -> macro_cpu [label="macro expands to"];
+    old_null -> errtest [style=dotted,label="correct scenario"];
+    errtest -> nice [style=dashed,label="if hypothetical task=NULL"];
+    nice -> attach [style=dashed,label="if object/attrs/callees valid"];
+    attach -> countidle [style=dotted,label="later in create_worker"];
+    countidle -> skipwake [style=dotted,label="if task remains NULL"];
+  }
+  subgraph cluster_A {
+    label="A: IDA range / word scan / occupancy / release";
+    cfg [label="idr_const.h\nCHUNK_SIZE=32768 bytes\nBITMAP_LONGS=32768/sizeof(long)"];
+    ida_init [label="ida_init\nkzalloc bitmap, initiated=true\nno pointer success check"];
+    alloc [label="ida_alloc / alloc_min / alloc_max\nwrapper params (0,~0)/(min,~0)/(0,max)"];
+    range [label="ida_alloc_range\nslot_idx starts at min (word index)\nmax not tested"];
+    skip [label="if(slot != ~1ULL)\ncan skip free bit0 in ~1ULL word"];
+    scan [label="bit_idx < sizeof(long)\nonly 8 low bits per LP64 word"];
+    result [label="return slot_idx*sizeof(long)+bit_idx\nno occupied bit write"];
+    end [label="no scanned low bit free\nreturn -1"];
+    free [label="ida_free(id)\nbitmap[id/sizeof(long)] &= 1 << remainder"];
+    oldIDA [shape=note,label="WQP89-F01/F02/F03 retained:\nmissing set / AND free / init unchecked"];
+    cfg -> ida_init [label="kzalloc size"];
+    cfg -> range [label="word/byte extent"];
+    alloc -> range [color=blue,label="wrapper call"];
+    range -> skip [style=dotted,label="each word"];
+    skip -> scan [style=dashed,label="if inequality true"];
+    scan -> result [style=dashed,label="if tested bit0"];
+    range -> end [style=dashed,label="if loops exhausted"];
+    free -> oldIDA [style=dotted,label="no root renumber"];
+    result -> oldIDA [style=dotted,label="no mark"];
+    ida_init -> oldIDA [style=dotted,label="NULL allocation gate"];
+  }
+  subgraph cluster_B {
+    label="B: IDR initialization, ranges, payloads and cursor";
+    idr_init [label="idr_init_base\n32768 pointers; base; cursor=0\ninitiated=true no NULL check"];
+    idralloc [label="idr_alloc\nstart<0? -EINVAL\nmax=end>0?end-1:32768"];
+    cyclic [label="idr_alloc_cyclic\nread cursor, clamp only if <start\nretry from start on ENOSPC & id>start"];
+    u32 [label="idr_alloc_u32\nbase and max ignored by scan\nint slot_idx=id; slot_idx<32768"];
+    slot [label="if slot NULL:\nslot=ptr, *nextid=index;\nreturn0"];
+    ptrNull [shape=note,label="ptr=NULL: no occupancy marker\nprior PID11-F01"];
+    ptrReal [label="ptr != NULL:\nslot stores object pointer"];
+    cur [label="cyclic success:\nidr_next=id+1"];
+    base [shape=note,label="nonzero idr_base not offset\nnew IDA90-F06"];
+    boundary [shape=note,label="end/exclusive max not enforced\nnew IDA90-F05"];
+    idr_init -> u32 [label="array source"];
+    idralloc -> u32 [color=blue,label="call"];
+    cyclic -> u32 [color=blue,label="first / optional retry"];
+    u32 -> slot [style=dashed,label="if valid free slot"];
+    slot -> ptrNull [style=dashed,label="when ptr=NULL"];
+    slot -> ptrReal [style=dashed,label="when ptr nonNULL"];
+    slot -> cur [style=dashed,label="only cyclic success"];
+    u32 -> base [style=dotted,label="index ignores field"];
+    u32 -> boundary [style=dotted,label="max parameter not consulted"];
+  }
+  subgraph cluster_C {
+    label="C: lookup, replace, remove, iterate and actual consumers";
+    find [label="idr_find\nreturn rt[id]\nno bound check"];
+    replace [label="idr_replace\nold=rt[id]; rt[id]=ptr;\nreturn old (no reservation check)"];
+    remove [label="idr_remove\nold=rt[id]; rt[id]=NULL;\nreturn old"];
+    iter [label="idr_for_each\nactive body: return0\ncallback never called"];
+    nextul [label="idr_get_next_ul\nentry=NULL; return entry\nno nextid update"];
+    nextint [label="idr_get_next\nwraps next_ul;\nWARN if id>INT_MAX; writeback"];
+    oldF02 [shape=note,label="PID11-F02 existing out-of-bounds lookup\nnot refiled"];
+    poolid [label="worker_pool_assign_id\nidr_alloc(pool ptr,0,OFFQ_POOL_NONE)\nret>=0 -> pool.id"];
+    workerid [label="create_worker\nida_alloc(worker_ida)\nnegative ID -> immediate NULL"];
+    workerfail [label="later failure only\nida_free(id), kfree(worker)"];
+    pid [label="alloc_pid\nexplicit idr_alloc(NULL,tid,tid+1)\nor cyclic(NULL,pid_min,pid_max)"];
+    pidpublish [label="later in alloc_pid:\nidr_replace(id,pid)\npid_allocated++"];
+    pidfind [label="find_pid_ns\nidr_find(&ns->idr,nr)"];
+    pidfree [label="out_free / free_pid\nconditional idr_remove"];
+    slot -> replace [style=dotted,label="PID separately publishes after allocation"];
+    idralloc -> poolid [label="ID returned to caller"];
+    poolid -> idralloc [color=blue,label="actual call"];
+    workerid -> alloc [color=blue,label="ida_alloc wrapper"];
+    workerid -> workerfail [style=dashed,label="only later allocation/kthread errors"];
+    pid -> idralloc [color=blue,label="explicit tid"];
+    pid -> cyclic [color=blue,label="automatic pid"];
+    pid -> pidpublish [style=dotted,label="after initialization/gates"];
+    pidpublish -> replace [color=blue,label="actual call"];
+    pidfind -> find [color=blue,label="actual call"];
+    pidfree -> remove [color=blue,label="actual call if path reached"];
+    find -> oldF02 [style=dotted,label="raw index risk"];
+    replace -> oldF02 [style=dashed,label="bounds precondition shared"];
+    nextint -> nextul [color=blue,label="actual call"];
+    iter -> nextul [style=dashed,label="independent APIs; no actual edge"];
+    pidpublish -> pidfind [style=dashed,label="lookup only if later invoked"];
+  }
+  review [shape=note,label="C06 Pro independent review:\nR89-01/02 corrections + batch90\nmainline_acceptance=PENDING\nruntime/P9=NOT_RUN"];
+  old_macro -> review [style=dashed,label="D00 pending"];
+  old_null -> review [style=dashed,label="D00 pending"];
+  poolid -> review [style=dashed,label="bounded static evidence"];
+  pidfind -> review [style=dashed,label="bounded static evidence"];
+}

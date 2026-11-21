@@ -1,0 +1,225 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-CWD-DISPLAY-118",
+  "record_type": "bounded_deferred_findings",
+  "date": "2026-11-21",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "inheritance": {
+    "R115_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R115_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R115_03": "OPEN",
+    "R116_01": "OPEN",
+    "R116_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R117_01": "OPEN",
+    "R117_02": "OPEN",
+    "R117_03": "OPEN",
+    "batch115": "RETURN",
+    "batch116": "RETURN",
+    "batch117": "RETURN"
+  },
+  "candidates": [
+    {
+      "id": "CW118-CAND-01",
+      "root": "R115-03",
+      "kind": "DOCUMENT_ACTUAL_GRAPH",
+      "premise": "old 117 cluster undefined and mappings absent, older numerical read_zero cases accepted",
+      "candidate": "118 R115 graph starts at read/write map instances and generated x64 wrappers, contains file_ppos/local positions and 0/P/P1 returns",
+      "source_ids": [
+        "CW118-P01",
+        "CW118-E001",
+        "CW118-E004",
+        "CW118-E007",
+        "CW118-E008",
+        "CW118-E009",
+        "CW118-E012",
+        "CW118-E015",
+        "CW118-E026",
+        "CW118-E028"
+      ],
+      "first_unverified_step": "C08 Pro replays all actual R115 graph edge kinds and numerical models including queued special gate",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "CW118-CAND-02",
+      "root": "R116-01",
+      "kind": "DOCUMENT_EVIDENCE_CLASSIFICATION",
+      "premise": "one/two/three tail value model accepted but CT117-E040/E046/E048 and old P29 consumers misindexed",
+      "candidate": "118 new true/false return, three asm label windows, closedir declaration/body/ls call all independently reclassified",
+      "source_ids": [
+        "CW118-E032",
+        "CW118-E033",
+        "CW118-E038",
+        "CW118-E039",
+        "CW118-E040",
+        "CW118-E042",
+        "CW118-E045"
+      ],
+      "first_unverified_step": "C08 Pro checks three old phantom P29 consumers and target path; independent tail initialized premise",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "CW118-CAND-03",
+      "root": "R117-01",
+      "kind": "DOCUMENT_TABLE_REPAIR",
+      "premise": "117 report seven undefined firstNUL cells although facts contain real values",
+      "candidate": "seven 8-column rows firstNUL 3/1/2/2/0/0/0 and byte request/printf lengths individually reconciled",
+      "source_ids": [
+        "CW118-E080",
+        "CW118-E082",
+        "CW118-E083"
+      ],
+      "first_unverified_step": "C08 recomputes each buffer's first zero and compares both 117 facts fields and table width",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "CW118-CAND-04",
+      "root": "R117-02",
+      "kind": "HISTORICAL_PREFIX_AND_MAPPING",
+      "premise": "117 evidence has88 source windows and MANIFEST line113 one explanatory prefix, total89",
+      "candidate": "118 distinguishes P2 windows and six-file prefix occurrences, corrects read/write/open/close actual mapping lines4–7 and lseek11",
+      "source_ids": [
+        "CW118-P01",
+        "CW118-P02",
+        "CW118-E001",
+        "CW118-E002"
+      ],
+      "first_unverified_step": "C08 Pro recounts final118 all six formal prefix occurrences and actual mapping source windows",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "CW118-CAND-05",
+      "root": "R117-03",
+      "kind": "DOCUMENT_CALL_OWNER_GRAPH",
+      "premise": "old CAT graph used direct CALL for malloc->memset and vfs->generic method",
+      "candidate": "118 CAT117 has separate cat-owned direct calls, sequence/data edges and vfs_read->new_sync_read->f_op->read_iter generic target",
+      "source_ids": [
+        "CW118-E019",
+        "CW118-E023",
+        "CW118-E047",
+        "CW118-E007",
+        "CW118-E012"
+      ],
+      "first_unverified_step": "C08 Pro traces normal/short/open fail/zero-count graph edges and target binding semantics",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "CW118-CAND-06",
+      "root": "A",
+      "kind": "SHELL_CWD_BOOTSTRAP",
+      "premise": "main clears static current_dir[4096] then calls getcwd ignoring return",
+      "candidate": "valid copied root string vs no user-buffer write yield distinct initial pwd/prompt while same prompt formatting owner",
+      "source_ids": [
+        "CW118-E050",
+        "CW118-E051",
+        "CW118-E052",
+        "CW118-E056",
+        "CW118-E057"
+      ],
+      "first_unverified_step": "actual compiled getcwd stub return and reliable initial user-buffer copy; no runtime",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "CW118-CAND-07",
+      "root": "B",
+      "kind": "CHDIR_CACHE_DIVERGENCE",
+      "premise": "cd dot early return before chdir, other successful chdir updates curr->fs->pwd before shell clears and calls getcwd",
+      "candidate": "stale cache can survive cd dot, failed chdir leaves shell unchanged, success+getcwd no write can leave shell blank while kernel pwd changed",
+      "source_ids": [
+        "CW118-E063",
+        "CW118-E064",
+        "CW118-E065",
+        "CW118-E066",
+        "CW118-E071",
+        "CW118-E072"
+      ],
+      "first_unverified_step": "valid user_path_at, directory lookup and actual getcwd copy/ABI behavior",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "CW118-CAND-08",
+      "root": "C",
+      "kind": "CACHE_DISPLAY_VS_KERNEL_PWD",
+      "premise": "pwd and prompt format shell array not curr->fs->pwd; getcwd success may copy bytes but return is pointer cast to int",
+      "candidate": "empty cache gives pwd LF and prompt MyOS2: # _, even when kernel pwd is /new in no-write model; cat uses same cache for filename",
+      "source_ids": [
+        "CW118-E074",
+        "CW118-E075",
+        "CW118-E077",
+        "CW118-E079",
+        "CW118-E085",
+        "CW118-E090",
+        "CW118-E091"
+      ],
+      "first_unverified_step": "real stdout write results, exact user-getcwd buffer effects and target integer/ABI conversion",
+      "status": "CONDITIONAL_STATIC"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "CW118-GAP-01",
+      "root": "R115-03",
+      "first_unverified_step": "C08 Pro confirms R115 actual mapping/ppos/commit graph edge evidence and 0/4096/4097 paths",
+      "resume": "118 DOT cluster_R115 + facts.D00.R115_03",
+      "status": "PENDING"
+    },
+    {
+      "id": "CW118-GAP-02",
+      "root": "R116-01",
+      "first_unverified_step": "C08 Pro validates one/two/three tail writer identities, C/ASM label provenance, actual closedir declaration and old consumers",
+      "resume": "118 facts.D00.R116_01 + evidence.md",
+      "status": "PENDING"
+    },
+    {
+      "id": "CW118-GAP-03",
+      "root": "R117-01",
+      "first_unverified_step": "C08 Pro verifies eight columns, seven rows, 117 facts comparison, firstNUL and printf bytes",
+      "resume": "118 report R117-01 table and facts.D00.R117_01",
+      "status": "PENDING"
+    },
+    {
+      "id": "CW118-GAP-04",
+      "root": "R117-02",
+      "first_unverified_step": "C08 Pro independently recounts old88/89 and 118 filewise prefix count after commit",
+      "resume": "117 fixed MANIFEST line113 and 118 evidence/manifest",
+      "status": "PENDING"
+    },
+    {
+      "id": "CW118-GAP-05",
+      "root": "R117-03",
+      "first_unverified_step": "C08 Pro distinguishes CAT117 call owner vs sequence vs method binding; ensure correct callback",
+      "resume": "118 DOT cluster_CAT117",
+      "status": "PENDING"
+    },
+    {
+      "id": "CW118-GAP-06",
+      "root": "A",
+      "first_unverified_step": "confirm actual startup getcwd copy, returned pointer conversion, stdout and console fd",
+      "resume": "myshell.c:58-104; kernel d_path.c:196-230",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "CW118-GAP-07",
+      "root": "B",
+      "first_unverified_step": "test stable chdir directory lookup and getcwd buffer bytes, failure errno and concurrent fs changes",
+      "resume": "myshell.c:188-212; open.c:272-293",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "CW118-GAP-08",
+      "root": "C_INTEGRATION",
+      "first_unverified_step": "real pwd/prompt/cat stdout requests and terminal display; full P9, compile/link, QEMU or hardware",
+      "resume": "myshell.c:75-104/245-269, printf.c:11-25",
+      "status": "NOT_RUN"
+    }
+  ],
+  "normal_issues": "Future kernel issues per project 18 deferred; this is analysis, not code repair",
+  "full_local_P9": "NOT_RUN",
+  "compiler": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "terminal": "NOT_RUN"
+}

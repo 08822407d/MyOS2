@@ -1,0 +1,1817 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-UACCESS-RECOVERY-64",
+  "record_type": "bounded_exception_fault_alternative_facts_and_documentary_challenge",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "produced_by": "GPT-6 (self reported), backend not independently attestable",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "fixed_contract94_short12": "aeefb9025a55",
+  "execution_base_short12": "51477ed51ee2",
+  "read_channel": "GitHub_connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "DOCUMENTARY_DISPUTE_SUBMITTED_PENDING_MAINLINE",
+  "subjects": {
+    "A": "completed_in_scope",
+    "B": "completed_in_scope",
+    "C": "completed_in_scope"
+  },
+  "runtime_evidence": "NOT_RUN",
+  "source_ledger": [
+    {
+      "path": "mykernel/fs/vfs/readdir.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "89c17eb48a64",
+      "role": "D00 original C14-C16 + four new anchors"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/asm.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "0aa2fa9155f6",
+      "role": "A three-field extable producer macros"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/uaccess_64.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "90ca89193f9c",
+      "role": "A/C copy_user_generic"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/fault.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "739a1eaaaf0b",
+      "role": "B complete selected handlers"
+    },
+    {
+      "path": "mykernel/scripts/target_kernel.cmake",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "7374ea803bf3",
+      "role": "A linker path (source context)"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "ef5baeb11176",
+      "role": "A/C full linker script (source context)"
+    },
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "6019436417ad",
+      "role": "G00 build switches (source context)"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/alternative.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "3f6ef892e508",
+      "role": "C alternative metadata macros"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/smap.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "7ceb4a24304c",
+      "role": "C stac/clac wrappers"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/bugs.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "4c57524dfbba",
+      "role": "C check_bugs commented patcher"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/common.c",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "cae051b123c8",
+      "role": "C cpu_init commented patcher"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "b10e280f26f0",
+      "role": "B TASK_SIZE_MAX source"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/errno-base.h",
+      "ref": "time@a039d9803ade",
+      "blob_sha_short12": "8705e60aee51",
+      "role": "B ENOERR zero source"
+    }
+  ],
+  "prior_return_disposition": {
+    "prior_batch": "CORE-USER-UACCESS-COPY-63",
+    "original_acceptance_verdict": "RETURN_DOCUMENTATION",
+    "returned_item": "R63-01",
+    "current_status": "DOCUMENTARY_DISPUTE_SUBMITTED_PENDING_MAINLINE",
+    "author_can_close": false,
+    "old_C14_C15_C16": [
+      {
+        "id": "C14",
+        "start": 108,
+        "end": 112,
+        "blank_lines": [
+          112
+        ],
+        "verdict": "original 5 physical lines exactly match pinned source"
+      },
+      {
+        "id": "C15",
+        "start": 113,
+        "end": 117,
+        "blank_lines": [],
+        "verdict": "original 5 physical lines exactly match pinned source"
+      },
+      {
+        "id": "C16",
+        "start": 117,
+        "end": 121,
+        "blank_lines": [
+          119
+        ],
+        "verdict": "original 5 physical lines exactly match pinned source"
+      }
+    ],
+    "verified_three_original_quotes": 3,
+    "old_quote_count": 64,
+    "old_remaining_quotes_not_rechecked": 61,
+    "original_short_anchor_frozen": true,
+    "old_comment_6736044109_frozen": true,
+    "new_four_anchor_map": {
+      "C14": [
+        "D01"
+      ],
+      "C15": [
+        "D02",
+        "D03"
+      ],
+      "C16": [
+        "D04"
+      ]
+    },
+    "mainline_claim": "R63-01 alleged C14/C15/C16 omitted 1/3/1 source blank lines",
+    "independent_test": "fetch_file pinned time, raw.githubusercontent fixed pin and fetch_blob same blob all agree; each C14/C15/C16 original label matches exact contiguous physical lines within filldir64",
+    "rebuttal": "C14 includes actual empty L112, C15 has no empties L113-117, C16 includes empty L119. Four reviewer-proposed replacements inject blanks absent from source.",
+    "P2_interpretation": "No substantive P2 failure of these three original anchors is supported by the independently re-read source",
+    "P13_metadata": "63 MANIFEST genuinely lacks produced_by; new 64 MANIFEST will state self reported GPT-6 and backend unknown",
+    "original_manifest_64_of_64_claim": "Not independently proven for the other 61 historical anchors; only these three objections rebutted. Do not reissue 64/64 as new full validation.",
+    "original_R58C_S01": "58 B25 earlier wrongful allegation withdrawn; not reopened",
+    "owner_action_now": "C05 to independently resolve R63-01; no executor self-closure"
+  },
+  "source_context": [
+    {
+      "path": "mykernel/scripts/target_kernel.cmake",
+      "exact_line": 7,
+      "text": "    -T ${PROJECT_SOURCE_DIR}/arch/${ARCH}/kernel.lds",
+      "usage": "selected linker script via CMake source text, no build"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel.lds",
+      "lines": 187,
+      "explicit___ex_table": false,
+      "explicit_altinstructions": false,
+      "explicit_altinstr_replacement": false,
+      "explicit_boundary_symbols": false,
+      "limit": "no final ELF/orphan/section-GC conclusions"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/alternative.h",
+      "lines": "69-94",
+      "state": "struct alt_instr and extern patcher declarations commented"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/bugs.c",
+      "line": 62,
+      "state": "alternative_instructions() commented"
+    },
+    {
+      "path": "mykernel/arch/x86_64/kernel/cpu/common.c",
+      "line": 692,
+      "state": "alternative_instructions() commented"
+    }
+  ],
+  "exception_record_link_matrix": {
+    "source_makers": [
+      {
+        "macro": "_ASM_EXTABLE_TYPE",
+        "file": "asm.h",
+        "physical_lines": "128-134 __ASSEMBLY__ branch; 178-184 C inline asm branch",
+        "section": "__ex_table",
+        "field_sequence": [
+          ".long fault - own_field_dot",
+          ".long fixup - own_field_dot",
+          ".long type"
+        ],
+        "align": 4,
+        "requested_type": "EX_TYPE_UACCESS symbolic; numeric definition not established"
+      },
+      {
+        "macro": "_ASM_EXTABLE_UA",
+        "source_lines": "212-213",
+        "expands_to": "_ASM_EXTABLE_TYPE(from,to,EX_TYPE_UACCESS)"
+      },
+      {
+        "consumer": "copy_user_generic",
+        "file": "uaccess_64.h",
+        "source_lines": "109-123",
+        "marked_fault_label": "1:",
+        "marked_fixup_label": "2:",
+        "operands": "+c(len), +D(to), +S(from)",
+        "source_annotation": "_ASM_EXTABLE_UA(1b,2b); no actual exception fixup proven"
+      }
+    ],
+    "source_record_bytes_if_emitted": 12,
+    "models": [
+      {
+        "id": "A-EXT-1",
+        "input": {
+          "record_start": "0x1000",
+          "fault_label": "0x2000",
+          "fixup_label": "0x3000"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x1000",
+          "to_relative_at": "0x1004"
+        },
+        "field_signed32_displacements": {
+          "from": 4096,
+          "to": 8188
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-2",
+        "input": {
+          "record_start": "0x1000",
+          "fault_label": "0xf00",
+          "fixup_label": "0xe00"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x1000",
+          "to_relative_at": "0x1004"
+        },
+        "field_signed32_displacements": {
+          "from": -256,
+          "to": -516
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-3",
+        "input": {
+          "record_start": "0x1000",
+          "fault_label": "0x1000",
+          "fixup_label": "0x1004"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x1000",
+          "to_relative_at": "0x1004"
+        },
+        "field_signed32_displacements": {
+          "from": 0,
+          "to": 0
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-4",
+        "input": {
+          "record_start": "0x1000",
+          "fault_label": "0x1800",
+          "fixup_label": "0x1800"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x1000",
+          "to_relative_at": "0x1004"
+        },
+        "field_signed32_displacements": {
+          "from": 2048,
+          "to": 2044
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-5",
+        "input": {
+          "record_start": "0x3000",
+          "fault_label": "0x2000",
+          "fixup_label": "0x4000"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x3000",
+          "to_relative_at": "0x3004"
+        },
+        "field_signed32_displacements": {
+          "from": -4096,
+          "to": 4092
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-6",
+        "input": {
+          "record_start": "0x3000",
+          "fault_label": "0x3100",
+          "fixup_label": "0x3200"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x3000",
+          "to_relative_at": "0x3004"
+        },
+        "field_signed32_displacements": {
+          "from": 256,
+          "to": 508
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-7",
+        "input": {
+          "record_start": "0x100",
+          "fault_label": "0x110",
+          "fixup_label": "0x120"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x100",
+          "to_relative_at": "0x104"
+        },
+        "field_signed32_displacements": {
+          "from": 16,
+          "to": 28
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-8",
+        "input": {
+          "record_start": "0x100",
+          "fault_label": "0xff",
+          "fixup_label": "0xff"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x100",
+          "to_relative_at": "0x104"
+        },
+        "field_signed32_displacements": {
+          "from": -1,
+          "to": -5
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-9",
+        "input": {
+          "record_start": "0x4000",
+          "fault_label": "0x4005",
+          "fixup_label": "0x4009"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x4000",
+          "to_relative_at": "0x4004"
+        },
+        "field_signed32_displacements": {
+          "from": 5,
+          "to": 5
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      },
+      {
+        "id": "A-EXT-10",
+        "input": {
+          "record_start": "0x4000",
+          "fault_label": "0x5000",
+          "fixup_label": "0x5000"
+        },
+        "source_field_positions": {
+          "from_relative_at": "0x4000",
+          "to_relative_at": "0x4004"
+        },
+        "field_signed32_displacements": {
+          "from": 4096,
+          "to": 4092
+        },
+        "premises": "each .long relative to own location, labels resolved and s32 fields fit; symbolic assembly model only"
+      }
+    ],
+    "link_script": {
+      "build_selector": "target_kernel.cmake L6-8 specifies -T .../arch/${ARCH}/kernel.lds",
+      "selected_script": "arch/x86_64/kernel.lds",
+      "explicit___ex_table": false,
+      "explicit_ex_table_boundaries": false,
+      "explicit_altinstructions": false,
+      "explicit_alt_instr_boundaries": false,
+      "unknowns": [
+        "default linker orphan section handling",
+        "linker GC flags",
+        "actual final ELF section retention and placement",
+        "runtime exception table consumer registration"
+      ]
+    },
+    "fault_consumer_scope": "selected fixed arch/x86_64/mm/fault.c 465 lines: no active __ex_table lookup nor regs->ip fixup in its chosen bodies. This is not proof all exception-entry consumers in repository are absent",
+    "bounded_search": {
+      "queries": [
+        "fixup_exception(",
+        "search_exception_tables(",
+        "__start___ex_table",
+        "__ex_table",
+        "apply_alternatives(",
+        "alternative_instructions(",
+        "rep_movs_alternative",
+        ".altinstructions"
+      ],
+      "mode": "default-branch navigation; reread candidates at time pin",
+      "directory_checks": [
+        "arch/x86_64/lib",
+        "arch/x86_64/mm",
+        "arch/x86_64/kernel",
+        "arch/x86_64/include/asm"
+      ],
+      "negative_result_scope": "no proof whole repository or linked binary lacks them"
+    }
+  },
+  "address_fault_route_matrix": {
+    "task_size_max_hex": "0x7ffffffff000",
+    "task_size_source": "page_const_arch.h TASK_SIZE_MAX=(1UL<<47)-4096",
+    "x86_uaccess_source": "uaccess_64.h shortcut tests signed-address start when compiler claims small-constant, general tests signed sum and wrap",
+    "cases": [
+      {
+        "id": "B-ADDR-01",
+        "address": "0x0",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_user_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-02",
+        "address": "0x0",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_user_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-03",
+        "address": "0x1",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_user_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-04",
+        "address": "0x1",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_user_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-05",
+        "address": "0x7fffffffe000",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_user_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-06",
+        "address": "0x7fffffffe000",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_user_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-07",
+        "address": "0x7fffffffefff",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_user_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-08",
+        "address": "0x7fffffffefff",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_user_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-09",
+        "address": "0x7ffffffff000",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-10",
+        "address": "0x7ffffffff000",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-11",
+        "address": "0x7ffffffff001",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-12",
+        "address": "0x7ffffffff001",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-13",
+        "address": "0x800000000000",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-14",
+        "address": "0x800000000000",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": true,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-15",
+        "address": "0x7fffffffffffffff",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-16",
+        "address": "0x7fffffffffffffff",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": true,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-17",
+        "address": "0x8000000000000000",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": false,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-18",
+        "address": "0x8000000000000000",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": false,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-19",
+        "address": "0x8000000000000001",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": false,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-20",
+        "address": "0x8000000000000001",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": false,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-21",
+        "address": "0xfffffffffffffff0",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": false,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-22",
+        "address": "0xfffffffffffffff0",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": false,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-23",
+        "address": "0xffffffffffffffff",
+        "size": 16,
+        "user_mode_regs": false,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": false,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "no FAULT_FLAG_USER from user_mode",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      },
+      {
+        "id": "B-ADDR-24",
+        "address": "0xffffffffffffffff",
+        "size": 16,
+        "user_mode_regs": true,
+        "assumed_x86_shortcut_if_compiler_confirms_constant_small_size": false,
+        "assumed_x86_general_branch": false,
+        "selected_fault_route_if_CPU_enters_exc_page_fault": "do_kern_addr_fault",
+        "user_flag_if_user_route": "FAULT_FLAG_USER requested",
+        "error_code_bit_inputs": "not inferred from address or user_mode",
+        "limits": "no mapping, CPU #PF/#GP, kernel object, state or compiled/optimized runtime proven"
+      }
+    ],
+    "control_cases": [
+      {
+        "id": "B-CTRL-1",
+        "input": {
+          "route": "do_user_addr_fault",
+          "vma": "valid",
+          "opaque_mm_fault": 0
+        },
+        "source_observation": "source while comparison false; function can reach normal local return if every earlier access/call valid",
+        "limit": "0 does not prove PTE restored/instruction retried"
+      },
+      {
+        "id": "B-CTRL-2",
+        "input": {
+          "route": "do_user_addr_fault",
+          "vma": "valid",
+          "opaque_mm_fault": 1
+        },
+        "source_observation": "while(fault != ENOERR) repeatedly evaluates nonzero unchanged local variable; no active second myos_handle_mm_fault call",
+        "limit": "source control only; no measured deadlock"
+      },
+      {
+        "id": "B-CTRL-3",
+        "input": {
+          "route": "do_user_addr_fault",
+          "vma": "NULL"
+        },
+        "source_observation": "myos_bad_area requested then return if it returns",
+        "limit": "myos_bad_area has kmalloc/memset/parse/print before while(1), early failure possible"
+      },
+      {
+        "id": "B-CTRL-4",
+        "input": {
+          "route": "do_kern_addr_fault",
+          "regs": "valid"
+        },
+        "source_observation": "selected active body reaches while(1) after commented alternative fixup gates",
+        "limit": "normal return not shown, no CPU run"
+      },
+      {
+        "id": "B-CTRL-5",
+        "input": {
+          "route": "do_user_addr_fault",
+          "mm": "invalid NULL"
+        },
+        "source_observation": "mm=current->mm then simple_find_vma(mm,address) called; cannot assign safe noVMA result",
+        "limit": "first invalid mm VMA helper access STOP"
+      },
+      {
+        "id": "B-CTRL-6",
+        "input": {
+          "route": "exc_page_fault",
+          "address": "invalid CR2 read"
+        },
+        "source_observation": "selected call to read_cr2 first; cannot assert handle_page_fault invocation",
+        "limit": "hardware/regs invalid STOP"
+      }
+    ],
+    "source_dispatch": [
+      "exc_page_fault(regs,error_code) reads CR2 then calls handle_page_fault(regs,error_code,address)",
+      "handle_page_fault chooses fault_in_kernel_space(address) by numeric address>=TASK_SIZE_MAX, independent of user_mode(regs)",
+      "kernel-address route do_kern_addr_fault has the selected active while(1), fixup path comments only",
+      "low-address route do_user_addr_fault derives flags via user_mode(regs) and X86_PF_ bits, then VMA lookup with valid-mm premises",
+      "noVMA causes myos_bad_area request; validVMA requests myos_handle_mm_fault once, then while comparison to ENOERR",
+      "nonzero fault is not fed through active retry/OOM/signal/fixup; successful0 not evidence real PTE"
+    ],
+    "source_boundaries": [
+      "user_mode(regs) is privilege context, not an address >= threshold check",
+      "error_code flag bits are not equal to user_mode(regs)",
+      "access_ok numeric acceptance is not a guarantee of readable/writable mapped range",
+      "PF vs GP hardware event not inferred from address model",
+      "local_irq_enable/disable and diagnostic memory/callee validity matter before loop",
+      "nothing in selected bodies actively looks up __ex_table or rewrites pt_regs.ip for fixup"
+    ],
+    "historical_link": "CORE-USER-MM-FAULT-12::MF12-F01/F02/F03/F04 keep status deferred_owner_not_ready, R12-S01/S02 applied to stable VMA branch and conditional graph"
+  },
+  "alternative_activation_matrix": {
+    "records": [
+      {
+        "source": "alternative.h::OLDINSTR",
+        "kind": "assembly-string macro",
+        "effect": "labels 771/772 plus NOP padding to 773; no code patching by this macro alone"
+      },
+      {
+        "source": "alternative.h::ALTINSTR_ENTRY",
+        "kind": "assembly-string macro",
+        "section": ".altinstructions",
+        "fields": [
+          "s32 orig relative to its own .long field",
+          "s32 repl relative to its own .long field",
+          "u32 ft_flags",
+          "u8 old_total_len",
+          "u8 repl_len"
+        ],
+        "nominal_bytes": 14,
+        "notes": "struct alt_instr in this header is commented; source metadata layout model, no binary check"
+      },
+      {
+        "source": "alternative.h::ALTINSTR_REPLACEMENT",
+        "section": ".altinstr_replacement",
+        "effect": "replacement source bytes under label 774; object retained in linker unknown"
+      },
+      {
+        "source": "alternative.h::ALTERNATIVE",
+        "effect": "concatenates OLDINSTR, ALTINSTR_ENTRY, ALTINSTR_REPLACEMENT as source strings"
+      },
+      {
+        "source": "uaccess_64.h::copy_user_generic",
+        "old_string": "rep movsb",
+        "new_string": "call rep_movs_alternative",
+        "feature_arg": "ALT_NOT(X86_FEATURE_FSRM)",
+        "notes": "actual patch choice and rep_movs implementation not established"
+      },
+      {
+        "source": "smap.h::stac / clac",
+        "old_string": "empty",
+        "new_string": "__ASM_STAC / __ASM_CLAC",
+        "feature_arg": "X86_FEATURE_SMAP",
+        "notes": "wrappers call alternative macro to declare candidates, not runtime apply"
+      },
+      {
+        "source": "bugs.c::check_bugs",
+        "line": 62,
+        "actual_status": "alternative_instructions() commented; identify_boot_cpu is active"
+      },
+      {
+        "source": "common.c::cpu_init",
+        "line": 692,
+        "actual_status": "alternative_instructions() commented; not an active call"
+      },
+      {
+        "source": "alternative.h",
+        "lines": "69-95",
+        "actual_status": "struct alt_instr, extern apply_alternatives, extern alternative_instructions are commented"
+      }
+    ],
+    "feature_cases": [
+      {
+        "id": "C-ALT-1",
+        "scenario": "FSRM_set_SMAP_set",
+        "assumed_hardware_feature_bits": {
+          "FSRM": true,
+          "SMAP": true
+        },
+        "old_source": "rep movsb",
+        "replacement_source": "call rep_movs_alternative",
+        "smap_source": "stac/clac alternative no-op or instruction candidate",
+        "alt_metadata": "present in source macros",
+        "patched_runtime_choice": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement",
+        "premises": [
+          "source symbols and macros selected",
+          "metadata entries emitted/retained if build exists",
+          "processor feature values hypothetical"
+        ]
+      },
+      {
+        "id": "C-ALT-2",
+        "scenario": "FSRM_unset_SMAP_set",
+        "assumed_hardware_feature_bits": {
+          "FSRM": false,
+          "SMAP": true
+        },
+        "old_source": "rep movsb",
+        "replacement_source": "call rep_movs_alternative",
+        "smap_source": "stac/clac alternative no-op or instruction candidate",
+        "alt_metadata": "present in source macros",
+        "patched_runtime_choice": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement",
+        "premises": [
+          "source symbols and macros selected",
+          "metadata entries emitted/retained if build exists",
+          "processor feature values hypothetical"
+        ]
+      },
+      {
+        "id": "C-ALT-3",
+        "scenario": "FSRM_set_SMAP_unset",
+        "assumed_hardware_feature_bits": {
+          "FSRM": true,
+          "SMAP": false
+        },
+        "old_source": "rep movsb",
+        "replacement_source": "call rep_movs_alternative",
+        "smap_source": "stac/clac alternative no-op or instruction candidate",
+        "alt_metadata": "present in source macros",
+        "patched_runtime_choice": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement",
+        "premises": [
+          "source symbols and macros selected",
+          "metadata entries emitted/retained if build exists",
+          "processor feature values hypothetical"
+        ]
+      },
+      {
+        "id": "C-ALT-4",
+        "scenario": "FSRM_unset_SMAP_unset",
+        "assumed_hardware_feature_bits": {
+          "FSRM": false,
+          "SMAP": false
+        },
+        "old_source": "rep movsb",
+        "replacement_source": "call rep_movs_alternative",
+        "smap_source": "stac/clac alternative no-op or instruction candidate",
+        "alt_metadata": "present in source macros",
+        "patched_runtime_choice": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement",
+        "premises": [
+          "source symbols and macros selected",
+          "metadata entries emitted/retained if build exists",
+          "processor feature values hypothetical"
+        ]
+      },
+      {
+        "id": "C-ALT-5",
+        "scenario": "FSRM_unknown_SMAP_unknown",
+        "assumed_hardware_feature_bits": {
+          "FSRM": null,
+          "SMAP": null
+        },
+        "old_source": "rep movsb",
+        "replacement_source": "call rep_movs_alternative",
+        "smap_source": "stac/clac alternative no-op or instruction candidate",
+        "alt_metadata": "present in source macros",
+        "patched_runtime_choice": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement",
+        "premises": [
+          "source symbols and macros selected",
+          "metadata entries emitted/retained if build exists",
+          "processor feature values hypothetical"
+        ]
+      },
+      {
+        "id": "C-ALT-6",
+        "scenario": "FSRM_yes_patcher_absent",
+        "assumed_hardware_feature_bits": {
+          "FSRM": true,
+          "SMAP": null
+        },
+        "old_source": "rep movsb",
+        "replacement_source": "call rep_movs_alternative",
+        "smap_source": "stac/clac alternative no-op or instruction candidate",
+        "alt_metadata": "present in source macros",
+        "patched_runtime_choice": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement",
+        "premises": [
+          "source symbols and macros selected",
+          "metadata entries emitted/retained if build exists",
+          "processor feature values hypothetical"
+        ]
+      },
+      {
+        "id": "C-ALT-7",
+        "scenario": "FSRM_no_patcher_absent",
+        "assumed_hardware_feature_bits": {
+          "FSRM": false,
+          "SMAP": null
+        },
+        "old_source": "rep movsb",
+        "replacement_source": "call rep_movs_alternative",
+        "smap_source": "stac/clac alternative no-op or instruction candidate",
+        "alt_metadata": "present in source macros",
+        "patched_runtime_choice": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement",
+        "premises": [
+          "source symbols and macros selected",
+          "metadata entries emitted/retained if build exists",
+          "processor feature values hypothetical"
+        ]
+      },
+      {
+        "id": "C-ALT-8",
+        "scenario": "FSRM_yes_text_unlinked",
+        "assumed_hardware_feature_bits": {
+          "FSRM": true,
+          "SMAP": null
+        },
+        "old_source": "rep movsb",
+        "replacement_source": "call rep_movs_alternative",
+        "smap_source": "stac/clac alternative no-op or instruction candidate",
+        "alt_metadata": "present in source macros",
+        "patched_runtime_choice": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement",
+        "premises": [
+          "source symbols and macros selected",
+          "metadata entries emitted/retained if build exists",
+          "processor feature values hypothetical"
+        ]
+      }
+    ],
+    "padding_cases": [
+      {
+        "case": "old_len_5_replace_len_5",
+        "old_len": 5,
+        "new_len": 5,
+        "expected_pad": 0,
+        "id": "C-META-1",
+        "premises": "abstract OLDINSTR .skip max(alt_rlen-alt_slen,0) pure integer model; not assembled bytes"
+      },
+      {
+        "case": "old_len_2_replace_len_5",
+        "old_len": 2,
+        "new_len": 5,
+        "expected_pad": 3,
+        "id": "C-META-2",
+        "premises": "abstract OLDINSTR .skip max(alt_rlen-alt_slen,0) pure integer model; not assembled bytes"
+      },
+      {
+        "case": "old_len_7_replace_len_3",
+        "old_len": 7,
+        "new_len": 3,
+        "expected_pad": 0,
+        "id": "C-META-3",
+        "premises": "abstract OLDINSTR .skip max(alt_rlen-alt_slen,0) pure integer model; not assembled bytes"
+      },
+      {
+        "case": "old_len_0_replace_len_1",
+        "old_len": 0,
+        "new_len": 1,
+        "expected_pad": 1,
+        "id": "C-META-4",
+        "premises": "abstract OLDINSTR .skip max(alt_rlen-alt_slen,0) pure integer model; not assembled bytes"
+      }
+    ],
+    "enable_chain_status": {
+      "source_producer": "FOUND",
+      "compile_and_link": "NOT_ATTESTED",
+      "active_runtime_patcher": "NOT_ESTABLISHED_WITHIN_BOUNDED_SOURCE",
+      "actual_CPU_choice": "NOT_RUN"
+    },
+    "search_limit": {
+      "queries_issued": 8,
+      "dirs_inspected": 4,
+      "default_search_scope": "navigation only, fixed-time files re-fetched",
+      "positive_source": "only alternative.h and uaccess_64.h plus commented call sites",
+      "rep_movs_definition": "NOT_LOCATED; extern declaration only in bounded source",
+      "not_claimed": "global nonexistence or exact runtime failure"
+    }
+  },
+  "finite_model_cases": [
+    {
+      "id": "D-OLD-1",
+      "group": "D",
+      "input": {
+        "old_label": "C14"
+      },
+      "result": {
+        "source_range": [
+          108,
+          112
+        ],
+        "verbatim": true,
+        "old_review_claim_unfounded": true
+      }
+    },
+    {
+      "id": "D-OLD-2",
+      "group": "D",
+      "input": {
+        "old_label": "C15"
+      },
+      "result": {
+        "source_range": [
+          113,
+          117
+        ],
+        "verbatim": true,
+        "old_review_claim_unfounded": true
+      }
+    },
+    {
+      "id": "D-OLD-3",
+      "group": "D",
+      "input": {
+        "old_label": "C16"
+      },
+      "result": {
+        "source_range": [
+          117,
+          121
+        ],
+        "verbatim": true,
+        "old_review_claim_unfounded": true
+      }
+    },
+    {
+      "id": "A-EXT-1",
+      "group": "A",
+      "input": {
+        "record_start": "0x1000",
+        "fault_label": "0x2000",
+        "fixup_label": "0x3000"
+      },
+      "output": {
+        "from": 4096,
+        "to": 8188
+      }
+    },
+    {
+      "id": "A-EXT-2",
+      "group": "A",
+      "input": {
+        "record_start": "0x1000",
+        "fault_label": "0xf00",
+        "fixup_label": "0xe00"
+      },
+      "output": {
+        "from": -256,
+        "to": -516
+      }
+    },
+    {
+      "id": "A-EXT-3",
+      "group": "A",
+      "input": {
+        "record_start": "0x1000",
+        "fault_label": "0x1000",
+        "fixup_label": "0x1004"
+      },
+      "output": {
+        "from": 0,
+        "to": 0
+      }
+    },
+    {
+      "id": "A-EXT-4",
+      "group": "A",
+      "input": {
+        "record_start": "0x1000",
+        "fault_label": "0x1800",
+        "fixup_label": "0x1800"
+      },
+      "output": {
+        "from": 2048,
+        "to": 2044
+      }
+    },
+    {
+      "id": "A-EXT-5",
+      "group": "A",
+      "input": {
+        "record_start": "0x3000",
+        "fault_label": "0x2000",
+        "fixup_label": "0x4000"
+      },
+      "output": {
+        "from": -4096,
+        "to": 4092
+      }
+    },
+    {
+      "id": "A-EXT-6",
+      "group": "A",
+      "input": {
+        "record_start": "0x3000",
+        "fault_label": "0x3100",
+        "fixup_label": "0x3200"
+      },
+      "output": {
+        "from": 256,
+        "to": 508
+      }
+    },
+    {
+      "id": "A-EXT-7",
+      "group": "A",
+      "input": {
+        "record_start": "0x100",
+        "fault_label": "0x110",
+        "fixup_label": "0x120"
+      },
+      "output": {
+        "from": 16,
+        "to": 28
+      }
+    },
+    {
+      "id": "A-EXT-8",
+      "group": "A",
+      "input": {
+        "record_start": "0x100",
+        "fault_label": "0xff",
+        "fixup_label": "0xff"
+      },
+      "output": {
+        "from": -1,
+        "to": -5
+      }
+    },
+    {
+      "id": "A-EXT-9",
+      "group": "A",
+      "input": {
+        "record_start": "0x4000",
+        "fault_label": "0x4005",
+        "fixup_label": "0x4009"
+      },
+      "output": {
+        "from": 5,
+        "to": 5
+      }
+    },
+    {
+      "id": "A-EXT-10",
+      "group": "A",
+      "input": {
+        "record_start": "0x4000",
+        "fault_label": "0x5000",
+        "fixup_label": "0x5000"
+      },
+      "output": {
+        "from": 4096,
+        "to": 4092
+      }
+    },
+    {
+      "id": "B-ADDR-01",
+      "group": "B",
+      "input": {
+        "addr": "0x0",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_user_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-02",
+      "group": "B",
+      "input": {
+        "addr": "0x0",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_user_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-03",
+      "group": "B",
+      "input": {
+        "addr": "0x1",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_user_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-04",
+      "group": "B",
+      "input": {
+        "addr": "0x1",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_user_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-05",
+      "group": "B",
+      "input": {
+        "addr": "0x7fffffffe000",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_user_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-06",
+      "group": "B",
+      "input": {
+        "addr": "0x7fffffffe000",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_user_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-07",
+      "group": "B",
+      "input": {
+        "addr": "0x7fffffffefff",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_user_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-08",
+      "group": "B",
+      "input": {
+        "addr": "0x7fffffffefff",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_user_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-09",
+      "group": "B",
+      "input": {
+        "addr": "0x7ffffffff000",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-10",
+      "group": "B",
+      "input": {
+        "addr": "0x7ffffffff000",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-11",
+      "group": "B",
+      "input": {
+        "addr": "0x7ffffffff001",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-12",
+      "group": "B",
+      "input": {
+        "addr": "0x7ffffffff001",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-13",
+      "group": "B",
+      "input": {
+        "addr": "0x800000000000",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-14",
+      "group": "B",
+      "input": {
+        "addr": "0x800000000000",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": true,
+        "general": true,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-15",
+      "group": "B",
+      "input": {
+        "addr": "0x7fffffffffffffff",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": true,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-16",
+      "group": "B",
+      "input": {
+        "addr": "0x7fffffffffffffff",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": true,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-17",
+      "group": "B",
+      "input": {
+        "addr": "0x8000000000000000",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": false,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-18",
+      "group": "B",
+      "input": {
+        "addr": "0x8000000000000000",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": false,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-19",
+      "group": "B",
+      "input": {
+        "addr": "0x8000000000000001",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": false,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-20",
+      "group": "B",
+      "input": {
+        "addr": "0x8000000000000001",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": false,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-21",
+      "group": "B",
+      "input": {
+        "addr": "0xfffffffffffffff0",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": false,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-22",
+      "group": "B",
+      "input": {
+        "addr": "0xfffffffffffffff0",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": false,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-23",
+      "group": "B",
+      "input": {
+        "addr": "0xffffffffffffffff",
+        "size": 16,
+        "regs_user": false
+      },
+      "result": {
+        "short": false,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-ADDR-24",
+      "group": "B",
+      "input": {
+        "addr": "0xffffffffffffffff",
+        "size": 16,
+        "regs_user": true
+      },
+      "result": {
+        "short": false,
+        "general": false,
+        "route": "do_kern_addr_fault"
+      }
+    },
+    {
+      "id": "B-CTRL-1",
+      "group": "B",
+      "input": {
+        "route": "do_user_addr_fault",
+        "vma": "valid",
+        "opaque_mm_fault": 0
+      },
+      "result": "source while comparison false; function can reach normal local return if every earlier access/call valid"
+    },
+    {
+      "id": "B-CTRL-2",
+      "group": "B",
+      "input": {
+        "route": "do_user_addr_fault",
+        "vma": "valid",
+        "opaque_mm_fault": 1
+      },
+      "result": "while(fault != ENOERR) repeatedly evaluates nonzero unchanged local variable; no active second myos_handle_mm_fault call"
+    },
+    {
+      "id": "B-CTRL-3",
+      "group": "B",
+      "input": {
+        "route": "do_user_addr_fault",
+        "vma": "NULL"
+      },
+      "result": "myos_bad_area requested then return if it returns"
+    },
+    {
+      "id": "B-CTRL-4",
+      "group": "B",
+      "input": {
+        "route": "do_kern_addr_fault",
+        "regs": "valid"
+      },
+      "result": "selected active body reaches while(1) after commented alternative fixup gates"
+    },
+    {
+      "id": "B-CTRL-5",
+      "group": "B",
+      "input": {
+        "route": "do_user_addr_fault",
+        "mm": "invalid NULL"
+      },
+      "result": "mm=current->mm then simple_find_vma(mm,address) called; cannot assign safe noVMA result"
+    },
+    {
+      "id": "B-CTRL-6",
+      "group": "B",
+      "input": {
+        "route": "exc_page_fault",
+        "address": "invalid CR2 read"
+      },
+      "result": "selected call to read_cr2 first; cannot assert handle_page_fault invocation"
+    },
+    {
+      "id": "C-ALT-1",
+      "group": "C",
+      "input": {
+        "FSRM": true,
+        "SMAP": true
+      },
+      "result": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement"
+    },
+    {
+      "id": "C-ALT-2",
+      "group": "C",
+      "input": {
+        "FSRM": false,
+        "SMAP": true
+      },
+      "result": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement"
+    },
+    {
+      "id": "C-ALT-3",
+      "group": "C",
+      "input": {
+        "FSRM": true,
+        "SMAP": false
+      },
+      "result": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement"
+    },
+    {
+      "id": "C-ALT-4",
+      "group": "C",
+      "input": {
+        "FSRM": false,
+        "SMAP": false
+      },
+      "result": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement"
+    },
+    {
+      "id": "C-ALT-5",
+      "group": "C",
+      "input": {
+        "FSRM": null,
+        "SMAP": null
+      },
+      "result": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement"
+    },
+    {
+      "id": "C-ALT-6",
+      "group": "C",
+      "input": {
+        "FSRM": true,
+        "SMAP": null
+      },
+      "result": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement"
+    },
+    {
+      "id": "C-ALT-7",
+      "group": "C",
+      "input": {
+        "FSRM": false,
+        "SMAP": null
+      },
+      "result": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement"
+    },
+    {
+      "id": "C-ALT-8",
+      "group": "C",
+      "input": {
+        "FSRM": true,
+        "SMAP": null
+      },
+      "result": "UNKNOWN: no verified active patcher, feature probes, final binary or opcode replacement"
+    },
+    {
+      "id": "C-META-1",
+      "group": "C",
+      "input": {
+        "old": 5,
+        "new": 5
+      },
+      "result": {
+        "padding": 0
+      }
+    },
+    {
+      "id": "C-META-2",
+      "group": "C",
+      "input": {
+        "old": 2,
+        "new": 5
+      },
+      "result": {
+        "padding": 3
+      }
+    },
+    {
+      "id": "C-META-3",
+      "group": "C",
+      "input": {
+        "old": 7,
+        "new": 3
+      },
+      "result": {
+        "padding": 0
+      }
+    },
+    {
+      "id": "C-META-4",
+      "group": "C",
+      "input": {
+        "old": 0,
+        "new": 1
+      },
+      "result": {
+        "padding": 1
+      }
+    }
+  ],
+  "finite_model_count": 55,
+  "finite_groups": {
+    "D": 3,
+    "A": 10,
+    "B": 30,
+    "C": 12
+  },
+  "prior_findings_links": [
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F01",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "note": "R12-S01 revises premises to stable inclusive VMA and removes unsupported related"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F02",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "note": "selected do_user_addr_fault permission/mm local gates commented"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F03",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "note": "nonzero fault while loop; not a new root"
+    },
+    {
+      "qualified_id": "CORE-USER-MM-FAULT-12::MF12-F04",
+      "source_field": "status",
+      "source_value": "deferred_owner_not_ready",
+      "note": "return 0 not proof actual PTE"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U03",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "note": "rep_movs implementation absent from bounded inspected source, keep open"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U04",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "note": "extable/alternative patch/SMAP runtime not proven, keep open"
+    },
+    {
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-F06",
+      "source_field": "status",
+      "source_value": "needs_evidence",
+      "note": "R63-S01 clarifies sizeof(*frame), dirent vs dentry and error branches"
+    }
+  ],
+  "prior_review_disposition": {
+    "batch63": "RETURN_DOCUMENTATION, R63-01 open; A/B technical core retained with limits; C retained pending documentary gate",
+    "mandatory": [
+      "R63-S01",
+      "R63-S02",
+      "R62-S01",
+      "R62-S02",
+      "R58C-S01",
+      "R12-S01",
+      "R12-S02"
+    ],
+    "batch62": "PASS_PENDING_LOCAL, R62-S01/S02",
+    "batch12": "PASS_PENDING_LOCAL, R12-S01/S02",
+    "batch58": "R58C-S01 correctly withdrew reviewer mistake about original B25"
+  },
+  "not_proven": [
+    "real compiled/linker section layout, orphan behavior, and extable consumer",
+    "actual IDT, #PF/#GP CPU entry or instruction retry",
+    "fault VMA or page mapping and physical fault outcome",
+    "actual CPU alternative application and rep_movs implementation",
+    "64 original batch63 evidence labels fully independently replayed",
+    "complete original historical findings dedup",
+    "full local P9, build, preprocessing or runtime tests"
+  ]
+}

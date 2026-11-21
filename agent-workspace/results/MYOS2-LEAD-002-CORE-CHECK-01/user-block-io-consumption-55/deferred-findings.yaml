@@ -1,0 +1,99 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-BLOCK-IO-CONSUMPTION-55",
+  "canonical_history": {
+    "R53_01": {
+      "canonical_status": "CLOSED_DOCUMENTATION_ONLY",
+      "origin": "C04 independent closure; false A03/B03 reviewer concerns withdrawn"
+    },
+    "batch53": {
+      "canonical_status": "PASS_PENDING_LOCAL"
+    },
+    "batch54": {
+      "canonical_status": "PASS_PENDING_LOCAL",
+      "mandatory": [
+        "R54-S01",
+        "R54-S02"
+      ]
+    },
+    "CA_03": {
+      "canonical_status": "SUPPORTED_IN_SCOPE"
+    },
+    "CA_04": {
+      "canonical_status": "SUPPORTED_IN_SCOPE"
+    },
+    "UV_01": {
+      "canonical_status": "deferred_owner_not_ready"
+    },
+    "IT35": {
+      "canonical_status": "prior_conditional_candidate_group",
+      "origin": "R35-S01/S02, not modified"
+    },
+    "SB38": {
+      "canonical_status": "prior_conditional_candidate_group",
+      "origin": "R38-S01/S02, not modified"
+    },
+    "RH54_F02": {
+      "canonical_status": "prior_source_only_candidate",
+      "origin": "fixed driver returns, not closed"
+    }
+  },
+  "candidates": [
+    {
+      "id": "BI55-F01",
+      "topic": "A",
+      "disposition": "source_only_conditional",
+      "source": "FAT usercopy residue and partial progress obscured",
+      "prior_distinction": "RH54-F02 upstream driver return, not FAT copy contract",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BI55-F02",
+      "topic": "A",
+      "disposition": "source_only_conditional",
+      "source": "new cluster flags1 skips sector computation and can pass 0",
+      "prior_distinction": "different from RH54 driver fixed0",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BI55-F03",
+      "topic": "B",
+      "disposition": "source_only_conditional",
+      "source": "iobuf lazy result discarded and write size lacks single-buffer bound",
+      "prior_distinction": "clusters[0] and iterator R35 already recorded, not renumbered",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BI55-F04",
+      "topic": "B",
+      "disposition": "source_only_conditional",
+      "source": "flags3 equality, per-iteration reset, buffers pointer-array lacking local free",
+      "prior_distinction": "not the old R35 iterator proof",
+      "runtime": "NOT_RUN"
+    },
+    {
+      "id": "BI55-F05",
+      "topic": "C",
+      "disposition": "source_only_conditional",
+      "source": "FAT values decouple from block return and NumFATs fixed1",
+      "prior_distinction": "RH54-F02 upstream, R35 chain ERR_PTR identity retained",
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "new_candidate_count": 5,
+  "actually_observed_runtime_failures": 0,
+  "unproven": [
+    "kernel build selection",
+    "real file bytes and disk writes",
+    "FAT table contents and multi-copy recovery",
+    "iobuf memory lifetime and buffer bounds",
+    "full VFS/path/scheduler"
+  ],
+  "not_authorized": [
+    "source edit",
+    "run",
+    "merge",
+    "start56"
+  ],
+  "acceptance": "PENDING"
+}

@@ -1,0 +1,1865 @@
+{
+  "task_id": "CORE-USER-MMAP-PLACEMENT-21",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "bounded_address_placement_facts",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra (Owner selected, backend not independently attested)",
+  "date": "2026-11-02",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task_contract_short12": "84ca207f5cc2",
+  "result_base_short12": "0e139c6ca86d",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "read_channel": "connector",
+  "phase": 2,
+  "nodes": [
+    {
+      "id": "AP21-N01",
+      "name": "do_mmap",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N02",
+      "name": "request.addr",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N03",
+      "name": "request.len",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N04",
+      "name": "request.flags",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N05",
+      "name": "request.pgoff",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N06",
+      "name": "round_hint_to_min",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N07",
+      "name": "mmap_min_addr",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N08",
+      "name": "__get_unmapped_area",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N09",
+      "name": "get_area",
+      "kind": "function_pointer"
+    },
+    {
+      "id": "AP21-N10",
+      "name": "mm.get_unmapped_area",
+      "kind": "function_pointer"
+    },
+    {
+      "id": "AP21-N11",
+      "name": "file.f_op.get_unmapped_area",
+      "kind": "function_pointer"
+    },
+    {
+      "id": "AP21-N12",
+      "name": "arch_pick_mmap_layout",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N13",
+      "name": "setup_new_exec",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N14",
+      "name": "mm.mmap_base",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N15",
+      "name": "mm.task_size",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N16",
+      "name": "simple_get_unmapped_area",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N17",
+      "name": "info.length",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N18",
+      "name": "info.low_limit",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N19",
+      "name": "info.high_limit",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N20",
+      "name": "info.align_mask",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N21",
+      "name": "info.align_offset",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N22",
+      "name": "simple_find_vma",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N23",
+      "name": "simple_find_vm_unmapped_area_topdown",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N24",
+      "name": "simple_find_vm_unmapped_area_bottomup",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N25",
+      "name": "for_each_vma_topdown",
+      "kind": "macro"
+    },
+    {
+      "id": "AP21-N26",
+      "name": "for_each_vma",
+      "kind": "macro"
+    },
+    {
+      "id": "AP21-N27",
+      "name": "mm_prev_vma",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N28",
+      "name": "mm_next_vma",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N29",
+      "name": "vma_next_vma",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N30",
+      "name": "vma_prev_vma",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N31",
+      "name": "list_is_head_anchor",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N32",
+      "name": "__none_header_listnode_to_vma",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N33",
+      "name": "find_vma_intersection",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N34",
+      "name": "find_vma_prev_to_addr",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N35",
+      "name": "__vma_intersect_with_range",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N36",
+      "name": "simple_mmap_region",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N37",
+      "name": "simple_munmap_vma_range",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N38",
+      "name": "simple_do_vma_munmap",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N39",
+      "name": "mm.mm_mt",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N40",
+      "name": "vma.vm_start",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N41",
+      "name": "vma.vm_end",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N42",
+      "name": "TASK_SIZE",
+      "kind": "macro"
+    },
+    {
+      "id": "AP21-N43",
+      "name": "TASK_SIZE_MAX",
+      "kind": "macro"
+    },
+    {
+      "id": "AP21-N44",
+      "name": "DEFAULT_MAP_WINDOW",
+      "kind": "macro"
+    },
+    {
+      "id": "AP21-N45",
+      "name": "TASK_UNMAPPED_BASE",
+      "kind": "macro"
+    },
+    {
+      "id": "AP21-N46",
+      "name": "PAGE_MASK",
+      "kind": "macro"
+    },
+    {
+      "id": "AP21-N47",
+      "name": "PAGE_SIZE",
+      "kind": "macro"
+    },
+    {
+      "id": "AP21-N48",
+      "name": "current_candidate",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N49",
+      "name": "local.gap",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N50",
+      "name": "local.gap_end",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N51",
+      "name": "returned_address",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N52",
+      "name": "error_code",
+      "kind": "data"
+    },
+    {
+      "id": "AP21-N53",
+      "name": "vm_start_gap",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N54",
+      "name": "vm_end_gap",
+      "kind": "function"
+    },
+    {
+      "id": "AP21-N55",
+      "name": "file.f_op",
+      "kind": "data"
+    }
+  ],
+  "edges": [
+    {
+      "id": "AP21-E01",
+      "from": "AP21-N01",
+      "to": "AP21-N06",
+      "kind": "call",
+      "claim": "round or raise non-fixed hint",
+      "when": "!(flags & MAP_FIXED) after NOREPLACE OR",
+      "anchors": [
+        "AP21-A002",
+        "AP21-A010"
+      ]
+    },
+    {
+      "id": "AP21-E02",
+      "from": "AP21-N06",
+      "to": "AP21-N07",
+      "kind": "data",
+      "claim": "read mmap_min_addr if hint is nonzero and below minimum",
+      "when": "hint valid",
+      "anchors": [
+        "AP21-A010",
+        "AP21-A011"
+      ]
+    },
+    {
+      "id": "AP21-E03",
+      "from": "AP21-N06",
+      "to": "AP21-N46",
+      "kind": "data",
+      "claim": "page-align hint by masking low bits",
+      "when": "entered",
+      "anchors": [
+        "AP21-A010",
+        "AP21-A076"
+      ]
+    },
+    {
+      "id": "AP21-E04",
+      "from": "AP21-N01",
+      "to": "AP21-N08",
+      "kind": "call",
+      "claim": "pass file,addr,len,pgoff,flags,vm_flags after checks",
+      "when": "len/page alignment and earlier checks pass",
+      "anchors": [
+        "AP21-A001",
+        "AP21-A002",
+        "AP21-A003",
+        "AP21-A004",
+        "AP21-A005",
+        "AP21-A006",
+        "AP21-A018"
+      ]
+    },
+    {
+      "id": "AP21-E05",
+      "from": "AP21-N01",
+      "to": "AP21-N04",
+      "kind": "data",
+      "claim": "check MAP_FIXED_NOREPLACE and effective MAP_FIXED",
+      "when": "valid request",
+      "anchors": [
+        "AP21-A002",
+        "AP21-A007"
+      ]
+    },
+    {
+      "id": "AP21-E06",
+      "from": "AP21-N01",
+      "to": "AP21-N03",
+      "kind": "data",
+      "claim": "align length and check pgoff sum",
+      "when": "valid length units",
+      "anchors": [
+        "AP21-A003",
+        "AP21-A004"
+      ]
+    },
+    {
+      "id": "AP21-E07",
+      "from": "AP21-N01",
+      "to": "AP21-N33",
+      "kind": "call",
+      "claim": "NOREPLACE overlap query with [addr,addr+len)",
+      "when": "flags & MAP_FIXED_NOREPLACE and __get result not encoded error",
+      "anchors": [
+        "AP21-A007",
+        "AP21-A061"
+      ]
+    },
+    {
+      "id": "AP21-E08",
+      "from": "AP21-N01",
+      "to": "AP21-N36",
+      "kind": "call",
+      "claim": "pass candidate to existing VMA placement/mapping stage",
+      "when": "selected checks pass",
+      "anchors": [
+        "AP21-A008",
+        "AP21-A009"
+      ]
+    },
+    {
+      "id": "AP21-E09",
+      "from": "AP21-N08",
+      "to": "AP21-N42",
+      "kind": "data",
+      "claim": "bound len then returned candidate in nonfixed callback path",
+      "when": "valid macro value",
+      "anchors": [
+        "AP21-A019",
+        "AP21-A025",
+        "AP21-A078"
+      ]
+    },
+    {
+      "id": "AP21-E10",
+      "from": "AP21-N08",
+      "to": "AP21-N09",
+      "kind": "effect",
+      "claim": "load mm pointer then optionally replace with file callback",
+      "when": "nonfixed request, file callback conditional",
+      "anchors": [
+        "AP21-A018",
+        "AP21-A020",
+        "AP21-A021"
+      ]
+    },
+    {
+      "id": "AP21-E11",
+      "from": "AP21-N08",
+      "to": "AP21-N10",
+      "kind": "data",
+      "claim": "default callback pointer source",
+      "when": "nonfixed and mm valid",
+      "anchors": [
+        "AP21-A021",
+        "AP21-A070"
+      ]
+    },
+    {
+      "id": "AP21-E12",
+      "from": "AP21-N08",
+      "to": "AP21-N11",
+      "kind": "data",
+      "claim": "override pointer when file and callback nonnull",
+      "when": "nonfixed; valid file and f_op",
+      "anchors": [
+        "AP21-A021",
+        "AP21-A082"
+      ]
+    },
+    {
+      "id": "AP21-E13",
+      "from": "AP21-N08",
+      "to": "AP21-N09",
+      "kind": "dynamic_call",
+      "claim": "invoke get_area(file,addr,len,pgoff,flags)",
+      "when": "nonfixed and callback valid; not a named direct call to simple_get",
+      "anchors": [
+        "AP21-A024"
+      ]
+    },
+    {
+      "id": "AP21-E14",
+      "from": "AP21-N08",
+      "to": "AP21-N51",
+      "kind": "effect",
+      "claim": "return fixed addr early or callback addr after checks",
+      "when": "path has normal return",
+      "anchors": [
+        "AP21-A020",
+        "AP21-A024",
+        "AP21-A025",
+        "AP21-A026"
+      ]
+    },
+    {
+      "id": "AP21-E15",
+      "from": "AP21-N13",
+      "to": "AP21-N12",
+      "kind": "call",
+      "claim": "initialize current mm callback and base during new exec setup",
+      "when": "setup_new_exec reached",
+      "anchors": [
+        "AP21-A074",
+        "AP21-A075"
+      ]
+    },
+    {
+      "id": "AP21-E16",
+      "from": "AP21-N13",
+      "to": "AP21-N15",
+      "kind": "effect",
+      "claim": "later assign TASK_SIZE after arch_pick call",
+      "when": "function continues",
+      "anchors": [
+        "AP21-A075",
+        "AP21-A078"
+      ]
+    },
+    {
+      "id": "AP21-E17",
+      "from": "AP21-N12",
+      "to": "AP21-N10",
+      "kind": "effect",
+      "claim": "assign simple_get_unmapped_area function pointer",
+      "when": "layout invoked",
+      "anchors": [
+        "AP21-A072"
+      ]
+    },
+    {
+      "id": "AP21-E18",
+      "from": "AP21-N12",
+      "to": "AP21-N16",
+      "kind": "binding",
+      "claim": "bind mm callback slot to function, not direct call",
+      "when": "selected layout path",
+      "anchors": [
+        "AP21-A072",
+        "AP21-A073"
+      ]
+    },
+    {
+      "id": "AP21-E19",
+      "from": "AP21-N12",
+      "to": "AP21-N14",
+      "kind": "effect",
+      "claim": "store TASK_UNMAPPED_BASE",
+      "when": "layout invoked",
+      "anchors": [
+        "AP21-A072",
+        "AP21-A079"
+      ]
+    },
+    {
+      "id": "AP21-E20",
+      "from": "AP21-N14",
+      "to": "AP21-N45",
+      "kind": "data",
+      "claim": "base computed as page-aligned TASK_SIZE_LOW/3",
+      "when": "selected 64-bit macros",
+      "anchors": [
+        "AP21-A072",
+        "AP21-A077",
+        "AP21-A079",
+        "AP21-A080",
+        "AP21-A081"
+      ]
+    },
+    {
+      "id": "AP21-E21",
+      "from": "AP21-N16",
+      "to": "AP21-N17",
+      "kind": "effect",
+      "claim": "set search length",
+      "when": "selected callback invoked",
+      "anchors": [
+        "AP21-A012",
+        "AP21-A013"
+      ]
+    },
+    {
+      "id": "AP21-E22",
+      "from": "AP21-N16",
+      "to": "AP21-N18",
+      "kind": "effect",
+      "claim": "set low_limit=PAGE_SIZE",
+      "when": "selected callback invoked",
+      "anchors": [
+        "AP21-A013",
+        "AP21-A076"
+      ]
+    },
+    {
+      "id": "AP21-E23",
+      "from": "AP21-N16",
+      "to": "AP21-N19",
+      "kind": "effect",
+      "claim": "set initial high_limit to mm.mmap_base then conditional addition",
+      "when": "selected callback invoked",
+      "anchors": [
+        "AP21-A013",
+        "AP21-A015"
+      ]
+    },
+    {
+      "id": "AP21-E24",
+      "from": "AP21-N16",
+      "to": "AP21-N20",
+      "kind": "effect",
+      "claim": "assign alignment mask zero",
+      "when": "selected callback invoked",
+      "anchors": [
+        "AP21-A013"
+      ]
+    },
+    {
+      "id": "AP21-E25",
+      "from": "AP21-N16",
+      "to": "AP21-N21",
+      "kind": "effect",
+      "claim": "assign pgoff<<PAGE_SHIFT; not consumed by selected topdown",
+      "when": "selected callback invoked",
+      "anchors": [
+        "AP21-A013",
+        "AP21-A076"
+      ]
+    },
+    {
+      "id": "AP21-E26",
+      "from": "AP21-N16",
+      "to": "AP21-N14",
+      "kind": "data",
+      "claim": "source of initial search high_limit",
+      "when": "mm valid and layout field available",
+      "anchors": [
+        "AP21-A013",
+        "AP21-A070",
+        "AP21-A072"
+      ]
+    },
+    {
+      "id": "AP21-E27",
+      "from": "AP21-N16",
+      "to": "AP21-N22",
+      "kind": "call",
+      "claim": "hint acceptance tests only whether start is inside existing VMA",
+      "when": "hint after masking nonzero",
+      "anchors": [
+        "AP21-A014",
+        "AP21-A055",
+        "AP21-A056"
+      ]
+    },
+    {
+      "id": "AP21-E28",
+      "from": "AP21-N16",
+      "to": "AP21-N23",
+      "kind": "call",
+      "claim": "default search when no fast hint return",
+      "when": "helper reaches search call",
+      "anchors": [
+        "AP21-A017"
+      ]
+    },
+    {
+      "id": "AP21-E29",
+      "from": "AP21-N16",
+      "to": "AP21-N44",
+      "kind": "data",
+      "claim": "conditional highlimit extension when hint exceeds window",
+      "when": "addr > DEFAULT_MAP_WINDOW",
+      "anchors": [
+        "AP21-A015",
+        "AP21-A077"
+      ]
+    },
+    {
+      "id": "AP21-E30",
+      "from": "AP21-N22",
+      "to": "AP21-N26",
+      "kind": "call_path",
+      "claim": "simple_find_vma uses for_each_vma -> mm_next_vma",
+      "when": "valid iterable mm list",
+      "anchors": [
+        "AP21-A055",
+        "AP21-A063"
+      ]
+    },
+    {
+      "id": "AP21-E31",
+      "from": "AP21-N22",
+      "to": "AP21-N40",
+      "kind": "data",
+      "claim": "check addr >= start",
+      "when": "valid VMA",
+      "anchors": [
+        "AP21-A055"
+      ]
+    },
+    {
+      "id": "AP21-E32",
+      "from": "AP21-N22",
+      "to": "AP21-N41",
+      "kind": "data",
+      "claim": "check addr < end",
+      "when": "valid VMA",
+      "anchors": [
+        "AP21-A055"
+      ]
+    },
+    {
+      "id": "AP21-E33",
+      "from": "AP21-N23",
+      "to": "AP21-N25",
+      "kind": "call_path",
+      "claim": "topdown loop macro -> mm_prev_vma",
+      "when": "valid iterable mm list",
+      "anchors": [
+        "AP21-A028",
+        "AP21-A064",
+        "AP21-A053",
+        "AP21-A054"
+      ]
+    },
+    {
+      "id": "AP21-E34",
+      "from": "AP21-N25",
+      "to": "AP21-N27",
+      "kind": "call",
+      "claim": "macro body calls mm_prev_vma on successive tmp values",
+      "when": "iterator step",
+      "anchors": [
+        "AP21-A064",
+        "AP21-A053",
+        "AP21-A054"
+      ]
+    },
+    {
+      "id": "AP21-E35",
+      "from": "AP21-N23",
+      "to": "AP21-N29",
+      "kind": "call",
+      "claim": "uses next VMA in loop; also calls with tmp==NULL on exhausted path",
+      "when": "tmp valid inside loop or NULL after exhaustion",
+      "anchors": [
+        "AP21-A028",
+        "AP21-A033",
+        "AP21-A049",
+        "AP21-A050"
+      ]
+    },
+    {
+      "id": "AP21-E36",
+      "from": "AP21-N23",
+      "to": "AP21-N49",
+      "kind": "effect",
+      "claim": "sets candidate and then assignment if(gap=~0) overwrites on reached line",
+      "when": "body reaches candidate and/or fallback",
+      "anchors": [
+        "AP21-A031",
+        "AP21-A034",
+        "AP21-A035",
+        "AP21-A036"
+      ]
+    },
+    {
+      "id": "AP21-E37",
+      "from": "AP21-N23",
+      "to": "AP21-N50",
+      "kind": "effect",
+      "claim": "records candidate upper bound; return uses gap not gap_end",
+      "when": "valid gap candidate",
+      "anchors": [
+        "AP21-A030",
+        "AP21-A031",
+        "AP21-A034"
+      ]
+    },
+    {
+      "id": "AP21-E38",
+      "from": "AP21-N23",
+      "to": "AP21-N19",
+      "kind": "data",
+      "claim": "uses high_limit for gap clipping and fallback",
+      "when": "valid info",
+      "anchors": [
+        "AP21-A028",
+        "AP21-A030",
+        "AP21-A035"
+      ]
+    },
+    {
+      "id": "AP21-E39",
+      "from": "AP21-N23",
+      "to": "AP21-N17",
+      "kind": "data",
+      "claim": "gap size test and fallback subtraction",
+      "when": "valid info",
+      "anchors": [
+        "AP21-A031",
+        "AP21-A034",
+        "AP21-A035"
+      ]
+    },
+    {
+      "id": "AP21-E40",
+      "from": "AP21-N24",
+      "to": "AP21-N26",
+      "kind": "call_path",
+      "claim": "bottomup has its own iterator but no selected default caller",
+      "when": "only when directly invoked by another eligible path",
+      "anchors": [
+        "AP21-A037",
+        "AP21-A038",
+        "AP21-A063"
+      ]
+    },
+    {
+      "id": "AP21-E41",
+      "from": "AP21-N26",
+      "to": "AP21-N28",
+      "kind": "call",
+      "claim": "macro calls mm_next_vma",
+      "when": "valid list & iterator",
+      "anchors": [
+        "AP21-A063",
+        "AP21-A051",
+        "AP21-A052"
+      ]
+    },
+    {
+      "id": "AP21-E42",
+      "from": "AP21-N24",
+      "to": "AP21-N30",
+      "kind": "call",
+      "claim": "traverse predecessor in bottomup loop",
+      "when": "valid tmp VMA",
+      "anchors": [
+        "AP21-A038",
+        "AP21-A047",
+        "AP21-A048"
+      ]
+    },
+    {
+      "id": "AP21-E43",
+      "from": "AP21-N24",
+      "to": "AP21-N29",
+      "kind": "call",
+      "claim": "on exhausted tmp==NULL uses next_vma(tmp)",
+      "when": "exhaustion branch and valid source execution",
+      "anchors": [
+        "AP21-A043",
+        "AP21-A049"
+      ]
+    },
+    {
+      "id": "AP21-E44",
+      "from": "AP21-N24",
+      "to": "AP21-N49",
+      "kind": "effect",
+      "claim": "records candidate, then if(gap=0) assignment guarantees final zero if reached",
+      "when": "returns normally after last statement",
+      "anchors": [
+        "AP21-A041",
+        "AP21-A044",
+        "AP21-A045"
+      ]
+    },
+    {
+      "id": "AP21-E45",
+      "from": "AP21-N24",
+      "to": "AP21-N50",
+      "kind": "effect",
+      "claim": "recorded candidate end not returned",
+      "when": "valid gap candidate",
+      "anchors": [
+        "AP21-A040",
+        "AP21-A041"
+      ]
+    },
+    {
+      "id": "AP21-E46",
+      "from": "AP21-N28",
+      "to": "AP21-N39",
+      "kind": "data",
+      "claim": "traverse mm header anchor.next or current VMA.next",
+      "when": "valid objects",
+      "anchors": [
+        "AP21-A051",
+        "AP21-A052",
+        "AP21-A070"
+      ]
+    },
+    {
+      "id": "AP21-E47",
+      "from": "AP21-N27",
+      "to": "AP21-N39",
+      "kind": "data",
+      "claim": "traverse mm header anchor.prev or current VMA.prev",
+      "when": "valid objects",
+      "anchors": [
+        "AP21-A053",
+        "AP21-A054",
+        "AP21-A070"
+      ]
+    },
+    {
+      "id": "AP21-E48",
+      "from": "AP21-N28",
+      "to": "AP21-N31",
+      "kind": "call",
+      "claim": "evaluates address of vma->list with NULL-guard caveat",
+      "when": "the second while reached",
+      "anchors": [
+        "AP21-A051",
+        "AP21-A065"
+      ]
+    },
+    {
+      "id": "AP21-E49",
+      "from": "AP21-N27",
+      "to": "AP21-N31",
+      "kind": "call",
+      "claim": "evaluates address of vma->list with NULL-guard caveat",
+      "when": "the second while reached",
+      "anchors": [
+        "AP21-A053",
+        "AP21-A065"
+      ]
+    },
+    {
+      "id": "AP21-E50",
+      "from": "AP21-N28",
+      "to": "AP21-N32",
+      "kind": "call",
+      "claim": "map list pointer to VMA/NULL",
+      "when": "header and pointer valid",
+      "anchors": [
+        "AP21-A046",
+        "AP21-A052"
+      ]
+    },
+    {
+      "id": "AP21-E51",
+      "from": "AP21-N27",
+      "to": "AP21-N32",
+      "kind": "call",
+      "claim": "map list pointer to VMA/NULL",
+      "when": "header and pointer valid",
+      "anchors": [
+        "AP21-A046",
+        "AP21-A054"
+      ]
+    },
+    {
+      "id": "AP21-E52",
+      "from": "AP21-N29",
+      "to": "AP21-N32",
+      "kind": "call",
+      "claim": "return next VMA unless head anchor",
+      "when": "vma != NULL and loop can complete",
+      "anchors": [
+        "AP21-A049",
+        "AP21-A050",
+        "AP21-A046"
+      ]
+    },
+    {
+      "id": "AP21-E53",
+      "from": "AP21-N30",
+      "to": "AP21-N32",
+      "kind": "call",
+      "claim": "return previous VMA unless head anchor",
+      "when": "vma != NULL and loop can complete",
+      "anchors": [
+        "AP21-A047",
+        "AP21-A048",
+        "AP21-A046"
+      ]
+    },
+    {
+      "id": "AP21-E54",
+      "from": "AP21-N33",
+      "to": "AP21-N34",
+      "kind": "call",
+      "claim": "first require VMA whose end < requested start",
+      "when": "start<=end and code continues",
+      "anchors": [
+        "AP21-A057",
+        "AP21-A060",
+        "AP21-A061"
+      ]
+    },
+    {
+      "id": "AP21-E55",
+      "from": "AP21-N34",
+      "to": "AP21-N25",
+      "kind": "call_path",
+      "claim": "iterate from top to find strictly ending-before-start",
+      "when": "valid iterators",
+      "anchors": [
+        "AP21-A057",
+        "AP21-A064"
+      ]
+    },
+    {
+      "id": "AP21-E56",
+      "from": "AP21-N33",
+      "to": "AP21-N29",
+      "kind": "call",
+      "claim": "advance from found predecessor",
+      "when": "predecessor nonnull",
+      "anchors": [
+        "AP21-A061"
+      ]
+    },
+    {
+      "id": "AP21-E57",
+      "from": "AP21-N33",
+      "to": "AP21-N35",
+      "kind": "call",
+      "claim": "test only next VMA against half-open interval",
+      "when": "predecessor and next nonnull",
+      "anchors": [
+        "AP21-A059",
+        "AP21-A061"
+      ]
+    },
+    {
+      "id": "AP21-E58",
+      "from": "AP21-N35",
+      "to": "AP21-N40",
+      "kind": "data",
+      "claim": "check vma->vm_start < end",
+      "when": "valid VMA and well-formed interval",
+      "anchors": [
+        "AP21-A059"
+      ]
+    },
+    {
+      "id": "AP21-E59",
+      "from": "AP21-N35",
+      "to": "AP21-N41",
+      "kind": "data",
+      "claim": "check vma->vm_end > start",
+      "when": "valid VMA and well-formed interval",
+      "anchors": [
+        "AP21-A059"
+      ]
+    },
+    {
+      "id": "AP21-E60",
+      "from": "AP21-N36",
+      "to": "AP21-N37",
+      "kind": "call",
+      "claim": "first handle old VMAs in target range",
+      "when": "simple_mmap_region entered",
+      "anchors": [
+        "AP21-A009",
+        "AP21-A092"
+      ]
+    },
+    {
+      "id": "AP21-E61",
+      "from": "AP21-N37",
+      "to": "AP21-N34",
+      "kind": "call",
+      "claim": "populate *pprev from strict predecessor",
+      "when": "valid mm, passed start",
+      "anchors": [
+        "AP21-A092",
+        "AP21-A057"
+      ]
+    },
+    {
+      "id": "AP21-E62",
+      "from": "AP21-N37",
+      "to": "AP21-N38",
+      "kind": "call",
+      "claim": "pass [start,start+len) to existing VMA removal",
+      "when": "valid range calculation and args",
+      "anchors": [
+        "AP21-A092"
+      ]
+    },
+    {
+      "id": "AP21-E63",
+      "from": "AP21-N38",
+      "to": "AP21-N33",
+      "kind": "call",
+      "claim": "uses same bounded flawed query to locate initial overlap",
+      "when": "valid start and end",
+      "anchors": [
+        "AP21-A085",
+        "AP21-A086"
+      ]
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "id": "AP21-C01",
+      "name": "len=0 before placement",
+      "premise": "do_mmap input len=0",
+      "result": "-EINVAL",
+      "side_effects": "no callback; no VMA handoff",
+      "limits": "no runtime claim",
+      "anchors": [
+        "AP21-A001"
+      ]
+    },
+    {
+      "id": "AP21-C02",
+      "name": "unrounded len becomes zero",
+      "premise": "positive len but PAGE_ALIGN(len) yields 0 in machine unsigned arithmetic",
+      "result": "-ENOMEM if this branch reached",
+      "side_effects": "len overwritten then early return",
+      "limits": "requires wraparound under selected ulong width",
+      "anchors": [
+        "AP21-A003",
+        "AP21-A076",
+        "AP21-A080",
+        "AP21-A081"
+      ]
+    },
+    {
+      "id": "AP21-C03",
+      "name": "pgoff+pages unsigned wraps",
+      "premise": "pgoff+len/PAGE_SIZE < pgoff",
+      "result": "-EOVERFLOW",
+      "side_effects": "no callback",
+      "limits": "only check of this sum, not every addr+len",
+      "anchors": [
+        "AP21-A004"
+      ]
+    },
+    {
+      "id": "AP21-C04",
+      "name": "MAP_FIXED with unaligned addr",
+      "premise": "valid len<=TASK_SIZE, MAP_FIXED and addr not aligned",
+      "result": "__get_unmapped_area returns addr unchanged",
+      "side_effects": "late offset_in_page not reached",
+      "limits": "do_mmap has no further explicit alignment gate in selected read path; VMA stage separate",
+      "anchors": [
+        "AP21-A002",
+        "AP21-A019",
+        "AP21-A020",
+        "AP21-A025"
+      ]
+    },
+    {
+      "id": "AP21-C05",
+      "name": "MAP_FIXED outside TASK_SIZE",
+      "premise": "valid len<=TASK_SIZE, addr beyond TASK_SIZE",
+      "result": "__get returns addr before addr>TASK_SIZE-len check",
+      "side_effects": "may be handed to simple_mmap_region after other gates",
+      "limits": "not proof of successful mapping; downstream validity unknown",
+      "anchors": [
+        "AP21-A019",
+        "AP21-A020",
+        "AP21-A025",
+        "AP21-A008",
+        "AP21-A009"
+      ]
+    },
+    {
+      "id": "AP21-C06",
+      "name": "MAP_FIXED_NOREPLACE overlap first VMA",
+      "premise": "first VMA intersects [addr,addr+len), no earlier VMA with vm_end<addr",
+      "result": "find_vma_prev_to_addr yields NULL if iteration well-defined; intersection returns NULL",
+      "side_effects": "-EEXIST guard fails to detect overlap under premise",
+      "limits": "old range handling may still run and change VMA; R14-limited",
+      "anchors": [
+        "AP21-A007",
+        "AP21-A057",
+        "AP21-A060",
+        "AP21-A061",
+        "AP21-A062",
+        "AP21-A092"
+      ]
+    },
+    {
+      "id": "AP21-C07",
+      "name": "MAP_FIXED_NOREPLACE overlap with strict predecessor",
+      "premise": "valid VMA predecessor ends<addr, its next VMA intersects [addr,addr+len)",
+      "result": "returns nonnull from intersection and do_mmap -EEXIST",
+      "side_effects": "no simple_mmap_region",
+      "limits": "no additional writers/races assumed",
+      "anchors": [
+        "AP21-A007",
+        "AP21-A057",
+        "AP21-A059",
+        "AP21-A061",
+        "AP21-A062"
+      ]
+    },
+    {
+      "id": "AP21-C08",
+      "name": "NOREPLACE adjacent no intersection",
+      "premise": "previous VMA ends==start, next VMA starts at end, and another earlier predecessor exists or not",
+      "result": "half-open __vma_intersect_with_range false for those adjacent VMA if actually tested",
+      "side_effects": "may pass NOREPLACE query",
+      "limits": "cannot assume first VMA inspected if no strict predecessor",
+      "anchors": [
+        "AP21-A057",
+        "AP21-A059",
+        "AP21-A061",
+        "AP21-A062"
+      ]
+    },
+    {
+      "id": "AP21-C09",
+      "name": "NOREPLACE addr+len wraps",
+      "premise": "addr and len arithmetic unsigned wraps to end<addr",
+      "result": "find_vma_intersection enters while(start>end) if reached",
+      "side_effects": "no reliable return",
+      "limits": "no complete overflow check on this expression at do_mmap level",
+      "anchors": [
+        "AP21-A007",
+        "AP21-A060"
+      ]
+    },
+    {
+      "id": "AP21-C10",
+      "name": "nonfixed hint 0",
+      "premise": "addr0=0, valid mm callback binding",
+      "result": "simple_get skips early hint and calls topdown",
+      "side_effects": "topdown return not guaranteed on exhausted iteration",
+      "limits": "no live runtime demonstration",
+      "anchors": [
+        "AP21-A012",
+        "AP21-A014",
+        "AP21-A017",
+        "AP21-A027",
+        "AP21-A033",
+        "AP21-A035",
+        "AP21-A072"
+      ]
+    },
+    {
+      "id": "AP21-C11",
+      "name": "nonfixed hint within existing VMA",
+      "premise": "hint aligned and simple_find_vma returns containing VMA",
+      "result": "falls through to topdown search",
+      "side_effects": "iterator validity and return conditional",
+      "limits": "no direct rejection solely due occupied start",
+      "anchors": [
+        "AP21-A014",
+        "AP21-A055",
+        "AP21-A056",
+        "AP21-A017"
+      ]
+    },
+    {
+      "id": "AP21-C12",
+      "name": "nonfixed hint start free but tail collides",
+      "premise": "hint H outside all VMA, [H,H+len) overlaps successor VMA; H+len<=TASK_SIZE; H aligned",
+      "result": "simple_get returns H immediately",
+      "side_effects": "__get upper/align checks can pass; no full-interval conflict check except NOREPLACE",
+      "limits": "not already safe free chunk; simple_mmap_region may attempt removal",
+      "anchors": [
+        "AP21-A014",
+        "AP21-A021",
+        "AP21-A024",
+        "AP21-A025",
+        "AP21-A055",
+        "AP21-A059",
+        "AP21-A009"
+      ]
+    },
+    {
+      "id": "AP21-C13",
+      "name": "hint below mmap_min_addr",
+      "premise": "addr!=0, round_hint_to_min clips to page-aligned minimum",
+      "result": "local addr modified before __get",
+      "side_effects": "short-circuit if resulting addr still valid",
+      "limits": "source uses address minimum only for nonfixed hint",
+      "anchors": [
+        "AP21-A002",
+        "AP21-A010",
+        "AP21-A011",
+        "AP21-A080"
+      ]
+    },
+    {
+      "id": "AP21-C14",
+      "name": "hint with low unaligned bits",
+      "premise": "nonfixed addr has low PAGE bits",
+      "result": "round_hint_to_min clears low bits",
+      "side_effects": "then callback may inspect normalized addr",
+      "limits": "fixed path does not use round_hint",
+      "anchors": [
+        "AP21-A002",
+        "AP21-A010",
+        "AP21-A076"
+      ]
+    },
+    {
+      "id": "AP21-C15",
+      "name": "hint above DEFAULT_MAP_WINDOW",
+      "premise": "addr>DEFAULT_MAP_WINDOW, valid callback and mm layout as read",
+      "result": "info.high_limit add TASK_SIZE_MAX-DEFAULT_MAP_WINDOW ==0 under chosen constants",
+      "side_effects": "same mmap_base search window",
+      "limits": "macro numeric equality, not global all config guarantee",
+      "anchors": [
+        "AP21-A015",
+        "AP21-A077",
+        "AP21-A078",
+        "AP21-A079"
+      ]
+    },
+    {
+      "id": "AP21-C16",
+      "name": "empty mm list",
+      "premise": "loop iterator begins tmp=NULL and mm_prev_vma receives NULL",
+      "result": "NULL-member expression in iterator; if loop does reach tmp==NULL block then vma_next_vma(NULL) while",
+      "side_effects": "no guaranteed successful candidate",
+      "limits": "avoid claiming specific CPU crash/infinite execution without compilation",
+      "anchors": [
+        "AP21-A027",
+        "AP21-A028",
+        "AP21-A033",
+        "AP21-A049",
+        "AP21-A053",
+        "AP21-A054",
+        "AP21-A064",
+        "AP21-A065"
+      ]
+    },
+    {
+      "id": "AP21-C17",
+      "name": "topdown finds valid interior gap",
+      "premise": "valid ordered list, candidate meets length and breaks with tmp nonnull",
+      "result": "sets gap=tmp_gap then if(gap=~0) overwrites it with high_limit-length",
+      "side_effects": "return aligned fallback if reaches tail",
+      "limits": "fallback not proven conflict-free; gap_end ignored",
+      "anchors": [
+        "AP21-A029",
+        "AP21-A030",
+        "AP21-A031",
+        "AP21-A032",
+        "AP21-A035",
+        "AP21-A036"
+      ]
+    },
+    {
+      "id": "AP21-C18",
+      "name": "topdown no suitable gap but breaks above low limit",
+      "premise": "valid loop exits via tmp->vm_start<=low_limit while tmp nonnull",
+      "result": "if(gap=~0) overwrites with high_limit-length regardless candidate validity",
+      "side_effects": "may output collided fallback",
+      "limits": "source control flow only, no actual mapping observed",
+      "anchors": [
+        "AP21-A027",
+        "AP21-A032",
+        "AP21-A035",
+        "AP21-A036"
+      ]
+    },
+    {
+      "id": "AP21-C19",
+      "name": "topdown exhausts entire list",
+      "premise": "loop ends with tmp=NULL in defined execution",
+      "result": "postloop vma_next_vma(tmp) receives NULL",
+      "side_effects": "cannot assume execution reaches fallback",
+      "limits": "active while(vma==NULL) and NULL member constraints",
+      "anchors": [
+        "AP21-A033",
+        "AP21-A049",
+        "AP21-A050"
+      ]
+    },
+    {
+      "id": "AP21-C20",
+      "name": "topdown high_limit < length",
+      "premise": "info.high_limit smaller than info.length and tail assignment reached",
+      "result": "unsigned high_limit-length wraps then PAGE_MASK",
+      "side_effects": "__get may reject if >TASK_SIZE-len after callback",
+      "limits": "not guaranteed clean allocation failure because may not reach tail",
+      "anchors": [
+        "AP21-A013",
+        "AP21-A035",
+        "AP21-A076",
+        "AP21-A025"
+      ]
+    },
+    {
+      "id": "AP21-C21",
+      "name": "topdown gap end lower than start",
+      "premise": "malformed ordering or unsigned bounds where tmp_gap_end<tmp_gap",
+      "result": "unsigned subtraction may pass size test on wrap",
+      "side_effects": "candidate may not be actual gap, then fallback overwrites",
+      "limits": "requires malformed state/overflow; not established runtime",
+      "anchors": [
+        "AP21-A029",
+        "AP21-A030",
+        "AP21-A031",
+        "AP21-A035"
+      ]
+    },
+    {
+      "id": "AP21-C22",
+      "name": "bottomup candidate found",
+      "premise": "hypothetical direct caller, iterator returns valid tmp and candidate fits",
+      "result": "sets gap but at end if(gap=0) forces gap=0; returns zero if reaches tail",
+      "side_effects": "NOT selected default mmap callback",
+      "limits": "does not claim active mmap uses bottomup",
+      "anchors": [
+        "AP21-A037",
+        "AP21-A038",
+        "AP21-A039",
+        "AP21-A040",
+        "AP21-A041",
+        "AP21-A045",
+        "AP21-A017"
+      ]
+    },
+    {
+      "id": "AP21-C23",
+      "name": "bottomup exhausted iterator",
+      "premise": "hypothetical bottomup call with loop exhausted tmp=NULL",
+      "result": "calls vma_next_vma(NULL), may not return",
+      "side_effects": "no normal zero guaranteed",
+      "limits": "not selected default path",
+      "anchors": [
+        "AP21-A043",
+        "AP21-A049",
+        "AP21-A050"
+      ]
+    },
+    {
+      "id": "AP21-C24",
+      "name": "file callback overrides mm callback",
+      "premise": "nonfixed file and valid f_op->get_unmapped_area pointer",
+      "result": "__get chooses file callback and invokes it",
+      "side_effects": "simple_get behavior not automatically in file path",
+      "limits": "callback result still passes postchecks, no whole-span test at wrapper",
+      "anchors": [
+        "AP21-A020",
+        "AP21-A021",
+        "AP21-A024",
+        "AP21-A025",
+        "AP21-A082"
+      ]
+    },
+    {
+      "id": "AP21-C25",
+      "name": "file callback returns encoded error",
+      "premise": "get_area callback returns IS_ERR_VALUE address",
+      "result": "__get returns it without later validation",
+      "side_effects": "do_mmap propagates encoded error",
+      "limits": "no guarantee callback actually emits given value",
+      "anchors": [
+        "AP21-A006",
+        "AP21-A024",
+        "AP21-A084"
+      ]
+    },
+    {
+      "id": "AP21-C26",
+      "name": "file callback returns aligned zero",
+      "premise": "nonfixed, file callback returns 0, len<=TASK_SIZE",
+      "result": "__get nonfixed posttests can accept 0",
+      "side_effects": "returned_address may be 0",
+      "limits": "not proof mmap_min_addr enforced by file callback; zero address maybe legitimate/error context requires caller",
+      "anchors": [
+        "AP21-A011",
+        "AP21-A021",
+        "AP21-A024",
+        "AP21-A025",
+        "AP21-A026"
+      ]
+    },
+    {
+      "id": "AP21-C27",
+      "name": "file callback returns valid aligned high addr",
+      "premise": "no encoded error, addr<=TASK_SIZE-len, offset_in_page==0",
+      "result": "__get returns candidate",
+      "side_effects": "may overlap another VMA",
+      "limits": "whole-span free-area validation not present in wrapper",
+      "anchors": [
+        "AP21-A024",
+        "AP21-A025",
+        "AP21-A026",
+        "AP21-A082"
+      ]
+    },
+    {
+      "id": "AP21-C28",
+      "name": "file callback returns addr > TASK_SIZE-len",
+      "premise": "nonfixed; len<=TASK_SIZE; signedness as ulong",
+      "result": "__get returns -ENOMEM",
+      "side_effects": "candidate rejected before alignment check",
+      "limits": "no downstream VMA mutation from selected do_mmap if early return",
+      "anchors": [
+        "AP21-A019",
+        "AP21-A024",
+        "AP21-A025",
+        "AP21-A006"
+      ]
+    },
+    {
+      "id": "AP21-C29",
+      "name": "nonfixed callback returns nonaligned addr",
+      "premise": "candidate not encoded error or over upper bound; offset_in_page!=0",
+      "result": "__get returns -EINVAL",
+      "side_effects": "no selected VMA stage",
+      "limits": "on fixed path this check is bypassed",
+      "anchors": [
+        "AP21-A020",
+        "AP21-A025",
+        "AP21-A083"
+      ]
+    },
+    {
+      "id": "AP21-C30",
+      "name": "fixed request follows downstream old VMA handling",
+      "premise": "fixed addr not rejected by NOREPLACE and other do_mmap gates pass",
+      "result": "simple_mmap_region→simple_munmap_vma_range→simple_do_vma_munmap",
+      "side_effects": "same find_vma_intersection chooses old VMA",
+      "limits": "not full rollback / actual new mapping certification",
+      "anchors": [
+        "AP21-A008",
+        "AP21-A009",
+        "AP21-A085",
+        "AP21-A086",
+        "AP21-A092"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "AP21-X01",
+      "target": "do_mmap.flags",
+      "action": "set MAP_FIXED for NOREPLACE before hint treatment",
+      "when": "flags & MAP_FIXED_NOREPLACE",
+      "anchors": [
+        "AP21-A002"
+      ]
+    },
+    {
+      "id": "AP21-X02",
+      "target": "do_mmap.addr",
+      "action": "nonfixed hint adjusted by round_hint_to_min",
+      "when": "!(flags & MAP_FIXED)",
+      "anchors": [
+        "AP21-A002",
+        "AP21-A010",
+        "AP21-A011"
+      ]
+    },
+    {
+      "id": "AP21-X03",
+      "target": "do_mmap.len",
+      "action": "len=PAGE_ALIGN(len), detects result zero",
+      "when": "len!=0 before conversion",
+      "anchors": [
+        "AP21-A001",
+        "AP21-A003",
+        "AP21-A080",
+        "AP21-A081"
+      ]
+    },
+    {
+      "id": "AP21-X04",
+      "target": "do_mmap.addr",
+      "action": "adopts __get_unmapped_area result as local addr, error return if encoded",
+      "when": "__get returns normally",
+      "anchors": [
+        "AP21-A006",
+        "AP21-A024",
+        "AP21-A084"
+      ]
+    },
+    {
+      "id": "AP21-X05",
+      "target": "get_area pointer",
+      "action": "initial source mm.get_unmapped_area, optional override file.f_op.get_unmapped_area",
+      "when": "nonfixed and valid callbacks",
+      "anchors": [
+        "AP21-A020",
+        "AP21-A021",
+        "AP21-A082"
+      ]
+    },
+    {
+      "id": "AP21-X06",
+      "target": "__get fixed return",
+      "action": "return addr before nonfixed upper bound/alignment checks",
+      "when": "flags & MAP_FIXED and len<=TASK_SIZE",
+      "anchors": [
+        "AP21-A019",
+        "AP21-A020",
+        "AP21-A025"
+      ]
+    },
+    {
+      "id": "AP21-X07",
+      "target": "__get callback validation",
+      "action": "after callback, return error or check addr>TASK_SIZE-len and offset_in_page(addr)",
+      "when": "nonfixed callback returns",
+      "anchors": [
+        "AP21-A024",
+        "AP21-A025",
+        "AP21-A026",
+        "AP21-A083",
+        "AP21-A084"
+      ]
+    },
+    {
+      "id": "AP21-X08",
+      "target": "info fields",
+      "action": "length=len; align_mask=0; align_offset=pgoff<<PAGE_SHIFT; low_limit=PAGE_SIZE; high_limit=mm.mmap_base",
+      "when": "simple_get invoked",
+      "anchors": [
+        "AP21-A012",
+        "AP21-A013",
+        "AP21-A076"
+      ]
+    },
+    {
+      "id": "AP21-X09",
+      "target": "info.high_limit",
+      "action": "add TASK_SIZE_MAX-DEFAULT_MAP_WINDOW when hint above default",
+      "when": "addr>DEFAULT_MAP_WINDOW",
+      "anchors": [
+        "AP21-A015",
+        "AP21-A077"
+      ]
+    },
+    {
+      "id": "AP21-X10",
+      "target": "topdown gap",
+      "action": "candidate found via tmp_gap... then overwritten by fallback if(gap=~0)",
+      "when": "code reaches assignment",
+      "anchors": [
+        "AP21-A031",
+        "AP21-A034",
+        "AP21-A035"
+      ]
+    },
+    {
+      "id": "AP21-X11",
+      "target": "topdown fallback",
+      "action": "gap=(high_limit-length)&PAGE_MASK",
+      "when": "assignment expression reached",
+      "anchors": [
+        "AP21-A035",
+        "AP21-A036",
+        "AP21-A076"
+      ]
+    },
+    {
+      "id": "AP21-X12",
+      "target": "bottomup gap",
+      "action": "if(gap=0) assigns zero and condition false, return 0",
+      "when": "helper (not default chain) reaches tail",
+      "anchors": [
+        "AP21-A041",
+        "AP21-A044",
+        "AP21-A045"
+      ]
+    },
+    {
+      "id": "AP21-X13",
+      "target": "iterator behavior",
+      "action": "topdown exhausted path calls vma_next_vma(NULL), which has active while(vma==NULL)",
+      "when": "iterator yields NULL and code reaches postloop",
+      "anchors": [
+        "AP21-A033",
+        "AP21-A049"
+      ]
+    },
+    {
+      "id": "AP21-X14",
+      "target": "NOREPLACE gate",
+      "action": "checks find_vma_intersection with addr+len; first VMA may not be examined if no strict predecessor",
+      "when": "NOREPLACE flag set and call reached",
+      "anchors": [
+        "AP21-A007",
+        "AP21-A057",
+        "AP21-A060",
+        "AP21-A061",
+        "AP21-A062"
+      ]
+    },
+    {
+      "id": "AP21-X15",
+      "target": "VMA handoff",
+      "action": "simple_mmap_region calls simple_munmap_vma_range before merge/new path",
+      "when": "chosen address accepted by do_mmap",
+      "anchors": [
+        "AP21-A008",
+        "AP21-A009",
+        "AP21-A087",
+        "AP21-A092"
+      ]
+    },
+    {
+      "id": "AP21-X16",
+      "target": "arch callback binding",
+      "action": "arch_pick_mmap_layout stores default callback and TASK_UNMAPPED_BASE in mm",
+      "when": "setup_new_exec calls arch layout",
+      "anchors": [
+        "AP21-A072",
+        "AP21-A074",
+        "AP21-A075",
+        "AP21-A079"
+      ]
+    },
+    {
+      "id": "AP21-X17",
+      "target": "gap guard omission",
+      "action": "selected topdown uses raw vm_start/end rather than vm_start_gap/vm_end_gap helpers",
+      "when": "selected code only; helpers exist elsewhere",
+      "anchors": [
+        "AP21-A028",
+        "AP21-A029",
+        "AP21-A030",
+        "AP21-A088",
+        "AP21-A090"
+      ]
+    }
+  ],
+  "object_ledger": [
+    {
+      "object": "byte_address",
+      "meaning": "addr0 / selected start / end=addr+len are byte addresses; do not conflate with pgoff page index",
+      "anchors": [
+        "AP21-A002",
+        "AP21-A003",
+        "AP21-A004",
+        "AP21-A006",
+        "AP21-A007",
+        "AP21-A012"
+      ]
+    },
+    {
+      "object": "length",
+      "meaning": "PAGE_ALIGN input length and info.length in bytes; pgoff is page number and align_offset uses left shift",
+      "anchors": [
+        "AP21-A003",
+        "AP21-A004",
+        "AP21-A013",
+        "AP21-A076",
+        "AP21-A080"
+      ]
+    },
+    {
+      "object": "info",
+      "meaning": "struct has flags, length, low/high, align mask/offset, start_gap; chosen assignment sets only selected fields and chosen topdown reads subset",
+      "anchors": [
+        "AP21-A013",
+        "AP21-A016",
+        "AP21-A027",
+        "AP21-A029",
+        "AP21-A030",
+        "AP21-A031",
+        "AP21-A067",
+        "AP21-A068",
+        "AP21-A069"
+      ]
+    },
+    {
+      "object": "mm_callback",
+      "meaning": "arch_pick writes mm.get_unmapped_area; __get loads it; file callback can override; initialization chronology not proven globally",
+      "anchors": [
+        "AP21-A021",
+        "AP21-A070",
+        "AP21-A072",
+        "AP21-A074",
+        "AP21-A075",
+        "AP21-A082"
+      ]
+    },
+    {
+      "object": "VMA_boundaries",
+      "meaning": "VMA.vm_start and vm_end are half-open range; simple_find_vma only checks a point; intersection searches strict predecessor first",
+      "anchors": [
+        "AP21-A055",
+        "AP21-A056",
+        "AP21-A057",
+        "AP21-A059",
+        "AP21-A060",
+        "AP21-A061",
+        "AP21-A062"
+      ]
+    },
+    {
+      "object": "guard_helpers",
+      "meaning": "vm_start_gap and vm_end_gap exist but selected topdown uses raw vm_start/end, no calls to these helpers in its body",
+      "anchors": [
+        "AP21-A028",
+        "AP21-A029",
+        "AP21-A030",
+        "AP21-A088",
+        "AP21-A089",
+        "AP21-A090",
+        "AP21-A091"
+      ]
+    }
+  ],
+  "bounded_arithmetic": [
+    {
+      "label": "x86 constants",
+      "assumptions": "64-bit ulong; PAGE_SHIFT=12, TASK_SIZE_LOW=TASK_SIZE_MAX=(1<<47)-4096, standard ALIGN power2",
+      "page_bytes": "4096",
+      "task_size_hex": "0x7ffffffff000",
+      "mmap_base_hex": "0x2aaaaaaab000",
+      "default_window_equals_task": true,
+      "high_extension_bytes": "0",
+      "anchors": [
+        "AP21-A076",
+        "AP21-A077",
+        "AP21-A078",
+        "AP21-A079",
+        "AP21-A080",
+        "AP21-A081"
+      ]
+    },
+    {
+      "label": "hint-start-only collision",
+      "assumptions": "selected valid callback, VMA [0x3000,0x5000), request addr=0x2000,len=0x2000; task bound satisfied",
+      "request_interval": "[0x2000,0x4000)",
+      "vma_interval": "[0x3000,0x5000)",
+      "start_contained": false,
+      "interval_overlaps": true,
+      "anchors": [
+        "AP21-A014",
+        "AP21-A055",
+        "AP21-A059",
+        "AP21-A025"
+      ]
+    },
+    {
+      "label": "first VMA noreplace blind spot",
+      "assumptions": "one VMA [0x3000,0x5000), request [0x3000,0x4000); iterator and list helpers return normally",
+      "strict_predecessor_exists": false,
+      "intersection_helper_returns_null_under_premise": true,
+      "anchors": [
+        "AP21-A007",
+        "AP21-A057",
+        "AP21-A060",
+        "AP21-A061",
+        "AP21-A062"
+      ]
+    },
+    {
+      "label": "gap assignment",
+      "assumptions": "topdown code reaches if(gap=~0) and high_limit>=length",
+      "candidate_gap": "any previously found value",
+      "final_gap_expression": "(info.high_limit - info.length) & PAGE_MASK",
+      "anchors": [
+        "AP21-A031",
+        "AP21-A035",
+        "AP21-A036"
+      ]
+    },
+    {
+      "label": "bottomup assignment",
+      "assumptions": "bottomup code reaches if(gap=0) after loop",
+      "return_gap_numeric": "0",
+      "default_path_reaches_bottomup": false,
+      "anchors": [
+        "AP21-A017",
+        "AP21-A045"
+      ]
+    }
+  ],
+  "counts": {
+    "verified_source_anchors": 92,
+    "nodes": 55,
+    "edges": 63,
+    "scenarios": 30,
+    "effects": 17,
+    "objects": 6,
+    "math_examples": 5
+  },
+  "limitations": [
+    "R20-S01..S04 and R14/R12 must be consumed",
+    "Default chosen layout does not bind bottomup; source definition not an active callback",
+    "No compiled execution; invalid NULL member computation is not a deterministic runtime outcome",
+    "Separate anchor source facts from conditionally constructed scenarios; valid VMA list and mm are assumptions",
+    "No full mmap permission, munmap rollback, actual CPU page tables, file callback implementations or concurrent threads audited",
+    "No source or old results modified"
+  ]
+}

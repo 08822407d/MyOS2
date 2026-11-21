@@ -1,0 +1,149 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-08",
+  "produced_by": "GPT-6 (self-reported)",
+  "model_per_owner": "GPT-6",
+  "reasoning_effort_per_owner": "Extra",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "R69-01 documentation_disposition_submitted; not closed by executor",
+  "new_findings": [
+    {
+      "id": "EO70-F01",
+      "kind": "duplicate_fput_on_single_bprm_file_field",
+      "status": "needs_evidence",
+      "claim": "In free_bprm a nonnull bprm.file is passed first to fput and immediately afterwards to do_close_execat, whose body passes the same nonnull pointer to fput. No local get_file intervenes. Depending on valid positive initial f_count and any independent mm.exe_file reference, the first put may make the object invalid before the second, or a second put may consume a reference expected elsewhere. The executable/mm lifetime and actual call paths are not fully certified.",
+      "premises": [
+        "free_bprm invoked with a valid nonnull bprm.file",
+        "both callers return and second use remains valid if first fput does not already request free",
+        "reference accounting has a particular valid positive initial count, no unmodelled increments/concurrent changes"
+      ],
+      "counter_evidence": "A caller may have multiple properly owned refs or a path may not reach both statements; freeing requests do not certify physical free; no kernel test or allocator trace",
+      "first_stop": "object validity after first fput; stop at possible zero rather than computing second decrement",
+      "evidence": [
+        "C01",
+        "C04",
+        "C28",
+        "C29",
+        "C31",
+        "B39",
+        "B40"
+      ],
+      "related": [
+        "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-U03"
+      ],
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-F01",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EO70-F02",
+      "kind": "unlocked_format_registration_iteration_conditional",
+      "status": "needs_evidence",
+      "claim": "The directly read register_binfmt/unregister_binfmt bodies have their lock operations commented, and the search_binary_handler traversal also has commented lock operations. If a registration or removal can happen concurrently with iteration, list/handler lifetime invariants may be at risk. This is separate from the prior IE69-F01 last-retval semantics; actual concurrency and life cycle are not established.",
+      "premises": [
+        "a live execution thread traverses formats",
+        "another task actually registers/unregisters an overlapping format without external synchronization",
+        "list node/object changes can interfere with traversal"
+      ],
+      "counter_evidence": "Boot may register a single static ELF handler before any user exec, and module exit need not occur concurrently; other synchronization may exist outside selected bodies",
+      "first_stop": "real registration/unregistration schedule and external synchronization unknown",
+      "evidence": [
+        "A02",
+        "A03",
+        "A11",
+        "A12",
+        "A13",
+        "A17",
+        "A18",
+        "A20",
+        "A21",
+        "A23"
+      ],
+      "related": [
+        "CORE-USER-INIT-EXEC-HANDOFF-69::IE69-F01"
+      ],
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-F02",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_findings_count": 2,
+  "evidence_gaps": [
+    {
+      "id": "EO70-U01",
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U01",
+      "status": "needs_evidence",
+      "detail": "Real runtime formats membership/order, registration count and concurrency not proven, despite concrete boot source call",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EO70-U02",
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U02",
+      "status": "needs_evidence",
+      "detail": "fput positive initial f_count, underlying kmem_cache_free behavior and object lifetime after first fput need actual ownership accounting",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EO70-U03",
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U03",
+      "status": "needs_evidence",
+      "detail": "mm.exe_file and bprm.file independent references across set_mm_exe_file and free_bprm not fully proved for all branches",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EO70-U04",
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U04",
+      "status": "needs_evidence",
+      "detail": "bprm.mm -> current.mm/active_mm transfer, mm_users/mm_count and lower-level mapping/CR3 effects not audited or run",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EO70-U05",
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U05",
+      "status": "needs_evidence",
+      "detail": "interpreter local file, bprm.interpreter/executable fields and fd_install producer/use conditions not exhaustively traced",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EO70-U06",
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U06",
+      "status": "needs_evidence",
+      "detail": "free_arg_pages empty helper and other arg page/mm cleanup routes require prior23/24/15 bounded consumption and actual lifetime tests",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EO70-U07",
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U07",
+      "status": "needs_evidence",
+      "detail": "point_of_no_return flag does not by itself implement fatal error return; later cleanup and exec bridge still limited by IE69-F02",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "EO70-U08",
+      "qualified_id": "CORE-USER-EXEC-RESOURCE-OWNERSHIP-70::EO70-U08",
+      "status": "needs_evidence",
+      "detail": "complete source macro preprocessing and kernel build, list synchronization, file allocator, QEMU/hardware all NOT_RUN",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "evidence_gaps_count": 8,
+  "actual_kernel_bug_reproduced": 0,
+  "historical_ids_unchanged": true,
+  "excluded_actions": [
+    "kernel changes",
+    "build/run/preprocess",
+    "self-close R69-01",
+    "self-sign 70 PASS",
+    "start 71"
+  ]
+}

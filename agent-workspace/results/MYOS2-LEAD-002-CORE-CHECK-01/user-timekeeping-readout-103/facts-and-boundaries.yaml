@@ -1,0 +1,4327 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMEKEEPING-READOUT-103",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-15",
+  "mainline_owner": "MYOS2-A-C07",
+  "date": "2026-11-18",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "7564e79a9b02",
+  "exec_parent_short12": "1a92f9839e53",
+  "master_direct_short12": "e8e60cd19540",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "R102_01": "OPEN",
+  "R102_02": "OPEN",
+  "R102_03": "OPEN",
+  "R101_01": "CLOSED_DOCUMENTATION_ONLY",
+  "D00_status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "read_channel": "connector",
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+    "old_batch102_verdict": "RETURN",
+    "old_102_result_commit": "1a92f9839e53",
+    "source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/",
+    "mainline_review_ref": "MyOS2@7564e79a9b02:agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-HPET-ENABLE-CLOCKSOURCE-102-review.md",
+    "R102_01": {
+      "old_selfcheck_claim": "130/130/0_HISTORICAL_UNCHANGED",
+      "actual_raw_count": 131,
+      "actual_source_excerpts": 130,
+      "extra_text_marker": 1,
+      "extra_location": "old102/MANIFEST.md P9-5 explanatory example",
+      "old_raw_summary": "WITHDRAWN_DO_NOT_REWRITE_OR_RENUMBER",
+      "disposition": "REPORT_RAW_131_VS_QUOTE_130; original source excerpts literal matches retained; explanatory marker is not an extra evidence ID; new 103 evidence separately counted"
+    },
+    "R102_02": {
+      "source_definitions_new_103": [
+        {
+          "problem": "clocks_calc_mult_shift body/precision/assignment",
+          "new_evidence": [
+            "TK103-E002",
+            "TK103-E003",
+            "TK103-E004",
+            "TK103-E005"
+          ],
+          "old_consumers": [
+            "B-P04",
+            "C-R03",
+            "HC102-M01–M07",
+            "HC102-F01",
+            "HC102-F02"
+          ]
+        },
+        {
+          "problem": "clocksource_max_adjustment, sec normalization, overflow adjustment",
+          "new_evidence": [
+            "TK103-E006",
+            "TK103-E007",
+            "TK103-E008",
+            "TK103-E009",
+            "TK103-E010",
+            "TK103-E011"
+          ],
+          "old_consumers": [
+            "C-R03",
+            "B-P04",
+            "HC102-M01–M07",
+            "HC102-F01",
+            "HC102-F02"
+          ]
+        },
+        {
+          "problem": "HPET_MASK->CLOCKSOURCE_MASK->GENMASK_ULL->__GENMASK_ULL and ULL/width",
+          "new_evidence": [
+            "TK103-E020",
+            "TK103-E019",
+            "TK103-E021",
+            "TK103-E022",
+            "TK103-E023",
+            "TK103-E133",
+            "TK103-E134",
+            "TK103-E135"
+          ],
+          "old_consumers": [
+            "C-R01",
+            "B-C05",
+            "B-P08",
+            "C-R02"
+          ]
+        },
+        {
+          "problem": "static hpet_base object vs struct and channel.boot_cfg",
+          "new_evidence": [
+            "TK103-E024",
+            "TK103-E025",
+            "TK103-E026"
+          ],
+          "old_consumers": [
+            "A-M02",
+            "A-M04",
+            "A-M05",
+            "A-E06"
+          ]
+        },
+        {
+          "problem": "list_add alias->__list_add_between, validation, list initialization, iteration, current clocksource_list",
+          "new_evidence": [
+            "TK103-E014",
+            "TK103-E015",
+            "TK103-E016",
+            "TK103-E039",
+            "TK103-E040",
+            "TK103-E041",
+            "TK103-E042",
+            "TK103-E043",
+            "TK103-E044",
+            "TK103-E045",
+            "TK103-E046",
+            "TK103-E047",
+            "TK103-E048",
+            "TK103-E049",
+            "TK103-E137"
+          ],
+          "old_consumers": [
+            "C-R04",
+            "C-R05",
+            "C-R06",
+            "C-R08",
+            "HC102-M16"
+          ]
+        },
+        {
+          "problem": "clocksource_select macro and __clocksource_register_scale real inactive select/return",
+          "new_evidence": [
+            "TK103-E012",
+            "TK103-E013",
+            "TK103-E017",
+            "TK103-E018"
+          ],
+          "old_consumers": [
+            "C-R05",
+            "C-R07",
+            "C-R08",
+            "ABC-04"
+          ]
+        },
+        {
+          "problem": "tk_setup raw clock/mask/cycle_last, shift/mult and clock fields",
+          "new_evidence": [
+            "TK103-E062",
+            "TK103-E063",
+            "TK103-E064",
+            "TK103-E065",
+            "TK103-E066",
+            "TK103-E067",
+            "TK103-E068"
+          ],
+          "old_consumers": [
+            "C-S03",
+            "C-S04",
+            "C-S07",
+            "HC102-M15",
+            "HC102-M16"
+          ]
+        },
+        {
+          "problem": "hpet_readl/writel->readl/writel->raw u32 volatile accesses, conditional macro definitions",
+          "new_evidence": [
+            "TK103-E053",
+            "TK103-E054",
+            "TK103-E055",
+            "TK103-E056"
+          ],
+          "old_consumers": [
+            "A-M01",
+            "B-C05",
+            "B-P06",
+            "B-P08"
+          ]
+        },
+        {
+          "problem": "independent config, route, initcall, bitmask definitions",
+          "new_evidence": [
+            "TK103-E001",
+            "TK103-E027",
+            "TK103-E028",
+            "TK103-E029",
+            "TK103-E030",
+            "TK103-E031",
+            "TK103-E032",
+            "TK103-E033",
+            "TK103-E034",
+            "TK103-E035",
+            "TK103-E036",
+            "TK103-E037",
+            "TK103-E038",
+            "TK103-E050",
+            "TK103-E051",
+            "TK103-E052"
+          ],
+          "old_consumers": [
+            "A-M03",
+            "A-M04",
+            "A-M05",
+            "B-P09",
+            "C-R08"
+          ]
+        },
+        {
+          "problem": "IRQ descriptor callback rather than dispatcher binding",
+          "new_evidence": [
+            "TK103-E057",
+            "TK103-E058",
+            "TK103-E059",
+            "TK103-E136"
+          ],
+          "old_consumers": [
+            "102 original DOT register_irq/irq_handler edges",
+            "ABC-05"
+          ]
+        }
+      ],
+      "type_and_selection_boundary": "Actual readl/raw helper declarations are behind ifndef/architecture include conditions; author explicitly does not certify chosen preprocessor branch, hardware bus width, atomic transaction, physical MMIO validity or compiled binary."
+    },
+    "R102_03": {
+      "record_type": "R102_03_graph_direct_and_callback_edge_append_only_correction",
+      "original_graph_status": "FROZEN_OLD_GRAPH_NOT_EDITED",
+      "source_pin_short12": "1a92f9839e53",
+      "original_direct_call_count": 36,
+      "original_callback_binding_count": 5,
+      "all_affected_edge_rows": 41,
+      "modified_edge_rows": 8,
+      "table": [
+        {
+          "edge_id": "G102-01",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "start_kernel",
+          "old_to": "timekeeping_init",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: source startup order before late_time_init",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "start_kernel",
+          "new_to": "timekeeping_init",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E117",
+            "HC102-E118"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-02",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "start_kernel",
+          "old_to": "late_time_init",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: conditional reachable boot path",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "start_kernel",
+          "new_to": "late_time_init",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E117",
+            "HC102-E118"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-03",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "late_time_init",
+          "old_to": "hpet_time_init",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: late_time_init body",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "late_time_init",
+          "new_to": "hpet_time_init",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E116"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-04",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_time_init",
+          "old_to": "hpet_enable",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: return value not checked",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_time_init",
+          "new_to": "hpet_enable",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E059",
+            "HC102-E114",
+            "HC102-E115"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-05",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_enable",
+          "old_to": "hpet_set_mapping",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: mapping request",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_enable",
+          "new_to": "hpet_set_mapping",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E042",
+            "HC102-E044",
+            "HC102-E045",
+            "HC102-E046",
+            "HC102-E050",
+            "HC102-E052",
+            "HC102-E053",
+            "HC102-E054",
+            "HC102-E058",
+            "TK103-E027",
+            "TK103-E028"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-06",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_set_mapping",
+          "old_to": "myos_ioremap",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: nonNULL does not prove valid MMIO",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_set_mapping",
+          "new_to": "myos_ioremap",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E042"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-07",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "myos_ioremap",
+          "old_to": "kernel_map",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: physical endpoint cast",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "myos_ioremap",
+          "new_to": "kernel_map",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E030"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-08",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_enable",
+          "old_to": "cfg_working",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: requires valid hpet_virt",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_enable",
+          "new_to": "cfg_working",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E042",
+            "HC102-E044",
+            "HC102-E045",
+            "HC102-E046",
+            "HC102-E050",
+            "HC102-E052",
+            "HC102-E053",
+            "HC102-E054",
+            "HC102-E058",
+            "TK103-E027",
+            "TK103-E028"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-09",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "cfg_working",
+          "old_to": "hpet_readl",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: read cfg",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "cfg_working",
+          "new_to": "hpet_readl",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E044"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-10",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "channels_decode",
+          "old_to": "kcalloc",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: request array; allocation opaque",
+          "disposition": "REPLACE_INVALID_DIRECT_CALL",
+          "new_from": "hpet_enable",
+          "new_to": "kcalloc",
+          "new_type": "DIRECT_CALL",
+          "reason": "channels_decode只是算式摘要，kcalloc出现在hpet_enable函数体内",
+          "support_evidence_ids": [
+            "TK103-E027",
+            "HC102-E050"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-11",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "cfg_sanitize",
+          "old_to": "hpet_readl",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: read global/per-channel cfg",
+          "disposition": "REPLACE_INVALID_DIRECT_CALL",
+          "new_from": "hpet_enable",
+          "new_to": "hpet_readl",
+          "new_type": "DIRECT_CALL",
+          "reason": "cfg_sanitize不是函数，hpet_enable直接发起全局和通道CFG读取",
+          "support_evidence_ids": [
+            "TK103-E028",
+            "HC102-E053",
+            "HC102-E054"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-12",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "cfg_sanitize",
+          "old_to": "hpet_writel",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: actual first config writes, not second warning pass",
+          "disposition": "REPLACE_INVALID_DIRECT_CALL",
+          "new_from": "hpet_enable",
+          "new_to": "hpet_writel",
+          "new_type": "DIRECT_CALL",
+          "reason": "cfg_sanitize不是函数，hpet_enable执行首次寄存器写请求",
+          "support_evidence_ids": [
+            "TK103-E028",
+            "HC102-E053",
+            "HC102-E054"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-13",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_counting",
+          "old_to": "restart_counter",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: first",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_counting",
+          "new_to": "restart_counter",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E066",
+            "HC102-E067"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-14",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "restart_counter",
+          "old_to": "stop_counter",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: counter reset chain",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "restart_counter",
+          "new_to": "stop_counter",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E065"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-15",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "restart_counter",
+          "old_to": "reset_counter",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: second",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "restart_counter",
+          "new_to": "reset_counter",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E065"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-16",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "restart_counter",
+          "old_to": "start_counter",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: third",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "restart_counter",
+          "new_to": "start_counter",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E065"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-17",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_counting",
+          "old_to": "hpet_readl",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: counter progress test",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_counting",
+          "new_to": "hpet_readl",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E066",
+            "HC102-E067"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-18",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_counting",
+          "old_to": "rdtsc",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: TSC threshold, not wall-time guarantee",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_counting",
+          "new_to": "rdtsc",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E066",
+            "HC102-E067"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-19",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hz_macro",
+          "old_to": "register_scale",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: macro expansion",
+          "disposition": "RETYPE_MACRO_EXPANSION",
+          "new_from": "clocksource_register_hz",
+          "new_to": "__clocksource_register_scale",
+          "new_type": "MACRO_EXPANSION",
+          "reason": "注册宏展开调用表达式，宏名自身不执行函数",
+          "support_evidence_ids": [
+            "TK103-E018"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-20",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "register_scale",
+          "old_to": "update_scale",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: mult shift before list",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "register_scale",
+          "new_to": "update_scale",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E012",
+            "TK103-E013"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-21",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "update_scale",
+          "old_to": "multshift",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: freq nonzero",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "update_scale",
+          "new_to": "multshift",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E008",
+            "TK103-E009"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-22",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "register_scale",
+          "old_to": "enqueue",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: source registration body",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "register_scale",
+          "new_to": "enqueue",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E012",
+            "TK103-E013"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-23",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_clock",
+          "old_to": "read_hpet",
+          "old_type": "CALLBACK_BINDING",
+          "original_relation": "CALLBACK_BINDING: read field, not invocation",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_clock",
+          "new_to": "read_hpet",
+          "new_type": "CALLBACK_BINDING",
+          "reason": "确实为静态字段绑定，必须与回调实际触发分开",
+          "support_evidence_ids": [
+            "HC102-E038",
+            "HC102-E039"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-24",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_clock",
+          "old_to": "hpet_enable",
+          "old_type": "CALLBACK_BINDING",
+          "original_relation": "CALLBACK_BINDING: enable field, registration does not call enable",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_clock",
+          "new_to": "hpet_enable",
+          "new_type": "CALLBACK_BINDING",
+          "reason": "确实为静态字段绑定，必须与回调实际触发分开",
+          "support_evidence_ids": [
+            "HC102-E038",
+            "HC102-E039"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-25",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "legacy",
+          "old_to": "periodic",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: only if LEGSUP",
+          "disposition": "REPLACE_INVALID_DIRECT_CALL",
+          "new_from": "hpet_enable",
+          "new_to": "myos_hpet_clkevt_set_state_periodic",
+          "new_type": "DIRECT_CALL",
+          "reason": "legacy只是LEGSUP条件节点，实际调用者hpet_enable",
+          "support_evidence_ids": [
+            "HC102-E058"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-26",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "periodic",
+          "old_to": "hpet_writel",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: first CFG CMP then second CMP",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "periodic",
+          "new_to": "hpet_writel",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E068",
+            "HC102-E069",
+            "HC102-E070",
+            "HC102-E071"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-27",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "periodic",
+          "old_to": "stop_counter",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: stop before read/compare",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "periodic",
+          "new_to": "stop_counter",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E068",
+            "HC102-E069",
+            "HC102-E070",
+            "HC102-E071"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-28",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "periodic",
+          "old_to": "start_counter",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: start after writes",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "periodic",
+          "new_to": "start_counter",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E068",
+            "HC102-E069",
+            "HC102-E070",
+            "HC102-E071"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-29",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "read_hpet",
+          "old_to": "hpet_readl",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: return cast to u64",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "read_hpet",
+          "new_to": "hpet_readl",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E072"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-30",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "done_booting",
+          "old_to": "default_clock",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: initial curr_clocksource default",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "done_booting",
+          "new_to": "default_clock",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E060",
+            "TK103-E061",
+            "TK103-E017"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-31",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "done_booting",
+          "old_to": "select",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: clocksource_select macro",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "done_booting",
+          "new_to": "select",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E060",
+            "TK103-E061",
+            "TK103-E017"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-32",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "select",
+          "old_to": "best",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: find_best source",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "select",
+          "new_to": "best",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E101"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-33",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "timekeeping_init",
+          "old_to": "default_clock",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: default selection",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "timekeeping_init",
+          "new_to": "default_clock",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E077"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-34",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "timekeeping_init",
+          "old_to": "tk_setup",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: with clock pointer",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "timekeeping_init",
+          "new_to": "tk_setup",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E077"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-35",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "timekeeping_get_ns",
+          "old_to": "tk_clock_read",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: clock read site",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "timekeeping_get_ns",
+          "new_to": "tk_clock_read",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E101"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-36",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "tk_clock_read",
+          "old_to": "jiffies_clock",
+          "old_type": "CALLBACK_BINDING",
+          "original_relation": "CALLBACK_BINDING: if weak default selected and not replaced",
+          "disposition": "REPLACE_INVALID_CALLBACK_BINDING",
+          "new_from": "tk_clock_read",
+          "new_to": "tkr.clock.read",
+          "new_type": "CALLBACK_INVOKE",
+          "reason": "读指针通过READ_ONCE后按该对象的read字段间接调用；是否jiffies依赖weak默认与对象稳定，jiffies对象的read字段绑定另列",
+          "support_evidence_ids": [
+            "TK103-E093",
+            "TK103-E085",
+            "TK103-E086"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-37",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_time_init",
+          "old_to": "irq_init",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: unconditional after hpet_enable returns",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_time_init",
+          "new_to": "irq_init",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E059",
+            "HC102-E114",
+            "HC102-E115"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-38",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "irq_init",
+          "old_to": "register_irq",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: issue IRQ registration",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "irq_init",
+          "new_to": "register_irq",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "TK103-E136"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-39",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "register_irq",
+          "old_to": "irq_handler",
+          "old_type": "CALLBACK_BINDING",
+          "original_relation": "CALLBACK_BINDING: handler dispatch requires real IRQ and desc",
+          "disposition": "REPLACE_INVALID_CALLBACK_BINDING",
+          "new_from": "register_irq",
+          "new_to": "irq_descriptors[irq].handler",
+          "new_type": "DATA_FLOW",
+          "reason": "register_irq只是保存参数handler；不绑定hwint_irq_handler；实际分发hwint_irq_handler从描述符取handler间接调用；新证据E057证明描述符字段写入、E058证明分发间接调用、E136证明HPET真实注册caller",
+          "support_evidence_ids": [
+            "TK103-E057",
+            "TK103-E058",
+            "TK103-E136"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-40",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "irq_handler",
+          "old_to": "hpet_handler",
+          "old_type": "CALLBACK_BINDING",
+          "original_relation": "CALLBACK_BINDING: requires real delivery and valid descriptor",
+          "disposition": "RETYPE_INDIRECT_INVOKE",
+          "new_from": "hwint_irq_handler",
+          "new_to": "irq_descriptors[vector].handler",
+          "new_type": "CALLBACK_INVOKE",
+          "reason": "实际分发通过描述符间接调用；仅当该槽由HPET注册且收到真实IRQ才会调用HPET_handler",
+          "support_evidence_ids": [
+            "TK103-E058"
+          ],
+          "runtime_proven": false
+        },
+        {
+          "edge_id": "G102-41",
+          "old_source_ref": "MyOS2@1a92f9839e53:agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-hpet-enable-clocksource-102/hpet-enable-clocksource-paths.dot",
+          "old_from": "hpet_handler",
+          "old_to": "do_timer",
+          "old_type": "DIRECT_CALL",
+          "original_relation": "DIRECT_CALL: do_timer(1)",
+          "disposition": "RETAIN_SOURCE_SUPPORTED_WITH_CONDITIONS",
+          "new_from": "hpet_handler",
+          "new_to": "do_timer",
+          "new_type": "DIRECT_CALL",
+          "reason": "旧边的from是实际函数或条件内联调用点，保留但不认证调用成功、可达或外部设备",
+          "support_evidence_ids": [
+            "HC102-E016"
+          ],
+          "runtime_proven": false
+        }
+      ],
+      "new_graph_semantics": {
+        "DIRECT_CALL": "实际C/ASM函数调用，宏展开后的目标依源语法分类且注明展开",
+        "CALLBACK_BINDING": "对象或描述符字段绑定函数指针，尚未发生调用",
+        "CALLBACK_INVOKE": "代码确有经字段间接调用表达式，真实运行仍需条件",
+        "MACRO_EXPANSION": "预处理宏名到目标表达式的静态展开关系，不是运行函数调用",
+        "DATA_FLOW": "字段赋值、参数传递及条件缓存",
+        "CONDITIONAL_STEP": "条件式控制边，不能推断所有分支都运行",
+        "UNPROVEN_JOIN": "对象/硬件/配置/执行可达性尚缺证据的候选连接"
+      },
+      "new_edges_required": [
+        {
+          "from": "timekeeping_get_ns",
+          "to": "timekeeping_cycles_to_ns",
+          "kind": "DIRECT_CALL",
+          "evidence": "TK103-E101"
+        },
+        {
+          "from": "hwint_irq_handler",
+          "to": "descriptor.handler",
+          "kind": "CALLBACK_INVOKE",
+          "evidence": "TK103-E058"
+        },
+        {
+          "from": "myos_HPET_init",
+          "to": "register_irq",
+          "kind": "DIRECT_CALL",
+          "evidence": "TK103-E136"
+        },
+        {
+          "from": "clocksource_jiffies",
+          "to": "jiffies_read",
+          "kind": "CALLBACK_BINDING",
+          "evidence": "TK103-E083"
+        }
+      ]
+    },
+    "R102_S01": "Preserve memory mapping and resource lifecycle gates; cfg LEGSUP capability != CFG_LEGACY requested bit != channel.mode; hpet_enable_legacy_int body has set bit but direct hpet_enable path not shown calling it; TSC unsigned wrap not UB by itself.",
+    "R102_S02": {
+      "old_A_M03_trace": "(id&mask)>>shift +1 (missing enclosing parentheses as written in source_trace)",
+      "corrected_A_M03_trace": "((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1",
+      "new_id": "TK103-E030",
+      "affected_consumers": [
+        "A-M03",
+        "HC102-M08",
+        "A-M06",
+        "A-E06"
+      ],
+      "old_B_P09": "TN_32BIT not explicitly ORed by periodic helper",
+      "corrected_B_P09": "When cfg initially contains TN_32BIT=1, current OR with ENABLE/PERIODIC/SETVAL can preserve it; final cfg bit not known to be zero",
+      "affected_consumers_B": [
+        "B-P09",
+        "B-P06",
+        "HC102-M14"
+      ]
+    },
+    "R102_S03": {
+      "F06_history": "HC102-F06 is a followup of IR101-F08/U05, not a new independent root; 8 ledger entries are not 8 unique newly confirmed failures",
+      "prior_roots": [
+        "MYOS2-LEAD-002::CA-05",
+        "MYOS2-LEAD-002-CORE-CHECK-01::V14",
+        "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03",
+        "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U08"
+      ],
+      "accepted_101": "R101-01 CLOSED_DOCUMENTATION_ONLY; batch101 PASS_PENDING_LOCAL",
+      "selected_vs_consumed": "list candidate, curr_clocksource pointer, timekeeper cached clock are three objects; no proof of automatic synchronization"
+    }
+  },
+  "source_quote_index": [
+    {
+      "id": "TK103-E001",
+      "source_path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "set_CMAKE_C_FLAGS",
+      "line_start": 58,
+      "line_end": 61,
+      "quote_line_count": 4,
+      "topic": "config",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E002",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocks_calc_mult_shift",
+      "line_start": 50,
+      "line_end": 51,
+      "quote_line_count": 2,
+      "topic": "calc-type",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E003",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocks_calc_mult_shift",
+      "line_start": 57,
+      "line_end": 61,
+      "quote_line_count": 5,
+      "topic": "precision-limit",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E004",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocks_calc_mult_shift",
+      "line_start": 67,
+      "line_end": 71,
+      "quote_line_count": 5,
+      "topic": "shift-search",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E005",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocks_calc_mult_shift",
+      "line_start": 72,
+      "line_end": 75,
+      "quote_line_count": 4,
+      "topic": "store-multshift",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E006",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocksource_max_adjustment",
+      "line_start": 133,
+      "line_end": 135,
+      "quote_line_count": 3,
+      "topic": "maxadj",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E007",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "update_freq_scale",
+      "line_start": 205,
+      "line_end": 205,
+      "quote_line_count": 1,
+      "topic": "freq-guard",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E008",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "update_freq_scale",
+      "line_start": 215,
+      "line_end": 219,
+      "quote_line_count": 5,
+      "topic": "sec-limit",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E009",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "update_freq_scale",
+      "line_start": 220,
+      "line_end": 223,
+      "quote_line_count": 4,
+      "topic": "sec-normalize",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E010",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "update_freq_scale",
+      "line_start": 249,
+      "line_end": 251,
+      "quote_line_count": 3,
+      "topic": "adjustment-guard",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E011",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "update_freq_scale",
+      "line_start": 252,
+      "line_end": 254,
+      "quote_line_count": 3,
+      "topic": "adjustment-loop",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E012",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "register_scale",
+      "line_start": 420,
+      "line_end": 422,
+      "quote_line_count": 3,
+      "topic": "enqueue",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E013",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "register_scale",
+      "line_start": 424,
+      "line_end": 428,
+      "quote_line_count": 5,
+      "topic": "return0-select-comment",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E014",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocksource_enqueue",
+      "line_start": 375,
+      "line_end": 376,
+      "quote_line_count": 2,
+      "topic": "list-entry",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E015",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocksource_enqueue",
+      "line_start": 377,
+      "line_end": 381,
+      "quote_line_count": 5,
+      "topic": "rating-loop",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E016",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocksource_enqueue",
+      "line_start": 383,
+      "line_end": 384,
+      "quote_line_count": 2,
+      "topic": "list-add",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E017",
+      "source_path": "mykernel/time/clocksource/clocksource_macro.h",
+      "symbol": "clocksource_select",
+      "line_start": 14,
+      "line_end": 15,
+      "quote_line_count": 2,
+      "topic": "select-macro",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E018",
+      "source_path": "mykernel/time/clocksource/clocksource_macro.h",
+      "symbol": "clocksource_register_hz",
+      "line_start": 9,
+      "line_end": 10,
+      "quote_line_count": 2,
+      "topic": "register-macro",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E019",
+      "source_path": "mykernel/time/clocksource/clocksource_macro.h",
+      "symbol": "CLOCKSOURCE_MASK",
+      "line_start": 7,
+      "line_end": 7,
+      "quote_line_count": 1,
+      "topic": "mask-macro",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E020",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "HPET_MASK",
+      "line_start": 40,
+      "line_end": 40,
+      "quote_line_count": 1,
+      "topic": "hpet-mask",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E021",
+      "source_path": "mykernel/include/linux/kernel/bits.h",
+      "symbol": "GENMASK_ULL",
+      "line_start": 45,
+      "line_end": 45,
+      "quote_line_count": 1,
+      "topic": "genmask-outer",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E022",
+      "source_path": "mykernel/include/linux/kernel/bits.h",
+      "symbol": "__GENMASK_ULL",
+      "line_start": 40,
+      "line_end": 42,
+      "quote_line_count": 3,
+      "topic": "genmask-inner",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E023",
+      "source_path": "mykernel/include/uapi/linux/const.h",
+      "symbol": "ULL",
+      "line_start": 37,
+      "line_end": 37,
+      "quote_line_count": 1,
+      "topic": "unsigned-longlong-constant",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E024",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "hpet_base",
+      "line_start": 51,
+      "line_end": 51,
+      "quote_line_count": 1,
+      "topic": "static-hpet-base",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E025",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "hpet_base_s",
+      "line_start": 34,
+      "line_end": 37,
+      "quote_line_count": 4,
+      "topic": "hpet-base-struct",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E026",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "hpet_channel_s",
+      "line_start": 25,
+      "line_end": 29,
+      "quote_line_count": 5,
+      "topic": "channel-fields",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E027",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "hpet_enable",
+      "line_start": 423,
+      "line_end": 424,
+      "quote_line_count": 2,
+      "topic": "channels-parentheses",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E028",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "hpet_enable",
+      "line_start": 442,
+      "line_end": 445,
+      "quote_line_count": 4,
+      "topic": "clear-legacy",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E029",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "hpet_enable_legacy_int",
+      "line_start": 166,
+      "line_end": 169,
+      "quote_line_count": 4,
+      "topic": "unused-legacy-helper",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E030",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "periodic",
+      "line_start": 219,
+      "line_end": 223,
+      "quote_line_count": 5,
+      "topic": "32bit-flag-not-explicit",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E031",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "symbol": "HPET_ID",
+      "line_start": 12,
+      "line_end": 12,
+      "quote_line_count": 1,
+      "topic": "HPET-ID",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E032",
+      "source_path": "mykernel/include/linux/kernel/hpet.h",
+      "symbol": "Tn_INT_ROUTE_CNF_SHIFT",
+      "line_start": 73,
+      "line_end": 73,
+      "quote_line_count": 1,
+      "topic": "IRQ-shift",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E033",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "symbol": "HPET_TN_LEVEL",
+      "line_start": 45,
+      "line_end": 45,
+      "quote_line_count": 1,
+      "topic": "LEVEL",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E034",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "symbol": "HPET_TN_FSB",
+      "line_start": 53,
+      "line_end": 53,
+      "quote_line_count": 1,
+      "topic": "FSB",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E035",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "symbol": "HPET_TN_PERIODIC_CAP",
+      "line_start": 48,
+      "line_end": 48,
+      "quote_line_count": 1,
+      "topic": "PERIODIC_CAP",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E036",
+      "source_path": "mykernel/arch/x86_64/include/asm/hpet.h",
+      "symbol": "HPET_TN_32BIT",
+      "line_start": 51,
+      "line_end": 51,
+      "quote_line_count": 1,
+      "topic": "TN32BIT",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E037",
+      "source_path": "mykernel/time/clocksource/clocksource_const.h",
+      "symbol": "CLOCK_SOURCE_IS_CONTINUOUS",
+      "line_start": 9,
+      "line_end": 9,
+      "quote_line_count": 1,
+      "topic": "continuous",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E038",
+      "source_path": "mykernel/time/clocksource/clocksource_const.h",
+      "symbol": "CLOCK_SOURCE_VALID_FOR_HRES",
+      "line_start": 13,
+      "line_end": 13,
+      "quote_line_count": 1,
+      "topic": "hres",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E039",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_add",
+      "line_start": 127,
+      "line_end": 127,
+      "quote_line_count": 1,
+      "topic": "list-add-alias",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E040",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "symbol": "list_add_to_next",
+      "line_start": 209,
+      "line_end": 209,
+      "quote_line_count": 1,
+      "topic": "list-add-impl",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E041",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "symbol": "__list_add_between",
+      "line_start": 190,
+      "line_end": 193,
+      "quote_line_count": 4,
+      "topic": "list-check",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E042",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "symbol": "__list_add_between",
+      "line_start": 194,
+      "line_end": 196,
+      "quote_line_count": 3,
+      "topic": "list-pointers",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E043",
+      "source_path": "mykernel/lib/list/double_list.h",
+      "symbol": "__list_add_valid",
+      "line_start": 163,
+      "line_end": 166,
+      "quote_line_count": 4,
+      "topic": "list-guard",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E044",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "LIST_INIT",
+      "line_start": 5,
+      "line_end": 8,
+      "quote_line_count": 4,
+      "topic": "list-init",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E045",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "LIST_HEADER_INIT",
+      "line_start": 9,
+      "line_end": 12,
+      "quote_line_count": 4,
+      "topic": "list-header-init",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E046",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "LIST_HEAD_INIT",
+      "line_start": 330,
+      "line_end": 330,
+      "quote_line_count": 1,
+      "topic": "list-head-init",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E047",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "DECLARE_LIST_HDR_S",
+      "line_start": 16,
+      "line_end": 17,
+      "quote_line_count": 2,
+      "topic": "list-header-declare",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E048",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_for_each_entry",
+      "line_start": 173,
+      "line_end": 176,
+      "quote_line_count": 4,
+      "topic": "list-iterate",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E049",
+      "source_path": "mykernel/lib/list/double_list_macro.h",
+      "symbol": "list_header_for_each_container",
+      "line_start": 346,
+      "line_end": 347,
+      "quote_line_count": 2,
+      "topic": "list-container-iterate",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E050",
+      "source_path": "mykernel/include/linux/init/init.h",
+      "symbol": "fs_initcall",
+      "line_start": 304,
+      "line_end": 304,
+      "quote_line_count": 1,
+      "topic": "initcall-level5",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E051",
+      "source_path": "mykernel/include/linux/init/init.h",
+      "symbol": "__define_initcall",
+      "line_start": 278,
+      "line_end": 278,
+      "quote_line_count": 1,
+      "topic": "initcall-indirect",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E052",
+      "source_path": "mykernel/include/linux/init/init.h",
+      "symbol": "____define_initcall",
+      "line_start": 263,
+      "line_end": 265,
+      "quote_line_count": 3,
+      "topic": "initcall-section-var",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E053",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/io.h",
+      "symbol": "__raw_readl",
+      "line_start": 92,
+      "line_end": 92,
+      "quote_line_count": 1,
+      "topic": "u32-vol-read",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E054",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/io.h",
+      "symbol": "__raw_writel",
+      "line_start": 124,
+      "line_end": 124,
+      "quote_line_count": 1,
+      "topic": "u32-vol-write",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E055",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/io.h",
+      "symbol": "readl",
+      "line_start": 169,
+      "line_end": 173,
+      "quote_line_count": 5,
+      "topic": "readl-chain",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E056",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/io.h",
+      "symbol": "writel",
+      "line_start": 213,
+      "line_end": 216,
+      "quote_line_count": 4,
+      "topic": "writel-chain",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E057",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "symbol": "register_irq",
+      "line_start": 183,
+      "line_end": 187,
+      "quote_line_count": 5,
+      "topic": "bind-handler-field",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E058",
+      "source_path": "mykernel/arch/x86_64/myos/interrupt.c",
+      "symbol": "hwint_irq_handler",
+      "line_start": 166,
+      "line_end": 169,
+      "quote_line_count": 4,
+      "topic": "invoke-handler-field",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E059",
+      "source_path": "mykernel/arch/x86_64/kernel/time.c",
+      "symbol": "hpet_time_init",
+      "line_start": 34,
+      "line_end": 38,
+      "quote_line_count": 5,
+      "topic": "ignore-HPET-return",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E060",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocksource_done_booting",
+      "line_start": 357,
+      "line_end": 361,
+      "quote_line_count": 5,
+      "topic": "default-curr",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E061",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocksource_done_booting",
+      "line_start": 363,
+      "line_end": 365,
+      "quote_line_count": 3,
+      "topic": "done-booting-select",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E062",
+      "source_path": "mykernel/time/timekeeping/timekeeping_types.h",
+      "symbol": "tk_read_base",
+      "line_start": 28,
+      "line_end": 32,
+      "quote_line_count": 5,
+      "topic": "readbase-fields",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E063",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_setup_internals",
+      "line_start": 135,
+      "line_end": 137,
+      "quote_line_count": 3,
+      "topic": "mono-bind",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E064",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_setup_internals",
+      "line_start": 139,
+      "line_end": 141,
+      "quote_line_count": 3,
+      "topic": "raw-bind",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E065",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_setup_internals",
+      "line_start": 161,
+      "line_end": 165,
+      "quote_line_count": 5,
+      "topic": "old-shift-minus",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E066",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_setup_internals",
+      "line_start": 166,
+      "line_end": 169,
+      "quote_line_count": 4,
+      "topic": "old-shift-plus",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E067",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_setup_internals",
+      "line_start": 172,
+      "line_end": 173,
+      "quote_line_count": 2,
+      "topic": "shift-publish",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E068",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_setup_internals",
+      "line_start": 184,
+      "line_end": 185,
+      "quote_line_count": 2,
+      "topic": "mult-publish",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E069",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_core",
+      "line_start": 19,
+      "line_end": 22,
+      "quote_line_count": 4,
+      "topic": "A-static-core-object",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E070",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_core",
+      "line_start": 23,
+      "line_end": 24,
+      "quote_line_count": 2,
+      "topic": "A-static-initializer",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E071",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "shadow_timekeeper",
+      "line_start": 26,
+      "line_end": 26,
+      "quote_line_count": 1,
+      "topic": "A-shadow-object",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E072",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_set_xtime",
+      "line_start": 35,
+      "line_end": 37,
+      "quote_line_count": 3,
+      "topic": "A-xtime-field-from-ts",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E073",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "tk_set_wall_to_mono",
+      "line_start": 56,
+      "line_end": 60,
+      "quote_line_count": 5,
+      "topic": "A-only-commented-wtm-assign",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E074",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_init",
+      "line_start": 238,
+      "line_end": 241,
+      "quote_line_count": 4,
+      "topic": "A-local-input-variables",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E075",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_init",
+      "line_start": 244,
+      "line_end": 245,
+      "quote_line_count": 2,
+      "topic": "A-opaque-input-callees",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E076",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_init",
+      "line_start": 251,
+      "line_end": 251,
+      "quote_line_count": 1,
+      "topic": "A-boot-minus-wall",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E077",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_init",
+      "line_start": 253,
+      "line_end": 256,
+      "quote_line_count": 4,
+      "topic": "A-default-then-enable-then-setup",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E078",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_init",
+      "line_start": 258,
+      "line_end": 261,
+      "quote_line_count": 4,
+      "topic": "A-xtime-rawsec-then-wtm",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E079",
+      "source_path": "mykernel/time/timekeeping/timekeeping_types.h",
+      "symbol": "tk_read_base",
+      "line_start": 33,
+      "line_end": 36,
+      "quote_line_count": 4,
+      "topic": "A-base-fraction-fields",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E080",
+      "source_path": "mykernel/time/timekeeping/timekeeping_types.h",
+      "symbol": "timekeeper",
+      "line_start": 86,
+      "line_end": 90,
+      "quote_line_count": 5,
+      "topic": "A-timekeeper-mono-raw-secs",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E081",
+      "source_path": "mykernel/time/timekeeping/timekeeping_types.h",
+      "symbol": "timekeeper",
+      "line_start": 91,
+      "line_end": 91,
+      "quote_line_count": 1,
+      "topic": "A-wall_to_monotonic-field",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E082",
+      "source_path": "mykernel/time/timekeeping/timekeeping_types.h",
+      "symbol": "timekeeper",
+      "line_start": 99,
+      "line_end": 99,
+      "quote_line_count": 1,
+      "topic": "A-rawsec-field",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E083",
+      "source_path": "mykernel/time/systick/systick.c",
+      "symbol": "clocksource_jiffies",
+      "line_start": 21,
+      "line_end": 25,
+      "quote_line_count": 5,
+      "topic": "A-jiffies-clock-identity",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E084",
+      "source_path": "mykernel/time/systick/systick.c",
+      "symbol": "clocksource_jiffies",
+      "line_start": 26,
+      "line_end": 29,
+      "quote_line_count": 4,
+      "topic": "A-jiffies-mult-shift-and-max10",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E085",
+      "source_path": "mykernel/time/systick/systick.c",
+      "symbol": "jiffies_read",
+      "line_start": 34,
+      "line_end": 34,
+      "quote_line_count": 1,
+      "topic": "A-jiffies-counter-read",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E086",
+      "source_path": "mykernel/time/systick/systick.c",
+      "symbol": "clocksource_default_clock",
+      "line_start": 38,
+      "line_end": 38,
+      "quote_line_count": 1,
+      "topic": "A-weak-return-jiffies",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E087",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "symbol": "HZ",
+      "line_start": 9,
+      "line_end": 9,
+      "quote_line_count": 1,
+      "topic": "A-HZ-1000",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E088",
+      "source_path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "JIFFIES_SHIFT",
+      "line_start": 22,
+      "line_end": 22,
+      "quote_line_count": 1,
+      "topic": "A-HZ1000-branch-shift8",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E089",
+      "source_path": "mykernel/time/systick/systick_const.h",
+      "symbol": "TICK_NSEC",
+      "line_start": 6,
+      "line_end": 6,
+      "quote_line_count": 1,
+      "topic": "A-jiffies-tick-nsec",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E090",
+      "source_path": "mykernel/time/misc/time_misc_const.h",
+      "symbol": "NSEC_PER_SEC",
+      "line_start": 32,
+      "line_end": 32,
+      "quote_line_count": 1,
+      "topic": "A-nsec-unit",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E091",
+      "source_path": "mykernel/time/time_type_declaration.h",
+      "symbol": "ktime_t",
+      "line_start": 9,
+      "line_end": 9,
+      "quote_line_count": 1,
+      "topic": "A-signed-ktime",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E092",
+      "source_path": "mykernel/time/time_type_declaration.h",
+      "symbol": "time64_t",
+      "line_start": 10,
+      "line_end": 10,
+      "quote_line_count": 1,
+      "topic": "A-signed-time64",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E093",
+      "source_path": "mykernel/time/timekeeping/timekeeping.h",
+      "symbol": "tk_clock_read",
+      "line_start": 81,
+      "line_end": 82,
+      "quote_line_count": 2,
+      "topic": "B-clock-pointer-and-indirect-call",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E094",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/rwonce.h",
+      "symbol": "READ_ONCE",
+      "line_start": 49,
+      "line_end": 52,
+      "quote_line_count": 4,
+      "topic": "B-volatile-read-once",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E095",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/rwonce.h",
+      "symbol": "__READ_ONCE",
+      "line_start": 45,
+      "line_end": 46,
+      "quote_line_count": 2,
+      "topic": "B-direct-volatile-scalar",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E096",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "delta_to_ns_safe",
+      "line_start": 193,
+      "line_end": 194,
+      "quote_line_count": 2,
+      "topic": "B-safe-helper-request",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E097",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_cycles_to_ns",
+      "line_start": 200,
+      "line_end": 200,
+      "quote_line_count": 1,
+      "topic": "B-counter-delta-mask",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E098",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_cycles_to_ns",
+      "line_start": 206,
+      "line_end": 206,
+      "quote_line_count": 1,
+      "topic": "B-max_cycles-guard",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E099",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_cycles_to_ns",
+      "line_start": 212,
+      "line_end": 215,
+      "quote_line_count": 4,
+      "topic": "B-high-half-or-safe",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E100",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_cycles_to_ns",
+      "line_start": 218,
+      "line_end": 218,
+      "quote_line_count": 1,
+      "topic": "B-fast-mul-add-shift",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E101",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "timekeeping_get_ns",
+      "line_start": 228,
+      "line_end": 228,
+      "quote_line_count": 1,
+      "topic": "B-direct-conversion-call",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E102",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "mul_u32_u32",
+      "line_start": 133,
+      "line_end": 133,
+      "quote_line_count": 1,
+      "topic": "B-low-product-definition",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E103",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "mul_u64_u32_add_u64_shr",
+      "line_start": 141,
+      "line_end": 143,
+      "quote_line_count": 3,
+      "topic": "B-ah-al-ret-types",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E104",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "mul_u64_u32_add_u64_shr",
+      "line_start": 145,
+      "line_end": 148,
+      "quote_line_count": 4,
+      "topic": "B-add-overflow-and-carry",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E105",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "mul_u64_u32_add_u64_shr",
+      "line_start": 149,
+      "line_end": 150,
+      "quote_line_count": 2,
+      "topic": "B-highword-term",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E106",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "mul_u64_u32_add_u64_shr",
+      "line_start": 152,
+      "line_end": 152,
+      "quote_line_count": 1,
+      "topic": "B-helper-return",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E107",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "ktime_get_real_ts64",
+      "line_start": 75,
+      "line_end": 77,
+      "quote_line_count": 3,
+      "topic": "C-real-get-readbase",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E108",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "ktime_get_real_ts64",
+      "line_start": 79,
+      "line_end": 82,
+      "quote_line_count": 4,
+      "topic": "C-real-seq-comment",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E109",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "ktime_get_real_ts64",
+      "line_start": 84,
+      "line_end": 85,
+      "quote_line_count": 2,
+      "topic": "C-real-read-wall-and-ns",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E110",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "ktime_get_real_ts64",
+      "line_start": 87,
+      "line_end": 90,
+      "quote_line_count": 4,
+      "topic": "C-real-normalize-result",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E111",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "ktime_get",
+      "line_start": 97,
+      "line_end": 100,
+      "quote_line_count": 4,
+      "topic": "C-ktime-input-locals",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E112",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "ktime_get",
+      "line_start": 102,
+      "line_end": 105,
+      "quote_line_count": 4,
+      "topic": "C-ktime-WARN-then-commented-seq",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E113",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "ktime_get",
+      "line_start": 106,
+      "line_end": 107,
+      "quote_line_count": 2,
+      "topic": "C-ktime-base-and-ns-read",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E114",
+      "source_path": "mykernel/time/timekeeping/timekeeping.c",
+      "symbol": "ktime_get",
+      "line_start": 108,
+      "line_end": 110,
+      "quote_line_count": 3,
+      "topic": "C-ktime-return-mixed-types",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E115",
+      "source_path": "mykernel/time/ktime/ktime_macro.h",
+      "symbol": "ktime_add_ns",
+      "line_start": 22,
+      "line_end": 22,
+      "quote_line_count": 1,
+      "topic": "C-ktime-add-macro",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E116",
+      "source_path": "mykernel/time/misc/time_misc_types.h",
+      "symbol": "timespec64",
+      "line_start": 7,
+      "line_end": 10,
+      "quote_line_count": 4,
+      "topic": "C-timespec-fields",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E117",
+      "source_path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_sub",
+      "line_start": 80,
+      "line_end": 83,
+      "quote_line_count": 4,
+      "topic": "C-timespec-sub-calls-normalizer",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E118",
+      "source_path": "mykernel/time/misc/time_misc.h",
+      "symbol": "timespec64_add_ns",
+      "line_start": 154,
+      "line_end": 156,
+      "quote_line_count": 3,
+      "topic": "C-timespec-add-ns-div-loop",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E119",
+      "source_path": "mykernel/time/misc/time_misc.c",
+      "symbol": "set_normalized_timespec64",
+      "line_start": 24,
+      "line_end": 24,
+      "quote_line_count": 1,
+      "topic": "C-positive-loop",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E120",
+      "source_path": "mykernel/time/misc/time_misc.c",
+      "symbol": "set_normalized_timespec64",
+      "line_start": 30,
+      "line_end": 33,
+      "quote_line_count": 4,
+      "topic": "C-positive-ns-sub-and-sec-inc",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E121",
+      "source_path": "mykernel/time/misc/time_misc.c",
+      "symbol": "set_normalized_timespec64",
+      "line_start": 34,
+      "line_end": 38,
+      "quote_line_count": 5,
+      "topic": "C-negative-ns-add-and-sec-dec",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E122",
+      "source_path": "mykernel/time/misc/time_misc.c",
+      "symbol": "set_normalized_timespec64",
+      "line_start": 39,
+      "line_end": 40,
+      "quote_line_count": 2,
+      "topic": "C-normalized-output-store",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E123",
+      "source_path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "line_start": 52,
+      "line_end": 53,
+      "quote_line_count": 2,
+      "topic": "C-early-result-struct-and-rem",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E124",
+      "source_path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "line_start": 55,
+      "line_end": 58,
+      "quote_line_count": 4,
+      "topic": "C-positive-path",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E125",
+      "source_path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "line_start": 64,
+      "line_end": 66,
+      "quote_line_count": 3,
+      "topic": "C-negative-INT64MIN-gate",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E126",
+      "source_path": "mykernel/time/misc/time_misc.c",
+      "symbol": "ns_to_timespec64",
+      "line_start": 68,
+      "line_end": 68,
+      "quote_line_count": 1,
+      "topic": "C-return-result",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E127",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "__iter_div_u64_rem",
+      "line_start": 13,
+      "line_end": 14,
+      "quote_line_count": 2,
+      "topic": "C-u32-ret-and-loop",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E128",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "__iter_div_u64_rem",
+      "line_start": 17,
+      "line_end": 20,
+      "quote_line_count": 4,
+      "topic": "C-dividend-decrease-and-ret++",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E129",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "__iter_div_u64_rem",
+      "line_start": 21,
+      "line_end": 23,
+      "quote_line_count": 3,
+      "topic": "C-remainder-store-and-quotient",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E130",
+      "source_path": "mykernel/include/linux/kernel/math64.h",
+      "symbol": "div_u64_rem",
+      "line_start": 43,
+      "line_end": 44,
+      "quote_line_count": 2,
+      "topic": "C-division-and-u32-remainder",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E131",
+      "source_path": "mykernel/time/timekeeping/timekeeping.h",
+      "symbol": "tk_normalize_xtime",
+      "line_start": 35,
+      "line_end": 37,
+      "quote_line_count": 3,
+      "topic": "C-shifted-mono-normalize",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E132",
+      "source_path": "mykernel/time/timekeeping/timekeeping.h",
+      "symbol": "tk_normalize_xtime",
+      "line_start": 39,
+      "line_end": 41,
+      "quote_line_count": 3,
+      "topic": "C-shifted-raw-normalize",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E133",
+      "source_path": "mykernel/include/uapi/linux/const.h",
+      "symbol": "_AC",
+      "line_start": 20,
+      "line_end": 20,
+      "quote_line_count": 1,
+      "topic": "D00-常量标记连接仅在非ASSEMBLY分支",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E134",
+      "source_path": "mykernel/include/uapi/linux/const.h",
+      "symbol": "_ULL",
+      "line_start": 25,
+      "line_end": 25,
+      "quote_line_count": 1,
+      "topic": "D00-独立常量宏转发",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E135",
+      "source_path": "mykernel/include/linux/kernel/asm-generic/bitsperlong.h",
+      "symbol": "BITS_PER_LONG_LONG",
+      "line_start": 18,
+      "line_end": 18,
+      "quote_line_count": 1,
+      "topic": "D00-GENMASK_ULL右移宽度来源",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E136",
+      "source_path": "mykernel/arch/x86_64/kernel/hpet.c",
+      "symbol": "myos_HPET_init",
+      "line_start": 552,
+      "line_end": 553,
+      "quote_line_count": 2,
+      "topic": "D00-actual-IRQ-register-HPET-handler",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    },
+    {
+      "id": "TK103-E137",
+      "source_path": "mykernel/time/clocksource/clocksource.c",
+      "symbol": "clocksource_list",
+      "line_start": 21,
+      "line_end": 21,
+      "quote_line_count": 1,
+      "topic": "D00-static-header-object",
+      "evidence_scope": "SOURCE_LITERAL_STATIC_ONLY"
+    }
+  ],
+  "source_quote_recheck": {
+    "source_anchors": 137,
+    "verified_claims": 137,
+    "quotes_reconfirmed": 137,
+    "downgraded_to_inferred": 0,
+    "raw_all_six_expected": 137,
+    "source_path_count": 30,
+    "complete_local_P9": "NOT_RUN",
+    "source_quote_method": "connector_fixed_commit_read_and_pure_text_span_comparison",
+    "definition_interior_repair_checked": "6 preliminary quote slices were refined before publication to avoid including function signature/parameter declaration; all now definition-internal or separately legitimate macro/struct anchors",
+    "fixed_source_excerpts_reopened": 137
+  },
+  "matrices": {
+    "timekeeper_field_origin_matrix": [
+      {
+        "id": "A-F01",
+        "claim": "tk_core是真实静态timekeeper对象",
+        "preconditions": "静态C对象初始化规则适用，真实引导把对象放入有效存储",
+        "source_trace": "tk_core.timekeeper 声明且非seq字段显式初始化",
+        "conditional_result": "默认零初始化为C抽象语义；不是已测内核BSS/页表值",
+        "first_stop_gate": "真实装载/并发与其他写者未证",
+        "evidence_ids": [
+          "TK103-E069",
+          "TK103-E070"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F02",
+        "claim": "shadow_timekeeper独立存在",
+        "preconditions": "只在本次所读timekeeping.c及列出调用链有限搜索",
+        "source_trace": "shadow_timekeeper静态声明而本读取路径使用tk_core.timekeeper",
+        "conditional_result": "不能把shadow当本轮两读接口的数据来源",
+        "first_stop_gate": "不能据局部缺调用宣称全树未使用",
+        "evidence_ids": [
+          "TK103-E071",
+          "TK103-E107",
+          "TK103-E111"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F03",
+        "claim": "弱默认jiffies对象选择",
+        "preconditions": "最终ELF没有覆盖弱定义，clocksource对象和callback有效",
+        "source_trace": "clocksource_default_clock返回&clocksource_jiffies",
+        "conditional_result": "默认文本给jiffies对象；非无条件实际链接结论",
+        "first_stop_gate": "真实link/其它强定义未证",
+        "evidence_ids": [
+          "TK103-E083",
+          "TK103-E084",
+          "TK103-E085",
+          "TK103-E086"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F04",
+        "claim": "jiffies常量链",
+        "preconditions": "选择HZ=1000所列预处理分支",
+        "source_trace": "HZ=1000、JIFFIES_SHIFT=8、TICK_NSEC=(1e9+HZ/2)/HZ=1000000",
+        "conditional_result": "mult=256000000、shift=8、mask=32bits、max_cycles=10的静态候选",
+        "first_stop_gate": "真实tick频率/硬件IRQ及宏选入另需证据",
+        "evidence_ids": [
+          "TK103-E084",
+          "TK103-E087",
+          "TK103-E088",
+          "TK103-E089",
+          "TK103-E090",
+          "TK103-E019",
+          "TK103-E021",
+          "TK103-E022",
+          "TK103-E135"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F05",
+        "claim": "读基底与timekeeper字段类型",
+        "preconditions": "有效对象，字段类型按固定结构",
+        "source_trace": "tk_read_base.clock/mask/cycle_last/mult/shift/xtime_nsec/base; timekeeper.tkr_mono/tkr_raw/xtime_sec/raw_sec",
+        "conditional_result": "clock、cycle和缓存mult/shift是不同字段；不能从一个初始化推全体一致",
+        "first_stop_gate": "跨字段快照和具体对象生命周期未证",
+        "evidence_ids": [
+          "TK103-E062",
+          "TK103-E079",
+          "TK103-E080",
+          "TK103-E081",
+          "TK103-E082"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F06",
+        "claim": "first setup mono/raw",
+        "preconditions": "clock非NULL且read回调可正常返回，静态timekeeper旧clock为NULL是前态假设",
+        "source_trace": "save clock/mask; read cycle_last via tk_clock_read; mirror raw fields; later assign shifts and mult",
+        "conditional_result": "在调用完成的代码序列中各字段按源次序赋值",
+        "first_stop_gate": "read clock失败时不能继续声称后继赋值发生",
+        "evidence_ids": [
+          "TK103-E063",
+          "TK103-E064",
+          "TK103-E067",
+          "TK103-E068",
+          "TK103-E093"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F07",
+        "claim": "set_xtime wall seconds与纳秒",
+        "preconditions": "wall_time已合法赋值，tv_nsec与shift各在有效域",
+        "source_trace": "tk_set_xtime writes tk->xtime_sec=ts->tv_sec; (u64)ts->tv_nsec<<mono.shift",
+        "conditional_result": "xtime_sec是u64存储；负tv_sec与超过s64的回读要按转换判断",
+        "first_stop_gate": "opaque RTC输入与位移溢出/丢位未证",
+        "evidence_ids": [
+          "TK103-E072",
+          "TK103-E080",
+          "TK103-E092"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F08",
+        "claim": "wall_to_mono虽计算但没有活动写回",
+        "preconditions": "wall_time与boot_offset都有效，timespec64_sub正常返回",
+        "source_trace": "timekeeping_init计算wtm并调用tk_set_wall_to_mono；函数体相关赋值语句均被注释",
+        "conditional_result": "所读函数集合内不能认证tk->wall_to_monotonic已保存新值",
+        "first_stop_gate": "不外推全树其它写者永不存在",
+        "evidence_ids": [
+          "TK103-E073",
+          "TK103-E076",
+          "TK103-E078",
+          "TK103-E081"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F09",
+        "claim": "base与raw分数字段",
+        "preconditions": "只有本批所读timekeeping_init/tk_setup路径，静态初态有效",
+        "source_trace": "tk_core静态，tk_setup写cycle/mult/shift，tk_set_xtime写mono.xtime_nsec；未在这些函数写mono.base或raw.xtime_nsec",
+        "conditional_result": "在没有其它写者的条件下这些字段保留静态初值",
+        "first_stop_gate": "不得写作全内核永久零值或真实单调性",
+        "evidence_ids": [
+          "TK103-E069",
+          "TK103-E072",
+          "TK103-E079",
+          "TK103-E063",
+          "TK103-E064",
+          "TK103-E067",
+          "TK103-E068",
+          "TK103-E113"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-F10",
+        "claim": "jiffies实际读取对象",
+        "preconditions": "有效链接弱默认且所读jiffies_read为read字段的选中实现",
+        "source_trace": "clocksource_jiffies.read=jiffies_read，函数return (u64)jiffies",
+        "conditional_result": "read返回源级jiffies计数，不是硬件tick频率证明",
+        "first_stop_gate": "读时与timekeeper缓存跨字段有效性分开",
+        "evidence_ids": [
+          "TK103-E083",
+          "TK103-E085",
+          "TK103-E086",
+          "TK103-E093"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "initialization_transition_matrix": [
+      {
+        "id": "A-I01",
+        "claim": "timekeeping_init输入先于clock选择",
+        "preconditions": "read_persistent_clock64和local_clock正常返回且wall_time有效",
+        "source_trace": "persistent clock(&wall_time)→ns_to_timespec64(local_clock())→timespec64_sub",
+        "conditional_result": "BOOT wall时间、local_clock时间是opaque输入，无授权内部审计",
+        "first_stop_gate": "不能凭函数名证明日期或TSC单调",
+        "evidence_ids": [
+          "TK103-E074",
+          "TK103-E075",
+          "TK103-E076",
+          "TK103-E124"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-I02",
+        "claim": "enable返回不作为setup依据",
+        "preconditions": "clocksource_default_clock返回合法对象；如非NULL则clock->enable正常返回",
+        "source_trace": "default, if(enable)enable(clock), tk_setup_internals",
+        "conditional_result": "源代码此处不检查enable返回值；回调可能有外部影响但未证",
+        "first_stop_gate": "不能因返回false/非零推断实际选择HPET",
+        "evidence_ids": [
+          "TK103-E077",
+          "TK103-E086",
+          "TK103-E093"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-I03",
+        "claim": "tk_setup先读取当前clock再复制raw",
+        "preconditions": "valid clock and tk_core, tk_clock_read可达并正常返回",
+        "source_trace": "mono.clock/mask→cycle_last读取→raw.clock/mask/cycle_last",
+        "conditional_result": "当读取完成后mono/raw使用相同初始cycle值",
+        "first_stop_gate": "回调执行与字段回读之间可能修改，未证并发",
+        "evidence_ids": [
+          "TK103-E063",
+          "TK103-E064",
+          "TK103-E093",
+          "TK103-E094"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-I04",
+        "claim": "old_clock为空不走shift更换",
+        "preconditions": "有效初态old_clock==NULL",
+        "source_trace": "if(old_clock)跳过；随后将mono/raw shift和mult从clock发布",
+        "conditional_result": "旧分数不移位；新mult/shift赋值后才能供读接口使用",
+        "first_stop_gate": "初态必须真实成立且clock字段合法",
+        "evidence_ids": [
+          "TK103-E065",
+          "TK103-E066",
+          "TK103-E067",
+          "TK103-E068"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-I05",
+        "claim": "old_clock非空移位的C域",
+        "preconditions": "有效clock和old_clock对象，两个u32 shift已知且转换为int的值可解释",
+        "source_trace": "int shift_change=clock->shift-old_clock->shift，负值右移、非负值左移",
+        "conditional_result": "减法先以u32求值，转int可能实现定义；位移计数须合法",
+        "first_stop_gate": "不能仅用数学差或signed负数假定编译行为",
+        "evidence_ids": [
+          "TK103-E065",
+          "TK103-E066",
+          "TK103-E067"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-I06",
+        "claim": "tk_set_xtime再raw_sec/壁钟函数",
+        "preconditions": "timekeeping_init已顺利结束tk_setup",
+        "source_trace": "tk_set_xtime(tk,&wall_time); tk->raw_sec=0; tk_set_wall_to_mono(tk,wtm)",
+        "conditional_result": "参数/秒数依原赋值；末尾壁钟函数仅注释，无新的active wall_to_monotonic赋值",
+        "first_stop_gate": "opaque wall_time、NSEC有效区间和后继更新未知",
+        "evidence_ids": [
+          "TK103-E072",
+          "TK103-E073",
+          "TK103-E078",
+          "TK103-E082"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "A-I07",
+        "claim": "初始化顺序与HPET分离",
+        "preconditions": "固定start_kernel确实可达；旧weak链接条件满足",
+        "source_trace": "timekeeping_init在late_time_init之前（固定HC102-E117/E118）",
+        "conditional_result": "HPET稍后登记并不能自动替换timekeeper已缓存的default clock",
+        "first_stop_gate": "102 selector提交被注释，不能断言全树永不切换",
+        "evidence_ids": [
+          "TK103-E077",
+          "TK103-E086",
+          "TK103-E093",
+          "TK103-E095"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "cycle_delta_branch_matrix": [
+      {
+        "id": "B-C01",
+        "claim": "计数差采用u64取模",
+        "preconditions": "cycles与cycle_last为u64有效值；mask为已知对象字段",
+        "source_trace": "(cycles-cycle_last)&mask",
+        "conditional_result": "64位差为无符号模2^64再掩码；32位连续mask给模2^32差",
+        "first_stop_gate": "真实计数采样与实际mask选择另需证据",
+        "evidence_ids": [
+          "TK103-E097",
+          "TK103-E062",
+          "TK103-E019",
+          "TK103-E021",
+          "TK103-E022"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-C02",
+        "claim": "max_cycles恰好边界",
+        "preconditions": "tkr->clock仍指向有效clocksource，max_cycles已初始化",
+        "source_trace": "if (delta > tkr->clock->max_cycles)",
+        "conditional_result": "delta==max_cycles进入普通换算，严格大于才转后继检测",
+        "first_stop_gate": "READ_ONCE pointer与当前tkr->clock字段非同次读取快照",
+        "evidence_ids": [
+          "TK103-E098",
+          "TK103-E093",
+          "TK103-E084"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-C03",
+        "claim": "高半mask判断",
+        "preconditions": "delta>max_cycles，mask是按已读连续32bit值",
+        "source_trace": "if (delta & ~(mask>>1)) return frac>>shift",
+        "conditional_result": "delta具高半mask位则返回原分数，不代表时间倒退已经发生",
+        "first_stop_gate": "mask非连续场景不套普通二进制半域推断",
+        "evidence_ids": [
+          "TK103-E099",
+          "TK103-E019",
+          "TK103-E021",
+          "TK103-E022"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-C04",
+        "claim": "超阈值而非高半使用safe",
+        "preconditions": "delta>max_cycles且高半条件为假，shift合法",
+        "source_trace": "return delta_to_ns_safe(tkr,delta)",
+        "conditional_result": "仅此分支调用分拆乘数/溢出辅助",
+        "first_stop_gate": "safe名字不保证所有shift和高字情形合法",
+        "evidence_ids": [
+          "TK103-E099",
+          "TK103-E096",
+          "TK103-E103",
+          "TK103-E104",
+          "TK103-E105"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-C05",
+        "claim": "普通路径数学与类型",
+        "preconditions": "delta<=max_cycles, shift in0..63, tkr字段仍有效",
+        "source_trace": "((delta*tkr->mult)+tkr->xtime_nsec)>>shift",
+        "conditional_result": "乘加在u64域可回绕；必须另证积和分数不失真",
+        "first_stop_gate": "max_cycles名字不提供所有xtime_nsec范围保证",
+        "evidence_ids": [
+          "TK103-E100",
+          "TK103-E079"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-C06",
+        "claim": "tk_clock_read读取的对象限制",
+        "preconditions": "READ_ONCE宏实际选入且tkr->clock可读、回调返回",
+        "source_trace": "clock=READ_ONCE(tkr->clock); return clock->read(clock)",
+        "conditional_result": "单次pointer load不等于mask/mult/shift/cycle_last一组快照",
+        "first_stop_gate": "运行时并发/对象寿命/链接选中未证",
+        "evidence_ids": [
+          "TK103-E093",
+          "TK103-E094",
+          "TK103-E095"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-C07",
+        "claim": "max_cycles可来自不同时间点",
+        "preconditions": "任何并发修改都是条件而非观察",
+        "source_trace": "tk_clock_read的局部clock 与timekeeping_cycles_to_ns再读取tkr->clock->max_cycles",
+        "conditional_result": "两个读取未由本文件活动seqcount同步，不保证同一clock对象",
+        "first_stop_gate": "未观察到真实换源重入",
+        "evidence_ids": [
+          "TK103-E093",
+          "TK103-E098",
+          "TK103-E108"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-C08",
+        "claim": "jiffies低32回绕模型",
+        "preconditions": "weak default选中且clocksource_jiffies.mask=2^32-1",
+        "source_trace": "(now-last)&mask 如last=0xfffffffe now=1得delta3",
+        "conditional_result": "在这类值上普通路径按3cycles换算",
+        "first_stop_gate": "真实jiffies读取及初始cycle_last未知",
+        "evidence_ids": [
+          "TK103-E083",
+          "TK103-E084",
+          "TK103-E085",
+          "TK103-E097"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "integer_conversion_domain_matrix": [
+      {
+        "id": "B-I01",
+        "claim": "helper分解高低字",
+        "preconditions": "a和mul,b有效且类型为u64/u32",
+        "source_trace": "ah=(u32)(a>>32), al=(u32)a; mul_u32_u32 returns u64",
+        "conditional_result": "先拆两段而非128位乘法，64位加/移位应逐步核",
+        "first_stop_gate": "不借其它INT128 helper保证此函数",
+        "evidence_ids": [
+          "TK103-E102",
+          "TK103-E103"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-I02",
+        "claim": "builtin_add_overflow与ret类型",
+        "preconditions": "假设编译器支持其官方语义；这里只给条件分流",
+        "source_trace": "ovf=__builtin_add_overflow(mul_u32_u32(al,mul),b,&ret)",
+        "conditional_result": "ret为u64存储，overflow flag单独决定补偿分支",
+        "first_stop_gate": "没有外部一手编译器文档与实际编译执行，不冒充工具实测",
+        "evidence_ids": [
+          "TK103-E104",
+          "TK103-E102"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-I03",
+        "claim": "shift=0边界",
+        "preconditions": "helper实际进入且ret有效，shift=0",
+        "source_trace": "ret>>0，ovf&&shift为假，高字条件可执行<<32",
+        "conditional_result": "函数表达式在shift0可计算为u64模域，不额外作1<<64",
+        "first_stop_gate": "算式的模域不保证原意无信息损失",
+        "evidence_ids": [
+          "TK103-E104",
+          "TK103-E105"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-I04",
+        "claim": "shift1到32且ah非0",
+        "preconditions": "helper实际执行，shift in[1,32]，右移与左移计数有效",
+        "source_trace": "ret>>shift；ovf?1ULL<<(64-shift)；if(ah) highproduct<<(32-shift)",
+        "conditional_result": "计算层面的位移表达式合法，各步u64可截断",
+        "first_stop_gate": "高精度全域等价另需精确溢出前提",
+        "evidence_ids": [
+          "TK103-E104",
+          "TK103-E105"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-I05",
+        "claim": "shift33到63且ah非0",
+        "preconditions": "helper实际进入且a>=2^32，shift>=33<=63",
+        "source_trace": "if(ah) highproduct << (32-shift)",
+        "conditional_result": "32-shift为uint下溢成不合法超大移位计数，失去定义良好的C执行",
+        "first_stop_gate": "不能跨越该语句继续计算返回结果或虚构CPU陷阱",
+        "evidence_ids": [
+          "TK103-E103",
+          "TK103-E105"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-I06",
+        "claim": "shift33到63且ah为0",
+        "preconditions": "helper实际进入，a<2^32,shift in[33,63]",
+        "source_trace": "ret>>shift；若ovf&&shift再加1ULL<<(64-shift)；跳过ah分支",
+        "conditional_result": "这些移位计数本身合法，不自动保证输出数学正确",
+        "first_stop_gate": "真实溢出与输入值另行证据",
+        "evidence_ids": [
+          "TK103-E103",
+          "TK103-E104",
+          "TK103-E105"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-I07",
+        "claim": "shift>=64",
+        "preconditions": "helper实际执行至ret >>= shift",
+        "source_trace": "shift为u32>=64",
+        "conditional_result": "最早于ret右移处失去标准C语义，不可再推return",
+        "first_stop_gate": "不声称实际执行到此或CPU异常",
+        "evidence_ids": [
+          "TK103-E104"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-I08",
+        "claim": "普通路径积+分数无全局溢出保证",
+        "preconditions": "tkr->mult非零、xtime_nsec可能合法但接近UINT64_MAX",
+        "source_trace": "delta*mult+b in u64",
+        "conditional_result": "即使delta<=max_cycles，b过大仍可导致mod2^64回绕",
+        "first_stop_gate": "不能将max_cycles标签当作动态证明",
+        "evidence_ids": [
+          "TK103-E097",
+          "TK103-E098",
+          "TK103-E100"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "B-I09",
+        "claim": "32位mask条件算术",
+        "preconditions": "GENMASK_ULL链假定选中非ASSEMBLY分支及BITS_PER_LONG_LONG=64",
+        "source_trace": "CLOCKSOURCE_MASK(32)→GENMASK_ULL(31,0)→0xffffffff",
+        "conditional_result": "对于jiffies默认源可用连续32位mask模型",
+        "first_stop_gate": "不把宏静态结果当作硬件32位原子读取认证",
+        "evidence_ids": [
+          "TK103-E019",
+          "TK103-E020",
+          "TK103-E021",
+          "TK103-E022",
+          "TK103-E023",
+          "TK103-E133",
+          "TK103-E134",
+          "TK103-E135"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "readout_interface_matrix": [
+      {
+        "id": "C-R01",
+        "claim": "ktime_get读base和nsecs",
+        "preconditions": "tk_core有效，WARN_ON调用正常返回，随后callback合法",
+        "source_trace": "base=tk->tkr_mono.base; nsecs=timekeeping_get_ns(&tk->tkr_mono)",
+        "conditional_result": "两个取值是不同时间点，seqcount重试注释",
+        "first_stop_gate": "无整个对象一致性证明",
+        "evidence_ids": [
+          "TK103-E111",
+          "TK103-E112",
+          "TK103-E113",
+          "TK103-E114"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-R02",
+        "claim": "ktime_t与u64混合加法",
+        "preconditions": "base为s64, nsecs为u64，表达式按通常C整数转换",
+        "source_trace": "ktime_add_ns(base,nsecs) 展开为 base+nsecs",
+        "conditional_result": "u64域加法并按s64返回存储；结果超INT64_MAX时转换实现定义，不称已发生signed overflow",
+        "first_stop_gate": "实际runtime数值与平台实现未证",
+        "evidence_ids": [
+          "TK103-E091",
+          "TK103-E113",
+          "TK103-E114",
+          "TK103-E115"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-R03",
+        "claim": "real_ts64先秒后纳秒",
+        "preconditions": "ts为有效可写timespec64_s，tk_core字段有效",
+        "source_trace": "ts.tv_sec=tk.xtime_sec; nsecs=timekeeping_get_ns(); ts.tv_nsec=0; timespec64_add_ns",
+        "conditional_result": "输出由u64 sec经s64字段转换和u64纳秒增量归一",
+        "first_stop_gate": "秒超s64域的转换/并发快照另开条件门",
+        "evidence_ids": [
+          "TK103-E107",
+          "TK103-E108",
+          "TK103-E109",
+          "TK103-E110",
+          "TK103-E116"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-R04",
+        "claim": "real接口的seqcount与WARN",
+        "preconditions": "真实声明按本轮固定函数体",
+        "source_trace": "ktime_get_real_ts64的WARN和seqcount循环均注释；ktime_get有活动WARN_ON但重试注释",
+        "conditional_result": "不可声称两者都实际执行seqcount或检查时间挂起",
+        "first_stop_gate": "WARN_ON内部效果未审，正常返回是前提",
+        "evidence_ids": [
+          "TK103-E108",
+          "TK103-E112",
+          "TK103-E110"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-R05",
+        "claim": "实际时间读取抽象链",
+        "preconditions": "clock有效、回调与返回合法",
+        "source_trace": "ktime_get/real_ts→timekeeping_get_ns→tk_clock_read + cycles_to_ns",
+        "conditional_result": "回调读取的对象来自tkr->clock，不是从clocksource_list直接选最高rating",
+        "first_stop_gate": "全树clocksource变更及硬件路径未证",
+        "evidence_ids": [
+          "TK103-E093",
+          "TK103-E101",
+          "TK103-E109",
+          "TK103-E113"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-R06",
+        "claim": "输出返回语义分离",
+        "preconditions": "两个接口均合法执行完毕",
+        "source_trace": "ktime_get返回ktime_t（纳秒标量），real_ts64通过指针存tv_sec/tv_nsec",
+        "conditional_result": "返回形式不同；不等于一项已成功贯通用户系统调用",
+        "first_stop_gate": "没有用户态ABI或时间精度证据",
+        "evidence_ids": [
+          "TK103-E091",
+          "TK103-E092",
+          "TK103-E110",
+          "TK103-E114",
+          "TK103-E116",
+          "TK103-E118"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "normalization_consistency_matrix": [
+      {
+        "id": "C-N01",
+        "claim": "timespec64字段范围与类型",
+        "preconditions": "符号结构选入且指针有效",
+        "source_trace": "time64_t tv_sec; long tv_nsec; NSEC_PER_SEC=1e9",
+        "conditional_result": "tv_nsec有符号存储域，real_ts接口先设0",
+        "first_stop_gate": "不能默认其它调用者都传已规范化值",
+        "evidence_ids": [
+          "TK103-E092",
+          "TK103-E116",
+          "TK103-E090",
+          "TK103-E110"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-N02",
+        "claim": "timespec64_add_ns商余返回类型",
+        "preconditions": "a->tv_nsec与ns的u64加法已合法计算，NSEC_PER_SEC非零",
+        "source_trace": "__iter_div_u64_rem(u64 dividend,u32 divisor,u64*remainder) 返回u32 ret，rem写*remainder",
+        "conditional_result": "商最多u32表示域；巨大dividend可以使ret++环绕，归一余数不保证秒值无失真",
+        "first_stop_gate": "循环实际耗时和真实上层输入未知",
+        "evidence_ids": [
+          "TK103-E118",
+          "TK103-E127",
+          "TK103-E128",
+          "TK103-E129",
+          "TK103-E090"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-N03",
+        "claim": "timespec64_add_ns的加数类型",
+        "preconditions": "a->tv_nsec为long，ns为u64，目标ts有效",
+        "source_trace": "a->tv_sec+=quotient; a->tv_nsec=remaining_ns",
+        "conditional_result": "tv_nsec+ns先按usual conversions到u64，可能mod2^64；秒字段累加也可能signed overflow",
+        "first_stop_gate": "本real_ts入口tv_nsec先置0减少但不消除极值域门",
+        "evidence_ids": [
+          "TK103-E116",
+          "TK103-E118",
+          "TK103-E127",
+          "TK103-E129"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-N04",
+        "claim": "timespec64_sub使用归一器",
+        "preconditions": "lhs/rhs合法且差值可用s64表示",
+        "source_trace": "set_normalized_timespec64(... lhs.tv_sec-rhs.tv_sec,lhs.tv_nsec-rhs.tv_nsec)",
+        "conditional_result": "signed减法先于归一循环，不能借normalize修复先前溢出",
+        "first_stop_gate": "opaque输入下先验证秒/纳秒算术有效",
+        "evidence_ids": [
+          "TK103-E117",
+          "TK103-E120",
+          "TK103-E121"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-N05",
+        "claim": "归一负nsec",
+        "preconditions": "nsec在s64范围，sec的减法/加法不越界",
+        "source_trace": "while(nsec<0){nsec+=NSEC_PER_SEC;--sec}",
+        "conditional_result": "正常返回后余数被调整到[0,NSEC_PER_SEC)",
+        "first_stop_gate": "有符号sec边界与循环结束需另证",
+        "evidence_ids": [
+          "TK103-E119",
+          "TK103-E120",
+          "TK103-E121",
+          "TK103-E122"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-N06",
+        "claim": "ns_to_timespec64正数",
+        "preconditions": "nsec>0、divisor=1e9，s32 rem目标合法且取值小于1e9",
+        "source_trace": "div_u64_rem(nsec,NSEC_PER_SEC,&rem) + tv_nsec=rem",
+        "conditional_result": "数学商余可描述；s32*传到u32*原型的指针类型不匹配须单独标注",
+        "first_stop_gate": "尚未编译，不能判定可执行产物如何处理该约束问题",
+        "evidence_ids": [
+          "TK103-E123",
+          "TK103-E124",
+          "TK103-E130"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-N07",
+        "claim": "ns_to_timespec64负值和MIN",
+        "preconditions": "nsec<0，需先使 -nsec -1 每一步符合signed s64域",
+        "source_trace": "tv_sec=-div_u64_rem(-nsec-1,NSEC_PER_SEC,&rem)-1; tv_nsec=NSEC_PER_SEC-rem-1",
+        "conditional_result": "对INT64_MIN，-nsec先失去定义良好的有符号C语义，后续代数等价不能补救",
+        "first_stop_gate": "不因静态源码就宣称该输入实际运行失败",
+        "evidence_ids": [
+          "TK103-E125",
+          "TK103-E130",
+          "TK103-E091"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-N08",
+        "claim": "__iter_div_u64_rem零除数域",
+        "preconditions": "divisor!=0且循环可以终止",
+        "source_trace": "while(dividend>=divisor){dividend-=divisor;ret++;}",
+        "conditional_result": "给定divisor=1e9可求有限商余；divisor=0则该循环不会减少dividend",
+        "first_stop_gate": "此处调用传宏非零，不推广其它调用者",
+        "evidence_ids": [
+          "TK103-E127",
+          "TK103-E128",
+          "TK103-E129",
+          "TK103-E090"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "C-N09",
+        "claim": "set_normalized负数与秒边界",
+        "preconditions": "sec,nsec合法且loop每次迭代算术可表示",
+        "source_trace": "nsec+=或-=1e9; sec--或++",
+        "conditional_result": "只证条件归一余数域；大量迭代/秒溢出仍可能阻断",
+        "first_stop_gate": "不以数学无限精度代替C数值域",
+        "evidence_ids": [
+          "TK103-E119",
+          "TK103-E120",
+          "TK103-E121",
+          "TK103-E122"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      }
+    ],
+    "ABC_join_matrix": [
+      {
+        "id": "ABC-01",
+        "claim": "默认clocksource到timekeeper字段",
+        "preconditions": "weak默认jiffies实现被选，clock->read可用且路径到达",
+        "source_trace": "clocksource_default_clock→clock->enable?→tk_setup_internals→tkr_mono.clock/mult/shift",
+        "conditional_result": "jiffies静态shift=8,mult=256000000,max_cycles=10，初始化读取基值",
+        "first_stop_gate": "静态值并非实测中断频率与真实用户态时间",
+        "evidence_ids": [
+          "TK103-E077",
+          "TK103-E083",
+          "TK103-E084",
+          "TK103-E086",
+          "TK103-E063",
+          "TK103-E064",
+          "TK103-E067",
+          "TK103-E068"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC-02",
+        "claim": "字段到delta判断",
+        "preconditions": "tkr fields合法稳定且时钟回调正常返回",
+        "source_trace": "tk_clock_read(tkr)→timekeeping_cycles_to_ns→delta mask→maxcycles/highhalf",
+        "conditional_result": "可根据输入分三种互斥返回路径，而不是所有读值正常换算",
+        "first_stop_gate": "无并发群组一致性与源对象生存期证明",
+        "evidence_ids": [
+          "TK103-E093",
+          "TK103-E097",
+          "TK103-E098",
+          "TK103-E099",
+          "TK103-E100",
+          "TK103-E101"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC-03",
+        "claim": "safe助手C域与readout",
+        "preconditions": "delta触发safe、shift和ah满足已审条件",
+        "source_trace": "delta_to_ns_safe→mul_u64_u32_add_u64_shr→u64 ns→ktime_get/real_ts64",
+        "conditional_result": "helper移位若非法则必须先停止，不可继续推导ktime返回",
+        "first_stop_gate": "不能把`safe`字面改写成无条件安全",
+        "evidence_ids": [
+          "TK103-E096",
+          "TK103-E103",
+          "TK103-E104",
+          "TK103-E105",
+          "TK103-E114",
+          "TK103-E118"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC-04",
+        "claim": "real与ktime不同存储形式",
+        "preconditions": "以相同合法tkr及输入值且两次调用不会发生外部修改为限定模型",
+        "source_trace": "ktime_get adds base+ns; real_ts sec+add_ns(normalize)",
+        "conditional_result": "两个接口的返回类型与语义不同，不因共享时间源就数值相等",
+        "first_stop_gate": "不保证调用在同一真实时间点",
+        "evidence_ids": [
+          "TK103-E109",
+          "TK103-E110",
+          "TK103-E113",
+          "TK103-E114",
+          "TK103-E115",
+          "TK103-E118"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC-05",
+        "claim": "102时钟源候选与timekeeper之间未证接合",
+        "preconditions": "本次只审固定主线限定函数与作者102后置纠正",
+        "source_trace": "HPET register list与start_kernel timekeeping_init默认cache对象分开",
+        "conditional_result": "不能把“登记HPET”当“real_ts和ktime_get使用HPET”",
+        "first_stop_gate": "不开展HPET/RTC/TSC全链审计或运行验证",
+        "evidence_ids": [
+          "TK103-E077",
+          "TK103-E083",
+          "TK103-E086",
+          "TK103-E093",
+          "TK103-E101"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      },
+      {
+        "id": "ABC-06",
+        "claim": "文档纠正与旧根边界",
+        "preconditions": "101文档项已闭合，102三项仍待C07",
+        "source_trace": "103 D00 R102-01/02/03追加后交审，103新证据137条独立统计",
+        "conditional_result": "不重写旧102/101/100原件，不自签102关闭/103通过",
+        "first_stop_gate": "CA-05/V14与FM96根身份不重编号",
+        "evidence_ids": [
+          "TK103-E001",
+          "TK103-E006",
+          "TK103-E020",
+          "TK103-E057",
+          "TK103-E058",
+          "TK103-E059",
+          "TK103-E063",
+          "TK103-E101"
+        ],
+        "claim_class": "SOURCE_ONLY_OR_BOUNDED_CONDITIONAL_NO_RUNTIME"
+      }
+    ]
+  },
+  "matrix_groups": 7,
+  "matrix_rows_by_group": {
+    "timekeeper_field_origin_matrix": 10,
+    "initialization_transition_matrix": 7,
+    "cycle_delta_branch_matrix": 8,
+    "integer_conversion_domain_matrix": 9,
+    "readout_interface_matrix": 6,
+    "normalization_consistency_matrix": 9,
+    "ABC_join_matrix": 6
+  },
+  "matrix_rows": 55,
+  "fact_to_evidence_id_index": {
+    "A-F01": [
+      "TK103-E069",
+      "TK103-E070"
+    ],
+    "A-F02": [
+      "TK103-E071",
+      "TK103-E107",
+      "TK103-E111"
+    ],
+    "A-F03": [
+      "TK103-E083",
+      "TK103-E084",
+      "TK103-E085",
+      "TK103-E086"
+    ],
+    "A-F04": [
+      "TK103-E084",
+      "TK103-E087",
+      "TK103-E088",
+      "TK103-E089",
+      "TK103-E090",
+      "TK103-E019",
+      "TK103-E021",
+      "TK103-E022",
+      "TK103-E135"
+    ],
+    "A-F05": [
+      "TK103-E062",
+      "TK103-E079",
+      "TK103-E080",
+      "TK103-E081",
+      "TK103-E082"
+    ],
+    "A-F06": [
+      "TK103-E063",
+      "TK103-E064",
+      "TK103-E067",
+      "TK103-E068",
+      "TK103-E093"
+    ],
+    "A-F07": [
+      "TK103-E072",
+      "TK103-E080",
+      "TK103-E092"
+    ],
+    "A-F08": [
+      "TK103-E073",
+      "TK103-E076",
+      "TK103-E078",
+      "TK103-E081"
+    ],
+    "A-F09": [
+      "TK103-E069",
+      "TK103-E072",
+      "TK103-E079",
+      "TK103-E063",
+      "TK103-E064",
+      "TK103-E067",
+      "TK103-E068",
+      "TK103-E113"
+    ],
+    "A-F10": [
+      "TK103-E083",
+      "TK103-E085",
+      "TK103-E086",
+      "TK103-E093"
+    ],
+    "A-I01": [
+      "TK103-E074",
+      "TK103-E075",
+      "TK103-E076",
+      "TK103-E124"
+    ],
+    "A-I02": [
+      "TK103-E077",
+      "TK103-E086",
+      "TK103-E093"
+    ],
+    "A-I03": [
+      "TK103-E063",
+      "TK103-E064",
+      "TK103-E093",
+      "TK103-E094"
+    ],
+    "A-I04": [
+      "TK103-E065",
+      "TK103-E066",
+      "TK103-E067",
+      "TK103-E068"
+    ],
+    "A-I05": [
+      "TK103-E065",
+      "TK103-E066",
+      "TK103-E067"
+    ],
+    "A-I06": [
+      "TK103-E072",
+      "TK103-E073",
+      "TK103-E078",
+      "TK103-E082"
+    ],
+    "A-I07": [
+      "TK103-E077",
+      "TK103-E086",
+      "TK103-E093",
+      "TK103-E095"
+    ],
+    "B-C01": [
+      "TK103-E097",
+      "TK103-E062",
+      "TK103-E019",
+      "TK103-E021",
+      "TK103-E022"
+    ],
+    "B-C02": [
+      "TK103-E098",
+      "TK103-E093",
+      "TK103-E084"
+    ],
+    "B-C03": [
+      "TK103-E099",
+      "TK103-E019",
+      "TK103-E021",
+      "TK103-E022"
+    ],
+    "B-C04": [
+      "TK103-E099",
+      "TK103-E096",
+      "TK103-E103",
+      "TK103-E104",
+      "TK103-E105"
+    ],
+    "B-C05": [
+      "TK103-E100",
+      "TK103-E079"
+    ],
+    "B-C06": [
+      "TK103-E093",
+      "TK103-E094",
+      "TK103-E095"
+    ],
+    "B-C07": [
+      "TK103-E093",
+      "TK103-E098",
+      "TK103-E108"
+    ],
+    "B-C08": [
+      "TK103-E083",
+      "TK103-E084",
+      "TK103-E085",
+      "TK103-E097"
+    ],
+    "B-I01": [
+      "TK103-E102",
+      "TK103-E103"
+    ],
+    "B-I02": [
+      "TK103-E104",
+      "TK103-E102"
+    ],
+    "B-I03": [
+      "TK103-E104",
+      "TK103-E105"
+    ],
+    "B-I04": [
+      "TK103-E104",
+      "TK103-E105"
+    ],
+    "B-I05": [
+      "TK103-E103",
+      "TK103-E105"
+    ],
+    "B-I06": [
+      "TK103-E103",
+      "TK103-E104",
+      "TK103-E105"
+    ],
+    "B-I07": [
+      "TK103-E104"
+    ],
+    "B-I08": [
+      "TK103-E097",
+      "TK103-E098",
+      "TK103-E100"
+    ],
+    "B-I09": [
+      "TK103-E019",
+      "TK103-E020",
+      "TK103-E021",
+      "TK103-E022",
+      "TK103-E023",
+      "TK103-E133",
+      "TK103-E134",
+      "TK103-E135"
+    ],
+    "C-R01": [
+      "TK103-E111",
+      "TK103-E112",
+      "TK103-E113",
+      "TK103-E114"
+    ],
+    "C-R02": [
+      "TK103-E091",
+      "TK103-E113",
+      "TK103-E114",
+      "TK103-E115"
+    ],
+    "C-R03": [
+      "TK103-E107",
+      "TK103-E108",
+      "TK103-E109",
+      "TK103-E110",
+      "TK103-E116"
+    ],
+    "C-R04": [
+      "TK103-E108",
+      "TK103-E112",
+      "TK103-E110"
+    ],
+    "C-R05": [
+      "TK103-E093",
+      "TK103-E101",
+      "TK103-E109",
+      "TK103-E113"
+    ],
+    "C-R06": [
+      "TK103-E091",
+      "TK103-E092",
+      "TK103-E110",
+      "TK103-E114",
+      "TK103-E116",
+      "TK103-E118"
+    ],
+    "C-N01": [
+      "TK103-E092",
+      "TK103-E116",
+      "TK103-E090",
+      "TK103-E110"
+    ],
+    "C-N02": [
+      "TK103-E118",
+      "TK103-E127",
+      "TK103-E128",
+      "TK103-E129",
+      "TK103-E090"
+    ],
+    "C-N03": [
+      "TK103-E116",
+      "TK103-E118",
+      "TK103-E127",
+      "TK103-E129"
+    ],
+    "C-N04": [
+      "TK103-E117",
+      "TK103-E120",
+      "TK103-E121"
+    ],
+    "C-N05": [
+      "TK103-E119",
+      "TK103-E120",
+      "TK103-E121",
+      "TK103-E122"
+    ],
+    "C-N06": [
+      "TK103-E123",
+      "TK103-E124",
+      "TK103-E130"
+    ],
+    "C-N07": [
+      "TK103-E125",
+      "TK103-E130",
+      "TK103-E091"
+    ],
+    "C-N08": [
+      "TK103-E127",
+      "TK103-E128",
+      "TK103-E129",
+      "TK103-E090"
+    ],
+    "C-N09": [
+      "TK103-E119",
+      "TK103-E120",
+      "TK103-E121",
+      "TK103-E122"
+    ],
+    "ABC-01": [
+      "TK103-E077",
+      "TK103-E083",
+      "TK103-E084",
+      "TK103-E086",
+      "TK103-E063",
+      "TK103-E064",
+      "TK103-E067",
+      "TK103-E068"
+    ],
+    "ABC-02": [
+      "TK103-E093",
+      "TK103-E097",
+      "TK103-E098",
+      "TK103-E099",
+      "TK103-E100",
+      "TK103-E101"
+    ],
+    "ABC-03": [
+      "TK103-E096",
+      "TK103-E103",
+      "TK103-E104",
+      "TK103-E105",
+      "TK103-E114",
+      "TK103-E118"
+    ],
+    "ABC-04": [
+      "TK103-E109",
+      "TK103-E110",
+      "TK103-E113",
+      "TK103-E114",
+      "TK103-E115",
+      "TK103-E118"
+    ],
+    "ABC-05": [
+      "TK103-E077",
+      "TK103-E083",
+      "TK103-E086",
+      "TK103-E093",
+      "TK103-E101"
+    ],
+    "ABC-06": [
+      "TK103-E001",
+      "TK103-E006",
+      "TK103-E020",
+      "TK103-E057",
+      "TK103-E058",
+      "TK103-E059",
+      "TK103-E063",
+      "TK103-E101"
+    ],
+    "TK103-M01": [
+      "TK103-E083",
+      "TK103-E084",
+      "TK103-E086",
+      "TK103-E087",
+      "TK103-E088",
+      "TK103-E089"
+    ],
+    "TK103-M02": [
+      "TK103-E097",
+      "TK103-E098",
+      "TK103-E100"
+    ],
+    "TK103-M03": [
+      "TK103-E084",
+      "TK103-E097",
+      "TK103-E098",
+      "TK103-E100"
+    ],
+    "TK103-M04": [
+      "TK103-E084",
+      "TK103-E097",
+      "TK103-E098",
+      "TK103-E100"
+    ],
+    "TK103-M05": [
+      "TK103-E084",
+      "TK103-E098",
+      "TK103-E099",
+      "TK103-E096",
+      "TK103-E102",
+      "TK103-E104",
+      "TK103-E105"
+    ],
+    "TK103-M06": [
+      "TK103-E084",
+      "TK103-E097",
+      "TK103-E100"
+    ],
+    "TK103-M07": [
+      "TK103-E098",
+      "TK103-E099"
+    ],
+    "TK103-M08": [
+      "TK103-E099",
+      "TK103-E096",
+      "TK103-E102",
+      "TK103-E104"
+    ],
+    "TK103-M09": [
+      "TK103-E100"
+    ],
+    "TK103-M10": [
+      "TK103-E103",
+      "TK103-E104",
+      "TK103-E105"
+    ],
+    "TK103-M11": [
+      "TK103-E103",
+      "TK103-E104",
+      "TK103-E105"
+    ],
+    "TK103-M12": [
+      "TK103-E103",
+      "TK103-E105"
+    ],
+    "TK103-M13": [
+      "TK103-E103",
+      "TK103-E104",
+      "TK103-E105"
+    ],
+    "TK103-M14": [
+      "TK103-E104"
+    ],
+    "TK103-M15": [
+      "TK103-E065",
+      "TK103-E066",
+      "TK103-E067"
+    ],
+    "TK103-M16": [
+      "TK103-E091",
+      "TK103-E113",
+      "TK103-E114",
+      "TK103-E115"
+    ],
+    "TK103-M17": [
+      "TK103-E091",
+      "TK103-E114",
+      "TK103-E115"
+    ],
+    "TK103-M18": [
+      "TK103-E109",
+      "TK103-E110",
+      "TK103-E116",
+      "TK103-E118",
+      "TK103-E127",
+      "TK103-E129"
+    ],
+    "TK103-M19": [
+      "TK103-E119",
+      "TK103-E120",
+      "TK103-E121",
+      "TK103-E122"
+    ],
+    "TK103-M20": [
+      "TK103-E123",
+      "TK103-E125",
+      "TK103-E130"
+    ],
+    "TK103-M21": [
+      "TK103-E125",
+      "TK103-E091",
+      "TK103-E092"
+    ],
+    "TK103-M22": [
+      "TK103-E118",
+      "TK103-E127",
+      "TK103-E128",
+      "TK103-E129"
+    ],
+    "TK103-M23": [
+      "TK103-E080",
+      "TK103-E092",
+      "TK103-E109",
+      "TK103-E116"
+    ]
+  },
+  "static_conversion_domains": "uint64, uint32, signed int64, long, s32 pointer mismatch and shift legality separated",
+  "history_identity": {
+    "old102": "RETURN",
+    "R102_01_02_03": "OPEN",
+    "old101": "PASS_PENDING_LOCAL",
+    "old100": "PASS_PENDING_LOCAL",
+    "related": [
+      "MYOS2-LEAD-002::CA-05",
+      "MYOS2-LEAD-002-CORE-CHECK-01::V14",
+      "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-F03",
+      "CORE-USER-FRAMEBUFFER-MAPPING-96::FM96-U08",
+      "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-F08",
+      "CORE-USER-IRQ-REGISTRATION-DISPATCH-101::IR101-U05"
+    ]
+  },
+  "runtime_evidence": "NOT_RUN",
+  "full_local_P9": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "finite_models": [
+    {
+      "id": "TK103-M01",
+      "scenario": "default-jiffies conversion",
+      "inputs": {
+        "HZ": "1000",
+        "TICK_NSEC": "1000000",
+        "JIFFIES_SHIFT": "8"
+      },
+      "formula": "mult=(1000000<<8)=256000000; shift=8; max_cycles=10",
+      "conditional_result": "default values subject to weak-symbol and preprocessor selection",
+      "first_stop_gate": "no hardware tick frequency certified",
+      "evidence_ids": [
+        "TK103-E083",
+        "TK103-E084",
+        "TK103-E086",
+        "TK103-E087",
+        "TK103-E088",
+        "TK103-E089"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M02",
+      "scenario": "delta0 ordinary",
+      "inputs": {
+        "last": "123",
+        "now": "123",
+        "fraction": "0"
+      },
+      "formula": "delta=0; ((0*256000000)+0)>>8",
+      "conditional_result": "0ns",
+      "first_stop_gate": "valid default clock cached values needed",
+      "evidence_ids": [
+        "TK103-E097",
+        "TK103-E098",
+        "TK103-E100"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M03",
+      "scenario": "delta1 ordinary",
+      "inputs": {
+        "last": "123",
+        "now": "124",
+        "fraction": "0"
+      },
+      "formula": "delta=1 <=10; (1*256000000)>>8",
+      "conditional_result": "1000000ns",
+      "first_stop_gate": "not a measured tick",
+      "evidence_ids": [
+        "TK103-E084",
+        "TK103-E097",
+        "TK103-E098",
+        "TK103-E100"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M04",
+      "scenario": "delta10 boundary",
+      "inputs": {
+        "last": "0",
+        "now": "10",
+        "fraction": "0"
+      },
+      "formula": "10>10 false; (10*256000000)>>8",
+      "conditional_result": "10000000ns",
+      "first_stop_gate": "valid shift and cached state",
+      "evidence_ids": [
+        "TK103-E084",
+        "TK103-E097",
+        "TK103-E098",
+        "TK103-E100"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M05",
+      "scenario": "delta11 safe helper",
+      "inputs": {
+        "last": "0",
+        "now": "11",
+        "fraction": "0"
+      },
+      "formula": "11>10, highmask false, split helper with lowword11 and shift8",
+      "conditional_result": "11000000ns under legal-helper domain",
+      "first_stop_gate": "not real 11 ticks; no model executed",
+      "evidence_ids": [
+        "TK103-E084",
+        "TK103-E098",
+        "TK103-E099",
+        "TK103-E096",
+        "TK103-E102",
+        "TK103-E104",
+        "TK103-E105"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M06",
+      "scenario": "low32 wrap",
+      "inputs": {
+        "last": "4294967294",
+        "now": "1",
+        "mask": "4294967295"
+      },
+      "formula": "(1-last) modulo2^64 & mask=3",
+      "conditional_result": "delta=3, then normal result3000000ns for b0 and jiffies mult/shift",
+      "first_stop_gate": "only arithmetic modulo, not observed wrap",
+      "evidence_ids": [
+        "TK103-E084",
+        "TK103-E097",
+        "TK103-E100"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M07",
+      "scenario": "high-half guard",
+      "inputs": {
+        "delta": "2147483648",
+        "mask": "4294967295",
+        "fraction": "10752",
+        "shift": "8"
+      },
+      "formula": "delta>10 and (delta & ~(mask>>1)) !=0; 10752>>8",
+      "conditional_result": "returns old42ns fraction, no safe helper",
+      "first_stop_gate": "not evidence that counter ran backward",
+      "evidence_ids": [
+        "TK103-E098",
+        "TK103-E099"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M08",
+      "scenario": "highest low-half",
+      "inputs": {
+        "delta": "2147483647",
+        "mask": "4294967295",
+        "fraction": "0",
+        "shift": "8"
+      },
+      "formula": "delta>10 but upper-half bit0; helper mathematical (2147483647*256000000)>>8",
+      "conditional_result": "2147483647000000ns only under valid helper inputs",
+      "first_stop_gate": "no real time interval certified",
+      "evidence_ids": [
+        "TK103-E099",
+        "TK103-E096",
+        "TK103-E102",
+        "TK103-E104"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M09",
+      "scenario": "ordinary accumulated u64 wrap",
+      "inputs": {
+        "delta": "1",
+        "mult": "256000000",
+        "fraction": "18446744073709551615",
+        "shift": "8"
+      },
+      "formula": "(256000000+UINT64_MAX) mod2^64=255999999; >>8",
+      "conditional_result": "999999ns not unbounded sum result",
+      "first_stop_gate": "constructed input; max_cycles not enough to bound fraction",
+      "evidence_ids": [
+        "TK103-E100"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M10",
+      "scenario": "safe helper shift0",
+      "inputs": {
+        "a": "1",
+        "mul": "1",
+        "b": "0",
+        "shift": "0",
+        "ah": "0"
+      },
+      "formula": "ret>>0 valid; ovf&&shift false; ah false",
+      "conditional_result": "1",
+      "first_stop_gate": "not universally safe for other values",
+      "evidence_ids": [
+        "TK103-E103",
+        "TK103-E104",
+        "TK103-E105"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M11",
+      "scenario": "safe helper shift32 highword",
+      "inputs": {
+        "a": "4294967296",
+        "mul": "1",
+        "b": "0",
+        "shift": "32",
+        "ah": "1"
+      },
+      "formula": "low ret>>32=0; high product<<(32-32)=1",
+      "conditional_result": "1",
+      "first_stop_gate": "requires conditionally legal call",
+      "evidence_ids": [
+        "TK103-E103",
+        "TK103-E104",
+        "TK103-E105"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M12",
+      "scenario": "safe helper shift33 ah present",
+      "inputs": {
+        "a": "4294967296",
+        "mul": "1",
+        "b": "0",
+        "shift": "33",
+        "ah": "1"
+      },
+      "formula": "if(ah) leads highproduct <<(32-33), unsigned count underflows",
+      "conditional_result": "invalid C shift; stop before return",
+      "first_stop_gate": "does not assert runtime reached the branch",
+      "evidence_ids": [
+        "TK103-E103",
+        "TK103-E105"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M13",
+      "scenario": "safe helper shift33 ah absent",
+      "inputs": {
+        "a": "1",
+        "mul": "1",
+        "b": "0",
+        "shift": "33",
+        "ah": "0"
+      },
+      "formula": "ret>>33 valid, no high branch",
+      "conditional_result": "0",
+      "first_stop_gate": "only this conditional case, not all shift33 inputs",
+      "evidence_ids": [
+        "TK103-E103",
+        "TK103-E104",
+        "TK103-E105"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M14",
+      "scenario": "safe helper shift64",
+      "inputs": {
+        "a": "1",
+        "mul": "1",
+        "b": "0",
+        "shift": "64"
+      },
+      "formula": "unconditional ret >>=64",
+      "conditional_result": "undefined C shift at first reached operation",
+      "first_stop_gate": "no CPU trap inferred",
+      "evidence_ids": [
+        "TK103-E104"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M15",
+      "scenario": "oldclock unsigned subtraction",
+      "inputs": {
+        "new_shift_u32": "8",
+        "old_shift_u32": "32"
+      },
+      "formula": "u32 8-32 wraps to4294967272; converted into int",
+      "conditional_result": "out-of-range u32-to-int result implementation-defined",
+      "first_stop_gate": "later negative shift branch cannot assume mathematical -24",
+      "evidence_ids": [
+        "TK103-E065",
+        "TK103-E066",
+        "TK103-E067"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M16",
+      "scenario": "ktime signed base + unsigned delta",
+      "inputs": {
+        "base_s64": "-2",
+        "nsecs_u64": "3"
+      },
+      "formula": "usual integer conversions: (2^64-2+3) mod2^64 = 1; convert to s64",
+      "conditional_result": "1 within signed range",
+      "first_stop_gate": "not actual monotonic reading",
+      "evidence_ids": [
+        "TK103-E091",
+        "TK103-E113",
+        "TK103-E114",
+        "TK103-E115"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M17",
+      "scenario": "ktime beyond signed limit",
+      "inputs": {
+        "base_s64": "9223372036854775807",
+        "nsecs_u64": "1"
+      },
+      "formula": "expression yields unsigned 9223372036854775808; assign s64",
+      "conditional_result": "implementation-defined conversion, not signed addition overflow",
+      "first_stop_gate": "real values not observed",
+      "evidence_ids": [
+        "TK103-E091",
+        "TK103-E114",
+        "TK103-E115"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M18",
+      "scenario": "real timespec adds 1.5 seconds",
+      "inputs": {
+        "start_sec": "7",
+        "nsecs": "1500000001"
+      },
+      "formula": "quotient1 remainder500000001",
+      "conditional_result": "(8,500000001) if all operations and storage valid",
+      "first_stop_gate": "not real wall-clock time",
+      "evidence_ids": [
+        "TK103-E109",
+        "TK103-E110",
+        "TK103-E116",
+        "TK103-E118",
+        "TK103-E127",
+        "TK103-E129"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M19",
+      "scenario": "negative timespec normalizer",
+      "inputs": {
+        "sec": "3",
+        "nsec": "-1"
+      },
+      "formula": "nsec +=1000000000, --sec",
+      "conditional_result": "(2,999999999) if operations valid",
+      "first_stop_gate": "inputs constructed",
+      "evidence_ids": [
+        "TK103-E119",
+        "TK103-E120",
+        "TK103-E121",
+        "TK103-E122"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M20",
+      "scenario": "ns_to_timespec64 negative one",
+      "inputs": {
+        "nsec_s64": "-1"
+      },
+      "formula": "-nsec-1=0; div_u64_rem(0,1e9) =>0 remainder0; sec=-1 nsec=999999999",
+      "conditional_result": "(-1,999999999) conditional",
+      "first_stop_gate": "prototype uses u32* while local rem is s32*, compilation not verified",
+      "evidence_ids": [
+        "TK103-E123",
+        "TK103-E125",
+        "TK103-E130"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M21",
+      "scenario": "ns_to_timespec64 signed minimum",
+      "inputs": {
+        "nsec_s64": "-9223372036854775808"
+      },
+      "formula": "-nsec evaluated before -1",
+      "conditional_result": "signed unary negation undefined; stop",
+      "first_stop_gate": "algebraic rewriting cannot rescue actual C expression",
+      "evidence_ids": [
+        "TK103-E125",
+        "TK103-E091",
+        "TK103-E092"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M22",
+      "scenario": "quotient exceeds u32",
+      "inputs": {
+        "tv_sec": "0",
+        "tv_nsec": "0",
+        "ns_u64": "4294967296000000000"
+      },
+      "formula": "mathematical quotient2^32; __iter_div_u64_rem stores u32 ret and increments",
+      "conditional_result": "u32 quotient wraps if 4294967296 iterations completed, remainder0",
+      "first_stop_gate": "not executed; no test or performance claim",
+      "evidence_ids": [
+        "TK103-E118",
+        "TK103-E127",
+        "TK103-E128",
+        "TK103-E129"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    },
+    {
+      "id": "TK103-M23",
+      "scenario": "real wall seconds u64 to signed",
+      "inputs": {
+        "tk_xtime_sec_u64": "9223372036854775808"
+      },
+      "formula": "assignment to time64_t signed64 tv_sec",
+      "conditional_result": "implementation-defined out-of-range conversion",
+      "first_stop_gate": "not a real RTC value",
+      "evidence_ids": [
+        "TK103-E080",
+        "TK103-E092",
+        "TK103-E109",
+        "TK103-E116"
+      ],
+      "kind": "DECLARED_INPUT_CLOSED_MATH_OR_C_TYPE_CONDITIONAL",
+      "executed": false
+    }
+  ],
+  "finite_model_count": 23,
+  "G00": {
+    "status": "PASS",
+    "fresh_batch": 103,
+    "observed_date": "2026-11-18",
+    "direct_refs": {
+      "lead": "7564e79a9b02",
+      "exec": "1a92f9839e53",
+      "time": "a039d9803ade",
+      "master": "e8e60cd19540"
+    },
+    "pr16": "OPEN_READY_UNMERGED",
+    "pr17": "OPEN_DRAFT_UNMERGED",
+    "open_prs": [
+      16,
+      17
+    ],
+    "target103": "NOT_FOUND_PREWRITE",
+    "formal_marker": "ZERO_IN_188_TOP_LEVEL_COMMENTS",
+    "mainline_publication_comment": 6979832098,
+    "author102_comment": 6978933773,
+    "canaries": "BOTH_TIME_AND_MASTER_OPTIONS_FLAGS_AND_PANIC_DIFFERENT",
+    "config_source": "TIME_OPTIONS_FLAGS_FULL_READ",
+    "conventions": "EXACT_WRITE_RULE_READ"
+  },
+  "read_ledger": {
+    "latest_new_full": [
+      "147 contract @7564e79a9b02",
+      "102 independent review @7564e79a9b02",
+      "101 document closure @7564e79a9b02",
+      "2026-11-18 hpet102 reviewed timekeeping103 checkpoint @7564e79a9b02",
+      "PR17 C07 release comment 6979832098",
+      "PR17 previous author comment 6978933773"
+    ],
+    "same_conversation_fixed_identity_reused": [
+      "102 six files @1a92f9839e53: all 6 blob IDs match own previous whole-file read and actual parent",
+      "nine MyOS2 rules and 110/124: personally fully read in prior batch in this same continuing conversation",
+      "Mnemosyne task-guidance personally refreshed in 102 in this same conversation; no maintenance route imported"
+    ],
+    "source_files": 30,
+    "source_paths": [
+      "mykernel/scripts/options_flags.cmake",
+      "mykernel/time/clocksource/clocksource.c",
+      "mykernel/time/clocksource/clocksource_macro.h",
+      "mykernel/arch/x86_64/kernel/hpet.c",
+      "mykernel/include/linux/kernel/bits.h",
+      "mykernel/include/uapi/linux/const.h",
+      "mykernel/arch/x86_64/include/asm/hpet.h",
+      "mykernel/include/linux/kernel/hpet.h",
+      "mykernel/time/clocksource/clocksource_const.h",
+      "mykernel/lib/list/double_list.h",
+      "mykernel/lib/list/double_list_macro.h",
+      "mykernel/include/linux/init/init.h",
+      "mykernel/include/linux/kernel/asm-generic/io.h",
+      "mykernel/arch/x86_64/myos/interrupt.c",
+      "mykernel/arch/x86_64/kernel/time.c",
+      "mykernel/time/timekeeping/timekeeping_types.h",
+      "mykernel/time/timekeeping/timekeeping.c",
+      "mykernel/time/systick/systick.c",
+      "mykernel/include/linux/kernel/asm-generic/param.h",
+      "mykernel/time/misc/time_misc_const.h",
+      "mykernel/time/systick/systick_const.h",
+      "mykernel/time/time_type_declaration.h",
+      "mykernel/time/timekeeping/timekeeping.h",
+      "mykernel/include/linux/kernel/asm-generic/rwonce.h",
+      "mykernel/include/linux/kernel/math64.h",
+      "mykernel/time/ktime/ktime_macro.h",
+      "mykernel/time/misc/time_misc_types.h",
+      "mykernel/time/misc/time_misc.h",
+      "mykernel/time/misc/time_misc.c",
+      "mykernel/include/linux/kernel/asm-generic/bitsperlong.h"
+    ],
+    "full_primary": [
+      "mykernel/time/timekeeping/timekeeping.c",
+      "mykernel/time/timekeeping/timekeeping.h",
+      "mykernel/time/timekeeping/timekeeping_types.h",
+      "mykernel/time/timekeeping/timekeeping_api.h",
+      "mykernel/time/systick/systick.c",
+      "mykernel/time/clocksource/clocksource.c",
+      "mykernel/include/linux/kernel/math64.h",
+      "mykernel/time/misc/time_misc.c",
+      "mykernel/time/misc/time_misc.h",
+      "mykernel/time/ktime/ktime_macro.h"
+    ],
+    "other_sources": "targeted fixed-time definitions and necessary include context, not semantic audit of every line",
+    "not_executed": [
+      "local P9",
+      "any repository script or code",
+      "compiler/assembler/linker",
+      "author executable model",
+      "Graphviz",
+      "QEMU",
+      "real hardware",
+      "real concurrency",
+      "external model/API/subagent"
+    ],
+    "scope": "only batch103 read-only source and current new six deliverables"
+  }
+}

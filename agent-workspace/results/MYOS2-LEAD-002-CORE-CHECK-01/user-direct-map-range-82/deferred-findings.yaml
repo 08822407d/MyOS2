@@ -1,0 +1,530 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DIRECT-MAP-RANGE-82",
+  "record_type": "new_bounded_conditional_findings_and_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "source_pin_short12": "a039d9803ade",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "phase": 2,
+  "D00": "NOT_REQUIRED",
+  "prior_state": {
+    "batch81": "PASS_PENDING_LOCAL_WITH_R81_S01_S02_S03",
+    "batch80": "PASS_PENDING_LOCAL",
+    "batch79": "PASS_PENDING_LOCAL_WITH_DOCUMENTATION_CLOSED",
+    "old_qualified_ids_not_reopened": true,
+    "source_risk_proven_in_runtime": false
+  },
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-F01",
+      "id": "DM82-F01",
+      "category": "capability_mask_stale_on_repeated_probe",
+      "observation": "重复调用探测函数的OR更新在能力/开关变化后可能保留旧的2M或1G候选位",
+      "source_fact_keys": [
+        "probe_2m",
+        "probe_1g",
+        "probe_1g_else",
+        "global_mask"
+      ],
+      "evidence_ids": [
+        "A03",
+        "A04",
+        "A05",
+        "A02"
+      ],
+      "content_sources": [
+        {
+          "fact_key": "probe_2m",
+          "anchor": "A03",
+          "definition": "mykernel/arch/x86_64/mm/init.c::simple_probe_page_size_mask",
+          "quote": "\tif (boot_cpu_data.x86_capa_bits.PageSize_Ext)\n\t\tpage_size_mask |= 1 << PG_LEVEL_2M;\n\telse\n\t\tdirect_gbpages = 0;"
+        },
+        {
+          "fact_key": "probe_1g",
+          "anchor": "A04",
+          "definition": "mykernel/arch/x86_64/mm/init.c::simple_probe_page_size_mask",
+          "quote": "\tif (direct_gbpages && boot_cpu_data.x86_capa_bits.Page_1GB) {\n\t\tprintk(KERN_INFO \"Using GB pages for direct mapping\\n\");\n\t\tpage_size_mask |= 1 << PG_LEVEL_1G;\n\t} else {"
+        },
+        {
+          "fact_key": "probe_1g_else",
+          "anchor": "A05",
+          "definition": "mykernel/arch/x86_64/mm/init.c::simple_probe_page_size_mask",
+          "quote": "\t\tdirect_gbpages = 0;\n\t}"
+        },
+        {
+          "fact_key": "global_mask",
+          "anchor": "A02",
+          "definition": "mykernel/arch/x86_64/mm/init.c::page_size_mask",
+          "quote": "static int page_size_mask;"
+        }
+      ],
+      "prerequisites": "实际上发生第二次调用且无外部mask复位",
+      "earliest_stop": "不得据旧位认定选中的硬件能力",
+      "evidence_class": "conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-F02",
+      "id": "DM82-F02",
+      "category": "promotion_memory_not_free",
+      "observation": "提升只调用memory单记录包含查询，不能据真值断言取整跨度没有reserved/NOMAP或已经可映射",
+      "source_fact_keys": [
+        "promote_2m_write",
+        "promote_1g_write",
+        "single_search",
+        "single_containment"
+      ],
+      "evidence_ids": [
+        "A16",
+        "A18",
+        "A19",
+        "A20"
+      ],
+      "content_sources": [
+        {
+          "fact_key": "promote_2m_write",
+          "anchor": "A16",
+          "definition": "mykernel/arch/x86_64/mm/init.c::adjust_range_page_size_mask",
+          "quote": "\t\t\tif (memblock_is_region_memory(start, end - start))\n\t\t\t\tmr[i].page_size_mask |= 1<<PG_LEVEL_2M;"
+        },
+        {
+          "fact_key": "promote_1g_write",
+          "anchor": "A18",
+          "definition": "mykernel/arch/x86_64/mm/init.c::adjust_range_page_size_mask",
+          "quote": "\t\t\tif (memblock_is_region_memory(start, end - start))\n\t\t\t\tmr[i].page_size_mask |= 1<<PG_LEVEL_1G;"
+        },
+        {
+          "fact_key": "single_search",
+          "anchor": "A19",
+          "definition": "mykernel/mm/early/memblock.c::memblock_is_region_memory",
+          "quote": "bool __init_memblock\nmemblock_is_region_memory(phys_addr_t base, phys_addr_t size) {\n\tint idx = memblock_search(&memblock.memory, base);\n\tphys_addr_t end = base + memblock_cap_size(base, &size);"
+        },
+        {
+          "fact_key": "single_containment",
+          "anchor": "A20",
+          "definition": "mykernel/mm/early/memblock.c::memblock_is_region_memory",
+          "quote": "\tif (idx == -1)\n\t\treturn false;\n\treturn (memblock.memory.regions[idx].base +\n\t\t memblock.memory.regions[idx].size) >= end;"
+        }
+      ],
+      "prerequisites": "单条memory跨实际reserved片段或NOMAP规则，合法查询仍完成",
+      "earliest_stop": "查询与实际可分配性不等价",
+      "evidence_class": "conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-F03",
+      "id": "DM82-F03",
+      "category": "multi_record_union_not_single_record",
+      "observation": "两个分别覆盖的相邻memory记录若尚未合并，取整跨度可在它们联合范围内而单记录查询返回false",
+      "source_fact_keys": [
+        "single_search",
+        "single_containment",
+        "promote_2m_write"
+      ],
+      "evidence_ids": [
+        "A19",
+        "A20",
+        "A16"
+      ],
+      "content_sources": [
+        {
+          "fact_key": "single_search",
+          "anchor": "A19",
+          "definition": "mykernel/mm/early/memblock.c::memblock_is_region_memory",
+          "quote": "bool __init_memblock\nmemblock_is_region_memory(phys_addr_t base, phys_addr_t size) {\n\tint idx = memblock_search(&memblock.memory, base);\n\tphys_addr_t end = base + memblock_cap_size(base, &size);"
+        },
+        {
+          "fact_key": "single_containment",
+          "anchor": "A20",
+          "definition": "mykernel/mm/early/memblock.c::memblock_is_region_memory",
+          "quote": "\tif (idx == -1)\n\t\treturn false;\n\treturn (memblock.memory.regions[idx].base +\n\t\t memblock.memory.regions[idx].size) >= end;"
+        },
+        {
+          "fact_key": "promote_2m_write",
+          "anchor": "A16",
+          "definition": "mykernel/arch/x86_64/mm/init.c::adjust_range_page_size_mask",
+          "quote": "\t\t\tif (memblock_is_region_memory(start, end - start))\n\t\t\t\tmr[i].page_size_mask |= 1<<PG_LEVEL_2M;"
+        }
+      ],
+      "prerequisites": "输入保留两个不同记录且查询base位于前一记录",
+      "earliest_stop": "不推出当前真实内存表仍分裂",
+      "evidence_class": "conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-F04",
+      "id": "DM82-F04",
+      "category": "pfn_down_coverage_adjustment",
+      "observation": "非页对齐请求的start/end被分别向下变为PFN，可能从start以前开始且遗漏end尾部",
+      "source_fact_keys": [
+        "limit_floor",
+        "head_bounds",
+        "tail4_save",
+        "pfn_down"
+      ],
+      "evidence_ids": [
+        "B07",
+        "B08",
+        "B16",
+        "B22"
+      ],
+      "content_sources": [
+        {
+          "fact_key": "limit_floor",
+          "anchor": "B07",
+          "definition": "mykernel/arch/x86_64/mm/init.c::split_mem_range",
+          "quote": "\tlimit_pfn = PFN_DOWN(end);"
+        },
+        {
+          "fact_key": "head_bounds",
+          "anchor": "B08",
+          "definition": "mykernel/arch/x86_64/mm/init.c::split_mem_range",
+          "quote": "\t/* head if not big page alignment ? */\n\tpfn = start_pfn = PFN_DOWN(start);\n\tend_pfn = round_up(pfn, PFN_DOWN(PMD_SIZE));\n\tif (end_pfn > limit_pfn)\n\t\tend_pfn = limit_pfn;"
+        },
+        {
+          "fact_key": "tail4_save",
+          "anchor": "B16",
+          "definition": "mykernel/arch/x86_64/mm/init.c::split_mem_range",
+          "quote": "\t/* tail is not big page (2M) alignment */\n\tstart_pfn = pfn;\n\tend_pfn = limit_pfn;\n\tnr_range = save_mr(mr, nr_range, start_pfn, end_pfn, 0);"
+        },
+        {
+          "fact_key": "pfn_down",
+          "anchor": "B22",
+          "definition": "mykernel/mm/highmem/highmem_macro.h::PFN_DOWN",
+          "quote": "\t#define PFN_DOWN(x)\t\t\t((x) >> PAGE_SHIFT)"
+        }
+      ],
+      "prerequisites": "合法非页对齐有序正向输入",
+      "earliest_stop": "先在PFN转换边界停止原字节覆盖宣称",
+      "evidence_class": "conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-F05",
+      "id": "DM82-F05",
+      "category": "save_capacity_panic_return_boundary",
+      "observation": "save_mr在nr_range>=5时调用panic，源码没有紧随其后的显式return，若panic返回仍可能访问第六元素",
+      "source_fact_keys": [
+        "save_guard",
+        "save_count",
+        "capacity"
+      ],
+      "evidence_ids": [
+        "B04",
+        "B05",
+        "B01"
+      ],
+      "content_sources": [
+        {
+          "fact_key": "save_guard",
+          "anchor": "B04",
+          "definition": "mykernel/arch/x86_64/mm/init.c::save_mr",
+          "quote": "\tif (start_pfn < end_pfn) {\n\t\tif (nr_range >= NR_RANGE_MR)\n\t\t\tpanic(\"run out of range for init_memory_mapping\\n\");\n\t\tmr[nr_range].start = start_pfn<<PAGE_SHIFT;\n\t\tmr[nr_range].end   = end_pfn<<PAGE_SHIFT;"
+        },
+        {
+          "fact_key": "save_count",
+          "anchor": "B05",
+          "definition": "mykernel/arch/x86_64/mm/init.c::save_mr",
+          "quote": "\t\tmr[nr_range].end   = end_pfn<<PAGE_SHIFT;\n\t\tmr[nr_range].page_size_mask = page_size_mask;\n\t\tnr_range++;\n\t}\n\treturn nr_range;"
+        },
+        {
+          "fact_key": "capacity",
+          "anchor": "B01",
+          "definition": "mykernel/arch/x86_64/mm/init.c::NR_RANGE_MR",
+          "quote": "#define NR_RANGE_MR\t5"
+        }
+      ],
+      "prerequisites": "此前5项已写或外部错误nr_range且panic可返回",
+      "earliest_stop": "不能据源码直接声明真实写越界或机器停止",
+      "evidence_class": "conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-F06",
+      "id": "DM82-F06",
+      "category": "rounding_endpoint_overflow_and_reversal",
+      "observation": "取整上界回绕、请求反向或clamp异常可使分段证明前提失效",
+      "source_fact_keys": [
+        "round_up",
+        "round_down",
+        "limit_floor",
+        "range_clamp"
+      ],
+      "evidence_ids": [
+        "A24",
+        "A25",
+        "B07",
+        "C10"
+      ],
+      "content_sources": [
+        {
+          "fact_key": "round_up",
+          "anchor": "A24",
+          "definition": "mykernel/include/linux/kernel/math.h::round_up",
+          "quote": "\t#define round_up(x, y)\t\t((((x)-1) | __round_mask(x, y))+1)"
+        },
+        {
+          "fact_key": "round_down",
+          "anchor": "A25",
+          "definition": "mykernel/include/linux/kernel/math.h::round_down",
+          "quote": "\t#define round_down(x, y)\t((x) & ~__round_mask(x, y))"
+        },
+        {
+          "fact_key": "limit_floor",
+          "anchor": "B07",
+          "definition": "mykernel/arch/x86_64/mm/init.c::split_mem_range",
+          "quote": "\tlimit_pfn = PFN_DOWN(end);"
+        },
+        {
+          "fact_key": "range_clamp",
+          "anchor": "C10",
+          "definition": "mykernel/arch/x86_64/mm/init.c::init_range_memory_mapping",
+          "quote": "\tfor_each_mem_pfn_range(i, &start_pfn, &end_pfn) {\n\t\tu64 start = clamp_val(PFN_PHYS(start_pfn), r_start, r_end);\n\t\tu64 end = clamp_val(PFN_PHYS(end_pfn), r_start, r_end);\n\t\tif (start >= end)\n\t\t\tcontinue;"
+        }
+      ],
+      "prerequisites": "极端上界或逆序端点输入且整数宽度按本树声明",
+      "earliest_stop": "最早无效端点/数组/源访问前停推",
+      "evidence_class": "conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-F07",
+      "id": "DM82-F07",
+      "category": "last_request_return_not_aggregate",
+      "observation": "init_memory_mapping覆盖ret并只返回最后一次下层端点，不能以此证明此前所有分段完成映射",
+      "source_fact_keys": [
+        "each_request",
+        "last_return",
+        "lower_initial",
+        "lower_return"
+      ],
+      "evidence_ids": [
+        "C03",
+        "C04",
+        "C07",
+        "C08"
+      ],
+      "content_sources": [
+        {
+          "fact_key": "each_request",
+          "anchor": "C03",
+          "definition": "mykernel/arch/x86_64/mm/init.c::init_memory_mapping",
+          "quote": "\tfor (i = 0; i < nr_range; i++)\n\t\tret = kernel_physical_mapping_init(mr[i].start,\n\t\t\t\tmr[i].end, mr[i].page_size_mask, prot);"
+        },
+        {
+          "fact_key": "last_return",
+          "anchor": "C04",
+          "definition": "mykernel/arch/x86_64/mm/init.c::init_memory_mapping",
+          "quote": "\t// add_pfn_range_mapped(start >> PAGE_SHIFT, ret >> PAGE_SHIFT);\n\n\treturn ret >> PAGE_SHIFT;"
+        },
+        {
+          "fact_key": "lower_initial",
+          "anchor": "C07",
+          "definition": "mykernel/arch/x86_64/mm/init.c::__kernel_physical_mapping_init",
+          "quote": "\tulong vaddr, vaddr_start, vaddr_end, vaddr_next, paddr_last;\n\n\tpaddr_last = paddr_end;\n\tvaddr = (ulong)__va(paddr_start);\n\tvaddr_end = (ulong)__va(paddr_end);"
+        },
+        {
+          "fact_key": "lower_return",
+          "anchor": "C08",
+          "definition": "mykernel/arch/x86_64/mm/init.c::__kernel_physical_mapping_init",
+          "quote": "\t\tpgd_changed = true;\n\t}\n\t// if (pgd_changed)\n\t// \tsync_global_pgds(vaddr_start, vaddr_end - 1);\n\treturn paddr_last;"
+        }
+      ],
+      "prerequisites": "至少两个有条件请求，下层结果可能各异",
+      "earliest_stop": "局部return不等于事务成功",
+      "evidence_class": "conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-F08",
+      "id": "DM82-F08",
+      "category": "requested_bytes_not_mapped_bytes",
+      "observation": "init_range按请求交集end-start累计字节且忽略子调用返回，且方向false时顶层else无活动普通RAM请求；统计量不能认证实际映射量",
+      "source_fact_keys": [
+        "range_account",
+        "range_return",
+        "iterator_macro",
+        "direction_gate",
+        "two_calls"
+      ],
+      "evidence_ids": [
+        "C11",
+        "C12",
+        "C17",
+        "C25",
+        "C26"
+      ],
+      "content_sources": [
+        {
+          "fact_key": "range_account",
+          "anchor": "C11",
+          "definition": "mykernel/arch/x86_64/mm/init.c::init_range_memory_mapping",
+          "quote": "\t\tinit_memory_mapping(start, end, PAGE_KERNEL);\n\t\tmapped_ram_size += end - start;"
+        },
+        {
+          "fact_key": "range_return",
+          "anchor": "C12",
+          "definition": "mykernel/arch/x86_64/mm/init.c::init_range_memory_mapping",
+          "quote": "\treturn mapped_ram_size;"
+        },
+        {
+          "fact_key": "iterator_macro",
+          "anchor": "C17",
+          "definition": "mykernel/mm/early/memblock_macro.h::for_each_mem_pfn_range",
+          "quote": "\t#define for_each_mem_pfn_range(i, p_start, p_end)\t\t\t\t\t\\\n\t\t\t\tfor (i = -1, __next_mem_pfn_range(&i, p_start, p_end);\t\\\n\t\t\t\t\ti >= 0; __next_mem_pfn_range(&i, p_start, p_end))"
+        },
+        {
+          "fact_key": "direction_gate",
+          "anchor": "C25",
+          "definition": "mykernel/arch/x86_64/mm/init.c::init_mem_mapping",
+          "quote": "\tif (memblock_bottom_up()) {\n\t\tulong kernel_end = __pa_symbol(_end);"
+        },
+        {
+          "fact_key": "two_calls",
+          "anchor": "C26",
+          "definition": "mykernel/arch/x86_64/mm/init.c::init_mem_mapping",
+          "quote": "\t\tmemory_map_bottom_up(kernel_end, end);\n\t\tmemory_map_bottom_up(ISA_END_ADDRESS, kernel_end);\n\t} else {\n\t\t// memory_map_top_down(ISA_END_ADDRESS, end);"
+        }
+      ],
+      "prerequisites": "实际内存表、方向状态与每个callee结果未知",
+      "earliest_stop": "不把加法或后续CR3当映射实证",
+      "evidence_class": "conditional_source_candidate",
+      "status": "needs_evidence",
+      "runtime_reproduced": false,
+      "fix_authorized": false,
+      "owner_decision_requested": false
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U01",
+      "id": "DM82-U01",
+      "name": "cpu_capability_and_reprobe_history",
+      "unknown": "真实PageSize_Ext/Page_1GB生产过程、probe调用次数、全局候选位其它写者及配置选择未知",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U02",
+      "id": "DM82-U02",
+      "name": "valid_firmware_pfn_extent",
+      "unknown": "实际max_pfn、memblock.memory类型、PFN单位/物理端点和输入未对齐性未由真实启动证实",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U03",
+      "id": "DM82-U03",
+      "name": "memblock_single_region_and_search",
+      "unknown": "取整跨度的单记录包含、空cnt do-while行为、旧MR79尾槽/指针合法性仍缺真实前提",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U04",
+      "id": "DM82-U04",
+      "name": "reserved_nomap_and_region_normalization",
+      "unknown": "被reserved占用、NOMAP及相邻记录规范化对提升判断的影响需要实际输入和定义链证据",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U05",
+      "id": "DM82-U05",
+      "name": "overflow_and_c_abi_width",
+      "unknown": "ulong、size_t、u64在所选编译下的运算宽度、取整回绕和逆序上下界效果尚未实测",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U06",
+      "id": "DM82-U06",
+      "name": "panic_noreturn_and_capacity",
+      "unknown": "save_mr达到容量时panic的最终执行/不返回保证、调用者可达nr_range与数组边界需要额外证明",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U07",
+      "id": "DM82-U07",
+      "name": "lower_page_mapping_actual_result",
+      "unknown": "__kernel_physical_mapping_init内部递归与叶建表/返回语义、实际映射和TLB效果在本包边界外",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U08",
+      "id": "DM82-U08",
+      "name": "mapped_range_producer_and_consumer",
+      "unknown": "被注释add_pfn_range_mapped不证明全局写者缺失，81 PT81-U06和相关窗口值尚未闭合",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U09",
+      "id": "DM82-U09",
+      "name": "bottomup_and_kernel_end_runtime",
+      "unknown": "启动时memblock.bottom_up真实值、_end物理翻译、[kernel_end,end)正序与device callee返回未证明",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-RANGE-82::DM82-U10",
+      "id": "DM82-U10",
+      "name": "real_CR3_TLB_and_prior_storage",
+      "unknown": "页表存储PT81、物理地址端点BM80、MR79来源以及真实CR3/TLB生效需要分层证据",
+      "status": "needs_evidence",
+      "no_automatic_fix": true
+    }
+  ],
+  "counts": {
+    "new_condition_candidates": 8,
+    "new_evidence_gaps": 10,
+    "observed_runtime_defects": 0,
+    "patches": 0,
+    "prior_findings_closed": 0
+  },
+  "related_old_findings": [
+    "MR79-F/U",
+    "BM80-F/U",
+    "PT81-F/U",
+    "PA77-F/U",
+    "PB78-F/U",
+    "AE75-U07",
+    "SL76-U09",
+    "MC/LB/GAP-M08",
+    "MR-02 narrowed"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "runtime": "NOT_RUN",
+  "preprocess": "NOT_RUN",
+  "compile": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "mainline_acceptance": "PENDING",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "owner_decisions_requested_now": []
+}

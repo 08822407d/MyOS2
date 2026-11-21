@@ -1,0 +1,151 @@
+{
+  "task_id": "CORE-USER-WP-COW-17",
+  "track_id": "MYOS2-LEAD-002",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra（Owner报告，非后端证明）",
+  "source_pin_short12": "a039d9803ade",
+  "results_initial_head_short12": "38a23958a355",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "date": "2026-11-01",
+  "record_type": "deferred_findings",
+  "findings_count": 9,
+  "findings": [
+    {
+      "id": "W17-F01",
+      "claim": "zeroPFN no actual zero-init guarantee",
+      "impact": "conditional possible content disclosure",
+      "basis": [
+        "W17-A09",
+        "W17-A10",
+        "W17-A15",
+        "W17-A16",
+        "W17-A17"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    },
+    {
+      "id": "W17-F02",
+      "claim": "vmf.page=NULL nonzeroPFN causes no copy and 0 result",
+      "impact": "conditional uninitialized destination",
+      "basis": [
+        "W17-A07",
+        "W17-A19",
+        "W17-A50",
+        "W17-A28"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    },
+    {
+      "id": "W17-F03",
+      "claim": "successful old_folio get+1 and two old puts; fork PTE mapping refs unclosed",
+      "impact": "not proof of double free or fully balanced mapcount",
+      "basis": [
+        "W17-A06",
+        "W17-A31",
+        "W17-A32",
+        "W17-A33",
+        "W17-A35",
+        "W17-A36"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    },
+    {
+      "id": "W17-F04",
+      "claim": "PTE recheck and set gap lacks local PTL/flush/rmap",
+      "impact": "concurrent state/visibility unknown",
+      "basis": [
+        "W17-A02",
+        "W17-A23",
+        "W17-A28",
+        "W17-A30",
+        "W17-A38",
+        "W17-A46",
+        "W17-A47"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    },
+    {
+      "id": "W17-F05",
+      "claim": "folio_alloc_noprof may dereference NULL before outer OOM test",
+      "impact": "clean VM_FAULT_OOM not established",
+      "basis": [
+        "W17-A11",
+        "W17-A12",
+        "W17-A13",
+        "W17-A52",
+        "W17-A49"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    },
+    {
+      "id": "W17-F06",
+      "claim": "VM_SHARED/MAYSHARE remains infinite loop",
+      "impact": "already within R12-S02, evidence only",
+      "basis": [
+        "W17-A05",
+        "W17-A06"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    },
+    {
+      "id": "W17-F07",
+      "claim": "UNSHARE branch skips protections and may hit BUG_ON",
+      "impact": "caller and VM prot unverified",
+      "basis": [
+        "W17-A25",
+        "W17-A26",
+        "W17-A28"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    },
+    {
+      "id": "W17-F08",
+      "claim": "PTE mismatch returns 0 despite no new mapping",
+      "impact": "prior fault/return issue evidence",
+      "basis": [
+        "W17-A02",
+        "W17-A23",
+        "W17-A31",
+        "W17-A33",
+        "W17-A40"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    },
+    {
+      "id": "W17-F09",
+      "claim": "__folio_put contains no live free",
+      "impact": "existing R13-S03 ref lifecycle remains open",
+      "basis": [
+        "W17-A36",
+        "W17-A37"
+      ],
+      "disposition": "deferred_owner_not_ready",
+      "runtime_confirmed": false,
+      "fix_authorized": false
+    }
+  ],
+  "all_old_results_preserved": true,
+  "owner_fix_authorized": false
+}

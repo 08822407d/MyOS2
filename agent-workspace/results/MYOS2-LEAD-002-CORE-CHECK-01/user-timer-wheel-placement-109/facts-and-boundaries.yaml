@@ -1,0 +1,1881 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-TIMER-WHEEL-PLACEMENT-109",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "lead_pin_short12": "66576d5b78eb",
+  "parent_exec_short12": "a8436da2c2b3",
+  "record_type": "bounded_timer_wheel_placement_and_D00_diff",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "historical_states": {
+    "R106_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R107_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R107_02": "CLOSED_DOCUMENTATION_ONLY",
+    "batch106": "PASS_PENDING_LOCAL",
+    "batch107": "PASS_PENDING_LOCAL",
+    "batch108": "RETURN",
+    "R108_01": "OPEN",
+    "R108_02": "OPEN"
+  },
+  "D00_targeted_correction_entries": [
+    {
+      "id": "R108-01-A",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_consumer_id_or_edge": "A04/S01",
+      "repair_kind": "SELECTOR_SOURCE",
+      "correction": "P25是SHIFT_HZ区间门（28–29），SEC_JIFFIE_SC重定义受P15的另一个#if；初值21与重定义22、NSEC_SC51分别对应独立定义和条件",
+      "new_and_cross_batch_evidence": [
+        "DT108-P15",
+        "DT108-P25",
+        "DT108-E026",
+        "DT108-E027",
+        "DT108-E028",
+        "DT108-E029",
+        "TW109-E053",
+        "TW109-E054",
+        "TW109-E055"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P15",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P25",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E027",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E029",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L156-L156",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L159-L159",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L161-L161"
+      ],
+      "premise": "HZ=1000、LP64的有限算式定义良好；(1000000000<<2)/1000000=4000；左移19得到2097152000=0x7d000000，和0x80000000位与0",
+      "first_unverified_step": "预处理是否实际选中，以及配置宽度",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-01-B",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_consumer_id_or_edge": "DT108-M01",
+      "repair_kind": "MODEL_REFERENCE_AND_WINDOW",
+      "correction": "旧M01把DT108-E026源窗口误指28–30，真实引文只有第29行；NSEC_SC51补DT108-E029；秒比例还需E030，纳秒比例E031",
+      "new_and_cross_batch_evidence": [
+        "DT108-E026",
+        "DT108-E027",
+        "DT108-E028",
+        "DT108-E029",
+        "DT108-E030",
+        "DT108-E031",
+        "DT108-P15",
+        "DT108-P25"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E027",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E028",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E029",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E030",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E031",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P15",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P25"
+      ],
+      "premise": "固定HZ1000，数学中间量/宏宽度有效",
+      "first_unverified_step": "真实预处理与数值求值",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-01-C",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+      "old_consumer_id_or_edge": "hertz->shiftHz; secshiftgate->secshift",
+      "repair_kind": "GRAPH_SELECTOR_GATES",
+      "correction": "HZ>100对应本身LVL_DEPTH，与SHIFT_HZ/SEC_JIFFIE_SC两条件不同；新关系将HZ区间门接E026/P25，高位探测接E027/E028/P15，不能交叉引用",
+      "new_and_cross_batch_evidence": [
+        "DT108-P15",
+        "DT108-P25",
+        "DT108-E026",
+        "DT108-E027",
+        "DT108-E028",
+        "TW109-E053",
+        "TW109-E054"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P15",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P25",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E026",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E027",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E028",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L156-L156",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L159-L159"
+      ],
+      "premise": "两次预处理选择均按固定HZ1000理解",
+      "first_unverified_step": "实际预处理",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-01-D",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_consumer_id_or_edge": "A02",
+      "repair_kind": "INTEGER_DIVISION_UNITS",
+      "correction": "TICK_NSEC原比值1000000000/1000商1000000余0；含HZ/2=500偏置后1000000500/1000商1000000余500，两者的商在此HZ下恰相同，不能把偏置除法写成恰整除",
+      "new_and_cross_batch_evidence": [
+        "DT108-E024",
+        "DT108-E025",
+        "DT108-E013",
+        "RV108-Q1",
+        "TW109-E002",
+        "TW109-E056"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E024",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E025",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E013",
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-DURATION-TICK-CONVERSION-108-review.md@66576d5b78eb#RV108-Q1",
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L7-L7"
+      ],
+      "premise": "普通整数域和固定HZ1000",
+      "first_unverified_step": "真实时钟tick精度",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-01-E",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_consumer_id_or_edge": "U04/R08/DT108-M12",
+      "repair_kind": "UNIT_AND_RETURN_WIDTH",
+      "correction": "大j的jiffies_to_usecs返回单位是微秒不是毫秒；函数声明返回uint，先按unsigned long乘法及返回uint投影，不能用无限精度结果代返回值",
+      "new_and_cross_batch_evidence": [
+        "DT108-E046",
+        "DT108-E032",
+        "DT108-P12",
+        "TW109-E057"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E046",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E032",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P12",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L195-L195"
+      ],
+      "premise": "LP64 long64 uint32和无符号运算域",
+      "first_unverified_step": "实际编译ABI及大输入调用",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-01-F",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_consumer_id_or_edge": "M07",
+      "repair_kind": "MSEC_PUBLIC_GATE",
+      "correction": "毫秒往返等值需要msecs_to_jiffies公共常量或变量两路径都经(int)m>=0，且反向uint结果可表示，不只是_msecs_to_jiffies单式",
+      "new_and_cross_batch_evidence": [
+        "DT108-E036",
+        "DT108-E037",
+        "DT108-E038",
+        "DT108-E039",
+        "DT108-E044",
+        "DT108-P12",
+        "TW109-E058"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E036",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E037",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E038",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E039",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E044",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P12",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L102-L104"
+      ],
+      "premise": "m在普通非负int可表示且返回uint有效域内",
+      "first_unverified_step": "实际C转换及编译路径",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-01-G",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_consumer_id_or_edge": "U05/U06/U07",
+      "repair_kind": "BACKWARD_OUTPUT_PROVENANCE",
+      "correction": "999/1000/1001微秒的前向E040/E041/E043还须反向jiffies_to_usecs E046及返回uint签名P12；原1/0/999微秒正偏差保留",
+      "new_and_cross_batch_evidence": [
+        "DT108-E040",
+        "DT108-E041",
+        "DT108-E043",
+        "DT108-E046",
+        "DT108-P12",
+        "TW109-E057"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E040",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E041",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E043",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E046",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P12",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.c#L195-L195"
+      ],
+      "premise": "j=1/1/2小值及有效返回",
+      "first_unverified_step": "真实等待时长",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-01-H",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/MANIFEST.md@a8436da2c2b3",
+      "old_consumer_id_or_edge": "inputs_read / P9-3",
+      "repair_kind": "POSITION_ACCOUNT_APPEND",
+      "correction": "旧inputs_read文本仍写24条，旧P9-3列表止于P24；真实源位置应为P01–P25共25，不改原MANIFEST",
+      "new_and_cross_batch_evidence": [
+        "DT108-P24",
+        "DT108-P25"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P24",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P25"
+      ],
+      "premise": "以固定108 evidence计数，不假装108原自检另被改动",
+      "first_unverified_step": "完整本地P9",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-01-I",
+      "item": "R108-01",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion.md@a8436da2c2b3",
+      "old_consumer_id_or_edge": "正文第3行P01..P24",
+      "repair_kind": "POSITION_ACCOUNT_APPEND",
+      "correction": "旧正文开头仍止于P24；新差量说明P25的位置已实际存在，旧57/57/0和12模型原样冻结",
+      "new_and_cross_batch_evidence": [
+        "DT108-P25",
+        "DT108-E026"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P25",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E026"
+      ],
+      "premise": "固定旧正文、证据与审核回执合读",
+      "first_unverified_step": "原六件永久不可覆写",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-A",
+      "item": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+      "old_consumer_id_or_edge": "putsec -> putus (old DOT line 97)",
+      "repair_kind": "GRAPH_SHORT_CIRCUIT",
+      "correction": "旧边标签CONDITIONAL_STEP: C []截断。应为第一put_user宏正常store返回-ENOERR=0，C逻辑或左操作数为false才求右宏；若第一非零则短路不执行第二。旧事实R107-02-11语义已核，不修改旧图",
+      "new_and_cross_batch_evidence": [
+        "RV108-Q5",
+        "DT108-E017",
+        "DT108-E016",
+        "DT108-E010",
+        "TW109-E059"
+      ],
+      "evidence_locs": [
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-DURATION-TICK-CONVERSION-108-review.md@66576d5b78eb#RV108-Q5",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E016",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E010",
+        "time@a039d9803ade:mykernel/time/syscall.c#L19-L22"
+      ],
+      "premise": "合法用户目标且第一宏store及返回表达式有效",
+      "first_unverified_step": "实际用户内存和已链接宏语义",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-B",
+      "item": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+      "old_consumer_id_or_edge": "archflag -> declmacro",
+      "repair_kind": "GRAPH_WRAPPER_ENDPOINT",
+      "correction": "CONFIG_ARCH_HAS_SYSCALL_WRAPPER控制syscalls.h include asm/syscall_wrapper.h，而不是控制entry/syscall_64.c第一条__SYSCALL宏定义；应拆成archflag→syscalls_h_guard→arch_wrapper头，映射清单宏另起源",
+      "new_and_cross_batch_evidence": [
+        "DT108-E001",
+        "DT108-P08",
+        "RT107-P05",
+        "TW109-E002"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E001",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P08",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-P05",
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9"
+      ],
+      "premise": "time所读配置和头文件文本，非实际预处理完成",
+      "first_unverified_step": "真正编译/ELF入口",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-C",
+      "item": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+      "old_consumer_id_or_edge": "switchmacro -> switchcall",
+      "repair_kind": "GRAPH_MACRO_GENERATOR",
+      "correction": "第三次宏定义E004只给case替换式，switch体include E006、两个syscalls_64.h实例DT108-P03/P04均必须绑定，才支持生成的case从switch节点到目标stub",
+      "new_and_cross_batch_evidence": [
+        "DT108-E004",
+        "DT108-E006",
+        "DT108-P03",
+        "DT108-P04",
+        "RT107-P01",
+        "RT107-P02"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E004",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E006",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P03",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P04",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-P01",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-P02"
+      ],
+      "premise": "source macro展开规则和头文件无污染",
+      "first_unverified_step": "实际预处理/链接",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-D",
+      "item": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+      "old_consumer_id_or_edge": "delta node",
+      "repair_kind": "GRAPH_DISTINCT_DELTA",
+      "correction": "旧108 delta节点属于timekeeping_cycles_to_ns的(cycles−cycle_last)&tkr->mask，独立于本109的expires−base->clk；用RV108-Q6及本批E060，不能混为一个时间轮delta",
+      "new_and_cross_batch_evidence": [
+        "RV108-Q6",
+        "DT108-E018",
+        "TW109-E060",
+        "TW109-E016"
+      ],
+      "evidence_locs": [
+        "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-DURATION-TICK-CONVERSION-108-review.md@66576d5b78eb#RV108-Q6",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E018",
+        "time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L199-L200",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55"
+      ],
+      "premise": "固定readbase字段合法",
+      "first_unverified_step": "真实clocksource/并发",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-E",
+      "item": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+      "old_consumer_id_or_edge": "addns -> iterdiv",
+      "repair_kind": "GRAPH_REAL_CALL_NAME",
+      "correction": "timespec64_add_ns体直接调用__iter_div_u64_rem作商余，不是旧边的multiply time unit division helper；实际调用点E061，新源同一函数内",
+      "new_and_cross_batch_evidence": [
+        "DT108-E057",
+        "DT108-E011",
+        "TW109-E061",
+        "TW109-E062"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E057",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E011",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.h#L154-L155",
+        "time@a039d9803ade:mykernel/include/linux/kernel/math64.h#L13-L14"
+      ],
+      "premise": "u64加法和分母1e9为正；函数体选用",
+      "first_unverified_step": "q能表示u32及真实调用",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-F",
+      "item": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+      "old_consumer_id_or_edge": "iterdiv -> q32",
+      "repair_kind": "GRAPH_RETURN_WIDTH",
+      "correction": "u32 ret在迭代辅助函数内声明E062、增量/return E063；这是RETURN_FLOW和u32值域门而非输入‘requires fit’就能证明正确信息；返回进入addns最终字段赋值E061",
+      "new_and_cross_batch_evidence": [
+        "DT108-E011",
+        "DT108-E012",
+        "DT108-E057",
+        "TW109-E062",
+        "TW109-E063",
+        "TW109-E061"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E011",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E012",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E057",
+        "time@a039d9803ade:mykernel/include/linux/kernel/math64.h#L13-L14",
+        "time@a039d9803ade:mykernel/include/linux/kernel/math64.h#L19-L23",
+        "time@a039d9803ade:mykernel/time/misc/time_misc.h#L154-L155"
+      ],
+      "premise": "q<=UINT32_MAX、秒可表示且时间值有效",
+      "first_unverified_step": "真实并发/程序输出",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-G",
+      "item": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_consumer_id_or_edge": "D00_R107_01_configuration_and_3_macros",
+      "repair_kind": "CROSS_FILE_MANIFEST_EVIDENCE",
+      "correction": "旧R107-01混合消费者必须分别指回107 MANIFEST的配置申报、107 evidence中的E043/044/045及P01/P02/P05、107 facts t1-03..08/t2-08和107 DOT sysmap三边，不能一律视为107 facts中相同段落",
+      "new_and_cross_batch_evidence": [
+        "DT108-E001",
+        "DT108-E002",
+        "DT108-E003",
+        "DT108-E004",
+        "RT107-E043",
+        "RT107-E044",
+        "RT107-E045",
+        "RT107-P01",
+        "RT107-P02",
+        "RT107-P05"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E001",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E002",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E003",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E004",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E043",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E044",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E045",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-P01",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-P02",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-P05"
+      ],
+      "premise": "冻结107各类文件有真实不同ID",
+      "first_unverified_step": "最终编译入口",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-H",
+      "item": "R108-02",
+      "old_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_consumer_id_or_edge": "D00_R107_02 rows 10..13",
+      "repair_kind": "CROSS_FILE_DOT",
+      "correction": "旧108 facts 的R107-02-10..13文字以DOT为消费者，但old_fixed_file填107 facts；准确原边tvnonnull→ktimeread、do_gt→putsec/putusec、ktimeread→sample_sec/nsec、to_ns→sample_ns皆出自107 DOT。107 facts仅是原引用关系表，而RT107-E/P来自107 evidence",
+      "new_and_cross_batch_evidence": [
+        "RT107-E057",
+        "RT107-E058",
+        "RT107-E072",
+        "RT107-E073",
+        "RT107-E075",
+        "RT107-E076",
+        "DT108-E017",
+        "DT108-E018",
+        "DT108-E019",
+        "DT108-E020",
+        "TW109-E059",
+        "TW109-E060"
+      ],
+      "evidence_locs": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E057",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E058",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E072",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E073",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E075",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e#RT107-E076",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E017",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E018",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E019",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E020",
+        "time@a039d9803ade:mykernel/time/syscall.c#L19-L22",
+        "time@a039d9803ade:mykernel/time/timekeeping/timekeeping.c#L199-L200"
+      ],
+      "premise": "原107 DOT和facts分别固定且可解析",
+      "first_unverified_step": "对应源级边是否实际执行",
+      "disposition": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-LOC-R107-01-config",
+      "old_summary_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_record": "R107-01-config",
+      "correct_primary_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/MANIFEST.md@988632b3757e",
+      "actual_primary_consumer": [
+        "wrapper配置声明"
+      ],
+      "other_distinct_fixed_sources": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e"
+      ],
+      "correction": "逐一按源文件类别解析；evidence存E/P锚，facts存表/模型，DOT存真实边，MANIFEST存读取申报，107原文件完全冻结",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-LOC-R107-01-extern",
+      "old_summary_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_record": "R107-01-extern",
+      "correct_primary_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e",
+      "actual_primary_consumer": [
+        "RT107-E043",
+        "RT107-P01",
+        "RT107-P02"
+      ],
+      "other_distinct_fixed_sources": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e"
+      ],
+      "correction": "逐一按源文件类别解析；evidence存E/P锚，facts存表/模型，DOT存真实边，MANIFEST存读取申报，107原文件完全冻结",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-LOC-R107-01-table",
+      "old_summary_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_record": "R107-01-table",
+      "correct_primary_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e",
+      "actual_primary_consumer": [
+        "RT107-E044",
+        "RT107-P01",
+        "RT107-P02"
+      ],
+      "other_distinct_fixed_sources": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e"
+      ],
+      "correction": "逐一按源文件类别解析；evidence存E/P锚，facts存表/模型，DOT存真实边，MANIFEST存读取申报，107原文件完全冻结",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-LOC-R107-01-switch",
+      "old_summary_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_record": "R107-01-switch",
+      "correct_primary_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e",
+      "actual_primary_consumer": [
+        "RT107-E045",
+        "RT107-E046",
+        "RT107-P01",
+        "RT107-P02"
+      ],
+      "other_distinct_fixed_sources": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e"
+      ],
+      "correction": "逐一按源文件类别解析；evidence存E/P锚，facts存表/模型，DOT存真实边，MANIFEST存读取申报，107原文件完全冻结",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-LOC-R107-02-10",
+      "old_summary_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_record": "R107-02-10",
+      "correct_primary_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+      "actual_primary_consumer": [
+        "tvnonnull->ktimeread"
+      ],
+      "other_distinct_fixed_sources": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e"
+      ],
+      "correction": "逐一按源文件类别解析；evidence存E/P锚，facts存表/模型，DOT存真实边，MANIFEST存读取申报，107原文件完全冻结",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-LOC-R107-02-11",
+      "old_summary_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_record": "R107-02-11",
+      "correct_primary_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+      "actual_primary_consumer": [
+        "do_gt->putsec/putusec"
+      ],
+      "other_distinct_fixed_sources": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e"
+      ],
+      "correction": "逐一按源文件类别解析；evidence存E/P锚，facts存表/模型，DOT存真实边，MANIFEST存读取申报，107原文件完全冻结",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-LOC-R107-02-12",
+      "old_summary_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_record": "R107-02-12",
+      "correct_primary_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+      "actual_primary_consumer": [
+        "ktimeread->sample_sec/nsec",
+        "iterdiv->outputs"
+      ],
+      "other_distinct_fixed_sources": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e"
+      ],
+      "correction": "逐一按源文件类别解析；evidence存E/P锚，facts存表/模型，DOT存真实边，MANIFEST存读取申报，107原文件完全冻结",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    },
+    {
+      "id": "R108-02-LOC-R107-02-13",
+      "old_summary_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+      "old_record": "R107-02-13",
+      "correct_primary_fixed_file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+      "actual_primary_consumer": [
+        "to_ns->sample_ns"
+      ],
+      "other_distinct_fixed_sources": [
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e"
+      ],
+      "correction": "逐一按源文件类别解析；evidence存E/P锚，facts存表/模型，DOT存真实边，MANIFEST存读取申报，107原文件完全冻结",
+      "status": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW"
+    }
+  ],
+  "D00_old_ref_path_ledger": {
+    "review108": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-DURATION-TICK-CONVERSION-108-review.md@66576d5b78eb",
+    "old108_facts": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/facts-and-boundaries.yaml@a8436da2c2b3",
+    "old108_DOT": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion-paths.dot@a8436da2c2b3",
+    "old108_MANIFEST": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/MANIFEST.md@a8436da2c2b3",
+    "old108_main": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/duration-tick-conversion.md@a8436da2c2b3",
+    "old108_evidence": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3",
+    "old107_facts": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/facts-and-boundaries.yaml@988632b3757e",
+    "old107_DOT": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/realtime-readout-abi-paths.dot@988632b3757e",
+    "old107_MANIFEST": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/MANIFEST.md@988632b3757e",
+    "old107_evidence": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-realtime-readout-abi-107/evidence.md@988632b3757e"
+  },
+  "seven_bounded_matrices": {
+    "deadline_and_normal_gate": [
+      {
+        "id": "A01",
+        "refs": [
+          "TW109-E002",
+          "TW109-E003",
+          "TW109-E004",
+          "TW109-E005"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L764-L766",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L784-L788",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L789-L789"
+        ],
+        "premise": "timer初始化和正有限long timeout，排除MAX与负值",
+        "conditional_conclusion": "MAX在专门case;负值由<0跳出;本批只跟有效正值",
+        "first_unverified_step": "实际当前任务状态/调用者"
+      },
+      {
+        "id": "A02",
+        "refs": [
+          "TW109-E006",
+          "TW109-E064"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+          "time@a039d9803ade:mykernel/time/timer/timer_macro.h#L21-L22"
+        ],
+        "premise": "jiffies读取可用，timeout在ulong求和域内",
+        "conditional_conclusion": "schedule_timeout设置expire=timeout+jiffies，请求栈timer初始化及__mod_timer(...,MOD_TIMER_NOTPENDING)",
+        "first_unverified_step": "真实jiffies值、timer生存期"
+      },
+      {
+        "id": "A03",
+        "refs": [
+          "TW109-E008",
+          "TW109-E009"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L206-L206",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L227-L227"
+        ],
+        "premise": "MOD_TIMER_NOTPENDING=0x04，options来自该调用",
+        "conditional_conclusion": "初始fast pending优化条件首项为false，进入后续else锁定分支",
+        "first_unverified_step": "运行时base及锁"
+      },
+      {
+        "id": "A04",
+        "refs": [
+          "TW109-E007",
+          "TW109-E010",
+          "TW109-E011",
+          "TW109-E012"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L215-L218",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L279-L280",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L286-L289",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L292-L296"
+        ],
+        "premise": "timer->function非NULL，锁定/forward正常，非PENDING_ONLY",
+        "conditional_conclusion": "idx初值UINT_MAX，normal分支没有预计算idx，先查base与detach，再可进入新增",
+        "first_unverified_step": "异步迁移/并发"
+      },
+      {
+        "id": "A05",
+        "refs": [
+          "TW109-E013",
+          "TW109-E014",
+          "TW109-E015"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L321-L321",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L328-L331",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L148-L151"
+        ],
+        "premise": "new_base选择/必要迁移完成，函数未早退，idx仍UINT_MAX",
+        "conditional_conclusion": "__mod_timer先保存timer->expires后进入internal_add_timer",
+        "first_unverified_step": "base->clk实际值"
+      },
+      {
+        "id": "A06",
+        "refs": [
+          "TW109-E039",
+          "TW109-E065",
+          "TW109-E066",
+          "TW109-E067"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#L60-L63",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L155-L156",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L162-L164",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L165-L168"
+        ],
+        "premise": "jiffies与base->clk有不同来源，前向函数可修改base->clk",
+        "conditional_conclusion": "模型指定jiffies=1000且base->clk=1000是独立假设，不能从代码自动推出相等",
+        "first_unverified_step": "真实时基值和base初始化"
+      },
+      {
+        "id": "A07",
+        "refs": [
+          "TW109-E041",
+          "TW109-E015"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#L75-L78",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L148-L151"
+        ],
+        "premise": "timer和base合法，timer->expires保存绝对截止",
+        "conditional_conclusion": "internal_add_timer用timer->expires与base->clk交calc_wheel_index，再把idx和bucket_expiry交enqueue_timer",
+        "first_unverified_step": "实际时钟推进"
+      },
+      {
+        "id": "A08",
+        "refs": [
+          "TW109-E006",
+          "TW109-E014"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L328-L331"
+        ],
+        "premise": "有限路径的schedule调用在该代码处已注释，后有del_timer_sync",
+        "conditional_conclusion": "到入桶不证明线程已经睡眠、回调发生或timer仍在桶中",
+        "first_unverified_step": "异步运行/删除路径"
+      }
+    ],
+    "wheel_geometry": [
+      {
+        "id": "G01",
+        "refs": [
+          "TW109-E002",
+          "TW109-E023",
+          "TW109-E024",
+          "TW109-E025"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L94-L94",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L97-L97",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98"
+        ],
+        "premise": "HZ1000、LVL_CLK_SHIFT=3",
+        "conditional_conclusion": "LVL_SHIFT(n)=3n，LVL_GRAN(n)=2^(3n)tick",
+        "first_unverified_step": "移位合法域"
+      },
+      {
+        "id": "G02",
+        "refs": [
+          "TW109-E027",
+          "TW109-E028",
+          "TW109-E029",
+          "TW109-E030"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L108-L108",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L109-L109",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L110-L110",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L111-L111"
+        ],
+        "premise": "LVL_BITS=6",
+        "conditional_conclusion": "每层64槽，MASK=63，层偏移64*n",
+        "first_unverified_step": "实际数组地址与base有效"
+      },
+      {
+        "id": "G03",
+        "refs": [
+          "TW109-E002",
+          "TW109-E031",
+          "TW109-E032"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L115-L115",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L128-L128"
+        ],
+        "premise": "HZ>100条件成立",
+        "conditional_conclusion": "LVL_DEPTH=9，WHEEL_SIZE=64*9=576",
+        "first_unverified_step": "实际预处理布局"
+      },
+      {
+        "id": "G04",
+        "refs": [
+          "TW109-E026",
+          "TW109-E016"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55"
+        ],
+        "premise": "LVL_START(n)公式在n=1",
+        "conditional_conclusion": "首层选择delta<63，delta=62还在level0，delta=63进入level1",
+        "first_unverified_step": "无回绕小delta"
+      },
+      {
+        "id": "G05",
+        "refs": [
+          "TW109-E026",
+          "TW109-E017"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59"
+        ],
+        "premise": "n=2",
+        "conditional_conclusion": "LVL_START(2)=504，level1覆盖63..503，delta=504进入level2",
+        "first_unverified_step": "大输入模型没有执行"
+      },
+      {
+        "id": "G06",
+        "refs": [
+          "TW109-E026",
+          "TW109-E018",
+          "TW109-E019"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L60-L63",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L64-L67"
+        ],
+        "premise": "n=3,4,5,6",
+        "conditional_conclusion": "更高起点4032、32256、258048、2064384",
+        "first_unverified_step": "shift/long宽度"
+      },
+      {
+        "id": "G07",
+        "refs": [
+          "TW109-E026",
+          "TW109-E020"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L68-L72"
+        ],
+        "premise": "n=7,8且深度9",
+        "conditional_conclusion": "更高起点16515072和132120576，level7后进入最后level8或异常分支",
+        "first_unverified_step": "有界表示"
+      },
+      {
+        "id": "G08",
+        "refs": [
+          "TW109-E033",
+          "TW109-E034",
+          "TW109-E021",
+          "TW109-E022"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L121-L121",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L122-L122",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L78-L79",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L81-L83"
+        ],
+        "premise": "n=9，粒度level8为2^24",
+        "conditional_conclusion": "WHEEL_TIMEOUT_CUTOFF=1056964608，MAX=1040187392，超额时只改calc_wheel_index局部expires",
+        "first_unverified_step": "实际高值运算和截断"
+      },
+      {
+        "id": "G09",
+        "refs": [
+          "TW109-E016",
+          "TW109-E017",
+          "TW109-E018",
+          "TW109-E019",
+          "TW109-E020"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L60-L63",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L64-L67",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L68-L72"
+        ],
+        "premise": "small positive delta且依次比较严格<",
+        "conditional_conclusion": "delta选的是轮级，不是数组槽号；负delta转long和过大delta另走特殊门",
+        "first_unverified_step": "有符号转换及回绕"
+      }
+    ],
+    "bucket_index_and_expiry": [
+      {
+        "id": "B01",
+        "refs": [
+          "TW109-E015",
+          "TW109-E016",
+          "TW109-E017",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L148-L151",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base->clk、timer->expires均给定，选层合法",
+        "conditional_conclusion": "先用相对delta=expires-clk选择lvl，再用绝对expires求calc_index",
+        "first_unverified_step": "真实base时钟/编译"
+      },
+      {
+        "id": "B02",
+        "refs": [
+          "TW109-E035",
+          "TW109-E024",
+          "TW109-E025"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L97-L97",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98"
+        ],
+        "premise": "lvl在0..8且shift合法无回绕",
+        "conditional_conclusion": "q=(expires>>LVL_SHIFT(lvl))+1；bucket_expiry=q<<shift",
+        "first_unverified_step": "ulong移位合法和取样"
+      },
+      {
+        "id": "B03",
+        "refs": [
+          "TW109-E035",
+          "TW109-E028",
+          "TW109-E029",
+          "TW109-E030"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L109-L109",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L110-L110",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L111-L111"
+        ],
+        "premise": "q在ulong有效域",
+        "conditional_conclusion": "slot=q&63，idx=64*lvl+slot，槽和全数组下标不同",
+        "first_unverified_step": "array idx<576"
+      },
+      {
+        "id": "B04",
+        "refs": [
+          "TW109-E015",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L148-L151",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "同一lvl、相同delta但是不同绝对expires",
+        "conditional_conclusion": "idx取绝对expires高位，基准改动可能改变bucket slot",
+        "first_unverified_step": "时间基准初值"
+      },
+      {
+        "id": "B05",
+        "refs": [
+          "TW109-E016",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base=1000、jiffies=1000、timeout=62",
+        "conditional_conclusion": "expires1062、delta62、level0、q1063、bucket1063、slot39、idx39",
+        "first_unverified_step": "条件执行路径"
+      },
+      {
+        "id": "B06",
+        "refs": [
+          "TW109-E017",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base=1000、jiffies=1000、timeout=63",
+        "conditional_conclusion": "expires1063、delta63、level1、q133、bucket1064、slot5、idx69",
+        "first_unverified_step": "条件执行路径"
+      },
+      {
+        "id": "B07",
+        "refs": [
+          "TW109-E017",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base=1000、jiffies=1000、timeout=64",
+        "conditional_conclusion": "expires1064、delta64、level1、q134、bucket1072、slot6、idx70，恰对齐仍向后加8",
+        "first_unverified_step": "条件执行路径"
+      },
+      {
+        "id": "B08",
+        "refs": [
+          "TW109-E017",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base=1001、jiffies=1001、同样timeout=63",
+        "conditional_conclusion": "expires1064、delta63仍level1，但q134、bucket1072、slot6、idx70，区别base1000的idx69",
+        "first_unverified_step": "模型自定相同基准与实际调度"
+      },
+      {
+        "id": "B09",
+        "refs": [
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "lvl1且expires为8的倍数",
+        "conditional_conclusion": "源式先右移再加1，因此严格向下一粒度，不是普通数学ceil；bucket_expiry-expires可达8",
+        "first_unverified_step": "何时被认为到期由实际轮执行另证"
+      }
+    ],
+    "bucket_vector_and_bits": [
+      {
+        "id": "C01",
+        "refs": [
+          "TW109-E036",
+          "TW109-E040",
+          "TW109-E041",
+          "TW109-E051",
+          "TW109-E052"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#L64-L67",
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#L75-L78",
+          "time@a039d9803ade:mykernel/lib/list/hash_list_types.h#L8-L10",
+          "time@a039d9803ade:mykernel/lib/list/hash_list_types.h#L12-L15"
+        ],
+        "premise": "timer entry有效，idx在0..575，vectors可写",
+        "conditional_conclusion": "桶头是base->vectors+idx，节点是&timer->entry，不是以timer->expires作为list指针",
+        "first_unverified_step": "对象/锁/地址映射"
+      },
+      {
+        "id": "C02",
+        "refs": [
+          "TW109-E036",
+          "TW109-E048",
+          "TW109-E049",
+          "TW109-E050"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/lib/list/hash_list.h#L69-L69",
+          "time@a039d9803ade:mykernel/lib/list/hash_list.h#L175-L178",
+          "time@a039d9803ade:mykernel/lib/list/hash_list.h#L179-L180"
+        ],
+        "premise": "目标hlist可改，首节点可能非NULL",
+        "conditional_conclusion": "先经hlist_add_head宏别名调用hlist_add_to_head，更新n->next、可能首节点pprev、head.first、n->pprev",
+        "first_unverified_step": "实际并发/内存写"
+      },
+      {
+        "id": "C03",
+        "refs": [
+          "TW109-E036",
+          "TW109-E045"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L90-L91"
+        ],
+        "premise": "有效idx、timer flags低22位可保留",
+        "conditional_conclusion": "入链后timer_set_idx，源码宏写flags中idx高位，保留低位",
+        "first_unverified_step": "目标对象的flags原值"
+      },
+      {
+        "id": "C04",
+        "refs": [
+          "TW109-E042",
+          "TW109-E043",
+          "TW109-E044",
+          "TW109-E045"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L195-L195",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L196-L196",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L84-L84",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L90-L91"
+        ],
+        "premise": "TIMER_ARRAYSHIFT22，MASK0xFFC00000",
+        "conditional_conclusion": "encode保留原flags&~MASK再OR(idx<<22)；get取(mask)>>22",
+        "first_unverified_step": "u32有效位操作"
+      },
+      {
+        "id": "C05",
+        "refs": [
+          "TW109-E036",
+          "TW109-E042",
+          "TW109-E043",
+          "TW109-E044",
+          "TW109-E045"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L195-L195",
+          "time@a039d9803ade:mykernel/time/timer/timer_const.h#L196-L196",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L84-L84",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L90-L91"
+        ],
+        "premise": "old_flags=0x00100002、idx69",
+        "conditional_conclusion": "编码0x11500002，解码得69，原低22位0x00100002不变",
+        "first_unverified_step": "真实timer.flags并未测量"
+      },
+      {
+        "id": "C06",
+        "refs": [
+          "TW109-E040",
+          "TW109-E036"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#L64-L67",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125"
+        ],
+        "premise": "bitmap设置代码为注释",
+        "conditional_conclusion": "活动函数确有入链和flags编码，但本体未执行__set_bit(pending_map)；不能据此断言其它代码没有bitmap机制",
+        "first_unverified_step": "源级全仓与实际编译"
+      },
+      {
+        "id": "C07",
+        "refs": [
+          "TW109-E039",
+          "TW109-E040",
+          "TW109-E041"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#L60-L63",
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#L64-L67",
+          "time@a039d9803ade:mykernel/time/timer/timer_types.h#L75-L78"
+        ],
+        "premise": "timer_base有clk/next_expiry/timers_pending/next_expiry_recalc/vectors，timer_list有entry/expires/flags",
+        "conditional_conclusion": "各字段是不同存储对象，写timer->expires与更新base->next_expiry不能合并",
+        "first_unverified_step": "实际结构ABI/布局"
+      },
+      {
+        "id": "C08",
+        "refs": [
+          "TW109-E036",
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "无论后续比较是否成立",
+        "conditional_conclusion": "先入链且编码idx，随后才判断bucket_expiry相对next_expiry的条件",
+        "first_unverified_step": "实际cpu中断/锁生效"
+      }
+    ],
+    "next_expiry_conditional": [
+      {
+        "id": "N01",
+        "refs": [
+          "TW109-E037",
+          "TW109-E046",
+          "TW109-E047"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+          "time@a039d9803ade:mykernel/time/systick/systick_macro.h#L27-L31",
+          "time@a039d9803ade:mykernel/time/systick/systick_macro.h#L39-L39"
+        ],
+        "premise": "ulong小距离差可转long比较",
+        "conditional_conclusion": "time_before(a,b)=time_after(b,a)；表达为((long)(a-b)<0)的有界符号检验",
+        "first_unverified_step": "大回绕/有符号表示"
+      },
+      {
+        "id": "N02",
+        "refs": [
+          "TW109-E036",
+          "TW109-E037",
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "bucket_expiry1064、旧next_expiry1065",
+        "conditional_conclusion": "比较真，先入链并存idx，再写next_expiry=1064/timers_pending=true/next_expiry_recalc=false，并请求trigger_dyntick_cpu",
+        "first_unverified_step": "真实clock/唤醒效果"
+      },
+      {
+        "id": "N03",
+        "refs": [
+          "TW109-E036",
+          "TW109-E037",
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "bucket_expiry1064、旧next_expiry1064",
+        "conditional_conclusion": "严格小于为假，入链及idx仍发生，本体不重写这三个base字段",
+        "first_unverified_step": "原字段值/并发"
+      },
+      {
+        "id": "N04",
+        "refs": [
+          "TW109-E036",
+          "TW109-E037",
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "bucket_expiry1064、旧next_expiry1060",
+        "conditional_conclusion": "相对更晚为假，入链及idx仍发生，三个base字段在本体此分支未更新",
+        "first_unverified_step": "其它并发写者"
+      },
+      {
+        "id": "N05",
+        "refs": [
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "条件为真",
+        "conditional_conclusion": "更新顺序是WRITE_ONCE(next_expiry),timers_pending=true,next_expiry_recalc=false,trigger_dyntick_cpu调用",
+        "first_unverified_step": "函数实际硬件/CPU效果"
+      },
+      {
+        "id": "N06",
+        "refs": [
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "条件为假",
+        "conditional_conclusion": "本体不请求trigger_dyntick_cpu，不等于没有任何已有pending timer",
+        "first_unverified_step": "前态和后续事件"
+      },
+      {
+        "id": "N07",
+        "refs": [
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "trigger_dyntick_cpu体内当前全为注释",
+        "conditional_conclusion": "有call源语句但所读定义无活动IPI调用，不能宣称实机远程唤醒",
+        "first_unverified_step": "预处理/实际调度器"
+      },
+      {
+        "id": "N08",
+        "refs": [
+          "TW109-E037"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134"
+        ],
+        "premise": "条件比较对象是bucket_expiry而非timer->expires",
+        "conditional_conclusion": "next_expiry跟踪有效桶期限；同lvl1 aligned 1064请求可变成bucket1072",
+        "first_unverified_step": "真实实际执行"
+      }
+    ],
+    "end_to_end_models": [
+      {
+        "id": "X01",
+        "refs": [
+          "TW109-E006",
+          "TW109-E014",
+          "TW109-E015",
+          "TW109-E016",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L328-L331",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L148-L151",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base=jiffies=1000，timeout62，正常NOTPENDING",
+        "conditional_conclusion": "timer->expires1062，idx39，bucket1063，增量+1tick",
+        "first_unverified_step": "是否到达/中断"
+      },
+      {
+        "id": "X02",
+        "refs": [
+          "TW109-E006",
+          "TW109-E014",
+          "TW109-E015",
+          "TW109-E017",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L328-L331",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L148-L151",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base=jiffies=1000，timeout63，正常NOTPENDING",
+        "conditional_conclusion": "timer->expires1063，idx69，bucket1064，增量+1tick",
+        "first_unverified_step": "实际clock"
+      },
+      {
+        "id": "X03",
+        "refs": [
+          "TW109-E006",
+          "TW109-E014",
+          "TW109-E015",
+          "TW109-E017",
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L328-L331",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L148-L151",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base=jiffies=1000，timeout64，正常NOTPENDING",
+        "conditional_conclusion": "timer->expires1064，idx70，bucket1072，增量+8ticks",
+        "first_unverified_step": "真实队列执行"
+      },
+      {
+        "id": "X04",
+        "refs": [
+          "TW109-E035"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+        ],
+        "premise": "base=jiffies=1001，timeout63",
+        "conditional_conclusion": "timer->expires1064，idx70，与base1000同timeout idx69不同",
+        "first_unverified_step": "时钟采样"
+      },
+      {
+        "id": "X05",
+        "refs": [
+          "TW109-E036",
+          "TW109-E037",
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "idx69，bucket1064，旧next1065",
+        "conditional_conclusion": "列表插入+编码flags，条件真更新三字段",
+        "first_unverified_step": "真实延后情况"
+      },
+      {
+        "id": "X06",
+        "refs": [
+          "TW109-E036",
+          "TW109-E037",
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "idx69，bucket1064，旧next1064",
+        "conditional_conclusion": "列表插入+编码flags，条件假不改三字段",
+        "first_unverified_step": "未来轮处理"
+      },
+      {
+        "id": "X07",
+        "refs": [
+          "TW109-E036",
+          "TW109-E037",
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "idx69，bucket1064，旧next1060",
+        "conditional_conclusion": "列表插入+编码flags，条件假不改三字段",
+        "first_unverified_step": "历史已pending状态"
+      },
+      {
+        "id": "X08",
+        "refs": [
+          "TW109-E014",
+          "TW109-E015",
+          "TW109-E036",
+          "TW109-E038"
+        ],
+        "locations": [
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L328-L331",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L148-L151",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+          "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+        ],
+        "premise": "已请求插入后schedule_timeout后续有del_timer_sync",
+        "conditional_conclusion": "登记不代表真实睡眠或保持直到到期；本批不推取消与回调",
+        "first_unverified_step": "异步运行/对象寿命"
+      }
+    ]
+  },
+  "matrix_counts": {
+    "deadline_and_normal_gate": 8,
+    "wheel_geometry": 9,
+    "bucket_index_and_expiry": 9,
+    "bucket_vector_and_bits": 8,
+    "next_expiry_conditional": 8,
+    "end_to_end_models": 8
+  },
+  "model_scenarios": [
+    {
+      "id": "TW109-M01",
+      "input": "HZ1000",
+      "result": "LVL_DEPTH9,LVL_SIZE64,WHEEL_SIZE576,LVL_START(1)=63,LVL_START(2)=504,LEVEL gran0=1, gran1=8",
+      "refs": [
+        "TW109-E002",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E028",
+        "TW109-E031",
+        "TW109-E032"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/include/linux/kernel/asm-generic/param.h#L9-L9",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L94-L94",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L109-L109",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L115-L115",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L128-L128"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M02",
+      "input": "base_clk=1000, jiffies=1000, timeout=62",
+      "result": {
+        "base_clk": 1000,
+        "jiffies": 1000,
+        "relative_ticks": 62,
+        "expires": 1062,
+        "delta": 62,
+        "level": 0,
+        "granularity_ticks": 1,
+        "quotient_after_shift_plus_one": 1063,
+        "bucket_expiry": 1063,
+        "slot": 39,
+        "idx": 39,
+        "lateness_ticks": 1
+      },
+      "refs": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E035"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L60-L63",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L94-L94",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M03",
+      "input": "base_clk=1000, jiffies=1000, timeout=63",
+      "result": {
+        "base_clk": 1000,
+        "jiffies": 1000,
+        "relative_ticks": 63,
+        "expires": 1063,
+        "delta": 63,
+        "level": 1,
+        "granularity_ticks": 8,
+        "quotient_after_shift_plus_one": 133,
+        "bucket_expiry": 1064,
+        "slot": 5,
+        "idx": 69,
+        "lateness_ticks": 1
+      },
+      "refs": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E035"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L60-L63",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L94-L94",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M04",
+      "input": "base_clk=1000, jiffies=1000, timeout=64",
+      "result": {
+        "base_clk": 1000,
+        "jiffies": 1000,
+        "relative_ticks": 64,
+        "expires": 1064,
+        "delta": 64,
+        "level": 1,
+        "granularity_ticks": 8,
+        "quotient_after_shift_plus_one": 134,
+        "bucket_expiry": 1072,
+        "slot": 6,
+        "idx": 70,
+        "lateness_ticks": 8
+      },
+      "refs": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E035"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L60-L63",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L94-L94",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M05",
+      "input": "base_clk=1001, jiffies=1001, timeout=63",
+      "result": {
+        "base_clk": 1001,
+        "jiffies": 1001,
+        "relative_ticks": 63,
+        "expires": 1064,
+        "delta": 63,
+        "level": 1,
+        "granularity_ticks": 8,
+        "quotient_after_shift_plus_one": 134,
+        "bucket_expiry": 1072,
+        "slot": 6,
+        "idx": 70,
+        "lateness_ticks": 8
+      },
+      "refs": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E035"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L60-L63",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L94-L94",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M06",
+      "input": "base_clk=1008, jiffies=1008, timeout=63",
+      "result": {
+        "base_clk": 1008,
+        "jiffies": 1008,
+        "relative_ticks": 63,
+        "expires": 1071,
+        "delta": 63,
+        "level": 1,
+        "granularity_ticks": 8,
+        "quotient_after_shift_plus_one": 134,
+        "bucket_expiry": 1072,
+        "slot": 6,
+        "idx": 70,
+        "lateness_ticks": 1
+      },
+      "refs": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E035"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L60-L63",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L94-L94",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M07",
+      "input": "base_clk=1000, jiffies=1000, timeout=504",
+      "result": {
+        "base_clk": 1000,
+        "jiffies": 1000,
+        "relative_ticks": 504,
+        "expires": 1504,
+        "delta": 504,
+        "level": 2,
+        "granularity_ticks": 64,
+        "quotient_after_shift_plus_one": 24,
+        "bucket_expiry": 1536,
+        "slot": 24,
+        "idx": 152,
+        "lateness_ticks": 32
+      },
+      "refs": [
+        "TW109-E006",
+        "TW109-E016",
+        "TW109-E017",
+        "TW109-E018",
+        "TW109-E023",
+        "TW109-E025",
+        "TW109-E026",
+        "TW109-E035"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L793-L797",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L51-L55",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L56-L59",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L60-L63",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L94-L94",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L98-L98",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L105-L105",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#L109-L111"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M08",
+      "input": "idx69,old_flags0x00100002",
+      "result": "idx<<22=0x11400000;flags=0x11500002;timer_get_idx returns69; low22bits unchanged",
+      "refs": [
+        "TW109-E042",
+        "TW109-E043",
+        "TW109-E044",
+        "TW109-E045"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L195-L195",
+        "time@a039d9803ade:mykernel/time/timer/timer_const.h#L196-L196",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#L84-L84",
+        "time@a039d9803ade:mykernel/time/timer/timer.h#L90-L91"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M09",
+      "input": "idx69,bucket_expiry1064,old_next_expiry1065",
+      "result": "hlist head write and flags update;next_expiry becomes1064,pending=true,recalc=false;trigger requested",
+      "refs": [
+        "TW109-E036",
+        "TW109-E037",
+        "TW109-E038",
+        "TW109-E046",
+        "TW109-E047"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143",
+        "time@a039d9803ade:mykernel/time/systick/systick_macro.h#L27-L31",
+        "time@a039d9803ade:mykernel/time/systick/systick_macro.h#L39-L39"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M10",
+      "input": "idx69,bucket_expiry1064,old_next_expiry1064",
+      "result": "hlist and idx updated;next_expiry/pending/recalc unchanged by this enqueue body",
+      "refs": [
+        "TW109-E036",
+        "TW109-E037",
+        "TW109-E038"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M11",
+      "input": "idx69,bucket_expiry1064,old_next_expiry1060",
+      "result": "hlist and idx updated;next_expiry/pending/recalc unchanged by this enqueue body",
+      "refs": [
+        "TW109-E036",
+        "TW109-E037",
+        "TW109-E038"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L123-L125",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L134-L134",
+        "time@a039d9803ade:mykernel/time/timer/timer.c#L139-L143"
+      ],
+      "repository_executed": false
+    },
+    {
+      "id": "TW109-M12",
+      "input": "R108-01 fixed arithmetic probes",
+      "result": "unbiased 1000000000/1000 q1000000 r0; with HZ/2 bias 1000000500/1000 q1000000 r500; probe2097152000=0x7d000000 and 0x80000000 gives0",
+      "refs": [
+        "TW109-E056",
+        "DT108-P15",
+        "DT108-P25",
+        "DT108-E027",
+        "DT108-E028"
+      ],
+      "source_locs": [
+        "time@a039d9803ade:mykernel/time/systick/systick_const.h#L7-L7",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P15",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-P25",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E027",
+        "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-duration-tick-conversion-108/evidence.md@a8436da2c2b3#DT108-E028"
+      ],
+      "repository_executed": false
+    }
+  ],
+  "model_count": 12,
+  "example_inputs": [
+    {
+      "base_clk": 1000,
+      "jiffies": 1000,
+      "relative_ticks": 62,
+      "expires": 1062,
+      "delta": 62,
+      "level": 0,
+      "granularity_ticks": 1,
+      "quotient_after_shift_plus_one": 1063,
+      "bucket_expiry": 1063,
+      "slot": 39,
+      "idx": 39,
+      "lateness_ticks": 1
+    },
+    {
+      "base_clk": 1000,
+      "jiffies": 1000,
+      "relative_ticks": 63,
+      "expires": 1063,
+      "delta": 63,
+      "level": 1,
+      "granularity_ticks": 8,
+      "quotient_after_shift_plus_one": 133,
+      "bucket_expiry": 1064,
+      "slot": 5,
+      "idx": 69,
+      "lateness_ticks": 1
+    },
+    {
+      "base_clk": 1000,
+      "jiffies": 1000,
+      "relative_ticks": 64,
+      "expires": 1064,
+      "delta": 64,
+      "level": 1,
+      "granularity_ticks": 8,
+      "quotient_after_shift_plus_one": 134,
+      "bucket_expiry": 1072,
+      "slot": 6,
+      "idx": 70,
+      "lateness_ticks": 8
+    },
+    {
+      "base_clk": 1001,
+      "jiffies": 1001,
+      "relative_ticks": 63,
+      "expires": 1064,
+      "delta": 63,
+      "level": 1,
+      "granularity_ticks": 8,
+      "quotient_after_shift_plus_one": 134,
+      "bucket_expiry": 1072,
+      "slot": 6,
+      "idx": 70,
+      "lateness_ticks": 8
+    },
+    {
+      "base_clk": 1008,
+      "jiffies": 1008,
+      "relative_ticks": 63,
+      "expires": 1071,
+      "delta": 63,
+      "level": 1,
+      "granularity_ticks": 8,
+      "quotient_after_shift_plus_one": 134,
+      "bucket_expiry": 1072,
+      "slot": 6,
+      "idx": 70,
+      "lateness_ticks": 1
+    },
+    {
+      "base_clk": 1000,
+      "jiffies": 1000,
+      "relative_ticks": 504,
+      "expires": 1504,
+      "delta": 504,
+      "level": 2,
+      "granularity_ticks": 64,
+      "quotient_after_shift_plus_one": 24,
+      "bucket_expiry": 1536,
+      "slot": 24,
+      "idx": 152,
+      "lateness_ticks": 32
+    }
+  ],
+  "first_unverified_actual": "CPU/timer bases, lock/IRQ, runtime jiffies and asynchronous timer expiry",
+  "phase_2_source_only": true,
+  "full_local_P9": "NOT_RUN",
+  "repo_code_execution": "NOT_RUN"
+}

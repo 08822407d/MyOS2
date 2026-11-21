@@ -1,0 +1,295 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83",
+  "record_type": "conditional_candidates_and_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "D00": "NOT_REQUIRED",
+  "prior_status": {
+    "batch82": "PASS_PENDING_LOCAL_WITH_R82_S01_S02_S03",
+    "batch81": "PASS_PENDING_LOCAL_WITH_R81_S01_S02_S03",
+    "old_qualified_ids_unchanged": true
+  },
+  "findings": [
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F01",
+      "id": "TI83-F01",
+      "topic": "G01",
+      "category": "root_value_nonzero_vs_validity",
+      "statement": "根项以非零选择复用但非zero无法认证present/合法子表，若非零却指向无效页可能不能安全递归",
+      "source_fact_keys": [
+        "root_reuse_existing_nonzero",
+        "pgd_nonzero_alias",
+        "root_existing_vaddr_alias",
+        "p4d_pointed_page_virtual"
+      ],
+      "evidence_ids": [
+        "A06",
+        "A23",
+        "A24",
+        "A25"
+      ],
+      "preconditions": "非零但非有效子表的真实输入",
+      "earliest_stop": "首次未证指针解引用",
+      "status": "needs_evidence",
+      "runtime_proven": false,
+      "patch_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F02",
+      "id": "TI83-F02",
+      "topic": "G01",
+      "category": "allocation_and_publish_dependencies",
+      "statement": "新根/PUD/PMD路径先分配递归后发布；分配非零、清零及可写都依81先验",
+      "source_fact_keys": [
+        "root_alloc_before_child",
+        "one_page_alloc_wrapper",
+        "root_publish_after_recursion"
+      ],
+      "evidence_ids": [
+        "A07",
+        "A38",
+        "A08"
+      ],
+      "preconditions": "真实分配失败或映射不可写",
+      "earliest_stop": "子页首次未证存储",
+      "status": "needs_evidence",
+      "runtime_proven": false,
+      "patch_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F03",
+      "id": "TI83-F03",
+      "topic": "G02",
+      "category": "huge_next_not_precise_endpoint",
+      "statement": "复用或新大页可将paddr_last设为下一大页边界并高于请求end，不能声称精确成功覆盖",
+      "source_fact_keys": [
+        "pud_large_reuse_or_old_prot",
+        "pmd_large_reuse_vs_downgrade",
+        "pud_slot_va_and_next",
+        "pmd_iteration_next_guard"
+      ],
+      "evidence_ids": [
+        "B05",
+        "B14",
+        "B02",
+        "B11"
+      ],
+      "preconditions": "调用层提供局部不对齐或短区间且相应mask允许",
+      "earliest_stop": "不自动归因82正常分段路径",
+      "status": "needs_evidence",
+      "runtime_proven": false,
+      "patch_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F04",
+      "id": "TI83-F04",
+      "topic": "G02",
+      "category": "demotion_old_frame_not_automatically_preserved",
+      "statement": "降级提取旧prot但子项页框由请求paddr构造，旧大页页框与请求不同则不能直接保证映射身份保持",
+      "source_fact_keys": [
+        "pud_large_reuse_or_old_prot",
+        "pmd_large_reuse_vs_downgrade",
+        "remove_pse_from_pte_cast",
+        "pte_pfn_frame_mask_and_flags"
+      ],
+      "evidence_ids": [
+        "B05",
+        "B14",
+        "B28",
+        "C28"
+      ],
+      "preconditions": "旧大页的页框与请求不相同",
+      "earliest_stop": "具体旧映射及新子页合法性未证",
+      "status": "needs_evidence",
+      "runtime_proven": false,
+      "patch_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F05",
+      "id": "TI83-F05",
+      "topic": "G03",
+      "category": "safe_warning_does_not_block_store",
+      "statement": "所读safe函数检查冲突但依旧调用普通WRITE_ONCE；旧huge改子表时的warn义务独立审",
+      "source_fact_keys": [
+        "pte_warn_then_write",
+        "pmd_warn_then_write",
+        "pud_warn_then_write",
+        "p4d_warn_then_write",
+        "pte_write_once"
+      ],
+      "evidence_ids": [
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24"
+      ],
+      "preconditions": "init=true且旧present值与新值不同、WARN返回",
+      "earliest_stop": "不能当成实际冲突或硬件行为实证",
+      "status": "needs_evidence",
+      "runtime_proven": false,
+      "patch_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F06",
+      "id": "TI83-F06",
+      "topic": "G03",
+      "category": "pte_range_guard_after_pointer_formation",
+      "statement": "PTE指针及next先于paddr>=end判断，部分页新写后last可能超过end，尾后一地址形成不等于越界访问",
+      "source_fact_keys": [
+        "pte_start_slot_and_next",
+        "pte_new_last_count_return",
+        "pte_signature_and_last_default"
+      ],
+      "evidence_ids": [
+        "C02",
+        "C05",
+        "C01"
+      ],
+      "preconditions": "独立非页对齐helper输入、表合法",
+      "earliest_stop": "最早无效地址或求值",
+      "status": "needs_evidence",
+      "runtime_proven": false,
+      "patch_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F07",
+      "id": "TI83-F07",
+      "topic": "G03",
+      "category": "cross_level_page_accounting",
+      "statement": "早期复用计数、晚期复用不计，降级后子层递增但所读函数内未见同层旧大页扣减，不能当去重映射量",
+      "source_fact_keys": [
+        "pte_existing_count_or_skip",
+        "pmd_existing_leaf_count_early",
+        "pud_existing_leaf_count_early",
+        "pmd_counter_call",
+        "pud_counter_call"
+      ],
+      "evidence_ids": [
+        "C03",
+        "C08",
+        "C11",
+        "C10",
+        "C13"
+      ],
+      "preconditions": "已有页、降级及计数路径合法",
+      "earliest_stop": "不推广为全树不存在回收",
+      "status": "needs_evidence",
+      "runtime_proven": false,
+      "patch_authorized": false
+    },
+    {
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-F08",
+      "id": "TI83-F08",
+      "topic": "G02",
+      "category": "leaf_predicate_and_prot_transfer",
+      "statement": "leaf谓词检测PSE，降级从重新解释的pte值取得prot且新页框来自paddr，不证明present和PAT/NX全部一致",
+      "source_fact_keys": [
+        "pud_leaf_tests_pse",
+        "pmd_leaf_tests_pse",
+        "pte_to_pgprot_macro",
+        "remove_pse_from_pte_cast",
+        "page_protection_supported_bits"
+      ],
+      "evidence_ids": [
+        "B26",
+        "B27",
+        "B30",
+        "B28",
+        "B36"
+      ],
+      "preconditions": "特殊表项状态或属性组合真实出现",
+      "earliest_stop": "所选配置及硬件效果未证",
+      "status": "needs_evidence",
+      "runtime_proven": false,
+      "patch_authorized": false
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "TI83-U01",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U01",
+      "category": "active_root_and_child_table",
+      "unknown": "当前CR3引用的真实PGD及非零项目标子页合法性未知",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U02",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U02",
+      "category": "physical_virtual_address_inverse",
+      "unknown": "实际phys_base和__va/__pa直接映射前提，跨边界与地址回绕可达性未知",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U03",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U03",
+      "category": "page_allocator_and_storage",
+      "unknown": "alloc_low_page早期/晚期来源、失败、页表清零及可写性按PT81/PB78/PA77约束",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U04",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U04",
+      "category": "old_huge_frame_and_new_leaf",
+      "unknown": "旧1G/2M物理页框与传入请求paddr的对应及完整属性等价尚未核实",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U05",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U05",
+      "category": "warning_write_once_configuration",
+      "unknown": "safe写实际定义已找到，但WARN_ON_ONCE/WRITE_ONCE选择、异常效果仍未预处理/运行",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U06",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U06",
+      "category": "pgprot_mask_and_pat",
+      "unknown": "pte_pgprot的旧huge重解释、PAT/NX及动态支持位过滤的硬件等价性未知",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U07",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U07",
+      "category": "pte_input_alignment_callers",
+      "unknown": "物理字节端点是否总由82分段规整，存在其它低级调用者时需独立审",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U08",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U08",
+      "category": "returns_vs_real_mapping",
+      "unknown": "各层默认end、next和递归返回与真正页表映射覆盖的对应需要运行或更多上游证据",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U09",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U09",
+      "category": "direct_pages_count_global_semantics",
+      "unknown": "其它计数写者、跨层降级重用及用户可见统计消费未穷尽",
+      "status": "needs_evidence"
+    },
+    {
+      "id": "TI83-U10",
+      "qualified_id": "CORE-USER-DIRECT-MAP-TABLE-INSTALL-83::TI83-U10",
+      "category": "TLB_root_concurrency",
+      "unknown": "父槽发布、load_cr3/flush与多核锁、真实物理表页可见性在本批边界外",
+      "status": "needs_evidence"
+    }
+  ],
+  "counts": {
+    "candidate_records": 8,
+    "gaps": 10,
+    "runtime_reproduced": 0,
+    "old_closed": 0
+  },
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "full_local_P9": "NOT_RUN",
+  "runtime": "NOT_RUN",
+  "owner_decisions_requested_now": []
+}

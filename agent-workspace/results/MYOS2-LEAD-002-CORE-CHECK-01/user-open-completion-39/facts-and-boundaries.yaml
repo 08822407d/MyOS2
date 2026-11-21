@@ -1,0 +1,581 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-OPEN-COMPLETION-39",
+  "record_type": "bounded_open_completion_typed_provenance_and_return_matrix",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-04",
+  "date": "2026-11-05",
+  "read_channel": "connector",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "61a95d13dcb6",
+  "contract64_short12": "08d383bb2b2c",
+  "mandatory_supplements": [
+    "R38-S01",
+    "R38-S02"
+  ],
+  "prior38_acceptance": "PASS_PENDING_LOCAL",
+  "prior38_returned_scope": [],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "objects": [
+    {
+      "id": "op",
+      "type": "const open_flags_s*",
+      "producer": "build_open_flags / path_openat argument",
+      "consumer": "op->open_flag allocated file; op->lookup_flags controls path traversal",
+      "boundary": "valid op required; OF30-F01 invalid helper producer still conditional"
+    },
+    {
+      "id": "op.open_flag",
+      "type": "int",
+      "producer": "build_open_flags writes flags snapshot",
+      "consumer": "alloc_empty_file(op->open_flag)",
+      "boundary": "not the flags passed to open_last_lookups/do_open"
+    },
+    {
+      "id": "op.lookup_flags",
+      "type": "int",
+      "producer": "build_open_flags after lookup mapping",
+      "consumer": "do_filp_open int flags and path_openat's traversal",
+      "boundary": "different from O_ bit domain; no reliable O_CREAT projection"
+    },
+    {
+      "id": "how.flags",
+      "type": "u64",
+      "producer": "build_open_how output",
+      "consumer": "build_open_flags; get_unused_fd_flags",
+      "boundary": "helper validation error may be ignored by do_sys_openat2"
+    },
+    {
+      "id": "file",
+      "type": "file_s*",
+      "producer": "alloc_empty_file -> __alloc_file -> kmem_cache_zalloc",
+      "consumer": "path_openat, vfs_open, fput, fd_install",
+      "boundary": "normal pointer or ERR_PTR(-ENOMEM) on actual selected allocator failure; no -ENFILE normal route"
+    },
+    {
+      "id": "file.f_count",
+      "type": "atomic_long_t",
+      "producer": "__alloc_file sets1",
+      "consumer": "fput decrements",
+      "boundary": "allocator cache semantics/lifetime beyond direct fput excluded"
+    },
+    {
+      "id": "file.f_flags",
+      "type": "uint",
+      "producer": "__alloc_file assigns flags",
+      "consumer": "other unexamined methods may consume",
+      "boundary": "exact op.open_flag snapshot in selected path"
+    },
+    {
+      "id": "file.f_mode",
+      "type": "fmode_t",
+      "producer": "__alloc_file assigns OPEN_FMODE(flags)",
+      "consumer": "myos_do_dentry_open checks against O_TRUNC/O_APPEND",
+      "boundary": "not same domain as f_flags; selected output low2 bits plus FMODE_NONOTIFY"
+    },
+    {
+      "id": "file.f_pos",
+      "type": "loff_t",
+      "producer": "kmem_cache_zalloc request; selected direct writer FAT32_open sets0",
+      "consumer": "myos_do_dentry_open APPEND gate, later file I/O",
+      "boundary": "without matching callback and proof of zeroing no direct writer established"
+    },
+    {
+      "id": "file.f_path",
+      "type": "path_s",
+      "producer": "vfs_open copies *path into file",
+      "consumer": "myos_do_dentry_open path_get; callback f_path.dentry inode",
+      "boundary": "value copy not new dentry or mount object allocation"
+    },
+    {
+      "id": "file.f_inode",
+      "type": "inode_s*",
+      "producer": "myos_do_dentry_open assigns inode arg",
+      "consumer": "other downstream consumers",
+      "boundary": "should be same as f_path.dentry->d_inode only under valid consistent input"
+    },
+    {
+      "id": "file.f_mapping",
+      "type": "addr_spc_s*",
+      "producer": "myos_do_dentry_open copies inode->i_mapping",
+      "consumer": "later cache/file readers",
+      "boundary": "pointer alias, not newly allocated address_space"
+    },
+    {
+      "id": "file.f_op",
+      "type": "const file_ops_s*",
+      "producer": "myos_do_dentry_open copies inode->i_fop",
+      "consumer": "optional open callback",
+      "boundary": "may be NULL or table with NULL open; only FAT32 example bound here"
+    },
+    {
+      "id": "path",
+      "type": "path_s*",
+      "producer": "nameidata nd.path after path walk; vfs_open input",
+      "consumer": "vfs_open shallow copy to file.f_path",
+      "boundary": "only a valid path model; SB38 A root mapping and child containment unclosed"
+    },
+    {
+      "id": "nd",
+      "type": "nameidata_s*",
+      "producer": "set_nameidata and path_init",
+      "consumer": "path_openat link_path_walk/open_last_lookups and do_open",
+      "boundary": "no full path walk, locks, refs, mounts certification"
+    },
+    {
+      "id": "nd.path.dentry",
+      "type": "dentry_s*",
+      "producer": "earlier VFS lookup step_into",
+      "consumer": "vfs_open dereferences d_inode",
+      "boundary": "valid dentry and inode are conditional, not root/child runtime proved"
+    },
+    {
+      "id": "inode",
+      "type": "inode_s*",
+      "producer": "vfs_open path.dentry.d_inode",
+      "consumer": "myos_do_dentry_open f_mapping/f_op/f_inode",
+      "boundary": "SB38-F02/F03 provenance and NI37 conditions apply"
+    },
+    {
+      "id": "fop.open",
+      "type": "int (*)(inode_s*,file_s*)",
+      "producer": "f->f_op->open if both pointers nonNULL",
+      "consumer": "myos_do_dentry_open assigns to unsigned long error",
+      "boundary": "callback status not checked nor returned by this function"
+    },
+    {
+      "id": "error_callback",
+      "type": "ulong",
+      "producer": "myos_do_dentry_open initialized -ENOERR then set from optional open",
+      "consumer": "no further read before fallthrough",
+      "boundary": "FAT32_open returns1, but does not become caller's defined int return"
+    },
+    {
+      "id": "error_openat",
+      "type": "int",
+      "producer": "path_openat while assigns link_path_walk status, may overwrite with do_open result",
+      "consumer": "if(error==0) file else fput and ERR_PTR(error)",
+      "boundary": "do_open is nonvoid missing return on normal completion: no valid defined value there"
+    },
+    {
+      "id": "fop_FAT32",
+      "type": "file_ops_s",
+      "producer": "FAT32_file_ops initialized open=FAT32_open",
+      "consumer": "callback sets file.f_pos0 and returns1",
+      "boundary": "only when inode->i_fop actually points to this table and pointer accesses valid"
+    },
+    {
+      "id": "fd",
+      "type": "int",
+      "producer": "do_sys_openat2 build_open_flags return overwritten by get_unused_fd_flags",
+      "consumer": "IS_ERR(file) gate then fd_install if normal",
+      "boundary": "old validation error ignored; normal file return not established downstream"
+    }
+  ],
+  "function_return_matrix": [
+    {
+      "function_name": "__alloc_file",
+      "declared_type": "file_s*",
+      "defined_prefix": "kmem_cache_zalloc returns NULL -> ERR_PTR(-ENOMEM); allocated pointer -> f",
+      "consumer": "alloc_empty_file returns pointer unchanged",
+      "limit": "no active -ENFILE from function"
+    },
+    {
+      "function_name": "alloc_empty_file",
+      "declared_type": "file_s*",
+      "defined_prefix": "calls __alloc_file flags; returns f",
+      "consumer": "path_openat tests IS_ERR(file)",
+      "limit": "over: -ENFILE is after unconditional return, not a defined selected path"
+    },
+    {
+      "function_name": "fput",
+      "declared_type": "void",
+      "defined_prefix": "if dec_and_test then kmem_cache_free",
+      "consumer": "path_openat error cleanup",
+      "limit": "not evidence of full refs, mounts or data page cleanup"
+    },
+    {
+      "function_name": "FAT32_open",
+      "declared_type": "int",
+      "defined_prefix": "writes file->f_pos=0, returns literal 1",
+      "consumer": "myos_do_dentry_open captures into ulong error",
+      "limit": "no caller-visible error success interpretation inferred"
+    },
+    {
+      "function_name": "myos_do_dentry_open",
+      "declared_type": "int",
+      "defined_prefix": "initializes error; writes fields; optional f_op->open; checks f_mode O_TRUNC/O_APPEND; falls off end",
+      "consumer": "vfs_open uses as return-expression",
+      "limit": "no defined int return on normal completion; no callback error gate"
+    },
+    {
+      "function_name": "vfs_open",
+      "declared_type": "int",
+      "defined_prefix": "file->f_path=*path, returns myos_do_dentry_open result",
+      "consumer": "do_open calls as discarded expression",
+      "limit": "lower result not defined if callee falls off end"
+    },
+    {
+      "function_name": "do_open",
+      "declared_type": "int",
+      "defined_prefix": "calls vfs_open without return; falls off end",
+      "consumer": "path_openat assigns error = do_open(...)",
+      "limit": "UV-04 historical; no valid return value for normal completion"
+    },
+    {
+      "function_name": "path_openat",
+      "declared_type": "file_s*",
+      "defined_prefix": "alloc file error pointer early; path walk error; normal do_open completion return value unknown",
+      "consumer": "do_filp_open uses result; success if(error==0) / error cleanup otherwise",
+      "limit": "cannot assert success or failure from undefined do_open return; valid earlier path-walk errors still modelable"
+    },
+    {
+      "function_name": "do_filp_open",
+      "declared_type": "file_s*",
+      "defined_prefix": "sets flags=op->lookup_flags, returns filp from path_openat",
+      "consumer": "file_open_name or do_sys_openat2",
+      "limit": "not an independent success validator"
+    },
+    {
+      "function_name": "file_open_name",
+      "declared_type": "file_s*",
+      "defined_prefix": "checks build_open_flags error, else returns do_filp_open result",
+      "consumer": "filp_open or direct kernel helper",
+      "limit": "proper helper error gate before open path, not proof of final open"
+    },
+    {
+      "function_name": "do_sys_openat2",
+      "declared_type": "long",
+      "defined_prefix": "ignores build_open_flags error after getname and fd overwrite; if fd>=0 calls do_filp_open",
+      "consumer": "IS_ERR -> PTR_ERR or fd_install; returns fd",
+      "limit": "fd_install requires definite normal nonerror file return; previous error ignored OF30-F01"
+    },
+    {
+      "function_name": "do_sys_open",
+      "declared_type": "long",
+      "defined_prefix": "build_open_how and return do_sys_openat2",
+      "consumer": "syscall caller beyond scope",
+      "limit": "does not bypass undefined open return"
+    }
+  ],
+  "field_writer_gate_matrix": [
+    {
+      "field": "file.f_flags",
+      "writer": "__alloc_file",
+      "expression": "f_flags=flags (path_openat passes op.open_flag)",
+      "gate": "successful cache allocation",
+      "later": "not read by the local O_TRUNC/O_APPEND checks"
+    },
+    {
+      "field": "file.f_mode",
+      "writer": "__alloc_file",
+      "expression": "OPEN_FMODE(flags)=((flags+1)&O_ACCMODE)|(flags&FMODE_NONOTIFY)",
+      "gate": "successful cache allocation and integral expression valid",
+      "later": "myos_do_dentry_open incorrectly checks against O_TRUNC/O_APPEND"
+    },
+    {
+      "field": "file.f_count",
+      "writer": "__alloc_file",
+      "expression": "atomic_long_set(...,1)",
+      "gate": "successful file allocation",
+      "later": "fput decrement+optional cache free"
+    },
+    {
+      "field": "file.f_path",
+      "writer": "vfs_open",
+      "expression": "*path copied (shallow)",
+      "gate": "valid path and file",
+      "later": "path_get(&file.f_path)"
+    },
+    {
+      "field": "file.f_inode",
+      "writer": "myos_do_dentry_open",
+      "expression": "f_inode=inode",
+      "gate": "path_get normal, file/inode valid",
+      "later": "not an independent file inode allocation"
+    },
+    {
+      "field": "file.f_mapping",
+      "writer": "myos_do_dentry_open",
+      "expression": "f_mapping=inode->i_mapping",
+      "gate": "valid inode.i_mapping",
+      "later": "alias of prior embedded mapping"
+    },
+    {
+      "field": "file.f_op",
+      "writer": "myos_do_dentry_open",
+      "expression": "f_op=inode->i_fop",
+      "gate": "valid inode object",
+      "later": "if f_op && f_op->open"
+    },
+    {
+      "field": "file.f_pos",
+      "writer": "FAT32_open",
+      "expression": "f_pos=0",
+      "gate": "FAT32_file_ops selected and actual callback called normally",
+      "later": "append branch gate false for selected OPEN_FMODE"
+    },
+    {
+      "field": "inode.i_size",
+      "writer": "myos_do_dentry_open",
+      "expression": "i_size=0",
+      "gate": "f_mode&O_TRUNC nonzero; no such bit from selected OPEN_FMODE",
+      "later": "no actual truncate proof for user O_TRUNC"
+    },
+    {
+      "field": "file.f_pos_append",
+      "writer": "myos_do_dentry_open",
+      "expression": "f_pos=inode.i_size",
+      "gate": "f_mode&O_APPEND nonzero; no such bit from selected OPEN_FMODE",
+      "later": "no actual O_APPEND seek proof"
+    },
+    {
+      "field": "myos_do_dentry_open.error",
+      "writer": "myos_do_dentry_open",
+      "expression": "-ENOERR then optional callback int converted to ulong",
+      "gate": "callback returns normally",
+      "later": "never read/returned in selected full body"
+    },
+    {
+      "field": "path_openat.error",
+      "writer": "link_path_walk or do_open",
+      "expression": "first by while; then if(error==0) error=do_open",
+      "gate": "if path walk completed, do_open called",
+      "later": "error test invalid after nonvoid missing-return path"
+    }
+  ],
+  "open_flag_numeric_model": {
+    "O_ACCMODE": 3,
+    "O_RDONLY": 0,
+    "O_WRONLY": 1,
+    "O_RDWR": 2,
+    "O_TRUNC": 512,
+    "O_APPEND": 1024,
+    "FMODE_NONOTIFY": 67108864,
+    "FMODE_OPENED": 524288,
+    "OPEN_FMODE_formula": "((flags+1)&3)|(flags&0x4000000) under selected macros and valid integral evaluation",
+    "selected_bit_result": "always no O_TRUNC or O_APPEND bit for this expression",
+    "proof_scope": "fixed-time textual macros, no full preprocess/target compiler confirmation"
+  },
+  "finite_cases": [
+    {
+      "id": "OC39-C01",
+      "classification": "valid_selected_macro_arithmetic",
+      "input_name": "O_RDONLY",
+      "open_flag": 0,
+      "f_flags": 0,
+      "f_mode": 1,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C02",
+      "classification": "valid_selected_macro_arithmetic",
+      "input_name": "O_WRONLY",
+      "open_flag": 1,
+      "f_flags": 1,
+      "f_mode": 2,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C03",
+      "classification": "valid_selected_macro_arithmetic",
+      "input_name": "O_RDWR",
+      "open_flag": 2,
+      "f_flags": 2,
+      "f_mode": 3,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C04",
+      "classification": "valid_selected_macro_arithmetic",
+      "input_name": "O_RDONLY|O_TRUNC",
+      "open_flag": 512,
+      "f_flags": 512,
+      "f_mode": 1,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C05",
+      "classification": "valid_selected_macro_arithmetic",
+      "input_name": "O_WRONLY|O_TRUNC",
+      "open_flag": 513,
+      "f_flags": 513,
+      "f_mode": 2,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C06",
+      "classification": "valid_selected_macro_arithmetic",
+      "input_name": "O_RDWR|O_APPEND",
+      "open_flag": 1026,
+      "f_flags": 1026,
+      "f_mode": 3,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C07",
+      "classification": "valid_selected_macro_arithmetic",
+      "input_name": "O_RDONLY|O_APPEND|O_TRUNC",
+      "open_flag": 1536,
+      "f_flags": 1536,
+      "f_mode": 1,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C08",
+      "classification": "valid_selected_macro_arithmetic",
+      "input_name": "O_WRONLY|O_APPEND|O_TRUNC",
+      "open_flag": 1537,
+      "f_flags": 1537,
+      "f_mode": 2,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C09",
+      "classification": "helper_only",
+      "input_name": "O_ACCMODE==3 helper_only",
+      "open_flag": 3,
+      "f_flags": 3,
+      "f_mode": 0,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C10",
+      "classification": "helper_only",
+      "input_name": "FMODE_NONOTIFY raw helper",
+      "open_flag": 67108864,
+      "f_flags": 67108864,
+      "f_mode": 67108865,
+      "f_mode_has_O_TRUNC": false,
+      "f_mode_has_O_APPEND": false,
+      "STOP": "user flags are not checked directly by myos_do_dentry_open; actual producer build_open_flags needs valid status"
+    },
+    {
+      "id": "OC39-C11",
+      "classification": "conditional_valid",
+      "input": "valid FAT32_file_ops.open, callback returns1",
+      "prefix": "f_path copied; path_get; f_inode,f_mapping,f_op assigned; callback sets f_pos0, returns1 stored into error",
+      "after": "O_TRUNC/O_APPEND predicates evaluated (false for f_mode from OPEN_FMODE under shown macros), then no int return",
+      "stop": "do not propagate callback 1 to vfs_open/do_open/path_openat"
+    },
+    {
+      "id": "OC39-C12",
+      "classification": "helper_only",
+      "input": "f_op==NULL with valid file/inode",
+      "prefix": "no open callback; both mode predicates still evaluated",
+      "after": "falls off int function without return",
+      "stop": "no success0 guarantee"
+    },
+    {
+      "id": "OC39-C13",
+      "classification": "helper_only",
+      "input": "f_op!=NULL but f_op->open==NULL",
+      "prefix": "callback not called, mode gates still evaluated",
+      "after": "falls off int function without return",
+      "stop": "no defined result"
+    },
+    {
+      "id": "OC39-C14",
+      "classification": "helper_only",
+      "input": "callback returns0 with valid inputs",
+      "prefix": "error local receives0",
+      "after": "no comparison/early return of error; mode predicates then fallthrough",
+      "stop": "callback0 does not resolve missing int return"
+    },
+    {
+      "id": "OC39-C15",
+      "classification": "helper_only",
+      "input": "callback returns -EIO or other nonzero",
+      "prefix": "converted to ulong and saved, not checked",
+      "after": "mode gates after normal callback return; missing int return",
+      "stop": "no inferred errno propagation or rollback"
+    },
+    {
+      "id": "OC39-C16",
+      "classification": "helper_only",
+      "input": "callback does not return normally",
+      "prefix": "file fields up to callback call were assigned; callback began",
+      "after": "NOT_REACHED",
+      "stop": "do not assert f_pos/truncate or return"
+    },
+    {
+      "id": "OC39-C17",
+      "classification": "source_derived",
+      "input": "file kmem_cache_zalloc returns NULL",
+      "prefix": "__alloc_file returns ERR_PTR(-ENOMEM); alloc_empty_file returns it",
+      "after": "path_openat early IS_ERR returns file",
+      "stop": "no path_init/do_open/fput on this branch"
+    },
+    {
+      "id": "OC39-C18",
+      "classification": "source_derived",
+      "input": "file allocated and link_path_walk returns nonzero integer error before do_open",
+      "prefix": "error assigned by while left expression; do_open skipped",
+      "after": "terminate_walk; after normal cleanup if error !=0 fput(file), return ERR_PTR(error)",
+      "stop": "requires valid file/nd and normal cleanup; no fd install assumed"
+    },
+    {
+      "id": "OC39-C19",
+      "classification": "source_derived",
+      "input": "file allocated, path walk error0, open_last_lookups returns NULL, do_open normally executes body",
+      "prefix": "vfs_open call and its direct field writes under valid input",
+      "after": "do_open lacks return; path_openat assignment of returned int has no defined value",
+      "stop": "cannot choose return file or ERR_PTR based on imagined register"
+    },
+    {
+      "id": "OC39-C20",
+      "classification": "source_derived",
+      "input": "file_open_name build_open_flags returns -EINVAL",
+      "prefix": "helper checks err and returns ERR_PTR(-EINVAL)",
+      "after": "do_filp_open NOT_CALLED",
+      "stop": "do_sys_openat2 differs; old OF30-F01 preserved"
+    },
+    {
+      "id": "OC39-C21",
+      "classification": "source_derived_conditional",
+      "input": "do_sys_openat2 build_open_flags returns error, getname valid and fd allocation nonnegative",
+      "prefix": "fd overwritten by get_unused_fd_flags without prior check",
+      "after": "do_filp_open called with possibly partial op",
+      "stop": "old OF30-F01; no actual downstream success"
+    },
+    {
+      "id": "OC39-C22",
+      "classification": "source_derived_conditional",
+      "input": "do_filp_open returns a valid normal file pointer to sys caller under extra valid producer not certified here",
+      "prefix": "IS_ERR(f)==false",
+      "after": "fd_install(fd,f) then return fd if normal",
+      "stop": "helper-only synthetic assumption, actual do_open return gap unclosed"
+    }
+  ],
+  "uncertainty_rules": [
+    "earliest invalid object/write/read or nonreturn stops later effects",
+    "do_open and myos_do_dentry_open omit return on defined normal completion; C consumed nonvoid return cannot be replaced by a deterministic value",
+    "callback code return1 does not propagate through myos_do_dentry_open",
+    "f_op absent or f_op.open absent still falls through normal missing-return path",
+    "f_flags and f_mode and lookup_flags distinct",
+    "path_openat's valid path-walk error prefix is distinct from undefined do_open result",
+    "R38-S01/S02 A root mapping and standalone child containment not repaired",
+    "no file descriptor table implementation nor full mount/permission/cache/refcount correctness"
+  ]
+}

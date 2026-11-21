@@ -1,0 +1,2168 @@
+{
+  "task_id": "CORE-USER-EXEC-STACK-23",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "bounded_exec_user_stack_facts_and_boundaries",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-02",
+  "conversation_display_name": "MYOS2-A-C03b 代码分析执行续建",
+  "produced_by": "GPT-6",
+  "model_per_owner": "GPT-6",
+  "effort_per_owner": "Extra (Owner selected; backend not independently attested)",
+  "date": "2026-11-02",
+  "source_branch": "time",
+  "source_pin_short12": "a039d9803ade",
+  "task_contract_short12": "c9be5ac03550",
+  "result_base_short12": "b32f3ebc9095",
+  "read_channel": "connector",
+  "phase": 2,
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "nodes": [
+    {
+      "id": "ES23-N01",
+      "name": "alloc_bprm",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N02",
+      "name": "bprm_mm_init",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N03",
+      "name": "mm_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N04",
+      "name": "mm_init",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N05",
+      "name": "__bprm_mm_init",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N06",
+      "name": "vm_area_alloc",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N07",
+      "name": "vma_init",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N08",
+      "name": "vma_set_anonymous",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N09",
+      "name": "mmap_write_lock_killable",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N10",
+      "name": "mmap_write_unlock",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N11",
+      "name": "insert_vm_struct",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N12",
+      "name": "find_vma_prev",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N13",
+      "name": "simple_vma_link",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N14",
+      "name": "__vma_link_to_list",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N15",
+      "name": "vm_get_page_prot",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N16",
+      "name": "bprm.mm",
+      "kind": "pointer"
+    },
+    {
+      "id": "ES23-N17",
+      "name": "bprm.vma",
+      "kind": "pointer"
+    },
+    {
+      "id": "ES23-N18",
+      "name": "current.mm",
+      "kind": "pointer"
+    },
+    {
+      "id": "ES23-N19",
+      "name": "current.active_mm",
+      "kind": "pointer"
+    },
+    {
+      "id": "ES23-N20",
+      "name": "vma.vm_mm",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N21",
+      "name": "vma.vm_start",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N22",
+      "name": "vma.vm_end",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N23",
+      "name": "vma.vm_flags",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N24",
+      "name": "vma.vm_page_prot",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N25",
+      "name": "vma.vm_pgoff",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N26",
+      "name": "mm.map_count",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N27",
+      "name": "mm.stack_vm",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N28",
+      "name": "mm.total_vm",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N29",
+      "name": "mm.mm_mt",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N30",
+      "name": "bprm.p",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N31",
+      "name": "bprm.exec",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N32",
+      "name": "bprm.loader",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N33",
+      "name": "mm.arg_start",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N34",
+      "name": "mm.start_stack",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N35",
+      "name": "rlim_stack",
+      "kind": "data"
+    },
+    {
+      "id": "ES23-N36",
+      "name": "copy_strings",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N37",
+      "name": "get_arg_page",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N38",
+      "name": "mmap_read_lock",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N39",
+      "name": "myos_get_user_pages",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N40",
+      "name": "simple_find_vma",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N41",
+      "name": "myos_get_one_page_from_mapping",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N42",
+      "name": "alloc_page",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N43",
+      "name": "myos_creat_one_page_mapping",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N44",
+      "name": "get_page",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N45",
+      "name": "memcpy_to_page",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N46",
+      "name": "PAGE_SHARED_EXEC",
+      "kind": "macro"
+    },
+    {
+      "id": "ES23-N47",
+      "name": "get_arg_page.ret",
+      "kind": "local"
+    },
+    {
+      "id": "ES23-N48",
+      "name": "load_elf_binary",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N49",
+      "name": "begin_new_exec",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N50",
+      "name": "exec_mmap",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N51",
+      "name": "setup_new_exec",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N52",
+      "name": "setup_arg_pages",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N53",
+      "name": "arch_align_stack",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N54",
+      "name": "randomize_stack_top",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N55",
+      "name": "STACK_TOP",
+      "kind": "macro"
+    },
+    {
+      "id": "ES23-N56",
+      "name": "STACK_TOP_MAX",
+      "kind": "macro"
+    },
+    {
+      "id": "ES23-N57",
+      "name": "VM_STACK_FLAGS",
+      "kind": "macro"
+    },
+    {
+      "id": "ES23-N58",
+      "name": "VM_STACK_INCOMPLETE_SETUP",
+      "kind": "macro"
+    },
+    {
+      "id": "ES23-N59",
+      "name": "VM_EXEC",
+      "kind": "macro"
+    },
+    {
+      "id": "ES23-N60",
+      "name": "mm.def_flags",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N61",
+      "name": "local.vm_flags",
+      "kind": "local"
+    },
+    {
+      "id": "ES23-N62",
+      "name": "vm_flags_clear",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N63",
+      "name": "stack_shift",
+      "kind": "local"
+    },
+    {
+      "id": "ES23-N64",
+      "name": "stack_base",
+      "kind": "local"
+    },
+    {
+      "id": "ES23-N65",
+      "name": "expand_stack",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N66",
+      "name": "mm.page_table_lock",
+      "kind": "field"
+    },
+    {
+      "id": "ES23-N67",
+      "name": "do_user_addr_fault",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N68",
+      "name": "myos_bad_area",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N69",
+      "name": "myos_handle_mm_fault",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N70",
+      "name": "finalize_exec",
+      "kind": "function"
+    },
+    {
+      "id": "ES23-N71",
+      "name": "START_THREAD",
+      "kind": "macro"
+    },
+    {
+      "id": "ES23-N72",
+      "name": "return_status",
+      "kind": "data"
+    }
+  ],
+  "edges": [
+    {
+      "id": "ES23-E01",
+      "from": "ES23-N01",
+      "to": "ES23-N02",
+      "kind": "call",
+      "meaning": "create a new exec mm and temporary stack VMA before binfmt load",
+      "condition": "alloc_bprm reached",
+      "anchors": [
+        "ES23-A043"
+      ]
+    },
+    {
+      "id": "ES23-E02",
+      "from": "ES23-N02",
+      "to": "ES23-N03",
+      "kind": "call",
+      "meaning": "allocate new mm and save in bprm.mm",
+      "condition": "entered",
+      "anchors": [
+        "ES23-A005",
+        "ES23-A083"
+      ]
+    },
+    {
+      "id": "ES23-E03",
+      "from": "ES23-N03",
+      "to": "ES23-N04",
+      "kind": "call",
+      "meaning": "initialize mm chain/head and mm fields",
+      "condition": "allocation succeeds",
+      "anchors": [
+        "ES23-A081",
+        "ES23-A083",
+        "ES23-A115"
+      ]
+    },
+    {
+      "id": "ES23-E04",
+      "from": "ES23-N02",
+      "to": "ES23-N16",
+      "kind": "effect",
+      "meaning": "assign newly allocated mm, or clear on failure",
+      "condition": "mm_alloc and selected error path",
+      "anchors": [
+        "ES23-A005",
+        "ES23-A008"
+      ]
+    },
+    {
+      "id": "ES23-E05",
+      "from": "ES23-N02",
+      "to": "ES23-N05",
+      "kind": "call",
+      "meaning": "call temporary VMA producer",
+      "condition": "new mm exists",
+      "anchors": [
+        "ES23-A007"
+      ]
+    },
+    {
+      "id": "ES23-E06",
+      "from": "ES23-N05",
+      "to": "ES23-N16",
+      "kind": "data",
+      "meaning": "read mm pointer for VMA construction, distinct from current mm pre-replacement",
+      "condition": "bprm.mm valid",
+      "anchors": [
+        "ES23-A009",
+        "ES23-A005",
+        "ES23-A103"
+      ]
+    },
+    {
+      "id": "ES23-E07",
+      "from": "ES23-N05",
+      "to": "ES23-N06",
+      "kind": "call",
+      "meaning": "allocate temporary VMA from mm",
+      "condition": "valid mm",
+      "anchors": [
+        "ES23-A009",
+        "ES23-A046"
+      ]
+    },
+    {
+      "id": "ES23-E08",
+      "from": "ES23-N06",
+      "to": "ES23-N07",
+      "kind": "call",
+      "meaning": "clear fields and set vm_mm/dummy vm_ops",
+      "condition": "allocation succeeds",
+      "anchors": [
+        "ES23-A046",
+        "ES23-A084"
+      ]
+    },
+    {
+      "id": "ES23-E09",
+      "from": "ES23-N07",
+      "to": "ES23-N20",
+      "kind": "effect",
+      "meaning": "set vm_mm to bprm new mm after memset",
+      "condition": "new VMA valid",
+      "anchors": [
+        "ES23-A084",
+        "ES23-A009"
+      ]
+    },
+    {
+      "id": "ES23-E10",
+      "from": "ES23-N05",
+      "to": "ES23-N08",
+      "kind": "call",
+      "meaning": "assign vm_ops=NULL for temporary anonymous stack",
+      "condition": "VMA allocation succeeded",
+      "anchors": [
+        "ES23-A010",
+        "ES23-A085",
+        "ES23-A103"
+      ]
+    },
+    {
+      "id": "ES23-E11",
+      "from": "ES23-N05",
+      "to": "ES23-N09",
+      "kind": "call",
+      "meaning": "returns 0 in selected active wrapper, no actual down_write",
+      "condition": "VMA allocated",
+      "anchors": [
+        "ES23-A010",
+        "ES23-A095"
+      ]
+    },
+    {
+      "id": "ES23-E12",
+      "from": "ES23-N05",
+      "to": "ES23-N22",
+      "kind": "effect",
+      "meaning": "set STACK_TOP_MAX",
+      "condition": "nominal wrapper normal return",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A093"
+      ]
+    },
+    {
+      "id": "ES23-E13",
+      "from": "ES23-N05",
+      "to": "ES23-N21",
+      "kind": "effect",
+      "meaning": "set vm_end-PAGE_SIZE",
+      "condition": "nominal wrapper normal return",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A094"
+      ]
+    },
+    {
+      "id": "ES23-E14",
+      "from": "ES23-N05",
+      "to": "ES23-N23",
+      "kind": "effect",
+      "meaning": "set VM_SOFTDIRTY|VM_STACK_FLAGS|VM_STACK_INCOMPLETE_SETUP",
+      "condition": "nominal wrapper normal return",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A089",
+        "ES23-A090",
+        "ES23-A091"
+      ]
+    },
+    {
+      "id": "ES23-E15",
+      "from": "ES23-N05",
+      "to": "ES23-N15",
+      "kind": "call",
+      "meaning": "derive initial stack protection template",
+      "condition": "vma flags initialized",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A110"
+      ]
+    },
+    {
+      "id": "ES23-E16",
+      "from": "ES23-N15",
+      "to": "ES23-N23",
+      "kind": "data",
+      "meaning": "consume current stack flags to choose template by low RWX bits",
+      "condition": "new stack VMA flag established",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A109",
+        "ES23-A110"
+      ]
+    },
+    {
+      "id": "ES23-E17",
+      "from": "ES23-N05",
+      "to": "ES23-N24",
+      "kind": "effect",
+      "meaning": "assign vm_get_page_prot(flags) initial pgprot",
+      "condition": "function returns normally",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A110",
+        "ES23-A111"
+      ]
+    },
+    {
+      "id": "ES23-E18",
+      "from": "ES23-N05",
+      "to": "ES23-N11",
+      "kind": "call",
+      "meaning": "publish temporary stack VMA",
+      "condition": "fields assigned",
+      "anchors": [
+        "ES23-A012",
+        "ES23-A049"
+      ]
+    },
+    {
+      "id": "ES23-E19",
+      "from": "ES23-N11",
+      "to": "ES23-N12",
+      "kind": "call",
+      "meaning": "derive prev from point lookup of VMA start",
+      "condition": "valid VMA and initialized mm list",
+      "anchors": [
+        "ES23-A049",
+        "ES23-A088"
+      ]
+    },
+    {
+      "id": "ES23-E20",
+      "from": "ES23-N11",
+      "to": "ES23-N25",
+      "kind": "effect",
+      "meaning": "set anonymous pgoff=vm_start>>PAGE_SHIFT",
+      "condition": "vma_is_anonymous true and BUG_ON allows execution",
+      "anchors": [
+        "ES23-A050",
+        "ES23-A085",
+        "ES23-A086"
+      ]
+    },
+    {
+      "id": "ES23-E21",
+      "from": "ES23-N11",
+      "to": "ES23-N13",
+      "kind": "call",
+      "meaning": "link VMA and check error",
+      "condition": "normal helper input",
+      "anchors": [
+        "ES23-A051",
+        "ES23-A048"
+      ]
+    },
+    {
+      "id": "ES23-E22",
+      "from": "ES23-N13",
+      "to": "ES23-N14",
+      "kind": "call",
+      "meaning": "actual linked list insertion",
+      "condition": "function reached",
+      "anchors": [
+        "ES23-A048"
+      ]
+    },
+    {
+      "id": "ES23-E23",
+      "from": "ES23-N14",
+      "to": "ES23-N26",
+      "kind": "effect",
+      "meaning": "increment VMA count after linking",
+      "condition": "list operations return",
+      "anchors": [
+        "ES23-A048"
+      ]
+    },
+    {
+      "id": "ES23-E24",
+      "from": "ES23-N05",
+      "to": "ES23-N27",
+      "kind": "effect",
+      "meaning": "set stack_vm to 1 only after insert result success",
+      "condition": "insert returns0",
+      "anchors": [
+        "ES23-A013"
+      ]
+    },
+    {
+      "id": "ES23-E25",
+      "from": "ES23-N05",
+      "to": "ES23-N28",
+      "kind": "effect",
+      "meaning": "set total_vm to1 at same selected point",
+      "condition": "insert returns0",
+      "anchors": [
+        "ES23-A013"
+      ]
+    },
+    {
+      "id": "ES23-E26",
+      "from": "ES23-N05",
+      "to": "ES23-N30",
+      "kind": "effect",
+      "meaning": "set initial pointer vm_end-sizeof(void*)",
+      "condition": "insert success and unlock normal return",
+      "anchors": [
+        "ES23-A013"
+      ]
+    },
+    {
+      "id": "ES23-E27",
+      "from": "ES23-N36",
+      "to": "ES23-N30",
+      "kind": "effect",
+      "meaning": "decrement pointer by string length before accessing pages",
+      "condition": "string enumeration selected",
+      "anchors": [
+        "ES23-A017",
+        "ES23-A044",
+        "ES23-A045"
+      ]
+    },
+    {
+      "id": "ES23-E28",
+      "from": "ES23-N36",
+      "to": "ES23-N37",
+      "kind": "call",
+      "meaning": "request a page at argument string address",
+      "condition": "loop entered",
+      "anchors": [
+        "ES23-A099",
+        "ES23-A018"
+      ]
+    },
+    {
+      "id": "ES23-E29",
+      "from": "ES23-N37",
+      "to": "ES23-N16",
+      "kind": "data",
+      "meaning": "read transient mm, not current.mm",
+      "condition": "bprm.mm not yet transferred",
+      "anchors": [
+        "ES23-A001",
+        "ES23-A002"
+      ]
+    },
+    {
+      "id": "ES23-E30",
+      "from": "ES23-N37",
+      "to": "ES23-N38",
+      "kind": "call",
+      "meaning": "named helper is currently no-op",
+      "condition": "valid mm and GUP path",
+      "anchors": [
+        "ES23-A002",
+        "ES23-A097"
+      ]
+    },
+    {
+      "id": "ES23-E31",
+      "from": "ES23-N37",
+      "to": "ES23-N39",
+      "kind": "call",
+      "meaning": "call GUP and read its long result into ret",
+      "condition": "valid mm",
+      "anchors": [
+        "ES23-A002",
+        "ES23-A003",
+        "ES23-A077",
+        "ES23-A080"
+      ]
+    },
+    {
+      "id": "ES23-E32",
+      "from": "ES23-N39",
+      "to": "ES23-N40",
+      "kind": "call",
+      "meaning": "only attempt page mapping when VMA contains requested addr",
+      "condition": "valid mm and lookup definitions",
+      "anchors": [
+        "ES23-A077",
+        "ES23-A078",
+        "ES23-A088"
+      ]
+    },
+    {
+      "id": "ES23-E33",
+      "from": "ES23-N39",
+      "to": "ES23-N41",
+      "kind": "call",
+      "meaning": "attempt to reuse prior PTE backing page",
+      "condition": "valid addr VMA",
+      "anchors": [
+        "ES23-A078",
+        "ES23-A108"
+      ]
+    },
+    {
+      "id": "ES23-E34",
+      "from": "ES23-N39",
+      "to": "ES23-N42",
+      "kind": "call",
+      "meaning": "allocate user page if missing",
+      "condition": "missing old mapping and valid VMA",
+      "anchors": [
+        "ES23-A078",
+        "ES23-A079"
+      ]
+    },
+    {
+      "id": "ES23-E35",
+      "from": "ES23-N39",
+      "to": "ES23-N43",
+      "kind": "call",
+      "meaning": "create PTE for allocated page; return result not used",
+      "condition": "allocation returned nonnull",
+      "anchors": [
+        "ES23-A079",
+        "ES23-A106",
+        "ES23-A107"
+      ]
+    },
+    {
+      "id": "ES23-E36",
+      "from": "ES23-N43",
+      "to": "ES23-N46",
+      "kind": "data",
+      "meaning": "uses hardcoded PAGE_SHARED_EXEC|PAT for PTE, not vma vm_page_prot",
+      "condition": "page != NULL and reaches *pte write",
+      "anchors": [
+        "ES23-A106",
+        "ES23-A112"
+      ]
+    },
+    {
+      "id": "ES23-E37",
+      "from": "ES23-N39",
+      "to": "ES23-N44",
+      "kind": "call",
+      "meaning": "increment page ref when allocated",
+      "condition": "page nonnull and mapping helper normal return",
+      "anchors": [
+        "ES23-A079"
+      ]
+    },
+    {
+      "id": "ES23-E38",
+      "from": "ES23-N37",
+      "to": "ES23-N47",
+      "kind": "data",
+      "meaning": "test ret<=0 despite nonvoid GUP missing explicit return",
+      "condition": "GUP call returned control; C result not proven",
+      "anchors": [
+        "ES23-A003",
+        "ES23-A080"
+      ]
+    },
+    {
+      "id": "ES23-E39",
+      "from": "ES23-N36",
+      "to": "ES23-N45",
+      "kind": "call",
+      "meaning": "copy argument bytes only if get_arg_page returned a valid page",
+      "condition": "get_arg_page valid and copy loop progresses",
+      "anchors": [
+        "ES23-A099",
+        "ES23-A100"
+      ]
+    },
+    {
+      "id": "ES23-E40",
+      "from": "ES23-N48",
+      "to": "ES23-N49",
+      "kind": "call",
+      "meaning": "commit to mm transition before finalizing user stack",
+      "condition": "ELF selected and earlier gates pass",
+      "anchors": [
+        "ES23-A072"
+      ]
+    },
+    {
+      "id": "ES23-E41",
+      "from": "ES23-N49",
+      "to": "ES23-N50",
+      "kind": "call",
+      "meaning": "switch task mm to bprm.mm, then clear bprm.mm",
+      "condition": "required earlier gates and exec_mmap success",
+      "anchors": [
+        "ES23-A038",
+        "ES23-A039"
+      ]
+    },
+    {
+      "id": "ES23-E42",
+      "from": "ES23-N50",
+      "to": "ES23-N18",
+      "kind": "effect",
+      "meaning": "assign tsk.mm=mm after saving old mm",
+      "condition": "task_lock and local_irq_disable stage reached",
+      "anchors": [
+        "ES23-A034",
+        "ES23-A035"
+      ]
+    },
+    {
+      "id": "ES23-E43",
+      "from": "ES23-N50",
+      "to": "ES23-N19",
+      "kind": "effect",
+      "meaning": "assign active_mm=mm separately",
+      "condition": "task switch reached",
+      "anchors": [
+        "ES23-A035",
+        "ES23-A036"
+      ]
+    },
+    {
+      "id": "ES23-E44",
+      "from": "ES23-N48",
+      "to": "ES23-N51",
+      "kind": "call",
+      "meaning": "after begin_new_exec and before setup_arg_pages",
+      "condition": "begin_new_exec returned0",
+      "anchors": [
+        "ES23-A072",
+        "ES23-A073"
+      ]
+    },
+    {
+      "id": "ES23-E45",
+      "from": "ES23-N48",
+      "to": "ES23-N52",
+      "kind": "call",
+      "meaning": "pass randomize_stack_top(STACK_TOP) and executable_stack",
+      "condition": "setup_new_exec returned normally",
+      "anchors": [
+        "ES23-A073",
+        "ES23-A076"
+      ]
+    },
+    {
+      "id": "ES23-E46",
+      "from": "ES23-N48",
+      "to": "ES23-N59",
+      "kind": "data",
+      "meaning": "derive executable_stack policy from ELF PT_GNU_STACK PF_X",
+      "condition": "ELF program header observed",
+      "anchors": [
+        "ES23-A070",
+        "ES23-A071",
+        "ES23-A098"
+      ]
+    },
+    {
+      "id": "ES23-E47",
+      "from": "ES23-N52",
+      "to": "ES23-N18",
+      "kind": "data",
+      "meaning": "read post-transition mm from current",
+      "condition": "begin_new_exec switching succeeded",
+      "anchors": [
+        "ES23-A019",
+        "ES23-A035",
+        "ES23-A039"
+      ]
+    },
+    {
+      "id": "ES23-E48",
+      "from": "ES23-N52",
+      "to": "ES23-N17",
+      "kind": "data",
+      "meaning": "read VMA created earlier, still attached to mm",
+      "condition": "bprm.vma valid",
+      "anchors": [
+        "ES23-A019",
+        "ES23-A009",
+        "ES23-A103"
+      ]
+    },
+    {
+      "id": "ES23-E49",
+      "from": "ES23-N52",
+      "to": "ES23-N53",
+      "kind": "call",
+      "meaning": "align passed stack_top to 16 bytes",
+      "condition": "function entered",
+      "anchors": [
+        "ES23-A021",
+        "ES23-A075",
+        "ES23-A101"
+      ]
+    },
+    {
+      "id": "ES23-E50",
+      "from": "ES23-N52",
+      "to": "ES23-N63",
+      "kind": "effect",
+      "meaning": "compute vma.vm_end - arch_aligned stack_top",
+      "condition": "valid unsigned values and no overflow",
+      "anchors": [
+        "ES23-A021",
+        "ES23-A022",
+        "ES23-A093"
+      ]
+    },
+    {
+      "id": "ES23-E51",
+      "from": "ES23-N52",
+      "to": "ES23-N30",
+      "kind": "effect",
+      "meaning": "subtract stack_shift from saved argument pointer",
+      "condition": "after local shift calculation",
+      "anchors": [
+        "ES23-A022"
+      ]
+    },
+    {
+      "id": "ES23-E52",
+      "from": "ES23-N52",
+      "to": "ES23-N33",
+      "kind": "effect",
+      "meaning": "copy changed bprm.p to current mm argument boundary",
+      "condition": "after subtracting shift",
+      "anchors": [
+        "ES23-A022"
+      ]
+    },
+    {
+      "id": "ES23-E53",
+      "from": "ES23-N52",
+      "to": "ES23-N32",
+      "kind": "effect",
+      "meaning": "subtract stack_shift if loader nonzero",
+      "condition": "if(bprm->loader)",
+      "anchors": [
+        "ES23-A023"
+      ]
+    },
+    {
+      "id": "ES23-E54",
+      "from": "ES23-N52",
+      "to": "ES23-N31",
+      "kind": "effect",
+      "meaning": "subtract stack_shift unconditionally",
+      "condition": "after optional loader adjust",
+      "anchors": [
+        "ES23-A023"
+      ]
+    },
+    {
+      "id": "ES23-E55",
+      "from": "ES23-N52",
+      "to": "ES23-N09",
+      "kind": "call",
+      "meaning": "checks helper after writing argument pointers",
+      "condition": "local source pointer updates reached",
+      "anchors": [
+        "ES23-A023",
+        "ES23-A095"
+      ]
+    },
+    {
+      "id": "ES23-E56",
+      "from": "ES23-N52",
+      "to": "ES23-N57",
+      "kind": "data",
+      "meaning": "build local policy flags from VM_STACK_FLAGS macro",
+      "condition": "lock helper returned0",
+      "anchors": [
+        "ES23-A024",
+        "ES23-A090"
+      ]
+    },
+    {
+      "id": "ES23-E57",
+      "from": "ES23-N52",
+      "to": "ES23-N60",
+      "kind": "data",
+      "meaning": "OR current mm def_flags into local flags after EXSTACK adjustment",
+      "condition": "normal code progression",
+      "anchors": [
+        "ES23-A026",
+        "ES23-A082"
+      ]
+    },
+    {
+      "id": "ES23-E58",
+      "from": "ES23-N52",
+      "to": "ES23-N61",
+      "kind": "effect",
+      "meaning": "apply enable/disable EXSTACK policy only to local variable, then OR def_flags/incomplete flag",
+      "condition": "selected policy branch",
+      "anchors": [
+        "ES23-A024",
+        "ES23-A025",
+        "ES23-A026"
+      ]
+    },
+    {
+      "id": "ES23-E59",
+      "from": "ES23-N52",
+      "to": "ES23-N62",
+      "kind": "call",
+      "meaning": "clear only temporary VM_STACK_INCOMPLETE_SETUP from VMA",
+      "condition": "after warnings and commented mprotect/shift region",
+      "anchors": [
+        "ES23-A027",
+        "ES23-A029",
+        "ES23-A030",
+        "ES23-A087"
+      ]
+    },
+    {
+      "id": "ES23-E60",
+      "from": "ES23-N62",
+      "to": "ES23-N23",
+      "kind": "effect",
+      "meaning": "mask off passed incomplete bits; does not assign calculated local VM_EXEC state",
+      "condition": "vma valid and helper reached",
+      "anchors": [
+        "ES23-A030",
+        "ES23-A087",
+        "ES23-A089"
+      ]
+    },
+    {
+      "id": "ES23-E61",
+      "from": "ES23-N52",
+      "to": "ES23-N64",
+      "kind": "effect",
+      "meaning": "set to vma->vm_end-32*PAGE_SIZE",
+      "condition": "after clearing temporary flag",
+      "anchors": [
+        "ES23-A030",
+        "ES23-A031",
+        "ES23-A032"
+      ]
+    },
+    {
+      "id": "ES23-E62",
+      "from": "ES23-N52",
+      "to": "ES23-N34",
+      "kind": "effect",
+      "meaning": "store bprm.p to current mm before expand_stack call",
+      "condition": "line539 reached",
+      "anchors": [
+        "ES23-A032"
+      ]
+    },
+    {
+      "id": "ES23-E63",
+      "from": "ES23-N52",
+      "to": "ES23-N65",
+      "kind": "call",
+      "meaning": "expand metadata downwards toward stack_base",
+      "condition": "current mm valid and compute reached",
+      "anchors": [
+        "ES23-A032",
+        "ES23-A102"
+      ]
+    },
+    {
+      "id": "ES23-E64",
+      "from": "ES23-N65",
+      "to": "ES23-N20",
+      "kind": "data",
+      "meaning": "source for mm.page_table_lock; not implied equal to current mm without prior mm switch",
+      "condition": "input vma valid",
+      "anchors": [
+        "ES23-A054",
+        "ES23-A009",
+        "ES23-A084"
+      ]
+    },
+    {
+      "id": "ES23-E65",
+      "from": "ES23-N65",
+      "to": "ES23-N21",
+      "kind": "effect",
+      "meaning": "write aligned address if below old start and grow<=pgoff",
+      "condition": "lock helper returned and comparison satisfied",
+      "anchors": [
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A060",
+        "ES23-A061",
+        "ES23-A116"
+      ]
+    },
+    {
+      "id": "ES23-E66",
+      "from": "ES23-N65",
+      "to": "ES23-N25",
+      "kind": "effect",
+      "meaning": "decrement by computed grow pages, after vm_start write",
+      "condition": "successful growth branch and operations reach assignment",
+      "anchors": [
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A061"
+      ]
+    },
+    {
+      "id": "ES23-E67",
+      "from": "ES23-N65",
+      "to": "ES23-N66",
+      "kind": "call",
+      "meaning": "uses spin_lock/unlock around target field updates; not mmap_lock",
+      "condition": "eligible growth path",
+      "anchors": [
+        "ES23-A060",
+        "ES23-A061"
+      ]
+    },
+    {
+      "id": "ES23-E68",
+      "from": "ES23-N67",
+      "to": "ES23-N18",
+      "kind": "data",
+      "meaning": "uses tsk->mm after task switch",
+      "condition": "valid current task",
+      "anchors": [
+        "ES23-A063",
+        "ES23-A035"
+      ]
+    },
+    {
+      "id": "ES23-E69",
+      "from": "ES23-N67",
+      "to": "ES23-N40",
+      "kind": "call",
+      "meaning": "point lookup before expand attempt",
+      "condition": "valid mm",
+      "anchors": [
+        "ES23-A065",
+        "ES23-A088"
+      ]
+    },
+    {
+      "id": "ES23-E70",
+      "from": "ES23-N67",
+      "to": "ES23-N68",
+      "kind": "call",
+      "meaning": "no containing VMA -> bad area, or failed growth",
+      "condition": "branch conditions",
+      "anchors": [
+        "ES23-A065",
+        "ES23-A067"
+      ]
+    },
+    {
+      "id": "ES23-E71",
+      "from": "ES23-N67",
+      "to": "ES23-N65",
+      "kind": "call",
+      "meaning": "only after lookup found a VMA and vm_start>address and GROWSDOWN",
+      "condition": "requires nonstandard lookup result or VMA concurrent change; stable normal point lookup contradicts",
+      "anchors": [
+        "ES23-A065",
+        "ES23-A066",
+        "ES23-A067",
+        "ES23-A088"
+      ]
+    },
+    {
+      "id": "ES23-E72",
+      "from": "ES23-N67",
+      "to": "ES23-N69",
+      "kind": "call",
+      "meaning": "passes VMA/address/flags to fault implementation",
+      "condition": "selected VMA and preceding logic reached",
+      "anchors": [
+        "ES23-A065",
+        "ES23-A066",
+        "ES23-A067",
+        "ES23-A069"
+      ]
+    },
+    {
+      "id": "ES23-E73",
+      "from": "ES23-N48",
+      "to": "ES23-N70",
+      "kind": "call",
+      "meaning": "near end of ELF sequence",
+      "condition": "earlier steps passed",
+      "anchors": [
+        "ES23-A074",
+        "ES23-A041"
+      ]
+    },
+    {
+      "id": "ES23-E74",
+      "from": "ES23-N48",
+      "to": "ES23-N71",
+      "kind": "binding",
+      "meaning": "call-site macro for final entry and bprm.p; implementation not analyzed",
+      "condition": "ELF load path reaches final steps",
+      "anchors": [
+        "ES23-A074"
+      ]
+    }
+  ],
+  "scenario_matrix": [
+    {
+      "id": "ES23-M01",
+      "name": "mm_alloc fails",
+      "conditions": "mm_alloc returns NULL",
+      "stage": "bprm_mm_init",
+      "delta": "bprm.mm remains NULL; no temporary VMA published",
+      "result": "-ENOMEM as initialized",
+      "limits": "requires helper actual NULL",
+      "anchors": [
+        "ES23-A005",
+        "ES23-A008",
+        "ES23-A083"
+      ]
+    },
+    {
+      "id": "ES23-M02",
+      "name": "VMA allocation fails",
+      "conditions": "mm allocated, vm_area_alloc returns NULL",
+      "stage": "__bprm_mm_init",
+      "delta": "no stack VMA published; outer bprm_mm_init mmdrop(mm)",
+      "result": "-ENOMEM path",
+      "limits": "mmdrop semantics not reaudited",
+      "anchors": [
+        "ES23-A008",
+        "ES23-A009",
+        "ES23-A046"
+      ]
+    },
+    {
+      "id": "ES23-M03",
+      "name": "stack mmap_write_lock_killable if nonzero",
+      "conditions": "hypothetical helper nonzero return",
+      "stage": "__bprm_mm_init",
+      "delta": "bprm.vma=NULL; vm_area_free; outer mmdrop",
+      "result": "-EINTR",
+      "limits": "actual fixed helper returns0; not a proven producer",
+      "anchors": [
+        "ES23-A010",
+        "ES23-A014",
+        "ES23-A095"
+      ]
+    },
+    {
+      "id": "ES23-M04",
+      "name": "VMA insert fails",
+      "conditions": "insert_vm_struct returns nonzero",
+      "stage": "__bprm_mm_init",
+      "delta": "error unlock/free of VMA, then bprm.mm=NULL/mmdrop",
+      "result": "error retained",
+      "limits": "even if simple_vma_link has unconditional return0, conditional code path exists; no inserted VMA removal proof",
+      "anchors": [
+        "ES23-A012",
+        "ES23-A014",
+        "ES23-A049",
+        "ES23-A051"
+      ]
+    },
+    {
+      "id": "ES23-M05",
+      "name": "initial VMA successful",
+      "conditions": "valid mm/VMA, insert returns0",
+      "stage": "__bprm_mm_init",
+      "delta": "start=STACK_TOP_MAX-PAGE_SIZE; end=STACK_TOP_MAX; stack_vm=total_vm=1; p=end-8",
+      "result": "0",
+      "limits": "page metadata only, not allocated PTE",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A012",
+        "ES23-A013",
+        "ES23-A094"
+      ]
+    },
+    {
+      "id": "ES23-M06",
+      "name": "initial VMA zero fields",
+      "conditions": "vma_init clears VMA before setting anonymous and stack fields",
+      "stage": "vma_init→__bprm_mm_init",
+      "delta": "vm_file, vm_private_data, anon_vma initially0; vm_ops dummy then NULL; pgoff initially0 then set at insert",
+      "result": "conditional publish",
+      "limits": "not unknown random pointers in selected init path",
+      "anchors": [
+        "ES23-A084",
+        "ES23-A085",
+        "ES23-A086",
+        "ES23-A050"
+      ]
+    },
+    {
+      "id": "ES23-M07",
+      "name": "initial x86 stack executable policy",
+      "conditions": "VM_STACK_DEFAULT_FLAGS=VM_DATA_DEFAULT_FLAGS, TASK_EXEC=VM_EXEC",
+      "stage": "stack init",
+      "delta": "initial VMA.vm_flags contains VM_EXEC and READ/WRITE",
+      "result": "initial vm_get_page_prot uses PAGE_COPY_EXEC before supported-mask",
+      "limits": "do not equate template with PTE or hardware permission",
+      "anchors": [
+        "ES23-A089",
+        "ES23-A090",
+        "ES23-A109",
+        "ES23-A110",
+        "ES23-A111",
+        "ES23-A093"
+      ]
+    },
+    {
+      "id": "ES23-M08",
+      "name": "anonymous pgoff set",
+      "conditions": "stack VMA vm_ops NULL and BUG_ON allows normal control",
+      "stage": "insert_vm_struct",
+      "delta": "pgoff=vm_start>>PAGE_SHIFT; list insertion",
+      "result": "0 if simple_vma_link returns0",
+      "limits": "point-query prev and NULL iterator caveat R21 applies",
+      "anchors": [
+        "ES23-A049",
+        "ES23-A050",
+        "ES23-A051",
+        "ES23-A085",
+        "ES23-A088"
+      ]
+    },
+    {
+      "id": "ES23-M09",
+      "name": "argument bytes inside one-page VMA",
+      "conditions": "copy_strings requests addr contained by initial VMA",
+      "stage": "GUP",
+      "delta": "may find or allocate page, call mapping and memcpy_to_page if ret and page valid",
+      "result": "unknown",
+      "limits": "myos_get_user_pages has no return, no actual copy completion certification",
+      "anchors": [
+        "ES23-A077",
+        "ES23-A078",
+        "ES23-A079",
+        "ES23-A080",
+        "ES23-A099",
+        "ES23-A100"
+      ]
+    },
+    {
+      "id": "ES23-M10",
+      "name": "argument bytes below initial vm_start",
+      "conditions": "copy_strings decrements bprm.p beyond initial single VMA",
+      "stage": "GUP",
+      "delta": "simple_find_vma returns NULL, loop continue leaves pages[i] unwritten",
+      "result": "unknown/indeterminate ret",
+      "limits": "copy happens before setup_arg_pages, expansion not yet called; no deterministic failure",
+      "anchors": [
+        "ES23-A017",
+        "ES23-A045",
+        "ES23-A077",
+        "ES23-A078",
+        "ES23-A080",
+        "ES23-A099"
+      ]
+    },
+    {
+      "id": "ES23-M11",
+      "name": "GUP nonvoid no return",
+      "conditions": "myos_get_user_pages reaches end of function",
+      "stage": "get_arg_page",
+      "delta": "local ret is read from call whose source has no value return",
+      "result": "not proved ret>0",
+      "limits": "C undefined return behavior; do not assert a fixed random value or actual fault",
+      "anchors": [
+        "ES23-A002",
+        "ES23-A003",
+        "ES23-A077",
+        "ES23-A080"
+      ]
+    },
+    {
+      "id": "ES23-M12",
+      "name": "fresh argument page mapping",
+      "conditions": "valid contained VMA, old mapping absent, alloc_page returns valid page",
+      "stage": "GUP→myos_creat_one_page_mapping",
+      "delta": "PTE uses PAGE_SHARED_EXEC with RW and no NX in template",
+      "result": "conditional PTE write",
+      "limits": "return of helper ignored, not proof CPU permission/data safety",
+      "anchors": [
+        "ES23-A079",
+        "ES23-A105",
+        "ES23-A106",
+        "ES23-A107",
+        "ES23-A112"
+      ]
+    },
+    {
+      "id": "ES23-M13",
+      "name": "memory context pre-switch",
+      "conditions": "alloc_bprm/bprm_mm_init normal, begin_new_exec not yet performed",
+      "stage": "exec preparation",
+      "delta": "bprm.mm new and current.mm old; get_arg_page uses bprm.mm",
+      "result": "temporary argument access",
+      "limits": "do not identify with task kernel stack",
+      "anchors": [
+        "ES23-A001",
+        "ES23-A005",
+        "ES23-A034",
+        "ES23-A035",
+        "ES23-A039",
+        "ES23-A043"
+      ]
+    },
+    {
+      "id": "ES23-M14",
+      "name": "memory context post-switch",
+      "conditions": "begin_new_exec→exec_mmap completes normally",
+      "stage": "ELF load",
+      "delta": "current.mm/newmm; bprm.mm=NULL while bprm.vma still points to VMA in new mm",
+      "result": "next setup_new_exec/setup_arg_pages",
+      "limits": "not global synchronization/CR3 certification",
+      "anchors": [
+        "ES23-A035",
+        "ES23-A036",
+        "ES23-A039",
+        "ES23-A073",
+        "ES23-A019"
+      ]
+    },
+    {
+      "id": "ES23-M15",
+      "name": "PT_GNU_STACK with PF_X",
+      "conditions": "ELF PT_GNU_STACK p_flags includes PF_X",
+      "stage": "load_elf_binary",
+      "delta": "executable_stack=EXSTACK_ENABLE_X",
+      "result": "setup_arg_pages receives ENABLE_X",
+      "limits": "requires selected ELF branch and earlier gates",
+      "anchors": [
+        "ES23-A070",
+        "ES23-A071",
+        "ES23-A073",
+        "ES23-A098"
+      ]
+    },
+    {
+      "id": "ES23-M16",
+      "name": "PT_GNU_STACK without PF_X",
+      "conditions": "ELF PT_GNU_STACK p_flags lacks PF_X",
+      "stage": "load_elf_binary",
+      "delta": "executable_stack=EXSTACK_DISABLE_X",
+      "result": "setup_arg_pages local vm_flags clears VM_EXEC",
+      "limits": "but no active VMA vm_flags writeback; no NX proof",
+      "anchors": [
+        "ES23-A071",
+        "ES23-A025",
+        "ES23-A026",
+        "ES23-A027",
+        "ES23-A030"
+      ]
+    },
+    {
+      "id": "ES23-M17",
+      "name": "no PT_GNU_STACK",
+      "conditions": "no ELF header sets executable_stack",
+      "stage": "load_elf_binary",
+      "delta": "EXSTACK_DEFAULT maintained",
+      "result": "arch default remains",
+      "limits": "source VM_STACK_FLAGS defaults executable; not direct CPU proof",
+      "anchors": [
+        "ES23-A070",
+        "ES23-A071",
+        "ES23-A090",
+        "ES23-A098"
+      ]
+    },
+    {
+      "id": "ES23-M18",
+      "name": "policy disabled yet def_flags carries VM_EXEC",
+      "conditions": "mm.def_flags includes VM_EXEC after local disable (conditional producer)",
+      "stage": "setup_arg_pages",
+      "delta": "later OR mm.def_flags restores local VM_EXEC",
+      "result": "local warning may be emitted",
+      "limits": "selected mm_init def_flags producer only mask VM_INIT_DEF_MASK, other mutators unknown",
+      "anchors": [
+        "ES23-A025",
+        "ES23-A026",
+        "ES23-A082"
+      ]
+    },
+    {
+      "id": "ES23-M19",
+      "name": "policy variable not applied",
+      "conditions": "all EXSTACK policy cases, lock helper returns0",
+      "stage": "setup_arg_pages",
+      "delta": "mprotect_fixup commented; only vm_flags_clear removes incomplete flags",
+      "result": "0 contingent on expand_stack",
+      "limits": "VMA.vm_exec stays initial if no other writer, pgprot not recomputed",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A025",
+        "ES23-A026",
+        "ES23-A027",
+        "ES23-A030",
+        "ES23-A087"
+      ]
+    },
+    {
+      "id": "ES23-M20",
+      "name": "selected x86 stack shift",
+      "conditions": "STACK_TOP_MAX=STACK_TOP and randomize_stack_top returns input, arch_align_stack masks low4",
+      "stage": "ELF→setup_arg_pages",
+      "delta": "stack_top unchanged, stack_shift=0",
+      "result": "bprm pointer delta=0",
+      "limits": "paper arithmetic under given x86 config, no runtime evidence",
+      "anchors": [
+        "ES23-A021",
+        "ES23-A022",
+        "ES23-A073",
+        "ES23-A075",
+        "ES23-A076",
+        "ES23-A093",
+        "ES23-A114"
+      ]
+    },
+    {
+      "id": "ES23-M21",
+      "name": "nonzero stack shift alternative",
+      "conditions": "direct call stack_top below initialized vma end",
+      "stage": "setup_arg_pages",
+      "delta": "subtract shift from bprm.p/loader/exec and set arg_start",
+      "result": "return depends downstream",
+      "limits": "shift_arg_pages is commented; no proof actual VMA/pages relocated or rollback",
+      "anchors": [
+        "ES23-A022",
+        "ES23-A023",
+        "ES23-A029",
+        "ES23-A101"
+      ]
+    },
+    {
+      "id": "ES23-M22",
+      "name": "setup_arg_pages writes before write lock",
+      "conditions": "nonzero shift and helper returns nonzero hypothetically",
+      "stage": "setup_arg_pages",
+      "delta": "bprm.p,arg_start,loader,exec already modified",
+      "result": "-EINTR syntactically",
+      "limits": "actual lock helper returns0, so this exact failure producer not proven",
+      "anchors": [
+        "ES23-A022",
+        "ES23-A023",
+        "ES23-A095"
+      ]
+    },
+    {
+      "id": "ES23-M23",
+      "name": "incomplete flags clear",
+      "conditions": "control reaches vm_flags_clear after local flag computation",
+      "stage": "setup_arg_pages",
+      "delta": "vma->vm_flags &=~VM_STACK_INCOMPLETE_SETUP",
+      "result": "proceeds to growth",
+      "limits": "VM_EXEC not reassigned; vm_page_prot untouched",
+      "anchors": [
+        "ES23-A026",
+        "ES23-A027",
+        "ES23-A030",
+        "ES23-A087",
+        "ES23-A089"
+      ]
+    },
+    {
+      "id": "ES23-M24",
+      "name": "stack expand selected default",
+      "conditions": "initial one-page VMA, stack_top=vm_end, P=4096",
+      "stage": "setup_arg_pages→expand_stack",
+      "delta": "stack_base=end-32pages; grow=31; vm_pgoff initially huge",
+      "result": "VM metadata may become32-page VMA",
+      "limits": "requires actual valid VMA and successful locks, no real pages proven",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A032",
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A061",
+        "ES23-A081",
+        "ES23-A093",
+        "ES23-A094"
+      ]
+    },
+    {
+      "id": "ES23-M25",
+      "name": "expand requested address at/above start",
+      "conditions": "PAGE_MASK(address)>=vm_start",
+      "stage": "expand_stack",
+      "delta": "no size/grow computation or write",
+      "result": "0",
+      "limits": "0 is not evidence of any growth",
+      "anchors": [
+        "ES23-A054",
+        "ES23-A058",
+        "ES23-A062",
+        "ES23-A113"
+      ]
+    },
+    {
+      "id": "ES23-M26",
+      "name": "expand beyond available vm_pgoff",
+      "conditions": "address<vm_start but grow>vm_pgoff",
+      "stage": "expand_stack",
+      "delta": "guard fails, no vm_start or pgoff write",
+      "result": "0",
+      "limits": "no active assignment to error=-ENOMEM; not actual runtime reproduction",
+      "anchors": [
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A062",
+        "ES23-A116"
+      ]
+    },
+    {
+      "id": "ES23-M27",
+      "name": "expand below mmap minimum",
+      "conditions": "PAGE_MASK(address)<mmap_min_addr",
+      "stage": "expand_stack",
+      "delta": "return early without growth",
+      "result": "-EPERM",
+      "limits": "setup_arg_pages converts nonzero into -EFAULT if reached",
+      "anchors": [
+        "ES23-A052",
+        "ES23-A054",
+        "ES23-A062",
+        "ES23-A102"
+      ]
+    },
+    {
+      "id": "ES23-M28",
+      "name": "expand within available pgoff",
+      "conditions": "address<start, grow<=vm_pgoff, valid vma/mm, spin lock returns normally",
+      "stage": "expand_stack",
+      "delta": "vm_start=aligned address then vm_pgoff-=grow",
+      "result": "0",
+      "limits": "no active guard gap/rlim or accounting; intermediate writes not atomic with return",
+      "anchors": [
+        "ES23-A055",
+        "ES23-A057",
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A060",
+        "ES23-A061",
+        "ES23-A062"
+      ]
+    },
+    {
+      "id": "ES23-M29",
+      "name": "stack metadata growth vs mm counters",
+      "conditions": "initial mm stack_vm=total_vm=1 then 31-page grow",
+      "stage": "exec setup",
+      "delta": "VMA length changes to32 pages, selected expand function doesn't update stack_vm/total_vm",
+      "result": "0 if normal",
+      "limits": "no global accounting/protection certification",
+      "anchors": [
+        "ES23-A013",
+        "ES23-A031",
+        "ES23-A032",
+        "ES23-A058",
+        "ES23-A060",
+        "ES23-A061"
+      ]
+    },
+    {
+      "id": "ES23-M30",
+      "name": "start_stack written before growth failure",
+      "conditions": "expand_stack below minimum",
+      "stage": "setup_arg_pages",
+      "delta": "mm.start_stack=bprm.p committed before expand, no local rollback",
+      "result": "-EFAULT after ret mapping",
+      "limits": "normal stack setup failure does not automatically restore bprm p/arg_start either",
+      "anchors": [
+        "ES23-A022",
+        "ES23-A023",
+        "ES23-A032",
+        "ES23-A102"
+      ]
+    },
+    {
+      "id": "ES23-M31",
+      "name": "fault within existing stack VMA",
+      "conditions": "simple_find_vma returns containing VMA and stable endpoints",
+      "stage": "do_user_addr_fault",
+      "delta": "vm_start<=address, goto lock_mmap",
+      "result": "myos_handle_mm_fault once",
+      "limits": "0 return not proof PTE exists/CPU retry; R12-F03",
+      "anchors": [
+        "ES23-A065",
+        "ES23-A066",
+        "ES23-A069",
+        "ES23-A088"
+      ]
+    },
+    {
+      "id": "ES23-M32",
+      "name": "fault before stack VMA start",
+      "conditions": "address<vm_start and stable VMA, point-contains lookup",
+      "stage": "do_user_addr_fault",
+      "delta": "lookup returns NULL, myos_bad_area before grow branch",
+      "result": "no expand_stack call",
+      "limits": "MF12-F01 older root; no runtime demonstration",
+      "anchors": [
+        "ES23-A065",
+        "ES23-A066",
+        "ES23-A067",
+        "ES23-A088"
+      ]
+    },
+    {
+      "id": "ES23-M33",
+      "name": "hypothetical fault growth branch",
+      "conditions": "a VMA returned then vma->vm_start>address via concurrency/alternate lookup",
+      "stage": "do_user_addr_fault",
+      "delta": "if VM_GROWSDOWN then calls expand_stack",
+      "result": "error or fault continuation",
+      "limits": "selected stable lookup does not establish this producer",
+      "anchors": [
+        "ES23-A065",
+        "ES23-A066",
+        "ES23-A067",
+        "ES23-A088"
+      ]
+    },
+    {
+      "id": "ES23-M34",
+      "name": "nonzero fault status",
+      "conditions": "myos_handle_mm_fault called and returns nonzero",
+      "stage": "do_user_addr_fault",
+      "delta": "while(fault!=ENOERR) on same value, no new call",
+      "result": "no normal exit proved",
+      "limits": "old MF12-F03, not new retry implementation",
+      "anchors": [
+        "ES23-A069",
+        "ES23-A113"
+      ]
+    },
+    {
+      "id": "ES23-M35",
+      "name": "final user stack pointer interface",
+      "conditions": "ELF control reaches finalize_exec and START_THREAD with bprm.p",
+      "stage": "load_elf_binary",
+      "delta": "bprm.p passed to macro for final user context",
+      "result": "runtime RSP not certified",
+      "limits": "no full arch start_thread register implementation or hardware test",
+      "anchors": [
+        "ES23-A074",
+        "ES23-A022"
+      ]
+    }
+  ],
+  "effects": [
+    {
+      "id": "ES23-X01",
+      "target": "bprm.mm",
+      "when": "mm_alloc normal",
+      "action": "new temporary mm allocated and saved",
+      "anchors": [
+        "ES23-A005",
+        "ES23-A083"
+      ],
+      "limits": "Current mm remains old until exec_mmap; not one object"
+    },
+    {
+      "id": "ES23-X02",
+      "target": "bprm.vma / vma.vm_mm",
+      "when": "vm_area_alloc + vma_init normal",
+      "action": "new VMA is cleared and linked to new mm identity",
+      "anchors": [
+        "ES23-A009",
+        "ES23-A084",
+        "ES23-A103"
+      ],
+      "limits": ""
+    },
+    {
+      "id": "ES23-X03",
+      "target": "vma.vm_ops",
+      "when": "vma_set_anonymous reached",
+      "action": "set NULL, making vma_is_anonymous true",
+      "anchors": [
+        "ES23-A010",
+        "ES23-A085",
+        "ES23-A086"
+      ],
+      "limits": ""
+    },
+    {
+      "id": "ES23-X04",
+      "target": "vma.vm_end/start",
+      "when": "stack init fields reached",
+      "action": "set end=STACK_TOP_MAX and start=end-PAGE_SIZE",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A093",
+        "ES23-A094"
+      ],
+      "limits": ""
+    },
+    {
+      "id": "ES23-X05",
+      "target": "vma.vm_flags",
+      "when": "stack init",
+      "action": "assign VM_SOFTDIRTY|VM_STACK_FLAGS|VM_STACK_INCOMPLETE_SETUP",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A089",
+        "ES23-A090",
+        "ES23-A091"
+      ],
+      "limits": "not downstream EXSTACK policy yet"
+    },
+    {
+      "id": "ES23-X06",
+      "target": "vma.vm_page_prot",
+      "when": "stack init",
+      "action": "assign vm_get_page_prot(initial vm_flags)",
+      "anchors": [
+        "ES23-A011",
+        "ES23-A109",
+        "ES23-A110",
+        "ES23-A111"
+      ],
+      "limits": ""
+    },
+    {
+      "id": "ES23-X07",
+      "target": "vma.vm_pgoff",
+      "when": "insert_vm_struct on valid anon VMA",
+      "action": "assign vm_start>>PAGE_SHIFT",
+      "anchors": [
+        "ES23-A050",
+        "ES23-A085",
+        "ES23-A086"
+      ],
+      "limits": ""
+    },
+    {
+      "id": "ES23-X08",
+      "target": "mm.map_count / list",
+      "when": "simple_vma_link and __vma_link_to_list normal",
+      "action": "insert into list and increment map count",
+      "anchors": [
+        "ES23-A048",
+        "ES23-A049",
+        "ES23-A051",
+        "ES23-A081"
+      ],
+      "limits": "not physical mapping proof"
+    },
+    {
+      "id": "ES23-X09",
+      "target": "mm.stack_vm / mm.total_vm",
+      "when": "insert returns0",
+      "action": "both set to1",
+      "anchors": [
+        "ES23-A012",
+        "ES23-A013"
+      ],
+      "limits": "not expanded later in the selected expand_stack body"
+    },
+    {
+      "id": "ES23-X10",
+      "target": "bprm.p",
+      "when": "stack init success",
+      "action": "set end-sizeof(void*)",
+      "anchors": [
+        "ES23-A013"
+      ],
+      "limits": "no bytes have been copied by this assignment"
+    },
+    {
+      "id": "ES23-X11",
+      "target": "bprm.p",
+      "when": "copy_strings selected string",
+      "action": "decrement by string length before get_arg_page",
+      "anchors": [
+        "ES23-A017",
+        "ES23-A099"
+      ],
+      "limits": "GUP may not produce a defined result"
+    },
+    {
+      "id": "ES23-X12",
+      "target": "bprm.mm",
+      "when": "begin_new_exec switch success",
+      "action": "clear bprm.mm after exec_mmap(current.mm=old bprm.mm)",
+      "anchors": [
+        "ES23-A035",
+        "ES23-A039"
+      ],
+      "limits": ""
+    },
+    {
+      "id": "ES23-X13",
+      "target": "bprm.p/mm.arg_start",
+      "when": "setup_arg_pages after alignment",
+      "action": "subtract stack_shift then set arg_start",
+      "anchors": [
+        "ES23-A021",
+        "ES23-A022"
+      ],
+      "limits": "occurs before mmap_write_lock_killable"
+    },
+    {
+      "id": "ES23-X14",
+      "target": "bprm.loader/bprm.exec",
+      "when": "setup_arg_pages before lock",
+      "action": "conditional/unconditional subtract stack_shift",
+      "anchors": [
+        "ES23-A023"
+      ],
+      "limits": ""
+    },
+    {
+      "id": "ES23-X15",
+      "target": "local.vm_flags",
+      "when": "setup_arg_pages after lock helper",
+      "action": "EXSTACK enable/disable; OR mm.def_flags/incomplete",
+      "anchors": [
+        "ES23-A024",
+        "ES23-A025",
+        "ES23-A026"
+      ],
+      "limits": "no active mprotect_fixup or vm_flags assignment"
+    },
+    {
+      "id": "ES23-X16",
+      "target": "vma.vm_flags",
+      "when": "vm_flags_clear reached",
+      "action": "clear only VM_STACK_INCOMPLETE_SETUP",
+      "anchors": [
+        "ES23-A030",
+        "ES23-A087",
+        "ES23-A089"
+      ],
+      "limits": ""
+    },
+    {
+      "id": "ES23-X17",
+      "target": "mm.start_stack",
+      "when": "setup_arg_pages reaching call",
+      "action": "write bprm.p before expand_stack",
+      "anchors": [
+        "ES23-A032"
+      ],
+      "limits": "failure is not automatically rolled back"
+    },
+    {
+      "id": "ES23-X18",
+      "target": "vma.vm_start / pgoff",
+      "when": "expand_stack meets growth test",
+      "action": "update start then decrement pgoff under page_table_lock",
+      "anchors": [
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A060",
+        "ES23-A061"
+      ],
+      "limits": "no active stack_vm/total_vm accounting or guard check"
+    },
+    {
+      "id": "ES23-X19",
+      "target": "parameter PTE",
+      "when": "myos_creat_one_page_mapping for allocated page",
+      "action": "assign hardcoded PAGE_SHARED_EXEC|PAT|phys to *pte",
+      "anchors": [
+        "ES23-A079",
+        "ES23-A106",
+        "ES23-A112"
+      ],
+      "limits": "not VMA.vm_page_prot, and no actual runtime PTE check"
+    },
+    {
+      "id": "ES23-X20",
+      "target": "return_status",
+      "when": "expand_stack returns",
+      "action": "ENOERR initially zero, even if no growth; EPERM if below minimum",
+      "anchors": [
+        "ES23-A054",
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A062",
+        "ES23-A113",
+        "ES23-A116"
+      ],
+      "limits": ""
+    }
+  ],
+  "bounded_math": [
+    {
+      "label": "x86 selected stack top and alignment",
+      "assumptions": "64-bit unsigned long; PAGE_SHIFT=12; STACK_TOP_MAX=STACK_TOP=TASK_SIZE_MAX; randomize_stack_top returns input",
+      "top_hex": "0x7ffffffff000",
+      "initial_start_hex": "0x7fffffffe000",
+      "initial_bprm_p_hex": "0x7fffffffeff8",
+      "aligned_stacktop_hex": "0x7ffffffff000",
+      "stack_shift_bytes": 0,
+      "anchors": [
+        "ES23-A011",
+        "ES23-A013",
+        "ES23-A021",
+        "ES23-A022",
+        "ES23-A075",
+        "ES23-A076",
+        "ES23-A092",
+        "ES23-A093",
+        "ES23-A094",
+        "ES23-A114"
+      ]
+    },
+    {
+      "label": "32-page growth under initial VMA",
+      "assumptions": "initial one-page stack published, aligned address and vm_pgoff initialized; no other writers",
+      "stack_base_hex": "0x7ffffffdf000",
+      "initial_pgoff": "34359738366",
+      "grow_pages": "31",
+      "new_pgoff": "34359738335",
+      "old_vma_pages": 1,
+      "new_vma_pages": 32,
+      "mm_stack_vm_written": 1,
+      "mm_total_vm_written": 1,
+      "anchors": [
+        "ES23-A011",
+        "ES23-A013",
+        "ES23-A032",
+        "ES23-A050",
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A061",
+        "ES23-A081",
+        "ES23-A094"
+      ]
+    },
+    {
+      "label": "no-grow zero return",
+      "assumptions": "mmap_min_addr valid; address<start, grow>vma->vm_pgoff; function reaches final return",
+      "written_start": false,
+      "returned_code": 0,
+      "anchors": [
+        "ES23-A052",
+        "ES23-A054",
+        "ES23-A058",
+        "ES23-A059",
+        "ES23-A062",
+        "ES23-A113"
+      ]
+    },
+    {
+      "label": "page protection layer separation",
+      "assumptions": "selected private stack flags VM_READ|VM_WRITE|VM_EXEC; underlying GUP alloc returns valid page and mapping helper writes a PTE",
+      "VMA_template": "PAGE_COPY_EXEC (RW0, NX0 before supported filtering)",
+      "GUP_PTE_template": "PAGE_SHARED_EXEC (RW1, NX0) | PAT | physical address",
+      "flags_policy_written_to_VMA": false,
+      "anchors": [
+        "ES23-A011",
+        "ES23-A025",
+        "ES23-A027",
+        "ES23-A030",
+        "ES23-A079",
+        "ES23-A106",
+        "ES23-A109",
+        "ES23-A110",
+        "ES23-A111",
+        "ES23-A112"
+      ]
+    }
+  ],
+  "counts": {
+    "source_anchors": 116,
+    "nodes": 72,
+    "edges": 74,
+    "scenarios": 35,
+    "effects": 20,
+    "math_cases": 4
+  },
+  "limitations": [
+    "R22-S01/S02/S03 require stage-before-return and object identity",
+    "R12-S01/S02 and MF12-F01/F02/F03 remain prior root causes; R21 NULL traversal constraints still apply",
+    "15 current/mm transition used only at selected interface; neither CR3 nor all context locking reaudited",
+    "19 anonymous page and 20 VM protection distinction carried as input, not full reanalysis",
+    "No compile/QEMU or runtime page mapping, CPU stack pointer, argv bytes or RSP evidence",
+    "Uninitialized C nonvoid return and invalid NULL pointers have no deterministic machine result; source inference conditional",
+    "Parser and graph checks do not establish semantics"
+  ]
+}

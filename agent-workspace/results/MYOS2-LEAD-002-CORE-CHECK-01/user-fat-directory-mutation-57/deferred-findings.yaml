@@ -1,0 +1,382 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57",
+  "record_type": "bounded_conditional_findings_increment",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "source_pin_short12": "a039d9803ade",
+  "result_base_short12": "9b7239b29b0d",
+  "source_snapshot": "time",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "not_vulnerability_count": true,
+  "source_only_candidate_count": 8,
+  "actually_reproduced_runtime_faults": 0,
+  "previous_qualified_ids_not_renumbered": true,
+  "prior_verdicts": {
+    "batch35": "PASS_PENDING_LOCAL_with_R35-S01/S02",
+    "batch36": "PASS_PENDING_LOCAL_after_documentation_closure_R36C-S01",
+    "batch38": "PASS_PENDING_LOCAL_with_R38-S01/S02",
+    "batch55": "PASS_PENDING_LOCAL_with_R55-S01/S02",
+    "batch56": "PASS_PENDING_LOCAL_with_R56-S01/S02"
+  },
+  "new_findings": [
+    {
+      "id": "DM57-F01",
+      "topic": "A",
+      "kind": "conditional_alias_name_generation",
+      "fact": "正常完成的短别名生成固定使用~1，所读vfat_add_entry/vfat_build_slots链没有本地冲突探测或选择备用尾号；不同长名可产生同名短别名",
+      "premises": [
+        "len>8且产生相同前6字节/扩展",
+        "所有指针、拷贝及数组合法",
+        "执行到固定后缀"
+      ],
+      "counter": [
+        "未穷尽其他目录级重名检查",
+        "无真实盘面或目录冲突复现"
+      ],
+      "prior": [],
+      "anchors": [
+        "A05",
+        "A06",
+        "A09",
+        "A17"
+      ],
+      "scope": "alias_generation_only",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F01",
+      "evidence_class": "source_conditional_candidate",
+      "status": "deferred_owner_not_ready",
+      "counterevidence": [
+        "未穷尽其他目录级重名检查",
+        "无真实盘面或目录冲突复现"
+      ],
+      "resume_gate": "Owner明确授权未来定点验证或处理；非按日期自动恢复",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-F02",
+      "topic": "A",
+      "kind": "conditional_slot_count_capacity_excess",
+      "fact": "固定MSDOS_SLOTS=21；helper输入len=261时(len+12)/13=21个长槽外加1个短槽，超出vfat_add_entry固定数组容量",
+      "premises": [
+        "仅helper输入域len=261",
+        "整数有效且先前namebuf分配/复制正常",
+        "短项地址按ps递增"
+      ],
+      "counter": [
+        "FAT_LFN_LEN=255存在但所读helper没有直接调用门",
+        "并未证明可由真实VFS的合规name输入抵达261"
+      ],
+      "prior": [],
+      "anchors": [
+        "A10",
+        "A13",
+        "A14",
+        "A30"
+      ],
+      "scope": "helper_only_not_user_reachable",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F02",
+      "evidence_class": "source_conditional_candidate",
+      "status": "deferred_owner_not_ready",
+      "counterevidence": [
+        "FAT_LFN_LEN=255存在但所读helper没有直接调用门",
+        "并未证明可由真实VFS的合规name输入抵达261"
+      ],
+      "resume_gate": "Owner明确授权未来定点验证或处理；非按日期自动恢复",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-F03",
+      "topic": "A",
+      "kind": "directory_free_run_count_mismatch",
+      "fact": "fat_add_entries首空槽记录empty_off却没有同时增加emtpy_count；nr_slots=N的break需第N+1个连续空槽；若上限停止时已得起点但不足N个槽仍走固定N字节写入请求",
+      "premises": [
+        "读到可识别E/X条目并正常结束循环",
+        "iobuf/整数/缓冲合法",
+        "采用上限出口与bufend不冲突的条件模型"
+      ],
+      "counter": [
+        "未运行真实盘查",
+        "不同目录布局可能提供额外空槽",
+        "iobuf_write可提前错误返回或非法访问"
+      ],
+      "prior": [
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F03"
+      ],
+      "anchors": [
+        "A21",
+        "A23",
+        "A24",
+        "A25",
+        "A26",
+        "A27"
+      ],
+      "scope": "new_free_run_consumer_logic",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F03",
+      "evidence_class": "source_conditional_candidate",
+      "status": "deferred_owner_not_ready",
+      "counterevidence": [
+        "未运行真实盘查",
+        "不同目录布局可能提供额外空槽",
+        "iobuf_write可提前错误返回或非法访问"
+      ],
+      "resume_gate": "Owner明确授权未来定点验证或处理；非按日期自动恢复",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-F04",
+      "topic": "B",
+      "kind": "create_return_without_local_dentry_inode_publication",
+      "fact": "FAT32_create经vfat_add_entry正常返回0时本活动函数未构建inode、未设置dentry->d_inode；紧邻do_creatat/done_path_create也未实施这种绑定",
+      "premises": [
+        "active_dir_inode_ops binds FAT32_create",
+        "vfat_add_entry正常返回0",
+        "selected direct VFS path and objects valid"
+      ],
+      "counter": [
+        "未展开所有dcache/其它消费者",
+        "无真实open(O_CREAT)结果",
+        "此前对象来源R38仍有限"
+      ],
+      "prior": [
+        "CORE-USER-FAT-SUPERBLOCK-BINDING-38::SB38-F01"
+      ],
+      "anchors": [
+        "B01",
+        "B02",
+        "B14",
+        "B15",
+        "B17",
+        "B18"
+      ],
+      "scope": "direct_callback_and_immediate_consumer_only",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F04",
+      "evidence_class": "source_conditional_candidate",
+      "status": "deferred_owner_not_ready",
+      "counterevidence": [
+        "未展开所有dcache/其它消费者",
+        "无真实open(O_CREAT)结果",
+        "此前对象来源R38仍有限"
+      ],
+      "resume_gate": "Owner明确授权未来定点验证或处理；非按日期自动恢复",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-F05",
+      "topic": "B",
+      "kind": "mkdir_resource_and_parent_entry_partial_completion",
+      "fact": "FAT32_alloc_new_dir的早退不释放已分配buf；FAT EOF请求和父目录插入结果未形成可见回滚/事务，mkdir按局部err返回",
+      "premises": [
+        "newdir reaches allocated buffer and selected normal/failure prefixes",
+        "callee calls return",
+        "no hidden cleanup outside inspected direct body"
+      ],
+      "counter": [
+        "不能签真实块写成功",
+        "未证明分配状态变化或可观察泄漏数量",
+        "u32-to-int高位转换结果依赖实现"
+      ],
+      "prior": [
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F05",
+        "CORE-USER-FAT-ALLOCATION-GEOMETRY-56::AG56-F02"
+      ],
+      "anchors": [
+        "B06",
+        "B09",
+        "B10",
+        "B03",
+        "B04"
+      ],
+      "scope": "newdir_and_parent_entry_order",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F05",
+      "evidence_class": "source_conditional_candidate",
+      "status": "deferred_owner_not_ready",
+      "counterevidence": [
+        "不能签真实块写成功",
+        "未证明分配状态变化或可观察泄漏数量",
+        "u32-to-int高位转换结果依赖实现"
+      ],
+      "resume_gate": "Owner明确授权未来定点验证或处理；非按日期自动恢复",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-F06",
+      "topic": "C",
+      "kind": "directory_empty_error_to_success_boundary",
+      "fact": "FAT32_dir_empty遇到FAT32_get_full_ent以ERR_PTR正常返回的while条件为假时可保持初值ENOERR返回；删除流程据该0进入释放",
+      "premises": [
+        "getter以编码错误安全返回（非内部先失效）",
+        "此前没有普通项令result=-ENOTEMPTY",
+        "release正常返回"
+      ],
+      "counter": [
+        "某些错误在getter->attr处提前失去合法性",
+        "普通项若已被识别会先返回-ENOTEMPTY",
+        "末项覆盖是已有IT35-F02而非本批独立新成因"
+      ],
+      "prior": [
+        "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F01",
+        "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F02"
+      ],
+      "anchors": [
+        "C01",
+        "C02",
+        "C04",
+        "C06",
+        "C07",
+        "C11"
+      ],
+      "scope": "new_dir_empty_consumer_return_masking",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F06",
+      "evidence_class": "source_conditional_candidate",
+      "status": "deferred_owner_not_ready",
+      "counterevidence": [
+        "某些错误在getter->attr处提前失去合法性",
+        "普通项若已被识别会先返回-ENOTEMPTY",
+        "末项覆盖是已有IT35-F02而非本批独立新成因"
+      ],
+      "resume_gate": "Owner明确授权未来定点验证或处理；非按日期自动恢复",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-F07",
+      "topic": "C",
+      "kind": "delete_public_result_not_storage_commit",
+      "fact": "rmdir/unlink先释放子簇再请求父目录删除标记且无统一错误传递；FAT32_release_clusters/mark_entry_romoved两个int helper未return且其值未被所读调用者消费",
+      "premises": [
+        "目录info合法、缓冲初始化及返回链有效",
+        "两个helper正常完成且调用方不使用返回值"
+      ],
+      "counter": [
+        "不能据缺return判每次调用必然UB",
+        "无法认证已发生真实扇区写入、FAT表回收或POSIX引用生命周期"
+      ],
+      "prior": [
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F03",
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F04",
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F05"
+      ],
+      "anchors": [
+        "C08",
+        "C09",
+        "C10",
+        "C12",
+        "C14",
+        "C19",
+        "C20"
+      ],
+      "scope": "new_delete_consumer_order_and_return",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F07",
+      "evidence_class": "source_conditional_candidate",
+      "status": "deferred_owner_not_ready",
+      "counterevidence": [
+        "不能据缺return判每次调用必然UB",
+        "无法认证已发生真实扇区写入、FAT表回收或POSIX引用生命周期"
+      ],
+      "resume_gate": "Owner明确授权未来定点验证或处理；非按日期自动恢复",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-F08",
+      "topic": "C",
+      "kind": "directory_entry_range_metadata_to_marking",
+      "fact": "lookup的dentry_position取游标de_start、dentry_length=off-de_start；标记helper按长度每32字节写一个e5，长度非整倍数则向上取整调用，跨buffer和非法off的更早停止须单列",
+      "premises": [
+        "旧lookup成功构造合法元信息对象",
+        "off>=de_start，算术/指针有效",
+        "parent iobuf可正常初始化及访问"
+      ],
+      "counter": [
+        "无法确认具体真实目录项的值由旧lookup稳定产生",
+        "跨buffer写入时不得跨最早越界继续认定后续事件"
+      ],
+      "prior": [
+        "CORE-USER-FAT-DIR-ITERATOR-35::IT35-F02",
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F03"
+      ],
+      "anchors": [
+        "C15",
+        "C16",
+        "C17",
+        "C09",
+        "A27"
+      ],
+      "scope": "new_delete_range_consumer",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-F08",
+      "evidence_class": "source_conditional_candidate",
+      "status": "deferred_owner_not_ready",
+      "counterevidence": [
+        "无法确认具体真实目录项的值由旧lookup稳定产生",
+        "跨buffer写入时不得跨最早越界继续认定后续事件"
+      ],
+      "resume_gate": "Owner明确授权未来定点验证或处理；非按日期自动恢复",
+      "owner_action_now": "none"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "DM57-U01",
+      "topic": "A",
+      "kind": "input_validation_gap",
+      "status": "needs_evidence",
+      "detail": "从VFS qstr到vfat_build_slots的最终长度上限、NUL可读范围、具体字符集及是否有前置同名检测未穷尽；len>260仅helper模型。",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-U01",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-U02",
+      "topic": "A",
+      "kind": "directory_storage_gap",
+      "status": "needs_evidence",
+      "detail": "FAT32_iobuf_expand的真实数组容量与多簇缓冲内容/设备读写状态使用已审R56/R55；本批未测试真实目录回收、扩容或持久化。",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-U02",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-U03",
+      "topic": "B",
+      "kind": "mkdir_object_provenance_gap",
+      "status": "needs_evidence",
+      "detail": "FAT32与vfat两个超级块来源R38不可互换；不能验证真实启动选择、root/child inode合法性、mkdir簇真实成功预留。",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-U03",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-U04",
+      "topic": "B",
+      "kind": "integer_conversion_gap",
+      "status": "needs_evidence",
+      "detail": "u32负错误编码转int超范围标准实现定义和x86-64典型二补数模型分开；未预处理或编译确认。",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-U04",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-U05",
+      "topic": "C",
+      "kind": "open_inode_lifetime_gap",
+      "status": "needs_evidence",
+      "detail": "并发/锁、dcache和打开中的文件引用、unlink延迟回收、内核panic或重挂载都未审，本批无POSIX生命周期保证。",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-U05",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "DM57-U06",
+      "topic": "C",
+      "kind": "return_and_persistence_gap",
+      "status": "needs_evidence",
+      "detail": "ROOTBLK、FAT setter和void release的真实磁盘持久化、部分写、失败重试未运行；不据正常局部返回签盘成功。",
+      "qualified_id": "CORE-USER-FAT-DIRECTORY-MUTATION-57::DM57-U06",
+      "owner_action_now": "none"
+    }
+  ],
+  "not_modified": [
+    "kernel",
+    "old_findings",
+    "old_reports",
+    "lead",
+    "PR_metadata",
+    "Mnemosyne"
+  ],
+  "next_action": "C05 independent acceptance only; not batch58"
+}

@@ -1,0 +1,83 @@
+// MYOS2-LEAD-002-CHAT-EXEC-12 / CORE-USER-PRINTF-STRING-POINTER-93
+// Fixed time@a039d9803ade, static-only diagram; NOT a runtime CFG.
+// Solid blue = actual function CALL; black solid = argument DATA, not a call.
+// Dotted = source order; dashed = conditional or independent hypothetical.
+// Purple dashed = callee return value FLOW when independently established.
+// Orange dashed = UNPROVEN return and STOP; do not treat as a valid edge to suffix.
+digraph SP93_String_Pointer {
+  graph [rankdir=LR,labelloc=t,label="SP93: %s guard/precision -> width/memmove -> %c and %p return gate"];
+  node [shape=box,fontsize=10]; edge [fontsize=9];
+  subgraph cluster_A {
+    label="A: real %s inputs and placeholder branches";
+    fmt [label="valid fmt string\nordinary / %s / %c / %% / %p"];
+    parse [label="format_decode\nSTR / CHAR / PTR / PERCENT"];
+    strCase [label="vsnprintf STR case\nva_arg(char*)"];
+    strFn [label="string(buf,end,s,spec)"];
+    check [label="check_pointer"];
+    msg [label="check_pointer_msg\nNULL -> (null), low/ERR -> (efault)"];
+    errstr [label="error_string\nprecision=-1 -> 2*sizeof(void*)"];
+    nocheck [label="string_nocheck\nwhile(lim--) reads *s++\nNUL break; write if buf<end\nbut logical buf++"];
+    astatus [shape=note,label="check_pointer returns -EFAULT internally\nstring returns advanced buf pointer\nnot vsnprintf return -EFAULT"];
+    fmt -> parse [label="DATA: format bytes"];
+    parse -> strCase [style=dashed,label="conditional decoded STR"];
+    strCase -> strFn [color=blue,label="CALL"];
+    strFn -> check [color=blue,label="CALL"];
+    check -> msg [color=blue,label="CALL"];
+    check -> errstr [color=blue,style=dashed,label="CALL if placeholder"];
+    errstr -> nocheck [color=blue,label="CALL"];
+    strFn -> nocheck [color=blue,style=dashed,label="CALL if no placeholder"];
+    check -> astatus [style=dotted,label="internal status"];
+    astatus -> strFn [style=dashed,color=purple,label="RETURN/FLOW: advances buf"];
+  }
+  subgraph cluster_B {
+    label="B: string field shift and character physical byte output";
+    widen [label="widen_string\nn vs field_width; LEFT"];
+    shift [label="move_right(base,end,len,spaces)\nsize=end-base; if size<=spaces fill only"];
+    move [label="generic memmove\nif dest>src copy backward\nunder __HAVE_ARCH_* selection gate"];
+    fill [label="generic memset spaces\nunder arch selection gate"];
+    bstatus [shape=note,label="buf-n / buf+spaces / str-buf\nare C pointer arithmetic gates\nmath final image != visited bytes"];
+    charCase [label="vsnprintf CHAR case"];
+    leading [label="if !LEFT: --width>0 spaces"];
+    cval [label="va_arg(int) -> unsigned char\nwrite one byte incl NUL, str++"];
+    trailing [label="tail: --width>0 spaces"];
+    pctCase [label="PERCENT_CHAR\nwrite '%' and str++\nno va_arg"];
+    out [label="vsnprintf out:\nsize>0 writes final NUL\nreturn str-buf demand"];
+    nocheck -> widen [color=blue,label="CALL"];
+    widen -> shift [color=blue,style=dashed,label="CALL if !LEFT and width>n"];
+    shift -> move [color=blue,style=dashed,label="CALL if size>spaces and len>0"];
+    shift -> fill [color=blue,style=dashed,label="CALL if space remains"];
+    widen -> bstatus [style=dotted,label="data/pointer range"];
+    shift -> bstatus [style=dotted,label="source and destination intervals"];
+    parse -> charCase [style=dashed,label="decoded CHAR"];
+    charCase -> leading [style=dotted,label="source order"];
+    leading -> cval [style=dotted,label="source order"];
+    cval -> trailing [style=dotted,label="source order"];
+    parse -> pctCase [style=dashed,label="decoded %%"];
+    trailing -> out [style=dotted,label="outer source order if valid"];
+    pctCase -> out [style=dotted,label="outer source order if valid"];
+    widen -> out [style=dashed,color=purple,label="RETURN/FLOW via string and STR case"];
+  }
+  subgraph cluster_C {
+    label="C: pointer CALL, missing active return, hypothetical suffix only";
+    ptrCase [label="vsnprintf PTR case:\nva_arg(void*), str=pointer(...)"];
+    ptrFn [label="pointer(fmt,buf,end,ptr,spec)\nall old switch/return commented"];
+    noReturn [shape=octagon,label="FIRST STOP:\nnonvoid pointer body closes\nwithout active return;\ncaller consumes result"];
+    suffix [label="while(isalnum(*fmt)) fmt++\nonly hypothetical if valid return"];
+    cat [label="isalnum(c) macro\n_U|_L|_D"];
+    table [label="_ctype[unsigned char]\nASCII A,1 yes; '_' ':' no"];
+    nextFmt [label="format_decode on remaining suffix\nonly hypothetical after valid return"];
+    producer [label="create_worker pr_err_once(...%pe)\nsource producer ONLY; logging route not traced"];
+    parse -> ptrCase [style=dashed,label="decoded PTR"];
+    ptrCase -> ptrFn [color=blue,label="CALL with void* argument"];
+    ptrFn -> noReturn [style=dotted,label="actual function body end"];
+    ptrCase -> noReturn [color=orange,style=dashed,label="RETURN/FLOW cannot be certified"];
+    ptrCase -> suffix [style=dashed,label="HYPOTHETICAL only (not valid real flow)"];
+    suffix -> cat [style=dotted,label="macro expression"];
+    cat -> table [label="MACRO/table DATA expansion, not function call"];
+    suffix -> nextFmt [style=dashed,label="HYPOTHETICAL resume"];
+    producer -> ptrCase [style=dashed,label="NOT a proven call edge: pr_err route unknown"];
+  }
+  limit [shape=note,label="93 has NO D00; 92 PASS_PENDING_LOCAL with R92-S01/02/03\nR91-S01/02/03 & R90C-S01 retained;\nP9/build/QEMU/hardware/concurrency/Graphviz NOT_RUN\nC06 independent Pro acceptance PENDING"];
+  noReturn -> limit [style=dashed,label="report missing contract"];
+  bstatus -> limit [style=dashed,label="do not claim binary safety"];
+}

@@ -1,0 +1,379 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-WORKQUEUE-POOL-BOOTSTRAP-89",
+  "record_type": "bounded_worker_pool_bootstrap_conditional_findings_and_gaps",
+  "produced_by": "GPT-6（本对话模型标识；后台不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra",
+  "date": "2026-11-15",
+  "base_snapshot": "time",
+  "read_channel": "connector",
+  "status": "STATIC_AUTHOR_FINDINGS_PENDING_PRO_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "R88_01": {
+    "old_status": "RETURN_DOCUMENTATION_ONLY",
+    "new_89_correction": "CORRECTION_SUBMITTED_PENDING_C06_REVIEW",
+    "old_88_unchanged": true
+  },
+  "open_questions": [
+    "WQP89-U01",
+    "WQP89-U02",
+    "WQP89-U03",
+    "WQP89-U04",
+    "WQP89-U05",
+    "WQP89-U06",
+    "WQP89-U07",
+    "WQP89-U08",
+    "WQP89-U09"
+  ],
+  "new_candidates": [
+    {
+      "qualified_id": "WQP89-F01",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "title": "IDA allocator returns a found ID without reserving its bitmap bit",
+      "conditional_source_root": "ida_init supplies valid bitmap; first and second ida_alloc_range serial calls see the same zero bit with no intervening writer",
+      "local_implication": "both return same ID; worker->id and format_worker_id can reuse numeric identity",
+      "first_unproved_gate": "source does not prove two distinct worker tasks were successfully created, nor exhaustive previous IDA root history",
+      "evidence_ids": [
+        "WQP89-E077",
+        "WQP89-E078",
+        "WQP89-E079",
+        "WQP89-E082",
+        "WQP89-E083",
+        "WQP89-E084",
+        "WQP89-E060",
+        "WQP89-E064"
+      ],
+      "prior_findings_links": [],
+      "status": "DEFERRED_FOR_PRO_REVIEW",
+      "fix_authorized": false,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQP89-F02",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "title": "IDA release uses mask AND rather than clear-bit operation",
+      "conditional_source_root": "valid bitmap word and supplied id, ida_free normally reached",
+      "local_implication": "bitmap[word] &= 1<<bit may retain just that bit and drop unrelated bits; no general released-bit guarantee",
+      "first_unproved_gate": "intent, overflow/capacity, actual allocated bits and runtime effects untested",
+      "evidence_ids": [
+        "WQP89-E081",
+        "WQP89-E084"
+      ],
+      "prior_findings_links": [
+        "WQP89-F01 shared IDA contract; not counted as a separate observed incident"
+      ],
+      "status": "DEFERRED_FOR_PRO_REVIEW",
+      "fix_authorized": false,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQP89-F03",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "title": "IDA bitmap and IDR array allocation results are not checked in nearest init wrappers",
+      "conditional_source_root": "ida_init kzalloc returns NULL, or idr_init_base kzalloc returns NULL",
+      "local_implication": "initiated=true is written despite NULL; subsequent ida_alloc_range or idr_alloc_u32 may reach NULL dereference under valid follow-up calls",
+      "first_unproved_gate": "actual allocator failure and CPU exception not observed; different wrappers share failure-check class",
+      "evidence_ids": [
+        "WQP89-E052",
+        "WQP89-E022",
+        "WQP89-E023",
+        "WQP89-E078",
+        "WQP89-E025",
+        "WQP89-E026"
+      ],
+      "prior_findings_links": [],
+      "status": "DEFERRED_FOR_PRO_REVIEW",
+      "fix_authorized": false,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQP89-F04",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "title": "manager retry loop has no active cooldown on persistent failed creation",
+      "conditional_source_root": "pending worklist nonempty, nr_running0, idle0, each create_worker returns NULL promptly and need remains true",
+      "local_implication": "inner while can repeat without source-visible timer/cooldown/sleep; no finite return in this stable-condition model",
+      "first_unproved_gate": "not actual infinite loop; external states/allocator/locking may change or block earlier",
+      "evidence_ids": [
+        "WQP89-E103",
+        "WQP89-E104",
+        "WQP89-E105",
+        "WQP89-E110",
+        "WQP89-E111",
+        "WQP89-E112",
+        "WQP89-E113",
+        "WQP89-E114"
+      ],
+      "prior_findings_links": [],
+      "status": "DEFERRED_FOR_PRO_REVIEW",
+      "fix_authorized": false,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQP89-F05",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "title": "worker creation does not explicitly reject NULL task after kthread return",
+      "conditional_source_root": "ordinary pool and kthread_create_on_node returns NULL rather than ERR_PTR",
+      "local_implication": "IS_ERR(NULL) false in chosen pointer convention; set_user_nice receives NULL and normal proof stops",
+      "first_unproved_gate": "callee may not return NULL in allowed environment, so this is a conditional API mismatch not reproduced bad pointer",
+      "evidence_ids": [
+        "WQP89-E065",
+        "WQP89-E066",
+        "WQP89-E068",
+        "WQP89-E089",
+        "WQP89-E090",
+        "WQP89-E091",
+        "WQP89-E092"
+      ],
+      "prior_findings_links": [],
+      "status": "DEFERRED_FOR_PRO_REVIEW",
+      "fix_authorized": false,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQP89-F06",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "title": "pool initializer depends on zeroed prior scalars beyond explicit assignments",
+      "conditional_source_root": "valid reused pool object enters init_worker_pool with nonzero nr_running/nr_workers/manager/POOL_MANAGER_ACTIVE",
+      "local_implication": "source overwrites IDs and lists, ORs DISASSOCIATED, but selected scalars/manager may retain prior values, altering policy",
+      "first_unproved_gate": "static perCPU allocation may already provide zero storage; no verified real invalid reuse",
+      "evidence_ids": [
+        "WQP89-E013",
+        "WQP89-E014",
+        "WQP89-E015",
+        "WQP89-E016",
+        "WQP89-E031",
+        "WQP89-E032",
+        "WQP89-E033",
+        "WQP89-E034"
+      ],
+      "prior_findings_links": [],
+      "status": "DEFERRED_FOR_PRO_REVIEW",
+      "fix_authorized": false,
+      "runtime": "NOT_RUN"
+    },
+    {
+      "qualified_id": "WQP89-F07",
+      "classification": "CONDITIONAL_STATIC_SOURCE_CANDIDATE_NOT_PROVEN_RUNTIME_BUG",
+      "title": "worker list insertion precedes worker->pool publication",
+      "conditional_source_root": "worker_attach_to_pool called with valid list/node, concurrent readers are hypothetically present",
+      "local_implication": "pool.workers can be updated before worker.pool gets assigned; local state has a publication gap",
+      "first_unproved_gate": "needs actual concurrency and memory-ordering proof; not an observed race or uninitialized data access",
+      "evidence_ids": [
+        "WQP89-E073",
+        "WQP89-E074",
+        "WQP89-E075",
+        "WQP89-E076",
+        "WQP89-E102"
+      ],
+      "prior_findings_links": [],
+      "status": "DEFERRED_FOR_PRO_REVIEW",
+      "fix_authorized": false,
+      "runtime": "NOT_RUN"
+    }
+  ],
+  "new_gaps": [
+    {
+      "qualified_id": "WQP89-U01",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "actual startup call reachability",
+      "evidence_missing": "start_kernel and kernel_init_freeable fixed sites have calls commented; other callers and runtime boot entry not exhaustively surveyed",
+      "first_proof_gate": "source call chain beyond two sites and separate authorization to observe running system",
+      "evidence_ids": [
+        "WQP89-E050",
+        "WQP89-E051",
+        "WQP89-E040",
+        "WQP89-E048"
+      ],
+      "status": "DEFERRED"
+    },
+    {
+      "qualified_id": "WQP89-U02",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "valid perCPU pool storage for each enumerated CPU",
+      "evidence_missing": "static template definitions do not certify all logical CPU instances are copied/decoded/mapped; PA87 address risk retained",
+      "first_proof_gate": "verified compiled link/percpu addressing and zero state for N CPU units",
+      "evidence_ids": [
+        "WQP89-E004",
+        "WQP89-E005",
+        "WQP89-E006",
+        "WQP89-E007",
+        "WQP89-E010"
+      ],
+      "status": "DEFERRED"
+    },
+    {
+      "qualified_id": "WQP89-U03",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "IDA/IDR underlying buffer lifecycle",
+      "evidence_missing": "ida_init/idr_init_base do not check returned pointer; actual lower allocator clear and failure behavior not fully inspected",
+      "first_proof_gate": "allocation outcome and bitmap initialization from completed lower-layer proof",
+      "evidence_ids": [
+        "WQP89-E022",
+        "WQP89-E023",
+        "WQP89-E052",
+        "WQP89-E077",
+        "WQP89-E084"
+      ],
+      "status": "DEFERRED"
+    },
+    {
+      "qualified_id": "WQP89-U04",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "IDR pool ID assignment and release semantics",
+      "evidence_missing": "idr_alloc returns a conditional ID; no complete idr_find/idr_remove or all current consumers audited",
+      "first_proof_gate": "pool ID ownership/cleanup invariants and unique accepted IDs",
+      "evidence_ids": [
+        "WQP89-E020",
+        "WQP89-E021",
+        "WQP89-E025",
+        "WQP89-E026",
+        "WQP89-E027"
+      ],
+      "status": "DEFERRED"
+    },
+    {
+      "qualified_id": "WQP89-U05",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "kthread task creation/wakeup and cleanup",
+      "evidence_missing": "workqueue create checks IS_ERR and wakes task, but actual __kthread_create_on_node completion and schedule execution not proven",
+      "first_proof_gate": "valid task object return; wake_up_process lower scheduler path and lifecycle owner",
+      "evidence_ids": [
+        "WQP89-E065",
+        "WQP89-E066",
+        "WQP89-E068",
+        "WQP89-E071",
+        "WQP89-E090",
+        "WQP89-E093",
+        "WQP89-E094",
+        "WQP89-E095",
+        "WQP89-E096",
+        "WQP89-E098"
+      ],
+      "status": "DEFERRED"
+    },
+    {
+      "qualified_id": "WQP89-U06",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "thread/pool list and lock correctness",
+      "evidence_missing": "list nodes, count and lock requests are read locally but no actual concurrency state or full return chain observed",
+      "first_proof_gate": "valid double-link list invariant, lock context, interrupt restore and reentrancy policy",
+      "evidence_ids": [
+        "WQP89-E069",
+        "WQP89-E070",
+        "WQP89-E073",
+        "WQP89-E076",
+        "WQP89-E099",
+        "WQP89-E100",
+        "WQP89-E102",
+        "WQP89-E117",
+        "WQP89-E118"
+      ],
+      "status": "DEFERRED"
+    },
+    {
+      "qualified_id": "WQP89-U07",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "manager progress/termination under changing state",
+      "evidence_missing": "two need checks and retry loop depend on resource returns, list counts and activity during unlocked interval",
+      "first_proof_gate": "validated fairness, source states over time and bounded allocator behavior, excluded full scheduler review",
+      "evidence_ids": [
+        "WQP89-E103",
+        "WQP89-E104",
+        "WQP89-E105",
+        "WQP89-E106",
+        "WQP89-E107",
+        "WQP89-E108",
+        "WQP89-E109",
+        "WQP89-E110",
+        "WQP89-E111",
+        "WQP89-E112",
+        "WQP89-E113",
+        "WQP89-E114"
+      ],
+      "status": "DEFERRED"
+    },
+    {
+      "qualified_id": "WQP89-U08",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "actual nice/CPU binding and BH executor",
+      "evidence_missing": "formatter consumes attrs.nice and set_user_nice wrapper call, CPU binding comment, BH branch skips thread; task scheduling and BH executor excluded",
+      "first_proof_gate": "validated set_user_nice return, affinity, actual CPU/BH context and sched state",
+      "evidence_ids": [
+        "WQP89-E017",
+        "WQP89-E056",
+        "WQP89-E057",
+        "WQP89-E058",
+        "WQP89-E059",
+        "WQP89-E068",
+        "WQP89-E071",
+        "WQP89-E074",
+        "WQP89-E075"
+      ],
+      "status": "DEFERRED"
+    },
+    {
+      "qualified_id": "WQP89-U09",
+      "classification": "UNRESOLVED_EVIDENCE_GAP_NOT_A_BUG_FINDING",
+      "title": "upstream consumer and historic qualified issue boundaries",
+      "evidence_missing": "88 WQ88-F03 pool BH kick path and 87 PA87 perCPU pointer/slot constraints remain required; no new worker running proof",
+      "first_proof_gate": "qualified prior findings plus full work-item init/PWQ mapping and real callback reachability",
+      "evidence_ids": [
+        "WQP89-E003",
+        "WQP89-E004",
+        "WQP89-E005",
+        "WQP89-E048",
+        "WQP89-E049",
+        "WQP89-E050",
+        "WQP89-E051"
+      ],
+      "status": "DEFERRED"
+    }
+  ],
+  "prior_findings_links": [
+    {
+      "prior": "R88-01",
+      "state": "RETURN_DOCUMENTATION_ONLY",
+      "action": "89 new D00 evidence replaces old WQ88-E011 and WQ88-E039 only for consumers; old artifacts frozen; C06 closure PENDING"
+    },
+    {
+      "prior": "R88-S01/S02/S03",
+      "state": "RETAINED_CONSUMPTION",
+      "action": "return true/list/kick/callback distinct; source order and CPU/PWQ gates; fixed main.c comments"
+    },
+    {
+      "prior": "R87-S01/S02/S03",
+      "state": "PASS_PENDING_LOCAL_QUALIFIED",
+      "action": "perCPU integer metadata write, pointer decode, backing zeroing and error flow limits preserved"
+    },
+    {
+      "prior": "R86-S01/S02/S03",
+      "state": "PASS_PENDING_LOCAL_QUALIFIED",
+      "action": "no unsigned wrap error invention; actual memory object and boot initialization unproved"
+    },
+    {
+      "prior": "R86-01",
+      "state": "CLOSED_DOCUMENTATION_ONLY",
+      "action": "do not reopen"
+    },
+    {
+      "prior": "WQ88-F03",
+      "state": "HISTORIC_CONDITIONAL_SOURCE_CANDIDATE",
+      "action": "BH kick while(1) remains WQ88 identity; 89 BH pseudo-worker is producer condition, not new reproduction"
+    },
+    {
+      "prior": "PA87-F05/PA87-U06",
+      "state": "HISTORIC_CONDITIONAL_ADDRESS_GATE",
+      "action": "perCPU pointers must be legal before pool/worker dereference; no fake closure"
+    }
+  ],
+  "tallies": {
+    "new_conditional_candidates": 7,
+    "new_evidence_gaps": 9,
+    "actual_runtime_confirmed_bugs": 0,
+    "proven_repair_count": 0,
+    "old_ids_automatically_closed": 0,
+    "owner_technical_actions_required": 0
+  }
+}

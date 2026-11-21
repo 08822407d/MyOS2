@@ -1,0 +1,414 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79",
+  "record_type": "bounded_deferred_findings_increment",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-10",
+  "source_pin_short12": "a039d9803ade",
+  "contract_pin_short12": "ed8b3ac237f6",
+  "policy_ref": "agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md",
+  "phase": 2,
+  "review_receiver": "MYOS2-A-C06 Pro",
+  "D00": {
+    "previous_return": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78-REVIEW-001::R78-01",
+    "type": "documentation_erratum",
+    "old_status": "RETURN_DOCUMENTATION_ONLY",
+    "submitted": "DOCUMENTATION_CORRECTION_SUBMITTED_PENDING_C06",
+    "old_78_file_comment_immutable": true,
+    "not_self_closed": true,
+    "correction_in": "79 memblock-region-lifecycle.md §D00 + facts.D00 + evidence D01–D13",
+    "prior77_closed": true
+  },
+  "findings": [
+    {
+      "id": "MR79-F01",
+      "kind": "conditional_first_iteration_pre_array_pointer",
+      "status": "needs_evidence",
+      "anchors": [
+        "A12",
+        "A13"
+      ],
+      "earliest_stop": "idx0 rgn-1 pointer formation before idx>0 conditional",
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F01",
+      "category": "conditional_source_hypothesis",
+      "demonstrated_runtime_bug": false,
+      "conditional_analysis": [
+        "第一轮 idx==0 下 rgn=&regions[0] 后立即 prev=rgn-1",
+        "这一步先于 idx>0 判定；不能把未解引用等同于指针构造合法",
+        "严格C边界处停止后续确证；可在独立实现检查评估"
+      ],
+      "owner_action_now": "none",
+      "independent_reviewer_action": "verify boundary/anchor and conditional wording, not fix code"
+    },
+    {
+      "id": "MR79-F02",
+      "kind": "conditional_overlap_unsigned_size",
+      "status": "needs_evidence",
+      "anchors": [
+        "A14",
+        "A16"
+      ],
+      "earliest_stop": "old rbase < new base uses unsigned rbase-base; invalid union size",
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F02",
+      "category": "conditional_source_hypothesis",
+      "demonstrated_runtime_bug": false,
+      "conditional_analysis": [
+        "已有[10,20)且新[15,25)时 rbase-base=-5",
+        "size_t承接负的数学差，在64位无符号模型为2^64-5",
+        "不得据EN0ERR返回断言重叠集合正确"
+      ],
+      "owner_action_now": "none",
+      "independent_reviewer_action": "verify boundary/anchor and conditional wording, not fix code"
+    },
+    {
+      "id": "MR79-F03",
+      "kind": "conditional_merge_index_and_bridge_scope",
+      "status": "needs_evidence",
+      "anchors": [
+        "A18",
+        "B04",
+        "B07"
+      ],
+      "earliest_stop": "idx0 signed-to-unsigned/unsigned-to-int, and bounded merge range may leave right neighbor unmerged",
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F03",
+      "category": "conditional_source_hypothesis",
+      "demonstrated_runtime_bug": false,
+      "conditional_analysis": [
+        "idx0传idx-1进ulong；bridge [10,20)+[20,30)+[30,40)只检查旧左边对",
+        "负数转ULONG_MAX、再取int范围不可移植；单次merge的end范围也可能不足",
+        "分别保持首个非法门与假设隔离，不称已运行的多链重复分配"
+      ],
+      "owner_action_now": "none",
+      "independent_reviewer_action": "verify boundary/anchor and conditional wording, not fix code"
+    },
+    {
+      "id": "MR79-F04",
+      "kind": "conditional_cnt_tail_and_stale_search",
+      "status": "needs_evidence",
+      "anchors": [
+        "A12",
+        "A14",
+        "B10",
+        "C07",
+        "C08",
+        "C09"
+      ],
+      "earliest_stop": "cnt+1 tail access (including cnt==max) and empty do-while consuming retained old slot; same cnt/tail family",
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F04",
+      "category": "conditional_source_hypothesis",
+      "demonstrated_runtime_bug": false,
+      "conditional_analysis": [
+        "cnt+1迭代会接触额外槽，已删尾槽不清，空cnt搜索为do-while一次",
+        "cnt==max时尾槽解引用危险；cnt==0且残留[10,20)时搜索15可能错误命中",
+        "计数、尾槽、空表查询合并为同一家庭的一个候选"
+      ],
+      "owner_action_now": "none",
+      "independent_reviewer_action": "verify boundary/anchor and conditional wording, not fix code"
+    },
+    {
+      "id": "MR79-F05",
+      "kind": "conditional_trim_total_size_invariant",
+      "status": "needs_evidence",
+      "anchors": [
+        "C02",
+        "C03"
+      ],
+      "earliest_stop": "nonempty aligned slice changes size without updating type total_size",
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F05",
+      "category": "conditional_source_hypothesis",
+      "demonstrated_runtime_bug": false,
+      "conditional_analysis": [
+        "[3,14)按4字节裁齐到[4,12)，区间size变为8",
+        "此路径没有从type.total_size减去3，仍可能是11",
+        "是否有后续全局修复/调用者依赖待查"
+      ],
+      "owner_action_now": "none",
+      "independent_reviewer_action": "verify boundary/anchor and conditional wording, not fix code"
+    },
+    {
+      "id": "MR79-F06",
+      "kind": "conditional_reverse_iterator_index_and_deletion_skip",
+      "status": "needs_evidence",
+      "anchors": [
+        "C01",
+        "C04"
+      ],
+      "earliest_stop": "cnt0 topdown underflow, final decrement one-before array, dual r-- can skip previous member",
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F06",
+      "category": "conditional_source_hypothesis",
+      "demonstrated_runtime_bug": false,
+      "conditional_analysis": [
+        "cnt0时倒序宏取cnt-1；删除时函数内r--，宏自身还r--",
+        "删除索引2后从0续走会跳过索引1；最终越过数组边界亦未证合法",
+        "局部顺序模型不认证C执行或真实E820布局"
+      ],
+      "owner_action_now": "none",
+      "independent_reviewer_action": "verify boundary/anchor and conditional wording, not fix code"
+    },
+    {
+      "id": "MR79-F07",
+      "kind": "conditional_inserted_flags_not_written",
+      "status": "needs_evidence",
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "A22"
+      ],
+      "earliest_stop": "flags param not stored, stale slot flags may affect merge/filter; caller flags0 alone cannot prove tail",
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F07",
+      "category": "conditional_source_hypothesis",
+      "demonstrated_runtime_bug": false,
+      "conditional_analysis": [
+        "insert_region的flags形参没有被赋给新增rgn->flags",
+        "两入口传0，并不能保证被复用的非新鲜尾槽flag也为0",
+        "检查真实写入者、尾槽初态，再推断合并/过滤"
+      ],
+      "owner_action_now": "none",
+      "independent_reviewer_action": "verify boundary/anchor and conditional wording, not fix code"
+    },
+    {
+      "id": "MR79-F08",
+      "kind": "conditional_zero_size_alloc_without_reserve",
+      "status": "needs_evidence",
+      "anchors": [
+        "A09",
+        "C27",
+        "C32"
+      ],
+      "earliest_stop": "found candidate with size0 can return physical nonzero despite no reserved byte",
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-F08",
+      "category": "conditional_source_hypothesis",
+      "demonstrated_runtime_bug": false,
+      "conditional_analysis": [
+        "memblock_alloc_range允许size为0进入候选匹配",
+        "reserve(found,0)立即ENOERR，不新增保留区；物理地址可非零",
+        "必须检验上层正size约束，不能笼统称任意分配成功都已预留"
+      ],
+      "owner_action_now": "none",
+      "independent_reviewer_action": "verify boundary/anchor and conditional wording, not fix code"
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "id": "MR79-U01",
+      "status": "needs_evidence",
+      "topic": "type->cnt provenance, region-array allocated extent, writer invariants, tail slot initialization and capacity check at each call",
+      "anchors": [
+        "A01",
+        "A12",
+        "A14"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U01",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U02",
+      "status": "needs_evidence",
+      "topic": "first-iteration invalid pointer evaluation and language/compiler mode; no preprocessing or executable artifact",
+      "anchors": [
+        "A13"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U02",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U03",
+      "status": "needs_evidence",
+      "topic": "overlap cases with typed operands, insertion partition invariant and add/merge semantics; no full property proof",
+      "anchors": [
+        "A15",
+        "A16",
+        "B04"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U03",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U04",
+      "status": "needs_evidence",
+      "topic": "signed idx to ulong conversion, 64-bit to int conversion and merge loop termination; build/ABI not executed",
+      "anchors": [
+        "A18",
+        "B04",
+        "B16"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U04",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U05",
+      "status": "needs_evidence",
+      "topic": "all flags writers and end-to-end region flags including tail stale contents",
+      "anchors": [
+        "B02",
+        "A22",
+        "C13"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U05",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U06",
+      "status": "needs_evidence",
+      "topic": "zero-member search after delete and consumers of is_memory/is_reserved/is_map_memory",
+      "anchors": [
+        "B10",
+        "C08",
+        "C11",
+        "C12",
+        "C14"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U06",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U07",
+      "status": "needs_evidence",
+      "topic": "trim caller timing, alignment validity, total_size consumers and cumulative repair; no whole tree survey",
+      "anchors": [
+        "C01",
+        "C03",
+        "C04",
+        "C05"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U07",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U08",
+      "status": "needs_evidence",
+      "topic": "physical layout provenance, sorted/disjoint coverage, phys max and map/direct address validity",
+      "anchors": [
+        "C15",
+        "C21",
+        "C24",
+        "C27"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U08",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U09",
+      "status": "needs_evidence",
+      "topic": "nonzero-size obligation of memblock_alloc_range, callers and pre-slab lifetime",
+      "anchors": [
+        "A09",
+        "C29",
+        "C32"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U09",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "MR79-U10",
+      "status": "needs_evidence",
+      "topic": "links to PB78-F01–F06 and MM historical MC-01/05, LB-01/08, GAP-M08 remain source conditional and not reaccepted",
+      "anchors": [
+        "D02",
+        "D08",
+        "D12",
+        "D13"
+      ],
+      "qualified_id": "CORE-USER-MEMBLOCK-REGION-LIFECYCLE-79::MR79-U10",
+      "category": "bounded_unresolved_evidence",
+      "runtime_evidence": "NOT_RUN",
+      "owner_action_now": "none"
+    }
+  ],
+  "prior_findings_immutable": [
+    {
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F01",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F02",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F03",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F04",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F05",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-BOOTSTRAP-HANDOFF-78::PB78-F06",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-01",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::MC-05",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-01",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::LB-08",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-MM-BASELINE-04::GAP-M08",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F01",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    },
+    {
+      "qualified_id": "CORE-USER-PAGE-ALLOCATOR-LIFECYCLE-77::PA77-F02",
+      "disposition": "historical_status_preserved_no_self_resolution"
+    }
+  ],
+  "counts": {
+    "new_conditional_source_candidates": 8,
+    "new_evidence_gaps": 10,
+    "old_findings_changed": 0,
+    "old_comments_changed": 0,
+    "demonstrated_runtime_bugs": 0
+  },
+  "work_to_reopen_later": [
+    "Pro审查退回的逐项锚点/定义范围可在今后新授权写区做新增勘误，不修改历史文件",
+    "若Owner未来授权真实修复，需单独定义编译、运行、内存布局与并发证据，不把本批静态推断视为测试结果",
+    "R78-01交由C06独立裁定，77已闭合不重做"
+  ],
+  "prohibited_now": {
+    "patch": true,
+    "kernel_changes": true,
+    "build_or_run": true,
+    "branch_or_PR_changes": true,
+    "owner_manual_coding": true,
+    "merge": true,
+    "phase3": true
+  },
+  "owner_decisions_requested_now": [],
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING"
+}

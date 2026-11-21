@@ -1,0 +1,203 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-KTIME-DEADLINE-ARITHMETIC-112",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-17",
+  "record_type": "conditional_findings_and_unverified_boundaries",
+  "date": "2026-11-20",
+  "source_pin_short12": "a039d9803ade",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C07_REVIEW",
+  "inherited_states": {
+    "batch109": "PASS_PENDING_LOCAL",
+    "batch110": "RETURN",
+    "batch111": "RETURN",
+    "R110_01": "OPEN",
+    "R110_02": "OPEN",
+    "R111_01": "OPEN",
+    "R111_02": "OPEN"
+  },
+  "conditional_candidates": [
+    {
+      "id": "KD112-CAND-01",
+      "issue": "R110-01",
+      "premise": "original110 row field matched 71/71 and ID/path 223/223, original74 quotes matched",
+      "evidence": [
+        "user-timer-base-forwarding-110/facts-and-boundaries.yaml@d7ebfb1d5e40",
+        "user-timer-arm-target-111/facts-and-boundaries.yaml@ab6c14299a76"
+      ],
+      "result": "200 positions across six sections need original source_paths key; D00 23 use source_locations",
+      "first_unverified_step": "C07 independent recheck exact close condition",
+      "status": "SUBMITTED_NOT_CLOSED"
+    },
+    {
+      "id": "KD112-CAND-02",
+      "issue": "R110-02",
+      "premise": "mod_timer wrappers and idx sentinel actual statements fixed time",
+      "evidence": [
+        "KD112-E004",
+        "KD112-E005",
+        "KD112-E006",
+        "KD112-E007",
+        "KD112-E008"
+      ],
+      "result": "O11 options and O12 initial/final control now have distinct graph edges",
+      "first_unverified_step": "C07 independently reviews original O01–O12 consumers",
+      "status": "SUBMITTED_NOT_CLOSED"
+    },
+    {
+      "id": "KD112-CAND-03",
+      "issue": "R111-01",
+      "premise": "old AT111-E017 spans signature line109 and body line110; 54 old matches, 53 qualified",
+      "evidence": [
+        "KD112-E002",
+        "KD112-E003",
+        "KD112-P13"
+      ],
+      "result": "body-only replacement for A07/B05/M08 and linked pending graph",
+      "first_unverified_step": "C07 independently verifies consumers",
+      "status": "SUBMITTED_NOT_CLOSED"
+    },
+    {
+      "id": "KD112-CAND-04",
+      "issue": "R111-02",
+      "premise": "fixedtime source includes currentCPU selection, explicitCPU target, bucket index writes and macro restore",
+      "evidence": [
+        "KD112-E009",
+        "KD112-E010",
+        "KD112-E014",
+        "KD112-E023",
+        "KD112-E019",
+        "KD112-E020"
+      ],
+      "result": "consumer/flags timepoint and macro correction",
+      "first_unverified_step": "C07 independently verifies all named original models/edges",
+      "status": "SUBMITTED_NOT_CLOSED"
+    },
+    {
+      "id": "KD112-CAND-05",
+      "issue": "A",
+      "premise": "timespec64_to_ktime and timespec64_to_ns differ in negative SEC_MIN guard, no validation internally",
+      "evidence": [
+        "KD112-E035",
+        "KD112-E036",
+        "KD112-E037",
+        "KD112-E038"
+      ],
+      "result": "at SEC_MIN/0 the former computes representable negative product, latter clamps to KTIME_MIN",
+      "first_unverified_step": "actual call sites' validation and allowed input domain",
+      "status": "CONDITIONAL_STATIC_FINDING"
+    },
+    {
+      "id": "KD112-CAND-06",
+      "issue": "B",
+      "premise": "ktime_add_safe compares res to both operands after unsigned-cast sum",
+      "evidence": [
+        "KD112-E044",
+        "KD112-E046",
+        "KD112-E047"
+      ],
+      "result": "-1+2 arithmetic result1 but third comparison caps to KTIME_MAX",
+      "first_unverified_step": "actual caller domain and signed conversion ABI",
+      "status": "CONDITIONAL_STATIC_FINDING"
+    },
+    {
+      "id": "KD112-CAND-07",
+      "issue": "C",
+      "premise": "s32 rem address passed to helper declaring u32*; integer helper returns quotient and writes remainder",
+      "evidence": [
+        "KD112-E049",
+        "KD112-E050",
+        "KD112-E053",
+        "KD112-P08"
+      ],
+      "result": "source-level parameter mismatch; mathematical normalization assumes compatible remainder write",
+      "first_unverified_step": "compile diagnostics/strict aliasing/ABI behavior",
+      "status": "STATIC_TYPE_MISMATCH_UNVERIFIED_RUNTIME"
+    },
+    {
+      "id": "KD112-CAND-08",
+      "issue": "C",
+      "premise": "negative branch spells -nsec - 1",
+      "evidence": [
+        "KD112-E051"
+      ],
+      "result": "INT64_MIN unary negation may already overflow before subtraction; no portable runtime claim",
+      "first_unverified_step": "target build with actual compiler and supported input ranges",
+      "status": "CONDITIONAL_STATIC_FINDING"
+    }
+  ],
+  "unverified_gaps": [
+    {
+      "id": "KD112-GAP-01",
+      "root": "R110-01",
+      "premise": "new 71-row field override produced",
+      "first_unverified_step": "C07 Pro review of 223 mapping close threshold",
+      "status": "PENDING"
+    },
+    {
+      "id": "KD112-GAP-02",
+      "root": "R110-02",
+      "premise": "new O11 options/O12 terminal test evidence",
+      "first_unverified_step": "C07 Pro review of original consumer positions and DOT",
+      "status": "PENDING"
+    },
+    {
+      "id": "KD112-GAP-03",
+      "root": "R111-01",
+      "premise": "new body-only hash_list.h 110 anchor",
+      "first_unverified_step": "C07 Pro review of AT111-E017 replacement uses",
+      "status": "PENDING"
+    },
+    {
+      "id": "KD112-GAP-04",
+      "root": "R111-02",
+      "premise": "CPU candidate and flags sampling corrected on paper",
+      "first_unverified_step": "C07 Pro independent validation; actual CPU/pointer/locks cannot be proved",
+      "status": "PENDING"
+    },
+    {
+      "id": "KD112-GAP-05",
+      "root": "A",
+      "premise": "converters do not call valid or strict in body",
+      "first_unverified_step": "caller preconditions/negative nsec typing, signed overflow test, exact config used",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "KD112-GAP-06",
+      "root": "B",
+      "premise": "unsigned modulo sum assigned to signed variable",
+      "first_unverified_step": "actual compiler behavior for out-of-range u64→s64",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "KD112-GAP-07",
+      "root": "C",
+      "premise": "s32* differs from u32* in div_u64_rem call and INT64_MIN intermediate overflow",
+      "first_unverified_step": "compiler warning/error, compiled runtime, aliasing and min-value behavior",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "KD112-GAP-08",
+      "root": "A_B_C_INTEGRATION",
+      "premise": "documented individual source-local call and macro edges",
+      "first_unverified_step": "caller integration linking nanosecond representation with jiffies wheel, full build and real runtime/hardware",
+      "status": "NOT_RUN"
+    }
+  ],
+  "explicit_not_run": [
+    "full local P9",
+    "preprocessing",
+    "compilation",
+    "linking",
+    "repository programs or scripts",
+    "QEMU",
+    "kernel test",
+    "Graphviz",
+    "real CPU/IRQ/hardware",
+    "concurrent interleavings",
+    "external model or paid tooling"
+  ],
+  "revisit": "Keep source pin and old IDs frozen; C07 Pro alone adjudicates the four OPEN documentation returns and downstream batch."
+}

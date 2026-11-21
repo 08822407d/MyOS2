@@ -1,0 +1,60 @@
+{
+ "record": "USER_SYSCALL_STDIO_08_CHECK_RUN",
+ "cwd": "<clone 根> = /home/cheyh/projs/myos2-handoff06-local/MyOS2",
+ "command": "PYTHONDONTWRITEBYTECODE=1 python3 -B -P agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/scripts/ss_check.py /home/cheyh/projs/myos2-handoff06-local/MyOS2 check agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08 agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/records/ss_check.json",
+ "returncode": 0,
+ "started_utc": "2026-10-28T09:27:54+00:00",
+ "finished_utc": "2026-10-28T09:27:55+00:00",
+ "stdout_summary": {
+  "anchors": [
+   70,
+   70
+  ],
+  "markdown_tags": [
+   34,
+   34
+  ],
+  "queries": [
+   38,
+   0
+  ],
+  "hit_refs": 18,
+  "structure_checks": [
+   23,
+   23
+  ],
+  "value_tables_ok": true,
+  "structure_errors": 0,
+  "deferred_findings_errors": 0,
+  "hex40_in_package": 0,
+  "all_ok": true
+ },
+ "stderr": [
+  "{\"scan_index_repo_frozen\": \"/home/user/MyOS2\", \"scan_index_repo_rebound\": \"/home/cheyh/projs/myos2-handoff06-local/MyOS2\", \"pin\": \"a039d9803ade\"}"
+ ],
+ "outputs": [
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/records/ss_check.json",
+  "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/records/queries.json"
+ ],
+ "pin_time": "a039d9803ade",
+ "base_execution_head": "ab3b4b86662c",
+ "tools": {
+  "git": "git version 2.53.0",
+  "python": "Python 3.14.4",
+  "pyyaml": "6.0.3"
+ },
+ "input_sha256": {
+  "facts-and-boundaries.yaml": "49ce4976160304abad0b467eda7af8b9a1760841ff821946f6d638c84b614d92",
+  "deferred-findings.yaml": "bf92be23de1c15be60654285f107841c8e52554af24be6ff204bcb7de08ddadf",
+  "user-syscall-stdio.md": "e1abab7b9fd092632c26aebd0a190842c64b6053e06c0e24b7bf0bd06de49a64",
+  "scripts/ss_check.py": "bad989f2c49aa395bfbbd51ea0e674759cb648d48333ffff02e4a99e93633e38"
+ },
+ "reused_module": {
+  "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/scheduler-integration-03/scripts/scan_index.py",
+  "sha256": "468fd2d538f0862c1f00de7e8d8147352c6fbfd7ec0e39ce597b32df8cc60efc",
+  "use": "import 读取原语（show/analyse），REPO 重绑到 clone 根；文件本身未改"
+ },
+ "pycache_before": [],
+ "pycache_after": [],
+ "not_run": "没有编译或运行 C/ASM、cmake、内核、QEMU、宿主安装/挂盘脚本或仓库原有脚本"
+}

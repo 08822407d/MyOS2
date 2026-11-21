@@ -1,0 +1,268 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-UACCESS-RECOVERY-64",
+  "record_type": "source_conditional_findings_and_unresolved_evidence",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "51477ed51ee2",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00_status": "DOCUMENTARY_DISPUTE_SUBMITTED_PENDING_MAINLINE",
+  "prior_return_items": [
+    {
+      "qualified_id": "R63-01",
+      "source_value": "RETURN_DOCUMENTATION",
+      "finding": "reviewer erroneously claims original C14/C15/C16 dropped empty lines; fixed original quotes verified exact and continuous, old produced_by omission true",
+      "closed_by_executor": false
+    }
+  ],
+  "prior_status": {
+    "batch63": "RETURN_DOCUMENTATION pending mainline dispute",
+    "batch62": "PASS_PENDING_LOCAL R62-S01/S02",
+    "batch12": "PASS_PENDING_LOCAL R12-S01/S02",
+    "batch58": "B25 prior reviewer error withdrawn R58C-S01"
+  },
+  "new_findings": [
+    {
+      "id": "UR64-F01",
+      "topic": "A/B",
+      "kind": "extable_producer_without_selected_fault_fixup_bridge",
+      "claim": "asm.h creates source text for __ex_table relative records; uaccess copy_user_generic emits _ASM_EXTABLE_UA(1b,2b) annotation. In fixed fault.c selected active branches, no extable lookup or regs->ip redirection was found; their exception recovery linkage is unproven. This extends UC63-U04 and does not claim a globally absent consumer.",
+      "premises": [
+        "compiler selects these macros and symbols resolve",
+        "the named architecture fault.c selected path receives a relevant CPU fault",
+        "all earlier regs/mm/diagnostic accesses valid"
+      ],
+      "counterexample": "another linked handler may consume ex_table, a fault may be resolved by myos_handle_mm_fault with0; no runtime/ELF audit",
+      "first_stop": "invalid fault context before path dispatch or unresolved linked bridge; no guaranteed exception outcome",
+      "related": [
+        "CORE-USER-UACCESS-COPY-63::UC63-U04"
+      ],
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F01",
+      "status": "needs_evidence",
+      "classification": "source_conditional_extension",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-F02",
+      "topic": "A",
+      "kind": "no_explicit_extable_retention_or_bounds_in_link_script",
+      "claim": "target_kernel.cmake names arch/${ARCH}/kernel.lds; this selected script has no explicit __ex_table section or boundary symbols. Source generator presence and script absence cannot prove final linked records retained, discarded, ordered or discoverable.",
+      "premises": [
+        "selected ARCH is x86_64 and script used at link",
+        "no other linker script fragments or linker command overriding",
+        "linker/orphan rules and actual flags unknown"
+      ],
+      "counterexample": "ELF orphan sections may be retained automatically, and generic consumers may not require named boundaries in this script",
+      "first_stop": "final link layout not observed; do not infer actual discarding",
+      "related": [
+        "CORE-USER-UACCESS-COPY-63::UC63-U04"
+      ],
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F02",
+      "status": "needs_evidence",
+      "classification": "source_conditional_extension",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-F03",
+      "topic": "B",
+      "kind": "access_ok_numeric_domain_crosses_fault_kernel_route_threshold",
+      "claim": "At numeric TASK_SIZE_MAX=(1<<47)-4096, both modeled x86 small-constant and general __access_ok may accept address as nonnegative and no-wrap, while fault_in_kernel_space routes address>=TASK_SIZE_MAX to do_kern_addr_fault. The predicates and fault route are different tests, not a guarantee an actual access will #PF.",
+      "premises": [
+        "64-bit LP64/two's-complement signed-cast numerical model",
+        "size16, compiler branch considered only conditionally",
+        "real fault entry not assumed"
+      ],
+      "counterexample": "actual VMA/canonicality/hardware may reject address or cause #GP; generic fallback if selected would reject at limit for size>0",
+      "first_stop": "real CPU fault origin and mapping unverified",
+      "related": [
+        "CORE-USER-UACCESS-COPY-63::UC63-F02",
+        "CORE-USER-MM-FAULT-12::MF12-F02"
+      ],
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F03",
+      "status": "needs_evidence",
+      "classification": "source_conditional_extension",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-F04",
+      "topic": "B",
+      "kind": "kernel_address_fault_path_active_while_without_fixup",
+      "claim": "For a valid fault context and numeric address>=TASK_SIZE_MAX, handle_page_fault selects do_kern_addr_fault; selected body has comments for fixup/spurious checks and an active while(1), with no visible extable consumer or recovery return on that branch.",
+      "premises": [
+        "exc_page_fault path actually called with valid regs/cr2",
+        "no earlier exceptional control, source while reached",
+        "target build not executed"
+      ],
+      "counterexample": "different CPU exception (#GP) may not enter this function; earlier hardware handling/other entry not audited",
+      "first_stop": "invalid regs/CR2/context before while, no measured deadlock claim",
+      "related": [
+        "CORE-USER-UACCESS-COPY-63::UC63-U04"
+      ],
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F04",
+      "status": "needs_evidence",
+      "classification": "source_conditional_extension",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-F05",
+      "topic": "B",
+      "kind": "user_address_route_reuses_MF12_nonzero_fault_without_fixup",
+      "claim": "Address below TASK_SIZE_MAX can enter do_user_addr_fault even with supervisor regs; after VMA lookup it invokes myos_handle_mm_fault once, and nonzero fault is compared in a while with no active retry/fixup. Zero return does not certify PTE repaired or faulting instruction replayed; this is a consumer of MF12-F02/F03/F04.",
+      "premises": [
+        "valid current/mm, VMA and flags",
+        "fault handler invoked and normally returns a specified vm_fault_t",
+        "source expression evaluation valid"
+      ],
+      "counterexample": "zero fault normally skips loop; invalid/noVMA may reach myos_bad_area first",
+      "first_stop": "bad mm/vma diagnostic buffer/other pointer before fault, no post-stop result",
+      "related": [
+        "CORE-USER-MM-FAULT-12::MF12-F02",
+        "CORE-USER-MM-FAULT-12::MF12-F03",
+        "CORE-USER-MM-FAULT-12::MF12-F04"
+      ],
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F05",
+      "status": "needs_evidence",
+      "classification": "source_conditional_extension",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-F06",
+      "topic": "C",
+      "kind": "metadata_emitter_but_selected_startup_patch_calls_commented",
+      "claim": "alternative.h emits source strings for .altinstructions/.altinstr_replacement and stac/clac and copy_user_generic depend on ALTERNATIVE. Yet check_bugs and cpu_init show alternative_instructions() only commented and header declares patcher/alt_instr only in comments; no active startup application is established in bounded fixed-time sources.",
+      "premises": [
+        "source macros compiled and relevant code linked",
+        "the two selected startup functions are representative only of reviewed call sites",
+        "not asserting all repository call sites exhausted"
+      ],
+      "counterexample": "other dynamic/module/init code could patch alternatives; linker/CPU assembly not inspected",
+      "first_stop": "build/link/patcher assignment unknown; no actual FSRM/SMAP selection claim",
+      "related": [
+        "CORE-USER-UACCESS-COPY-63::UC63-U04"
+      ],
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F06",
+      "status": "needs_evidence",
+      "classification": "source_conditional_extension",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-F07",
+      "topic": "C",
+      "kind": "rep_movs_alternative_missing_body_and_asm_call_ABI_unverified",
+      "claim": "copy_user_generic has asm replacement text call rep_movs_alternative; uaccess_64.h contains only a function declaration with uint len and bounded search did not locate a definition. That C prototype does not prove how an inline-asm call passes/shortens +c(len), or that actual copied bytes/residual meet raw contract.",
+      "premises": [
+        "the candidate would be selected only under a verified alternative patch",
+        "linking may require a real symbol definition or a different mechanism",
+        "search scope remains bounded"
+      ],
+      "counterexample": "implementation may exist outside searched files or in linked objects; if original rep movsb remains, replacement call is not executed",
+      "first_stop": "implementation/link binding not established; no actual copied byte count",
+      "related": [
+        "CORE-USER-UACCESS-COPY-63::UC63-U03"
+      ],
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-F07",
+      "status": "needs_evidence",
+      "classification": "source_conditional_extension",
+      "runtime_reproduced": false,
+      "owner_action_now": "none"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "UR64-U01",
+      "topic": "A",
+      "kind": "final_ELF_layout",
+      "detail": "No preprocessor, linker map or final ELF; orphan __ex_table/alt sections retention, GC, alignment and named bounds unknown.",
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U01",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-U02",
+      "topic": "A",
+      "kind": "extable_type_value_and_runtime_decoder",
+      "detail": "EX_TYPE_UACCESS numeric binding and a loaded table search/fixup entry have not been established within permitted source range.",
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U02",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-U03",
+      "topic": "B",
+      "kind": "CPU_exception_entry_and_GP",
+      "detail": "Actual #PF vs #GP, interrupt entry, IDT and real exception instruction frame/CR2 not audited or executed.",
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U03",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-U04",
+      "topic": "B",
+      "kind": "VMA_PTE_MM_return",
+      "detail": "myos_handle_mm_fault delegated to batch12; real VMA and successful CPU instruction retry remain unproven.",
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U04",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-U05",
+      "topic": "B",
+      "kind": "diagnostic_buffer_safety",
+      "detail": "myos_bad_area kmalloc/memset/parse/print preceding while require valid kernel buffer and helpers.",
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U05",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-U06",
+      "topic": "C",
+      "kind": "alternatives_runtime_activation",
+      "detail": "No verified active alternative_instructions/apply_alternatives in bounded inspected startup; patch timing, feature selection and original/replacement bytes unknown.",
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U06",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-U07",
+      "topic": "C",
+      "kind": "rep_movs_body_and_register_contract",
+      "detail": "Only declaration for rep_movs_alternative; no implementation body or verified register convention, uint declaration not actual asm call narrowing.",
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U07",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UR64-U08",
+      "topic": "A/B/C",
+      "kind": "copy_residual_AC_state_and_hardware",
+      "detail": "Actual residual count, SMAP state after faults, #PF restoration, final userspace memory and instruction replay not executed.",
+      "qualified_id": "CORE-USER-UACCESS-RECOVERY-64::UR64-U08",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    }
+  ],
+  "candidate_count": 7,
+  "gap_count": 8,
+  "runtime_confirmed_count": 0,
+  "duplicates_avoided": [
+    "UC63-U03/U04 remain open",
+    "MF12-F02/F03/F04 originals remain unchanged",
+    "no re-issue of full fault/PTE implementation",
+    "R63-01 closure reserved to C05"
+  ],
+  "not_authorized": [
+    "kernel patch",
+    "build/preprocess/test",
+    "edit historical result/comment",
+    "change PR metadata/merge",
+    "self-close R63-01 or sign PASS",
+    "start65"
+  ]
+}

@@ -1,0 +1,291 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-UACCESS-COPY-63",
+  "record_type": "bounded_conditional_consumers_and_missing_evidence",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-07",
+  "base_snapshot": "time",
+  "source_pin_short12": "a039d9803ade",
+  "execution_base_short12": "54101196eb11",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "runtime_evidence": "NOT_RUN",
+  "prior_return_items": [],
+  "prior_status": {
+    "batch62": "PASS_PENDING_LOCAL, R62-S01/S02 mandatory",
+    "batch61": "PASS_PENDING_LOCAL R61-S01/S02/S03",
+    "batch58": "R58C-S01 B25 reviewer error formally withdrawn",
+    "batch59": "PASS_PENDING_LOCAL; DE59-F05 prior",
+    "batch60": "PASS_PENDING_LOCAL; FC60-F03 prior",
+    "batch09": "bounded PASS_PENDING_LOCAL with 09-DOC-FIX-01, RS-06/07 original",
+    "batch55": "PASS_PENDING_LOCAL R55-S01/S02"
+  },
+  "new_findings": [
+    {
+      "id": "UC63-F01",
+      "topic": "A",
+      "kind": "architecture_fallback_selection_is_a_build_dependency",
+      "claim": "asm/uaccess.h includes uaccess_64.h before generic access_ok.h; x86 defines __access_ok and a same-name object-like macro before generic's #ifndef __access_ok. The generic limit-size fallback is a separate guarded definition, not a second predicate called in series on this source include order.",
+      "premises": [
+        "these include paths are selected in the actual translation unit",
+        "no unseen earlier redefinition/override changes macro state",
+        "compiler preprocessing not executed"
+      ],
+      "counterexample": "if architecture macro not defined under different build headers, generic fallback may be chosen; no source evidence of runtime both checks",
+      "earliest_stop": "configuration/include binding unknown => label source-text selected condition rather than compiled fact",
+      "anchors": [
+        "A02",
+        "A05",
+        "A06",
+        "A07",
+        "A08"
+      ],
+      "prior": [],
+      "runtime_reproduced": false,
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-F01",
+      "status": "needs_evidence",
+      "classification": "source_conditional_candidate_only",
+      "owner_action_now": "none",
+      "resume_condition": "Owner explicitly authorizes follow-up; recheck selected source, compiler binding and historical consumer before any runtime"
+    },
+    {
+      "id": "UC63-F02",
+      "topic": "A",
+      "kind": "constant_small_size_fast_path_can_skip_end_check",
+      "claim": "For a compiler-identified constant expression size<=PAGE_SIZE and true, the selected x86 __access_ok returns valid_user_address(ptr) and omits the general ptr+size overflow/sign-boundary test. Explicit 64-bit model for ptr=2^63-16 and size32 gives true for shortcut but false for general; neither is a mapping guarantee.",
+      "premises": [
+        "LP64 and two's-complement signed cast model specified",
+        "compiler judges (size<=PAGE_SIZE) a compile-time true constant",
+        "ptr and size modeled as pure integers not dereferenced"
+      ],
+      "counterexample": "general branch tests sum sign and sum>=ptr; generic fallback checks TASK_SIZE_MAX; actual userspace may not supply such address, no fault asserted",
+      "earliest_stop": "compiler branch or signed conversion not established: no actual-call result claim",
+      "anchors": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A09",
+        "A10"
+      ],
+      "prior": [],
+      "runtime_reproduced": false,
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-F02",
+      "status": "needs_evidence",
+      "classification": "source_conditional_candidate_only",
+      "owner_action_now": "none",
+      "resume_condition": "Owner explicitly authorizes follow-up; recheck selected source, compiler binding and historical consumer before any runtime"
+    },
+    {
+      "id": "UC63-F03",
+      "topic": "B",
+      "kind": "from_user_inline_skips_active_source_range_check_and_zero_pads_residue",
+      "claim": "copy_from_user unconditionally delegates selected _inline_copy_from_user; active source access_ok test is commented, raw_copy_from_user is invoked. If raw normally returns residual r with 0<r<=n and writable destination, memset zeros dest+(n-r) length r; a zero-filled tail does not establish authentic user source bytes.",
+      "premises": [
+        "valid destination, source/size and copy primitive normal return",
+        "0<=r<=n and finite pointer offset",
+        "compiler selection of this source body valid"
+      ],
+      "counterexample": "r0 skips memset; invalid destination or r>n cannot safely be evaluated to a defined padding result",
+      "earliest_stop": "raw input/object invalid or n-r outside range before memset; do not predict physical exception",
+      "anchors": [
+        "B01",
+        "B02",
+        "B03",
+        "B06",
+        "B10"
+      ],
+      "prior": [
+        "CORE-USER-BLOCK-IO-CONSUMPTION-55::BI55-F01",
+        "CORE-USER-WRITEV-CONSUMPTION-62::WV62-F07"
+      ],
+      "runtime_reproduced": false,
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-F03",
+      "status": "needs_evidence",
+      "classification": "source_conditional_candidate_only",
+      "owner_action_now": "none",
+      "resume_condition": "Owner explicitly authorizes follow-up; recheck selected source, compiler binding and historical consumer before any runtime"
+    },
+    {
+      "id": "UC63-F04",
+      "topic": "B",
+      "kind": "to_user_guard_and_residue_differ_from_from_user",
+      "claim": "copy_to_user always delegates _inline_copy_to_user: it first evaluates access_ok(to,n), skips raw copy when false and returns the original n, else returns the raw residual. It does not zero-pad its user destination. n0 may numerically return0 even when no meaningful pointer access occurred.",
+      "premises": [
+        "to pointer expression and access_ok normally evaluated",
+        "raw copy callback returns normally when taken",
+        "residual bounded for copied-byte interpretation"
+      ],
+      "counterexample": "access_ok true is only a numeric predicate, not guaranteed actual copy; raw return nonzero still possible",
+      "earliest_stop": "invalid pointer/object evaluation or raw copy failure not modeled, no safe CPU/errno outcome",
+      "anchors": [
+        "B04",
+        "B05",
+        "B08",
+        "B09",
+        "B11"
+      ],
+      "prior": [
+        "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F05",
+        "CORE-USER-FS-CONTEXT-CWD-60::FC60-F03"
+      ],
+      "runtime_reproduced": false,
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-F04",
+      "status": "needs_evidence",
+      "classification": "source_conditional_candidate_only",
+      "owner_action_now": "none",
+      "resume_condition": "Owner explicitly authorizes follow-up; recheck selected source, compiler binding and historical consumer before any runtime"
+    },
+    {
+      "id": "UC63-F05",
+      "topic": "C",
+      "kind": "direct_scalar_get_put_have_zero_only_after_valid_memory_operations",
+      "claim": "Active get_user(x,ptr) is direct target-type-sized load followed by -ENOERR=0, and put_user(x,ptr) directly stores converted value followed by0. Old doc comments promise -EFAULT/zero-on-error but those helpers and switch/call paths are commented. On invalid memory neither a safe -EFAULT nor a normally returned0 is established.",
+      "premises": [
+        "the selected macros are active under the include binding",
+        "for normal0 result, direct load/store and conversion complete normally",
+        "do not assume a compiled exception handler for the direct C dereference"
+      ],
+      "counterexample": "valid memory causes normal0 and caller if(error) false; source code does not prove actual hardware failure disposition",
+      "earliest_stop": "direct invalid load/store; neither later -ENOERR evaluation nor caller branch is guaranteed",
+      "anchors": [
+        "C01",
+        "C02",
+        "C03",
+        "C22",
+        "C23"
+      ],
+      "prior": [
+        "CORE-USER-RETURN-SIGNAL-09::RS-06",
+        "CORE-USER-RETURN-SIGNAL-09::RS-07"
+      ],
+      "runtime_reproduced": false,
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-F05",
+      "status": "needs_evidence",
+      "classification": "source_conditional_candidate_only",
+      "owner_action_now": "none",
+      "resume_condition": "Owner explicitly authorizes follow-up; recheck selected source, compiler binding and historical consumer before any runtime"
+    },
+    {
+      "id": "UC63-F06",
+      "topic": "C",
+      "kind": "two_consumers_have_distinct_direct_store_and_return_gates",
+      "claim": "rt_sigreturn checks access_ok(frame,sizeof frame), then two get_user calls; their if(error) branches are false only after normal direct loads, and restore_sigcontext has a separate copy_from_user error branch. filldir64 directly stores prev/dentry fields, calls copy_to_user and does not consume cplen before a direct terminator write and accounting. Both are bounded consumers of existing RS-06/07 and DE59-F05, not new roots.",
+      "premises": [
+        "each selected caller frame, dirent, user memory, and object is valid until discussed gate",
+        "callee return values normally available",
+        "no underlying physical fault recovery implied"
+      ],
+      "counterexample": "if access_ok(frame) rejects, rt_sigreturn goes to badframe and returns0; if filldir64's first direct store invalid, later copy not reached",
+      "earliest_stop": "first direct frame load/field store/copy fault lacking defined object; no after-stop cleanup inference",
+      "anchors": [
+        "C04",
+        "C05",
+        "C06",
+        "C07",
+        "C08",
+        "C09",
+        "C15",
+        "C16",
+        "C17"
+      ],
+      "prior": [
+        "CORE-USER-RETURN-SIGNAL-09::RS-06",
+        "CORE-USER-RETURN-SIGNAL-09::RS-07",
+        "CORE-USER-DIRECTORY-ENUMERATION-59::DE59-F05"
+      ],
+      "runtime_reproduced": false,
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-F06",
+      "status": "needs_evidence",
+      "classification": "source_conditional_candidate_only",
+      "owner_action_now": "none",
+      "resume_condition": "Owner explicitly authorizes follow-up; recheck selected source, compiler binding and historical consumer before any runtime"
+    }
+  ],
+  "new_gaps": [
+    {
+      "id": "UC63-U01",
+      "topic": "A",
+      "kind": "preprocessor_and_builtin_constant_p",
+      "detail": "Neither compiler recognition of __builtin_constant_p(size <= PAGE_SIZE), selected macro bindings nor translation-unit integration is executed; source inclusion only conditional evidence.",
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U01",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UC63-U02",
+      "topic": "A",
+      "kind": "real_user_mapping_and_permissions",
+      "detail": "Neither x86 sign predicate nor generic TASK_SIZE limit confirms page table mapping, writable/readable permissions, canonicality, or object lifetime.",
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U02",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UC63-U03",
+      "topic": "B",
+      "kind": "rep_movs_alternative_implementation",
+      "detail": "Only function declaration and asm call string found in selected direct source; no function body established, default-branch search not proof of absence. uint C formal does not independently fix asm call register width.",
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U03",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UC63-U04",
+      "topic": "B",
+      "kind": "exception_table_and_alternative_runtime",
+      "detail": "_ASM_EXTABLE_UA, ALTERNATIVE, stac/clac text read; actual extable linking/fixup/FSRM choice/AC state and fault recovery NOT_RUN.",
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U04",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UC63-U05",
+      "topic": "B",
+      "kind": "raw_residual_contract_and_memory",
+      "detail": "The raw residual 0..n, copied prefix, memset validity and actual CPU faults are premises, not real measurements; r>n cannot safely become a zero-padding claim.",
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U05",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UC63-U06",
+      "topic": "C",
+      "kind": "scalar_width_object_evaluation",
+      "detail": "Type/pointer width and aliasing for arbitrary helper-only mismatched x/ptr, user unmapped fields and hardware exceptions are unverified.",
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U06",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UC63-U07",
+      "topic": "C",
+      "kind": "signal_frame_and_final_user_return",
+      "detail": "rt_sigreturn caller restored regs/stack, blocked signal mask and signal/restart tail only selected lines; no complete post-dispatch ABI or real frame source.",
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U07",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    },
+    {
+      "id": "UC63-U08",
+      "topic": "C",
+      "kind": "directory_user_stores_and_copy",
+      "detail": "filldir64's early direct writes, cplen ignoring and NUL/store actual faults not executed, physical delivery and user buffer contents unverified.",
+      "qualified_id": "CORE-USER-UACCESS-COPY-63::UC63-U08",
+      "status": "needs_evidence",
+      "owner_action_now": "none"
+    }
+  ],
+  "conditional_candidate_count": 6,
+  "missing_evidence_count": 8,
+  "runtime_confirmed_count": 0,
+  "old_problem_id_policy": "Only consumer-specific incremental claims, do not re-issue RS06/07 or DE59/FC60/BI55/WV62 original roots",
+  "not_authorized": [
+    "kernel modifications",
+    "preprocess/compile",
+    "repository tests",
+    "full local P9",
+    "merge/close/PR metadata changes",
+    "self PASS",
+    "batch64"
+  ]
+}
