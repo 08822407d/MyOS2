@@ -1,0 +1,215 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-DIR-STREAM-LS-116",
+  "record_type": "bounded_deferred_findings",
+  "date": "2026-11-21",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "inherited": {
+    "batch114": "PASS_PENDING_LOCAL",
+    "batch115": "RETURN",
+    "R115_01": "OPEN",
+    "R115_02": "OPEN",
+    "R115_03": "OPEN"
+  },
+  "conditional_candidates": [
+    {
+      "id": "DS116-CAND-01",
+      "root": "R115-01",
+      "kind": "DOCUMENT_REPAIR",
+      "premise": "115 report 23 cells missing across B7 / three steps / C6",
+      "candidate": "three complete tables preserve B7 and C6 results and bind each cell to old facts keys",
+      "source_ids": [
+        "old 115 facts B.models/C.six_cells",
+        "DS116-E012",
+        "DS116-E013",
+        "DS116-E014"
+      ],
+      "first_unverified_step": "C08 Pro rechecks all table columns and value bindings",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "DS116-CAND-02",
+      "root": "R115-02",
+      "kind": "DOCUMENT_SOURCE_CORRECTION",
+      "premise": "old literal70, original symbol69, filewide prefix72",
+      "candidate": "CMake set variable name, five field-level action citations, INT_MAX and PAGE_MASK provenance",
+      "source_ids": [
+        "DS116-E001",
+        "DS116-E002",
+        "DS116-E003",
+        "DS116-E004",
+        "MD115-E023",
+        "MD115-E028",
+        "MD115-E066",
+        "MD115-E067"
+      ],
+      "first_unverified_step": "C08 checks exact old fields and new source references against original 115",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "DS116-CAND-03",
+      "root": "R115-03",
+      "kind": "DOCUMENT_GRAPH_CORRECTION",
+      "premise": "115 graph omits ksys actual owner and zero-length exit, overgeneralizes iterator queued return",
+      "candidate": "explicit owner nodes, typed VFS clamp/storage, zero/one/crosspage paths and BUG_ON gate",
+      "source_ids": [
+        "DS116-E005",
+        "DS116-E006",
+        "DS116-E007",
+        "DS116-E008",
+        "DS116-E009",
+        "DS116-E010",
+        "DS116-E011"
+      ],
+      "first_unverified_step": "C08 verifies graph endpoints/edge semantics and queue sentinel exclusion",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "DS116-CAND-04",
+      "root": "A",
+      "kind": "OPENDIR_FD_LIFETIME",
+      "premise": "open return not checked negative, alloc_dir malloc failure does not close opened fd",
+      "candidate": "valid malloc can return nonNULL DIR with negative saved fd; valid fd and malloc failure leaves fd not closed by these functions",
+      "source_ids": [
+        "DS116-E020",
+        "DS116-E021",
+        "DS116-E022",
+        "DS116-E025",
+        "DS116-E026",
+        "DS116-E027"
+      ],
+      "first_unverified_step": "real malloc behavior, open errno, fd lifetime and negative fd path across calls",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "DS116-CAND-05",
+      "root": "A",
+      "kind": "DIRECTORY_STREAM_STATE",
+      "premise": "DIR allocated with malloc(sizeof DIR+32768), sets fd/allocation and zeros counters",
+      "candidate": "source initial fields and static allocation amount; max buffer enum not actually used for chosen allocation",
+      "source_ids": [
+        "DS116-E023",
+        "DS116-E024",
+        "DS116-E025",
+        "DS116-E028",
+        "DS116-E030",
+        "DS116-E031",
+        "DS116-E033"
+      ],
+      "first_unverified_step": "compiler layout sizeof DIR/offset to char data and feature-conditioned declarations",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "DS116-CAND-06",
+      "root": "B",
+      "kind": "BATCHED_GETDENTS",
+      "premise": "readdir only refills on offset>=size; uses d_reclen to advance and d_off for filepos",
+      "candidate": "one 80-byte refill provides 24,24,32 record sequence with three readdir pointers before next syscall",
+      "source_ids": [
+        "DS116-E034",
+        "DS116-E035",
+        "DS116-E038",
+        "DS116-E039",
+        "DS116-E040",
+        "DS116-E041"
+      ],
+      "first_unverified_step": "verified compiled layout, actual first buffer records and consistency with user feature macros",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "DS116-CAND-07",
+      "root": "B",
+      "kind": "TAIL_OFFSET_UNDEFINED",
+      "premise": "kernel filldir64 only updates predecessor d_off and final tail repair commented",
+      "candidate": "last dirent d_off cannot be asserted zero, model must require known initialized symbolic value",
+      "source_ids": [
+        "DS116-E048",
+        "DS116-E050",
+        "DS116-E060",
+        "DS116-E062"
+      ],
+      "first_unverified_step": "actual initialization of tail byte range before readdir reads d_off, kernel FAT record producer",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "DS116-CAND-08",
+      "root": "C",
+      "kind": "INCOMPLETE_CLOSEDIR",
+      "premise": "closedir.c function has no active close/free/return, ls ignores returned value",
+      "candidate": "cannot claim released fd/DIR or a defined success/error return; ls still reaches its own return1 in bounded source sequence",
+      "source_ids": [
+        "DS116-P01",
+        "DS116-P29",
+        "DS116-E058"
+      ],
+      "first_unverified_step": "compile and test actual linked closedir code and lifetime without changing source",
+      "status": "CONDITIONAL_STATIC"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "DS116-GAP-01",
+      "root": "R115-01",
+      "first_unverified_step": "C08 Pro independently validates 23 repaired cells and absence of column splitting",
+      "resume": "facts D00.R115-01, report three replacement tables",
+      "state": "PENDING"
+    },
+    {
+      "id": "DS116-GAP-02",
+      "root": "R115-02",
+      "first_unverified_step": "C08 Pro replays 70/69/72 historical evidence distinction and five exact field source mappings",
+      "resume": "facts D00.R115-02 and original 115 facts",
+      "state": "PENDING"
+    },
+    {
+      "id": "DS116-GAP-03",
+      "root": "R115-03",
+      "first_unverified_step": "C08 Pro checks original 115 DOT line fixes, BUG_ON queued guard and 0 loop exit",
+      "resume": "facts D00.R115-03, new dot",
+      "state": "PENDING"
+    },
+    {
+      "id": "DS116-GAP-04",
+      "root": "A",
+      "first_unverified_step": "actual sizeof(DIR), allocator and empty/open errno effects, close fd on allocation failure",
+      "resume": "opendir.c:33–121; dirstream.h:30–51",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "DS116-GAP-05",
+      "root": "B",
+      "first_unverified_step": "check compiler feature flags __USE_LARGEFILE64/__USE_GNU and incompatible shell dirent pointer assignment",
+      "resume": "bits/dirent.h:22–47 and dirent.h:141–172",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "DS116-GAP-06",
+      "root": "B",
+      "first_unverified_step": "verify record tail d_off storage is initialized and actual FAT path supplies 80 bytes on a real directory",
+      "resume": "kernel readdir.c:92–169 and FAT myos_fat32.c:311–351",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "DS116-GAP-07",
+      "root": "C",
+      "first_unverified_step": "examine real linked closedir implementation and C nonvoid fall-through return behavior; fd/malloc cleanup",
+      "resume": "closedir.c:26–51 and shell ls_command:240–242",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "DS116-GAP-08",
+      "root": "INTEGRATION",
+      "first_unverified_step": "full local P9, preprocessing, compiler/link, actual shell+libc+kernel syscall boundary, Graphviz, QEMU, real hardware",
+      "resume": "future authorized testing phase only",
+      "state": "NOT_RUN"
+    }
+  ],
+  "source_scope": "time source, approved fixed review/115 inputs; no kernel changes, scripts, compilation, real I/O or additional agent execution",
+  "full_local_P9": "NOT_RUN",
+  "kernel_runtime": "NOT_RUN"
+}
