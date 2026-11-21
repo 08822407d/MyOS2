@@ -1,0 +1,221 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-CAT-FILE-DISPLAY-117",
+  "record_type": "bounded_deferred_findings_source_stage2",
+  "date": "2026-11-21",
+  "base_snapshot": "time（分支名）",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "legacy": {
+    "R115_01": "CLOSED_DOCUMENTATION_ONLY",
+    "R115_02": "CLOSED_DOCUMENTATION_ONLY",
+    "R115_03": "OPEN",
+    "R116_01": "OPEN",
+    "R116_02": "OPEN",
+    "batch115": "RETURN",
+    "batch116": "RETURN"
+  },
+  "candidates": [
+    {
+      "id": "CT117-CAND-01",
+      "root": "R115-03",
+      "kind": "DOCUMENT_GRAPH_CORRECTION",
+      "condition": "valid zero_fops scalar read, valid ppos, read count 0,4096,4097",
+      "finding": "117 actual R115 graph has all ksys/VFS/mem loop and read_zero table binding, 0/P/P1 return/f_pos paths; old 116 graph left ksys sinks",
+      "evidence": [
+        "CT117-E001",
+        "CT117-E002",
+        "CT117-E015",
+        "CT117-E016",
+        "CT117-E017",
+        "CT117-E018",
+        "CT117-E019",
+        "CT117-E012",
+        "CT117-E013"
+      ],
+      "first_unverified": "C08 independently rechecks classified edges, node reachability and queued BUG gate",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "CT117-CAND-02",
+      "root": "R116-01",
+      "kind": "DOCUMENT_TAIL_OFFSET",
+      "condition": "complete valid actors, FAT passes offset0, current/prev pointers and direct stores are valid",
+      "finding": "single accepted record writes own tail d_off=0, multi-record last tail is not assigned by this producer; requires separately known D2/D3 for readdir",
+      "evidence": [
+        "CT117-E032",
+        "CT117-E036",
+        "CT117-E038",
+        "CT117-E039",
+        "CT117-E034"
+      ],
+      "first_unverified": "C08 checks one/two/three actor values, missing DS116-P29 consumer remap, asm labels",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "CT117-CAND-03",
+      "root": "R116-02",
+      "kind": "DOCUMENT_ACTUAL_CALLERS",
+      "condition": "properly formed opendir DIR and valid cached records",
+      "finding": "117 R116 graph separates run_cmd indirect call, opendir vs open vs allocdir call owners, maxread and kernel prev_reclen gates, shell filter and exit; A03 negative stored vs live fd0, A04 valid7 retained",
+      "evidence": [
+        "CT117-E020",
+        "CT117-E022",
+        "CT117-E023",
+        "CT117-E027",
+        "CT117-E028",
+        "CT117-E034",
+        "CT117-E035"
+      ],
+      "first_unverified": "C08 reviews actual DOT and per-model B01/B02 continue and NULL stop",
+      "status": "PENDING_C08"
+    },
+    {
+      "id": "CT117-CAND-04",
+      "root": "A",
+      "kind": "PATH_SEPARATORS",
+      "condition": "current_dir and argv1 valid terminated strings and filename allocation sufficient",
+      "finding": "cat concatenates root / + note as /note, /docs + note as /docs/note and /docs + /note as /docs//note; no normalize call in examined full body",
+      "evidence": [
+        "CT117-E052",
+        "CT117-E053",
+        "CT117-E054",
+        "CT117-E057",
+        "CT117-E058"
+      ],
+      "first_unverified": "Actual filesystem path lookup semantics and full program input parsing",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "CT117-CAND-05",
+      "root": "A",
+      "kind": "OPEN_ERROR_RESOURCE",
+      "condition": "filename allocation valid and open returns negative integer",
+      "finding": "cat error prefix ls:; filename allocation not freed, buf not yet allocated, function returns-1; errno string not fixed by examined code",
+      "evidence": [
+        "CT117-E051",
+        "CT117-E055",
+        "CT117-E056",
+        "CT117-P07"
+      ],
+      "first_unverified": "Real allocator/open/errno and process cleanup; no test",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "CT117-CAND-06",
+      "root": "B",
+      "kind": "SEEK_LENGTH_READ",
+      "condition": "small regular FAT file 0–32, lseek end/set succeed, file mode and buffer valid",
+      "finding": "END return assigned int i, SET return ignored, buf prezero i+1, read requested i exactly once; VFS selects FAT32 read_iter over scalar read",
+      "evidence": [
+        "CT117-E059",
+        "CT117-E060",
+        "CT117-E061",
+        "CT117-E062",
+        "CT117-E070",
+        "CT117-E073",
+        "CT117-E074",
+        "CT117-E076"
+      ],
+      "first_unverified": "Actual read return, FAT object binding, page cache and kiocb position update",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "CT117-CAND-07",
+      "root": "C",
+      "kind": "NULL_TERMINATED_OUTPUT",
+      "condition": "valid small printf buffer and model-supplied read bytes, no formatting truncation",
+      "finding": "printf uses %s strlen first NUL and its own literal LF, requests rv bytes to stdout; NUL/short read/embedded LF produce outputs different from raw file bytes",
+      "evidence": [
+        "CT117-E077",
+        "CT117-E080",
+        "CT117-E081",
+        "CT117-E082",
+        "CT117-E084",
+        "CT117-E085",
+        "CT117-E086"
+      ],
+      "first_unverified": "Compiled printf behavior, stdout fd, actual write return and terminal",
+      "status": "CONDITIONAL_STATIC"
+    },
+    {
+      "id": "CT117-CAND-08",
+      "root": "C",
+      "kind": "RESOURCE_RETURN_CONTRACT",
+      "condition": "valid filenames and allocation, normal/ordinary negative read models",
+      "finding": "cat calls close(fd) after read regardless ret, ignores its result, returns1 and does not call free on filename/buf; printf write return ignored",
+      "evidence": [
+        "CT117-E056",
+        "CT117-E078",
+        "CT117-E081",
+        "CT117-P07"
+      ],
+      "first_unverified": "Close/fd release and process memory lifetime beyond examined function",
+      "status": "CONDITIONAL_STATIC"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "CT117-GAP-01",
+      "root": "R115-03",
+      "first_unverified": "C08 Pro reviews entire R115 DOT actual reachability and source classification for n0/P/P1",
+      "resume": "117 DOT cluster_R115 and facts D00.R115-03",
+      "state": "PENDING"
+    },
+    {
+      "id": "CT117-GAP-02",
+      "root": "R116-01",
+      "first_unverified": "C08 Pro checks the one/two/three tail record write identities and all source-index fixes",
+      "resume": "117 facts D00.R116-01, kernel readdir.c:109–168",
+      "state": "PENDING"
+    },
+    {
+      "id": "CT117-GAP-03",
+      "root": "R116-02",
+      "first_unverified": "C08 Pro checks actual callers, output branch, maxread and valid FD accounting in new R116 graph",
+      "resume": "117 DOT cluster_R116 and facts D00.R116-02",
+      "state": "PENDING"
+    },
+    {
+      "id": "CT117-GAP-04",
+      "root": "A",
+      "first_unverified": "Actual current_dir normalization and path lookup for /docs//note",
+      "resume": "myinitramfs/myshell/myshell.c:260–275",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "CT117-GAP-05",
+      "root": "A",
+      "first_unverified": "Actual malloc, open failure errno and filename allocation lifetime",
+      "resume": "cat_command:260–275, string helper bodies",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "CT117-GAP-06",
+      "root": "B",
+      "first_unverified": "After successful seeks, verify real generic_file_read_iter/simple_filemap_read bytes and position",
+      "resume": "mykernel/mm/vm_map/filemap.c:263–305; mykernel/fs/vfs/read_write.c:147–196",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "CT117-GAP-07",
+      "root": "C",
+      "first_unverified": "Determine actual stdout->_fileno write effects/partial result and compiled %s formatting",
+      "resume": "myglibc/stdio/printf.c:11–25; vsnprintf.c:783–808",
+      "state": "NOT_RUN"
+    },
+    {
+      "id": "CT117-GAP-08",
+      "root": "INTEGRATION",
+      "first_unverified": "Full local P9, preprocess/compile/link, shell/core integration, QEMU, hardware, resource lifecycle",
+      "resume": "future separately authorized testing phase",
+      "state": "NOT_RUN"
+    }
+  ],
+  "scope": "Not a repair authorization. Do not change kernel, old results, task contracts, PR metadata or actual hardware. Source issue follow-up per project 18.",
+  "full_local_P9": "NOT_RUN",
+  "compiled": "NOT_RUN",
+  "runtime": "NOT_RUN"
+}
