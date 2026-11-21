@@ -1,0 +1,136 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-STDIO-OPEN-FLAG-ABI-122",
+  "record_type": "phase2_deferred_and_D00_return_items",
+  "produced_by": "GPT-6（后端与effort不可认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-18",
+  "date": "2026-11-22",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "official_closed_by_C08": [
+    "R117-02",
+    "R120-01"
+  ],
+  "history_old_batches": {
+    "117": "PASS_PENDING_LOCAL_COMPOSITE",
+    "120": "RETURN",
+    "121": "RETURN"
+  },
+  "items": [
+    {
+      "id": "R120-02",
+      "category": "D00_DOCUMENTATION_RETURN",
+      "state": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_status": "OPEN",
+      "correction": "121 shared gate in missing-method cases replaced with case-specific edge paths; A01/B01 reach EPERM conditional user return builtin0 without callback/done/putname; rm/rmdir separate argc, output, success",
+      "evidence": [
+        "stdio-open-flag-abi.md D00 table",
+        "facts D00.R120_02",
+        "DOT cluster_D00",
+        "time namei.c:916-929,983-996"
+      ],
+      "closure": "C08 independently traverse each case starting from case_id, verify absence from forbidden cleanup and cross-command output paths"
+    },
+    {
+      "id": "R121-01",
+      "category": "D00_DOCUMENTATION_RETURN",
+      "state": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_status": "OPEN",
+      "correction": "_IO_new_file_fopen invokes _IO_file_open with 5 args; _IO_file_open invokes open with 3 args; correct E023 title, C121 machine tuple, b cursor side effect, inner direct fd7, all NULL/same-P outer paths",
+      "evidence": [
+        "time fileops.c:173-181,199-267,339-340",
+        "time iofopen.c:82-88",
+        "DOT cluster_R121"
+      ],
+      "closure": "C08 checks case-specific parser->helper5->open3 (or no calls) and outer identity NULL/P"
+    },
+    {
+      "id": "R121-02",
+      "category": "D00_DOCUMENTATION_RETURN",
+      "state": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "reviewer_status": "OPEN",
+      "correction": "new formal P2 windows of actual set(CMAKE_C_FLAGS) 39-43 and 64-66 with independent literal count, separate user CMake and actual build",
+      "evidence": [
+        "time mykernel/scripts/options_flags.cmake:39-43,64-66",
+        "evidence.md ABI122 P2"
+      ],
+      "closure": "C08 counts all six final files and checks source/symbol support"
+    },
+    {
+      "id": "ABI122-BIT-COLLISION",
+      "category": "STATIC_ABI_CONSISTENCY_OBSERVATION",
+      "state": "DEFERRED_SOURCE_LEVEL_REVIEW",
+      "claim": "user O_CREAT 0x200 is kernel O_TRUNC; user O_TRUNC 0x400 is kernel O_APPEND; user O_EXCL 0x800 is kernel O_NONBLOCK; user O_APPEND 0x8 is outside kernel VALID_OPEN_FLAGS",
+      "boundary": "conditional hypothesis same raw numeric bits cross from this chosen header to this kernel; no actual executable ABI link",
+      "resume": "Pro independently assess source-to-binary bridge and fixed numeric model without suggesting runtime bug reproduction"
+    },
+    {
+      "id": "ABI122-HEADER-PREPROCESS",
+      "category": "CONDITIONAL_HEADER_BOUNDARY",
+      "state": "NEEDS_EVIDENCE",
+      "claim": "myglibc CMake text -D_GNU_SOURCE and features.h can enable __USE_XOPEN2K8 and __USE_LARGEFILE64 if active; user O_LARGEFILE then 0, kernel O_LARGEFILE different",
+      "boundary": "actual selected includes, preprocessing flags, sh dependency and compiler/link output absent",
+      "resume": "separately authorized inspection of actual compile_commands/link map or artifact; none now"
+    },
+    {
+      "id": "ABI122-BUILD-LINK",
+      "category": "ACTUAL_LIBC_SOURCE_PROVENANCE_GAP",
+      "state": "NEEDS_EVIDENCE",
+      "claim": "separate source trees for myglibc and initramfs project; top points to external musl-gcc after project; not enough to assert actual sh uses inrepo myglibc or specific musl",
+      "boundary": "source availability not runtime connection",
+      "resume": "outside scope; owner must separately authorize concrete build artifact verification"
+    },
+    {
+      "id": "ABI122-HOW-SCOPE",
+      "category": "DOWNSTREAM_KERNEL_CONSUMPTION_BOUNDARY",
+      "state": "NEEDS_EVIDENCE",
+      "claim": "build_open_how returns deterministic flags/mode/resolve for eight given values; does not confirm build_open_flags, fd allocation, file open, create/truncate/append semantics",
+      "boundary": "30号独立裁定 and doc fix apply; op partial-init and downstream return not rechecked",
+      "resume": "existing 30 record and future independent code/runtime scope if authorized"
+    },
+    {
+      "id": "ABI122-ERROR-PATH",
+      "category": "USER_RETURN_ERRNO_BOUNDARY",
+      "state": "NEEDS_EVIDENCE",
+      "claim": "user stub and kernel source are separate; actual errno, signal/restart return rewrite, actual library handling and printf not established by the kernel -EPERM model",
+      "boundary": "R120-02 kernel return to user result remains conditional",
+      "resume": "rely 08/09 reviewed context; actual binary and runtime only if separately authorized"
+    },
+    {
+      "id": "ABI122-GIT-VALIDATION",
+      "category": "LOCAL_GATE_BOUNDARY",
+      "state": "NOT_RUN",
+      "claim": "P1-P13 feasible remote text validation and SHA checks requested",
+      "boundary": "full local P9, preprocessor, C/ASM compiler, Graphviz, QEMU, real files NOT_RUN",
+      "resume": "C08 Pro mainline review; no autonomous kernel runtime work"
+    },
+    {
+      "id": "ABI122-O-PATH-AND-TMP",
+      "category": "SCOPE_EXCLUSION",
+      "state": "DEFERRED",
+      "claim": "WILL_CREATE includes __O_TMPFILE and O_PATH may further filter flags, but none of four pairs carry these bits",
+      "boundary": "do not extend to O_PATH or O_TMPFILE beyond 30 review under this contract",
+      "resume": "future work package only if C08 publishes"
+    }
+  ],
+  "source_limitations": {
+    "actual_sh_selected_libc": "UNKNOWN",
+    "user_header_selected": "UNKNOWN",
+    "preprocessing": "NOT_RUN",
+    "kernel_compilation": "NOT_RUN",
+    "full_local_P9": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_file_actions": "NOT_RUN",
+    "modeled_int_string_only": true
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

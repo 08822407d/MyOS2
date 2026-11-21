@@ -1,0 +1,1656 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-STDIO-OPEN-FLAG-ABI-122",
+  "record_type": "paper_models_and_D00_corrections",
+  "produced_by": "GPT-6（后端与effort不可独立认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-18",
+  "date": "2026-11-22",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "pins_short12": {
+    "lead": "72abc20e7a70",
+    "execution_parent": "e1272a3f9b69",
+    "time": "a039d9803ade",
+    "master": "e8e60cd19540"
+  },
+  "D00": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "open": [
+      "R120-02",
+      "R121-01",
+      "R121-02"
+    ],
+    "closed": [
+      "R117-02",
+      "R120-01"
+    ],
+    "R120_02": {
+      "original_13_cases_replayed_and_reclassified": [
+        {
+          "case_id": "D121-A01",
+          "cmd": "touch",
+          "argc": 2,
+          "condition": "METHOD_MISSING",
+          "kernel_return": "-EPERM",
+          "user_interface_return": "-EPERM_IF_RAW_USER_RESULT",
+          "local_err_when_called": "-EPERM_IF_RAW_USER_RESULT",
+          "builtin_return": 0,
+          "done_path_create": false,
+          "putname": false,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "ACTUAL_SELECTED_LIBC_AND_NORMAL_COMPLETION_WITH_NO_RETURN_OVERRIDE",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": true,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-A02",
+          "cmd": "touch",
+          "argc": 2,
+          "condition": "CALLBACK_RETURNS_0",
+          "kernel_return": 0,
+          "user_interface_return": 0,
+          "local_err_when_called": 0,
+          "builtin_return": 0,
+          "done_path_create": true,
+          "putname": true,
+          "callback_called": true,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-A03",
+          "cmd": "touch",
+          "argc": 1,
+          "condition": "INVALID_ARGC",
+          "kernel_return": null,
+          "user_interface_return": null,
+          "local_err_when_called": null,
+          "builtin_return": -1,
+          "done_path_create": false,
+          "putname": false,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-B01",
+          "cmd": "mkdir",
+          "argc": 2,
+          "condition": "METHOD_MISSING",
+          "kernel_return": "-EPERM",
+          "user_interface_return": "-EPERM_IF_RAW_USER_RESULT",
+          "local_err_when_called": "-EPERM_IF_RAW_USER_RESULT",
+          "builtin_return": 0,
+          "done_path_create": false,
+          "putname": false,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "ACTUAL_SELECTED_LIBC_AND_NORMAL_COMPLETION_WITH_NO_RETURN_OVERRIDE",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": true,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-B02",
+          "cmd": "mkdir",
+          "argc": 2,
+          "condition": "CALLBACK_RETURNS_0",
+          "kernel_return": 0,
+          "user_interface_return": 0,
+          "local_err_when_called": 0,
+          "builtin_return": 0,
+          "done_path_create": true,
+          "putname": true,
+          "callback_called": true,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-B03",
+          "cmd": "mkdir",
+          "argc": 2,
+          "condition": "FILENAME_CREATE_ERRPTR_MINUS2",
+          "kernel_return": -2,
+          "user_interface_return": "-2_IF_RAW_USER_RESULT",
+          "local_err_when_called": "-2_IF_RAW_USER_RESULT",
+          "builtin_return": 0,
+          "done_path_create": false,
+          "putname": true,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "ACTUAL_SELECTED_LIBC_AND_NORMAL_COMPLETION_WITH_NO_RETURN_OVERRIDE",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-B04",
+          "cmd": "mkdir",
+          "argc": 3,
+          "condition": "INVALID_ARGC",
+          "kernel_return": null,
+          "user_interface_return": null,
+          "local_err_when_called": null,
+          "builtin_return": -1,
+          "done_path_create": false,
+          "putname": false,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-R01",
+          "cmd": "rm",
+          "argc": 1,
+          "condition": "INVALID_ARGC",
+          "kernel_return": null,
+          "user_interface_return": null,
+          "local_err_when_called": null,
+          "builtin_return": -1,
+          "done_path_create": null,
+          "putname": null,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-R02",
+          "cmd": "rm",
+          "argc": 2,
+          "condition": "USER_INTERFACE_RESULT_ZERO",
+          "kernel_return": null,
+          "user_interface_return": 0,
+          "local_err_when_called": 0,
+          "builtin_return": 0,
+          "done_path_create": null,
+          "putname": null,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-R03",
+          "cmd": "rm",
+          "argc": 2,
+          "condition": "USER_INTERFACE_RESULT_MINUS5",
+          "kernel_return": null,
+          "user_interface_return": -5,
+          "local_err_when_called": -5,
+          "builtin_return": -5,
+          "done_path_create": null,
+          "putname": null,
+          "callback_called": false,
+          "output_request": "rm: %s: %s\\n",
+          "output_format_args": [
+            "strerror(errno)",
+            "note"
+          ],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-D01",
+          "cmd": "rmdir",
+          "argc": 1,
+          "condition": "INVALID_ARGC",
+          "kernel_return": null,
+          "user_interface_return": null,
+          "local_err_when_called": null,
+          "builtin_return": -1,
+          "done_path_create": null,
+          "putname": null,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-D02",
+          "cmd": "rmdir",
+          "argc": 2,
+          "condition": "USER_INTERFACE_RESULT_ZERO",
+          "kernel_return": null,
+          "user_interface_return": 0,
+          "local_err_when_called": 0,
+          "builtin_return": 0,
+          "done_path_create": null,
+          "putname": null,
+          "callback_called": false,
+          "output_request": null,
+          "output_format_args": [],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        },
+        {
+          "case_id": "D121-D03",
+          "cmd": "rmdir",
+          "argc": 2,
+          "condition": "USER_INTERFACE_RESULT_MINUS5",
+          "kernel_return": null,
+          "user_interface_return": -5,
+          "local_err_when_called": -5,
+          "builtin_return": -5,
+          "done_path_create": null,
+          "putname": null,
+          "callback_called": false,
+          "output_request": "rmdir: %s: %s\\n",
+          "output_format_args": [
+            "strerror(errno)",
+            "docs"
+          ],
+          "user_return_condition": "GIVEN_INTERFACE_OR_NOT_CALLED",
+          "actual_errno_from_negative_return": "UNKNOWN",
+          "same_case_path_must_avoid_cleanup": false,
+          "run_cmd_consumes_builtin_result": false
+        }
+      ],
+      "source_snapshots": [
+        "myshell.c:325-375",
+        "namei.c:916-929,983-996"
+      ],
+      "source_return_rule": "-EPERM skips done_path_create/putname only under valid dentry and missing i_op method",
+      "case_specific_graph": "each case_id has a uniquely guarded scenario node; missing-method case cannot reach callback/done/putname",
+      "rm_rmdir_cross_path_precluded": true
+    },
+    "R121_01": {
+      "old_evidence_title": "FO121-E023 described four arguments incorrectly",
+      "correct_source_fileops_line267": {
+        "function": "_IO_new_file_fopen",
+        "callee": "_IO_file_open",
+        "ordered_arguments": [
+          "fp",
+          "filename",
+          "omode | oflags",
+          "oprot",
+          "read_write"
+        ],
+        "argument_count": 5
+      },
+      "correct_source_fileops_line178": {
+        "function": "_IO_file_open",
+        "callee": "open",
+        "ordered_arguments": [
+          "filename",
+          "posix_mode | O_LARGEFILE",
+          "prot"
+        ],
+        "argument_count": 3
+      },
+      "corrected_return_cases": [
+        {
+          "case_id": "C121-01",
+          "outer": true,
+          "mode": "r",
+          "fileno_initial": -1,
+          "open_return_given": -1,
+          "helper_call_args_ordered": [
+            "P",
+            "note",
+            0,
+            438,
+            8
+          ],
+          "open_call_args_ordered": [
+            "note",
+            0,
+            438
+          ],
+          "open_count": 1,
+          "final_fileno": -1,
+          "inner_result": "NULL",
+          "outer_result": "NULL"
+        },
+        {
+          "case_id": "C121-02",
+          "outer": true,
+          "mode": "r",
+          "fileno_initial": -1,
+          "open_return_given": 0,
+          "helper_call_args_ordered": [
+            "P",
+            "note",
+            0,
+            438,
+            8
+          ],
+          "open_call_args_ordered": [
+            "note",
+            0,
+            438
+          ],
+          "open_count": 1,
+          "final_fileno": 0,
+          "inner_result": "P",
+          "outer_result": "P"
+        },
+        {
+          "case_id": "C121-03",
+          "outer": true,
+          "mode": "r",
+          "fileno_initial": -1,
+          "open_return_given": 5,
+          "helper_call_args_ordered": [
+            "P",
+            "note",
+            0,
+            438,
+            8
+          ],
+          "open_call_args_ordered": [
+            "note",
+            0,
+            438
+          ],
+          "open_count": 1,
+          "final_fileno": 5,
+          "inner_result": "P",
+          "outer_result": "P"
+        },
+        {
+          "case_id": "C121-04",
+          "outer": true,
+          "mode": "q",
+          "fileno_initial": -1,
+          "open_return_given": null,
+          "helper_call_args_ordered": null,
+          "open_call_args_ordered": null,
+          "open_count": 0,
+          "final_fileno": -1,
+          "inner_result": "NULL",
+          "outer_result": "NULL",
+          "why": "INVALID_FIRST_CHARACTER"
+        },
+        {
+          "case_id": "C121-05",
+          "outer": false,
+          "mode": "r",
+          "fileno_initial": 7,
+          "open_return_given": null,
+          "helper_call_args_ordered": null,
+          "open_call_args_ordered": null,
+          "open_count": 0,
+          "final_fileno": 7,
+          "inner_result": "NULL",
+          "outer_result": "NOT_CALLED",
+          "why": "INNER_DIRECT_EXISTING_FD_GATE"
+        }
+      ],
+      "corrected_direct_case_A12103": {
+        "case_id": "A121-03",
+        "owner": "DIRECT_INNER_CALL_NOT_WRAPPER",
+        "initial_fileno": 7,
+        "wrapper_initialization_performed": false,
+        "inner_result": "NULL",
+        "open_count": 0,
+        "call_arguments": [
+          "P_with_fileno_7",
+          "note",
+          "r"
+        ],
+        "source": "fileops.c:209-210"
+      },
+      "actual_build_link": "UNKNOWN",
+      "no_direct_control_bypass_of_mode_parser": true,
+      "b_cursor_only_last_recognized_not_oflags": true,
+      "early_return_reaches_outer_NULL_when_outer_exists": true
+    },
+    "R121_02": {
+      "replacement_CMAKE_P2": [
+        "options_flags.cmake:39-43",
+        "options_flags.cmake:64-66"
+      ],
+      "scope": "time kernel flags only, not user initramfs compile/linked binary"
+    }
+  },
+  "A_provenance": {
+    "source_head_user": "myinitramfs/mylib/myglibc/bits/fcntl.h",
+    "source_head_kernel": "mykernel/include/uapi/asm-generic/fcntl.h",
+    "user_higher_level_headers": [
+      "myinitramfs/mylib/myglibc/libio/fileops.c:29",
+      "myinitramfs/mylib/myglibc/include/fcntl.h:1-4",
+      "myinitramfs/mylib/myglibc/io/fcntl.h:24-35",
+      "myinitramfs/mylib/myglibc/bits/fcntl.h:24-58"
+    ],
+    "kernel_include_chain": [
+      "mykernel/fs/vfs/open.c:15",
+      "mykernel/include/linux/kernel/fcntl.h:5-6",
+      "mykernel/include/uapi/linux/fcntl.h:5-6",
+      "mykernel/include/uapi/asm-generic/fcntl.h:19-64"
+    ],
+    "feature_conditions": {
+      "CMake_myglibc_target_C_FLAGS": "-D__USE_GNU -D_GNU_SOURCE -I${CC_INC_PATH}",
+      "GNU_SOURCE_implies": "_XOPEN_SOURCE=700 and _LARGEFILE64_SOURCE=1 in this features.h",
+      "XOPEN2K8_visible": "conditional on preprocessor_feature_selection",
+      "LARGEFILE64_visible": "conditional on preprocessor_feature_selection",
+      "user_O_LARGEFILE_if_visible": 0,
+      "kernel_O_LARGEFILE_if_not_predefined": 32768,
+      "actual_preprocess": "NOT_RUN",
+      "actual_user_header": "UNKNOWN",
+      "real_sh_library": "UNKNOWN"
+    },
+    "actual_kernel_open": {
+      "user_stub_instance": "myinitramfs/mylib/myglibc/syscall/syscall.c:30",
+      "number": 2,
+      "kernel_switch_instance": "mykernel/arch/x86_64/include/asm/syscalls_64.h:6",
+      "kernel_entry": "mykernel/fs/syscall.c:38-42",
+      "kernel_direct_callee": "do_sys_open(0,filename,flags,mode)",
+      "do_sys_open": "mykernel/fs/vfs/open.c:266-270",
+      "additional_flags_added_by_do_sys_open": false
+    },
+    "mode_mask_octal": "07777",
+    "mode_input_octal": "0666",
+    "contract_scope": "SOURCE_ONLY_NO_PROCESS"
+  },
+  "B_symbol_encodings": {
+    "user_constants": {
+      "O_RDONLY": 0,
+      "O_WRONLY": 1,
+      "O_RDWR": 2,
+      "O_CREAT": 512,
+      "O_EXCL": 2048,
+      "O_TRUNC": 1024,
+      "O_APPEND": 8,
+      "O_LARGEFILE": 0,
+      "O_CLOEXEC": 4194304
+    },
+    "kernel_constants": {
+      "O_RDONLY": 0,
+      "O_WRONLY": 1,
+      "O_RDWR": 2,
+      "O_CREAT": 64,
+      "O_EXCL": 128,
+      "O_NOCTTY": 256,
+      "O_TRUNC": 512,
+      "O_APPEND": 1024,
+      "O_NONBLOCK": 2048,
+      "O_NDELAY": 2048,
+      "O_DSYNC": 4096,
+      "FASYNC": 8192,
+      "O_DIRECT": 16384,
+      "O_LARGEFILE": 32768,
+      "O_DIRECTORY": 65536,
+      "O_NOFOLLOW": 131072,
+      "O_NOATIME": 262144,
+      "O_CLOEXEC": 524288,
+      "__O_SYNC": 1048576,
+      "O_PATH": 2097152,
+      "__O_TMPFILE": 4194304
+    },
+    "valid_kernel_mask": {
+      "decimal": 8388547,
+      "hex": "0x7FFFC3",
+      "octal": "037777703"
+    },
+    "valid_kernel_mask_expression": "VALID_OPEN_FLAGS = enumerated in kernel/fcntl.h:9-16",
+    "S_IALLUGO": {
+      "decimal": 4095,
+      "hex": "0xFFF",
+      "octal": "07777"
+    },
+    "cases": [
+      {
+        "case_id": "ABI122-01",
+        "mode": "r",
+        "parts": [
+          "O_RDONLY"
+        ],
+        "omode": 0,
+        "oflags": 0,
+        "read_write": 8,
+        "suffix_indices": [
+          1
+        ],
+        "last_recognized_index": 0,
+        "recognized_char": "r",
+        "b_cursor_write": false,
+        "filename_model": "note",
+        "oprot_octal": "0666",
+        "oprot_decimal": 438,
+        "user_posix_mode": {
+          "decimal": 0,
+          "hex": "0x0",
+          "octal": "00"
+        },
+        "kernel_by_name_reencode": {
+          "decimal": 0,
+          "hex": "0x0",
+          "octal": "00"
+        },
+        "user_parts": [
+          {
+            "symbol": "O_RDONLY",
+            "user": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "kernel_by_same_name": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "kernel_same_numeric_symbol": [],
+            "raw_bit_recognized_by_kernel": true
+          }
+        ],
+        "mode_intents": [
+          "O_RDONLY"
+        ],
+        "stages": [
+          {
+            "interpretation": "RAW_USER_INTEGER_NO_TRANSLATION",
+            "input": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "valid_mask_value": {
+              "decimal": 8388547,
+              "hex": "0x7FFFC3",
+              "octal": "037777703"
+            },
+            "flags_kept": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "flags_dropped": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "will_create": false,
+            "how": {
+              "flags": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              },
+              "mode": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              },
+              "resolve": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              }
+            },
+            "kernel_bit_names": []
+          },
+          {
+            "interpretation": "KERNEL_BY_NAME_REENCODE_ONLY_NOT_OBSERVED",
+            "input": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "valid_mask_value": {
+              "decimal": 8388547,
+              "hex": "0x7FFFC3",
+              "octal": "037777703"
+            },
+            "flags_kept": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "flags_dropped": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "will_create": false,
+            "how": {
+              "flags": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              },
+              "mode": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              },
+              "resolve": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              }
+            },
+            "kernel_bit_names": []
+          }
+        ],
+        "external_bridge": "HYPOTHETICAL_SAME_INTEGER_FROM_SELECTED_USER_HEADER_AND_REPO_USER_OPEN_STUB_TO_REPO_KERNEL",
+        "actual_binary_linkage": "UNKNOWN"
+      },
+      {
+        "case_id": "ABI122-02",
+        "mode": "w",
+        "parts": [
+          "O_WRONLY",
+          "O_CREAT",
+          "O_TRUNC"
+        ],
+        "omode": 1,
+        "oflags": 1536,
+        "read_write": 4,
+        "suffix_indices": [
+          1
+        ],
+        "last_recognized_index": 0,
+        "recognized_char": "w",
+        "b_cursor_write": false,
+        "filename_model": "note",
+        "oprot_octal": "0666",
+        "oprot_decimal": 438,
+        "user_posix_mode": {
+          "decimal": 1537,
+          "hex": "0x601",
+          "octal": "03001"
+        },
+        "kernel_by_name_reencode": {
+          "decimal": 577,
+          "hex": "0x241",
+          "octal": "01101"
+        },
+        "user_parts": [
+          {
+            "symbol": "O_WRONLY",
+            "user": {
+              "decimal": 1,
+              "hex": "0x1",
+              "octal": "01"
+            },
+            "kernel_by_same_name": {
+              "decimal": 1,
+              "hex": "0x1",
+              "octal": "01"
+            },
+            "kernel_same_numeric_symbol": [],
+            "raw_bit_recognized_by_kernel": true
+          },
+          {
+            "symbol": "O_CREAT",
+            "user": {
+              "decimal": 512,
+              "hex": "0x200",
+              "octal": "01000"
+            },
+            "kernel_by_same_name": {
+              "decimal": 64,
+              "hex": "0x40",
+              "octal": "0100"
+            },
+            "kernel_same_numeric_symbol": [
+              "O_TRUNC"
+            ],
+            "raw_bit_recognized_by_kernel": true
+          },
+          {
+            "symbol": "O_TRUNC",
+            "user": {
+              "decimal": 1024,
+              "hex": "0x400",
+              "octal": "02000"
+            },
+            "kernel_by_same_name": {
+              "decimal": 512,
+              "hex": "0x200",
+              "octal": "01000"
+            },
+            "kernel_same_numeric_symbol": [
+              "O_APPEND"
+            ],
+            "raw_bit_recognized_by_kernel": true
+          }
+        ],
+        "mode_intents": [
+          "O_WRONLY",
+          "O_CREAT",
+          "O_TRUNC"
+        ],
+        "stages": [
+          {
+            "interpretation": "RAW_USER_INTEGER_NO_TRANSLATION",
+            "input": {
+              "decimal": 1537,
+              "hex": "0x601",
+              "octal": "03001"
+            },
+            "valid_mask_value": {
+              "decimal": 8388547,
+              "hex": "0x7FFFC3",
+              "octal": "037777703"
+            },
+            "flags_kept": {
+              "decimal": 1537,
+              "hex": "0x601",
+              "octal": "03001"
+            },
+            "flags_dropped": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "will_create": false,
+            "how": {
+              "flags": {
+                "decimal": 1537,
+                "hex": "0x601",
+                "octal": "03001"
+              },
+              "mode": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              },
+              "resolve": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              }
+            },
+            "kernel_bit_names": [
+              "O_WRONLY",
+              "O_TRUNC",
+              "O_APPEND"
+            ]
+          },
+          {
+            "interpretation": "KERNEL_BY_NAME_REENCODE_ONLY_NOT_OBSERVED",
+            "input": {
+              "decimal": 577,
+              "hex": "0x241",
+              "octal": "01101"
+            },
+            "valid_mask_value": {
+              "decimal": 8388547,
+              "hex": "0x7FFFC3",
+              "octal": "037777703"
+            },
+            "flags_kept": {
+              "decimal": 577,
+              "hex": "0x241",
+              "octal": "01101"
+            },
+            "flags_dropped": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "will_create": true,
+            "how": {
+              "flags": {
+                "decimal": 577,
+                "hex": "0x241",
+                "octal": "01101"
+              },
+              "mode": {
+                "decimal": 438,
+                "hex": "0x1B6",
+                "octal": "0666"
+              },
+              "resolve": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              }
+            },
+            "kernel_bit_names": [
+              "O_WRONLY",
+              "O_CREAT",
+              "O_TRUNC"
+            ]
+          }
+        ],
+        "external_bridge": "HYPOTHETICAL_SAME_INTEGER_FROM_SELECTED_USER_HEADER_AND_REPO_USER_OPEN_STUB_TO_REPO_KERNEL",
+        "actual_binary_linkage": "UNKNOWN"
+      },
+      {
+        "case_id": "ABI122-03",
+        "mode": "a+",
+        "parts": [
+          "O_RDWR",
+          "O_CREAT",
+          "O_APPEND"
+        ],
+        "omode": 2,
+        "oflags": 520,
+        "read_write": 4096,
+        "suffix_indices": [
+          1,
+          2
+        ],
+        "last_recognized_index": 1,
+        "recognized_char": "+",
+        "b_cursor_write": false,
+        "filename_model": "note",
+        "oprot_octal": "0666",
+        "oprot_decimal": 438,
+        "user_posix_mode": {
+          "decimal": 522,
+          "hex": "0x20A",
+          "octal": "01012"
+        },
+        "kernel_by_name_reencode": {
+          "decimal": 1090,
+          "hex": "0x442",
+          "octal": "02102"
+        },
+        "user_parts": [
+          {
+            "symbol": "O_RDWR",
+            "user": {
+              "decimal": 2,
+              "hex": "0x2",
+              "octal": "02"
+            },
+            "kernel_by_same_name": {
+              "decimal": 2,
+              "hex": "0x2",
+              "octal": "02"
+            },
+            "kernel_same_numeric_symbol": [],
+            "raw_bit_recognized_by_kernel": true
+          },
+          {
+            "symbol": "O_CREAT",
+            "user": {
+              "decimal": 512,
+              "hex": "0x200",
+              "octal": "01000"
+            },
+            "kernel_by_same_name": {
+              "decimal": 64,
+              "hex": "0x40",
+              "octal": "0100"
+            },
+            "kernel_same_numeric_symbol": [
+              "O_TRUNC"
+            ],
+            "raw_bit_recognized_by_kernel": true
+          },
+          {
+            "symbol": "O_APPEND",
+            "user": {
+              "decimal": 8,
+              "hex": "0x8",
+              "octal": "010"
+            },
+            "kernel_by_same_name": {
+              "decimal": 1024,
+              "hex": "0x400",
+              "octal": "02000"
+            },
+            "kernel_same_numeric_symbol": [],
+            "raw_bit_recognized_by_kernel": false
+          }
+        ],
+        "mode_intents": [
+          "O_RDWR",
+          "O_CREAT",
+          "O_APPEND"
+        ],
+        "stages": [
+          {
+            "interpretation": "RAW_USER_INTEGER_NO_TRANSLATION",
+            "input": {
+              "decimal": 522,
+              "hex": "0x20A",
+              "octal": "01012"
+            },
+            "valid_mask_value": {
+              "decimal": 8388547,
+              "hex": "0x7FFFC3",
+              "octal": "037777703"
+            },
+            "flags_kept": {
+              "decimal": 514,
+              "hex": "0x202",
+              "octal": "01002"
+            },
+            "flags_dropped": {
+              "decimal": 8,
+              "hex": "0x8",
+              "octal": "010"
+            },
+            "will_create": false,
+            "how": {
+              "flags": {
+                "decimal": 514,
+                "hex": "0x202",
+                "octal": "01002"
+              },
+              "mode": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              },
+              "resolve": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              }
+            },
+            "kernel_bit_names": [
+              "O_RDWR",
+              "O_TRUNC"
+            ]
+          },
+          {
+            "interpretation": "KERNEL_BY_NAME_REENCODE_ONLY_NOT_OBSERVED",
+            "input": {
+              "decimal": 1090,
+              "hex": "0x442",
+              "octal": "02102"
+            },
+            "valid_mask_value": {
+              "decimal": 8388547,
+              "hex": "0x7FFFC3",
+              "octal": "037777703"
+            },
+            "flags_kept": {
+              "decimal": 1090,
+              "hex": "0x442",
+              "octal": "02102"
+            },
+            "flags_dropped": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "will_create": true,
+            "how": {
+              "flags": {
+                "decimal": 1090,
+                "hex": "0x442",
+                "octal": "02102"
+              },
+              "mode": {
+                "decimal": 438,
+                "hex": "0x1B6",
+                "octal": "0666"
+              },
+              "resolve": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              }
+            },
+            "kernel_bit_names": [
+              "O_RDWR",
+              "O_CREAT",
+              "O_APPEND"
+            ]
+          }
+        ],
+        "external_bridge": "HYPOTHETICAL_SAME_INTEGER_FROM_SELECTED_USER_HEADER_AND_REPO_USER_OPEN_STUB_TO_REPO_KERNEL",
+        "actual_binary_linkage": "UNKNOWN"
+      },
+      {
+        "case_id": "ABI122-04",
+        "mode": "wbx",
+        "parts": [
+          "O_WRONLY",
+          "O_CREAT",
+          "O_TRUNC",
+          "O_EXCL"
+        ],
+        "omode": 1,
+        "oflags": 3584,
+        "read_write": 4,
+        "suffix_indices": [
+          1,
+          2,
+          3
+        ],
+        "last_recognized_index": 2,
+        "recognized_char": "x",
+        "b_cursor_write": true,
+        "b_index": 1,
+        "x_index": 2,
+        "filename_model": "note",
+        "oprot_octal": "0666",
+        "oprot_decimal": 438,
+        "user_posix_mode": {
+          "decimal": 3585,
+          "hex": "0xE01",
+          "octal": "07001"
+        },
+        "kernel_by_name_reencode": {
+          "decimal": 705,
+          "hex": "0x2C1",
+          "octal": "01301"
+        },
+        "user_parts": [
+          {
+            "symbol": "O_WRONLY",
+            "user": {
+              "decimal": 1,
+              "hex": "0x1",
+              "octal": "01"
+            },
+            "kernel_by_same_name": {
+              "decimal": 1,
+              "hex": "0x1",
+              "octal": "01"
+            },
+            "kernel_same_numeric_symbol": [],
+            "raw_bit_recognized_by_kernel": true
+          },
+          {
+            "symbol": "O_CREAT",
+            "user": {
+              "decimal": 512,
+              "hex": "0x200",
+              "octal": "01000"
+            },
+            "kernel_by_same_name": {
+              "decimal": 64,
+              "hex": "0x40",
+              "octal": "0100"
+            },
+            "kernel_same_numeric_symbol": [
+              "O_TRUNC"
+            ],
+            "raw_bit_recognized_by_kernel": true
+          },
+          {
+            "symbol": "O_TRUNC",
+            "user": {
+              "decimal": 1024,
+              "hex": "0x400",
+              "octal": "02000"
+            },
+            "kernel_by_same_name": {
+              "decimal": 512,
+              "hex": "0x200",
+              "octal": "01000"
+            },
+            "kernel_same_numeric_symbol": [
+              "O_APPEND"
+            ],
+            "raw_bit_recognized_by_kernel": true
+          },
+          {
+            "symbol": "O_EXCL",
+            "user": {
+              "decimal": 2048,
+              "hex": "0x800",
+              "octal": "04000"
+            },
+            "kernel_by_same_name": {
+              "decimal": 128,
+              "hex": "0x80",
+              "octal": "0200"
+            },
+            "kernel_same_numeric_symbol": [
+              "O_NONBLOCK",
+              "O_NDELAY"
+            ],
+            "raw_bit_recognized_by_kernel": true
+          }
+        ],
+        "mode_intents": [
+          "O_WRONLY",
+          "O_CREAT",
+          "O_TRUNC",
+          "O_EXCL"
+        ],
+        "stages": [
+          {
+            "interpretation": "RAW_USER_INTEGER_NO_TRANSLATION",
+            "input": {
+              "decimal": 3585,
+              "hex": "0xE01",
+              "octal": "07001"
+            },
+            "valid_mask_value": {
+              "decimal": 8388547,
+              "hex": "0x7FFFC3",
+              "octal": "037777703"
+            },
+            "flags_kept": {
+              "decimal": 3585,
+              "hex": "0xE01",
+              "octal": "07001"
+            },
+            "flags_dropped": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "will_create": false,
+            "how": {
+              "flags": {
+                "decimal": 3585,
+                "hex": "0xE01",
+                "octal": "07001"
+              },
+              "mode": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              },
+              "resolve": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              }
+            },
+            "kernel_bit_names": [
+              "O_WRONLY",
+              "O_TRUNC",
+              "O_APPEND",
+              "O_NONBLOCK",
+              "O_NDELAY"
+            ]
+          },
+          {
+            "interpretation": "KERNEL_BY_NAME_REENCODE_ONLY_NOT_OBSERVED",
+            "input": {
+              "decimal": 705,
+              "hex": "0x2C1",
+              "octal": "01301"
+            },
+            "valid_mask_value": {
+              "decimal": 8388547,
+              "hex": "0x7FFFC3",
+              "octal": "037777703"
+            },
+            "flags_kept": {
+              "decimal": 705,
+              "hex": "0x2C1",
+              "octal": "01301"
+            },
+            "flags_dropped": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "will_create": true,
+            "how": {
+              "flags": {
+                "decimal": 705,
+                "hex": "0x2C1",
+                "octal": "01301"
+              },
+              "mode": {
+                "decimal": 438,
+                "hex": "0x1B6",
+                "octal": "0666"
+              },
+              "resolve": {
+                "decimal": 0,
+                "hex": "0x0",
+                "octal": "00"
+              }
+            },
+            "kernel_bit_names": [
+              "O_WRONLY",
+              "O_CREAT",
+              "O_EXCL",
+              "O_TRUNC"
+            ]
+          }
+        ],
+        "external_bridge": "HYPOTHETICAL_SAME_INTEGER_FROM_SELECTED_USER_HEADER_AND_REPO_USER_OPEN_STUB_TO_REPO_KERNEL",
+        "actual_binary_linkage": "UNKNOWN"
+      }
+    ],
+    "user_O_RDONLY_zero_valid": true,
+    "user_O_LARGEFILE_zero_is_conditional": true
+  },
+  "C_build_open_how": {
+    "source": "mykernel/fs/vfs/open.c:23-41",
+    "kernel_struct_source": "mykernel/include/uapi/linux/openat2.h:19-23",
+    "input_mode_octal": "0666",
+    "comparison_cases": [
+      {
+        "case_id": "ABI122-01",
+        "mode": "r",
+        "raw": {
+          "interpretation": "RAW_USER_INTEGER_NO_TRANSLATION",
+          "input": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "valid_mask_value": {
+            "decimal": 8388547,
+            "hex": "0x7FFFC3",
+            "octal": "037777703"
+          },
+          "flags_kept": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "flags_dropped": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "will_create": false,
+          "how": {
+            "flags": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "mode": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "resolve": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            }
+          },
+          "kernel_bit_names": []
+        },
+        "same_names_recoded": {
+          "interpretation": "KERNEL_BY_NAME_REENCODE_ONLY_NOT_OBSERVED",
+          "input": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "valid_mask_value": {
+            "decimal": 8388547,
+            "hex": "0x7FFFC3",
+            "octal": "037777703"
+          },
+          "flags_kept": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "flags_dropped": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "will_create": false,
+          "how": {
+            "flags": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "mode": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "resolve": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            }
+          },
+          "kernel_bit_names": []
+        }
+      },
+      {
+        "case_id": "ABI122-02",
+        "mode": "w",
+        "raw": {
+          "interpretation": "RAW_USER_INTEGER_NO_TRANSLATION",
+          "input": {
+            "decimal": 1537,
+            "hex": "0x601",
+            "octal": "03001"
+          },
+          "valid_mask_value": {
+            "decimal": 8388547,
+            "hex": "0x7FFFC3",
+            "octal": "037777703"
+          },
+          "flags_kept": {
+            "decimal": 1537,
+            "hex": "0x601",
+            "octal": "03001"
+          },
+          "flags_dropped": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "will_create": false,
+          "how": {
+            "flags": {
+              "decimal": 1537,
+              "hex": "0x601",
+              "octal": "03001"
+            },
+            "mode": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "resolve": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            }
+          },
+          "kernel_bit_names": [
+            "O_WRONLY",
+            "O_TRUNC",
+            "O_APPEND"
+          ]
+        },
+        "same_names_recoded": {
+          "interpretation": "KERNEL_BY_NAME_REENCODE_ONLY_NOT_OBSERVED",
+          "input": {
+            "decimal": 577,
+            "hex": "0x241",
+            "octal": "01101"
+          },
+          "valid_mask_value": {
+            "decimal": 8388547,
+            "hex": "0x7FFFC3",
+            "octal": "037777703"
+          },
+          "flags_kept": {
+            "decimal": 577,
+            "hex": "0x241",
+            "octal": "01101"
+          },
+          "flags_dropped": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "will_create": true,
+          "how": {
+            "flags": {
+              "decimal": 577,
+              "hex": "0x241",
+              "octal": "01101"
+            },
+            "mode": {
+              "decimal": 438,
+              "hex": "0x1B6",
+              "octal": "0666"
+            },
+            "resolve": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            }
+          },
+          "kernel_bit_names": [
+            "O_WRONLY",
+            "O_CREAT",
+            "O_TRUNC"
+          ]
+        }
+      },
+      {
+        "case_id": "ABI122-03",
+        "mode": "a+",
+        "raw": {
+          "interpretation": "RAW_USER_INTEGER_NO_TRANSLATION",
+          "input": {
+            "decimal": 522,
+            "hex": "0x20A",
+            "octal": "01012"
+          },
+          "valid_mask_value": {
+            "decimal": 8388547,
+            "hex": "0x7FFFC3",
+            "octal": "037777703"
+          },
+          "flags_kept": {
+            "decimal": 514,
+            "hex": "0x202",
+            "octal": "01002"
+          },
+          "flags_dropped": {
+            "decimal": 8,
+            "hex": "0x8",
+            "octal": "010"
+          },
+          "will_create": false,
+          "how": {
+            "flags": {
+              "decimal": 514,
+              "hex": "0x202",
+              "octal": "01002"
+            },
+            "mode": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "resolve": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            }
+          },
+          "kernel_bit_names": [
+            "O_RDWR",
+            "O_TRUNC"
+          ]
+        },
+        "same_names_recoded": {
+          "interpretation": "KERNEL_BY_NAME_REENCODE_ONLY_NOT_OBSERVED",
+          "input": {
+            "decimal": 1090,
+            "hex": "0x442",
+            "octal": "02102"
+          },
+          "valid_mask_value": {
+            "decimal": 8388547,
+            "hex": "0x7FFFC3",
+            "octal": "037777703"
+          },
+          "flags_kept": {
+            "decimal": 1090,
+            "hex": "0x442",
+            "octal": "02102"
+          },
+          "flags_dropped": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "will_create": true,
+          "how": {
+            "flags": {
+              "decimal": 1090,
+              "hex": "0x442",
+              "octal": "02102"
+            },
+            "mode": {
+              "decimal": 438,
+              "hex": "0x1B6",
+              "octal": "0666"
+            },
+            "resolve": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            }
+          },
+          "kernel_bit_names": [
+            "O_RDWR",
+            "O_CREAT",
+            "O_APPEND"
+          ]
+        }
+      },
+      {
+        "case_id": "ABI122-04",
+        "mode": "wbx",
+        "raw": {
+          "interpretation": "RAW_USER_INTEGER_NO_TRANSLATION",
+          "input": {
+            "decimal": 3585,
+            "hex": "0xE01",
+            "octal": "07001"
+          },
+          "valid_mask_value": {
+            "decimal": 8388547,
+            "hex": "0x7FFFC3",
+            "octal": "037777703"
+          },
+          "flags_kept": {
+            "decimal": 3585,
+            "hex": "0xE01",
+            "octal": "07001"
+          },
+          "flags_dropped": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "will_create": false,
+          "how": {
+            "flags": {
+              "decimal": 3585,
+              "hex": "0xE01",
+              "octal": "07001"
+            },
+            "mode": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            },
+            "resolve": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            }
+          },
+          "kernel_bit_names": [
+            "O_WRONLY",
+            "O_TRUNC",
+            "O_APPEND",
+            "O_NONBLOCK",
+            "O_NDELAY"
+          ]
+        },
+        "same_names_recoded": {
+          "interpretation": "KERNEL_BY_NAME_REENCODE_ONLY_NOT_OBSERVED",
+          "input": {
+            "decimal": 705,
+            "hex": "0x2C1",
+            "octal": "01301"
+          },
+          "valid_mask_value": {
+            "decimal": 8388547,
+            "hex": "0x7FFFC3",
+            "octal": "037777703"
+          },
+          "flags_kept": {
+            "decimal": 705,
+            "hex": "0x2C1",
+            "octal": "01301"
+          },
+          "flags_dropped": {
+            "decimal": 0,
+            "hex": "0x0",
+            "octal": "00"
+          },
+          "will_create": true,
+          "how": {
+            "flags": {
+              "decimal": 705,
+              "hex": "0x2C1",
+              "octal": "01301"
+            },
+            "mode": {
+              "decimal": 438,
+              "hex": "0x1B6",
+              "octal": "0666"
+            },
+            "resolve": {
+              "decimal": 0,
+              "hex": "0x0",
+              "octal": "00"
+            }
+          },
+          "kernel_bit_names": [
+            "O_WRONLY",
+            "O_CREAT",
+            "O_EXCL",
+            "O_TRUNC"
+          ]
+        }
+      }
+    ],
+    "formula": {
+      "flags": "flags & VALID_OPEN_FLAGS; (O_PATH present => further O_PATH_FLAGS mask, absent in these four cases)",
+      "mode": "(mode & S_IALLUGO) then zero when !(flags & (O_CREAT|__O_TMPFILE))",
+      "resolve": "0 from C aggregate initializer omitted field",
+      "WILL_CREATE": "(flags & (O_CREAT | __O_TMPFILE))",
+      "O_PATH_extra_mask_applied_in_4_cases": false,
+      "do_sys_open_adds_more_flags": false
+    },
+    "interpretation": "not file creation, truncation, append or fd proof"
+  },
+  "limits": {
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "build": "NOT_RUN",
+    "link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_file_operations": "NOT_RUN",
+    "external_musl": "NOT_READ",
+    "real_linked_sh": "UNKNOWN",
+    "kernel_changes": false
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}
