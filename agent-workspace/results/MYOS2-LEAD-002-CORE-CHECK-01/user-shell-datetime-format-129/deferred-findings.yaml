@@ -1,0 +1,144 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-SHELL-DATETIME-FORMAT-129",
+  "record_type": "phase2_deferred_findings_and_D00",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "produced_by": "GPT-6 (self-identified), backend/effort UNATTESTED",
+  "model_per_owner": "GPT-6＋Extra via Owner and 180",
+  "date": "2026-11-22",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "4a8952c6c956",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "R127_02": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "R128_01": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "R127_01": "CLOSED_DOCUMENTATION_ONLY by C08",
+    "no_author_closure": true
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": [],
+  "items": [
+    {
+      "id": "R127-02",
+      "kind": "historical_graph_report_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_ref": {
+        "fixed_short12": "4a8952c6c956",
+        "paths": [
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-dest-aligned-word-copy-128/facts-and-boundaries.yaml::D00.R127_02.graph",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-dest-aligned-word-copy-128/libc-dest-aligned-word-copy-paths.dot::A127/B127/C127"
+        ]
+      },
+      "new_composite": "129 D00.R127_02; old unchanged",
+      "explanation": "Restore 43 write-node register names and 43 data-edge register names from fixed 127 WRITE.from_reg (20 a0,23 a1); patch 12 B/C summary labels and case1 no-loop do0",
+      "earliest_unknown": "C08 independent reapplication of 86 fields and B/C source review",
+      "resume": "C08 Pro reviewer checks 1,2,16-word read/write/loop sequence and three C summaries",
+      "owner_action": "NONE_NOW"
+    },
+    {
+      "id": "R128-01",
+      "kind": "historical_write_ledger_graph_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "source_ref": {
+        "fixed_short12": "4a8952c6c956",
+        "paths": [
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-dest-aligned-word-copy-128/facts-and-boundaries.yaml::C_outer_memcpy.cases[].byte_copy_trace",
+          "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-dest-aligned-word-copy-128/libc-dest-aligned-word-copy-paths.dot::C128_*"
+        ]
+      },
+      "new_composite": "129 D00.R128_01; old unchanged",
+      "explanation": "Original abstract widths32/16/201 corrected to16/16/41; one helper call per case, 2/1/5 word stores; stage adjacency SEQUENCE, original dstpp return data",
+      "earliest_unknown": "C08 independent correction of old C trace and graph edges",
+      "resume": "C08 Pro compare exact machine selectors, full byte coverage and return sources",
+      "owner_action": "NONE_NOW"
+    },
+    {
+      "id": "DT129-REALTIME",
+      "kind": "runtime_time_origin",
+      "status": "NEEDS_EVIDENCE",
+      "source_ref": {
+        "path": "myinitramfs/myshell/tests.c::test_PrintDateTime",
+        "line_range": "104-127"
+      },
+      "earliest_unknown": "actual gettimeofday tv_sec/tv_usec, valid tm and localtime timezone",
+      "limitation": "strftime sample text and four microseconds are fixed illustrative valid inputs; no actual date/time or timezone observed",
+      "resume": "future authorized runtime/timezone evidence only"
+    },
+    {
+      "id": "DT129-STDIO-LINK",
+      "kind": "binary_provenance",
+      "status": "NEEDS_EVIDENCE",
+      "source_ref": {
+        "paths": [
+          "myinitramfs/mylib/myglibc/stdio/printf.c",
+          "myinitramfs/mylib/myglibc/stdio/vsnprintf.c"
+        ]
+      },
+      "earliest_unknown": "the actual libc binary linked by sh and stdout binding",
+      "limitation": "in-repo C definitions are conditional paper model; stdout->_fileno numerical value is unknown",
+      "resume": "separate approved link/build provenance research"
+    },
+    {
+      "id": "DT129-PRINTF-WRITE",
+      "kind": "write_request_outcome",
+      "status": "NEEDS_EVIDENCE",
+      "source_ref": {
+        "path": "myinitramfs/mylib/myglibc/stdio/printf.c",
+        "line_range": "17-25"
+      },
+      "earliest_unknown": "actual write result, buffering of console path and visible terminal output",
+      "limitation": "only static write(fd expression, buf, 41) is supported; code discards write return; conditional full/partial (41/12) examples not observations",
+      "resume": "separate authorized execution or userspace stdout evidence"
+    },
+    {
+      "id": "DT129-STRFTIME-RETURN",
+      "kind": "unchecked_result",
+      "status": "CONDITIONAL_MODEL",
+      "source_ref": {
+        "path": "myinitramfs/myshell/tests.c",
+        "line_range": "118-124"
+      },
+      "earliest_unknown": "actual localtime() pointer and strftime return including failure",
+      "limitation": "source does not check localtime or strftime return; valid pointer and 19-byte successful string are modeled conditions, not verified actual runtime",
+      "resume": "future separately authorized source safety or runtime analysis"
+    },
+    {
+      "id": "DT129-VSNPRINTF-BOUNDARY",
+      "kind": "bounded_formatting_assumptions",
+      "status": "CONDITIONAL_MODEL",
+      "source_ref": {
+        "path": "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+        "line_range": "39,41-201,533-877"
+      },
+      "earliest_unknown": "actual target sizes, signed long compatibility of tv.tv_usec, effective implementation",
+      "limitation": "all four examples use nonnegative signed-long compatible integers, fmt ASCII, source string NUL-terminated, 4096 buffer adequate; excludes invalid pointers/negative/overflow",
+      "resume": "future contract for edge cases and effective ABI"
+    },
+    {
+      "id": "DT129-EXECUTION",
+      "kind": "not_run",
+      "status": "NOT_RUN",
+      "source_ref": {
+        "contract_short12": "0b52728d0314",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/180-user-shell-datetime-format-contract.md"
+      },
+      "earliest_unknown": "full local P9 and actual binary execution",
+      "limitation": "no preprocess, compile, link, Graphviz render, QEMU, hardware, real file operations; text/JS arithmetic only",
+      "resume": "separate explicit permission"
+    }
+  ],
+  "limits": {
+    "full_local_P9": "NOT_RUN",
+    "C_preprocess": "NOT_RUN",
+    "compile_link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_file_operations": "NOT_RUN"
+  }
+}
