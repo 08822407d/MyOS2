@@ -1,0 +1,125 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124",
+  "record_type": "bounded_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "date": "2026-11-22",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "items": [
+    {
+      "id": "R123-01",
+      "kind": "OPEN_D00_RETURN",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "mainline": "OPEN",
+      "what": "case-owned direct calls, actual versus absent calls, find_cmd own returns",
+      "source": [
+        "myshell.c:144-152",
+        "myshell.c:199-203",
+        "myshell.c:231-242",
+        "123 C08 review"
+      ],
+      "next": "C08 Pro independent close/reject; old123 remains frozen"
+    },
+    {
+      "id": "SC124-SH-LINK",
+      "kind": "EVIDENCE_GAP",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "effective sh compiler/linker and actual libc symbols",
+      "source": [
+        "myglibc/string/CMakeLists.txt",
+        "initramfs/CMakeLists.txt",
+        "myshell/CMakeLists.txt"
+      ],
+      "next": "independently authorized build/link map"
+    },
+    {
+      "id": "SC124-STRNLEN-SYMBOL",
+      "kind": "EVIDENCE_GAP",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "effective STRNLEN preprocessor macro and exported symbol identity",
+      "source": [
+        "strnlen.c:28-33",
+        "include/string.h:13",
+        "string/string.h:412"
+      ],
+      "next": "preprocessed TU and binary symbol map under separate authorization"
+    },
+    {
+      "id": "SC124-READ-BEYOND-BUDGET",
+      "kind": "BOUNDARY",
+      "status": "STATIC_ONLY",
+      "earliest_unknown": "behavior on insufficiently readable objects",
+      "source": [
+        "strnlen.c:47-53",
+        "strnlen.c:85-86",
+        "strnlen.c:116-158"
+      ],
+      "next": "separate memory-safety study; no claim for arbitrary objects"
+    },
+    {
+      "id": "SC124-ABI-ASSUMPTIONS",
+      "kind": "BOUNDARY",
+      "status": "CONDITIONAL_MODEL",
+      "earliest_unknown": "runtime word size/endian/alignment of actual binary",
+      "source": [
+        "strlen.c:57-64",
+        "strnlen.c:70-78"
+      ],
+      "next": "target ABI or runtime artifact"
+    },
+    {
+      "id": "SC124-STRNCPY-HELPERS",
+      "kind": "BOUNDARY",
+      "status": "CONDITIONAL_MODEL",
+      "earliest_unknown": "actual optimized/linked memcpy and memset identities",
+      "source": [
+        "strncpy.c:27-33",
+        "memcpy.c:56-59",
+        "memset.c:75-83"
+      ],
+      "next": "preprocess/link map when approved"
+    },
+    {
+      "id": "SC124-CAT",
+      "kind": "BOUNDARY",
+      "status": "CONDITIONAL_MODEL",
+      "earliest_unknown": "malloc success and later pathname/file/display behavior",
+      "source": [
+        "myshell.c:260-265"
+      ],
+      "next": "reuse117 under new scope if needed"
+    },
+    {
+      "id": "SC124-CALLER-RUNTIME",
+      "kind": "BOUNDARY",
+      "status": "NOT_RUN",
+      "earliest_unknown": "actual chdir, readdir and printf outcomes",
+      "source": [
+        "myshell.c:199-211",
+        "myshell.c:231-242"
+      ],
+      "next": "C08 static acceptance first; runtime later only if authorized"
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "open_questions": [],
+  "inputs_read": [
+    "agent-workspace/lead/MYOS2-LEAD-002/175-user-libc-string-length-copy-restart-contract.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/175-executor-continuation/00-C08a-to-C08b-handoff-package.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-LIBC-STRING-COMPARE-123-review.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-LIBC-STRING-COMPARE-123-D00-122-review.md",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-compare-123/facts-and-boundaries.yaml",
+    "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-string-compare-123/libc-string-compare-paths.dot",
+    "agent-workspace/conventions.md",
+    "agent-workspace/tasks/00-gpt-task-protocol-v2.md",
+    "agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md",
+    "myinitramfs/mylib/myglibc/string/strlen.c",
+    "myinitramfs/mylib/myglibc/string/strnlen.c",
+    "myinitramfs/mylib/myglibc/string/strncpy.c",
+    "myinitramfs/mylib/myglibc/string/strcmp.c",
+    "myinitramfs/mylib/myglibc/string/memcpy.c",
+    "myinitramfs/mylib/myglibc/string/memset.c",
+    "myinitramfs/myshell/myshell.c"
+  ]
+}

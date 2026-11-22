@@ -1,0 +1,956 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124",
+  "record_type": "conditional_case_facts",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "produced_by": "GPT-6 self-description; effort UNATTESTED",
+  "date": "2026-11-22",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "16398b8b96c6",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "return_id": "R123-01",
+    "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+    "F_find": [
+      {
+        "case_id": "C123-F01",
+        "owner": "find_cmd",
+        "cmd": "pwd",
+        "comparison_values": [
+          13,
+          4,
+          0
+        ],
+        "strcmp_calls": 3,
+        "byte_pairs": 6,
+        "last_strcmp_return": 0,
+        "find_return": 2,
+        "find_own_return": true,
+        "return_branch": "zero match",
+        "source": "myshell.c:144-152"
+      },
+      {
+        "case_id": "C123-F02",
+        "owner": "find_cmd",
+        "cmd": "pw",
+        "comparison_values": [
+          13,
+          4,
+          -100,
+          13,
+          -4,
+          -2,
+          3,
+          -2,
+          11,
+          -2
+        ],
+        "strcmp_calls": 10,
+        "byte_pairs": 12,
+        "last_strcmp_return": -2,
+        "find_return": -1,
+        "find_own_return": true,
+        "return_branch": "table exhausted",
+        "source": "myshell.c:144-152"
+      },
+      {
+        "case_id": "C123-F03",
+        "owner": "find_cmd",
+        "cmd": "rm",
+        "comparison_values": [
+          15,
+          6,
+          2,
+          15,
+          -2,
+          0
+        ],
+        "strcmp_calls": 6,
+        "byte_pairs": 8,
+        "last_strcmp_return": 0,
+        "find_return": 5,
+        "find_own_return": true,
+        "return_branch": "zero match",
+        "source": "myshell.c:144-152"
+      },
+      {
+        "case_id": "C123-F04",
+        "owner": "find_cmd",
+        "cmd": "rmdir",
+        "comparison_values": [
+          15,
+          6,
+          2,
+          15,
+          -2,
+          100,
+          5,
+          0
+        ],
+        "strcmp_calls": 8,
+        "byte_pairs": 15,
+        "last_strcmp_return": 0,
+        "find_return": 7,
+        "find_own_return": true,
+        "return_branch": "zero match",
+        "source": "myshell.c:144-152"
+      },
+      {
+        "case_id": "C123-F05",
+        "owner": "find_cmd",
+        "cmd": "rmd",
+        "comparison_values": [
+          15,
+          6,
+          2,
+          15,
+          -2,
+          100,
+          5,
+          -105,
+          13,
+          8
+        ],
+        "strcmp_calls": 10,
+        "byte_pairs": 16,
+        "last_strcmp_return": 8,
+        "find_return": -1,
+        "find_own_return": true,
+        "return_branch": "table exhausted",
+        "source": "myshell.c:144-152"
+      },
+      {
+        "case_id": "C123-F06",
+        "owner": "find_cmd",
+        "cmd": "cd",
+        "comparison_values": [
+          0
+        ],
+        "strcmp_calls": 1,
+        "byte_pairs": 3,
+        "last_strcmp_return": 0,
+        "find_return": 0,
+        "find_own_return": true,
+        "return_branch": "zero match",
+        "source": "myshell.c:144-152"
+      }
+    ],
+    "D_cd": [
+      {
+        "case_id": "C123-D01",
+        "path": ".",
+        "owner": "cd_command",
+        "strcmp_return": 0,
+        "strcmp_at": 200,
+        "chdir_called": false,
+        "chdir_at": null,
+        "early_return": 1,
+        "unknown": null
+      },
+      {
+        "case_id": "C123-D02",
+        "path": "./",
+        "owner": "cd_command",
+        "strcmp_return": -47,
+        "strcmp_at": 200,
+        "chdir_called": true,
+        "chdir_at": 203,
+        "early_return": null,
+        "unknown": "chdir actual return and cwd side effects"
+      }
+    ],
+    "L_ls": [
+      {
+        "case_id": "C123-L01",
+        "name": ".",
+        "cmp1": 0,
+        "cmp2_called": false,
+        "cmp2": null,
+        "name_printf_called": false,
+        "name_printf_at": null,
+        "LF_printf_at": 240,
+        "owner": "ls_command",
+        "cmp1_at": 236,
+        "cmp2_at": null,
+        "loop_exit_guard": "next readdir(dir) returns NULL at lines 233-235",
+        "LF_printf_called": true
+      },
+      {
+        "case_id": "C123-L02",
+        "name": "..",
+        "cmp1": 46,
+        "cmp2_called": true,
+        "cmp2": 0,
+        "name_printf_called": false,
+        "name_printf_at": null,
+        "LF_printf_at": 240,
+        "owner": "ls_command",
+        "cmp1_at": 236,
+        "cmp2_at": 237,
+        "loop_exit_guard": "next readdir(dir) returns NULL at lines 233-235",
+        "LF_printf_called": true
+      },
+      {
+        "case_id": "C123-L03",
+        "name": ".config",
+        "cmp1": 99,
+        "cmp2_called": true,
+        "cmp2": 53,
+        "name_printf_called": true,
+        "name_printf_at": 238,
+        "LF_printf_at": 240,
+        "owner": "ls_command",
+        "cmp1_at": 236,
+        "cmp2_at": 237,
+        "loop_exit_guard": "next readdir(dir) returns NULL at lines 233-235",
+        "LF_printf_called": true
+      }
+    ],
+    "graph_verification": {
+      "nodes": 205,
+      "edges": 262,
+      "positive_case_call_paths": 62,
+      "negative_existing_potential_callsite_paths": [
+        "C123-D01 -> C123-D01_chdir",
+        "C123-D02 -> C123-D02_early",
+        "C123-L01 -> C123-L01_cmp2",
+        "C123-L01 -> C123-L01_name",
+        "C123-L02 -> C123-L02_name"
+      ],
+      "forbidden_direct_edge_pairs": 5,
+      "owner_wrong_calls": 0
+    },
+    "actual_call_owner_rule": "only function_instance -> actual call uses DIRECT_CALL_INSTANCE",
+    "prior_R122_01": "CLOSED_DOCUMENTATION_ONLY_BY_C08",
+    "original_123_frozen": true
+  },
+  "A_strlen": {
+    "default_macro": "STRLEN→strlen absent override",
+    "word_size": 8,
+    "unsigned_long_bits": 64,
+    "byte_order": "little-endian",
+    "storage": "sufficiently readable same object including all 8-byte word reads",
+    "cases": [
+      {
+        "id": "A124-01",
+        "name": "empty_aligned",
+        "data": [
+          0,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65,
+          65
+        ],
+        "start_mod8": 0,
+        "prefix_byte_reads": [],
+        "words": [
+          0
+        ],
+        "confirmation": [
+          0
+        ],
+        "first_NUL": 0,
+        "result": 0,
+        "word_reads": [
+          {
+            "byte_start": 0,
+            "bytes_hex": "00 41 41 41 41 41 41 41",
+            "little_endian_ulong": "0x4141414141414100",
+            "strlen_mask": "0x0000000000000080",
+            "strnlen_mask": "0x0000000000000080"
+          }
+        ],
+        "word_size_bytes": 8,
+        "source": "strlen.c:38-100",
+        "return_excludes_NUL": true
+      },
+      {
+        "id": "A124-02",
+        "name": "leading_unaligned_NUL",
+        "data": [
+          65,
+          0,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79
+        ],
+        "start_mod8": 5,
+        "prefix_byte_reads": [
+          0,
+          1
+        ],
+        "words": [],
+        "confirmation": [],
+        "first_NUL": 1,
+        "result": 1,
+        "word_reads": [],
+        "word_size_bytes": 8,
+        "source": "strlen.c:38-100",
+        "return_excludes_NUL": true
+      },
+      {
+        "id": "A124-03",
+        "name": "aligned_word_NUL",
+        "data": [
+          65,
+          66,
+          0,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88
+        ],
+        "start_mod8": 0,
+        "prefix_byte_reads": [],
+        "words": [
+          0
+        ],
+        "confirmation": [
+          0,
+          1,
+          2
+        ],
+        "first_NUL": 2,
+        "result": 2,
+        "word_reads": [
+          {
+            "byte_start": 0,
+            "bytes_hex": "41 42 00 58 58 58 58 58",
+            "little_endian_ulong": "0x5858585858004241",
+            "strlen_mask": "0x0000000000800000",
+            "strnlen_mask": "0x0000000000800000"
+          }
+        ],
+        "word_size_bytes": 8,
+        "source": "strlen.c:38-100",
+        "return_excludes_NUL": true
+      },
+      {
+        "id": "A124-04",
+        "name": "skip_nonzero_word",
+        "data": [
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          0,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88
+        ],
+        "start_mod8": 0,
+        "prefix_byte_reads": [],
+        "words": [
+          0,
+          8
+        ],
+        "confirmation": [
+          8,
+          9,
+          10
+        ],
+        "first_NUL": 10,
+        "result": 10,
+        "word_reads": [
+          {
+            "byte_start": 0,
+            "bytes_hex": "61 62 63 64 65 66 67 68",
+            "little_endian_ulong": "0x6867666564636261",
+            "strlen_mask": "0x0000000000000000",
+            "strnlen_mask": "0x0000000000000000"
+          },
+          {
+            "byte_start": 8,
+            "bytes_hex": "69 6a 00 58 58 58 58 58",
+            "little_endian_ulong": "0x5858585858006a69",
+            "strlen_mask": "0x0000000000800000",
+            "strnlen_mask": "0x0000000000800000"
+          }
+        ],
+        "word_size_bytes": 8,
+        "source": "strlen.c:38-100",
+        "return_excludes_NUL": true
+      }
+    ],
+    "cat_case": {
+      "case_id": "A124-CAT",
+      "current_dir": "/bin",
+      "argv1": "hi",
+      "strlen_current_dir": 4,
+      "strlen_argv1": 2,
+      "len": 4,
+      "i": 6,
+      "malloc_i_plus_2": 8,
+      "memset_i_plus_2": 8,
+      "request_only": true,
+      "actual_sh_libc": "UNKNOWN"
+    }
+  },
+  "B_strnlen": {
+    "source_name": "__strnlen",
+    "macro": "STRNLEN conditionally renames function at preprocessor level",
+    "internal_decl": "include/string.h:13",
+    "public_decl": "string/string.h:412 strnlen",
+    "binary_symbol": "UNKNOWN",
+    "word_size": 8,
+    "byte_order": "little-endian",
+    "storage": "all pointer arithmetic within same sufficiently large object; 8-byte word reads valid even past maxlen",
+    "filter_strlen": "(word-lomagic)&~word&himagic",
+    "filter_strnlen": "(word-lomagic)&himagic",
+    "cases": [
+      {
+        "id": "B124-01",
+        "name": "zero_budget",
+        "data": [
+          97,
+          98,
+          99,
+          0,
+          100,
+          101,
+          102,
+          103,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88
+        ],
+        "maxlen": 0,
+        "nul": 3,
+        "words": [],
+        "check": [],
+        "result": 0,
+        "branch": "return0",
+        "str_start_mod8": 0,
+        "word_reads": [],
+        "end_offset": 0,
+        "actual_word_bytes": 0,
+        "source": "strnlen.c:33-158",
+        "storage_bytes": 24
+      },
+      {
+        "id": "B124-02",
+        "name": "NUL_after_budget",
+        "data": [
+          97,
+          98,
+          99,
+          0,
+          100,
+          101,
+          102,
+          103,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88
+        ],
+        "maxlen": 2,
+        "nul": 3,
+        "words": [
+          0
+        ],
+        "check": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "result": 2,
+        "branch": "word then clamp",
+        "str_start_mod8": 0,
+        "word_reads": [
+          {
+            "byte_start": 0,
+            "bytes_hex": "61 62 63 00 64 65 66 67",
+            "little_endian_ulong": "0x6766656400636261",
+            "strlen_mask": "0x0000000080000000",
+            "strnlen_mask": "0x0000000080000000"
+          }
+        ],
+        "end_offset": 2,
+        "actual_word_bytes": 8,
+        "source": "strnlen.c:33-158",
+        "storage_bytes": 24
+      },
+      {
+        "id": "B124-03",
+        "name": "NUL_at_budget",
+        "data": [
+          97,
+          98,
+          99,
+          0,
+          100,
+          101,
+          102,
+          103,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88
+        ],
+        "maxlen": 3,
+        "nul": 3,
+        "words": [
+          0
+        ],
+        "check": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "result": 3,
+        "branch": "word NUL at end",
+        "str_start_mod8": 0,
+        "word_reads": [
+          {
+            "byte_start": 0,
+            "bytes_hex": "61 62 63 00 64 65 66 67",
+            "little_endian_ulong": "0x6766656400636261",
+            "strlen_mask": "0x0000000080000000",
+            "strnlen_mask": "0x0000000080000000"
+          }
+        ],
+        "end_offset": 3,
+        "actual_word_bytes": 8,
+        "source": "strnlen.c:33-158",
+        "storage_bytes": 24
+      },
+      {
+        "id": "B124-04",
+        "name": "NUL_within_budget",
+        "data": [
+          97,
+          98,
+          99,
+          0,
+          100,
+          101,
+          102,
+          103,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88
+        ],
+        "maxlen": 5,
+        "nul": 3,
+        "words": [
+          0
+        ],
+        "check": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "result": 3,
+        "branch": "word NUL within",
+        "str_start_mod8": 0,
+        "word_reads": [
+          {
+            "byte_start": 0,
+            "bytes_hex": "61 62 63 00 64 65 66 67",
+            "little_endian_ulong": "0x6766656400636261",
+            "strlen_mask": "0x0000000080000000",
+            "strnlen_mask": "0x0000000080000000"
+          }
+        ],
+        "end_offset": 5,
+        "actual_word_bytes": 8,
+        "source": "strnlen.c:33-158",
+        "storage_bytes": 24
+      },
+      {
+        "id": "B124-05",
+        "name": "nonzero_first_word",
+        "data": [
+          97,
+          98,
+          99,
+          100,
+          101,
+          102,
+          103,
+          104,
+          105,
+          106,
+          107,
+          108,
+          0,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88
+        ],
+        "maxlen": 9,
+        "nul": 12,
+        "words": [
+          0,
+          8
+        ],
+        "check": [
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "result": 9,
+        "branch": "skip word, second candidate, clamp",
+        "str_start_mod8": 0,
+        "word_reads": [
+          {
+            "byte_start": 0,
+            "bytes_hex": "61 62 63 64 65 66 67 68",
+            "little_endian_ulong": "0x6867666564636261",
+            "strlen_mask": "0x0000000000000000",
+            "strnlen_mask": "0x0000000000000000"
+          },
+          {
+            "byte_start": 8,
+            "bytes_hex": "69 6a 6b 6c 00 58 58 58",
+            "little_endian_ulong": "0x585858006c6b6a69",
+            "strlen_mask": "0x0000008000000000",
+            "strnlen_mask": "0x0000008000000000"
+          }
+        ],
+        "end_offset": 9,
+        "actual_word_bytes": 16,
+        "source": "strnlen.c:33-158",
+        "storage_bytes": 24
+      },
+      {
+        "id": "B124-06",
+        "name": "false_candidate_0x81",
+        "data": [
+          129,
+          129,
+          129,
+          129,
+          129,
+          129,
+          129,
+          129,
+          75,
+          0,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88,
+          88
+        ],
+        "maxlen": 10,
+        "nul": 9,
+        "words": [
+          0,
+          8
+        ],
+        "check": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "result": 9,
+        "branch": "false candidate first; true second",
+        "str_start_mod8": 0,
+        "word_reads": [
+          {
+            "byte_start": 0,
+            "bytes_hex": "81 81 81 81 81 81 81 81",
+            "little_endian_ulong": "0x8181818181818181",
+            "strlen_mask": "0x0000000000000000",
+            "strnlen_mask": "0x8080808080808080"
+          },
+          {
+            "byte_start": 8,
+            "bytes_hex": "4b 00 58 58 58 58 58 58",
+            "little_endian_ulong": "0x585858585858004b",
+            "strlen_mask": "0x0000000000008000",
+            "strnlen_mask": "0x0000000000008000"
+          }
+        ],
+        "end_offset": 10,
+        "actual_word_bytes": 16,
+        "source": "strnlen.c:33-158",
+        "storage_bytes": 24
+      }
+    ],
+    "return_limit_not_load_limit": true
+  },
+  "C_strncpy": {
+    "source_name": "STRNCPY default strncpy",
+    "source_object": "valid source NUL+16 readable bytes",
+    "dest_object": "8 bytes initial 0x23 each",
+    "nonoverlap": true,
+    "cases": [
+      {
+        "case_id": "C124-01",
+        "source": "strncpy.c:27-33",
+        "source_first_NUL": 3,
+        "n": 0,
+        "size": 0,
+        "memset_called": false,
+        "memset": null,
+        "memcpy": {
+          "called": true,
+          "dest": "s1",
+          "src": "s2",
+          "bytes": 0,
+          "order": "after memset if any"
+        },
+        "dest_start": "23 23 23 23 23 23 23 23",
+        "dest_final": "23 23 23 23 23 23 23 23",
+        "dest_index7_preserved": true,
+        "has_NUL_in_first_n": false,
+        "return_pointer": "s1"
+      },
+      {
+        "case_id": "C124-02",
+        "source": "strncpy.c:27-33",
+        "source_first_NUL": 3,
+        "n": 2,
+        "size": 2,
+        "memset_called": false,
+        "memset": null,
+        "memcpy": {
+          "called": true,
+          "dest": "s1",
+          "src": "s2",
+          "bytes": 2,
+          "order": "after memset if any"
+        },
+        "dest_start": "23 23 23 23 23 23 23 23",
+        "dest_final": "63 61 23 23 23 23 23 23",
+        "dest_index7_preserved": true,
+        "has_NUL_in_first_n": false,
+        "return_pointer": "s1"
+      },
+      {
+        "case_id": "C124-03",
+        "source": "strncpy.c:27-33",
+        "source_first_NUL": 3,
+        "n": 3,
+        "size": 3,
+        "memset_called": false,
+        "memset": null,
+        "memcpy": {
+          "called": true,
+          "dest": "s1",
+          "src": "s2",
+          "bytes": 3,
+          "order": "after memset if any"
+        },
+        "dest_start": "23 23 23 23 23 23 23 23",
+        "dest_final": "63 61 74 23 23 23 23 23",
+        "dest_index7_preserved": true,
+        "has_NUL_in_first_n": false,
+        "return_pointer": "s1"
+      },
+      {
+        "case_id": "C124-04",
+        "source": "strncpy.c:27-33",
+        "source_first_NUL": 3,
+        "n": 5,
+        "size": 3,
+        "memset_called": true,
+        "memset": {
+          "start": 3,
+          "bytes": 2
+        },
+        "memcpy": {
+          "called": true,
+          "dest": "s1",
+          "src": "s2",
+          "bytes": 3,
+          "order": "after memset if any"
+        },
+        "dest_start": "23 23 23 23 23 23 23 23",
+        "dest_final": "63 61 74 00 00 23 23 23",
+        "dest_index7_preserved": true,
+        "has_NUL_in_first_n": true,
+        "return_pointer": "s1"
+      },
+      {
+        "case_id": "C124-05",
+        "source": "strncpy.c:27-33",
+        "source_first_NUL": 0,
+        "n": 4,
+        "size": 0,
+        "memset_called": true,
+        "memset": {
+          "start": 0,
+          "bytes": 4
+        },
+        "memcpy": {
+          "called": true,
+          "dest": "s1",
+          "src": "s2",
+          "bytes": 0,
+          "order": "after memset if any"
+        },
+        "dest_start": "23 23 23 23 23 23 23 23",
+        "dest_final": "00 00 00 00 23 23 23 23",
+        "dest_index7_preserved": true,
+        "has_NUL_in_first_n": true,
+        "return_pointer": "s1"
+      }
+    ],
+    "helpers": "__strnlen always; memset iff size!=n; memcpy always including size0",
+    "return_value": "s1 via memcpy dstpp"
+  },
+  "build": {
+    "myglibc": "static mylibc target collects string/*.c",
+    "initramfs": "text musl-gcc path; adds myinit and myshell",
+    "sh": "add_executable(sh...) only; actual link map UNKNOWN"
+  },
+  "limits": {
+    "C_runtime": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "P9_local": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_file_operations": "NOT_RUN"
+  },
+  "inputs_read": [
+    "myinitramfs/mylib/myglibc/string/strlen.c",
+    "myinitramfs/mylib/myglibc/string/strnlen.c",
+    "myinitramfs/mylib/myglibc/string/strncpy.c",
+    "myinitramfs/mylib/myglibc/string/strcmp.c",
+    "myinitramfs/mylib/myglibc/string/memcpy.c",
+    "myinitramfs/mylib/myglibc/string/memset.c",
+    "myinitramfs/myshell/myshell.c",
+    "myinitramfs/myshell/CMakeLists.txt",
+    "myinitramfs/mylib/myglibc/string/string.h",
+    "myinitramfs/mylib/myglibc/include/string.h",
+    "myinitramfs/mylib/myglibc/string/CMakeLists.txt",
+    "myinitramfs/mylib/myglibc/CMakeLists.txt",
+    "myinitramfs/CMakeLists.txt",
+    "mykernel/scripts/options_flags.cmake",
+    "mykernel/debug/panic.c"
+  ]
+}
