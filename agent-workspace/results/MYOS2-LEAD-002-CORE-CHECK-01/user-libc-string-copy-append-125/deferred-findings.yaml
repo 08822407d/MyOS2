@@ -1,0 +1,98 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-STRING-COPY-APPEND-125",
+  "record_type": "bounded_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "produced_by": "GPT-6 self-reported",
+  "date": "2026-11-22",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "NONE",
+  "items": [
+    {
+      "id": "SC125-ACTUAL-SH-LIBC",
+      "kind": "PROVENANCE_UNKNOWN",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "effective compiler, preprocessor aliases, linked sh symbols and final link map",
+      "observed": [
+        "strcpy.c:21-32",
+        "strcat.c:20-32",
+        "myglibc/CMakeLists.txt:1,20",
+        "initramfs/CMakeLists.txt:40-51",
+        "myshell/CMakeLists.txt:4"
+      ],
+      "limitation": "in-repo library definition is conditional model only, not attestation of installed sh",
+      "restore": "obtain separately authorized link map or resolved binary provenance; no build now"
+    },
+    {
+      "id": "SC125-C-ALLOC",
+      "kind": "PRECONDITION",
+      "status": "CONDITIONAL_ONLY",
+      "earliest_unknown": "real malloc return and physical buffer availability",
+      "observed": [
+        "myshell.c:260-263"
+      ],
+      "limitation": "F capacity and alignment were provided as case inputs; no real allocation performed",
+      "restore": "only under separate runtime authorization"
+    },
+    {
+      "id": "SC125-STRLEN-READABLE",
+      "kind": "MEMORY_PRECONDITION",
+      "status": "CONDITIONAL_ONLY",
+      "earliest_unknown": "real object alignment and readable extent for whole-word strlen loads",
+      "observed": [
+        "strlen.c:38-41,74-100"
+      ],
+      "limitation": "case source arrays >=16 bytes aligned8, F aligned8 and >=8 byte capacity; invalid/short arrays excluded",
+      "restore": "future independent target ABI and access safety review if directed"
+    },
+    {
+      "id": "SC125-MEMCPY-HELPER",
+      "kind": "SOURCE_SCOPE",
+      "status": "BOUNDED_SOURCE_ONLY",
+      "earliest_unknown": "actual compile-time MEMCPY helper resolution and inlining",
+      "observed": [
+        "strcpy.c:29-32",
+        "memcpy.c:28-59"
+      ],
+      "limitation": "short valid nonoverlapping copy semantics taken from helper model; no broad memcpy macro or alias analysis",
+      "restore": "effective preprocessing/link map with separate approval"
+    },
+    {
+      "id": "SC125-C-PATH-RESOLUTION",
+      "kind": "VFS_UNKNOWN",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "actual open return, VFS path handling and slash normalization",
+      "observed": [
+        "myshell.c:264-270"
+      ],
+      "limitation": "/bin//hi is literal request bytes; file identity, VFS normalization, errno or display not inferred",
+      "restore": "bounded read-only kernel investigation or later runtime on separately approved scope"
+    },
+    {
+      "id": "SC125-STRCAT-VALIDITY",
+      "kind": "FUNCTION_PRECONDITION",
+      "status": "CONDITIONAL_ONLY",
+      "earliest_unknown": "invalid overlap, absent destination NUL, insufficient destination capacity",
+      "observed": [
+        "strcat.c:28-32",
+        "strcpy.c:29-32"
+      ],
+      "limitation": "these cases require independent NUL-terminated objects and adequate destination capacity",
+      "restore": "different memory safety task if needed"
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "open_questions": [],
+  "runtime": {
+    "full_local_P9": "NOT_RUN",
+    "compile_link": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "hardware": "NOT_RUN",
+    "real_files": "NOT_RUN"
+  }
+}
