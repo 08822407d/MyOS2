@@ -1,0 +1,125 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-ALIGNED-WORD-COPY-127",
+  "record_type": "deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-19",
+  "date": "2026-11-22",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+  "previous_R125_01_R125_02": "CLOSED_DOCUMENTATION_ONLY_BY_C08",
+  "items": [
+    {
+      "id": "R126-01",
+      "kind": "HISTORICAL_DOCUMENTATION_GRAPH_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_C08_REVIEW",
+      "mainline": "OPEN",
+      "source": {
+        "execution_short12": "345d0f32374c",
+        "file": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-memory-copy-fill-126/libc-memory-copy-fill-paths.dot",
+        "review": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-LIBC-MEMORY-COPY-FILL-126-review.md"
+      },
+      "correction": "Corrected copy macro sites 12→13, M00 zero-loop no actual read/write/cursor increment, six memset returns from original dstpp, S09-U3 duplicate node declarations and case clustering, 9 C-stage half-open ranges and argv[1] source-length labels",
+      "read_view": {
+        "nodes": 192,
+        "declarations": 192,
+        "edges": 218,
+        "macro_sites": 13,
+        "direct_calls": 40
+      },
+      "earliest_unknown": "whether C08 approves exact composite graph and source relationships",
+      "next": "C08 Pro independently replay delta from fixed old DOT and judge CLOSED_DOCUMENTATION_ONLY or RETURN",
+      "owner_decisions_requested_now": []
+    },
+    {
+      "id": "WC127-BINARY-SYMBOL",
+      "kind": "BINARY_PROVENANCE",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "actual helper symbol selected after WORDCOPY_FWD_ALIGNED macro expansion and link resolution",
+      "read": [
+        "wordcopy.c:21-32",
+        "memcopy.h:119-131"
+      ],
+      "limitation": "default macro maps to _wordcopy_fwd_aligned only absent external override; sh symbol table not read",
+      "resume": "only under separate compiler/link investigation authorization"
+    },
+    {
+      "id": "WC127-HEADER-AND-PAGE",
+      "kind": "PREPROCESSOR_PROVENANCE",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "effective memcopy.h version and PAGE_COPY_THRESHOLD after include configuration",
+      "read": [
+        "memcpy.c:20-21",
+        "memcopy.h:63-67,119-131,192-199"
+      ],
+      "limitation": "model fixes generic header, op_t size 8, PAGE macro empty; actual preprocessing NOT_RUN",
+      "resume": "read-only compiler preprocessing evidence if separately permitted"
+    },
+    {
+      "id": "WC127-ARRAY-AND-POINTERS",
+      "kind": "BOUNDED_MODEL_ASSUMPTIONS",
+      "status": "CONDITIONAL_MODEL",
+      "earliest_unknown": "runtime object alignment and pointer provenance",
+      "read": [
+        "wordcopy.c:32-128",
+        "memcopy.h:121-131"
+      ],
+      "limitation": "S,D independent 384 bytes, modulo8 alignment; starting at +128 or +131 allows all effective word loads/stores and adjusted integer cursors to stay in objects; no invalid/overlap models",
+      "resume": "separate memory safety evaluation if authorized"
+    },
+    {
+      "id": "WC127-C-HELPER-ASSUMPTION",
+      "kind": "HELPER_MODEL",
+      "status": "CONDITIONAL_STATIC_INTERPRETATION",
+      "earliest_unknown": "compiled helper implementation and actual machine loads/stores",
+      "read": [
+        "wordcopy.c:38-128",
+        "memcpy.c:35-59"
+      ],
+      "limitation": "C-level static trace of selected function body, not compiled instruction trace; helper returns void; all cases assume normal completion",
+      "resume": "actual target binary disassembly/instrumentation requires separate approval"
+    },
+    {
+      "id": "WC127-OTHER-WORDCOPY",
+      "kind": "SCOPE_EXCLUSION",
+      "status": "DEFERRED",
+      "earliest_unknown": "dest-only-aligned helper or reverse aligned variants",
+      "read": [
+        "memcopy.h:119-131",
+        "wordcopy.c:130-214"
+      ],
+      "limitation": "contract only covers WORDCOPY_FWD_ALIGNED, not other helper implementations or overlap",
+      "resume": "new source scope and independent authorization"
+    },
+    {
+      "id": "WC127-SH-ACTUAL",
+      "kind": "REAL_BINARY_PROVENANCE",
+      "status": "NEEDS_EVIDENCE",
+      "earliest_unknown": "which libc actual sh uses",
+      "read": [
+        "myglibc string sources and CMake",
+        "initramfs myshell target"
+      ],
+      "limitation": "no source presence proves active sh binary linkage or behavior",
+      "resume": "separate authorized link map and runtime validation"
+    },
+    {
+      "id": "WC127-VALIDATION",
+      "kind": "NOT_EXECUTED",
+      "status": "NOT_RUN",
+      "earliest_unknown": "full local P9, compiler/linker, Graphviz render, QEMU, real hardware",
+      "read": [
+        "task contract and protocol"
+      ],
+      "limitation": "only GitHub static reads, finite JavaScript arithmetic and Git object readback; no C/repository runtime",
+      "resume": "under separate explicit permission for any runtime"
+    }
+  ],
+  "owner_decisions_requested_now": [],
+  "open_questions": [],
+  "preprocess_compile_link_Graphviz_QEMU_hardware_real_files": "NOT_RUN",
+  "full_local_P9": "NOT_RUN"
+}
