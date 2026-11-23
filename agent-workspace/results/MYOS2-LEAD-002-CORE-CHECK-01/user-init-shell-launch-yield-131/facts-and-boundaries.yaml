@@ -1,0 +1,3885 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-INIT-SHELL-LAUNCH-YIELD-131",
+  "record_type": "phase2_bounded_source_facts_and_replays",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "conversation_display_name": "MYOS2-A-C08c 代码分析执行",
+  "date": "2026-11-23",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "lead_release_short12": "5a22d13876bc",
+  "exec_parent_short12": "7e52edee26b4",
+  "produced_by": "GPT-6 self-reported, backend UNATTESTED",
+  "model_per_owner": "GPT-6＋Extra",
+  "actual_backend_effort": "UNATTESTED",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "R127_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_graph": "128 facts/DOT",
+      "replay_order": [
+        "128 base",
+        "129 twelve label overlays",
+        "130 typed edge replacements and additions + corrected B labels",
+        "131 rebase six B selectors and restore six regressed B/C labels"
+      ],
+      "six_rebased": [
+        {
+          "node_id": "B127_02_iteration",
+          "pre131_old_post129": "body only: do1 reads S1 writes D0; do0 writes D1 only after loop exit",
+          "new_label": "do1 loop body writes D0 only",
+          "old_130_selector_before129": "body summary: prefetch S0 as a0, do1 reads S1 as a1 and writes D0 from a0, do0 writes D1 from a1"
+        },
+        {
+          "node_id": "B127_02_footer",
+          "pre131_old_post129": "do/while: loop len0 false => out-of-loop do0",
+          "new_label": "len0 false -> do0 outside",
+          "old_130_selector_before129": "do/while checks len after footer; false"
+        },
+        {
+          "node_id": "B127_08_iteration",
+          "pre131_old_post129": "body only: do7..do1 writes D0..D6; outside-loop do0 writes D7",
+          "new_label": "do7..do1 loop body writes D0..D6 only",
+          "old_130_selector_before129": "body summary: prefetch S0, do7..do1 pipeline 7 writes, do0 writes D7"
+        },
+        {
+          "node_id": "B127_08_footer",
+          "pre131_old_post129": "do/while: loop len0 false => out-of-loop do0",
+          "new_label": "len0 false -> do0 outside",
+          "old_130_selector_before129": "do/while checks len after footer; false"
+        },
+        {
+          "node_id": "B127_16_iteration",
+          "pre131_old_post129": "body only: first do7..do1 D0..D6; footer len8 true; do8..do1 D7..D14; footer len0 false; do0 D15",
+          "new_label": "first partial do7..do1 writes D0..D6; second do8..do1 D7..D14 only",
+          "old_130_selector_before129": "body summary: prefetch S0; first partial do7..do1 writes D0..D6; second full do8..do1 writes D7..D14; do0 writes D15"
+        },
+        {
+          "node_id": "B127_16_footer",
+          "pre131_old_post129": "do/while: first len8 true loops back do8; second len0 false falls through",
+          "new_label": "footer len8 true back do8; then len0 false -> do0",
+          "old_130_selector_before129": "do/while checks len after footer; one true, then false"
+        }
+      ],
+      "six_retained": [
+        {
+          "node_id": "B127_02_switch",
+          "old_130_dot_label": "switch selects do1",
+          "restored_129_label": "switch(len%8)=2 selects case 2, then prefetch, adjust, explicit goto do1"
+        },
+        {
+          "node_id": "B127_08_switch",
+          "old_130_dot_label": "switch selects do7",
+          "restored_129_label": "switch(len%8)=0 selects case 0, then prefetch, adjust, explicit goto do7"
+        },
+        {
+          "node_id": "B127_16_switch",
+          "old_130_dot_label": "switch selects do7",
+          "restored_129_label": "switch(len%8)=0 selects case 0, then prefetch, adjust, explicit goto do7"
+        },
+        {
+          "node_id": "C127_M16_U3_switch",
+          "old_130_dot_label": "switch len%8 selects remainder 1",
+          "restored_129_label": "switch(len%8)=1 selects case1; not already at do0 before prefetch"
+        },
+        {
+          "node_id": "C127_M16_U3_goto",
+          "old_130_dot_label": "explicit case goto do0 after prefetch",
+          "restored_129_label": "explicit goto do0 after case1 prefetch and local cursor+len adjustments"
+        },
+        {
+          "node_id": "C127_M16_U3_body",
+          "old_130_dot_label": "body alternating reads/stores, footer and do0 (summary, see A)",
+          "restored_129_label": "1-word case1: no do8..do1 loop; direct outside-loop do0 writes D[136,144) from preloaded a1, then helper void return"
+        }
+      ],
+      "three_do0": [
+        {
+          "node_id": "B127_02_do0",
+          "old_label": "FALLTHROUGH on false to do0; write D1 from a1",
+          "new_label": "do0 outside loop writes D1 once"
+        },
+        {
+          "node_id": "B127_08_do0",
+          "old_label": "FALLTHROUGH on false to do0; write D7 from a1",
+          "new_label": "do0 outside loop writes D7 once"
+        },
+        {
+          "node_id": "B127_16_do0",
+          "old_label": "FALLTHROUGH on false to do0; write D15 from a1",
+          "new_label": "do0 outside loop writes D15 once"
+        }
+      ],
+      "previous_accepted": {
+        "edge_replacements": 18,
+        "new_edges": 19,
+        "register_pairs": 43,
+        "a0": 20,
+        "a1": 23
+      },
+      "final_view": {
+        "nodes": [
+          {
+            "id": "C127_M16_A",
+            "label": "C127-M16-A",
+            "prepatch_130_label": "C127-M16-A",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_owner",
+            "label": "MEMCPY outer caller",
+            "prepatch_130_label": "MEMCPY outer caller",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_prefix",
+            "label": "BYTE_COPY_FWD prealignment 0 bytes",
+            "prepatch_130_label": "BYTE_COPY_FWD prealignment 0 bytes",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_page",
+            "label": "empty PAGE macro",
+            "prepatch_130_label": "empty PAGE macro",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_word",
+            "label": "WORD_COPY_FWD 2 op_t",
+            "prepatch_130_label": "WORD_COPY_FWD 2 op_t",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_helpercall",
+            "label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+            "prepatch_130_label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_entry",
+            "label": "helper function entry, NO goto yet, srcp 128",
+            "prepatch_130_label": "helper function entry, NO goto yet, srcp 128",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_switch",
+            "label": "switch len%8 selects remainder 2",
+            "prepatch_130_label": "switch len%8 selects remainder 2",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_preload",
+            "label": "first actual prefetch at S+128",
+            "prepatch_130_label": "first actual prefetch at S+128",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_adjust",
+            "label": "local cursor and word-count adjustment after prefetch",
+            "prepatch_130_label": "local cursor and word-count adjustment after prefetch",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_goto",
+            "label": "explicit case goto do1 after prefetch",
+            "prepatch_130_label": "explicit case goto do1 after prefetch",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_body",
+            "label": "body alternating reads/stores, footer and do0 (summary, see A)",
+            "prepatch_130_label": "body alternating reads/stores, footer and do0 (summary, see A)",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_helperreturn",
+            "label": "helper returns void",
+            "prepatch_130_label": "helper returns void",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_callerupdate",
+            "label": "outer WORD macro advances caller srcp,dstp to 144",
+            "prepatch_130_label": "outer WORD macro advances caller srcp,dstp to 144",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_tail",
+            "label": "BYTE_COPY_FWD tail 0 bytes",
+            "prepatch_130_label": "BYTE_COPY_FWD tail 0 bytes",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_result",
+            "label": "MEMCPY returns original D+128",
+            "prepatch_130_label": "MEMCPY returns original D+128",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_A_original_dstpp",
+            "label": "original dstpp: outer MEMCPY input",
+            "prepatch_130_label": "original dstpp: outer MEMCPY input",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "id": "C127_M16_U3",
+            "label": "C127-M16-U3",
+            "prepatch_130_label": "C127-M16-U3",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_owner",
+            "label": "MEMCPY outer caller",
+            "prepatch_130_label": "MEMCPY outer caller",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_prefix",
+            "label": "BYTE_COPY_FWD prealignment 5 bytes",
+            "prepatch_130_label": "BYTE_COPY_FWD prealignment 5 bytes",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_page",
+            "label": "empty PAGE macro",
+            "prepatch_130_label": "empty PAGE macro",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_word",
+            "label": "WORD_COPY_FWD 1 op_t",
+            "prepatch_130_label": "WORD_COPY_FWD 1 op_t",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_helpercall",
+            "label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+            "prepatch_130_label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_entry",
+            "label": "helper function entry, NO goto yet, srcp 136",
+            "prepatch_130_label": "helper function entry, NO goto yet, srcp 136",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_switch",
+            "label": "switch(len%8)=1 selects case1; not already at do0 before prefetch",
+            "prepatch_130_label": "switch len%8 selects remainder 1",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_preload",
+            "label": "first actual prefetch at S+136",
+            "prepatch_130_label": "first actual prefetch at S+136",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_adjust",
+            "label": "local cursor and word-count adjustment after prefetch",
+            "prepatch_130_label": "local cursor and word-count adjustment after prefetch",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_goto",
+            "label": "explicit goto do0 after case1 prefetch and local cursor+len adjustments",
+            "prepatch_130_label": "explicit case goto do0 after prefetch",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_body",
+            "label": "1-word case1: no do8..do1 loop; direct outside-loop do0 writes D[136,144) from preloaded a1, then helper void return",
+            "prepatch_130_label": "body alternating reads/stores, footer and do0 (summary, see A)",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_helperreturn",
+            "label": "helper returns void",
+            "prepatch_130_label": "helper returns void",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_callerupdate",
+            "label": "outer WORD macro advances caller srcp,dstp to 144",
+            "prepatch_130_label": "outer WORD macro advances caller srcp,dstp to 144",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_tail",
+            "label": "BYTE_COPY_FWD tail 3 bytes",
+            "prepatch_130_label": "BYTE_COPY_FWD tail 3 bytes",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_result",
+            "label": "MEMCPY returns original D+131",
+            "prepatch_130_label": "MEMCPY returns original D+131",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M16_U3_original_dstpp",
+            "label": "original dstpp: outer MEMCPY input",
+            "prepatch_130_label": "original dstpp: outer MEMCPY input",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "id": "C127_M129_A",
+            "label": "C127-M129-A",
+            "prepatch_130_label": "C127-M129-A",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_owner",
+            "label": "MEMCPY outer caller",
+            "prepatch_130_label": "MEMCPY outer caller",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_prefix",
+            "label": "BYTE_COPY_FWD prealignment 0 bytes",
+            "prepatch_130_label": "BYTE_COPY_FWD prealignment 0 bytes",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_page",
+            "label": "empty PAGE macro",
+            "prepatch_130_label": "empty PAGE macro",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_word",
+            "label": "WORD_COPY_FWD 16 op_t",
+            "prepatch_130_label": "WORD_COPY_FWD 16 op_t",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_helpercall",
+            "label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+            "prepatch_130_label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_entry",
+            "label": "helper function entry, NO goto yet, srcp 128",
+            "prepatch_130_label": "helper function entry, NO goto yet, srcp 128",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_switch",
+            "label": "switch len%8 selects remainder 0",
+            "prepatch_130_label": "switch len%8 selects remainder 0",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_preload",
+            "label": "first actual prefetch at S+128",
+            "prepatch_130_label": "first actual prefetch at S+128",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_adjust",
+            "label": "local cursor and word-count adjustment after prefetch",
+            "prepatch_130_label": "local cursor and word-count adjustment after prefetch",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_goto",
+            "label": "explicit case goto do7 after prefetch",
+            "prepatch_130_label": "explicit case goto do7 after prefetch",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_body",
+            "label": "body alternating reads/stores, footer and do0 (summary, see A)",
+            "prepatch_130_label": "body alternating reads/stores, footer and do0 (summary, see A)",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_helperreturn",
+            "label": "helper returns void",
+            "prepatch_130_label": "helper returns void",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_callerupdate",
+            "label": "outer WORD macro advances caller srcp,dstp to 256",
+            "prepatch_130_label": "outer WORD macro advances caller srcp,dstp to 256",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_tail",
+            "label": "BYTE_COPY_FWD tail 1 bytes",
+            "prepatch_130_label": "BYTE_COPY_FWD tail 1 bytes",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_result",
+            "label": "MEMCPY returns original D+128",
+            "prepatch_130_label": "MEMCPY returns original D+128",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "C127_M129_A_original_dstpp",
+            "label": "original dstpp: outer MEMCPY input",
+            "prepatch_130_label": "original dstpp: outer MEMCPY input",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "id": "B127_02",
+            "label": "B127-02",
+            "prepatch_130_label": "B127-02",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_owner",
+            "label": "WORDCOPY_FWD_ALIGNED summary",
+            "prepatch_130_label": "WORDCOPY_FWD_ALIGNED summary",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_switch",
+            "label": "switch(len%8)=2 selects case 2, then prefetch, adjust, explicit goto do1",
+            "prepatch_130_label": "switch selects do1",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_preload",
+            "label": "read source word 0 BEFORE goto, reg a0",
+            "prepatch_130_label": "read source word 0 BEFORE goto, reg a0",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_adjust",
+            "label": "local srcp,dstp,len adjustments after prefetch",
+            "prepatch_130_label": "local srcp,dstp,len adjustments after prefetch",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_goto",
+            "label": "explicit case goto do1 AFTER adjustment",
+            "prepatch_130_label": "explicit case goto do1 AFTER adjustment",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_iteration",
+            "label": "do1 loop body writes D0 only",
+            "prepatch_130_label": "do1 loop body writes D0 only",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_footer",
+            "label": "len0 false -> do0 outside",
+            "prepatch_130_label": "len0 false -> do0 outside",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_do0",
+            "label": "do0 outside loop writes D1 once",
+            "prepatch_130_label": "do0 outside loop writes D1 once",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_02_return",
+            "label": "void return",
+            "prepatch_130_label": "void return",
+            "cluster": "B127_02"
+          },
+          {
+            "id": "B127_08",
+            "label": "B127-08",
+            "prepatch_130_label": "B127-08",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_owner",
+            "label": "WORDCOPY_FWD_ALIGNED summary",
+            "prepatch_130_label": "WORDCOPY_FWD_ALIGNED summary",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_switch",
+            "label": "switch(len%8)=0 selects case 0, then prefetch, adjust, explicit goto do7",
+            "prepatch_130_label": "switch selects do7",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_preload",
+            "label": "read source word 0 BEFORE goto, reg a0",
+            "prepatch_130_label": "read source word 0 BEFORE goto, reg a0",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_adjust",
+            "label": "local srcp,dstp,len adjustments after prefetch",
+            "prepatch_130_label": "local srcp,dstp,len adjustments after prefetch",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_goto",
+            "label": "explicit case goto do7 AFTER adjustment",
+            "prepatch_130_label": "explicit case goto do7 AFTER adjustment",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_iteration",
+            "label": "do7..do1 loop body writes D0..D6 only",
+            "prepatch_130_label": "do7..do1 loop body writes D0..D6 only",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_footer",
+            "label": "len0 false -> do0 outside",
+            "prepatch_130_label": "len0 false -> do0 outside",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_do0",
+            "label": "do0 outside loop writes D7 once",
+            "prepatch_130_label": "do0 outside loop writes D7 once",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_08_return",
+            "label": "void return",
+            "prepatch_130_label": "void return",
+            "cluster": "B127_08"
+          },
+          {
+            "id": "B127_16",
+            "label": "B127-16",
+            "prepatch_130_label": "B127-16",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_owner",
+            "label": "WORDCOPY_FWD_ALIGNED summary",
+            "prepatch_130_label": "WORDCOPY_FWD_ALIGNED summary",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_switch",
+            "label": "switch(len%8)=0 selects case 0, then prefetch, adjust, explicit goto do7",
+            "prepatch_130_label": "switch selects do7",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_preload",
+            "label": "read source word 0 BEFORE goto, reg a0",
+            "prepatch_130_label": "read source word 0 BEFORE goto, reg a0",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_adjust",
+            "label": "local srcp,dstp,len adjustments after prefetch",
+            "prepatch_130_label": "local srcp,dstp,len adjustments after prefetch",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_goto",
+            "label": "explicit case goto do7 AFTER adjustment",
+            "prepatch_130_label": "explicit case goto do7 AFTER adjustment",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_iteration",
+            "label": "first partial do7..do1 writes D0..D6; second do8..do1 D7..D14 only",
+            "prepatch_130_label": "first partial do7..do1 writes D0..D6; second do8..do1 D7..D14 only",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_footer",
+            "label": "footer len8 true back do8; then len0 false -> do0",
+            "prepatch_130_label": "footer len8 true back do8; then len0 false -> do0",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_do0",
+            "label": "do0 outside loop writes D15 once",
+            "prepatch_130_label": "do0 outside loop writes D15 once",
+            "cluster": "B127_16"
+          },
+          {
+            "id": "B127_16_return",
+            "label": "void return",
+            "prepatch_130_label": "void return",
+            "cluster": "B127_16"
+          }
+        ],
+        "edges": [
+          {
+            "from": "C127_M16_A_owner",
+            "to": "C127_M16_A_prefix",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:40 outer prefix macro",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_prefix",
+            "to": "C127_M16_A_page",
+            "kind": "SEQUENCE",
+            "label": "prefix then page",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_page",
+            "to": "C127_M16_A_word",
+            "kind": "SEQUENCE",
+            "label": "page then word",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_word",
+            "to": "C127_M16_A_helpercall",
+            "kind": "CONTROL_CONDITION",
+            "label": "aligned source selection",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_callerupdate",
+            "to": "C127_M16_A_tail",
+            "kind": "SEQUENCE",
+            "label": "outer cursor then tail",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_tail",
+            "to": "C127_M16_A_result",
+            "kind": "SEQUENCE",
+            "label": "tail then function return",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_owner",
+            "to": "C127_M16_A_page",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:45 page macro",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_owner",
+            "to": "C127_M16_A_word",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:51 word macro",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_owner",
+            "to": "C127_M16_A_tail",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:57 tail macro",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_owner",
+            "to": "C127_M16_A_helpercall",
+            "kind": "DIRECT_CALL_INSTANCE",
+            "label": "memcopy.h:125 C helper invocation",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_owner",
+            "to": "C127_M16_A_original_dstpp",
+            "kind": "DATA_ORIGINAL_ARGUMENT",
+            "label": "memcpy.c:28 formal dstpp",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_original_dstpp",
+            "to": "C127_M16_A_result",
+            "kind": "RETURN_DATA",
+            "label": "memcpy.c:59 return original dstpp",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A",
+            "to": "C127_M16_A_owner",
+            "kind": "MODEL_ENTRY",
+            "label": "given valid function invocation",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_helpercall",
+            "to": "C127_M16_A_entry",
+            "kind": "MODEL_ENTRY",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_entry",
+            "to": "C127_M16_A_switch",
+            "kind": "CONTROL_CASE",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_switch",
+            "to": "C127_M16_A_preload",
+            "kind": "READ",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_preload",
+            "to": "C127_M16_A_adjust",
+            "kind": "PTR_ARITH",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_adjust",
+            "to": "C127_M16_A_goto",
+            "kind": "EXPLICIT_GOTO",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_goto",
+            "to": "C127_M16_A_body",
+            "kind": "MODEL_SUMMARY",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_body",
+            "to": "C127_M16_A_helperreturn",
+            "kind": "RETURN_VOID",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_A_helperreturn",
+            "to": "C127_M16_A_callerupdate",
+            "kind": "SEQUENCE",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_A"
+          },
+          {
+            "from": "C127_M16_U3_owner",
+            "to": "C127_M16_U3_prefix",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:40 outer prefix macro",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_prefix",
+            "to": "C127_M16_U3_page",
+            "kind": "SEQUENCE",
+            "label": "prefix then page",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_page",
+            "to": "C127_M16_U3_word",
+            "kind": "SEQUENCE",
+            "label": "page then word",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_word",
+            "to": "C127_M16_U3_helpercall",
+            "kind": "CONTROL_CONDITION",
+            "label": "aligned source selection",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_callerupdate",
+            "to": "C127_M16_U3_tail",
+            "kind": "SEQUENCE",
+            "label": "outer cursor then tail",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_tail",
+            "to": "C127_M16_U3_result",
+            "kind": "SEQUENCE",
+            "label": "tail then function return",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_owner",
+            "to": "C127_M16_U3_page",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:45 page macro",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_owner",
+            "to": "C127_M16_U3_word",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:51 word macro",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_owner",
+            "to": "C127_M16_U3_tail",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:57 tail macro",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_owner",
+            "to": "C127_M16_U3_helpercall",
+            "kind": "DIRECT_CALL_INSTANCE",
+            "label": "memcopy.h:125 C helper invocation",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_owner",
+            "to": "C127_M16_U3_original_dstpp",
+            "kind": "DATA_ORIGINAL_ARGUMENT",
+            "label": "memcpy.c:28 formal dstpp",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_original_dstpp",
+            "to": "C127_M16_U3_result",
+            "kind": "RETURN_DATA",
+            "label": "memcpy.c:59 return original dstpp",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3",
+            "to": "C127_M16_U3_owner",
+            "kind": "MODEL_ENTRY",
+            "label": "given valid function invocation",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_helpercall",
+            "to": "C127_M16_U3_entry",
+            "kind": "MODEL_ENTRY",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_entry",
+            "to": "C127_M16_U3_switch",
+            "kind": "CONTROL_CASE",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_switch",
+            "to": "C127_M16_U3_preload",
+            "kind": "READ",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_preload",
+            "to": "C127_M16_U3_adjust",
+            "kind": "PTR_ARITH",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_adjust",
+            "to": "C127_M16_U3_goto",
+            "kind": "EXPLICIT_GOTO",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_goto",
+            "to": "C127_M16_U3_body",
+            "kind": "MODEL_SUMMARY",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_body",
+            "to": "C127_M16_U3_helperreturn",
+            "kind": "RETURN_VOID",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M16_U3_helperreturn",
+            "to": "C127_M16_U3_callerupdate",
+            "kind": "SEQUENCE",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M16_U3"
+          },
+          {
+            "from": "C127_M129_A_owner",
+            "to": "C127_M129_A_prefix",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:40 outer prefix macro",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_prefix",
+            "to": "C127_M129_A_page",
+            "kind": "SEQUENCE",
+            "label": "prefix then page",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_page",
+            "to": "C127_M129_A_word",
+            "kind": "SEQUENCE",
+            "label": "page then word",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_word",
+            "to": "C127_M129_A_helpercall",
+            "kind": "CONTROL_CONDITION",
+            "label": "aligned source selection",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_callerupdate",
+            "to": "C127_M129_A_tail",
+            "kind": "SEQUENCE",
+            "label": "outer cursor then tail",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_tail",
+            "to": "C127_M129_A_result",
+            "kind": "SEQUENCE",
+            "label": "tail then function return",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_owner",
+            "to": "C127_M129_A_page",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:45 page macro",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_owner",
+            "to": "C127_M129_A_word",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:51 word macro",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_owner",
+            "to": "C127_M129_A_tail",
+            "kind": "MACRO_EXPANSION",
+            "label": "memcpy.c:57 tail macro",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_owner",
+            "to": "C127_M129_A_helpercall",
+            "kind": "DIRECT_CALL_INSTANCE",
+            "label": "memcopy.h:125 C helper invocation",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_owner",
+            "to": "C127_M129_A_original_dstpp",
+            "kind": "DATA_ORIGINAL_ARGUMENT",
+            "label": "memcpy.c:28 formal dstpp",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_original_dstpp",
+            "to": "C127_M129_A_result",
+            "kind": "RETURN_DATA",
+            "label": "memcpy.c:59 return original dstpp",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A",
+            "to": "C127_M129_A_owner",
+            "kind": "MODEL_ENTRY",
+            "label": "given valid function invocation",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_helpercall",
+            "to": "C127_M129_A_entry",
+            "kind": "MODEL_ENTRY",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_entry",
+            "to": "C127_M129_A_switch",
+            "kind": "CONTROL_CASE",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_switch",
+            "to": "C127_M129_A_preload",
+            "kind": "READ",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_preload",
+            "to": "C127_M129_A_adjust",
+            "kind": "PTR_ARITH",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_adjust",
+            "to": "C127_M129_A_goto",
+            "kind": "EXPLICIT_GOTO",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_goto",
+            "to": "C127_M129_A_body",
+            "kind": "MODEL_SUMMARY",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_body",
+            "to": "C127_M129_A_helperreturn",
+            "kind": "RETURN_VOID",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "C127_M129_A_helperreturn",
+            "to": "C127_M129_A_callerupdate",
+            "kind": "SEQUENCE",
+            "label": "sequential source-level stage with explicit role; detailed reads in fact table",
+            "cluster": "C127_M129_A"
+          },
+          {
+            "from": "B127_02",
+            "to": "B127_02_owner",
+            "kind": "MODEL_ENTRY",
+            "label": "given valid function invocation",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_02_owner",
+            "to": "B127_02_switch",
+            "kind": "CONTROL_CASE",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_02_switch",
+            "to": "B127_02_preload",
+            "kind": "READ",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_02_preload",
+            "to": "B127_02_adjust",
+            "kind": "PTR_ARITH",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_02_adjust",
+            "to": "B127_02_goto",
+            "kind": "EXPLICIT_GOTO",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_02_goto",
+            "to": "B127_02_iteration",
+            "kind": "MODEL_SUMMARY",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_02_iteration",
+            "to": "B127_02_footer",
+            "kind": "LOOP_GUARD",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_02_footer",
+            "to": "B127_02_do0",
+            "kind": "FALLTHROUGH_DO0",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_02_do0",
+            "to": "B127_02_return",
+            "kind": "RETURN_VOID",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_02"
+          },
+          {
+            "from": "B127_08",
+            "to": "B127_08_owner",
+            "kind": "MODEL_ENTRY",
+            "label": "given valid function invocation",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_08_owner",
+            "to": "B127_08_switch",
+            "kind": "CONTROL_CASE",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_08_switch",
+            "to": "B127_08_preload",
+            "kind": "READ",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_08_preload",
+            "to": "B127_08_adjust",
+            "kind": "PTR_ARITH",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_08_adjust",
+            "to": "B127_08_goto",
+            "kind": "EXPLICIT_GOTO",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_08_goto",
+            "to": "B127_08_iteration",
+            "kind": "MODEL_SUMMARY",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_08_iteration",
+            "to": "B127_08_footer",
+            "kind": "LOOP_GUARD",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_08_footer",
+            "to": "B127_08_do0",
+            "kind": "FALLTHROUGH_DO0",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_08_do0",
+            "to": "B127_08_return",
+            "kind": "RETURN_VOID",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_08"
+          },
+          {
+            "from": "B127_16",
+            "to": "B127_16_owner",
+            "kind": "MODEL_ENTRY",
+            "label": "given valid function invocation",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_owner",
+            "to": "B127_16_switch",
+            "kind": "CONTROL_CASE",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_switch",
+            "to": "B127_16_preload",
+            "kind": "READ",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_preload",
+            "to": "B127_16_adjust",
+            "kind": "PTR_ARITH",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_adjust",
+            "to": "B127_16_goto",
+            "kind": "EXPLICIT_GOTO",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_goto",
+            "to": "B127_16_iteration",
+            "kind": "MODEL_SUMMARY",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_iteration",
+            "to": "B127_16_footer",
+            "kind": "LOOP_GUARD",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_footer",
+            "to": "B127_16_do0",
+            "kind": "FALLTHROUGH_DO0",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_do0",
+            "to": "B127_16_return",
+            "kind": "RETURN_VOID",
+            "label": "actual source phases in order, detailed reads/writes retained in A machine trace",
+            "cluster": "B127_16"
+          },
+          {
+            "from": "B127_16_footer",
+            "to": "B127_16_iteration",
+            "kind": "CONTROL_LOOP_TRUE",
+            "label": "footer len8 => body do8 second iteration",
+            "cluster": "B127_16"
+          }
+        ],
+        "counts": {
+          "nodes": 81,
+          "edges": 91
+        }
+      },
+      "one_word": "C127_M16_U3 direct outside-loop do0 D[136,144), preloaded a1, helper void return"
+    },
+    "R130_01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "source_window_deltas": [
+        {
+          "old_id": "E130-003",
+          "operation": "REPLACE_FUNCTION_SIGNATURE_WITH_BODY_ONLY",
+          "source_path": "myinitramfs/myshell/myshell.c",
+          "line": 141,
+          "valid_replacement_or_append": "\tshell_internal_cmd[index].function(argc, argv);",
+          "old_reference_exists": true
+        },
+        {
+          "old_id": "E130-014",
+          "operation": "REPLACE_COMMENTED_VALUE_WITH_ACTIVE_MACRO",
+          "source_path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+          "line": 424,
+          "valid_replacement_or_append": "\t#define ENOENT\t\t\t0x02",
+          "old_reference_exists": true
+        },
+        {
+          "old_id": "E130-015",
+          "operation": "REPLACE_COMMENTED_VALUE_WITH_ACTIVE_MACRO",
+          "source_path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+          "line": 435,
+          "valid_replacement_or_append": "\t#define EACCES\t\t\t0x0d",
+          "old_reference_exists": true
+        },
+        {
+          "old_id": "E130-016",
+          "operation": "REPLACE_COMMENTED_VALUE_WITH_ACTIVE_MACRO",
+          "source_path": "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+          "line": 489,
+          "valid_replacement_or_append": "\t#define ENOTEMPTY\t\t0x42",
+          "old_reference_exists": true
+        },
+        {
+          "old_id": "E130-017",
+          "operation": "REPLACE_ARRAY_DECLARATION_WITH_ELEMENT",
+          "source_path": "myinitramfs/mylib/myglibc/stdio/errlist_internal.c",
+          "line": 25,
+          "valid_replacement_or_append": "\t[0] = \"Success\",",
+          "old_reference_exists": true
+        },
+        {
+          "old_id": "E130-031",
+          "operation": "ADD_NEW_RETURN_ANCHOR_AFTER_ORIGINAL_WRITE",
+          "source_path": "myinitramfs/mylib/myglibc/stdio/printf.c",
+          "line": 25,
+          "valid_replacement_or_append": "\treturn rv;",
+          "old_reference_exists": true
+        }
+      ],
+      "original_P6": {
+        "six_files_bare_prefix_counts": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          44
+        ],
+        "total_bare": 45,
+        "formal_anchored": 44,
+        "original_self_check": {
+          "verified_claims": 44,
+          "quotes_reconfirmed": 44,
+          "downgraded_to_inferred": 0
+        },
+        "manifest_line24_utf8_hex": "e4 bb bb e5 8a a1 e5 90 88 e5 90 8c 31 38 31 e8 bf 9b e4 b8 80 e6 ad a5 e9 99 90 e5 88 b6 e6 9c ac e6 ac a1 72 65 73 75 6c 74 73 e6 96 b0 e7 9b ae e5 bd 95 e3 80 82 50 32 e6 a0 87 e9 a2 98 e5 8e 9f e6 96 87 ef bc 9a 50 32 20 c2 b7 20 e5 bc 95 e6 96 87 e9 94 9a e5 ae 9a ef bc 88 e6 af 8f e6 9d a1 20 5b 56 45 52 49 46 49 45 44 5d 20 e7 9a 84 e6 9c 80 e4 bd 8e e8 a6 81 e6 b1 82 ef bc 89 e3 80 82",
+        "reason": "P2 title in manifest contains one incidental bare prefix but no path::symbol anchor"
+      },
+      "virtual_130_manifest_correction": {
+        "selector": "MANIFEST.md line 24 P2 title, verify by UTF8 hex of original full line",
+        "replace_line24": "P2 · 引文锚定（源码定义内短窗、路径与符号）",
+        "new_bare_count": 44,
+        "new_formal_count": 44,
+        "self_check": {
+          "verified_claims": 44,
+          "quotes_reconfirmed": 44,
+          "downgraded_to_inferred": 0
+        },
+        "startup_selfcheck_quote": "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。",
+        "branch_canary_quotes": [
+          "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\",
+          "\tthis_cpu = smp_processor_id();"
+        ],
+        "inputs_read": [
+          "myinitramfs/myinit/initd.c",
+          "myinitramfs/myshell/myshell.c",
+          "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+          "myinitramfs/mylib/myglibc/stdio/errlist_internal.c",
+          "myinitramfs/mylib/myglibc/stdio/printf.c",
+          "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+          "mykernel/scripts/options_flags.cmake",
+          "mykernel/debug/panic.c"
+        ],
+        "read_channel": "connector",
+        "note": "inputs_read reconstructed from recorded 130 evidence paths and mainline review; do not attribute new reads to old actor"
+      }
+    },
+    "R130_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_edge_error_selectors": [
+        {
+          "case_id": "CD_LOST",
+          "old_from": "ERR_CD_LOST_s1",
+          "old_to": "ERR_CD_LOST_write",
+          "old_kind": "WRITE_REQUEST",
+          "correction": "s1 supplies formatting data, not direct syscall caller"
+        },
+        {
+          "case_id": "CD_LOST",
+          "old_from": "ERR_CD_LOST_write",
+          "old_to": "ERR_CD_LOST_ret",
+          "old_kind": "RETURN_SOURCE",
+          "correction": "write result ignored; separate rv->printf return from source command return"
+        },
+        {
+          "case_id": "LS_DOT",
+          "old_from": "ERR_LS_DOT_s1",
+          "old_to": "ERR_LS_DOT_write",
+          "old_kind": "WRITE_REQUEST",
+          "correction": "s1 supplies formatting data, not direct syscall caller"
+        },
+        {
+          "case_id": "LS_DOT",
+          "old_from": "ERR_LS_DOT_write",
+          "old_to": "ERR_LS_DOT_ret",
+          "old_kind": "RETURN_SOURCE",
+          "correction": "write result ignored; separate rv->printf return from source command return"
+        },
+        {
+          "case_id": "CAT_NOTE",
+          "old_from": "ERR_CAT_NOTE_s1",
+          "old_to": "ERR_CAT_NOTE_write",
+          "old_kind": "WRITE_REQUEST",
+          "correction": "s1 supplies formatting data, not direct syscall caller"
+        },
+        {
+          "case_id": "CAT_NOTE",
+          "old_from": "ERR_CAT_NOTE_write",
+          "old_to": "ERR_CAT_NOTE_ret",
+          "old_kind": "RETURN_SOURCE",
+          "correction": "write result ignored; separate rv->printf return from source command return"
+        },
+        {
+          "case_id": "RMDIR_TMPD",
+          "old_from": "ERR_RMDIR_TMPD_s1",
+          "old_to": "ERR_RMDIR_TMPD_write",
+          "old_kind": "WRITE_REQUEST",
+          "correction": "s1 supplies formatting data, not direct syscall caller"
+        },
+        {
+          "case_id": "RMDIR_TMPD",
+          "old_from": "ERR_RMDIR_TMPD_write",
+          "old_to": "ERR_RMDIR_TMPD_ret",
+          "old_kind": "RETURN_SOURCE",
+          "correction": "write result ignored; separate rv->printf return from source command return"
+        },
+        {
+          "case_id": "RM_LOG",
+          "old_from": "ERR_RM_LOG_s1",
+          "old_to": "ERR_RM_LOG_write",
+          "old_kind": "WRITE_REQUEST",
+          "correction": "s1 supplies formatting data, not direct syscall caller"
+        },
+        {
+          "case_id": "RM_LOG",
+          "old_from": "ERR_RM_LOG_write",
+          "old_to": "ERR_RM_LOG_ret",
+          "old_kind": "RETURN_SOURCE",
+          "correction": "write result ignored; separate rv->printf return from source command return"
+        }
+      ],
+      "case_models": [
+        {
+          "case_id": "CD_LOST",
+          "command": "cd",
+          "failure_guard": "chdir return -1 / i!=0",
+          "arg0": {
+            "expr": "strerror(errno)",
+            "given_text": "No such file or directory",
+            "strlen": 25,
+            "real_linkage": "UNKNOWN"
+          },
+          "arg1": {
+            "expr": "path",
+            "given_text": "/lost",
+            "strlen": 5
+          },
+          "formatted_line": "cd: No such file or directory: /lost\n",
+          "printf_vsnprintf_rv": 37,
+          "write_requested_bytes": 37,
+          "write_return_source": "ignored, unobserved",
+          "printf_return_source": "vsnprintf rv not write",
+          "command_return_value": 1,
+          "command_return_source": "constant 1",
+          "run_cmd_ignores_result": true,
+          "argc_gate": "no gate in selected case"
+        },
+        {
+          "case_id": "LS_DOT",
+          "command": "ls",
+          "failure_guard": "opendir returns NULL",
+          "arg0": {
+            "expr": "strerror(errno)",
+            "given_text": "Permission denied",
+            "strlen": 17,
+            "real_linkage": "UNKNOWN"
+          },
+          "arg1": {
+            "expr": "path",
+            "given_text": ".",
+            "strlen": 1
+          },
+          "formatted_line": "ls: Permission denied: .\n",
+          "printf_vsnprintf_rv": 25,
+          "write_requested_bytes": 25,
+          "write_return_source": "ignored, unobserved",
+          "printf_return_source": "vsnprintf rv not write",
+          "command_return_value": -1,
+          "command_return_source": "constant -1",
+          "run_cmd_ignores_result": true,
+          "argc_gate": "no gate in selected case"
+        },
+        {
+          "case_id": "CAT_NOTE",
+          "command": "cat",
+          "failure_guard": "open returns -1; fd<0",
+          "arg0": {
+            "expr": "strerror(errno)",
+            "given_text": "No such file or directory",
+            "strlen": 25,
+            "real_linkage": "UNKNOWN"
+          },
+          "arg1": {
+            "expr": "filename",
+            "given_text": "/note",
+            "strlen": 5
+          },
+          "formatted_line": "ls: No such file or directory: /note\n",
+          "printf_vsnprintf_rv": 37,
+          "write_requested_bytes": 37,
+          "write_return_source": "ignored, unobserved",
+          "printf_return_source": "vsnprintf rv not write",
+          "command_return_value": -1,
+          "command_return_source": "constant -1",
+          "run_cmd_ignores_result": true,
+          "argc_gate": "no gate in selected case"
+        },
+        {
+          "case_id": "RMDIR_TMPD",
+          "command": "rmdir",
+          "failure_guard": "rmdir returns -1; err!=0",
+          "arg0": {
+            "expr": "strerror(errno)",
+            "given_text": "Directory not empty",
+            "strlen": 19,
+            "real_linkage": "UNKNOWN"
+          },
+          "arg1": {
+            "expr": "dirname",
+            "given_text": "/tmp/d",
+            "strlen": 6
+          },
+          "formatted_line": "rmdir: Directory not empty: /tmp/d\n",
+          "printf_vsnprintf_rv": 35,
+          "write_requested_bytes": 35,
+          "write_return_source": "ignored, unobserved",
+          "printf_return_source": "vsnprintf rv not write",
+          "command_return_value": -1,
+          "command_return_source": "err variable storing rmdir/unlink return after argc==2",
+          "run_cmd_ignores_result": true,
+          "argc_gate": "argc==2; otherwise return -1 before API or printf"
+        },
+        {
+          "case_id": "RM_LOG",
+          "command": "rm",
+          "failure_guard": "unlink returns -1; err!=0",
+          "arg0": {
+            "expr": "strerror(errno)",
+            "given_text": "Permission denied",
+            "strlen": 17,
+            "real_linkage": "UNKNOWN"
+          },
+          "arg1": {
+            "expr": "filename",
+            "given_text": "/log",
+            "strlen": 4
+          },
+          "formatted_line": "rm: Permission denied: /log\n",
+          "printf_vsnprintf_rv": 28,
+          "write_requested_bytes": 28,
+          "write_return_source": "ignored, unobserved",
+          "printf_return_source": "vsnprintf rv not write",
+          "command_return_value": -1,
+          "command_return_source": "err variable storing rmdir/unlink return after argc==2",
+          "run_cmd_ignores_result": true,
+          "argc_gate": "argc==2; otherwise return -1 before API or printf"
+        }
+      ],
+      "zero_slot": {
+        "exact_source_selector": "[0]",
+        "actual_string": "Success",
+        "display_label_only": "SUCCESS",
+        "macro_named_SUCCESS": "NOT_DEFINED_BY_THE_EVIDENCE"
+      },
+      "declarations": [
+        {
+          "path": "myinitramfs/mylib/myglibc/include/stdio.h",
+          "line": 184,
+          "kind": "ACTIVE_EXTERN",
+          "text": "extern const char *const _sys_errlist_internal[];"
+        },
+        {
+          "path": "myinitramfs/mylib/myglibc/include/stdio.h",
+          "line": 186,
+          "kind": "ACTIVE_EXTERN",
+          "text": "extern const char *__get_errlist(int);"
+        },
+        {
+          "path": "myinitramfs/mylib/myglibc/string/string.h",
+          "line": 416,
+          "kind": "COMMENT_ONLY",
+          "text": "// extern char *strerror(int __errnum) __THROW;"
+        }
+      ],
+      "ls_partial_write": {
+        "request": 25,
+        "given_syscall_write_result": 2,
+        "printf_returns": 25,
+        "ls_command_returns": -1,
+        "run_cmd_ignores": true
+      },
+      "argc_mismatch": [
+        {
+          "command": "rmdir",
+          "argc": 1,
+          "underlying_API_called": false,
+          "printf_called": false,
+          "output_bytes": 0,
+          "command_return": -1
+        },
+        {
+          "command": "rm",
+          "argc": 3,
+          "underlying_API_called": false,
+          "printf_called": false,
+          "output_bytes": 0,
+          "command_return": -1
+        }
+      ],
+      "real_strerror_to_error_table": "UNKNOWN",
+      "real_sh_linker": "UNKNOWN"
+    },
+    "R129_01": "CLOSED_DOCUMENTATION_ONLY_BY_C09"
+  },
+  "A": {
+    "main_flow": [
+      {
+        "order": 0,
+        "source": "freopen",
+        "filename": "/dev/console",
+        "mode": "r",
+        "stream": "stdin",
+        "return_used": false
+      },
+      {
+        "order": 1,
+        "source": "freopen",
+        "filename": "/dev/console",
+        "mode": "w",
+        "stream": "stdout",
+        "return_used": false
+      },
+      {
+        "order": 2,
+        "source": "freopen",
+        "filename": "/dev/console",
+        "mode": "w",
+        "stream": "stderr",
+        "return_used": false
+      },
+      {
+        "order": 3,
+        "source": "printf",
+        "literal": "Welcome to MyOS2\n\n",
+        "return_used": false
+      },
+      {
+        "order": 4,
+        "source": "return normal_boot(argc, argv)",
+        "result_consumed": true
+      }
+    ],
+    "fork_call_count_in_normal_boot": 1,
+    "conditional_branches": [
+      {
+        "given_fork_result": 0,
+        "condition": "rv==0",
+        "getpid_calls": 1,
+        "local_pid_used": false,
+        "execve_calls": 1,
+        "success": "process image replacement; execve does not return",
+        "failed_or_returned_execve": "normal_boot falls through without returning int, main uses its result: undefined behavior; not evidence of particular exit status",
+        "parent_yield_calls": 0
+      },
+      {
+        "given_fork_result": 1234,
+        "condition": "rv!=0",
+        "getpid_calls": 1,
+        "local_pid_used": false,
+        "execve_calls": 0,
+        "flow": "while(1) sched_yield()",
+        "fork_retry": 0,
+        "wait": 0,
+        "child_restart": 0
+      },
+      {
+        "given_fork_result": -1,
+        "condition": "rv!=0 even fork failure",
+        "getpid_calls": 1,
+        "local_pid_used": false,
+        "execve_calls": 0,
+        "flow": "while(1) sched_yield()",
+        "fork_retry": 0,
+        "wait": 0,
+        "child_restart": 0
+      }
+    ],
+    "scope": "only initd.c::main/normal_boot in pinned time; real process creation remains unknown",
+    "init_build_target": "add_executable(init ...)",
+    "sh_build_target": "add_executable(sh ...)",
+    "installation": "install both init and sh to boot"
+  },
+  "B": {
+    "filename": "prog_name",
+    "filename_string": "/boot/sh",
+    "filename_same_pointer_as_args0": true,
+    "args": [
+      {
+        "index": 0,
+        "points_to": "prog_name",
+        "value": "/boot/sh"
+      },
+      {
+        "index": 1,
+        "value": "userarg_test_1"
+      },
+      {
+        "index": 2,
+        "value": "userarg_test_2"
+      },
+      {
+        "index": 3,
+        "kind": "NULL_POINTER",
+        "value": null
+      }
+    ],
+    "envs": [
+      {
+        "index": 0,
+        "value": "userenv_test_1"
+      },
+      {
+        "index": 1,
+        "value": "userenv_test_2"
+      },
+      {
+        "index": 2,
+        "value": "userenv_test_3"
+      },
+      {
+        "index": 3,
+        "kind": "NULL_POINTER",
+        "value": null
+      }
+    ],
+    "distinct_text_sequences": [
+      {
+        "key": "prog_name",
+        "value": "/boot/sh",
+        "ascii_length": 8,
+        "with_NUL": 9,
+        "ascii_hex": "2f 62 6f 6f 74 2f 73 68"
+      },
+      {
+        "key": "args1",
+        "value": "userarg_test_1",
+        "ascii_length": 14,
+        "with_NUL": 15,
+        "ascii_hex": "75 73 65 72 61 72 67 5f 74 65 73 74 5f 31"
+      },
+      {
+        "key": "args2",
+        "value": "userarg_test_2",
+        "ascii_length": 14,
+        "with_NUL": 15,
+        "ascii_hex": "75 73 65 72 61 72 67 5f 74 65 73 74 5f 32"
+      },
+      {
+        "key": "envs0",
+        "value": "userenv_test_1",
+        "ascii_length": 14,
+        "with_NUL": 15,
+        "ascii_hex": "75 73 65 72 65 6e 76 5f 74 65 73 74 5f 31"
+      },
+      {
+        "key": "envs1",
+        "value": "userenv_test_2",
+        "ascii_length": 14,
+        "with_NUL": 15,
+        "ascii_hex": "75 73 65 72 65 6e 76 5f 74 65 73 74 5f 32"
+      },
+      {
+        "key": "envs2",
+        "value": "userenv_test_3",
+        "ascii_length": 14,
+        "with_NUL": 15,
+        "ascii_hex": "75 73 65 72 65 6e 76 5f 74 65 73 74 5f 33"
+      }
+    ],
+    "byte_sums": {
+      "by_argument_reference_without_NUL": 86,
+      "by_argument_reference_with_NUL": 93,
+      "by_distinct_content_without_NUL": 78,
+      "by_distinct_content_with_NUL": 84
+    },
+    "args_POINTER_slots": 4,
+    "envs_POINTER_slots": 4,
+    "NULL_pointer_terminators": 2,
+    "individual_string_NUL_terminators": 6,
+    "path_object_allocated_once_by_local_prog_name": true,
+    "outer_normal_boot_argc_argv_unused_by_execve": true,
+    "envs_strings_contain_equal_sign": false,
+    "NUL_different_from_NULL_pointer": true,
+    "actual_string_addresses": "UNKNOWN",
+    "actual_user_stack": "UNKNOWN",
+    "actual_dynamic_linking": "UNKNOWN",
+    "actual_sh_main_entry": "UNKNOWN"
+  },
+  "C": {
+    "nr": 24,
+    "nr_symbol": "__NR_sched_yield",
+    "nr_path": "mykernel/arch/x86_64/include/asm/unistd_64.h",
+    "entry_macro": "__SYSCALL(__NR_sched_yield, sys_sched_yield)",
+    "dispatch": "x64_sys_call switch invokes __x64_##sym(regs) under macro expansion",
+    "user_musl_to_syscall_bridge": "UNKNOWN",
+    "body_order": [
+      "rq_flags_s rf; rq_s* rq",
+      "rq=this_rq_lock_irq(&rf)",
+      "current->sched_class->yield_task(rq)",
+      "preempt_disable()",
+      "rq_unlock_irq(rq,&rf) is COMMENT_ONLY",
+      "sched_preempt_enable_no_resched()",
+      "schedule()",
+      "return 0"
+    ],
+    "class_table": "DEFINE_SCHED_CLASS(myos_rt).yield_task=yield_task_fair_myos",
+    "callback": "yield_task_fair_myos(rq)->resched_curr(rq)",
+    "same_cpu_given": [
+      {
+        "need_resched_already_set": true,
+        "resched_curr": "early return before setting flags",
+        "syscall_schedule_call_in_body": true,
+        "switch_to_another_task_guaranteed": false
+      },
+      {
+        "need_resched_already_set": false,
+        "cpu_is_same": true,
+        "resched_curr": "set_tsk_need_resched(curr) + set_preempt_need_resched(), return",
+        "syscall_schedule_call_in_body": true,
+        "switch_to_another_task_guaranteed": false
+      }
+    ],
+    "remote_cpu": "cross-CPU send reschedule path is commented, no active send established",
+    "rq_lock_irq_and_preempt_actual_effect": "requires separate implementation evidence; no unlock call in selected body",
+    "unproven": [
+      "wake child",
+      "guaranteed switch",
+      "fairness",
+      "real system call reaches this kernel code"
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "C127_M16_A",
+        "label": "C127-M16-A",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_owner",
+        "label": "MEMCPY outer caller",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_prefix",
+        "label": "BYTE_COPY_FWD prealignment 0 bytes",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_page",
+        "label": "empty PAGE macro",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_word",
+        "label": "WORD_COPY_FWD 2 op_t",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_helpercall",
+        "label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_entry",
+        "label": "helper function entry, NO goto yet, srcp 128",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_switch",
+        "label": "switch len%8 selects remainder 2",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_preload",
+        "label": "first actual prefetch at S+128",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_adjust",
+        "label": "local cursor and word-count adjustment after prefetch",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_goto",
+        "label": "explicit case goto do1 after prefetch",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_body",
+        "label": "body alternating reads/stores, footer and do0 (summary, see A)",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_helperreturn",
+        "label": "helper returns void",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_callerupdate",
+        "label": "outer WORD macro advances caller srcp,dstp to 144",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_tail",
+        "label": "BYTE_COPY_FWD tail 0 bytes",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_result",
+        "label": "MEMCPY returns original D+128",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_A_original_dstpp",
+        "label": "original dstpp: outer MEMCPY input",
+        "group": "C127_M16_A"
+      },
+      {
+        "id": "C127_M16_U3",
+        "label": "C127-M16-U3",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_owner",
+        "label": "MEMCPY outer caller",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_prefix",
+        "label": "BYTE_COPY_FWD prealignment 5 bytes",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_page",
+        "label": "empty PAGE macro",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_word",
+        "label": "WORD_COPY_FWD 1 op_t",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_helpercall",
+        "label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_entry",
+        "label": "helper function entry, NO goto yet, srcp 136",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_switch",
+        "label": "switch(len%8)=1 selects case1; not already at do0 before prefetch",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_preload",
+        "label": "first actual prefetch at S+136",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_adjust",
+        "label": "local cursor and word-count adjustment after prefetch",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_goto",
+        "label": "explicit goto do0 after case1 prefetch and local cursor+len adjustments",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_body",
+        "label": "1-word case1: no do8..do1 loop; direct outside-loop do0 writes D[136,144) from preloaded a1, then helper void return",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_helperreturn",
+        "label": "helper returns void",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_callerupdate",
+        "label": "outer WORD macro advances caller srcp,dstp to 144",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_tail",
+        "label": "BYTE_COPY_FWD tail 3 bytes",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_result",
+        "label": "MEMCPY returns original D+131",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M16_U3_original_dstpp",
+        "label": "original dstpp: outer MEMCPY input",
+        "group": "C127_M16_U3"
+      },
+      {
+        "id": "C127_M129_A",
+        "label": "C127-M129-A",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_owner",
+        "label": "MEMCPY outer caller",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_prefix",
+        "label": "BYTE_COPY_FWD prealignment 0 bytes",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_page",
+        "label": "empty PAGE macro",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_word",
+        "label": "WORD_COPY_FWD 16 op_t",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_helpercall",
+        "label": "MEMCPY calls _wordcopy_fwd_aligned (via macro)",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_entry",
+        "label": "helper function entry, NO goto yet, srcp 128",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_switch",
+        "label": "switch len%8 selects remainder 0",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_preload",
+        "label": "first actual prefetch at S+128",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_adjust",
+        "label": "local cursor and word-count adjustment after prefetch",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_goto",
+        "label": "explicit case goto do7 after prefetch",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_body",
+        "label": "body alternating reads/stores, footer and do0 (summary, see A)",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_helperreturn",
+        "label": "helper returns void",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_callerupdate",
+        "label": "outer WORD macro advances caller srcp,dstp to 256",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_tail",
+        "label": "BYTE_COPY_FWD tail 1 bytes",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_result",
+        "label": "MEMCPY returns original D+128",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "C127_M129_A_original_dstpp",
+        "label": "original dstpp: outer MEMCPY input",
+        "group": "C127_M129_A"
+      },
+      {
+        "id": "B127_02",
+        "label": "B127-02",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_owner",
+        "label": "WORDCOPY_FWD_ALIGNED summary",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_switch",
+        "label": "switch(len%8)=2 selects case 2, then prefetch, adjust, explicit goto do1",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_preload",
+        "label": "read source word 0 BEFORE goto, reg a0",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_adjust",
+        "label": "local srcp,dstp,len adjustments after prefetch",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_goto",
+        "label": "explicit case goto do1 AFTER adjustment",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_iteration",
+        "label": "do1 loop body writes D0 only",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_footer",
+        "label": "len0 false -> do0 outside",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_do0",
+        "label": "do0 outside loop writes D1 once",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_02_return",
+        "label": "void return",
+        "group": "B127_02"
+      },
+      {
+        "id": "B127_08",
+        "label": "B127-08",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_owner",
+        "label": "WORDCOPY_FWD_ALIGNED summary",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_switch",
+        "label": "switch(len%8)=0 selects case 0, then prefetch, adjust, explicit goto do7",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_preload",
+        "label": "read source word 0 BEFORE goto, reg a0",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_adjust",
+        "label": "local srcp,dstp,len adjustments after prefetch",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_goto",
+        "label": "explicit case goto do7 AFTER adjustment",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_iteration",
+        "label": "do7..do1 loop body writes D0..D6 only",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_footer",
+        "label": "len0 false -> do0 outside",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_do0",
+        "label": "do0 outside loop writes D7 once",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_08_return",
+        "label": "void return",
+        "group": "B127_08"
+      },
+      {
+        "id": "B127_16",
+        "label": "B127-16",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_owner",
+        "label": "WORDCOPY_FWD_ALIGNED summary",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_switch",
+        "label": "switch(len%8)=0 selects case 0, then prefetch, adjust, explicit goto do7",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_preload",
+        "label": "read source word 0 BEFORE goto, reg a0",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_adjust",
+        "label": "local srcp,dstp,len adjustments after prefetch",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_goto",
+        "label": "explicit case goto do7 AFTER adjustment",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_iteration",
+        "label": "first partial do7..do1 writes D0..D6; second do8..do1 D7..D14 only",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_footer",
+        "label": "footer len8 true back do8; then len0 false -> do0",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_do0",
+        "label": "do0 outside loop writes D15 once",
+        "group": "B127_16"
+      },
+      {
+        "id": "B127_16_return",
+        "label": "void return",
+        "group": "B127_16"
+      },
+      {
+        "id": "E131_CD_LOST_owner",
+        "label": "cd source owner",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_argc",
+        "label": "no gate in selected case",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_failed",
+        "label": "chdir return -1 / i!=0",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_s0",
+        "label": "first %s strlen 25",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_s1",
+        "label": "second %s strlen 5",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_rv",
+        "label": "vsnprintf rv=37",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_request",
+        "label": "write request length 37",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_printf_return",
+        "label": "printf returns format rv 37",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_command_source",
+        "label": "constant 1",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_command_return",
+        "label": "command returns 1",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_LS_DOT_owner",
+        "label": "ls source owner",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_argc",
+        "label": "no gate in selected case",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_failed",
+        "label": "opendir returns NULL",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_s0",
+        "label": "first %s strlen 17",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_s1",
+        "label": "second %s strlen 1",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_rv",
+        "label": "vsnprintf rv=25",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_request",
+        "label": "write request length 25",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_printf_return",
+        "label": "printf returns format rv 25",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_command_source",
+        "label": "constant -1",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_command_return",
+        "label": "command returns -1",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_CAT_NOTE_owner",
+        "label": "cat source owner",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_argc",
+        "label": "no gate in selected case",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_failed",
+        "label": "open returns -1; fd<0",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_s0",
+        "label": "first %s strlen 25",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_s1",
+        "label": "second %s strlen 5",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_rv",
+        "label": "vsnprintf rv=37",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_request",
+        "label": "write request length 37",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_printf_return",
+        "label": "printf returns format rv 37",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_command_source",
+        "label": "constant -1",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_command_return",
+        "label": "command returns -1",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_owner",
+        "label": "rmdir source owner",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_argc",
+        "label": "argc==2; otherwise return -1 before API or printf",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_failed",
+        "label": "rmdir returns -1; err!=0",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_s0",
+        "label": "first %s strlen 19",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_s1",
+        "label": "second %s strlen 6",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_rv",
+        "label": "vsnprintf rv=35",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_request",
+        "label": "write request length 35",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_printf_return",
+        "label": "printf returns format rv 35",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_command_source",
+        "label": "err variable storing rmdir/unlink return after argc==2",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_command_return",
+        "label": "command returns -1",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RM_LOG_owner",
+        "label": "rm source owner",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_argc",
+        "label": "argc==2; otherwise return -1 before API or printf",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_failed",
+        "label": "unlink returns -1; err!=0",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_s0",
+        "label": "first %s strlen 17",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_s1",
+        "label": "second %s strlen 4",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_rv",
+        "label": "vsnprintf rv=28",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_request",
+        "label": "write request length 28",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_printf_return",
+        "label": "printf returns format rv 28",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_command_source",
+        "label": "err variable storing rmdir/unlink return after argc==2",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_command_return",
+        "label": "command returns -1",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "A_INIT_main",
+        "label": "init main redirect and welcome",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_fork",
+        "label": "normal_boot calls fork once",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_child",
+        "label": "rv==0 child getpid unused, execve",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_exec_ok",
+        "label": "execve success no return",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_exec_return",
+        "label": "returned execve -> int normal_boot falls through",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_else_pos",
+        "label": "rv positive: getpid unused and infinite yield",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_else_neg",
+        "label": "rv -1: getpid unused and infinite yield",
+        "group": "A_INIT"
+      },
+      {
+        "id": "C_YIELD_user",
+        "label": "init else sched_yield loop",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_nr",
+        "label": "number 24 is kernel candidate",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_map",
+        "label": "syscalls_64.h mapping",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_switch",
+        "label": "x64_sys_call switch",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_syscall",
+        "label": "MYOS_SYSCALL_DEFINE0(sched_yield)",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_rq",
+        "label": "this_rq_lock_irq(&rf) returns rq",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_callback",
+        "label": "current->sched_class->yield_task(rq)",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_rt",
+        "label": "myos_rt yields via yield_task_fair_myos",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_resched",
+        "label": "resched_curr(rq)",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_already",
+        "label": "flag true early return",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_notset",
+        "label": "flag false + same CPU set two flags",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_preempt",
+        "label": "preempt_disable / enable_no_resched; unlock commented",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_schedule",
+        "label": "schedule()",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_return",
+        "label": "normal return 0",
+        "group": "C_YIELD"
+      }
+    ],
+    "edges": [
+      {
+        "from": "C127_M16_A_owner",
+        "to": "C127_M16_A_prefix",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_prefix",
+        "to": "C127_M16_A_page",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_page",
+        "to": "C127_M16_A_word",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_word",
+        "to": "C127_M16_A_helpercall",
+        "kind": "CONTROL_CONDITION",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_callerupdate",
+        "to": "C127_M16_A_tail",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_tail",
+        "to": "C127_M16_A_result",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_owner",
+        "to": "C127_M16_A_page",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_owner",
+        "to": "C127_M16_A_word",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_owner",
+        "to": "C127_M16_A_tail",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_owner",
+        "to": "C127_M16_A_helpercall",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_owner",
+        "to": "C127_M16_A_original_dstpp",
+        "kind": "DATA_ORIGINAL_ARGUMENT",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_original_dstpp",
+        "to": "C127_M16_A_result",
+        "kind": "RETURN_DATA",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A",
+        "to": "C127_M16_A_owner",
+        "kind": "MODEL_ENTRY",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_helpercall",
+        "to": "C127_M16_A_entry",
+        "kind": "MODEL_ENTRY",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_entry",
+        "to": "C127_M16_A_switch",
+        "kind": "CONTROL_CASE",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_switch",
+        "to": "C127_M16_A_preload",
+        "kind": "READ",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_preload",
+        "to": "C127_M16_A_adjust",
+        "kind": "PTR_ARITH",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_adjust",
+        "to": "C127_M16_A_goto",
+        "kind": "EXPLICIT_GOTO",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_goto",
+        "to": "C127_M16_A_body",
+        "kind": "MODEL_SUMMARY",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_body",
+        "to": "C127_M16_A_helperreturn",
+        "kind": "RETURN_VOID",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_A_helperreturn",
+        "to": "C127_M16_A_callerupdate",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_A"
+      },
+      {
+        "from": "C127_M16_U3_owner",
+        "to": "C127_M16_U3_prefix",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_prefix",
+        "to": "C127_M16_U3_page",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_page",
+        "to": "C127_M16_U3_word",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_word",
+        "to": "C127_M16_U3_helpercall",
+        "kind": "CONTROL_CONDITION",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_callerupdate",
+        "to": "C127_M16_U3_tail",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_tail",
+        "to": "C127_M16_U3_result",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_owner",
+        "to": "C127_M16_U3_page",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_owner",
+        "to": "C127_M16_U3_word",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_owner",
+        "to": "C127_M16_U3_tail",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_owner",
+        "to": "C127_M16_U3_helpercall",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_owner",
+        "to": "C127_M16_U3_original_dstpp",
+        "kind": "DATA_ORIGINAL_ARGUMENT",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_original_dstpp",
+        "to": "C127_M16_U3_result",
+        "kind": "RETURN_DATA",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3",
+        "to": "C127_M16_U3_owner",
+        "kind": "MODEL_ENTRY",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_helpercall",
+        "to": "C127_M16_U3_entry",
+        "kind": "MODEL_ENTRY",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_entry",
+        "to": "C127_M16_U3_switch",
+        "kind": "CONTROL_CASE",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_switch",
+        "to": "C127_M16_U3_preload",
+        "kind": "READ",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_preload",
+        "to": "C127_M16_U3_adjust",
+        "kind": "PTR_ARITH",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_adjust",
+        "to": "C127_M16_U3_goto",
+        "kind": "EXPLICIT_GOTO",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_goto",
+        "to": "C127_M16_U3_body",
+        "kind": "MODEL_SUMMARY",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_body",
+        "to": "C127_M16_U3_helperreturn",
+        "kind": "RETURN_VOID",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M16_U3_helperreturn",
+        "to": "C127_M16_U3_callerupdate",
+        "kind": "SEQUENCE",
+        "group": "C127_M16_U3"
+      },
+      {
+        "from": "C127_M129_A_owner",
+        "to": "C127_M129_A_prefix",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_prefix",
+        "to": "C127_M129_A_page",
+        "kind": "SEQUENCE",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_page",
+        "to": "C127_M129_A_word",
+        "kind": "SEQUENCE",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_word",
+        "to": "C127_M129_A_helpercall",
+        "kind": "CONTROL_CONDITION",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_callerupdate",
+        "to": "C127_M129_A_tail",
+        "kind": "SEQUENCE",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_tail",
+        "to": "C127_M129_A_result",
+        "kind": "SEQUENCE",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_owner",
+        "to": "C127_M129_A_page",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_owner",
+        "to": "C127_M129_A_word",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_owner",
+        "to": "C127_M129_A_tail",
+        "kind": "MACRO_EXPANSION",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_owner",
+        "to": "C127_M129_A_helpercall",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_owner",
+        "to": "C127_M129_A_original_dstpp",
+        "kind": "DATA_ORIGINAL_ARGUMENT",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_original_dstpp",
+        "to": "C127_M129_A_result",
+        "kind": "RETURN_DATA",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A",
+        "to": "C127_M129_A_owner",
+        "kind": "MODEL_ENTRY",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_helpercall",
+        "to": "C127_M129_A_entry",
+        "kind": "MODEL_ENTRY",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_entry",
+        "to": "C127_M129_A_switch",
+        "kind": "CONTROL_CASE",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_switch",
+        "to": "C127_M129_A_preload",
+        "kind": "READ",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_preload",
+        "to": "C127_M129_A_adjust",
+        "kind": "PTR_ARITH",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_adjust",
+        "to": "C127_M129_A_goto",
+        "kind": "EXPLICIT_GOTO",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_goto",
+        "to": "C127_M129_A_body",
+        "kind": "MODEL_SUMMARY",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_body",
+        "to": "C127_M129_A_helperreturn",
+        "kind": "RETURN_VOID",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "C127_M129_A_helperreturn",
+        "to": "C127_M129_A_callerupdate",
+        "kind": "SEQUENCE",
+        "group": "C127_M129_A"
+      },
+      {
+        "from": "B127_02",
+        "to": "B127_02_owner",
+        "kind": "MODEL_ENTRY",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_02_owner",
+        "to": "B127_02_switch",
+        "kind": "CONTROL_CASE",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_02_switch",
+        "to": "B127_02_preload",
+        "kind": "READ",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_02_preload",
+        "to": "B127_02_adjust",
+        "kind": "PTR_ARITH",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_02_adjust",
+        "to": "B127_02_goto",
+        "kind": "EXPLICIT_GOTO",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_02_goto",
+        "to": "B127_02_iteration",
+        "kind": "MODEL_SUMMARY",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_02_iteration",
+        "to": "B127_02_footer",
+        "kind": "LOOP_GUARD",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_02_footer",
+        "to": "B127_02_do0",
+        "kind": "FALLTHROUGH_DO0",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_02_do0",
+        "to": "B127_02_return",
+        "kind": "RETURN_VOID",
+        "group": "B127_02"
+      },
+      {
+        "from": "B127_08",
+        "to": "B127_08_owner",
+        "kind": "MODEL_ENTRY",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_08_owner",
+        "to": "B127_08_switch",
+        "kind": "CONTROL_CASE",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_08_switch",
+        "to": "B127_08_preload",
+        "kind": "READ",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_08_preload",
+        "to": "B127_08_adjust",
+        "kind": "PTR_ARITH",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_08_adjust",
+        "to": "B127_08_goto",
+        "kind": "EXPLICIT_GOTO",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_08_goto",
+        "to": "B127_08_iteration",
+        "kind": "MODEL_SUMMARY",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_08_iteration",
+        "to": "B127_08_footer",
+        "kind": "LOOP_GUARD",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_08_footer",
+        "to": "B127_08_do0",
+        "kind": "FALLTHROUGH_DO0",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_08_do0",
+        "to": "B127_08_return",
+        "kind": "RETURN_VOID",
+        "group": "B127_08"
+      },
+      {
+        "from": "B127_16",
+        "to": "B127_16_owner",
+        "kind": "MODEL_ENTRY",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_owner",
+        "to": "B127_16_switch",
+        "kind": "CONTROL_CASE",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_switch",
+        "to": "B127_16_preload",
+        "kind": "READ",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_preload",
+        "to": "B127_16_adjust",
+        "kind": "PTR_ARITH",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_adjust",
+        "to": "B127_16_goto",
+        "kind": "EXPLICIT_GOTO",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_goto",
+        "to": "B127_16_iteration",
+        "kind": "MODEL_SUMMARY",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_iteration",
+        "to": "B127_16_footer",
+        "kind": "LOOP_GUARD",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_footer",
+        "to": "B127_16_do0",
+        "kind": "FALLTHROUGH_DO0",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_do0",
+        "to": "B127_16_return",
+        "kind": "RETURN_VOID",
+        "group": "B127_16"
+      },
+      {
+        "from": "B127_16_footer",
+        "to": "B127_16_iteration",
+        "kind": "CONTROL_LOOP_TRUE",
+        "group": "B127_16"
+      },
+      {
+        "from": "E131_CD_LOST_owner",
+        "to": "E131_CD_LOST_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_argc",
+        "to": "E131_CD_LOST_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_failed",
+        "to": "E131_CD_LOST_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_failed",
+        "to": "E131_CD_LOST_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_given",
+        "to": "E131_CD_LOST_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_printf",
+        "to": "E131_CD_LOST_s0",
+        "kind": "VARARG_FETCH0",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_s0",
+        "to": "E131_CD_LOST_s1",
+        "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_s0",
+        "to": "E131_CD_LOST_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_s1",
+        "to": "E131_CD_LOST_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_rv",
+        "to": "E131_CD_LOST_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_request",
+        "to": "E131_CD_LOST_ignored_write",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_rv",
+        "to": "E131_CD_LOST_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_owner",
+        "to": "E131_CD_LOST_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_command_source",
+        "to": "E131_CD_LOST_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_printf_return",
+        "to": "E131_CD_LOST_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_command_return",
+        "to": "E131_CD_LOST_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_LS_DOT_owner",
+        "to": "E131_LS_DOT_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_argc",
+        "to": "E131_LS_DOT_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_failed",
+        "to": "E131_LS_DOT_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_failed",
+        "to": "E131_LS_DOT_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_given",
+        "to": "E131_LS_DOT_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_printf",
+        "to": "E131_LS_DOT_s0",
+        "kind": "VARARG_FETCH0",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_s0",
+        "to": "E131_LS_DOT_s1",
+        "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_s0",
+        "to": "E131_LS_DOT_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_s1",
+        "to": "E131_LS_DOT_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_rv",
+        "to": "E131_LS_DOT_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_request",
+        "to": "E131_LS_DOT_ignored_write",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_rv",
+        "to": "E131_LS_DOT_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_owner",
+        "to": "E131_LS_DOT_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_command_source",
+        "to": "E131_LS_DOT_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_printf_return",
+        "to": "E131_LS_DOT_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_command_return",
+        "to": "E131_LS_DOT_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_CAT_NOTE_owner",
+        "to": "E131_CAT_NOTE_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_argc",
+        "to": "E131_CAT_NOTE_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_failed",
+        "to": "E131_CAT_NOTE_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_failed",
+        "to": "E131_CAT_NOTE_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_given",
+        "to": "E131_CAT_NOTE_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_printf",
+        "to": "E131_CAT_NOTE_s0",
+        "kind": "VARARG_FETCH0",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_s0",
+        "to": "E131_CAT_NOTE_s1",
+        "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_s0",
+        "to": "E131_CAT_NOTE_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_s1",
+        "to": "E131_CAT_NOTE_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_rv",
+        "to": "E131_CAT_NOTE_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_request",
+        "to": "E131_CAT_NOTE_ignored_write",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_rv",
+        "to": "E131_CAT_NOTE_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_owner",
+        "to": "E131_CAT_NOTE_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_command_source",
+        "to": "E131_CAT_NOTE_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_printf_return",
+        "to": "E131_CAT_NOTE_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_command_return",
+        "to": "E131_CAT_NOTE_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_owner",
+        "to": "E131_RMDIR_TMPD_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_argc",
+        "to": "E131_RMDIR_TMPD_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_failed",
+        "to": "E131_RMDIR_TMPD_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_failed",
+        "to": "E131_RMDIR_TMPD_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_given",
+        "to": "E131_RMDIR_TMPD_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_printf",
+        "to": "E131_RMDIR_TMPD_s0",
+        "kind": "VARARG_FETCH0",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_s0",
+        "to": "E131_RMDIR_TMPD_s1",
+        "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_s0",
+        "to": "E131_RMDIR_TMPD_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_s1",
+        "to": "E131_RMDIR_TMPD_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_rv",
+        "to": "E131_RMDIR_TMPD_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_request",
+        "to": "E131_RMDIR_TMPD_ignored_write",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_rv",
+        "to": "E131_RMDIR_TMPD_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_owner",
+        "to": "E131_RMDIR_TMPD_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_command_source",
+        "to": "E131_RMDIR_TMPD_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_printf_return",
+        "to": "E131_RMDIR_TMPD_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_command_return",
+        "to": "E131_RMDIR_TMPD_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RM_LOG_owner",
+        "to": "E131_RM_LOG_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_argc",
+        "to": "E131_RM_LOG_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_failed",
+        "to": "E131_RM_LOG_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_failed",
+        "to": "E131_RM_LOG_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_given",
+        "to": "E131_RM_LOG_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_printf",
+        "to": "E131_RM_LOG_s0",
+        "kind": "VARARG_FETCH0",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_s0",
+        "to": "E131_RM_LOG_s1",
+        "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_s0",
+        "to": "E131_RM_LOG_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_s1",
+        "to": "E131_RM_LOG_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_rv",
+        "to": "E131_RM_LOG_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_request",
+        "to": "E131_RM_LOG_ignored_write",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_rv",
+        "to": "E131_RM_LOG_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_owner",
+        "to": "E131_RM_LOG_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_command_source",
+        "to": "E131_RM_LOG_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_printf_return",
+        "to": "E131_RM_LOG_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_command_return",
+        "to": "E131_RM_LOG_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "A_INIT_main",
+        "to": "A_INIT_fork",
+        "kind": "DIRECT_CALL",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_fork",
+        "to": "A_INIT_child",
+        "kind": "CONDITION_0",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_fork",
+        "to": "A_INIT_else_pos",
+        "kind": "CONDITION_POSITIVE",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_fork",
+        "to": "A_INIT_else_neg",
+        "kind": "CONDITION_NEGATIVE",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_child",
+        "to": "A_INIT_exec_ok",
+        "kind": "CONDITIONAL_SUCCESS",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_child",
+        "to": "A_INIT_exec_return",
+        "kind": "CONDITIONAL_EXECVE_RETURNS",
+        "group": "A_INIT"
+      },
+      {
+        "from": "C_YIELD_user",
+        "to": "C_YIELD_nr",
+        "kind": "UNKNOWN_REAL_USER_LINK",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_nr",
+        "to": "C_YIELD_map",
+        "kind": "SYSCALL_NO",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_map",
+        "to": "C_YIELD_switch",
+        "kind": "DISPATCH_MAP",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_switch",
+        "to": "C_YIELD_syscall",
+        "kind": "CONDITIONAL_CALL",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_syscall",
+        "to": "C_YIELD_rq",
+        "kind": "DIRECT_CALL",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_rq",
+        "to": "C_YIELD_callback",
+        "kind": "INDIRECT_CALL_ARGUMENT",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_callback",
+        "to": "C_YIELD_rt",
+        "kind": "CLASS_TABLE_CONDITION",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_rt",
+        "to": "C_YIELD_resched",
+        "kind": "DIRECT_CALL",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_resched",
+        "to": "C_YIELD_already",
+        "kind": "BRANCH_FLAG_SET",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_resched",
+        "to": "C_YIELD_notset",
+        "kind": "BRANCH_FLAG_CLEAR_SAME_CPU",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_callback",
+        "to": "C_YIELD_preempt",
+        "kind": "SOURCE_SEQUENCE",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_preempt",
+        "to": "C_YIELD_schedule",
+        "kind": "DIRECT_CALL",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_schedule",
+        "to": "C_YIELD_return",
+        "kind": "SEQUENCE_RETURN",
+        "group": "C_YIELD"
+      }
+    ],
+    "groups": [
+      "C127_M16_A",
+      "C127_M16_U3",
+      "C127_M129_A",
+      "B127_02",
+      "B127_08",
+      "B127_16",
+      "DIAG_CD_LOST",
+      "DIAG_LS_DOT",
+      "DIAG_CAT_NOTE",
+      "DIAG_RMDIR_TMPD",
+      "DIAG_RM_LOG",
+      "A_INIT",
+      "C_YIELD"
+    ],
+    "counts": {
+      "D00_nodes": 81,
+      "D00_edges": 91,
+      "five_error_models": 5,
+      "three_fork_cases": 3,
+      "total_nodes": 172,
+      "total_edges": 190
+    }
+  },
+  "full_local_P9": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "compilation": "NOT_RUN",
+  "linking": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "actual_process_scheduler_file_IO": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "actual execve success and loaded shell not observed",
+    "real musl bridge and strerror linkage UNKNOWN",
+    "actual scheduler lock/IRQ effect and task selection UNKNOWN",
+    "all three documentation corrections require C09 independent adjudication"
+  ]
+}
