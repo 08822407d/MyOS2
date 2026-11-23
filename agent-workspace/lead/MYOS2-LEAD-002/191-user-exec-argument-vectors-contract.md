@@ -1,0 +1,82 @@
+---
+task_id: "MYOS2-LEAD-002-CORE-CHECK-01"
+track_id: "MYOS2-LEAD-002"
+record_type: "phase2_executor_contract"
+followup_id: "CORE-USER-EXEC-ARGUMENT-VECTORS-139"
+date: "2026-11-23"
+date_timezone: "Asia/Shanghai"
+phase: 2
+conversation_display_name: "MYOS2-A-C09 内核分析主线续建"
+produced_by: "GPT-6 Astra Pro（会话标识）"
+model_per_owner: "Pro（主线独立验收）"
+actual_backend_model: "UNATTESTED"
+actual_backend_effort: "UNATTESTED"
+base_snapshot: "time（分支名）"
+source_pin_short12: "a039d9803ade"
+direct_master_short12: "e8e60cd19540"
+lead_before_publication_short12: "4777e07269dd"
+execution_pin_short12: "38a5184142d7"
+read_channel: "connector"
+startup_selfcheck_quote: "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。"
+branch_canary_quotes: ["\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\","\tthis_cpu = smp_processor_id();"]
+inputs_read: ["agent-workspace/lead/MYOS2-LEAD-002/00-work-order.md","agent-workspace/lead/MYOS2-LEAD-002/18-deferred-findings-and-resume.md","agent-workspace/lead/MYOS2-LEAD-002/24-chatgpt-specialist-conversation-separation.md","agent-workspace/lead/MYOS2-LEAD-002/28-review-and-next-batch-same-turn.md","agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md","agent-workspace/lead/MYOS2-LEAD-002/79-work-package-sizing-and-pro-review.md","agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md","agent-workspace/lead/MYOS2-LEAD-002/124-model-routing-and-pro-message-budget.md","agent-workspace/lead/MYOS2-LEAD-002/182-continuation/03-C08-to-C09-handoff-CONFIRMED.md","agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-FORK-SCHED-FIELD-INHERITANCE-137-review.md","agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-FORK-SCHED-FIELD-INHERITANCE-137-D00-136-review.md","agent-workspace/lead/MYOS2-LEAD-002/checkpoints/2026-11-23-fork-fields137-reviewed-task-comm138.md","agent-workspace/README.md","agent-workspace/conventions.md","agent-workspace/tasks/00-gpt-task-protocol-v2.md","agent-workspace/lead/MYOS2-LEAD-002/190-user-task-comm-fork-exec-contract.md","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/MANIFEST.md","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/deferred-findings.yaml","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/evidence.md","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/facts-and-boundaries.yaml","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/task-comm-fork-exec-paths.dot","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/task-comm-fork-exec.md","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-fork-sched-field-inheritance-137/MANIFEST.md","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-fork-sched-field-inheritance-137/facts-and-boundaries.yaml","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-fork-sched-field-inheritance-137/evidence.md","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-fork-sched-field-inheritance-137/fork-sched-field-inheritance.md","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-fork-sched-field-inheritance-137/fork-sched-field-inheritance-paths.dot","agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-fork-sched-field-inheritance-137/deferred-findings.yaml","mykernel/sched/task/task_const.h","mykernel/sched/task/task_types.h","mykernel/sched/forkexec/fork.c","mykernel/sched/syscall.c","mykernel/lib/string/string.c","mykernel/lib/string/string_helpers.c","mykernel/sched/forkexec/exec.c","mykernel/sched/task/task.h","mykernel/sched/scheduler/scheduler_core.c","mykernel/sched/scheduler/myos_rt.c","mykernel/sched/scheduler/scheduler_types.h","mykernel/sched/runqueue/runqueue_types.h","mykernel/lib/list/double_list.h","mykernel/sched/task/pid.c","mykernel/lock_IPC/signal/signal.h","mykernel/arch/x86_64/sched/context/process_arch.c","mykernel/sched/scheduler/scheduler.h","mykernel/lib/list/rcu_list_macro.h","mykernel/include/linux/kernel/asm-generic/bug.h","mykernel/scripts/options_flags.cmake","mykernel/include/linux/lib/string.h","mykernel/debug/panic.c","mykernel/sched/scheduler/scheduler_const.h","mykernel/lib/string/strnlen_user.c","mykernel/include/uapi/linux/resource.h","mykernel/include/uapi/linux/limits.h","mykernel/include/uapi/linux/auxvec.h","mykernel/fs/vfs/binfmt_elf.c","agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ARG-PAGES-24-review.md","agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ELF-STACK-TABLES-25-review.md","agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-EXEC-STACK-23-review.md","agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-INIT-SHELL-LAUNCH-YIELD-131-review.md"]
+status: "PUBLISHED_PENDING_EXECUTOR_START"
+execution_status: "NOT_STARTED"
+executor_identity: "MYOS2-LEAD-002-CHAT-EXEC-21"
+executor_display_name: "MYOS2-A-C09a 代码分析执行"
+executor_model_per_owner: "GPT-6＋Extra"
+canonical_execution_branch: "claude/dazzling-cori-q0dnyt"
+canonical_execution_PR: 17
+allowed_directory: "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-argument-vectors-139/"
+allowed_files: ["MANIFEST.md","exec-argument-vectors.md","facts-and-boundaries.yaml","exec-argument-vectors-paths.dot","deferred-findings.yaml","evidence.md"]
+D00: ["R138-01","R138-02","R138-03","R138-04"]
+self_check: {"verified_claims":0,"quotes_reconfirmed":0,"downgraded_to_inferred":0}
+full_local_P9: "NOT_RUN"
+owner_decisions_requested_now: []
+open_questions: []
+---
+
+# 191 号合同 · 第 139 批 · exec 的文件名、argv[0] 与空参数向量
+
+**执行席位**　现有「MYOS2-A-C09a 代码分析执行」／MYOS2-LEAD-002-CHAT-EXEC-21，按 Owner 选择 GPT-6＋Extra。发令时状态为 PUBLISHED_PENDING_EXECUTOR_START。阶段 2，以固定 time 源、成功前提和合法有界输入进行静态推演。原 C09 使用 Pro 独立验收并于同轮正式发布后继。[110 号交付约定](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/110-owner-communication-and-delivery-continuity.md) · [124 号模型分工](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/124-model-routing-and-pro-message-budget.md)
+
+138 的任务名取自 bprm->filename，本批追踪同一次装载准备中的三个不同对象：最初的文件名、栈中保存的文件名字节、参数向量的首字符串。23/24/25 已覆盖栈 VMA、参数页和 ELF 指针表，131 覆盖 init 调用。本批以两套计数路径、带终止符的游标变化和两种空向量策略为交付重点。[23 批](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-EXEC-STACK-23-review.md) · [24 批](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ARG-PAGES-24-review.md) · [25 批](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ELF-STACK-TABLES-25-review.md) · [131 批](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-INIT-SHELL-LAUNCH-YIELD-131-review.md)
+
+## G00 · 从当前远端取得输入
+
+读取本次发令固定提交的[138 裁定](reviews/CORE-USER-TASK-COMM-FORK-EXEC-138-review.md)、[历史裁定](reviews/CORE-USER-TASK-COMM-FORK-EXEC-138-D00-136-137-review.md)、[检查点](checkpoints/2026-11-23-comm138-reviewed-exec-argv139.md)及本合同。读取上轮 190 合同、冻结 138 六件和作者回执、上轮发布回执、这一轮 C09 正式裁定／发布回执；沿用 00/18/24/28/63/79/110/124、182-continuation/03、直接 master 公约／README／协议 v2。输入逐项登记实际读到的分支、路径、符号、源行或评论 ID。[190](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/190-user-task-comm-fork-exec-contract.md) · [138 目录入口](https://github.com/08822407d/MyOS2/blob/38a5184142d7/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/MANIFEST.md) · [138 作者回执](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7099213925) · [190 发布](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7098360142)
+
+直接读 refs/heads 下 time、master、agent/MYOS2-LEAD-002、claude/dazzling-cori-q0dnyt，读取两个原 PR 并将开放 PR 及 PR17 顶层评论无 since 分页至空。首次启动预期 lead 为本 191 文件所在的主线发布提交；exec=38a5184142d7、time=a039d9803ade、直接 master=e8e60cd19540。PR16 Open/Ready、原题 PR17 Open/Draft，均至 master、未合并。138 单父 4ae5e3ea1af0，比较仅六新增；固定／活动六件全文、行、字节、Blob 与回执相符，总 4,257 行／133,838 字节。138 作者回执按 ID 双读且完整标记唯一，本轮 C09 的 138 裁定与 139 发布标记均唯一并在同一条正式评论。检查 139 目标目录、本人完整作者标记和原 exec 分支写前 head。已生效步骤按 63 号先核后续，防止重复。MANIFEST 填真实启动句、金丝雀及直接 master 反验、read_channel、P6 三整数、适用 P9。[63 号恢复规则](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/63-github-write-retry-and-readback.md)
+
+## D00 · 四项增量补正
+
+138 冻结原件与评论。每项在新报告、机器件及相应图／证据中给原批次／作者、旧定位、旧值、准确的新值与查找路径。状态 CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW；关闭权在原 C09。
+
+| 编号 | 要交付的独立复核依据 |
+|---|---|
+| R138-01 | 复录 138 的 A1/A4 旧节点及边。新图标明 strscpy 内层分别向下标 0／3 写入源字符，再将同一下标覆为 NUL，随后负返回；strscpy_pad 直接返回。A3 对照真正外层补 3、4；以五例十个标量返回和 40 字节重检图与结果。[旧节点及边](https://github.com/08822407d/MyOS2/blob/38a5184142d7/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/task-comm-fork-exec-paths.dot#L28) · [实际内层顺序](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/lib/string/string.c#L225) · [包装判断](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/lib/string/string_helpers.c#L835) |
+| R138-02 | 复录旧 B 三边与 C.shared_premises 原字段。新图用不同类型标同一 P→K、P→J 两次独立结构赋值和 K→getter 数据源。区分 C1/C2 的 bprm、setter、K.alloc_lock 与 C3 入口早返、其后独立 getter。三例图和机器件各带实际 getter 容量、精确输出（可用确定范围）、复制结果及返回原 buf。核 C1 的 8 字节及 −E2BIG，C2 的 32 字节及 31，C3 的 8 字节及 4；K/J、读者 buf 各自成对象。[旧 B 边](https://github.com/08822407d/MyOS2/blob/38a5184142d7/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/task-comm-fork-exec-paths.dot#L90) · [C 条件](https://github.com/08822407d/MyOS2/blob/38a5184142d7/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/facts-and-boundaries.yaml#L2302) · [early return](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L1297) |
+| R138-03 | 将 138 报告 41、evidence 17／552 的导航各自对应到可解析的 D00["R137-02"].all_73_old_windows，核其 73 项和同级 new_47_window_index 的 47 项。47 个 ID 对应 46 种物理区间，E037/E045 共窗。E010 限定 max=count、res=0；E027 用可复核的完整 execve 系统调用定义定位与活动 return，宏来源或配置若作断言另给正式窄窗。对 E006/010/014/018/034 拆分独立注释，保留 E040 原行内文字；P4 涉及配置的否定结论给对应 CMake 逐字窗，保留条件边界。新索引逐条解析至实际正文／源行，区分“能逐字命中”与“能支撑标题”。[旧键](https://github.com/08822407d/MyOS2/blob/38a5184142d7/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/task-comm-fork-exec.md#L41) · [真实表](https://github.com/08822407d/MyOS2/blob/38a5184142d7/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/facts-and-boundaries.yaml#L300) · [旧标签](https://github.com/08822407d/MyOS2/blob/38a5184142d7/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/evidence.md#L315) · [宏调用活动返回](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L1463) |
+| R138-04 | 拆分 caller_flag_values 的三个时点。初始 F 未给，左移后为可表达而数值未给的 F<<1，函数返回后确实赋 RQCF_UPDATED，固定宏为 0x04；保留原 999／1000／1001 的写入及值变化三例，保留 K→Q、J→J。给调用者活动窗和宏定义窗，明确原 R137-01 已按 190 判闭。[旧 UNKNOWN](https://github.com/08822407d/MyOS2/blob/38a5184142d7/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-task-comm-fork-exec-138/facts-and-boundaries.yaml#L255) · [调用点](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/scheduler/scheduler_core.c#L1065) · [固定宏](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/scheduler/scheduler_const.h#L48) |
+
+## A · 两条路径如何数指针
+
+给定四个各自独立、在界内的合法输入：A0 整个 argv=NULL；A1 非空数组首槽就是 NULL；A2 两槽分别是指向单个终止字节的有效字符串指针及 NULL；A3 三槽为 "display"、"-q"、NULL。用户指针访问均成功；内核版传内容相同的合法内核对象。固定 max 足够大。对用户 count/get_user_arg_ptr 和 count_strings_kernel 分开列向量基址、被求值的槽下标及顺序、终止谓词、计数返回。用户槽读取数只统计计数过程，对应 0/1/2/3；内核版直接索引另列。解释 A2 为何计一个参数，以及在这里何时才会读取字符串本身的字节。按静态源码逐条区分计数时和复制阶段的再次取槽。[用户槽读取](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L187) · [用户计数](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L199) · [内核计数](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L227)
+
+## B · 给定普通参数和环境，重建每段字节
+
+给定 AT_FDCWD、filename="/bin/tool"、argv={"display","-q",NULL}、envp={"E=1","F=xy",NULL}。按成功的普通用户入口在 x86-64 以 sizeof(void*)=8 建模。所有字符串使用 ASCII 和终止 NUL。令 T 为 bprm 新建后的初始 p，满足 T=vma->vm_end−sizeof(void*)；给定合法空间、充足限额和本例全部字节在一页内，取槽、取长度、取页和复制均成功。只到 bprm_execve 调用处。[初始游标](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L122) · [保存文件名位置及入栈顺序](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L1335) · [用户串测长](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/lib/string/strnlen_user.c#L120) · [内核串含 NUL](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L399)
+
+建立“时间顺序”和“低地址到高地址”两张表。按 filename、envp 逆序、argv 逆序给每次来源对象与下标、使用的 helper、含 NUL 长度、进入/离开游标、半开区间和字节；分别给文件名源指针、bprm.exec 保存的数值与 argv[0] 的位置。补 T−30 至 T 的完整字节，可用有唯一解码的 ASCII+NUL 表示。列 _STK_LIM、ARG_MAX、指针宽、ptr_size、扣减后限额和 argmin 导出过程，区分“限额扣减”与“p 下降”。暂存结果检算为 argc=2、envc=2、指针预算 32 字节、bprm.exec=T−10、最终 p=T−30。只把 setup_arg_pages 的可能平移及 AT_EXECFN 的使用列为后续有界定位。[预算](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L268) · [预留并设置边界](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L291) · [用户逆序取槽](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L311) · [成功复制](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L361) · [内核串复制](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L415) · [平移](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L478) · [AT_EXECFN](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/fs/vfs/binfmt_elf.c#L229)
+
+## C · 空向量与一个空字符串何时走不同路径
+
+六个互相独立的样本 C-U0/U1/U2 和 C-K0/K1/K2 分别取 A0、A1、A2，在 do_execveat_common 和 kernel_execve 比较。文件名、环境、T 和合法成功条件同 B。内核入口另给 current 未置 PF_KTHREAD、getname_kernel／alloc_bprm 成功。对每项列初始计数、argc/envc 写点与是否到达、是否到达警告调用点、env 的计数与复制、实参字符串源、是否合成单 NUL、argc 是否被改写、bprm.exec 与最终 p、预算和到达的下一调用或清理标签。对未执行的步骤标 SKIPPED，未知字段保留未给。警告只记调用点；达 bprm_execve 只记调用边界。[用户计数与警告](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L1322) · [合成空串](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L1358) · [内核入口与 argv 判零](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L1385) · [内核成功路径](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L1411)
+
+用户三例均到 argc=1、envc=2、p=T−20、bprm.exec=T−10；前二在参数常规复制零次后调用 copy_string_kernel("") 并赋 argc=1，第三例从用户 argv[0] 复制一个 NUL。分别标记指针预算 24。内核两种零计数在读取 envp 前设 −EINVAL 并转 out_free，仅在通常清理返回前提下追到函数返回值；显式单空串经普通内核数组复制抵达 bprm_execve，导出相同的相对布局。给一张用户／内核对照表和可追溯的图，不把不同样本串成调用链。[内核数组逆序](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L437) · [清理与返回](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/sched/forkexec/exec.c#L1428) · [_STK_LIM](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/include/uapi/linux/resource.h#L65) · [ARG_MAX](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/include/uapi/linux/limits.h#L8)
+
+## 六件、回执与 G04
+
+唯一执行写区 `agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-argument-vectors-139/`，仅新增 `MANIFEST.md`、`exec-argument-vectors.md`、`facts-and-boundaries.yaml`、`exec-argument-vectors-paths.dot`、`deferred-findings.yaml`、`evidence.md`。中文报告带全部案例、字节范围和错误诊断；机器件含可按实际键解析的 D00、A/B/C、条件求值、各自对象与返回类型；DOT 同 ID／kind／label、端点及关系、值和适用例。deferred 登记实际装载、运行、最终地址、未走分支及未证边界，evidence 按编号作 1–5 行物理窄窗及独立定位。强制锚点覆盖上述 D00、双计数、两种长度来源、逆序取槽及复制、预算与 argmin、保存 exec、用户零计数补串和内核拒绝，及命名来源和后续地址边界。MANIFEST 写实际 P6/P9 结果。本任务适用协议 v2 全部十三条；1–8/11/13 在连接器可达范围实核，9/10/12 依实际交付判适用。完整本地 P9 仍为 NOT_RUN。[配置来源](https://github.com/08822407d/MyOS2/blob/a039d9803ade/mykernel/scripts/options_flags.cmake#L59) · [原六件合同](https://github.com/08822407d/MyOS2/blob/4777e07269dd/agent-workspace/lead/MYOS2-LEAD-002/190-user-task-comm-fork-exec-contract.md)
+
+原 exec expected_sha，force=false 单父快进，比较恰六新增、零删改；提交后按固定／活动逐件重算全文、LF、UTF-8 字节、Git Blob。发评前以无 since 全分页查重，原 Draft PR17 唯一顶层作者回执使用完整标记 `MYOS2-LEAD-002-CHAT-EXEC-21 / CORE-USER-EXEC-ARGUMENT-VECTORS-139 / FORMAL_DELIVERY`，附固定提交、逐件行／字节／Blob、补正状态、样本结果和运行禁令。发评后按真实 ID 双次读回并对全部顶层评论分页至空核唯一，四 refs、开放 PR、两 PR 状态、固定／活动六件再次回读，聊天报告真实终点。保持阶段 2、原分支与 PR；完整本地 P9、预处理、编译链接、仓库程序或脚本、Graphviz、QEMU、实机及真实文件、进程、PID、调度、时钟操作均 NOT_RUN。终点 READY_FOR_MAINLINE_REVIEW · mainline_acceptance=PENDING · STOP_WRITING，交原 C09 用 Pro 独立验收并同轮发下批。
