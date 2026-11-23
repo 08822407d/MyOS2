@@ -1,0 +1,4402 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-YIELD-TASK-SELECTION-132",
+  "phase": 2,
+  "record_type": "phase2_static_selection_and_D00",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "conversation_display_name": "MYOS2-A-C08c 代码分析执行",
+  "date": "2026-11-23",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "direct_master_short12": "e8e60cd19540",
+  "lead_release_short12": "f07e60a5e8c0",
+  "exec_parent_short12": "2089bfff6f4a",
+  "read_channel": "connector",
+  "produced_by": "GPT-6 self-reported",
+  "model_per_owner": "GPT-6＋Extra",
+  "actual_backend_model": "UNATTESTED",
+  "actual_backend_effort": "UNATTESTED",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "R127_02": "CLOSED_DOCUMENTATION_ONLY_BY_C09_NOT_REOPENED",
+    "R130_01": "CLOSED_DOCUMENTATION_ONLY_BY_C09_NOT_REOPENED",
+    "R129_01": "CLOSED_DOCUMENTATION_ONLY_BY_C09_NOT_REOPENED",
+    "R130_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_file": "131 facts.graph and DOT five DIAG_* clusters, combine with frozen 130 original",
+      "old_graph_baseline": {
+        "nodes": 91,
+        "edges": 99
+      },
+      "old_edge_selectors_and_replacements": [
+        {
+          "case_id": "CD_LOST",
+          "old_to_new": [
+            {
+              "old": {
+                "from": "E131_CD_LOST_printf",
+                "to": "E131_CD_LOST_s0",
+                "kind": "VARARG_FETCH0",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_CD_LOST_printf",
+                "to": "E131_CD_LOST_va_list",
+                "kind": "CONSTRUCTS_VA_LIST"
+              },
+              "why": "printf owns va_start not va_arg"
+            },
+            {
+              "old": {
+                "from": "E131_CD_LOST_s0",
+                "to": "E131_CD_LOST_s1",
+                "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_CD_LOST_s0",
+                "to": "E131_CD_LOST_s1",
+                "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY"
+              },
+              "why": "ordered by format not C argument eval"
+            },
+            {
+              "old": {
+                "from": "E131_CD_LOST_request",
+                "to": "E131_CD_LOST_ignored_write",
+                "kind": "IGNORED_RESULT",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_CD_LOST_write",
+                "to": "E131_CD_LOST_ignored_write",
+                "kind": "WRITE_RESULT_IGNORED"
+              },
+              "why": "the write call produces ignored return"
+            }
+          ],
+          "request_bytes": 37,
+          "printf_return": 37,
+          "command_return": 1,
+          "source_of_command_return": "constant 1",
+          "argc_gate": "no gate in selected case"
+        },
+        {
+          "case_id": "LS_DOT",
+          "old_to_new": [
+            {
+              "old": {
+                "from": "E131_LS_DOT_printf",
+                "to": "E131_LS_DOT_s0",
+                "kind": "VARARG_FETCH0",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_LS_DOT_printf",
+                "to": "E131_LS_DOT_va_list",
+                "kind": "CONSTRUCTS_VA_LIST"
+              },
+              "why": "printf owns va_start not va_arg"
+            },
+            {
+              "old": {
+                "from": "E131_LS_DOT_s0",
+                "to": "E131_LS_DOT_s1",
+                "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_LS_DOT_s0",
+                "to": "E131_LS_DOT_s1",
+                "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY"
+              },
+              "why": "ordered by format not C argument eval"
+            },
+            {
+              "old": {
+                "from": "E131_LS_DOT_request",
+                "to": "E131_LS_DOT_ignored_write",
+                "kind": "IGNORED_RESULT",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_LS_DOT_write",
+                "to": "E131_LS_DOT_ignored_write",
+                "kind": "WRITE_RESULT_IGNORED"
+              },
+              "why": "the write call produces ignored return"
+            }
+          ],
+          "request_bytes": 25,
+          "printf_return": 25,
+          "command_return": -1,
+          "source_of_command_return": "constant -1",
+          "argc_gate": "no gate in selected case"
+        },
+        {
+          "case_id": "CAT_NOTE",
+          "old_to_new": [
+            {
+              "old": {
+                "from": "E131_CAT_NOTE_printf",
+                "to": "E131_CAT_NOTE_s0",
+                "kind": "VARARG_FETCH0",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_CAT_NOTE_printf",
+                "to": "E131_CAT_NOTE_va_list",
+                "kind": "CONSTRUCTS_VA_LIST"
+              },
+              "why": "printf owns va_start not va_arg"
+            },
+            {
+              "old": {
+                "from": "E131_CAT_NOTE_s0",
+                "to": "E131_CAT_NOTE_s1",
+                "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_CAT_NOTE_s0",
+                "to": "E131_CAT_NOTE_s1",
+                "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY"
+              },
+              "why": "ordered by format not C argument eval"
+            },
+            {
+              "old": {
+                "from": "E131_CAT_NOTE_request",
+                "to": "E131_CAT_NOTE_ignored_write",
+                "kind": "IGNORED_RESULT",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_CAT_NOTE_write",
+                "to": "E131_CAT_NOTE_ignored_write",
+                "kind": "WRITE_RESULT_IGNORED"
+              },
+              "why": "the write call produces ignored return"
+            }
+          ],
+          "request_bytes": 37,
+          "printf_return": 37,
+          "command_return": -1,
+          "source_of_command_return": "constant -1",
+          "argc_gate": "no gate in selected case"
+        },
+        {
+          "case_id": "RMDIR_TMPD",
+          "old_to_new": [
+            {
+              "old": {
+                "from": "E131_RMDIR_TMPD_printf",
+                "to": "E131_RMDIR_TMPD_s0",
+                "kind": "VARARG_FETCH0",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_RMDIR_TMPD_printf",
+                "to": "E131_RMDIR_TMPD_va_list",
+                "kind": "CONSTRUCTS_VA_LIST"
+              },
+              "why": "printf owns va_start not va_arg"
+            },
+            {
+              "old": {
+                "from": "E131_RMDIR_TMPD_s0",
+                "to": "E131_RMDIR_TMPD_s1",
+                "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_RMDIR_TMPD_s0",
+                "to": "E131_RMDIR_TMPD_s1",
+                "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY"
+              },
+              "why": "ordered by format not C argument eval"
+            },
+            {
+              "old": {
+                "from": "E131_RMDIR_TMPD_request",
+                "to": "E131_RMDIR_TMPD_ignored_write",
+                "kind": "IGNORED_RESULT",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_RMDIR_TMPD_write",
+                "to": "E131_RMDIR_TMPD_ignored_write",
+                "kind": "WRITE_RESULT_IGNORED"
+              },
+              "why": "the write call produces ignored return"
+            }
+          ],
+          "request_bytes": 35,
+          "printf_return": 35,
+          "command_return": -1,
+          "source_of_command_return": "err variable storing rmdir/unlink return after argc==2",
+          "argc_gate": "argc==2; otherwise return -1 before API or printf"
+        },
+        {
+          "case_id": "RM_LOG",
+          "old_to_new": [
+            {
+              "old": {
+                "from": "E131_RM_LOG_printf",
+                "to": "E131_RM_LOG_s0",
+                "kind": "VARARG_FETCH0",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_RM_LOG_printf",
+                "to": "E131_RM_LOG_va_list",
+                "kind": "CONSTRUCTS_VA_LIST"
+              },
+              "why": "printf owns va_start not va_arg"
+            },
+            {
+              "old": {
+                "from": "E131_RM_LOG_s0",
+                "to": "E131_RM_LOG_s1",
+                "kind": "FETCH_NEXT_VARARG_NOT_C_EVAL_ORDER",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_RM_LOG_s0",
+                "to": "E131_RM_LOG_s1",
+                "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY"
+              },
+              "why": "ordered by format not C argument eval"
+            },
+            {
+              "old": {
+                "from": "E131_RM_LOG_request",
+                "to": "E131_RM_LOG_ignored_write",
+                "kind": "IGNORED_RESULT",
+                "match_count": 1
+              },
+              "replacement": {
+                "from": "E131_RM_LOG_write",
+                "to": "E131_RM_LOG_ignored_write",
+                "kind": "WRITE_RESULT_IGNORED"
+              },
+              "why": "the write call produces ignored return"
+            }
+          ],
+          "request_bytes": 28,
+          "printf_return": 28,
+          "command_return": -1,
+          "source_of_command_return": "err variable storing rmdir/unlink return after argc==2",
+          "argc_gate": "argc==2; otherwise return -1 before API or printf"
+        }
+      ],
+      "call_owner": "shell command calls printf; printf.c:17 creates va_list; printf.c:18 directly calls vsnprintf; vsnprintf.c:784 owns both va_arg per successive %s; printf.c:22 directly calls write",
+      "write_vs_return": "vsnprintf return rv supplies write count AND printf return; write's own return is ignored; command return independent and discarded by run_cmd",
+      "five_cases": [
+        {
+          "case_id": "CD_LOST",
+          "request": 37,
+          "printf_return": 37,
+          "command_return": 1,
+          "command_return_source": "constant 1",
+          "argc_gate": "no gate in selected case",
+          "source_of_two_varargs": "vsnprintf, not printf"
+        },
+        {
+          "case_id": "LS_DOT",
+          "request": 25,
+          "printf_return": 25,
+          "command_return": -1,
+          "command_return_source": "constant -1",
+          "argc_gate": "no gate in selected case",
+          "source_of_two_varargs": "vsnprintf, not printf"
+        },
+        {
+          "case_id": "CAT_NOTE",
+          "request": 37,
+          "printf_return": 37,
+          "command_return": -1,
+          "command_return_source": "constant -1",
+          "argc_gate": "no gate in selected case",
+          "source_of_two_varargs": "vsnprintf, not printf"
+        },
+        {
+          "case_id": "RMDIR_TMPD",
+          "request": 35,
+          "printf_return": 35,
+          "command_return": -1,
+          "command_return_source": "err variable storing rmdir/unlink return after argc==2",
+          "argc_gate": "argc==2; otherwise return -1 before API or printf",
+          "source_of_two_varargs": "vsnprintf, not printf"
+        },
+        {
+          "case_id": "RM_LOG",
+          "request": 28,
+          "printf_return": 28,
+          "command_return": -1,
+          "command_return_source": "err variable storing rmdir/unlink return after argc==2",
+          "argc_gate": "argc==2; otherwise return -1 before API or printf",
+          "source_of_two_varargs": "vsnprintf, not printf"
+        }
+      ],
+      "edge_semantics": [
+        "DIRECT_CALL_INSTANCE",
+        "CONSTRUCTS_VA_LIST",
+        "VA_LIST_ARGUMENT",
+        "VAARG0_CONSUMED_BY_VSNPRINTF",
+        "VAARG1_CONSUMED_BY_VSNPRINTF",
+        "FORMATTED_RETURN_LENGTH",
+        "WRITE_LENGTH_ARGUMENT",
+        "WRITE_RESULT_IGNORED",
+        "RETURN_DATA"
+      ],
+      "given_ls_part_write": {
+        "write_requested": 25,
+        "given_return_from_write": 2,
+        "printf_return": 25,
+        "ls_command_return": -1
+      },
+      "argc_not_two": [
+        {
+          "command": "rmdir",
+          "argc": 1,
+          "return": -1,
+          "called_underlying": false,
+          "called_printf": false
+        },
+        {
+          "command": "rm",
+          "argc": 3,
+          "return": -1,
+          "called_underlying": false,
+          "called_printf": false
+        }
+      ],
+      "old_strerror_to__get_errlist_link": "UNKNOWN"
+    },
+    "R131_01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_131_evidence_E044": {
+        "old_source": "mykernel/sched/scheduler/myos_rt.c:65–67",
+        "wrongly_contains_definition_header": true,
+        "new_formal_exact_window": {
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "line": 66,
+          "source_line": "\t.yield_task\t\t\t= yield_task_fair_myos,"
+        },
+        "source_header_line_65_kind": "LOCATION_ONLY_NOT_FORMAL",
+        "one_to_one_virtual_replacement_preserves_old_131_48_formal_count": true
+      },
+      "old_131_E053": {
+        "source": "mykernel/scripts/options_flags.cmake:41",
+        "kind": "TIME_BRANCH_CANARY_ONLY",
+        "new_active_config_window": {
+          "source": "mykernel/scripts/options_flags.cmake",
+          "start": 62,
+          "end": 65,
+          "lines": 4,
+          "activity": "-DCONFIG_64BIT ... -DCONFIG_ARCH_HAS_SYSCALL_WRAPPER",
+          "scope": "fixed time CMake text, not a preprocessed binary"
+        },
+        "P4": "negative claims only about selected fixed source functions and activity of listed CMake lines; cannot infer global build/link outcomes"
+      },
+      "old130_attribution": {
+        "original_130_source_window_count": 44,
+        "original_130_bare_prefix_count": 45,
+        "old_130_unique_anchored_source_paths": [
+          "myinitramfs/mylib/myglibc/stdio/errlist.c",
+          "myinitramfs/mylib/myglibc/stdio/errlist_internal.c",
+          "myinitramfs/mylib/myglibc/stdio/printf.c",
+          "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+          "myinitramfs/mylib/myglibc/string/memcpy.c",
+          "myinitramfs/mylib/myglibc/string/wordcopy.c",
+          "myinitramfs/mylib/myglibc/sysdeps/generic/memcopy.h",
+          "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+          "myinitramfs/myshell/myshell.c",
+          "mykernel/debug/panic.c",
+          "mykernel/scripts/options_flags.cmake"
+        ],
+        "old131_virtual_inputs_read": [
+          "myinitramfs/myinit/initd.c",
+          "myinitramfs/myshell/myshell.c",
+          "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+          "myinitramfs/mylib/myglibc/stdio/errlist_internal.c",
+          "myinitramfs/mylib/myglibc/stdio/printf.c",
+          "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+          "mykernel/scripts/options_flags.cmake",
+          "mykernel/debug/panic.c"
+        ],
+        "matched_seven": [
+          "myinitramfs/mylib/myglibc/stdio/errlist_internal.c",
+          "myinitramfs/mylib/myglibc/stdio/printf.c",
+          "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+          "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+          "myinitramfs/myshell/myshell.c",
+          "mykernel/debug/panic.c",
+          "mykernel/scripts/options_flags.cmake"
+        ],
+        "missing_four": [
+          "myinitramfs/mylib/myglibc/stdio/errlist.c",
+          "myinitramfs/mylib/myglibc/string/memcpy.c",
+          "myinitramfs/mylib/myglibc/string/wordcopy.c",
+          "myinitramfs/mylib/myglibc/sysdeps/generic/memcopy.h"
+        ],
+        "extra_initd_c": [
+          "myinitramfs/myinit/initd.c"
+        ],
+        "normalized_virtual_evidence_only": [
+          "myinitramfs/mylib/myglibc/stdio/errlist.c",
+          "myinitramfs/mylib/myglibc/stdio/errlist_internal.c",
+          "myinitramfs/mylib/myglibc/stdio/printf.c",
+          "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+          "myinitramfs/mylib/myglibc/string/memcpy.c",
+          "myinitramfs/mylib/myglibc/string/wordcopy.c",
+          "myinitramfs/mylib/myglibc/sysdeps/generic/memcopy.h",
+          "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+          "myinitramfs/myshell/myshell.c",
+          "mykernel/debug/panic.c",
+          "mykernel/scripts/options_flags.cmake"
+        ],
+        "separate_other_inputs": "need source-specific provenance, not pretend all 130 model internal read status known",
+        "categories": [
+          {
+            "name": "evidence_anchored_130",
+            "paths": [
+              "myinitramfs/mylib/myglibc/stdio/errlist.c",
+              "myinitramfs/mylib/myglibc/stdio/errlist_internal.c",
+              "myinitramfs/mylib/myglibc/stdio/printf.c",
+              "myinitramfs/mylib/myglibc/stdio/vsnprintf.c",
+              "myinitramfs/mylib/myglibc/string/memcpy.c",
+              "myinitramfs/mylib/myglibc/string/wordcopy.c",
+              "myinitramfs/mylib/myglibc/sysdeps/generic/memcopy.h",
+              "myinitramfs/mylib/myglibc/sysdeps/unix/sysv_linux/bits/errno.h",
+              "myinitramfs/myshell/myshell.c",
+              "mykernel/debug/panic.c",
+              "mykernel/scripts/options_flags.cmake"
+            ],
+            "proof": "44 old source-window tags"
+          },
+          {
+            "name": "contract_or_MANIFEST_or_review_without_formal_tag",
+            "proof": "read original source document, not automatically an anchor; no source filename inferred as formal without tag"
+          },
+          {
+            "name": "new_131_specific_initd",
+            "paths": [
+              "myinitramfs/myinit/initd.c"
+            ],
+            "proof": "131 init topic, not old130 window"
+          }
+        ],
+        "P6_applicability": [
+          {
+            "scope": "130 frozen 6 files",
+            "bare": 45,
+            "formal": 44
+          },
+          {
+            "scope": "only replace 130 MANIFEST P2 title",
+            "bare": 44,
+            "formal": 44
+          },
+          {
+            "scope": "title plus five old windows replacement and one append",
+            "bare": 45,
+            "formal": 45
+          },
+          {
+            "scope": "131 original frozen 6 files",
+            "bare": 48,
+            "formal": 48
+          },
+          {
+            "scope": "131 E044 virtual one-to-one replacement",
+            "bare": 48,
+            "formal": 48
+          }
+        ],
+        "actual_131_new_P6": 48
+      }
+    },
+    "R131_02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_graph": "131 DOT and graph",
+      "B_old_nodes": 0,
+      "B_old_edges": 0,
+      "new_B_nodes": 26,
+      "new_B_edges": 26,
+      "three_execve_roots": [
+        "EX132_FILENAME",
+        "EX132_ARGS",
+        "EX132_ENVS"
+      ],
+      "filename_and_args0_alias": "EX132_STR_PROG",
+      "six_distinct_strings": [
+        "/boot/sh",
+        "userarg_test_1",
+        "userarg_test_2",
+        "userenv_test_1",
+        "userenv_test_2",
+        "userenv_test_3"
+      ],
+      "two_null_pointer_slots": [
+        "EX132_NULL_A3",
+        "EX132_NULL_E3"
+      ],
+      "six_data_NUL_bytes": [
+        "EX132_NUL_PROG",
+        "EX132_NUL_ARG1",
+        "EX132_NUL_ARG2",
+        "EX132_NUL_ENV1",
+        "EX132_NUL_ENV2",
+        "EX132_NUL_ENV3"
+      ],
+      "byte_sums": {
+        "by_reference_without_NUL": 86,
+        "by_reference_with_NUL": 93,
+        "by_distinct_target_without_NUL": 78,
+        "by_distinct_target_with_NUL": 84
+      },
+      "C_old_edge_corrected": [
+        {
+          "old": {
+            "from": "C_YIELD_rq",
+            "to": "C_YIELD_callback",
+            "kind": "INDIRECT_CALL_ARGUMENT",
+            "match_count": 1
+          },
+          "replacement": {
+            "from": "C_YIELD_rq",
+            "to": "C_YIELD_callback",
+            "kind": "RQ_ARGUMENT_DATA"
+          },
+          "why": "rq supplies pointer only"
+        },
+        {
+          "old": {
+            "from": "C_YIELD_callback",
+            "to": "C_YIELD_rt",
+            "kind": "CLASS_TABLE_CONDITION",
+            "match_count": 1
+          },
+          "replacement": {
+            "from": "C_YIELD_callback",
+            "to": "C132_YIELD_MEMBER",
+            "kind": "CONDITIONAL_MEMBER_LOOKUP"
+          },
+          "why": "given myos_rt"
+        },
+        {
+          "old": {
+            "from": "C_YIELD_preempt",
+            "to": "C_YIELD_schedule",
+            "kind": "DIRECT_CALL",
+            "match_count": 1
+          },
+          "replacement": {
+            "from": "C_YIELD_preempt",
+            "to": "C_YIELD_schedule",
+            "kind": "SOURCE_SEQUENCE_NOT_CALL"
+          },
+          "why": "preempt isn't call owner"
+        }
+      ],
+      "A_old_owner_corrected": [
+        {
+          "old": {
+            "from": "A_INIT_main",
+            "to": "A_INIT_fork",
+            "kind": "DIRECT_CALL",
+            "match_count": 1
+          },
+          "replacement": {
+            "from": "A_INIT_main",
+            "to": "A132_NORMAL_BOOT",
+            "kind": "DIRECT_CALL_INSTANCE"
+          },
+          "why": "main invokes normal_boot, not fork"
+        }
+      ],
+      "C_syscall_owned_calls": [
+        "current->sched_class->yield_task(rq) indirect call",
+        "preempt_disable() direct",
+        "sched_preempt_enable_no_resched() direct",
+        "schedule() direct"
+      ],
+      "C_given_myos_rt": "class .yield_task -> yield_task_fair_myos -> resched_curr",
+      "C_flag_scope": "already set => early return; unset same CPU => both setters; remote IPI commented; actual link unknown"
+    }
+  },
+  "A": {
+    "source_chain": [
+      {
+        "caller": "MYOS_SYSCALL_DEFINE0(sched_yield)",
+        "site": "mykernel/sched/syscall.c:38",
+        "callee": "schedule",
+        "kind": "DIRECT_CALL"
+      },
+      {
+        "caller": "schedule",
+        "site": "mykernel/sched/scheduler/scheduler_core.c:1209",
+        "guard": "task_is_running(P) true => no sched_submit_work",
+        "then": "__schedule_loop(SM_NONE)"
+      },
+      {
+        "caller": "__schedule_loop",
+        "site": "mykernel/sched/scheduler/scheduler.h:281–286",
+        "body": [
+          "preempt_disable()",
+          "__schedule(SM_NONE)",
+          "sched_preempt_enable_no_resched()"
+        ],
+        "repeat_if": "need_resched() bottom; at least one pass"
+      },
+      {
+        "caller": "__schedule",
+        "site": "mykernel/sched/scheduler/scheduler_core.c:1032–1034",
+        "save": "cpu=smp_processor_id; rq=cpu_rq(cpu); prev=rq->curr P"
+      },
+      {
+        "caller": "__schedule",
+        "site": "mykernel/sched/scheduler/scheduler_core.c:1116",
+        "macro": "pick_next_task := __pick_next_task (core.c:976)",
+        "passes": [
+          "rq",
+          "prev",
+          "&rf"
+        ]
+      },
+      {
+        "caller": "__pick_next_task",
+        "site": "mykernel/sched/scheduler/scheduler.h:258–276",
+        "class_loop": "for_each_class (scheduler_macro.h)",
+        "invoke": "class->pick_next_task(rq,prev)",
+        "accept": "first nonNULL p",
+        "give_class": "myos_rt"
+      },
+      {
+        "caller": "myos_rt_sched_class",
+        "site": "mykernel/sched/scheduler/myos_rt.c:67",
+        "member": "pick_next_task_myos",
+        "result": "P or Q per B1–B4"
+      },
+      {
+        "caller": "pick_next_task_myos",
+        "site": "mykernel/sched/scheduler/myos_rt.c:56–57",
+        "effect": "rq->curr=retval; return retval"
+      }
+    ],
+    "SM_NONE": 0,
+    "task_is_running_given": true,
+    "preemption_and_locks": "API calls visible; actual effects not attested",
+    "class_linker_order": "UNKNOWN",
+    "yield_member_distinction": "yield_task called before schedule() via current class, pick_next_task called inside __pick_next_task class iteration; different method pointer"
+  },
+  "B": {
+    "common_initial": {
+      "P_vruntime": 10,
+      "R_vruntime": 30,
+      "P_time_slice": 10,
+      "previous_last_jiffies": 100,
+      "P_is_idle": false,
+      "P_state": "TASK_RUNNING",
+      "rq_curr": "P",
+      "rq_nr_switches": 8,
+      "P_nivcsw": 5,
+      "P_nvcsw": 4,
+      "Q_and_R_distinct_from_P": true,
+      "CPU": "one",
+      "concurrency": "none",
+      "wraparound": "none"
+    },
+    "case_inputs": [
+      {
+        "id": "B1",
+        "queue": [],
+        "need": true,
+        "j": 103
+      },
+      {
+        "id": "B2",
+        "queue": [
+          "Q",
+          "R"
+        ],
+        "need": false,
+        "j": 103
+      },
+      {
+        "id": "B3",
+        "queue": [
+          "Q",
+          "R"
+        ],
+        "need": true,
+        "j": 103
+      },
+      {
+        "id": "B4",
+        "queue": [
+          "Q",
+          "R"
+        ],
+        "need": false,
+        "j": 110
+      }
+    ],
+    "case_results": [
+      {
+        "id": "B1",
+        "scenario": {
+          "queue_head_to_tail": [],
+          "need_resched_at_picker": true,
+          "jiffies": 103,
+          "valid_structures": true,
+          "non_idle_running_current_P": true
+        },
+        "used_jiffies": 3,
+        "gate": {
+          "terms": [
+            {
+              "term": "need_resched()",
+              "evaluated": true,
+              "value": true
+            },
+            {
+              "term": "curr_task == rq->idle",
+              "evaluated": false,
+              "value": null
+            },
+            {
+              "term": "used_jiffies >= rt->time_slice",
+              "evaluated": false,
+              "value": null
+            },
+            {
+              "term": "curr_task->__state != TASK_RUNNING",
+              "evaluated": false,
+              "value": null
+            }
+          ],
+          "or_result": true,
+          "queue_count_gt_zero": false,
+          "final": false,
+          "short_circuit": "left-to-right C || then &&"
+        },
+        "selection": {
+          "removed_Q": false,
+          "queue_after_dequeue": "NOT_EXECUTED",
+          "count_after_remove": 0,
+          "reinsertion": "NOT_EXECUTED",
+          "count_after_manual_increment": 0,
+          "charged_after_reinsertion": "NOT_EXECUTED",
+          "requested_next": "P",
+          "rv_return_ptr": "P",
+          "runqueue_count_writes": [],
+          "used_jiffies_not_mutated": true
+        },
+        "prev": "P",
+        "next": "P",
+        "prev_ne_next": false,
+        "output": {
+          "P_vruntime": 10,
+          "R_vruntime": 30,
+          "last_jiffies": 100,
+          "queue": [],
+          "queue_count": 0,
+          "rq_curr": "P",
+          "returned_task_ptr": "P",
+          "rq_nr_switches": 8,
+          "P_nivcsw": 5,
+          "P_nvcsw": 4
+        },
+        "events": [
+          {
+            "seq": 1,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1034",
+            "action": "prev = rq->curr",
+            "data": "P; saved before pick"
+          },
+          {
+            "seq": 2,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:9",
+            "action": "retval = curr_task=current",
+            "data": "P"
+          },
+          {
+            "seq": 3,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:12",
+            "action": "used_jiffies=jiffies-last_jiffies",
+            "data": 3
+          },
+          {
+            "seq": 4,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:14–18",
+            "action": "trigger = (need || idle || time_expired || nonrunning) && count>0",
+            "data": false
+          },
+          {
+            "seq": 5,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:56",
+            "action": "rq->curr = retval",
+            "value": "P"
+          },
+          {
+            "seq": 6,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:57",
+            "action": "return retval",
+            "value": "P"
+          },
+          {
+            "seq": 7,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1069",
+            "action": "switch_count = &prev->nivcsw",
+            "value": "&P.nivcsw"
+          },
+          {
+            "seq": 8,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1116",
+            "action": "next=pick_next_task(rq,prev,&rf)",
+            "value": "P"
+          },
+          {
+            "seq": 9,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1118",
+            "action": "clear_tsk_need_resched(prev)",
+            "value": "P"
+          },
+          {
+            "seq": 10,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1119",
+            "action": "clear_preempt_need_resched()",
+            "value": "called"
+          },
+          {
+            "seq": 11,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1124",
+            "action": "if(prev != next)",
+            "value": false
+          },
+          {
+            "seq": 12,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1163–1167",
+            "action": "else branch, no count increment or context_switch invocation"
+          },
+          {
+            "seq": 13,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1169",
+            "action": "local_irq_enable() at function tail if reached",
+            "runtime": "NOT_RUN"
+          }
+        ],
+        "loop_bottom": {
+          "minimum_iterations": 1,
+          "__schedule_loop_retest": "need_resched() at scheduler.h:286",
+          "next_current_after_pick": "P",
+          "current_next_flag_input": "P flag cleared by __schedule; in no-concurrency scenario expected no new flag",
+          "repeat_without_new_flag": false,
+          "actual_resume_time": "UNKNOWN"
+        }
+      },
+      {
+        "id": "B2",
+        "scenario": {
+          "queue_head_to_tail": [
+            "Q",
+            "R"
+          ],
+          "need_resched_at_picker": false,
+          "jiffies": 103,
+          "valid_structures": true,
+          "non_idle_running_current_P": true
+        },
+        "used_jiffies": 3,
+        "gate": {
+          "terms": [
+            {
+              "term": "need_resched()",
+              "evaluated": true,
+              "value": false
+            },
+            {
+              "term": "curr_task == rq->idle",
+              "evaluated": true,
+              "value": false
+            },
+            {
+              "term": "used_jiffies >= rt->time_slice",
+              "evaluated": true,
+              "value": false
+            },
+            {
+              "term": "curr_task->__state != TASK_RUNNING",
+              "evaluated": true,
+              "value": false
+            }
+          ],
+          "or_result": false,
+          "queue_count_gt_zero": true,
+          "final": false,
+          "short_circuit": "left-to-right C || then &&"
+        },
+        "selection": {
+          "removed_Q": false,
+          "queue_after_dequeue": "NOT_EXECUTED",
+          "count_after_remove": 2,
+          "reinsertion": "NOT_EXECUTED",
+          "count_after_manual_increment": 2,
+          "charged_after_reinsertion": "NOT_EXECUTED",
+          "requested_next": "P",
+          "rv_return_ptr": "P",
+          "runqueue_count_writes": [],
+          "used_jiffies_not_mutated": true
+        },
+        "prev": "P",
+        "next": "P",
+        "prev_ne_next": false,
+        "output": {
+          "P_vruntime": 10,
+          "R_vruntime": 30,
+          "last_jiffies": 100,
+          "queue": [
+            "Q",
+            "R"
+          ],
+          "queue_count": 2,
+          "rq_curr": "P",
+          "returned_task_ptr": "P",
+          "rq_nr_switches": 8,
+          "P_nivcsw": 5,
+          "P_nvcsw": 4
+        },
+        "events": [
+          {
+            "seq": 1,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1034",
+            "action": "prev = rq->curr",
+            "data": "P; saved before pick"
+          },
+          {
+            "seq": 2,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:9",
+            "action": "retval = curr_task=current",
+            "data": "P"
+          },
+          {
+            "seq": 3,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:12",
+            "action": "used_jiffies=jiffies-last_jiffies",
+            "data": 3
+          },
+          {
+            "seq": 4,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:14–18",
+            "action": "trigger = (need || idle || time_expired || nonrunning) && count>0",
+            "data": false
+          },
+          {
+            "seq": 5,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:56",
+            "action": "rq->curr = retval",
+            "value": "P"
+          },
+          {
+            "seq": 6,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:57",
+            "action": "return retval",
+            "value": "P"
+          },
+          {
+            "seq": 7,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1069",
+            "action": "switch_count = &prev->nivcsw",
+            "value": "&P.nivcsw"
+          },
+          {
+            "seq": 8,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1116",
+            "action": "next=pick_next_task(rq,prev,&rf)",
+            "value": "P"
+          },
+          {
+            "seq": 9,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1118",
+            "action": "clear_tsk_need_resched(prev)",
+            "value": "P"
+          },
+          {
+            "seq": 10,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1119",
+            "action": "clear_preempt_need_resched()",
+            "value": "called"
+          },
+          {
+            "seq": 11,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1124",
+            "action": "if(prev != next)",
+            "value": false
+          },
+          {
+            "seq": 12,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1163–1167",
+            "action": "else branch, no count increment or context_switch invocation"
+          },
+          {
+            "seq": 13,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1169",
+            "action": "local_irq_enable() at function tail if reached",
+            "runtime": "NOT_RUN"
+          }
+        ],
+        "loop_bottom": {
+          "minimum_iterations": 1,
+          "__schedule_loop_retest": "need_resched() at scheduler.h:286",
+          "next_current_after_pick": "P",
+          "current_next_flag_input": "P flag cleared by __schedule; in no-concurrency scenario expected no new flag",
+          "repeat_without_new_flag": false,
+          "actual_resume_time": "UNKNOWN"
+        }
+      },
+      {
+        "id": "B3",
+        "scenario": {
+          "queue_head_to_tail": [
+            "Q",
+            "R"
+          ],
+          "need_resched_at_picker": true,
+          "jiffies": 103,
+          "valid_structures": true,
+          "non_idle_running_current_P": true
+        },
+        "used_jiffies": 3,
+        "gate": {
+          "terms": [
+            {
+              "term": "need_resched()",
+              "evaluated": true,
+              "value": true
+            },
+            {
+              "term": "curr_task == rq->idle",
+              "evaluated": false,
+              "value": null
+            },
+            {
+              "term": "used_jiffies >= rt->time_slice",
+              "evaluated": false,
+              "value": null
+            },
+            {
+              "term": "curr_task->__state != TASK_RUNNING",
+              "evaluated": false,
+              "value": null
+            }
+          ],
+          "or_result": true,
+          "queue_count_gt_zero": true,
+          "final": true,
+          "short_circuit": "left-to-right C || then &&"
+        },
+        "selection": {
+          "removed_Q": true,
+          "queue_after_dequeue": [
+            "R"
+          ],
+          "count_after_remove": 1,
+          "reinsertion": "P inserted before R, cursor=R, old key P10 compared with R30; no further traversal",
+          "count_after_manual_increment": 2,
+          "charged_after_reinsertion": "P10+3",
+          "requested_next": "Q",
+          "rv_return_ptr": "Q",
+          "runqueue_count_writes": [
+            "list_header_remove_head:2->1",
+            "pick_next_task_myos:1->2"
+          ],
+          "used_jiffies_not_mutated": true
+        },
+        "prev": "P",
+        "next": "Q",
+        "prev_ne_next": true,
+        "output": {
+          "P_vruntime": 13,
+          "R_vruntime": 30,
+          "last_jiffies": 103,
+          "queue": [
+            "P",
+            "R"
+          ],
+          "queue_count": 2,
+          "rq_curr": "Q",
+          "returned_task_ptr": "Q",
+          "rq_nr_switches": 9,
+          "P_nivcsw": 6,
+          "P_nvcsw": 4
+        },
+        "events": [
+          {
+            "seq": 1,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1034",
+            "action": "prev = rq->curr",
+            "data": "P; saved before pick"
+          },
+          {
+            "seq": 2,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:9",
+            "action": "retval = curr_task=current",
+            "data": "P"
+          },
+          {
+            "seq": 3,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:12",
+            "action": "used_jiffies=jiffies-last_jiffies",
+            "data": 3
+          },
+          {
+            "seq": 4,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:14–18",
+            "action": "trigger = (need || idle || time_expired || nonrunning) && count>0",
+            "data": true
+          },
+          {
+            "seq": 5,
+            "owner": "list_header_remove_head",
+            "path": "mykernel/lib/list/double_list.h:653–657",
+            "action": "list_del_init(Q), then count--",
+            "queue_after": [
+              "R"
+            ],
+            "count_before": 2,
+            "count_after": 1
+          },
+          {
+            "seq": 6,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:37–44",
+            "action": "tmp_list=R; compare old P.vruntime10>R.vruntime30 ==false; list_add_to_prev(P,R)",
+            "queue_after": [
+              "P",
+              "R"
+            ],
+            "count_now": 1
+          },
+          {
+            "seq": 7,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:45",
+            "action": "running_lhdr.count++ explicitly once",
+            "count_before": 1,
+            "count_after": 2
+          },
+          {
+            "seq": 8,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:49–50",
+            "action": "P.se.vruntime += used_jiffies after reinsertion",
+            "vruntime_after": 13
+          },
+          {
+            "seq": 9,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:52–53",
+            "action": "retval from next_lp=Q",
+            "task": "Q"
+          },
+          {
+            "seq": 10,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:54",
+            "action": "last_jiffies = fixed current case jiffies",
+            "value": 103
+          },
+          {
+            "seq": 11,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:56",
+            "action": "rq->curr = retval",
+            "value": "Q"
+          },
+          {
+            "seq": 12,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:57",
+            "action": "return retval",
+            "value": "Q"
+          },
+          {
+            "seq": 13,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1069",
+            "action": "switch_count = &prev->nivcsw",
+            "value": "&P.nivcsw"
+          },
+          {
+            "seq": 14,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1116",
+            "action": "next=pick_next_task(rq,prev,&rf)",
+            "value": "Q"
+          },
+          {
+            "seq": 15,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1118",
+            "action": "clear_tsk_need_resched(prev)",
+            "value": "P"
+          },
+          {
+            "seq": 16,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1119",
+            "action": "clear_preempt_need_resched()",
+            "value": "called"
+          },
+          {
+            "seq": 17,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1124",
+            "action": "if(prev != next)",
+            "value": true
+          },
+          {
+            "seq": 18,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1125",
+            "action": "rq->nr_switches++",
+            "before": 8,
+            "after": 9
+          },
+          {
+            "seq": 19,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1130",
+            "action": "RCU_INIT_POINTER(rq->curr,next) second publication",
+            "value": "Q"
+          },
+          {
+            "seq": 20,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1153",
+            "action": "++*switch_count -> P.nivcsw",
+            "before": 5,
+            "after": 6
+          },
+          {
+            "seq": 21,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1162",
+            "action": "context_switch(rq,P,Q,&rf) call",
+            "execution": "CALLED; actual register switch unknown"
+          },
+          {
+            "seq": 22,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1169",
+            "action": "local_irq_enable() at function tail if reached",
+            "runtime": "NOT_RUN"
+          }
+        ],
+        "loop_bottom": {
+          "minimum_iterations": 1,
+          "__schedule_loop_retest": "need_resched() at scheduler.h:286",
+          "next_current_after_pick": "Q",
+          "current_next_flag_input": "NOT_GIVEN; cannot conclude one final iteration",
+          "repeat_without_new_flag": false,
+          "actual_resume_time": "UNKNOWN"
+        }
+      },
+      {
+        "id": "B4",
+        "scenario": {
+          "queue_head_to_tail": [
+            "Q",
+            "R"
+          ],
+          "need_resched_at_picker": false,
+          "jiffies": 110,
+          "valid_structures": true,
+          "non_idle_running_current_P": true
+        },
+        "used_jiffies": 10,
+        "gate": {
+          "terms": [
+            {
+              "term": "need_resched()",
+              "evaluated": true,
+              "value": false
+            },
+            {
+              "term": "curr_task == rq->idle",
+              "evaluated": true,
+              "value": false
+            },
+            {
+              "term": "used_jiffies >= rt->time_slice",
+              "evaluated": true,
+              "value": true
+            },
+            {
+              "term": "curr_task->__state != TASK_RUNNING",
+              "evaluated": false,
+              "value": null
+            }
+          ],
+          "or_result": true,
+          "queue_count_gt_zero": true,
+          "final": true,
+          "short_circuit": "left-to-right C || then &&"
+        },
+        "selection": {
+          "removed_Q": true,
+          "queue_after_dequeue": [
+            "R"
+          ],
+          "count_after_remove": 1,
+          "reinsertion": "P inserted before R, cursor=R, old key P10 compared with R30; no further traversal",
+          "count_after_manual_increment": 2,
+          "charged_after_reinsertion": "P10+10",
+          "requested_next": "Q",
+          "rv_return_ptr": "Q",
+          "runqueue_count_writes": [
+            "list_header_remove_head:2->1",
+            "pick_next_task_myos:1->2"
+          ],
+          "used_jiffies_not_mutated": true
+        },
+        "prev": "P",
+        "next": "Q",
+        "prev_ne_next": true,
+        "output": {
+          "P_vruntime": 20,
+          "R_vruntime": 30,
+          "last_jiffies": 110,
+          "queue": [
+            "P",
+            "R"
+          ],
+          "queue_count": 2,
+          "rq_curr": "Q",
+          "returned_task_ptr": "Q",
+          "rq_nr_switches": 9,
+          "P_nivcsw": 6,
+          "P_nvcsw": 4
+        },
+        "events": [
+          {
+            "seq": 1,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1034",
+            "action": "prev = rq->curr",
+            "data": "P; saved before pick"
+          },
+          {
+            "seq": 2,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:9",
+            "action": "retval = curr_task=current",
+            "data": "P"
+          },
+          {
+            "seq": 3,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:12",
+            "action": "used_jiffies=jiffies-last_jiffies",
+            "data": 10
+          },
+          {
+            "seq": 4,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:14–18",
+            "action": "trigger = (need || idle || time_expired || nonrunning) && count>0",
+            "data": true
+          },
+          {
+            "seq": 5,
+            "owner": "list_header_remove_head",
+            "path": "mykernel/lib/list/double_list.h:653–657",
+            "action": "list_del_init(Q), then count--",
+            "queue_after": [
+              "R"
+            ],
+            "count_before": 2,
+            "count_after": 1
+          },
+          {
+            "seq": 6,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:37–44",
+            "action": "tmp_list=R; compare old P.vruntime10>R.vruntime30 ==false; list_add_to_prev(P,R)",
+            "queue_after": [
+              "P",
+              "R"
+            ],
+            "count_now": 1
+          },
+          {
+            "seq": 7,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:45",
+            "action": "running_lhdr.count++ explicitly once",
+            "count_before": 1,
+            "count_after": 2
+          },
+          {
+            "seq": 8,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:49–50",
+            "action": "P.se.vruntime += used_jiffies after reinsertion",
+            "vruntime_after": 20
+          },
+          {
+            "seq": 9,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:52–53",
+            "action": "retval from next_lp=Q",
+            "task": "Q"
+          },
+          {
+            "seq": 10,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:54",
+            "action": "last_jiffies = fixed current case jiffies",
+            "value": 110
+          },
+          {
+            "seq": 11,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:56",
+            "action": "rq->curr = retval",
+            "value": "Q"
+          },
+          {
+            "seq": 12,
+            "owner": "pick_next_task_myos",
+            "path": "mykernel/sched/scheduler/myos_rt.c:57",
+            "action": "return retval",
+            "value": "Q"
+          },
+          {
+            "seq": 13,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1069",
+            "action": "switch_count = &prev->nivcsw",
+            "value": "&P.nivcsw"
+          },
+          {
+            "seq": 14,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1116",
+            "action": "next=pick_next_task(rq,prev,&rf)",
+            "value": "Q"
+          },
+          {
+            "seq": 15,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1118",
+            "action": "clear_tsk_need_resched(prev)",
+            "value": "P"
+          },
+          {
+            "seq": 16,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1119",
+            "action": "clear_preempt_need_resched()",
+            "value": "called"
+          },
+          {
+            "seq": 17,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1124",
+            "action": "if(prev != next)",
+            "value": true
+          },
+          {
+            "seq": 18,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1125",
+            "action": "rq->nr_switches++",
+            "before": 8,
+            "after": 9
+          },
+          {
+            "seq": 19,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1130",
+            "action": "RCU_INIT_POINTER(rq->curr,next) second publication",
+            "value": "Q"
+          },
+          {
+            "seq": 20,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1153",
+            "action": "++*switch_count -> P.nivcsw",
+            "before": 5,
+            "after": 6
+          },
+          {
+            "seq": 21,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1162",
+            "action": "context_switch(rq,P,Q,&rf) call",
+            "execution": "CALLED; actual register switch unknown"
+          },
+          {
+            "seq": 22,
+            "owner": "__schedule",
+            "path": "mykernel/sched/scheduler/scheduler_core.c:1169",
+            "action": "local_irq_enable() at function tail if reached",
+            "runtime": "NOT_RUN"
+          }
+        ],
+        "loop_bottom": {
+          "minimum_iterations": 1,
+          "__schedule_loop_retest": "need_resched() at scheduler.h:286",
+          "next_current_after_pick": "Q",
+          "current_next_flag_input": "NOT_GIVEN; cannot conclude one final iteration",
+          "repeat_without_new_flag": false,
+          "actual_resume_time": "UNKNOWN"
+        }
+      }
+    ],
+    "write_ownership": {
+      "count_decrement": {
+        "path": "mykernel/lib/list/double_list.h:653–657",
+        "owner": "list_header_remove_head",
+        "quantity": "count-- once",
+        "condition": "count >0 and selection reached"
+      },
+      "count_increment": {
+        "path": "mykernel/sched/scheduler/myos_rt.c:45",
+        "owner": "pick_next_task_myos",
+        "quantity": "count++ once",
+        "condition": "after list_add_to_prev(P,R) non-idle running"
+      },
+      "P_charge": {
+        "path": "mykernel/sched/scheduler/myos_rt.c:50",
+        "owner": "pick_next_task_myos",
+        "rule": "P.vruntime+=used_jiffies AFTER P reinsertion comparator uses old key"
+      },
+      "time_baseline": {
+        "path": "mykernel/sched/scheduler/myos_rt.c:54",
+        "owner": "pick_next_task_myos",
+        "rule": "last_jiffies=jiffies only if entered selection block"
+      },
+      "rq_curr": {
+        "path": "mykernel/sched/scheduler/myos_rt.c:56",
+        "owner": "pick_next_task_myos",
+        "rule": "always assign retval"
+      },
+      "core_switches": {
+        "path": "mykernel/sched/scheduler/scheduler_core.c:1125",
+        "owner": "__schedule",
+        "rule": "nr_switches++ only prev!=next"
+      },
+      "core_nivcsw": {
+        "path": "mykernel/sched/scheduler/scheduler_core.c:1153",
+        "owner": "__schedule",
+        "rule": "++*switch_count where switch_count=&prev->nivcsw at1069, only prev!=next"
+      },
+      "core_nvcsw": {
+        "path": "mykernel/sched/scheduler/scheduler_core.c:1113",
+        "owner": "COMMENT_ONLY",
+        "rule": "no switch_count=&prev->nvcsw active"
+      },
+      "core_context": {
+        "path": "mykernel/sched/scheduler/scheduler_core.c:1162",
+        "rule": "context_switch call only prev!=next"
+      }
+    },
+    "historical_scope": "W01–W08 and integration03 candidate policies referenced not rerun, no patch"
+  },
+  "C": {
+    "before": {
+      "rq_nr_switches": 8,
+      "P_nivcsw": 5,
+      "P_nvcsw": 4
+    },
+    "cases": [
+      {
+        "id": "B1",
+        "prev": "P",
+        "next": "P",
+        "prev_ne_next": false,
+        "clear_prev_task_flag_called": true,
+        "clear_preempt_flag_called": true,
+        "first_rq_curr_write": "myos_rt.c:56",
+        "second_RCU_publish": "NOT_EXECUTED",
+        "nr_switches_after": 8,
+        "P_nivcsw_after": 5,
+        "P_nvcsw_after": 4,
+        "context_switch_called": false,
+        "local_irq_enable_tail": "scheduler_core.c:1169 if function reaches tail",
+        "need_resched_bottom": "scheduler.h:286; Q state not given"
+      },
+      {
+        "id": "B2",
+        "prev": "P",
+        "next": "P",
+        "prev_ne_next": false,
+        "clear_prev_task_flag_called": true,
+        "clear_preempt_flag_called": true,
+        "first_rq_curr_write": "myos_rt.c:56",
+        "second_RCU_publish": "NOT_EXECUTED",
+        "nr_switches_after": 8,
+        "P_nivcsw_after": 5,
+        "P_nvcsw_after": 4,
+        "context_switch_called": false,
+        "local_irq_enable_tail": "scheduler_core.c:1169 if function reaches tail",
+        "need_resched_bottom": "scheduler.h:286; Q state not given"
+      },
+      {
+        "id": "B3",
+        "prev": "P",
+        "next": "Q",
+        "prev_ne_next": true,
+        "clear_prev_task_flag_called": true,
+        "clear_preempt_flag_called": true,
+        "first_rq_curr_write": "myos_rt.c:56",
+        "second_RCU_publish": "scheduler_core.c:1130",
+        "nr_switches_after": 9,
+        "P_nivcsw_after": 6,
+        "P_nvcsw_after": 4,
+        "context_switch_called": true,
+        "local_irq_enable_tail": "scheduler_core.c:1169 if function reaches tail",
+        "need_resched_bottom": "scheduler.h:286; Q state not given"
+      },
+      {
+        "id": "B4",
+        "prev": "P",
+        "next": "Q",
+        "prev_ne_next": true,
+        "clear_prev_task_flag_called": true,
+        "clear_preempt_flag_called": true,
+        "first_rq_curr_write": "myos_rt.c:56",
+        "second_RCU_publish": "scheduler_core.c:1130",
+        "nr_switches_after": 9,
+        "P_nivcsw_after": 6,
+        "P_nvcsw_after": 4,
+        "context_switch_called": true,
+        "local_irq_enable_tail": "scheduler_core.c:1169 if function reaches tail",
+        "need_resched_bottom": "scheduler.h:286; Q state not given"
+      }
+    ],
+    "prev_capture": "prev=rq->curr at 1034 before pick changes rq->curr",
+    "switch_count": "&prev->nivcsw at 1069",
+    "prev_state": "READ_ONCE prev->__state at 1078; given TASK_RUNNING",
+    "clear_order": [
+      "clear_tsk_need_resched(prev) 1118",
+      "clear_preempt_need_resched 1119"
+    ],
+    "conditional_write": "if likely(prev!=next) 1124",
+    "other_writes": [
+      "rq.clock_update_flags and rq.clock updated in __schedule but numeric initial unspecified; do not invent",
+      "local_irq_disable 1041 and enable 1169 are calls, effects unknown"
+    ],
+    "loop": "minimum first __schedule_loop iteration, additional iterations depend on need_resched at loop bottom; case inputs do not supply Q flag or actual context resume timing",
+    "real_switch_success": "UNKNOWN_NOT_RUN",
+    "child_awake_or_running": "UNKNOWN_NOT_RUN",
+    "fairness": "NOT_PROVEN"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "E131_CD_LOST_owner",
+        "label": "cd source owner",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_argc",
+        "label": "no gate in selected case",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_failed",
+        "label": "chdir return -1 / i!=0",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_s0",
+        "label": "first %s strlen 25",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_s1",
+        "label": "second %s strlen 5",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_rv",
+        "label": "vsnprintf rv=37",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_request",
+        "label": "write request length 37",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_printf_return",
+        "label": "printf returns format rv 37",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_command_source",
+        "label": "constant 1",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_command_return",
+        "label": "command returns 1",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_LS_DOT_owner",
+        "label": "ls source owner",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_argc",
+        "label": "no gate in selected case",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_failed",
+        "label": "opendir returns NULL",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_s0",
+        "label": "first %s strlen 17",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_s1",
+        "label": "second %s strlen 1",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_rv",
+        "label": "vsnprintf rv=25",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_request",
+        "label": "write request length 25",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_printf_return",
+        "label": "printf returns format rv 25",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_command_source",
+        "label": "constant -1",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_command_return",
+        "label": "command returns -1",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_CAT_NOTE_owner",
+        "label": "cat source owner",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_argc",
+        "label": "no gate in selected case",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_failed",
+        "label": "open returns -1; fd<0",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_s0",
+        "label": "first %s strlen 25",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_s1",
+        "label": "second %s strlen 5",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_rv",
+        "label": "vsnprintf rv=37",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_request",
+        "label": "write request length 37",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_printf_return",
+        "label": "printf returns format rv 37",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_command_source",
+        "label": "constant -1",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_command_return",
+        "label": "command returns -1",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_owner",
+        "label": "rmdir source owner",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_argc",
+        "label": "argc==2; otherwise return -1 before API or printf",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_failed",
+        "label": "rmdir returns -1; err!=0",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_s0",
+        "label": "first %s strlen 19",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_s1",
+        "label": "second %s strlen 6",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_rv",
+        "label": "vsnprintf rv=35",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_request",
+        "label": "write request length 35",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_printf_return",
+        "label": "printf returns format rv 35",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_command_source",
+        "label": "err variable storing rmdir/unlink return after argc==2",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_command_return",
+        "label": "command returns -1",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RM_LOG_owner",
+        "label": "rm source owner",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_argc",
+        "label": "argc==2; otherwise return -1 before API or printf",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_failed",
+        "label": "unlink returns -1; err!=0",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_given",
+        "label": "given ASCII error text; strerror linkage UNKNOWN",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_printf",
+        "label": "owning command calls printf",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_s0",
+        "label": "first %s strlen 17",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_s1",
+        "label": "second %s strlen 4",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_rv",
+        "label": "vsnprintf rv=28",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_request",
+        "label": "write request length 28",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_ignored_write",
+        "label": "write return discarded, value UNKNOWN",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_printf_return",
+        "label": "printf returns format rv 28",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_command_source",
+        "label": "err variable storing rmdir/unlink return after argc==2",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_command_return",
+        "label": "command returns -1",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_run_cmd",
+        "label": "run_cmd drops command result",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "A_INIT_main",
+        "label": "init main redirect and welcome",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_fork",
+        "label": "normal_boot calls fork once",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_child",
+        "label": "rv==0 child getpid unused, execve",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_exec_ok",
+        "label": "execve success no return",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_exec_return",
+        "label": "returned execve -> int normal_boot falls through",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_else_pos",
+        "label": "rv positive: getpid unused and infinite yield",
+        "group": "A_INIT"
+      },
+      {
+        "id": "A_INIT_else_neg",
+        "label": "rv -1: getpid unused and infinite yield",
+        "group": "A_INIT"
+      },
+      {
+        "id": "C_YIELD_user",
+        "label": "init else sched_yield loop",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_nr",
+        "label": "number 24 is kernel candidate",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_map",
+        "label": "syscalls_64.h mapping",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_switch",
+        "label": "x64_sys_call switch",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_syscall",
+        "label": "MYOS_SYSCALL_DEFINE0(sched_yield)",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_rq",
+        "label": "this_rq_lock_irq(&rf) returns rq",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_callback",
+        "label": "current->sched_class->yield_task(rq)",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_rt",
+        "label": "myos_rt yields via yield_task_fair_myos",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_resched",
+        "label": "resched_curr(rq)",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_already",
+        "label": "flag true early return",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_notset",
+        "label": "flag false + same CPU set two flags",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_preempt",
+        "label": "preempt_disable / enable_no_resched; unlock commented",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_schedule",
+        "label": "schedule()",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C_YIELD_return",
+        "label": "normal return 0",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "E131_CD_LOST_va_list",
+        "label": "printf va_start(ap,fmt); ap passed to vsnprintf",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_vsnprintf",
+        "label": "vsnprintf owns both va_arg for two %s",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_CD_LOST_write",
+        "label": "printf directly calls write with formatted rv",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "id": "E131_LS_DOT_va_list",
+        "label": "printf va_start(ap,fmt); ap passed to vsnprintf",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_vsnprintf",
+        "label": "vsnprintf owns both va_arg for two %s",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_LS_DOT_write",
+        "label": "printf directly calls write with formatted rv",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "id": "E131_CAT_NOTE_va_list",
+        "label": "printf va_start(ap,fmt); ap passed to vsnprintf",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_vsnprintf",
+        "label": "vsnprintf owns both va_arg for two %s",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_CAT_NOTE_write",
+        "label": "printf directly calls write with formatted rv",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_va_list",
+        "label": "printf va_start(ap,fmt); ap passed to vsnprintf",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_vsnprintf",
+        "label": "vsnprintf owns both va_arg for two %s",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RMDIR_TMPD_write",
+        "label": "printf directly calls write with formatted rv",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "id": "E131_RM_LOG_va_list",
+        "label": "printf va_start(ap,fmt); ap passed to vsnprintf",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_vsnprintf",
+        "label": "vsnprintf owns both va_arg for two %s",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "E131_RM_LOG_write",
+        "label": "printf directly calls write with formatted rv",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "id": "A132_NORMAL_BOOT",
+        "label": "normal_boot is owner of fork",
+        "group": "A_INIT"
+      },
+      {
+        "id": "C132_YIELD_MEMBER",
+        "label": "myos_rt class .yield_task -> yield_task_fair_myos",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C132_DISABLE",
+        "label": "preempt_disable, called by syscall",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C132_ENABLE",
+        "label": "sched_preempt_enable_no_resched, called by syscall",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C132_UNLOCK_COMMENT",
+        "label": "rq_unlock_irq is only comment",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C132_REMOTE",
+        "label": "remote reschedule IPI lines are comments",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "C132_RET0",
+        "label": "sys_sched_yield returns 0",
+        "group": "C_YIELD"
+      },
+      {
+        "id": "EX132_CALL",
+        "label": "execve(prog_name,args,envs)",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_FILENAME",
+        "label": "filename root",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_ARGS",
+        "label": "args array 4 pointer slots",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_ENVS",
+        "label": "envs array 4 pointer slots",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_STR_PROG",
+        "label": "/boot/sh ASCII 8 bytes",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_NUL_PROG",
+        "label": "NUL byte after PROG",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_STR_ARG1",
+        "label": "userarg_test_1 ASCII 14 bytes",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_NUL_ARG1",
+        "label": "NUL byte after ARG1",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_STR_ARG2",
+        "label": "userarg_test_2 ASCII 14 bytes",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_NUL_ARG2",
+        "label": "NUL byte after ARG2",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_STR_ENV1",
+        "label": "userenv_test_1 ASCII 14 bytes",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_NUL_ENV1",
+        "label": "NUL byte after ENV1",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_STR_ENV2",
+        "label": "userenv_test_2 ASCII 14 bytes",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_NUL_ENV2",
+        "label": "NUL byte after ENV2",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_STR_ENV3",
+        "label": "userenv_test_3 ASCII 14 bytes",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_NUL_ENV3",
+        "label": "NUL byte after ENV3",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_A0",
+        "label": "A[0]",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_A1",
+        "label": "A[1]",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_A2",
+        "label": "A[2]",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_A3",
+        "label": "A[3]",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_NULL_A3",
+        "label": "NULL pointer not NUL byte",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_E0",
+        "label": "E[0]",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_E1",
+        "label": "E[1]",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_E2",
+        "label": "E[2]",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_E3",
+        "label": "E[3]",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "EX132_NULL_E3",
+        "label": "NULL pointer not NUL byte",
+        "group": "B_EXECVE"
+      },
+      {
+        "id": "S132_entry",
+        "label": "sys_sched_yield call site schedule()",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_schedule",
+        "label": "schedule: task_is_running(P) true",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_loop",
+        "label": "__schedule_loop(SM_NONE), do while >=one",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_disable",
+        "label": "preempt_disable()",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_core",
+        "label": "__schedule(SM_NONE), prev=rq->curr=P",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_enable",
+        "label": "sched_preempt_enable_no_resched()",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_again",
+        "label": "need_resched recheck at bottom",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_alias",
+        "label": "pick_next_task -> __pick_next_task macro",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_class_iter",
+        "label": "for_each_class and indirect member",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_class_member",
+        "label": "myos_rt.pick_next_task = pick_next_task_myos",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_picker",
+        "label": "myos_rt picks P or Q",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_retval",
+        "label": "class member non-NULL return chosen",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_prev",
+        "label": "prev saved before picker rq.curr write",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_clear_task",
+        "label": "clear_tsk_need_resched(prev)",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_clear_preempt",
+        "label": "clear_preempt_need_resched()",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_neq",
+        "label": "prev!=next switch guard",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_switch",
+        "label": "switch path only if P!=Q",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_same",
+        "label": "no switch path if P==P",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_rcu",
+        "label": "RCU_INIT_POINTER(rq->curr,next), conditional",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_nrs",
+        "label": "rq->nr_switches++ conditional",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_niv",
+        "label": "++*switch_count=prev.nivcsw conditional",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_ctx",
+        "label": "context_switch call conditional",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_irq",
+        "label": "local_irq_enable() tail",
+        "group": "A_C_SCHED"
+      },
+      {
+        "id": "S132_B1_input",
+        "label": "B1 queue=empty need=true j=103",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_used",
+        "label": "used=3; time_slice10",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_gate",
+        "label": "selection condition false",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_pop",
+        "label": "not executed",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_reinsert",
+        "label": "not executed",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_count",
+        "label": "no count change",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_charge",
+        "label": "P.vruntime 10 last=100",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_pick",
+        "label": "next=P rq.curr assigned by picker",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_branch",
+        "label": "prev P ==next P",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_switch",
+        "label": "nr_switches 8 nivcsw 5 nvcsw4",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B1_loop",
+        "label": "need_resched bottom recheck; Q flag unknown",
+        "group": "B_SAMPLE_B1"
+      },
+      {
+        "id": "S132_B2_input",
+        "label": "B2 queue=Q->R need=false j=103",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_used",
+        "label": "used=3; time_slice10",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_gate",
+        "label": "selection condition false",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_pop",
+        "label": "not executed",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_reinsert",
+        "label": "not executed",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_count",
+        "label": "no count change",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_charge",
+        "label": "P.vruntime 10 last=100",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_pick",
+        "label": "next=P rq.curr assigned by picker",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_branch",
+        "label": "prev P ==next P",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_switch",
+        "label": "nr_switches 8 nivcsw 5 nvcsw4",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B2_loop",
+        "label": "need_resched bottom recheck; Q flag unknown",
+        "group": "B_SAMPLE_B2"
+      },
+      {
+        "id": "S132_B3_input",
+        "label": "B3 queue=Q->R need=true j=103",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_used",
+        "label": "used=3; time_slice10",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_gate",
+        "label": "selection condition true",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_pop",
+        "label": "remove Q count2->1",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_reinsert",
+        "label": "P10 compare R30 -> insert P before R",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_count",
+        "label": "count++ 1->2",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_charge",
+        "label": "P.vruntime 13 last=103",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_pick",
+        "label": "next=Q rq.curr assigned by picker",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_branch",
+        "label": "prev P !=next Q",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_switch",
+        "label": "nr_switches 9 nivcsw 6 nvcsw4",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B3_loop",
+        "label": "need_resched bottom recheck; Q flag unknown",
+        "group": "B_SAMPLE_B3"
+      },
+      {
+        "id": "S132_B4_input",
+        "label": "B4 queue=Q->R need=false j=110",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_used",
+        "label": "used=10; time_slice10",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_gate",
+        "label": "selection condition true",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_pop",
+        "label": "remove Q count2->1",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_reinsert",
+        "label": "P10 compare R30 -> insert P before R",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_count",
+        "label": "count++ 1->2",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_charge",
+        "label": "P.vruntime 20 last=110",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_pick",
+        "label": "next=Q rq.curr assigned by picker",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_branch",
+        "label": "prev P !=next Q",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_switch",
+        "label": "nr_switches 9 nivcsw 6 nvcsw4",
+        "group": "B_SAMPLE_B4"
+      },
+      {
+        "id": "S132_B4_loop",
+        "label": "need_resched bottom recheck; Q flag unknown",
+        "group": "B_SAMPLE_B4"
+      }
+    ],
+    "edges": [
+      {
+        "from": "E131_CD_LOST_owner",
+        "to": "E131_CD_LOST_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_argc",
+        "to": "E131_CD_LOST_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_failed",
+        "to": "E131_CD_LOST_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_failed",
+        "to": "E131_CD_LOST_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_given",
+        "to": "E131_CD_LOST_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_s0",
+        "to": "E131_CD_LOST_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_s1",
+        "to": "E131_CD_LOST_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_rv",
+        "to": "E131_CD_LOST_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_rv",
+        "to": "E131_CD_LOST_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_owner",
+        "to": "E131_CD_LOST_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_command_source",
+        "to": "E131_CD_LOST_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_printf_return",
+        "to": "E131_CD_LOST_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_CD_LOST_command_return",
+        "to": "E131_CD_LOST_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_CD_LOST"
+      },
+      {
+        "from": "E131_LS_DOT_owner",
+        "to": "E131_LS_DOT_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_argc",
+        "to": "E131_LS_DOT_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_failed",
+        "to": "E131_LS_DOT_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_failed",
+        "to": "E131_LS_DOT_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_given",
+        "to": "E131_LS_DOT_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_s0",
+        "to": "E131_LS_DOT_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_s1",
+        "to": "E131_LS_DOT_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_rv",
+        "to": "E131_LS_DOT_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_rv",
+        "to": "E131_LS_DOT_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_owner",
+        "to": "E131_LS_DOT_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_command_source",
+        "to": "E131_LS_DOT_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_printf_return",
+        "to": "E131_LS_DOT_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_LS_DOT_command_return",
+        "to": "E131_LS_DOT_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_LS_DOT"
+      },
+      {
+        "from": "E131_CAT_NOTE_owner",
+        "to": "E131_CAT_NOTE_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_argc",
+        "to": "E131_CAT_NOTE_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_failed",
+        "to": "E131_CAT_NOTE_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_failed",
+        "to": "E131_CAT_NOTE_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_given",
+        "to": "E131_CAT_NOTE_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_s0",
+        "to": "E131_CAT_NOTE_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_s1",
+        "to": "E131_CAT_NOTE_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_rv",
+        "to": "E131_CAT_NOTE_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_rv",
+        "to": "E131_CAT_NOTE_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_owner",
+        "to": "E131_CAT_NOTE_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_command_source",
+        "to": "E131_CAT_NOTE_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_printf_return",
+        "to": "E131_CAT_NOTE_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_CAT_NOTE_command_return",
+        "to": "E131_CAT_NOTE_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_CAT_NOTE"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_owner",
+        "to": "E131_RMDIR_TMPD_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_argc",
+        "to": "E131_RMDIR_TMPD_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_failed",
+        "to": "E131_RMDIR_TMPD_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_failed",
+        "to": "E131_RMDIR_TMPD_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_given",
+        "to": "E131_RMDIR_TMPD_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_s0",
+        "to": "E131_RMDIR_TMPD_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_s1",
+        "to": "E131_RMDIR_TMPD_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_rv",
+        "to": "E131_RMDIR_TMPD_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_rv",
+        "to": "E131_RMDIR_TMPD_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_owner",
+        "to": "E131_RMDIR_TMPD_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_command_source",
+        "to": "E131_RMDIR_TMPD_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_printf_return",
+        "to": "E131_RMDIR_TMPD_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_command_return",
+        "to": "E131_RMDIR_TMPD_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_RMDIR_TMPD"
+      },
+      {
+        "from": "E131_RM_LOG_owner",
+        "to": "E131_RM_LOG_argc",
+        "kind": "SOURCE_ARGC_GATE",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_argc",
+        "to": "E131_RM_LOG_failed",
+        "kind": "CONDITIONAL_SOURCE_PATH",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_failed",
+        "to": "E131_RM_LOG_printf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_failed",
+        "to": "E131_RM_LOG_given",
+        "kind": "GIVEN_TEXT_ONLY",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_given",
+        "to": "E131_RM_LOG_s0",
+        "kind": "STRING_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_s0",
+        "to": "E131_RM_LOG_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_s1",
+        "to": "E131_RM_LOG_rv",
+        "kind": "FORMAT_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_rv",
+        "to": "E131_RM_LOG_request",
+        "kind": "WRITE_COUNT_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_rv",
+        "to": "E131_RM_LOG_printf_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_owner",
+        "to": "E131_RM_LOG_command_source",
+        "kind": "SOURCE_RETURN",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_command_source",
+        "to": "E131_RM_LOG_command_return",
+        "kind": "RETURN_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_printf_return",
+        "to": "E131_RM_LOG_command_return",
+        "kind": "SEQUENCE_NOT_RETURN_DATA",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "E131_RM_LOG_command_return",
+        "to": "E131_RM_LOG_run_cmd",
+        "kind": "IGNORED_RESULT",
+        "group": "DIAG_RM_LOG"
+      },
+      {
+        "from": "A_INIT_fork",
+        "to": "A_INIT_child",
+        "kind": "CONDITION_0",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_fork",
+        "to": "A_INIT_else_pos",
+        "kind": "CONDITION_POSITIVE",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_fork",
+        "to": "A_INIT_else_neg",
+        "kind": "CONDITION_NEGATIVE",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_child",
+        "to": "A_INIT_exec_ok",
+        "kind": "CONDITIONAL_SUCCESS",
+        "group": "A_INIT"
+      },
+      {
+        "from": "A_INIT_child",
+        "to": "A_INIT_exec_return",
+        "kind": "CONDITIONAL_EXECVE_RETURNS",
+        "group": "A_INIT"
+      },
+      {
+        "from": "C_YIELD_user",
+        "to": "C_YIELD_nr",
+        "kind": "UNKNOWN_REAL_USER_LINK",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_nr",
+        "to": "C_YIELD_map",
+        "kind": "SYSCALL_NO",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_map",
+        "to": "C_YIELD_switch",
+        "kind": "DISPATCH_MAP",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_switch",
+        "to": "C_YIELD_syscall",
+        "kind": "CONDITIONAL_CALL",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_syscall",
+        "to": "C_YIELD_rq",
+        "kind": "DIRECT_CALL",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_rt",
+        "to": "C_YIELD_resched",
+        "kind": "DIRECT_CALL",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_resched",
+        "to": "C_YIELD_already",
+        "kind": "BRANCH_FLAG_SET",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_resched",
+        "to": "C_YIELD_notset",
+        "kind": "BRANCH_FLAG_CLEAR_SAME_CPU",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_callback",
+        "to": "C_YIELD_preempt",
+        "kind": "SOURCE_SEQUENCE",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "C_YIELD_schedule",
+        "to": "C_YIELD_return",
+        "kind": "SEQUENCE_RETURN",
+        "group": "C_YIELD"
+      },
+      {
+        "from": "E131_CD_LOST_printf",
+        "to": "E131_CD_LOST_va_list",
+        "kind": "CONSTRUCTS_VA_LIST",
+        "group": "DIAG_CD_LOST",
+        "why": "printf owns va_start not va_arg"
+      },
+      {
+        "from": "E131_CD_LOST_s0",
+        "to": "E131_CD_LOST_s1",
+        "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY",
+        "group": "DIAG_CD_LOST",
+        "why": "ordered by format not C argument eval"
+      },
+      {
+        "from": "E131_CD_LOST_write",
+        "to": "E131_CD_LOST_ignored_write",
+        "kind": "WRITE_RESULT_IGNORED",
+        "group": "DIAG_CD_LOST",
+        "why": "the write call produces ignored return"
+      },
+      {
+        "from": "E131_CD_LOST_printf",
+        "to": "E131_CD_LOST_vsnprintf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_CD_LOST",
+        "why": ""
+      },
+      {
+        "from": "E131_CD_LOST_printf",
+        "to": "E131_CD_LOST_write",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_CD_LOST",
+        "why": ""
+      },
+      {
+        "from": "E131_CD_LOST_va_list",
+        "to": "E131_CD_LOST_vsnprintf",
+        "kind": "VA_LIST_ARGUMENT",
+        "group": "DIAG_CD_LOST",
+        "why": ""
+      },
+      {
+        "from": "E131_CD_LOST_vsnprintf",
+        "to": "E131_CD_LOST_s0",
+        "kind": "VAARG0_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_CD_LOST",
+        "why": ""
+      },
+      {
+        "from": "E131_CD_LOST_vsnprintf",
+        "to": "E131_CD_LOST_s1",
+        "kind": "VAARG1_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_CD_LOST",
+        "why": ""
+      },
+      {
+        "from": "E131_CD_LOST_vsnprintf",
+        "to": "E131_CD_LOST_rv",
+        "kind": "FORMATTED_RETURN_LENGTH",
+        "group": "DIAG_CD_LOST",
+        "why": ""
+      },
+      {
+        "from": "E131_CD_LOST_request",
+        "to": "E131_CD_LOST_write",
+        "kind": "WRITE_LENGTH_ARGUMENT",
+        "group": "DIAG_CD_LOST",
+        "why": ""
+      },
+      {
+        "from": "E131_LS_DOT_printf",
+        "to": "E131_LS_DOT_va_list",
+        "kind": "CONSTRUCTS_VA_LIST",
+        "group": "DIAG_LS_DOT",
+        "why": "printf owns va_start not va_arg"
+      },
+      {
+        "from": "E131_LS_DOT_s0",
+        "to": "E131_LS_DOT_s1",
+        "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY",
+        "group": "DIAG_LS_DOT",
+        "why": "ordered by format not C argument eval"
+      },
+      {
+        "from": "E131_LS_DOT_write",
+        "to": "E131_LS_DOT_ignored_write",
+        "kind": "WRITE_RESULT_IGNORED",
+        "group": "DIAG_LS_DOT",
+        "why": "the write call produces ignored return"
+      },
+      {
+        "from": "E131_LS_DOT_printf",
+        "to": "E131_LS_DOT_vsnprintf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_LS_DOT",
+        "why": ""
+      },
+      {
+        "from": "E131_LS_DOT_printf",
+        "to": "E131_LS_DOT_write",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_LS_DOT",
+        "why": ""
+      },
+      {
+        "from": "E131_LS_DOT_va_list",
+        "to": "E131_LS_DOT_vsnprintf",
+        "kind": "VA_LIST_ARGUMENT",
+        "group": "DIAG_LS_DOT",
+        "why": ""
+      },
+      {
+        "from": "E131_LS_DOT_vsnprintf",
+        "to": "E131_LS_DOT_s0",
+        "kind": "VAARG0_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_LS_DOT",
+        "why": ""
+      },
+      {
+        "from": "E131_LS_DOT_vsnprintf",
+        "to": "E131_LS_DOT_s1",
+        "kind": "VAARG1_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_LS_DOT",
+        "why": ""
+      },
+      {
+        "from": "E131_LS_DOT_vsnprintf",
+        "to": "E131_LS_DOT_rv",
+        "kind": "FORMATTED_RETURN_LENGTH",
+        "group": "DIAG_LS_DOT",
+        "why": ""
+      },
+      {
+        "from": "E131_LS_DOT_request",
+        "to": "E131_LS_DOT_write",
+        "kind": "WRITE_LENGTH_ARGUMENT",
+        "group": "DIAG_LS_DOT",
+        "why": ""
+      },
+      {
+        "from": "E131_CAT_NOTE_printf",
+        "to": "E131_CAT_NOTE_va_list",
+        "kind": "CONSTRUCTS_VA_LIST",
+        "group": "DIAG_CAT_NOTE",
+        "why": "printf owns va_start not va_arg"
+      },
+      {
+        "from": "E131_CAT_NOTE_s0",
+        "to": "E131_CAT_NOTE_s1",
+        "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY",
+        "group": "DIAG_CAT_NOTE",
+        "why": "ordered by format not C argument eval"
+      },
+      {
+        "from": "E131_CAT_NOTE_write",
+        "to": "E131_CAT_NOTE_ignored_write",
+        "kind": "WRITE_RESULT_IGNORED",
+        "group": "DIAG_CAT_NOTE",
+        "why": "the write call produces ignored return"
+      },
+      {
+        "from": "E131_CAT_NOTE_printf",
+        "to": "E131_CAT_NOTE_vsnprintf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_CAT_NOTE",
+        "why": ""
+      },
+      {
+        "from": "E131_CAT_NOTE_printf",
+        "to": "E131_CAT_NOTE_write",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_CAT_NOTE",
+        "why": ""
+      },
+      {
+        "from": "E131_CAT_NOTE_va_list",
+        "to": "E131_CAT_NOTE_vsnprintf",
+        "kind": "VA_LIST_ARGUMENT",
+        "group": "DIAG_CAT_NOTE",
+        "why": ""
+      },
+      {
+        "from": "E131_CAT_NOTE_vsnprintf",
+        "to": "E131_CAT_NOTE_s0",
+        "kind": "VAARG0_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_CAT_NOTE",
+        "why": ""
+      },
+      {
+        "from": "E131_CAT_NOTE_vsnprintf",
+        "to": "E131_CAT_NOTE_s1",
+        "kind": "VAARG1_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_CAT_NOTE",
+        "why": ""
+      },
+      {
+        "from": "E131_CAT_NOTE_vsnprintf",
+        "to": "E131_CAT_NOTE_rv",
+        "kind": "FORMATTED_RETURN_LENGTH",
+        "group": "DIAG_CAT_NOTE",
+        "why": ""
+      },
+      {
+        "from": "E131_CAT_NOTE_request",
+        "to": "E131_CAT_NOTE_write",
+        "kind": "WRITE_LENGTH_ARGUMENT",
+        "group": "DIAG_CAT_NOTE",
+        "why": ""
+      },
+      {
+        "from": "E131_RMDIR_TMPD_printf",
+        "to": "E131_RMDIR_TMPD_va_list",
+        "kind": "CONSTRUCTS_VA_LIST",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": "printf owns va_start not va_arg"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_s0",
+        "to": "E131_RMDIR_TMPD_s1",
+        "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": "ordered by format not C argument eval"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_write",
+        "to": "E131_RMDIR_TMPD_ignored_write",
+        "kind": "WRITE_RESULT_IGNORED",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": "the write call produces ignored return"
+      },
+      {
+        "from": "E131_RMDIR_TMPD_printf",
+        "to": "E131_RMDIR_TMPD_vsnprintf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": ""
+      },
+      {
+        "from": "E131_RMDIR_TMPD_printf",
+        "to": "E131_RMDIR_TMPD_write",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": ""
+      },
+      {
+        "from": "E131_RMDIR_TMPD_va_list",
+        "to": "E131_RMDIR_TMPD_vsnprintf",
+        "kind": "VA_LIST_ARGUMENT",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": ""
+      },
+      {
+        "from": "E131_RMDIR_TMPD_vsnprintf",
+        "to": "E131_RMDIR_TMPD_s0",
+        "kind": "VAARG0_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": ""
+      },
+      {
+        "from": "E131_RMDIR_TMPD_vsnprintf",
+        "to": "E131_RMDIR_TMPD_s1",
+        "kind": "VAARG1_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": ""
+      },
+      {
+        "from": "E131_RMDIR_TMPD_vsnprintf",
+        "to": "E131_RMDIR_TMPD_rv",
+        "kind": "FORMATTED_RETURN_LENGTH",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": ""
+      },
+      {
+        "from": "E131_RMDIR_TMPD_request",
+        "to": "E131_RMDIR_TMPD_write",
+        "kind": "WRITE_LENGTH_ARGUMENT",
+        "group": "DIAG_RMDIR_TMPD",
+        "why": ""
+      },
+      {
+        "from": "E131_RM_LOG_printf",
+        "to": "E131_RM_LOG_va_list",
+        "kind": "CONSTRUCTS_VA_LIST",
+        "group": "DIAG_RM_LOG",
+        "why": "printf owns va_start not va_arg"
+      },
+      {
+        "from": "E131_RM_LOG_s0",
+        "to": "E131_RM_LOG_s1",
+        "kind": "FORMAT_CONSUMPTION_SEQUENCE_ONLY",
+        "group": "DIAG_RM_LOG",
+        "why": "ordered by format not C argument eval"
+      },
+      {
+        "from": "E131_RM_LOG_write",
+        "to": "E131_RM_LOG_ignored_write",
+        "kind": "WRITE_RESULT_IGNORED",
+        "group": "DIAG_RM_LOG",
+        "why": "the write call produces ignored return"
+      },
+      {
+        "from": "E131_RM_LOG_printf",
+        "to": "E131_RM_LOG_vsnprintf",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_RM_LOG",
+        "why": ""
+      },
+      {
+        "from": "E131_RM_LOG_printf",
+        "to": "E131_RM_LOG_write",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "DIAG_RM_LOG",
+        "why": ""
+      },
+      {
+        "from": "E131_RM_LOG_va_list",
+        "to": "E131_RM_LOG_vsnprintf",
+        "kind": "VA_LIST_ARGUMENT",
+        "group": "DIAG_RM_LOG",
+        "why": ""
+      },
+      {
+        "from": "E131_RM_LOG_vsnprintf",
+        "to": "E131_RM_LOG_s0",
+        "kind": "VAARG0_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_RM_LOG",
+        "why": ""
+      },
+      {
+        "from": "E131_RM_LOG_vsnprintf",
+        "to": "E131_RM_LOG_s1",
+        "kind": "VAARG1_CONSUMED_BY_VSNPRINTF",
+        "group": "DIAG_RM_LOG",
+        "why": ""
+      },
+      {
+        "from": "E131_RM_LOG_vsnprintf",
+        "to": "E131_RM_LOG_rv",
+        "kind": "FORMATTED_RETURN_LENGTH",
+        "group": "DIAG_RM_LOG",
+        "why": ""
+      },
+      {
+        "from": "E131_RM_LOG_request",
+        "to": "E131_RM_LOG_write",
+        "kind": "WRITE_LENGTH_ARGUMENT",
+        "group": "DIAG_RM_LOG",
+        "why": ""
+      },
+      {
+        "from": "A_INIT_main",
+        "to": "A132_NORMAL_BOOT",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_INIT",
+        "why": "main invokes normal_boot, not fork"
+      },
+      {
+        "from": "A132_NORMAL_BOOT",
+        "to": "A_INIT_fork",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_INIT",
+        "why": ""
+      },
+      {
+        "from": "C_YIELD_rq",
+        "to": "C_YIELD_callback",
+        "kind": "RQ_ARGUMENT_DATA",
+        "group": "C_YIELD",
+        "why": "rq supplies pointer only"
+      },
+      {
+        "from": "C_YIELD_callback",
+        "to": "C132_YIELD_MEMBER",
+        "kind": "CONDITIONAL_MEMBER_LOOKUP",
+        "group": "C_YIELD",
+        "why": "given myos_rt"
+      },
+      {
+        "from": "C_YIELD_preempt",
+        "to": "C_YIELD_schedule",
+        "kind": "SOURCE_SEQUENCE_NOT_CALL",
+        "group": "C_YIELD",
+        "why": "preempt isn't call owner"
+      },
+      {
+        "from": "C_YIELD_syscall",
+        "to": "C_YIELD_callback",
+        "kind": "INDIRECT_CALL_INSTANCE",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C132_YIELD_MEMBER",
+        "to": "C_YIELD_rt",
+        "kind": "RESOLVES_CALLEE",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C_YIELD_syscall",
+        "to": "C132_DISABLE",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C_YIELD_syscall",
+        "to": "C132_ENABLE",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C_YIELD_syscall",
+        "to": "C_YIELD_schedule",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C_YIELD_syscall",
+        "to": "C132_RET0",
+        "kind": "RETURN_CONSTANT",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C132_DISABLE",
+        "to": "C132_ENABLE",
+        "kind": "SOURCE_SEQUENCE",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C132_ENABLE",
+        "to": "C_YIELD_schedule",
+        "kind": "SOURCE_SEQUENCE",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C_YIELD_preempt",
+        "to": "C132_UNLOCK_COMMENT",
+        "kind": "COMMENT_ONLY_LOCATION",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C_YIELD_resched",
+        "to": "C132_REMOTE",
+        "kind": "CONDITIONAL_REMOTE_COMMENT_BOUNDARY",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "C_YIELD_schedule",
+        "to": "C132_RET0",
+        "kind": "SOURCE_SEQUENCE",
+        "group": "C_YIELD",
+        "why": ""
+      },
+      {
+        "from": "EX132_CALL",
+        "to": "EX132_FILENAME",
+        "kind": "ARG_FILENAME",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_CALL",
+        "to": "EX132_ARGS",
+        "kind": "ARG_ARGV",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_CALL",
+        "to": "EX132_ENVS",
+        "kind": "ARG_ENVP",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_STR_PROG",
+        "to": "EX132_NUL_PROG",
+        "kind": "STRING_END_BYTE",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_STR_ARG1",
+        "to": "EX132_NUL_ARG1",
+        "kind": "STRING_END_BYTE",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_STR_ARG2",
+        "to": "EX132_NUL_ARG2",
+        "kind": "STRING_END_BYTE",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_STR_ENV1",
+        "to": "EX132_NUL_ENV1",
+        "kind": "STRING_END_BYTE",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_STR_ENV2",
+        "to": "EX132_NUL_ENV2",
+        "kind": "STRING_END_BYTE",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_STR_ENV3",
+        "to": "EX132_NUL_ENV3",
+        "kind": "STRING_END_BYTE",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_FILENAME",
+        "to": "EX132_STR_PROG",
+        "kind": "SAME_PROG_NAME_OBJECT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_ARGS",
+        "to": "EX132_A0",
+        "kind": "ARRAY_SLOT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_A0",
+        "to": "EX132_STR_PROG",
+        "kind": "POINTS_TO",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_ARGS",
+        "to": "EX132_A1",
+        "kind": "ARRAY_SLOT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_A1",
+        "to": "EX132_STR_ARG1",
+        "kind": "POINTS_TO",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_ARGS",
+        "to": "EX132_A2",
+        "kind": "ARRAY_SLOT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_A2",
+        "to": "EX132_STR_ARG2",
+        "kind": "POINTS_TO",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_ARGS",
+        "to": "EX132_A3",
+        "kind": "ARRAY_SLOT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_A3",
+        "to": "EX132_NULL_A3",
+        "kind": "NULL_POINTER_TERMINATOR",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_ENVS",
+        "to": "EX132_E0",
+        "kind": "ARRAY_SLOT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_E0",
+        "to": "EX132_STR_ENV1",
+        "kind": "POINTS_TO",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_ENVS",
+        "to": "EX132_E1",
+        "kind": "ARRAY_SLOT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_E1",
+        "to": "EX132_STR_ENV2",
+        "kind": "POINTS_TO",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_ENVS",
+        "to": "EX132_E2",
+        "kind": "ARRAY_SLOT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_E2",
+        "to": "EX132_STR_ENV3",
+        "kind": "POINTS_TO",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_ENVS",
+        "to": "EX132_E3",
+        "kind": "ARRAY_SLOT",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "EX132_E3",
+        "to": "EX132_NULL_E3",
+        "kind": "NULL_POINTER_TERMINATOR",
+        "group": "B_EXECVE",
+        "why": ""
+      },
+      {
+        "from": "S132_entry",
+        "to": "S132_schedule",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_schedule",
+        "to": "S132_loop",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_loop",
+        "to": "S132_disable",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_loop",
+        "to": "S132_core",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_loop",
+        "to": "S132_enable",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_enable",
+        "to": "S132_again",
+        "kind": "SOURCE_SEQUENCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_again",
+        "to": "S132_loop",
+        "kind": "REPEAT_IF_NEED_RESCHED",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_core",
+        "to": "S132_prev",
+        "kind": "SAVE_PRE_PICK",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_core",
+        "to": "S132_alias",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_alias",
+        "to": "S132_class_iter",
+        "kind": "MACRO_ALIAS",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_class_iter",
+        "to": "S132_class_member",
+        "kind": "CLASS_ITERATION_IF_REACHED",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_class_member",
+        "to": "S132_picker",
+        "kind": "INDIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_prev",
+        "to": "S132_picker",
+        "kind": "PREV_ARGUMENT",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_picker",
+        "to": "S132_retval",
+        "kind": "RETVAL_DATA",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_retval",
+        "to": "S132_core",
+        "kind": "NEXT_RETURN_DATA",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_core",
+        "to": "S132_clear_task",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_core",
+        "to": "S132_clear_preempt",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_clear_task",
+        "to": "S132_clear_preempt",
+        "kind": "SOURCE_SEQUENCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_clear_preempt",
+        "to": "S132_neq",
+        "kind": "SOURCE_SEQUENCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_neq",
+        "to": "S132_same",
+        "kind": "CONDITION_FALSE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_neq",
+        "to": "S132_switch",
+        "kind": "CONDITION_TRUE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_switch",
+        "to": "S132_nrs",
+        "kind": "DIRECT_INCREMENT",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_switch",
+        "to": "S132_rcu",
+        "kind": "CONDITIONAL_PUBLISH",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_switch",
+        "to": "S132_niv",
+        "kind": "DIRECT_INCREMENT",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_switch",
+        "to": "S132_ctx",
+        "kind": "DIRECT_CALL_INSTANCE",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_switch",
+        "to": "S132_irq",
+        "kind": "SOURCE_TAIL",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_same",
+        "to": "S132_irq",
+        "kind": "SOURCE_TAIL",
+        "group": "A_C_SCHED",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_input",
+        "to": "S132_B1_used",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_used",
+        "to": "S132_B1_gate",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_gate",
+        "to": "S132_B1_pop",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_pop",
+        "to": "S132_B1_reinsert",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_reinsert",
+        "to": "S132_B1_count",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_count",
+        "to": "S132_B1_charge",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_charge",
+        "to": "S132_B1_pick",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_pick",
+        "to": "S132_B1_branch",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_branch",
+        "to": "S132_B1_switch",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B1_switch",
+        "to": "S132_B1_loop",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B1",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_input",
+        "to": "S132_B2_used",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_used",
+        "to": "S132_B2_gate",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_gate",
+        "to": "S132_B2_pop",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_pop",
+        "to": "S132_B2_reinsert",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_reinsert",
+        "to": "S132_B2_count",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_count",
+        "to": "S132_B2_charge",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_charge",
+        "to": "S132_B2_pick",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_pick",
+        "to": "S132_B2_branch",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_branch",
+        "to": "S132_B2_switch",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B2_switch",
+        "to": "S132_B2_loop",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B2",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_input",
+        "to": "S132_B3_used",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_used",
+        "to": "S132_B3_gate",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_gate",
+        "to": "S132_B3_pop",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_pop",
+        "to": "S132_B3_reinsert",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_reinsert",
+        "to": "S132_B3_count",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_count",
+        "to": "S132_B3_charge",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_charge",
+        "to": "S132_B3_pick",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_pick",
+        "to": "S132_B3_branch",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_branch",
+        "to": "S132_B3_switch",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B3_switch",
+        "to": "S132_B3_loop",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B3",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_input",
+        "to": "S132_B4_used",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_used",
+        "to": "S132_B4_gate",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_gate",
+        "to": "S132_B4_pop",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_pop",
+        "to": "S132_B4_reinsert",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_reinsert",
+        "to": "S132_B4_count",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_count",
+        "to": "S132_B4_charge",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_charge",
+        "to": "S132_B4_pick",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_pick",
+        "to": "S132_B4_branch",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_branch",
+        "to": "S132_B4_switch",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      },
+      {
+        "from": "S132_B4_switch",
+        "to": "S132_B4_loop",
+        "kind": "CONDITIONAL_SOURCE_SEQUENCE",
+        "group": "B_SAMPLE_B4",
+        "why": ""
+      }
+    ],
+    "groups": [
+      "DIAG_CD_LOST",
+      "DIAG_LS_DOT",
+      "DIAG_CAT_NOTE",
+      "DIAG_RMDIR_TMPD",
+      "DIAG_RM_LOG",
+      "A_INIT",
+      "C_YIELD",
+      "B_EXECVE",
+      "A_C_SCHED",
+      "B_SAMPLE_B1",
+      "B_SAMPLE_B2",
+      "B_SAMPLE_B3",
+      "B_SAMPLE_B4"
+    ],
+    "counts": {
+      "nodes": 206,
+      "edges": 239
+    },
+    "selected_131_baseline": {
+      "nodes": 91,
+      "edges": 99
+    }
+  },
+  "P9": {
+    "bounded_text_checks": "PERFORMED",
+    "full_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compiler": "NOT_RUN",
+    "linker": "NOT_RUN",
+    "repository_script": "NOT_RUN",
+    "Graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_process_or_scheduler_or_file_io": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "actual linker scheduler class order",
+    "actual preempt, lock, IRQ behavior",
+    "Q flag at post context schedule loop",
+    "actual context switch completion and resume"
+  ]
+}

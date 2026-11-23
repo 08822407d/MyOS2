@@ -1,0 +1,115 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-YIELD-TASK-SELECTION-132",
+  "record_type": "phase2_deferred_source_gaps",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "conversation_display_name": "MYOS2-A-C08c 代码分析执行",
+  "date": "2026-11-23",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "produced_by": "GPT-6 self-reported; backend and effort UNATTESTED",
+  "model_per_owner": "GPT-6＋Extra",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "items": [
+    {
+      "id": "R130-02",
+      "category": "historical_documentation",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "basis": "131 five DIAG clusters + 130 old diagnostics",
+      "fix": "5x3 old edge selectors replaced; each formatter now has own va_list, vsnprintf, write; correct two va_arg owners, call edges, return and ignore",
+      "reviewer": "C09 Pro",
+      "impact": "130 combined RETURN until independent judgment"
+    },
+    {
+      "id": "R131-01",
+      "category": "historical_documentation",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "basis": "131 E044/E053; 130 fixed 44 evidence windows",
+      "fix": "myos_rt.c line66 active table member replaces 65–67; CMake 62–65 active config; 11 source paths =7 old match+4 omitted; initd is extraneous 131-only",
+      "reviewer": "C09 Pro",
+      "impact": "131 RETURN until review"
+    },
+    {
+      "id": "R131-02",
+      "category": "historical_documentation",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "basis": "131 A/B/C graphs and initd/syscall/rt source",
+      "fix": "three execve argument roots, 8 pointer slots, two NULL pointers, six NUL terminators, same prog_name object; call ownership of syscall and fork updated",
+      "reviewer": "C09 Pro",
+      "impact": "131 RETURN until review"
+    },
+    {
+      "id": "QUEUE_POLICY_NOT_ADOPTED",
+      "category": "scope",
+      "status": "HISTORICAL_CANDIDATES_ONLY",
+      "basis": "scheduler-order-02 MANIFEST and scheduler-integration-03 report",
+      "fact": "existing W01–W08 and candidate A/B are historical, not rerun and not Owner-approved as a kernel policy",
+      "next_evidence": "new explicitly authorized policy decision and independent run if required"
+    },
+    {
+      "id": "POST_LOOP_Q_NEED",
+      "category": "conditional_unknown",
+      "status": "UNKNOWN",
+      "basis": "scheduler.h __schedule_loop condition; B3/B4 chose Q",
+      "fact": "sample gives need at entry to picker but does not provide Q's need flag on next loop test",
+      "next_evidence": "Q flag at loop bottom or other explicit postcondition",
+      "impact": "cannot certify exact number of __schedule passes or return time"
+    },
+    {
+      "id": "PICK_REAL_SWITCH",
+      "category": "runtime_gap",
+      "status": "NOT_RUN",
+      "basis": "scheduler_core.c if(prev!=next) calls context_switch",
+      "fact": "B3/B4 call branch under inputs, not evidence real register/address-space switch and eventual return",
+      "next_evidence": "separate legal runtime authorization and observed execution"
+    },
+    {
+      "id": "LOCK_IRQ_PREEMPT",
+      "category": "runtime_gap",
+      "status": "UNKNOWN",
+      "basis": "syscall.c sched_yield and core scheduler",
+      "fact": "rq_unlock_irq in syscall is commented; preemption and local IRQ API calls have not been independently traced for effects",
+      "next_evidence": "separately bounded implementation read and/or authorized runtime measurement"
+    },
+    {
+      "id": "LINK_CLASS_ORDER",
+      "category": "build_gap",
+      "status": "UNKNOWN",
+      "basis": "scheduler_macro.h for_each_class and time CMake settings",
+      "fact": "myos_rt member proves a candidate function pointer, not actual linker class order, preprocess switches or user->kernel syscall reachability",
+      "next_evidence": "authorized build/link inspection; no compilation in phase2 work package"
+    },
+    {
+      "id": "SOURCE_SCOPE_EXCLUSIONS",
+      "category": "safety_boundary",
+      "status": "OBSERVED_BOUNDARY",
+      "basis": "contracts 183/184",
+      "fact": "negative claims only about selected files/function bodies; do not globally infer no other callers or states",
+      "next_evidence": "new contract if broader sweep needed"
+    },
+    {
+      "id": "COUNTER_UNKNOWN_CLOCK",
+      "category": "partial_numeric",
+      "status": "UNKNOWN",
+      "basis": "scheduler_core.c __schedule clock_update_flags, update_rq_clock",
+      "fact": "source contains writes beyond three counters; numeric initial clock state not given",
+      "next_evidence": "initial rq.clock/flags and clock implementation if numerical values sought"
+    }
+  ],
+  "historical_closed_not_reopened": [
+    "R127-02 CLOSED_DOCUMENTATION_ONLY",
+    "R130-01 CLOSED_DOCUMENTATION_ONLY",
+    "R129-01 CLOSED_DOCUMENTATION_ONLY"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "compiling": "NOT_RUN",
+  "linking": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "repository_scripts": "NOT_RUN",
+  "real_process_scheduler_file_ops": "NOT_RUN",
+  "owner_decisions_requested_now": []
+}
