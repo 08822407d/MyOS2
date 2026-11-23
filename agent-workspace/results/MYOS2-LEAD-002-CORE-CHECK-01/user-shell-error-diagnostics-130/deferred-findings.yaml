@@ -1,0 +1,39 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-SHELL-ERROR-DIAGNOSTICS-130",
+  "record_type": "deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "date": "2026-11-23",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "items": [
+    {
+      "id": "R127-02",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "next": "C09 Pro independently verify old selected edge identities and corrected C/B graph; full local P9 separate"
+    },
+    {
+      "id": "R129-01",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "next": "C09 Pro independently compare four case-keyed parser values and chronological byte stores"
+    },
+    {
+      "id": "actual_strerror_bridge",
+      "status": "UNKNOWN",
+      "known": "shell uses strerror; separate errlist helper exists",
+      "next": "inspect actual strerror implementation or resolved call graph"
+    },
+    {
+      "id": "actual_sh_libc_linkage",
+      "status": "UNKNOWN",
+      "known": "musl top CMake and distinct static mylibc target",
+      "next": "inspect actual final sh linker inputs; source alone insufficient"
+    },
+    {
+      "id": "actual_stdout_and_runtime",
+      "status": "NOT_RUN",
+      "known": "printf.c requests one write independent of return",
+      "next": "separate authorization for real runtime and stdout FD/locale investigation"
+    }
+  ],
+  "no_code_patch": true
+}
