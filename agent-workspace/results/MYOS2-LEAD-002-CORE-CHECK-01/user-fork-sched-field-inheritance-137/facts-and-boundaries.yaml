@@ -1,0 +1,2900 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FORK-SCHED-FIELD-INHERITANCE-137",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "produced_by": "GPT-6（模型族可见，后端未认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "actual_backend_model": "UNATTESTED",
+  "actual_backend_effort": "UNATTESTED",
+  "date": "2026-11-23",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "execution_parent_short12": "95b6af84d8f6",
+  "lead_contract_short12": "0b6cffc26e2d",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "record_type": "static_facts_and_graph",
+  "D00": {
+    "R136-01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_sources": [
+        "136 MANIFEST line129",
+        "136 MANIFEST 162-165"
+      ],
+      "missing_in_frozen_manifest": [
+        "startup_selfcheck_quote",
+        "branch_canary_quotes",
+        "task_local_only (in guidance refresh)"
+      ],
+      "corrected_in_137_manifest": true,
+      "startup_selfcheck_quote": "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。",
+      "branch_canary_quotes": [
+        "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\",
+        "\tthis_cpu = smp_processor_id();"
+      ],
+      "time_exact_hit": [
+        true,
+        true
+      ],
+      "direct_master_exact_miss": [
+        true,
+        true
+      ],
+      "task_local_only": true,
+      "task_local_scope": "188/00 explicit task-local borrowed guidance for MyOS2 execution; no Mnemosyne own task/authority import",
+      "prior_receive_and_refresh_record": "136 MANIFEST historical; not redone as current",
+      "author_lineage": [
+        {
+          "batch": 135,
+          "identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+          "display": "C08c",
+          "role": "frozen original"
+        },
+        {
+          "batch": 136,
+          "identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+          "display": "C09a",
+          "role": "prior correction"
+        },
+        {
+          "batch": 137,
+          "identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+          "display": "C09a",
+          "role": "new author"
+        }
+      ]
+    },
+    "R136-02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "historical_38_source_windows": [
+        {
+          "old_id": "E136-001",
+          "old_symbol": "__task_pid_nr_ns",
+          "old_line": 473,
+          "old_path": "mykernel/sched/task/pid.c",
+          "old_label": "default or explicit namespace and target slot",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-001",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-002",
+          "old_symbol": "pid_nr_ns",
+          "old_line": 452,
+          "old_path": "mykernel/sched/task/pid.c",
+          "old_label": "indexed PID namespace value",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-002",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-003",
+          "old_symbol": "init_task_pid",
+          "old_line": 848,
+          "old_path": "mykernel/sched/forkexec/fork.c",
+          "old_label": "PIDTYPE writes different slots",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-003",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-004",
+          "old_symbol": "copy_process",
+          "old_line": 1311,
+          "old_path": "mykernel/sched/forkexec/fork.c",
+          "old_label": "outer nonzero PID gate",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-004",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-005",
+          "old_symbol": "copy_process",
+          "old_line": 1314,
+          "old_path": "mykernel/sched/forkexec/fork.c",
+          "old_label": "PID gate precedes independent leader gate",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-005",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-006",
+          "old_symbol": "thread_group_leader",
+          "old_line": 205,
+          "old_path": "mykernel/lock_IPC/signal/signal.h",
+          "old_label": "leader predicate",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-006",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-007",
+          "old_symbol": "kernel_clone",
+          "old_line": 1488,
+          "old_path": "mykernel/sched/forkexec/fork.c",
+          "old_label": "raw p checked not K",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-007",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-008",
+          "old_symbol": "kernel_clone",
+          "old_line": 1497,
+          "old_path": "mykernel/sched/forkexec/fork.c",
+          "old_label": "read visible PID before wake",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-008",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-009",
+          "old_symbol": "kernel_clone",
+          "old_line": 1516,
+          "old_path": "mykernel/sched/forkexec/fork.c",
+          "old_label": "explicit wake call",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-009",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-010",
+          "old_symbol": "kernel_clone",
+          "old_line": 1527,
+          "old_path": "mykernel/sched/forkexec/fork.c",
+          "old_label": "return saved source nr",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-010",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-011",
+          "old_symbol": "copy_thread",
+          "old_line": 133,
+          "old_path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+          "old_label": "child ax assigned 0",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-011",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-012",
+          "old_symbol": "copy_process",
+          "old_line": 1104,
+          "old_path": "mykernel/sched/forkexec/fork.c",
+          "old_label": "sched_fork called in copy",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-012",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-013",
+          "old_symbol": "__sched_fork",
+          "old_line": 582,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "vruntime zero",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-013",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-014",
+          "old_symbol": "__sched_fork",
+          "old_line": 599,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "live self-list init; time_slice comment only",
+          "disposition": "SPLIT_ACTIVE_FROM_COMMENTS",
+          "new_formal_id": "E137-014",
+          "comment_locator": "L137-COMMENT-14"
+        },
+        {
+          "old_id": "E136-015",
+          "old_symbol": "sched_fork",
+          "old_line": 627,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "TASK_NEW written",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-015",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-016",
+          "old_symbol": "sched_fork",
+          "old_line": 670,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "on_cpu zero",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-016",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-017",
+          "old_symbol": "INIT_LIST_S",
+          "old_line": 150,
+          "old_path": "mykernel/lib/list/double_list.h",
+          "old_label": "self-link new list node",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-017",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-018",
+          "old_symbol": "TASK_NEW",
+          "old_line": 41,
+          "old_path": "mykernel/sched/task/task_const.h",
+          "old_label": "TASK_NEW value",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-018",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-019",
+          "old_symbol": "TASK_RUNNING",
+          "old_line": 26,
+          "old_path": "mykernel/sched/task/task_const.h",
+          "old_label": "TASK_RUNNING value",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-019",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-020",
+          "old_symbol": "wake_up_new_task",
+          "old_line": 688,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "fixed CPU0 rq",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-020",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-021",
+          "old_symbol": "wake_up_new_task",
+          "old_line": 691,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "new task state running",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-021",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-022",
+          "old_symbol": "wake_up_new_task",
+          "old_line": 702,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "migration lock clock lines commented",
+          "disposition": "COMMENT_ONLY_NO_FORMAL",
+          "new_formal_id": null,
+          "comment_locator": "L137-COMMENT-22"
+        },
+        {
+          "old_id": "E136-023",
+          "old_symbol": "wake_up_new_task",
+          "old_line": 707,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "general activation and preemption commented",
+          "disposition": "COMMENT_ONLY_NO_FORMAL",
+          "new_formal_id": null,
+          "comment_locator": "L137-COMMENT-23"
+        },
+        {
+          "old_id": "E136-024",
+          "old_symbol": "wake_up_new_task",
+          "old_line": 721,
+          "old_path": "mykernel/sched/scheduler/scheduler_core.c",
+          "old_label": "distinct list header and node",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-022",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-025",
+          "old_symbol": "list_header_add_to_head",
+          "old_line": 647,
+          "old_path": "mykernel/lib/list/double_list.h",
+          "old_label": "head insertion and count increment",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-023",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-026",
+          "old_symbol": "list_add_to_next",
+          "old_line": 209,
+          "old_path": "mykernel/lib/list/double_list.h",
+          "old_label": "delegate to two-neighbor insertion",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-024",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-027",
+          "old_symbol": "__list_add_between",
+          "old_line": 193,
+          "old_path": "mykernel/lib/list/double_list.h",
+          "old_label": "four ordered links",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-025",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-028",
+          "old_symbol": "pick_next_task_myos",
+          "old_line": 12,
+          "old_path": "mykernel/sched/scheduler/myos_rt.c",
+          "old_label": "elapsed jiffies",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-026",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-029",
+          "old_symbol": "pick_next_task_myos",
+          "old_line": 14,
+          "old_path": "mykernel/sched/scheduler/myos_rt.c",
+          "old_label": "picker short-circuit gate",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-027",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-030",
+          "old_symbol": "pick_next_task_myos",
+          "old_line": 24,
+          "old_path": "mykernel/sched/scheduler/myos_rt.c",
+          "old_label": "pop head K",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-028",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-031",
+          "old_symbol": "list_header_remove_head",
+          "old_line": 653,
+          "old_path": "mykernel/lib/list/double_list.h",
+          "old_label": "remove head then count decrement",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-029",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-032",
+          "old_symbol": "pick_next_task_myos",
+          "old_line": 37,
+          "old_path": "mykernel/sched/scheduler/myos_rt.c",
+          "old_label": "old vruntime position comparison",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-030",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-033",
+          "old_symbol": "pick_next_task_myos",
+          "old_line": 44,
+          "old_path": "mykernel/sched/scheduler/myos_rt.c",
+          "old_label": "reinsert P and increment count",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-031",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-034",
+          "old_symbol": "pick_next_task_myos",
+          "old_line": 49,
+          "old_path": "mykernel/sched/scheduler/myos_rt.c",
+          "old_label": "charge vruntime after reinsert",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-032",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-035",
+          "old_symbol": "pick_next_task_myos",
+          "old_line": 52,
+          "old_path": "mykernel/sched/scheduler/myos_rt.c",
+          "old_label": "return task and last-jiffies update",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-033",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-036",
+          "old_symbol": "pick_next_task_myos",
+          "old_line": 56,
+          "old_path": "mykernel/sched/scheduler/myos_rt.c",
+          "old_label": "record selected current and return",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-034",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-037",
+          "old_symbol": "list_add_to_prev",
+          "old_line": 221,
+          "old_path": "mykernel/lib/list/double_list.h",
+          "old_label": "insert before Q",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-035",
+          "comment_locator": null
+        },
+        {
+          "old_id": "E136-038",
+          "old_symbol": "list_del_init",
+          "old_line": 280,
+          "old_path": "mykernel/lib/list/double_list.h",
+          "old_label": "removed node reinitialized",
+          "disposition": "REANCHOR_ACTIVE",
+          "new_formal_id": "E137-036",
+          "comment_locator": null
+        }
+      ],
+      "original_38_physical_hits_confirmed_by_source": "38/38 according G00 and E137 reanchor; not 38 active formal claims",
+      "E136_014": "new E137-014 only active INIT_LIST_S, comments separate",
+      "E136_022_023": "pure comments independent locator only",
+      "new_evidence_active_count": 73,
+      "source_config_locs": [
+        "E137-073 CMAKE -DCONFIG_BUG",
+        "E137-072 BUG_ON macro",
+        "L137-BUG-CONDITION #ifdef CONFIG_BUG",
+        "L137-LIST-CONDITION conditional body",
+        "L137-LIST-DEFINITION definition translation unit"
+      ],
+      "evidence_link_groups": {
+        "child_saved_ax": [
+          "E137-011"
+        ],
+        "state_new_running": [
+          "E137-015",
+          "E137-018",
+          "E137-019",
+          "E137-021"
+        ],
+        "B_four_links": [
+          "E137-025"
+        ],
+        "C_reinsert_select_return": [
+          "E137-030",
+          "E137-031",
+          "E137-033",
+          "E137-034",
+          "E137-035",
+          "E137-036"
+        ],
+        "list_validate": [
+          "E137-052",
+          "E137-053",
+          "E137-054"
+        ],
+        "outer_schedule": [
+          "E137-056",
+          "E137-057",
+          "E137-060",
+          "E137-061",
+          "E137-062",
+          "E137-063",
+          "E137-064",
+          "E137-071"
+        ]
+      }
+    },
+    "R136-03": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_B_need_resched_paths": [
+        "B.base.need_resched",
+        "B.K_then_J[0].need_resched",
+        "B.K_then_J[1].need_resched",
+        "B.J_then_K[0].need_resched",
+        "B.J_then_K[1].need_resched"
+      ],
+      "old_value": false,
+      "new_value": "NOT_STIPULATED_IN_B_AND_NOT_WRITTEN_IN_SELECTED_WAKE; FOLLOW_INPUT",
+      "C_need_resched_given_false": true,
+      "valid_inputs": [
+        {
+          "id": "K_THEN_J_1",
+          "old_source_path": "136 facts.B and DOT B136_* source nodes",
+          "new_node": "K",
+          "prev": "H",
+          "next": "Q",
+          "tuple_new_prev_next": [
+            "K",
+            "H",
+            "Q"
+          ],
+          "initial": [
+            "H",
+            "Q",
+            "R",
+            "H"
+          ],
+          "initial_count": 2,
+          "validator_six": [
+            {
+              "predicate_id": "K_THEN_J_1_P1",
+              "expression": "prev == NULL",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_1_P2",
+              "expression": "next == NULL",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_1_P3",
+              "expression": "next->prev != prev",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_1_P4",
+              "expression": "prev->next != next",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_1_P5",
+              "expression": "new == prev",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_1_P6",
+              "expression": "new == next",
+              "evaluated": true,
+              "result": false
+            }
+          ],
+          "validator_while_condition": false,
+          "validator_iterations": 0,
+          "validator_returns": true,
+          "__list_add_between_if_not_valid": false,
+          "early_return_taken": false,
+          "ordered_writes": [
+            "Q.prev=K",
+            "K.next=Q",
+            "K.prev=H",
+            "H.next=K"
+          ],
+          "final": [
+            "H",
+            "K",
+            "Q",
+            "R",
+            "H"
+          ],
+          "reverse_final": [
+            "H",
+            "R",
+            "Q",
+            "K",
+            "H"
+          ],
+          "tail": "R",
+          "count_after": 3,
+          "increment_after_links": true,
+          "need_resched_initial": "UNSPECIFIED_IN_B",
+          "need_resched_written_in_wake": false,
+          "need_resched_after": "SAME_UNSPECIFIED_INPUT"
+        },
+        {
+          "id": "K_THEN_J_2",
+          "old_source_path": "136 facts.B and DOT B136_* source nodes",
+          "new_node": "J",
+          "prev": "H",
+          "next": "K",
+          "tuple_new_prev_next": [
+            "J",
+            "H",
+            "K"
+          ],
+          "initial": [
+            "H",
+            "K",
+            "Q",
+            "R",
+            "H"
+          ],
+          "initial_count": 3,
+          "validator_six": [
+            {
+              "predicate_id": "K_THEN_J_2_P1",
+              "expression": "prev == NULL",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_2_P2",
+              "expression": "next == NULL",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_2_P3",
+              "expression": "next->prev != prev",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_2_P4",
+              "expression": "prev->next != next",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_2_P5",
+              "expression": "new == prev",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "K_THEN_J_2_P6",
+              "expression": "new == next",
+              "evaluated": true,
+              "result": false
+            }
+          ],
+          "validator_while_condition": false,
+          "validator_iterations": 0,
+          "validator_returns": true,
+          "__list_add_between_if_not_valid": false,
+          "early_return_taken": false,
+          "ordered_writes": [
+            "K.prev=J",
+            "J.next=K",
+            "J.prev=H",
+            "H.next=J"
+          ],
+          "final": [
+            "H",
+            "J",
+            "K",
+            "Q",
+            "R",
+            "H"
+          ],
+          "reverse_final": [
+            "H",
+            "R",
+            "Q",
+            "K",
+            "J",
+            "H"
+          ],
+          "tail": "R",
+          "count_after": 4,
+          "increment_after_links": true,
+          "need_resched_initial": "UNSPECIFIED_IN_B",
+          "need_resched_written_in_wake": false,
+          "need_resched_after": "SAME_UNSPECIFIED_INPUT"
+        },
+        {
+          "id": "J_THEN_K_1",
+          "old_source_path": "136 facts.B and DOT B136_* source nodes",
+          "new_node": "J",
+          "prev": "H",
+          "next": "Q",
+          "tuple_new_prev_next": [
+            "J",
+            "H",
+            "Q"
+          ],
+          "initial": [
+            "H",
+            "Q",
+            "R",
+            "H"
+          ],
+          "initial_count": 2,
+          "validator_six": [
+            {
+              "predicate_id": "J_THEN_K_1_P1",
+              "expression": "prev == NULL",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_1_P2",
+              "expression": "next == NULL",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_1_P3",
+              "expression": "next->prev != prev",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_1_P4",
+              "expression": "prev->next != next",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_1_P5",
+              "expression": "new == prev",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_1_P6",
+              "expression": "new == next",
+              "evaluated": true,
+              "result": false
+            }
+          ],
+          "validator_while_condition": false,
+          "validator_iterations": 0,
+          "validator_returns": true,
+          "__list_add_between_if_not_valid": false,
+          "early_return_taken": false,
+          "ordered_writes": [
+            "Q.prev=J",
+            "J.next=Q",
+            "J.prev=H",
+            "H.next=J"
+          ],
+          "final": [
+            "H",
+            "J",
+            "Q",
+            "R",
+            "H"
+          ],
+          "reverse_final": [
+            "H",
+            "R",
+            "Q",
+            "J",
+            "H"
+          ],
+          "tail": "R",
+          "count_after": 3,
+          "increment_after_links": true,
+          "need_resched_initial": "UNSPECIFIED_IN_B",
+          "need_resched_written_in_wake": false,
+          "need_resched_after": "SAME_UNSPECIFIED_INPUT"
+        },
+        {
+          "id": "J_THEN_K_2",
+          "old_source_path": "136 facts.B and DOT B136_* source nodes",
+          "new_node": "K",
+          "prev": "H",
+          "next": "J",
+          "tuple_new_prev_next": [
+            "K",
+            "H",
+            "J"
+          ],
+          "initial": [
+            "H",
+            "J",
+            "Q",
+            "R",
+            "H"
+          ],
+          "initial_count": 3,
+          "validator_six": [
+            {
+              "predicate_id": "J_THEN_K_2_P1",
+              "expression": "prev == NULL",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_2_P2",
+              "expression": "next == NULL",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_2_P3",
+              "expression": "next->prev != prev",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_2_P4",
+              "expression": "prev->next != next",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_2_P5",
+              "expression": "new == prev",
+              "evaluated": true,
+              "result": false
+            },
+            {
+              "predicate_id": "J_THEN_K_2_P6",
+              "expression": "new == next",
+              "evaluated": true,
+              "result": false
+            }
+          ],
+          "validator_while_condition": false,
+          "validator_iterations": 0,
+          "validator_returns": true,
+          "__list_add_between_if_not_valid": false,
+          "early_return_taken": false,
+          "ordered_writes": [
+            "J.prev=K",
+            "K.next=J",
+            "K.prev=H",
+            "H.next=K"
+          ],
+          "final": [
+            "H",
+            "K",
+            "J",
+            "Q",
+            "R",
+            "H"
+          ],
+          "reverse_final": [
+            "H",
+            "R",
+            "Q",
+            "J",
+            "K",
+            "H"
+          ],
+          "tail": "R",
+          "count_after": 4,
+          "increment_after_links": true,
+          "need_resched_initial": "UNSPECIFIED_IN_B",
+          "need_resched_written_in_wake": false,
+          "need_resched_after": "SAME_UNSPECIFIED_INPUT"
+        }
+      ]
+    },
+    "R136-04": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_source_graph_node": {
+        "id": "C136_103",
+        "kind": "condition",
+        "label": "used3<time_slice10 OR false"
+      },
+      "old_facts_paths": [
+        "C.C1.used_ge_time_slice",
+        "C.C1.after.K_state absent",
+        "C.C2.reinsert compare anchor absent"
+      ],
+      "new_graph_node": {
+        "id": "D137_R13604_C1_GE_TEST",
+        "kind": "PREDICATE_GE_FALSE",
+        "label": "used_jiffies=3 >= rt.time_slice=10 => false",
+        "typed_false_edge": "FALSE_SKIP_COUNT_AND_PICKER_BODY"
+      },
+      "samples": {
+        "C1": {
+          "before_wake": {
+            "queue": [
+              "H",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 2,
+            "K_state": "TASK_NEW",
+            "K_link": "self-linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P"
+          },
+          "after_wake": {
+            "queue": [
+              "H",
+              "K",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 3,
+            "K_state": "TASK_RUNNING",
+            "K_link": "linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P"
+          },
+          "after_picker": {
+            "queue": [
+              "H",
+              "K",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 3,
+            "K_state": "TASK_RUNNING",
+            "K_link": "linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P",
+            "returned": "P"
+          },
+          "or_eval": [
+            "need_resched:false",
+            "is_idle:false",
+            "3>=10:false",
+            "not_RUNNING:false"
+          ],
+          "queue_count_expr": "NOT_EVALUATED",
+          "picker_body": "SKIPPED"
+        },
+        "C2": {
+          "before_wake": {
+            "queue": [
+              "H",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 2,
+            "K_state": "TASK_NEW",
+            "K_link": "self-linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P"
+          },
+          "after_wake": {
+            "queue": [
+              "H",
+              "K",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 3,
+            "K_state": "TASK_RUNNING",
+            "K_link": "linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P"
+          },
+          "after_picker": {
+            "queue": [
+              "H",
+              "P",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 3,
+            "K_state": "TASK_RUNNING",
+            "K_link": "self-linked after pop",
+            "P_vruntime": 13,
+            "last": 110,
+            "rq_curr": "K",
+            "returned": "K"
+          },
+          "or_eval": [
+            "need_resched:false",
+            "is_idle:false",
+            "10>=10:true",
+            "not_RUNNING:NOT_EVALUATED"
+          ],
+          "queue_count_expr": "EVALUATED_TRUE",
+          "K_removed_and_selflinked": true,
+          "old_P_vruntime_comparison": {
+            "lhs": 3,
+            "rhs": 20,
+            "expression": "3>20",
+            "evaluated": true,
+            "result": false
+          },
+          "anchor_second_operand_evaluated": false,
+          "need_resched": false
+        }
+      },
+      "old_frozen_returns": {
+        "C1": "P",
+        "C2": "K"
+      },
+      "old_frozen_queues": {
+        "C1": [
+          "H",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "C2": [
+          "H",
+          "P",
+          "Q",
+          "R",
+          "H"
+        ]
+      },
+      "no_executed_claim": true
+    }
+  },
+  "A": {
+    "field_copy_and_overwrite": [
+      {
+        "field": "rt.time_slice",
+        "struct": "task_struct.rt:sched_rt_entity.time_slice",
+        "copy": "P.rt.time_slice",
+        "overwrite_in_fork": "NO_ACTIVE_WRITE",
+        "final": "COPIED_AT_FORK"
+      },
+      {
+        "field": "se.vruntime",
+        "struct": "task_struct.se:sched_entity.vruntime",
+        "copy": "P.se.vruntime",
+        "overwrite_in_fork": "__sched_fork sets 0",
+        "final": 0
+      },
+      {
+        "field": "utime",
+        "struct": "task_struct",
+        "copy": "P.utime",
+        "overwrite_in_fork": "copy_process zero",
+        "final": 0
+      },
+      {
+        "field": "stime",
+        "struct": "task_struct",
+        "copy": "P.stime",
+        "overwrite_in_fork": "copy_process zero",
+        "final": 0
+      },
+      {
+        "field": "gtime",
+        "struct": "task_struct",
+        "copy": "P.gtime",
+        "overwrite_in_fork": "copy_process zero",
+        "final": 0
+      },
+      {
+        "field": "nvcsw",
+        "struct": "task_struct",
+        "copy": "P.nvcsw",
+        "overwrite_in_fork": "NO_ACTIVE_WRITE",
+        "final": "COPIED_AT_FORK"
+      },
+      {
+        "field": "nivcsw",
+        "struct": "task_struct",
+        "copy": "P.nivcsw",
+        "overwrite_in_fork": "NO_ACTIVE_WRITE",
+        "final": "COPIED_AT_FORK"
+      },
+      {
+        "field": "__state",
+        "struct": "task_struct",
+        "copy": "P.__state",
+        "overwrite_in_fork": "sched_fork:TASK_NEW; wake_up_new_task:TASK_RUNNING",
+        "final": "TASK_RUNNING"
+      },
+      {
+        "field": "on_cpu",
+        "struct": "task_struct",
+        "copy": "P.on_cpu",
+        "overwrite_in_fork": "sched_fork sets 0",
+        "final": 0
+      },
+      {
+        "field": "rt.run_list.next",
+        "struct": "task_struct.rt.run_list:List_s",
+        "copy": "P.rt.run_list.next pointer ADDRESS",
+        "overwrite_in_fork": "__sched_fork self; wake linked",
+        "final": "LINKED_NEIGHBOR"
+      },
+      {
+        "field": "rt.run_list.prev",
+        "struct": "task_struct.rt.run_list:List_s",
+        "copy": "P.rt.run_list.prev pointer ADDRESS",
+        "overwrite_in_fork": "__sched_fork self; wake linked",
+        "final": "LINKED_NEIGHBOR"
+      }
+    ],
+    "structure_copy": "distinct child task storage; *tsk=*orig copies embedded scalar and source pointer VALUES; then explicitly rewrites selected fields",
+    "copied_run_list_pointers": "at copy K/J both pointer values still reference P.rt.run_list; self-linked only after INIT_LIST_S and linked only after wake",
+    "run_permission": "NOT_RUN",
+    "source_evidence": [
+      "E137-037",
+      "E137-040",
+      "E137-014",
+      "E137-015",
+      "E137-016",
+      "E137-017",
+      "E137-020",
+      "E137-021",
+      "E137-048"
+    ]
+  },
+  "B": {
+    "selected_snapshots": [
+      {
+        "id": "B0",
+        "reason": "initial P slice4, queue Q,R, parent not linked",
+        "P": {
+          "slice": 4,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": null,
+        "J": null,
+        "queue": [
+          "H",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "H"
+        ],
+        "count": 2,
+        "rq_curr": "P"
+      },
+      {
+        "id": "B1",
+        "reason": "K whole copy, inherited slice4 and pointer values to P",
+        "P": {
+          "slice": 4,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": {
+          "slice": 4,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "copied-pointer-to-P"
+        },
+        "J": null,
+        "queue": [
+          "H",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "H"
+        ],
+        "count": 2,
+        "rq_curr": "P"
+      },
+      {
+        "id": "B2",
+        "reason": "K later active resets before wake",
+        "P": {
+          "slice": 4,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": {
+          "slice": 4,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_NEW",
+          "on_cpu": 0,
+          "node_next": "K.rt.run_list",
+          "node_prev": "K.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "J": null,
+        "queue": [
+          "H",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "H"
+        ],
+        "count": 2,
+        "rq_curr": "P"
+      },
+      {
+        "id": "B3",
+        "reason": "K first wake at head",
+        "P": {
+          "slice": 4,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": {
+          "slice": 4,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 0,
+          "node_next": "Q",
+          "node_prev": "H",
+          "node_mode": "linked"
+        },
+        "J": null,
+        "queue": [
+          "H",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "H"
+        ],
+        "count": 3,
+        "rq_curr": "P"
+      },
+      {
+        "id": "B4",
+        "reason": "given parent slice edit 4 to9",
+        "P": {
+          "slice": 9,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": {
+          "slice": 4,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 0,
+          "node_next": "Q",
+          "node_prev": "H",
+          "node_mode": "linked"
+        },
+        "J": null,
+        "queue": [
+          "H",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "H"
+        ],
+        "count": 3,
+        "rq_curr": "P"
+      },
+      {
+        "id": "B5",
+        "reason": "J whole copy slice9",
+        "P": {
+          "slice": 9,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": {
+          "slice": 4,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 0,
+          "node_next": "Q",
+          "node_prev": "H",
+          "node_mode": "linked"
+        },
+        "J": {
+          "slice": 9,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "copied-pointer-to-P"
+        },
+        "queue": [
+          "H",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "H"
+        ],
+        "count": 3,
+        "rq_curr": "P"
+      },
+      {
+        "id": "B6",
+        "reason": "J subsequent resets before wake",
+        "P": {
+          "slice": 9,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": {
+          "slice": 4,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 0,
+          "node_next": "Q",
+          "node_prev": "H",
+          "node_mode": "linked"
+        },
+        "J": {
+          "slice": 9,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_NEW",
+          "on_cpu": 0,
+          "node_next": "J.rt.run_list",
+          "node_prev": "J.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "queue": [
+          "H",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "H"
+        ],
+        "count": 3,
+        "rq_curr": "P"
+      },
+      {
+        "id": "B7",
+        "reason": "J second wake changes K predecessor",
+        "P": {
+          "slice": 9,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": {
+          "slice": 4,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 0,
+          "node_next": "Q",
+          "node_prev": "J",
+          "node_mode": "linked"
+        },
+        "J": {
+          "slice": 9,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 0,
+          "node_next": "K",
+          "node_prev": "H",
+          "node_mode": "linked"
+        },
+        "queue": [
+          "H",
+          "J",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "J",
+          "H"
+        ],
+        "count": 4,
+        "rq_curr": "P"
+      },
+      {
+        "id": "B8",
+        "reason": "given parent final slice edit9 to12",
+        "P": {
+          "slice": 12,
+          "vruntime": 23,
+          "utime": 17,
+          "stime": 8,
+          "gtime": 2,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 1,
+          "node_next": "P.rt.run_list",
+          "node_prev": "P.rt.run_list",
+          "node_mode": "self-linked"
+        },
+        "K": {
+          "slice": 4,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 0,
+          "node_next": "Q",
+          "node_prev": "J",
+          "node_mode": "linked"
+        },
+        "J": {
+          "slice": 9,
+          "vruntime": 0,
+          "utime": 0,
+          "stime": 0,
+          "gtime": 0,
+          "nvcsw": 7,
+          "nivcsw": 11,
+          "state": "TASK_RUNNING",
+          "on_cpu": 0,
+          "node_next": "K",
+          "node_prev": "H",
+          "node_mode": "linked"
+        },
+        "queue": [
+          "H",
+          "J",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "J",
+          "H"
+        ],
+        "count": 4,
+        "rq_curr": "P"
+      }
+    ],
+    "final_parent": {
+      "slice": 12,
+      "vruntime": 23,
+      "utime": 17,
+      "stime": 8,
+      "gtime": 2,
+      "nvcsw": 7,
+      "nivcsw": 11,
+      "state": "TASK_RUNNING",
+      "on_cpu": 1,
+      "node_next": "P.rt.run_list",
+      "node_prev": "P.rt.run_list",
+      "node_mode": "self-linked"
+    },
+    "final_K": {
+      "slice": 4,
+      "vruntime": 0,
+      "utime": 0,
+      "stime": 0,
+      "gtime": 0,
+      "nvcsw": 7,
+      "nivcsw": 11,
+      "state": "TASK_RUNNING",
+      "on_cpu": 0,
+      "node_next": "Q",
+      "node_prev": "J",
+      "node_mode": "linked"
+    },
+    "final_J": {
+      "slice": 9,
+      "vruntime": 0,
+      "utime": 0,
+      "stime": 0,
+      "gtime": 0,
+      "nvcsw": 7,
+      "nivcsw": 11,
+      "state": "TASK_RUNNING",
+      "on_cpu": 0,
+      "node_next": "K",
+      "node_prev": "H",
+      "node_mode": "linked"
+    },
+    "final_queue": [
+      "H",
+      "J",
+      "K",
+      "Q",
+      "R",
+      "H"
+    ],
+    "final_count": 4,
+    "rq_curr": "P",
+    "initial_need_resched": "NOT_SPECIFIED_BY_B",
+    "explicit_edits": "only P.rt.time_slice 4->9 and 9->12; not real system calls"
+  },
+  "C": {
+    "common": {
+      "independent_scenarios": true,
+      "C1_current": "K",
+      "C2_current": "J",
+      "current_equals_prev_equals_rq_curr": true,
+      "nonidle": true,
+      "current_state": "TASK_RUNNING",
+      "need_resched": false,
+      "current_vruntime": 0,
+      "current_nvcsw": 7,
+      "current_nivcsw": 11,
+      "queue": [
+        "H",
+        "Q",
+        "R",
+        "H"
+      ],
+      "count": 2,
+      "Q_vruntime": 20,
+      "R_vruntime": 40,
+      "jiffies_in_pick": 106,
+      "last_jiffies_before": 100,
+      "used": 6,
+      "rq_nr_switches_before": 30,
+      "sched_mode": "SM_NONE",
+      "rq_clock": "update_rq_clock uses local_clock() delta, unrelated stipulated jiffies numeric value"
+    },
+    "C1": {
+      "id": "C137_K",
+      "current": "K",
+      "prev": "K",
+      "inherited_slice": 4,
+      "used": 6,
+      "or": [
+        {
+          "term": "need_resched()",
+          "evaluated": true,
+          "value": false
+        },
+        {
+          "term": "current==idle",
+          "evaluated": true,
+          "value": false
+        },
+        {
+          "term": "used>=K.rt.time_slice",
+          "evaluated": true,
+          "value": true,
+          "expression": "6>=4"
+        },
+        {
+          "term": "current state!=TASK_RUNNING",
+          "evaluated": false,
+          "value": null
+        }
+      ],
+      "count_gate": {
+        "evaluated": true,
+        "value": true
+      },
+      "BUG_ON": {
+        "first_term_evaluated": true,
+        "first": false,
+        "second_term_evaluated": false
+      },
+      "pop": {
+        "node": "Q",
+        "after_pop": [
+          "H",
+          "R",
+          "H"
+        ],
+        "count": 1,
+        "Q_node_after": "self-linked"
+      },
+      "reinsert": {
+        "task": "K",
+        "old_vruntime": 0,
+        "next_node": "R",
+        "comparison": "0>40",
+        "evaluated": true,
+        "result": false,
+        "anchor_test_evaluated": false,
+        "after": [
+          "H",
+          "K",
+          "R",
+          "H"
+        ],
+        "count": 2
+      },
+      "vruntime_after": 6,
+      "last_jiffies_after": 106,
+      "picker_return": "Q",
+      "picker_rq_curr_write": "Q",
+      "outer": {
+        "prev_ne_next": true,
+        "RCU_INIT_POINTER_reached": true,
+        "RCU_write": "Q",
+        "rq_nr_switches_from": 30,
+        "switch_count_target": "K.nivcsw",
+        "K_nivcsw_from": 11,
+        "K_nvcsw": 7,
+        "context_switch_call_reached": true,
+        "rq_nr_switches_to": 31,
+        "K_nivcsw_to": 12
+      }
+    },
+    "C2": {
+      "id": "C137_J",
+      "current": "J",
+      "prev": "J",
+      "inherited_slice": 9,
+      "used": 6,
+      "or": [
+        {
+          "term": "need_resched()",
+          "evaluated": true,
+          "value": false
+        },
+        {
+          "term": "current==idle",
+          "evaluated": true,
+          "value": false
+        },
+        {
+          "term": "used>=J.rt.time_slice",
+          "evaluated": true,
+          "value": false,
+          "expression": "6>=9"
+        },
+        {
+          "term": "current state!=TASK_RUNNING",
+          "evaluated": true,
+          "value": false
+        }
+      ],
+      "count_gate": {
+        "evaluated": false,
+        "value": null
+      },
+      "BUG_ON": {
+        "reached": false
+      },
+      "pop": {
+        "reached": false
+      },
+      "reinsert": {
+        "reached": false
+      },
+      "end_queue": [
+        "H",
+        "Q",
+        "R",
+        "H"
+      ],
+      "end_count": 2,
+      "vruntime_after": 0,
+      "last_jiffies_after": 100,
+      "picker_return": "J",
+      "picker_rq_curr_write": "J",
+      "outer": {
+        "prev_ne_next": false,
+        "RCU_INIT_POINTER_reached": false,
+        "rq_nr_switches_from": 30,
+        "switch_count_target": "J.nivcsw",
+        "J_nivcsw_from": 11,
+        "J_nvcsw": 7,
+        "context_switch_call_reached": false,
+        "rq_nr_switches_to": 30,
+        "J_nivcsw_to": 11
+      }
+    },
+    "clk_vs_jiffies": "rq clock updated from local_clock before picker; jiffies independent stipulated input",
+    "runtime": "NOT_RUN",
+    "actual_context_or_user_return": "UNKNOWN"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "D137_R01_OLD",
+        "kind": "frozen",
+        "label": "136 missing startup and task-local fields"
+      },
+      {
+        "id": "D137_R01_CANARY",
+        "kind": "source",
+        "label": "time two lines; master misses both"
+      },
+      {
+        "id": "D137_R01_SCOPE",
+        "kind": "authority",
+        "label": "MyOS2 task_local_only=true"
+      },
+      {
+        "id": "D137_R02_MAP",
+        "kind": "mapping",
+        "label": "E136 38 physical windows to E137 activities/locators"
+      },
+      {
+        "id": "D137_R02_COMMENTS",
+        "kind": "scope",
+        "label": "E136 022/023 comments only; 014 split"
+      },
+      {
+        "id": "D137_R02_CONFIG",
+        "kind": "scope",
+        "label": "CONFIG_BUG and LIST_DEFINATION conditions"
+      },
+      {
+        "id": "D137_R13604_C1_GE_TEST",
+        "kind": "condition",
+        "label": "3 >= 10 false (not 3<10)"
+      },
+      {
+        "id": "D137_R13604_C1_SKIP",
+        "kind": "skip",
+        "label": "OR false; count skipped; K stays RUNNING"
+      },
+      {
+        "id": "D137_R13604_C1_OUT",
+        "kind": "snapshot",
+        "label": "H K Q R H count3; retval P curr P"
+      },
+      {
+        "id": "D137_R13604_C2_GE_TEST",
+        "kind": "condition",
+        "label": "10>=10 true"
+      },
+      {
+        "id": "D137_R13604_C2_COMPARE",
+        "kind": "condition",
+        "label": "old P key3>Q key20 false; anchor NOT_EVALUATED"
+      },
+      {
+        "id": "D137_R13604_C2_OUT",
+        "kind": "snapshot",
+        "label": "H P Q R H count3; K RUNNING selflinked; retval K curr K"
+      },
+      {
+        "id": "D137_K_THEN_J_1_IN",
+        "kind": "given",
+        "label": "(K,H,Q) valid, before H Q R H"
+      },
+      {
+        "id": "D137_K_THEN_J_1_SIX",
+        "kind": "condition",
+        "label": "six invalid predicates all evaluated false"
+      },
+      {
+        "id": "D137_K_THEN_J_1_OK",
+        "kind": "result",
+        "label": "while false -> return true; outer if(!valid) false"
+      },
+      {
+        "id": "D137_K_THEN_J_1_W1",
+        "kind": "pointer_write",
+        "label": "Q.prev=K"
+      },
+      {
+        "id": "D137_K_THEN_J_1_W2",
+        "kind": "pointer_write",
+        "label": "K.next=Q"
+      },
+      {
+        "id": "D137_K_THEN_J_1_W3",
+        "kind": "pointer_write",
+        "label": "K.prev=H"
+      },
+      {
+        "id": "D137_K_THEN_J_1_W4",
+        "kind": "pointer_write",
+        "label": "H.next=K"
+      },
+      {
+        "id": "D137_K_THEN_J_1_COUNT",
+        "kind": "counter_write",
+        "label": "count 2->3"
+      },
+      {
+        "id": "D137_K_THEN_J_1_OUT",
+        "kind": "list_state",
+        "label": "H K Q R H reverse H R Q K H"
+      },
+      {
+        "id": "D137_K_THEN_J_2_IN",
+        "kind": "given",
+        "label": "(J,H,K) valid, before H K Q R H"
+      },
+      {
+        "id": "D137_K_THEN_J_2_SIX",
+        "kind": "condition",
+        "label": "six invalid predicates all evaluated false"
+      },
+      {
+        "id": "D137_K_THEN_J_2_OK",
+        "kind": "result",
+        "label": "while false -> return true; outer if(!valid) false"
+      },
+      {
+        "id": "D137_K_THEN_J_2_W1",
+        "kind": "pointer_write",
+        "label": "K.prev=J"
+      },
+      {
+        "id": "D137_K_THEN_J_2_W2",
+        "kind": "pointer_write",
+        "label": "J.next=K"
+      },
+      {
+        "id": "D137_K_THEN_J_2_W3",
+        "kind": "pointer_write",
+        "label": "J.prev=H"
+      },
+      {
+        "id": "D137_K_THEN_J_2_W4",
+        "kind": "pointer_write",
+        "label": "H.next=J"
+      },
+      {
+        "id": "D137_K_THEN_J_2_COUNT",
+        "kind": "counter_write",
+        "label": "count 3->4"
+      },
+      {
+        "id": "D137_K_THEN_J_2_OUT",
+        "kind": "list_state",
+        "label": "H J K Q R H reverse H R Q K J H"
+      },
+      {
+        "id": "D137_J_THEN_K_1_IN",
+        "kind": "given",
+        "label": "(J,H,Q) valid, before H Q R H"
+      },
+      {
+        "id": "D137_J_THEN_K_1_SIX",
+        "kind": "condition",
+        "label": "six invalid predicates all evaluated false"
+      },
+      {
+        "id": "D137_J_THEN_K_1_OK",
+        "kind": "result",
+        "label": "while false -> return true; outer if(!valid) false"
+      },
+      {
+        "id": "D137_J_THEN_K_1_W1",
+        "kind": "pointer_write",
+        "label": "Q.prev=J"
+      },
+      {
+        "id": "D137_J_THEN_K_1_W2",
+        "kind": "pointer_write",
+        "label": "J.next=Q"
+      },
+      {
+        "id": "D137_J_THEN_K_1_W3",
+        "kind": "pointer_write",
+        "label": "J.prev=H"
+      },
+      {
+        "id": "D137_J_THEN_K_1_W4",
+        "kind": "pointer_write",
+        "label": "H.next=J"
+      },
+      {
+        "id": "D137_J_THEN_K_1_COUNT",
+        "kind": "counter_write",
+        "label": "count 2->3"
+      },
+      {
+        "id": "D137_J_THEN_K_1_OUT",
+        "kind": "list_state",
+        "label": "H J Q R H reverse H R Q J H"
+      },
+      {
+        "id": "D137_J_THEN_K_2_IN",
+        "kind": "given",
+        "label": "(K,H,J) valid, before H J Q R H"
+      },
+      {
+        "id": "D137_J_THEN_K_2_SIX",
+        "kind": "condition",
+        "label": "six invalid predicates all evaluated false"
+      },
+      {
+        "id": "D137_J_THEN_K_2_OK",
+        "kind": "result",
+        "label": "while false -> return true; outer if(!valid) false"
+      },
+      {
+        "id": "D137_J_THEN_K_2_W1",
+        "kind": "pointer_write",
+        "label": "J.prev=K"
+      },
+      {
+        "id": "D137_J_THEN_K_2_W2",
+        "kind": "pointer_write",
+        "label": "K.next=J"
+      },
+      {
+        "id": "D137_J_THEN_K_2_W3",
+        "kind": "pointer_write",
+        "label": "K.prev=H"
+      },
+      {
+        "id": "D137_J_THEN_K_2_W4",
+        "kind": "pointer_write",
+        "label": "H.next=K"
+      },
+      {
+        "id": "D137_J_THEN_K_2_COUNT",
+        "kind": "counter_write",
+        "label": "count 3->4"
+      },
+      {
+        "id": "D137_J_THEN_K_2_OUT",
+        "kind": "list_state",
+        "label": "H K J Q R H reverse H R Q J K H"
+      },
+      {
+        "id": "A137_COPY",
+        "kind": "whole_struct_copy",
+        "label": "*tsk=*orig copies scalars and pointers"
+      },
+      {
+        "id": "A137_RESETS",
+        "kind": "field_overrides",
+        "label": "CPU time, vruntime, state, on_cpu, list"
+      },
+      {
+        "id": "A137_WAKE",
+        "kind": "list_enqueue",
+        "label": "TASK_RUNNING, per_cpu0 list header"
+      },
+      {
+        "id": "A137_FIELD_rt_time_slice",
+        "kind": "field",
+        "label": "rt.time_slice: NO_ACTIVE_WRITE"
+      },
+      {
+        "id": "A137_FIELD_se_vruntime",
+        "kind": "field",
+        "label": "se.vruntime: __sched_fork sets 0"
+      },
+      {
+        "id": "A137_FIELD_utime",
+        "kind": "field",
+        "label": "utime: copy_process zero"
+      },
+      {
+        "id": "A137_FIELD_stime",
+        "kind": "field",
+        "label": "stime: copy_process zero"
+      },
+      {
+        "id": "A137_FIELD_gtime",
+        "kind": "field",
+        "label": "gtime: copy_process zero"
+      },
+      {
+        "id": "A137_FIELD_nvcsw",
+        "kind": "field",
+        "label": "nvcsw: NO_ACTIVE_WRITE"
+      },
+      {
+        "id": "A137_FIELD_nivcsw",
+        "kind": "field",
+        "label": "nivcsw: NO_ACTIVE_WRITE"
+      },
+      {
+        "id": "A137_FIELD___state",
+        "kind": "field",
+        "label": "__state: sched_fork:TASK_NEW; wake_up_new_task:TASK_RUNNING"
+      },
+      {
+        "id": "A137_FIELD_on_cpu",
+        "kind": "field",
+        "label": "on_cpu: sched_fork sets 0"
+      },
+      {
+        "id": "A137_FIELD_rt_run_list_next",
+        "kind": "field",
+        "label": "rt.run_list.next: __sched_fork self; wake linked"
+      },
+      {
+        "id": "A137_FIELD_rt_run_list_prev",
+        "kind": "field",
+        "label": "rt.run_list.prev: __sched_fork self; wake linked"
+      },
+      {
+        "id": "B137_B0",
+        "kind": "snapshot",
+        "label": "B0:P.slice4/K.sliceNA/J.sliceNA;H Q R H;count2;currP"
+      },
+      {
+        "id": "B137_B1",
+        "kind": "snapshot",
+        "label": "B1:P.slice4/K.slice4/J.sliceNA;H Q R H;count2;currP"
+      },
+      {
+        "id": "B137_B2",
+        "kind": "snapshot",
+        "label": "B2:P.slice4/K.slice4/J.sliceNA;H Q R H;count2;currP"
+      },
+      {
+        "id": "B137_B3",
+        "kind": "snapshot",
+        "label": "B3:P.slice4/K.slice4/J.sliceNA;H K Q R H;count3;currP"
+      },
+      {
+        "id": "B137_B4",
+        "kind": "snapshot",
+        "label": "B4:P.slice9/K.slice4/J.sliceNA;H K Q R H;count3;currP"
+      },
+      {
+        "id": "B137_B5",
+        "kind": "snapshot",
+        "label": "B5:P.slice9/K.slice4/J.slice9;H K Q R H;count3;currP"
+      },
+      {
+        "id": "B137_B6",
+        "kind": "snapshot",
+        "label": "B6:P.slice9/K.slice4/J.slice9;H K Q R H;count3;currP"
+      },
+      {
+        "id": "B137_B7",
+        "kind": "snapshot",
+        "label": "B7:P.slice9/K.slice4/J.slice9;H J K Q R H;count4;currP"
+      },
+      {
+        "id": "B137_B8",
+        "kind": "snapshot",
+        "label": "B8:P.slice12/K.slice4/J.slice9;H J K Q R H;count4;currP"
+      },
+      {
+        "id": "C137_K_IN",
+        "kind": "given",
+        "label": "current=K slice=4 used6"
+      },
+      {
+        "id": "C137_K_SLICE",
+        "kind": "read",
+        "label": "rt=&current->rt slice=4"
+      },
+      {
+        "id": "C137_K_GATE",
+        "kind": "condition",
+        "label": "6>=4 is true"
+      },
+      {
+        "id": "C137_K_COUNT",
+        "kind": "condition",
+        "label": "count checked=true"
+      },
+      {
+        "id": "C137_K_PICK",
+        "kind": "result",
+        "label": "picker returns Q; writes rq.curr"
+      },
+      {
+        "id": "C137_K_OUTER",
+        "kind": "condition",
+        "label": "prev!=next true"
+      },
+      {
+        "id": "C137_K_NR",
+        "kind": "counter",
+        "label": "nr_switches 30->31"
+      },
+      {
+        "id": "C137_K_RCU",
+        "kind": "pointer_write",
+        "label": "outer RCU write true"
+      },
+      {
+        "id": "C137_K_NV",
+        "kind": "counter",
+        "label": "prev nivcsw from11 to12"
+      },
+      {
+        "id": "C137_K_BOUND",
+        "kind": "boundary",
+        "label": "context_switch call reached=true"
+      },
+      {
+        "id": "C137_J_IN",
+        "kind": "given",
+        "label": "current=J slice=9 used6"
+      },
+      {
+        "id": "C137_J_SLICE",
+        "kind": "read",
+        "label": "rt=&current->rt slice=9"
+      },
+      {
+        "id": "C137_J_GATE",
+        "kind": "condition",
+        "label": "6>=9 is false"
+      },
+      {
+        "id": "C137_J_COUNT",
+        "kind": "condition",
+        "label": "count checked=false"
+      },
+      {
+        "id": "C137_J_PICK",
+        "kind": "result",
+        "label": "picker returns J; writes rq.curr"
+      },
+      {
+        "id": "C137_J_OUTER",
+        "kind": "condition",
+        "label": "prev!=next false"
+      },
+      {
+        "id": "C137_J_NR",
+        "kind": "counter",
+        "label": "nr_switches 30->30"
+      },
+      {
+        "id": "C137_J_RCU",
+        "kind": "pointer_write",
+        "label": "outer RCU write false"
+      },
+      {
+        "id": "C137_J_NV",
+        "kind": "counter",
+        "label": "prev nivcsw from11 unchanged"
+      },
+      {
+        "id": "C137_J_BOUND",
+        "kind": "boundary",
+        "label": "context_switch call reached=false"
+      },
+      {
+        "id": "C137_RQ_CLOCK",
+        "kind": "clock_source",
+        "label": "update_rq_clock uses local_clock delta"
+      },
+      {
+        "id": "C137_USED_JIFFIES",
+        "kind": "clock_input",
+        "label": "picker jiffies106-last100=6"
+      }
+    ],
+    "edges": [
+      {
+        "from": "D137_R01_OLD",
+        "to": "D137_R01_CANARY",
+        "kind": "SUPPLEMENT_REAL_SOURCE",
+        "label": ""
+      },
+      {
+        "from": "D137_R01_CANARY",
+        "to": "D137_R01_SCOPE",
+        "kind": "GUIDANCE_APPLIES_TASK_LOCAL_ONLY",
+        "label": ""
+      },
+      {
+        "from": "D137_R02_MAP",
+        "to": "D137_R02_COMMENTS",
+        "kind": "RECLASSIFY_SOURCE_WINDOWS",
+        "label": ""
+      },
+      {
+        "from": "D137_R02_COMMENTS",
+        "to": "D137_R02_CONFIG",
+        "kind": "ADD_ACTIVE_CONDITIONS",
+        "label": ""
+      },
+      {
+        "from": "D137_R13604_C1_GE_TEST",
+        "to": "D137_R13604_C1_SKIP",
+        "kind": "FALSE_3_GE_10",
+        "label": ""
+      },
+      {
+        "from": "D137_R13604_C1_SKIP",
+        "to": "D137_R13604_C1_OUT",
+        "kind": "SHORT_CIRCUIT_COUNT",
+        "label": ""
+      },
+      {
+        "from": "D137_R13604_C2_GE_TEST",
+        "to": "D137_R13604_C2_COMPARE",
+        "kind": "TRUE_10_GE_10",
+        "label": ""
+      },
+      {
+        "from": "D137_R13604_C2_COMPARE",
+        "to": "D137_R13604_C2_OUT",
+        "kind": "FALSE_3_GT_20_SKIP_ANCHOR",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_1_IN",
+        "to": "D137_K_THEN_J_1_SIX",
+        "kind": "VALIDATE_ADJACENT_NEW_NODE",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_1_SIX",
+        "to": "D137_K_THEN_J_1_OK",
+        "kind": "SIX_FALSE_WHILE_NOT_ENTERED",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_1_OK",
+        "to": "D137_K_THEN_J_1_W1",
+        "kind": "NO_EARLY_RETURN",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_1_W1",
+        "to": "D137_K_THEN_J_1_W2",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_1_W2",
+        "to": "D137_K_THEN_J_1_W3",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_1_W3",
+        "to": "D137_K_THEN_J_1_W4",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_1_W4",
+        "to": "D137_K_THEN_J_1_COUNT",
+        "kind": "COUNT_PLUS_ONE_AFTER_LINK",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_1_COUNT",
+        "to": "D137_K_THEN_J_1_OUT",
+        "kind": "BIDIRECTIONAL_VALID_POSTSTATE",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_2_IN",
+        "to": "D137_K_THEN_J_2_SIX",
+        "kind": "VALIDATE_ADJACENT_NEW_NODE",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_2_SIX",
+        "to": "D137_K_THEN_J_2_OK",
+        "kind": "SIX_FALSE_WHILE_NOT_ENTERED",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_2_OK",
+        "to": "D137_K_THEN_J_2_W1",
+        "kind": "NO_EARLY_RETURN",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_2_W1",
+        "to": "D137_K_THEN_J_2_W2",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_2_W2",
+        "to": "D137_K_THEN_J_2_W3",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_2_W3",
+        "to": "D137_K_THEN_J_2_W4",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_2_W4",
+        "to": "D137_K_THEN_J_2_COUNT",
+        "kind": "COUNT_PLUS_ONE_AFTER_LINK",
+        "label": ""
+      },
+      {
+        "from": "D137_K_THEN_J_2_COUNT",
+        "to": "D137_K_THEN_J_2_OUT",
+        "kind": "BIDIRECTIONAL_VALID_POSTSTATE",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_1_IN",
+        "to": "D137_J_THEN_K_1_SIX",
+        "kind": "VALIDATE_ADJACENT_NEW_NODE",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_1_SIX",
+        "to": "D137_J_THEN_K_1_OK",
+        "kind": "SIX_FALSE_WHILE_NOT_ENTERED",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_1_OK",
+        "to": "D137_J_THEN_K_1_W1",
+        "kind": "NO_EARLY_RETURN",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_1_W1",
+        "to": "D137_J_THEN_K_1_W2",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_1_W2",
+        "to": "D137_J_THEN_K_1_W3",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_1_W3",
+        "to": "D137_J_THEN_K_1_W4",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_1_W4",
+        "to": "D137_J_THEN_K_1_COUNT",
+        "kind": "COUNT_PLUS_ONE_AFTER_LINK",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_1_COUNT",
+        "to": "D137_J_THEN_K_1_OUT",
+        "kind": "BIDIRECTIONAL_VALID_POSTSTATE",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_2_IN",
+        "to": "D137_J_THEN_K_2_SIX",
+        "kind": "VALIDATE_ADJACENT_NEW_NODE",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_2_SIX",
+        "to": "D137_J_THEN_K_2_OK",
+        "kind": "SIX_FALSE_WHILE_NOT_ENTERED",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_2_OK",
+        "to": "D137_J_THEN_K_2_W1",
+        "kind": "NO_EARLY_RETURN",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_2_W1",
+        "to": "D137_J_THEN_K_2_W2",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_2_W2",
+        "to": "D137_J_THEN_K_2_W3",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_2_W3",
+        "to": "D137_J_THEN_K_2_W4",
+        "kind": "POINTER_WRITE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_2_W4",
+        "to": "D137_J_THEN_K_2_COUNT",
+        "kind": "COUNT_PLUS_ONE_AFTER_LINK",
+        "label": ""
+      },
+      {
+        "from": "D137_J_THEN_K_2_COUNT",
+        "to": "D137_J_THEN_K_2_OUT",
+        "kind": "BIDIRECTIONAL_VALID_POSTSTATE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_RESETS",
+        "kind": "AFTER_WHOLE_VALUE_COPY",
+        "label": ""
+      },
+      {
+        "from": "A137_RESETS",
+        "to": "A137_WAKE",
+        "kind": "FORK_THEN_WAKE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_rt_time_slice",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_rt_time_slice",
+        "to": "A137_RESETS",
+        "kind": "COPIED_FIELD_PRESERVED",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_se_vruntime",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_se_vruntime",
+        "to": "A137_RESETS",
+        "kind": "ACTIVE_CHILD_OVERRIDE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_utime",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_utime",
+        "to": "A137_RESETS",
+        "kind": "ACTIVE_CHILD_OVERRIDE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_stime",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_stime",
+        "to": "A137_RESETS",
+        "kind": "ACTIVE_CHILD_OVERRIDE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_gtime",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_gtime",
+        "to": "A137_RESETS",
+        "kind": "ACTIVE_CHILD_OVERRIDE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_nvcsw",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_nvcsw",
+        "to": "A137_RESETS",
+        "kind": "COPIED_FIELD_PRESERVED",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_nivcsw",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_nivcsw",
+        "to": "A137_RESETS",
+        "kind": "COPIED_FIELD_PRESERVED",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD___state",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD___state",
+        "to": "A137_RESETS",
+        "kind": "ACTIVE_CHILD_OVERRIDE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_on_cpu",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_on_cpu",
+        "to": "A137_RESETS",
+        "kind": "ACTIVE_CHILD_OVERRIDE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_rt_run_list_next",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_rt_run_list_next",
+        "to": "A137_RESETS",
+        "kind": "ACTIVE_CHILD_OVERRIDE",
+        "label": ""
+      },
+      {
+        "from": "A137_COPY",
+        "to": "A137_FIELD_rt_run_list_prev",
+        "kind": "COPIED_VALUE_OR_POINTER",
+        "label": ""
+      },
+      {
+        "from": "A137_FIELD_rt_run_list_prev",
+        "to": "A137_RESETS",
+        "kind": "ACTIVE_CHILD_OVERRIDE",
+        "label": ""
+      },
+      {
+        "from": "B137_B0",
+        "to": "B137_B1",
+        "kind": "SEQUENTIAL_GIVEN_CHANGE_OR_FORK",
+        "label": ""
+      },
+      {
+        "from": "B137_B1",
+        "to": "B137_B2",
+        "kind": "SEQUENTIAL_GIVEN_CHANGE_OR_FORK",
+        "label": ""
+      },
+      {
+        "from": "B137_B2",
+        "to": "B137_B3",
+        "kind": "SEQUENTIAL_GIVEN_CHANGE_OR_FORK",
+        "label": ""
+      },
+      {
+        "from": "B137_B3",
+        "to": "B137_B4",
+        "kind": "SEQUENTIAL_GIVEN_CHANGE_OR_FORK",
+        "label": ""
+      },
+      {
+        "from": "B137_B4",
+        "to": "B137_B5",
+        "kind": "SEQUENTIAL_GIVEN_CHANGE_OR_FORK",
+        "label": ""
+      },
+      {
+        "from": "B137_B5",
+        "to": "B137_B6",
+        "kind": "SEQUENTIAL_GIVEN_CHANGE_OR_FORK",
+        "label": ""
+      },
+      {
+        "from": "B137_B6",
+        "to": "B137_B7",
+        "kind": "SEQUENTIAL_GIVEN_CHANGE_OR_FORK",
+        "label": ""
+      },
+      {
+        "from": "B137_B7",
+        "to": "B137_B8",
+        "kind": "SEQUENTIAL_GIVEN_CHANGE_OR_FORK",
+        "label": ""
+      },
+      {
+        "from": "A137_WAKE",
+        "to": "B137_B3",
+        "kind": "K_WAKE_BOUNDED",
+        "label": ""
+      },
+      {
+        "from": "A137_WAKE",
+        "to": "B137_B7",
+        "kind": "J_WAKE_BOUNDED",
+        "label": ""
+      },
+      {
+        "from": "C137_K_IN",
+        "to": "C137_K_SLICE",
+        "kind": "CURRENT_RT_READ",
+        "label": ""
+      },
+      {
+        "from": "C137_K_SLICE",
+        "to": "C137_K_GATE",
+        "kind": "ELAPSED_GE_SLICE",
+        "label": ""
+      },
+      {
+        "from": "C137_K_GATE",
+        "to": "C137_K_COUNT",
+        "kind": "OR_TRUE_EVAL_COUNT",
+        "label": ""
+      },
+      {
+        "from": "C137_K_COUNT",
+        "to": "C137_K_PICK",
+        "kind": "REMOVE_Q_REINSERT_CHARGE",
+        "label": ""
+      },
+      {
+        "from": "C137_K_PICK",
+        "to": "C137_K_OUTER",
+        "kind": "PICK_TO_SCHEDULE",
+        "label": ""
+      },
+      {
+        "from": "C137_K_OUTER",
+        "to": "C137_K_NR",
+        "kind": "SWITCH_TRUE_INCREMENT",
+        "label": ""
+      },
+      {
+        "from": "C137_K_NR",
+        "to": "C137_K_RCU",
+        "kind": "RCU_INIT_POINTER_SITE",
+        "label": ""
+      },
+      {
+        "from": "C137_K_RCU",
+        "to": "C137_K_NV",
+        "kind": "PREV_SWITCH_COUNTER_WRITE_OR_SKIP",
+        "label": ""
+      },
+      {
+        "from": "C137_K_NV",
+        "to": "C137_K_BOUND",
+        "kind": "CONTEXT_SWITCH_CALL_REACHED",
+        "label": ""
+      },
+      {
+        "from": "C137_J_IN",
+        "to": "C137_J_SLICE",
+        "kind": "CURRENT_RT_READ",
+        "label": ""
+      },
+      {
+        "from": "C137_J_SLICE",
+        "to": "C137_J_GATE",
+        "kind": "ELAPSED_GE_SLICE",
+        "label": ""
+      },
+      {
+        "from": "C137_J_GATE",
+        "to": "C137_J_COUNT",
+        "kind": "OR_FALSE_SKIP_COUNT",
+        "label": ""
+      },
+      {
+        "from": "C137_J_COUNT",
+        "to": "C137_J_PICK",
+        "kind": "CONTINUE_CURR",
+        "label": ""
+      },
+      {
+        "from": "C137_J_PICK",
+        "to": "C137_J_OUTER",
+        "kind": "PICK_TO_SCHEDULE",
+        "label": ""
+      },
+      {
+        "from": "C137_J_OUTER",
+        "to": "C137_J_NR",
+        "kind": "SAME_TASK_SKIP",
+        "label": ""
+      },
+      {
+        "from": "C137_J_NR",
+        "to": "C137_J_RCU",
+        "kind": "RCU_SKIPPED",
+        "label": ""
+      },
+      {
+        "from": "C137_J_RCU",
+        "to": "C137_J_NV",
+        "kind": "PREV_SWITCH_COUNTER_WRITE_OR_SKIP",
+        "label": ""
+      },
+      {
+        "from": "C137_J_NV",
+        "to": "C137_J_BOUND",
+        "kind": "CONTEXT_SWITCH_NOT_REACHED",
+        "label": ""
+      },
+      {
+        "from": "C137_RQ_CLOCK",
+        "to": "C137_K_IN",
+        "kind": "DISTINCT_CLOCK_SOURCE",
+        "label": ""
+      },
+      {
+        "from": "C137_USED_JIFFIES",
+        "to": "C137_K_IN",
+        "kind": "JJIFFIES_USED_INPUT",
+        "label": ""
+      },
+      {
+        "from": "C137_RQ_CLOCK",
+        "to": "C137_J_IN",
+        "kind": "DISTINCT_CLOCK_SOURCE",
+        "label": ""
+      },
+      {
+        "from": "C137_USED_JIFFIES",
+        "to": "C137_J_IN",
+        "kind": "JJIFFIES_USED_INPUT",
+        "label": ""
+      }
+    ],
+    "node_count": 93,
+    "edge_count": 96,
+    "all_edges_grounded_in_node_set": true
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": [],
+  "full_local_P9": "NOT_RUN"
+}
