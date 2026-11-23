@@ -1,0 +1,121 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-RUNQUEUE-CLOCK-UPDATE-133",
+  "record_type": "phase2_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "produced_by": "GPT-6 self-report, actual backend UNATTESTED",
+  "model_per_owner": "GPT-6＋Extra",
+  "read_channel": "connector",
+  "date": "2026-11-23",
+  "base_snapshot": "time",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "items": [
+    {
+      "id": "R132-01",
+      "type": "historical_documentation_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "what": "B1–B4 event seq moves switch_count binding before picker; separate call/return, B2 short circuit, conditional loop-bottom context",
+      "evidence": "132 fixed machine+graph, core.c:1034/1069/1078/1116/1118–1124, scheduler.h:282–286",
+      "adjudicator": "C09 Pro"
+    },
+    {
+      "id": "R132-02",
+      "type": "historical_documentation_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "what": "__pick_next_task owns indirect function-pointer call; myos_rt class initializer only supplies target; null/nonnull/iteration exhausted distinguished",
+      "evidence": "132 class edge; scheduler.h:258–276; myos_rt.c:67",
+      "adjudicator": "C09 Pro"
+    },
+    {
+      "id": "R132-03",
+      "type": "historical_documentation_correction",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "what": "source-correct five/specific seven cluster scopes for 130/131/132",
+      "evidence": "130 fixed DOT + 131 facts/DOT + 132 facts/DOT",
+      "adjudicator": "C09 Pro"
+    },
+    {
+      "id": "COUNTER_UNKNOWN_CLOCK_LOCAL",
+      "type": "given_input_partially_resolved",
+      "status": "LOCAL_GIVEN_VALUES_RECONSTRUCTED_PENDING_MAINLINE_REVIEW",
+      "what": "clock1000 flags1 and 3 continuous samples give 1012/1012/1012, then independent C1/C2/C3 give 1012/1012/1000; source flags always4",
+      "boundary": "only given no-concurrency clock segment, not actual physical time; clock_task/pelt untouched in selected body",
+      "restore": "independent mainline review; separate authorized runtime evidence if real clocks needed"
+    },
+    {
+      "id": "TSC_USE_GATE",
+      "type": "actual_hardware_or_link_unknown",
+      "status": "UNKNOWN_NOT_RUN",
+      "what": "native_sched_clock uses TSC when __use_tsc true and jiffies_64 fallback otherwise; actual runtime gate and calibration unobserved",
+      "evidence": "clock.h local_clock; tsc.c native_sched_clock",
+      "restore": "separate permitted build/hardware study"
+    },
+    {
+      "id": "SIGNED_CONVERSION",
+      "type": "language_scope",
+      "status": "CONTRACT_STIPULATED_NOT_PORTABLE",
+      "what": "u64 modular subtraction overflowing s64 range is converted as low64 two's complement by 185; C does not generally require this mapping",
+      "evidence": "delta s64 plus u64 local_clock/rq.clock",
+      "restore": "toolchain and target ABI when separately authorized"
+    },
+    {
+      "id": "ZERO_ADD_ACTUAL_STORE",
+      "type": "compiler_evidence_unknown",
+      "status": "UNKNOWN",
+      "what": "source runs clock+=0 but compiler machine store, memory effects and optimization are not evidenced",
+      "restore": "authorized build/disassembly outside phase2"
+    },
+    {
+      "id": "POST_LOOP_CONTEXT",
+      "type": "scheduler_runtime_unknown",
+      "status": "UNKNOWN_NOT_RUN",
+      "what": "B3/B4 pick Q, call context_switch, but neither actual resumed execution context nor need_resched() state at loop bottom proven",
+      "restore": "authorized switch path evidence or given concrete resume state"
+    },
+    {
+      "id": "OTHER_RQ_CLOCKS",
+      "type": "source_scope",
+      "status": "NOT_EXAMINED_OUTSIDE_185",
+      "what": "clock_task and clock_pelt remain unchanged in the exact clock slice; other routines may write, no negative whole-tree assertion",
+      "restore": "new bounded contract if needed"
+    },
+    {
+      "id": "JIF_TSC_RELATION",
+      "type": "physical_source_scope",
+      "status": "UNKNOWN_REALITY",
+      "what": "specified ns and jiffies independently for paper experiments; actual hardware correlation and elapsed time not proved",
+      "restore": "separate clock and tick observations"
+    },
+    {
+      "id": "CLASS_ITERATION_ORDER",
+      "type": "linker_unknown",
+      "status": "UNKNOWN",
+      "what": "given reached myos_rt class sufficient for chosen case; linked class order and empty class path not verified",
+      "restore": "independently authorized linker inspection"
+    }
+  ],
+  "historical_closed_not_reopened": [
+    "R130-02",
+    "R131-01",
+    "R131-02",
+    "R127-02",
+    "R130-01"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "preprocess": "NOT_RUN",
+  "compilation": "NOT_RUN",
+  "linking": "NOT_RUN",
+  "repository_script": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "real_hardware_time_sample": "NOT_RUN",
+  "real_process_scheduler_filesystem": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "real TSC selection and task switch status",
+    "compiler store for +=0",
+    "C09 independent review of three D00 changes"
+  ]
+}
