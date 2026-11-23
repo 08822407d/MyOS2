@@ -1,0 +1,142 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-FORK-RETURN-IDENTITIES-135",
+  "record_type": "phase2_fork_return_and_D00_deferred_findings",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-20",
+  "conversation_display_name": "MYOS2-A-C08c 代码分析执行",
+  "date": "2026-11-23",
+  "base_snapshot": "time（分支名）",
+  "model_per_owner": "GPT-6＋Extra",
+  "actual_backend_model": "UNATTESTED",
+  "actual_backend_effort": "UNATTESTED",
+  "read_channel": "connector",
+  "author_status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "items": [
+    {
+      "id": "R133-01",
+      "type": "historical_virtual_to_actual_graph_mapping",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "fact": "133 virtual S132_class_iter->S132_picker / INDIRECT_CALL_INSTANCE expands into real D133_CLASS_owner->call / INDIRECT_CALL_INSTANCE plus call->callee / TARGET_RESOLUTION_IF_MYOS_RT, preserving data edges",
+      "check": "C09 Pro independent both carrier lookups"
+    },
+    {
+      "id": "R134-01",
+      "type": "historical_graph_identity_mapping",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "fact": "four D134_CLOCK_* virtual names and kinds mapped onto four real PID134_CLOCK_* nodes/edges; actual return merge kinds differ from virtual",
+      "check": "C09 Pro compare 134 fixed graph and D00"
+    },
+    {
+      "id": "R134-02",
+      "type": "historical_query_order_scope",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "fact": "ten prior target->observer EVALUATION_ORDER edges corrected: caller arguments are data not C expression order, if(!ns) at pid.c:473–474 precedes target slot at 475; five default chains P->P.thread_pid=T->T.numbers[1].ns=N1; five explicit retain ns",
+      "check": "C09 Pro verify 20 frozen fields per ten rows and graph mapping; two zero reasons preserved"
+    },
+    {
+      "id": "R134-03",
+      "type": "historical_syscall_dispatch",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "fact": "conditional switch -> __x64_sys_* direct call -> __se_sys_* direct call -> __do_sys_* direct call -> query body in definition; no fictitious direct switch to body",
+      "check": "C09 Pro macro-conditional fixed source review, preprocessor NOT_RUN"
+    },
+    {
+      "id": "R134-04",
+      "type": "historical_source_windows_and_assertions",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "fact": "E134-021 virtual one-to-one replacement only pid.h:125; E134-001..047 individually linked to narrow assertion; old frozen47/47/0 with16 locations, virtual corrected47, new135 evidence66 separate",
+      "check": "C09 Pro cross-check 47 assertion records against old source and E135-001"
+    },
+    {
+      "id": "SUCCESS_C1_PAPER",
+      "type": "given_value_not_runtime",
+      "status": "PAPER_MODEL_ONLY",
+      "fact": "N0: K scalar pid/tgid5200; P kernel fork returns child PID vnr5200; K saved ax0; K getpid5200 getppid5100, P getpid5100; temp refs 2->3->2",
+      "check": "independent static replay"
+    },
+    {
+      "id": "SUCCESS_C2_PAPER",
+      "type": "given_value_not_runtime",
+      "status": "PAPER_MODEL_ONLY",
+      "fact": "N1: K scalar pid/tgid5200 but P kernel fork returns child PID vnr30, K saved ax0; K getpid30 getppid20, P getpid20; explicit N0 child TGID helper5200; temp refs 2->3->2",
+      "check": "independent static replay"
+    },
+    {
+      "id": "DUP_TASK_STRUCT_NULL_C3",
+      "type": "given_failure_not_runtime",
+      "status": "PAPER_MODEL_ONLY",
+      "fact": "dup_task_struct NULL after retval=-ENOMEM, copy_process fork_out ERR_PTR(-ENOMEM), kernel_clone IS_ERR/PTR_ERR returns -ENOMEM; no child frame, PID allocation, PID vnr, get_task_pid, wake or put in success path",
+      "check": "do not infer user side -1 or errno from kernel source alone"
+    },
+    {
+      "id": "EXIT_SIGNAL_GROUP_LEADER",
+      "type": "condition_not_proven_from_SIGCHLD",
+      "status": "EXPLICIT_GIVEN_PREMISE",
+      "fact": "task.thread_group_leader checks p.exit_signal>=0; copy_process p.exit_signal=args.exit_signal line is commented; both success cases stipulate predicate true",
+      "check": "separate initialization/lifetime evidence if required"
+    },
+    {
+      "id": "USER_ABI_LIBC_BRIDGE",
+      "type": "runtime_unknown",
+      "status": "UNKNOWN",
+      "fact": "kernel source return nr and K.childregs.ax=0 are distinct; actual user fork return, errno mapping, getpid/getppid and SYSRET depend on unproven libc, ABI, assembly, CPU execution",
+      "check": "separate authorized runtime study"
+    },
+    {
+      "id": "ACTUAL_WAKE_ORDER",
+      "type": "runtime_unknown",
+      "status": "UNKNOWN",
+      "fact": "wake_up_new_task(K) source call after nr computation, not proof K executes or ordering relative to parent resume",
+      "check": "future permitted scheduling/real world evidence"
+    },
+    {
+      "id": "PID_LIFETIME_AND_LOCKS",
+      "type": "runtime_unknown",
+      "status": "UNKNOWN",
+      "fact": "get_task_pid uses rcu_dereference and get_pid; put_pid dec_and_test; object refcount 2->3->2 only under given no-other-change premise; concurrent lifetime not certified",
+      "check": "full lifetimes only with independent authorization"
+    },
+    {
+      "id": "PROCESS_NAMESPACE_PROVISIONING",
+      "type": "runtime_unknown",
+      "status": "UNKNOWN",
+      "fact": "N0/N1 given objects and arrays, not evidence actual creation/boot/child task support",
+      "check": "separate namespace implementation study"
+    },
+    {
+      "id": "UNATTESTED_BUILD",
+      "type": "phase2_prohibited",
+      "status": "NOT_RUN",
+      "fact": "CONFIG_ARCH_HAS_SYSCALL_WRAPPER fixed CMake and wrapper macro text only, actual preprocessing and linker bindings unknown",
+      "check": "no code/compile/link authorization"
+    },
+    {
+      "id": "COMPLETE_P9_RUNTIME",
+      "type": "phase2_prohibited",
+      "status": "NOT_RUN",
+      "fact": "full local P9, compile, link, repo code/scripts, Graphviz, QEMU, live hardware, PID/task/scheduler/file/time operations all NOT_RUN",
+      "check": "remain phase2"
+    }
+  ],
+  "historical_closed_not_reopened": [
+    "R133-02",
+    "R133-03",
+    "R132 combined PASS_PENDING_LOCAL"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "compiling": "NOT_RUN",
+  "linking": "NOT_RUN",
+  "repository_script": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU": "NOT_RUN",
+  "real_process_pid_namespace_scheduler_clock_files": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "open_questions": [
+    "C09 Pro review of five D00 items",
+    "real user fork status/errno and child resume",
+    "actual PID namespace/RCU/runtime success"
+  ]
+}
