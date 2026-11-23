@@ -1,0 +1,2455 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-NEW-TASK-RUNQUEUE-ENTRY-136",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "produced_by": "GPT-6（模型族自报，后台与effort未认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "actual_backend_model": "UNATTESTED",
+  "date": "2026-11-23",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "exec_parent_short12": "d01efe19ccec",
+  "lead_contract_short12": "9d333c5959a8",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "record_type": "machine_facts_and_static_graph",
+  "D00": {
+    "R135_01": {
+      "state": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_batch": 135,
+      "old_file": "facts-and-boundaries.yaml:D00.R134_02.queries",
+      "target_is_observer_default": [
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "explicit_queries_count": 5,
+      "explicit_edge_replacement": [
+        "IF_NS_NONNULL_SKIP_474",
+        "SEQUENCE_TO_475"
+      ],
+      "queries": [
+        {
+          "id": "C1_GETPID",
+          "old_frozen_query_id": "PID134_C1_GETPID",
+          "old_graph_stages": [
+            "PID134_C1_GETPID_entry",
+            "PID134_C1_GETPID_target",
+            "PID134_C1_GETPID_observer",
+            "PID134_C1_GETPID_level",
+            "PID134_C1_GETPID_index",
+            "PID134_C1_GETPID_ptr",
+            "PID134_C1_GETPID_nr",
+            "PID134_C1_GETPID_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C1_GETPID_target",
+            "to": "PID134_C1_GETPID_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": null,
+          "current": "P",
+          "target": "P",
+          "target_is_observer": true,
+          "namespace_source": "DEFAULT_CURRENT",
+          "ns_source_is_current": true,
+          "source_chain": [
+            "current=P",
+            "P.thread_pid=T",
+            "T.level=1",
+            "T.numbers[1].ns=N1"
+          ],
+          "condition_473": true,
+          "condition_473_result": true,
+          "statement_474_executed": true,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "USERSPACE_GETPID",
+            "current": "P",
+            "target_task": "P",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "G",
+            "pid_level": 1,
+            "requested_ns": "N1",
+            "ns_source": "DEFAULT_NS_NULL_CURRENT_P_THREAD_PID_T_LEVEL_1_N1",
+            "pid_object_nonnull": true,
+            "ns_level": 1,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 1,
+            "indexed_upid": {
+              "ns": "N1",
+              "nr": 20
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": true,
+            "nr_read": true,
+            "return_nr": 20,
+            "zero_reason": null
+          },
+          "old_return_nr": 20,
+          "graph_prefix": "Q136_C1_GETPID"
+        },
+        {
+          "id": "C1_GETPPID",
+          "old_frozen_query_id": "PID134_C1_GETPPID",
+          "old_graph_stages": [
+            "PID134_C1_GETPPID_entry",
+            "PID134_C1_GETPPID_target",
+            "PID134_C1_GETPPID_observer",
+            "PID134_C1_GETPPID_level",
+            "PID134_C1_GETPPID_index",
+            "PID134_C1_GETPPID_ptr",
+            "PID134_C1_GETPPID_nr",
+            "PID134_C1_GETPPID_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C1_GETPPID_target",
+            "to": "PID134_C1_GETPPID_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": null,
+          "current": "P",
+          "target": "RealParent",
+          "target_is_observer": false,
+          "namespace_source": "DEFAULT_CURRENT",
+          "ns_source_is_current": true,
+          "source_chain": [
+            "current=P",
+            "P.thread_pid=T",
+            "T.level=1",
+            "T.numbers[1].ns=N1"
+          ],
+          "condition_473": true,
+          "condition_473_result": true,
+          "statement_474_executed": true,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "USERSPACE_GETPPID",
+            "current": "P",
+            "target_task": "RealParent",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "GP",
+            "pid_level": 1,
+            "requested_ns": "N1",
+            "ns_source": "DEFAULT_NS_NULL_CURRENT_P_THREAD_PID_T_LEVEL_1_N1",
+            "pid_object_nonnull": true,
+            "ns_level": 1,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 1,
+            "indexed_upid": {
+              "ns": "N1",
+              "nr": 7
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": true,
+            "nr_read": true,
+            "return_nr": 7,
+            "zero_reason": null
+          },
+          "old_return_nr": 7,
+          "graph_prefix": "Q136_C1_GETPPID"
+        },
+        {
+          "id": "C1_PIDVNR",
+          "old_frozen_query_id": "PID134_C1_PIDVNR",
+          "old_graph_stages": [
+            "PID134_C1_PIDVNR_entry",
+            "PID134_C1_PIDVNR_target",
+            "PID134_C1_PIDVNR_observer",
+            "PID134_C1_PIDVNR_level",
+            "PID134_C1_PIDVNR_index",
+            "PID134_C1_PIDVNR_ptr",
+            "PID134_C1_PIDVNR_nr",
+            "PID134_C1_PIDVNR_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C1_PIDVNR_target",
+            "to": "PID134_C1_PIDVNR_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": null,
+          "current": "P",
+          "target": "P",
+          "target_is_observer": true,
+          "namespace_source": "DEFAULT_CURRENT",
+          "ns_source_is_current": true,
+          "source_chain": [
+            "current=P",
+            "P.thread_pid=T",
+            "T.level=1",
+            "T.numbers[1].ns=N1"
+          ],
+          "condition_473": true,
+          "condition_473_result": true,
+          "statement_474_executed": true,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "KERNEL_HELPER",
+            "current": "P",
+            "target_task": "P",
+            "type": "PIDTYPE_PID",
+            "slot_source": "task->thread_pid",
+            "pid_object": "T",
+            "pid_level": 1,
+            "requested_ns": "N1",
+            "ns_source": "DEFAULT_NS_NULL_CURRENT_P_THREAD_PID_T_LEVEL_1_N1",
+            "pid_object_nonnull": true,
+            "ns_level": 1,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 1,
+            "indexed_upid": {
+              "ns": "N1",
+              "nr": 22
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": true,
+            "nr_read": true,
+            "return_nr": 22,
+            "zero_reason": null
+          },
+          "old_return_nr": 22,
+          "graph_prefix": "Q136_C1_PIDVNR"
+        },
+        {
+          "id": "C2_N0_TGID",
+          "old_frozen_query_id": "PID134_C2_N0_TGID",
+          "old_graph_stages": [
+            "PID134_C2_N0_TGID_entry",
+            "PID134_C2_N0_TGID_target",
+            "PID134_C2_N0_TGID_observer",
+            "PID134_C2_N0_TGID_level",
+            "PID134_C2_N0_TGID_index",
+            "PID134_C2_N0_TGID_ptr",
+            "PID134_C2_N0_TGID_nr",
+            "PID134_C2_N0_TGID_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C2_N0_TGID_target",
+            "to": "PID134_C2_N0_TGID_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": {
+            "from": "Q135_C2_N0_TGID_resolved_ns",
+            "to": "Q135_C2_N0_TGID_slot",
+            "kind": "SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475",
+            "dot_selector": "Q135_C2_N0_TGID_resolved_ns -> Q135_C2_N0_TGID_slot [kind=\"SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475\"]",
+            "old_facts_selector": "graph.edges[from=Q135_C2_N0_TGID_resolved_ns,to=Q135_C2_N0_TGID_slot]"
+          },
+          "current": "P",
+          "target": "P",
+          "target_is_observer": true,
+          "namespace_source": "EXPLICIT_ARGUMENT",
+          "ns_source_is_current": false,
+          "source_chain": [
+            "explicit=N0",
+            "line474 not executed"
+          ],
+          "condition_473": true,
+          "condition_473_result": false,
+          "statement_474_executed": false,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "KERNEL_HELPER",
+            "current": "P",
+            "target_task": "P",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "G",
+            "pid_level": 1,
+            "requested_ns": "N0",
+            "ns_source": "EXPLICIT_ARG",
+            "pid_object_nonnull": true,
+            "ns_level": 0,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 0,
+            "indexed_upid": {
+              "ns": "N0",
+              "nr": 5100
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": true,
+            "nr_read": true,
+            "return_nr": 5100,
+            "zero_reason": null
+          },
+          "old_return_nr": 5100,
+          "graph_prefix": "Q136_C2_N0_TGID"
+        },
+        {
+          "id": "C2_N1_TGID",
+          "old_frozen_query_id": "PID134_C2_N1_TGID",
+          "old_graph_stages": [
+            "PID134_C2_N1_TGID_entry",
+            "PID134_C2_N1_TGID_target",
+            "PID134_C2_N1_TGID_observer",
+            "PID134_C2_N1_TGID_level",
+            "PID134_C2_N1_TGID_index",
+            "PID134_C2_N1_TGID_ptr",
+            "PID134_C2_N1_TGID_nr",
+            "PID134_C2_N1_TGID_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C2_N1_TGID_target",
+            "to": "PID134_C2_N1_TGID_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": {
+            "from": "Q135_C2_N1_TGID_resolved_ns",
+            "to": "Q135_C2_N1_TGID_slot",
+            "kind": "SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475",
+            "dot_selector": "Q135_C2_N1_TGID_resolved_ns -> Q135_C2_N1_TGID_slot [kind=\"SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475\"]",
+            "old_facts_selector": "graph.edges[from=Q135_C2_N1_TGID_resolved_ns,to=Q135_C2_N1_TGID_slot]"
+          },
+          "current": "P",
+          "target": "P",
+          "target_is_observer": true,
+          "namespace_source": "EXPLICIT_ARGUMENT",
+          "ns_source_is_current": false,
+          "source_chain": [
+            "explicit=N1",
+            "line474 not executed"
+          ],
+          "condition_473": true,
+          "condition_473_result": false,
+          "statement_474_executed": false,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "KERNEL_HELPER",
+            "current": "P",
+            "target_task": "P",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "G",
+            "pid_level": 1,
+            "requested_ns": "N1",
+            "ns_source": "EXPLICIT_ARG",
+            "pid_object_nonnull": true,
+            "ns_level": 1,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 1,
+            "indexed_upid": {
+              "ns": "N1",
+              "nr": 20
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": true,
+            "nr_read": true,
+            "return_nr": 20,
+            "zero_reason": null
+          },
+          "old_return_nr": 20,
+          "graph_prefix": "Q136_C2_N1_TGID"
+        },
+        {
+          "id": "C3_GETPPID_PARENT0",
+          "old_frozen_query_id": "PID134_C3_GETPPID_PARENT0",
+          "old_graph_stages": [
+            "PID134_C3_GETPPID_PARENT0_entry",
+            "PID134_C3_GETPPID_PARENT0_target",
+            "PID134_C3_GETPPID_PARENT0_observer",
+            "PID134_C3_GETPPID_PARENT0_level",
+            "PID134_C3_GETPPID_PARENT0_index",
+            "PID134_C3_GETPPID_PARENT0_ptr",
+            "PID134_C3_GETPPID_PARENT0_nr",
+            "PID134_C3_GETPPID_PARENT0_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C3_GETPPID_PARENT0_target",
+            "to": "PID134_C3_GETPPID_PARENT0_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": null,
+          "current": "P",
+          "target": "RealParent0",
+          "target_is_observer": false,
+          "namespace_source": "DEFAULT_CURRENT",
+          "ns_source_is_current": true,
+          "source_chain": [
+            "current=P",
+            "P.thread_pid=T",
+            "T.level=1",
+            "T.numbers[1].ns=N1"
+          ],
+          "condition_473": true,
+          "condition_473_result": true,
+          "statement_474_executed": true,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "USERSPACE_GETPPID",
+            "current": "P",
+            "target_task": "RealParent0",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "GP0",
+            "pid_level": 0,
+            "requested_ns": "N1",
+            "ns_source": "DEFAULT_NS_NULL_CURRENT_P_THREAD_PID_T_LEVEL_1_N1",
+            "pid_object_nonnull": true,
+            "ns_level": 1,
+            "level_gate_evaluated": true,
+            "level_gate_passed": false,
+            "index_read": "NOT_REACHED",
+            "indexed_upid": null,
+            "pointer_comparison_evaluated": false,
+            "pointer_comparison_result": "NOT_EVALUATED",
+            "nr_read": false,
+            "return_nr": 0,
+            "zero_reason": "NAMESPACE_LEVEL_GT_PID_LEVEL"
+          },
+          "old_return_nr": 0,
+          "graph_prefix": "Q136_C3_GETPPID_PARENT0"
+        },
+        {
+          "id": "C3_N0_GP0",
+          "old_frozen_query_id": "PID134_C3_N0_GP0",
+          "old_graph_stages": [
+            "PID134_C3_N0_GP0_entry",
+            "PID134_C3_N0_GP0_target",
+            "PID134_C3_N0_GP0_observer",
+            "PID134_C3_N0_GP0_level",
+            "PID134_C3_N0_GP0_index",
+            "PID134_C3_N0_GP0_ptr",
+            "PID134_C3_N0_GP0_nr",
+            "PID134_C3_N0_GP0_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C3_N0_GP0_target",
+            "to": "PID134_C3_N0_GP0_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": {
+            "from": "Q135_C3_N0_GP0_resolved_ns",
+            "to": "Q135_C3_N0_GP0_slot",
+            "kind": "SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475",
+            "dot_selector": "Q135_C3_N0_GP0_resolved_ns -> Q135_C3_N0_GP0_slot [kind=\"SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475\"]",
+            "old_facts_selector": "graph.edges[from=Q135_C3_N0_GP0_resolved_ns,to=Q135_C3_N0_GP0_slot]"
+          },
+          "current": "P",
+          "target": "RealParent0",
+          "target_is_observer": false,
+          "namespace_source": "EXPLICIT_ARGUMENT",
+          "ns_source_is_current": false,
+          "source_chain": [
+            "explicit=N0",
+            "line474 not executed"
+          ],
+          "condition_473": true,
+          "condition_473_result": false,
+          "statement_474_executed": false,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "KERNEL_HELPER",
+            "current": "P",
+            "target_task": "RealParent0",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "GP0",
+            "pid_level": 0,
+            "requested_ns": "N0",
+            "ns_source": "EXPLICIT_ARG",
+            "pid_object_nonnull": true,
+            "ns_level": 0,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 0,
+            "indexed_upid": {
+              "ns": "N0",
+              "nr": 4100
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": true,
+            "nr_read": true,
+            "return_nr": 4100,
+            "zero_reason": null
+          },
+          "old_return_nr": 4100,
+          "graph_prefix": "Q136_C3_N0_GP0"
+        },
+        {
+          "id": "C3_GETPID",
+          "old_frozen_query_id": "PID134_C3_GETPID",
+          "old_graph_stages": [
+            "PID134_C3_GETPID_entry",
+            "PID134_C3_GETPID_target",
+            "PID134_C3_GETPID_observer",
+            "PID134_C3_GETPID_level",
+            "PID134_C3_GETPID_index",
+            "PID134_C3_GETPID_ptr",
+            "PID134_C3_GETPID_nr",
+            "PID134_C3_GETPID_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C3_GETPID_target",
+            "to": "PID134_C3_GETPID_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": null,
+          "current": "P",
+          "target": "P",
+          "target_is_observer": true,
+          "namespace_source": "DEFAULT_CURRENT",
+          "ns_source_is_current": true,
+          "source_chain": [
+            "current=P",
+            "P.thread_pid=T",
+            "T.level=1",
+            "T.numbers[1].ns=N1"
+          ],
+          "condition_473": true,
+          "condition_473_result": true,
+          "statement_474_executed": true,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "USERSPACE_GETPID",
+            "current": "P",
+            "target_task": "P",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "G",
+            "pid_level": 1,
+            "requested_ns": "N1",
+            "ns_source": "DEFAULT_NS_NULL_CURRENT_P_THREAD_PID_T_LEVEL_1_N1",
+            "pid_object_nonnull": true,
+            "ns_level": 1,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 1,
+            "indexed_upid": {
+              "ns": "N1",
+              "nr": 20
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": true,
+            "nr_read": true,
+            "return_nr": 20,
+            "zero_reason": null
+          },
+          "old_return_nr": 20,
+          "graph_prefix": "Q136_C3_GETPID"
+        },
+        {
+          "id": "C4_M1_G",
+          "old_frozen_query_id": "PID134_C4_M1_G",
+          "old_graph_stages": [
+            "PID134_C4_M1_G_entry",
+            "PID134_C4_M1_G_target",
+            "PID134_C4_M1_G_observer",
+            "PID134_C4_M1_G_level",
+            "PID134_C4_M1_G_index",
+            "PID134_C4_M1_G_ptr",
+            "PID134_C4_M1_G_nr",
+            "PID134_C4_M1_G_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C4_M1_G_target",
+            "to": "PID134_C4_M1_G_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": {
+            "from": "Q135_C4_M1_G_resolved_ns",
+            "to": "Q135_C4_M1_G_slot",
+            "kind": "SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475",
+            "dot_selector": "Q135_C4_M1_G_resolved_ns -> Q135_C4_M1_G_slot [kind=\"SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475\"]",
+            "old_facts_selector": "graph.edges[from=Q135_C4_M1_G_resolved_ns,to=Q135_C4_M1_G_slot]"
+          },
+          "current": "P",
+          "target": "P",
+          "target_is_observer": true,
+          "namespace_source": "EXPLICIT_ARGUMENT",
+          "ns_source_is_current": false,
+          "source_chain": [
+            "explicit=M1",
+            "line474 not executed"
+          ],
+          "condition_473": true,
+          "condition_473_result": false,
+          "statement_474_executed": false,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "KERNEL_HELPER",
+            "current": "P",
+            "target_task": "P",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "G",
+            "pid_level": 1,
+            "requested_ns": "M1",
+            "ns_source": "EXPLICIT_ARG",
+            "pid_object_nonnull": true,
+            "ns_level": 1,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 1,
+            "indexed_upid": {
+              "ns": "N1",
+              "nr": 20
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": false,
+            "nr_read": false,
+            "return_nr": 0,
+            "zero_reason": "UPID_NAMESPACE_POINTER_MISMATCH"
+          },
+          "old_return_nr": 0,
+          "graph_prefix": "Q136_C4_M1_G"
+        },
+        {
+          "id": "C4_N1_G",
+          "old_frozen_query_id": "PID134_C4_N1_G",
+          "old_graph_stages": [
+            "PID134_C4_N1_G_entry",
+            "PID134_C4_N1_G_target",
+            "PID134_C4_N1_G_observer",
+            "PID134_C4_N1_G_level",
+            "PID134_C4_N1_G_index",
+            "PID134_C4_N1_G_ptr",
+            "PID134_C4_N1_G_nr",
+            "PID134_C4_N1_G_return"
+          ],
+          "old_r134_edge": {
+            "from": "PID134_C4_N1_G_target",
+            "to": "PID134_C4_N1_G_observer",
+            "kind": "EVALUATION_ORDER",
+            "facts_count": 1,
+            "dot_count": 1
+          },
+          "old_r135_explicit_edge": {
+            "from": "Q135_C4_N1_G_resolved_ns",
+            "to": "Q135_C4_N1_G_slot",
+            "kind": "SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475",
+            "dot_selector": "Q135_C4_N1_G_resolved_ns -> Q135_C4_N1_G_slot [kind=\"SOURCE_STATEMENT_ORDER_PID_C_474_BEFORE_475\"]",
+            "old_facts_selector": "graph.edges[from=Q135_C4_N1_G_resolved_ns,to=Q135_C4_N1_G_slot]"
+          },
+          "current": "P",
+          "target": "P",
+          "target_is_observer": true,
+          "namespace_source": "EXPLICIT_ARGUMENT",
+          "ns_source_is_current": false,
+          "source_chain": [
+            "explicit=N1",
+            "line474 not executed"
+          ],
+          "condition_473": true,
+          "condition_473_result": false,
+          "statement_474_executed": false,
+          "statement_475_executed": true,
+          "old_preserved_twenty_fields": {
+            "entry_kind": "KERNEL_HELPER",
+            "current": "P",
+            "target_task": "P",
+            "type": "PIDTYPE_TGID",
+            "slot_source": "task->signal->pids[PIDTYPE_TGID]",
+            "pid_object": "G",
+            "pid_level": 1,
+            "requested_ns": "N1",
+            "ns_source": "EXPLICIT_ARG",
+            "pid_object_nonnull": true,
+            "ns_level": 1,
+            "level_gate_evaluated": true,
+            "level_gate_passed": true,
+            "index_read": 1,
+            "indexed_upid": {
+              "ns": "N1",
+              "nr": 20
+            },
+            "pointer_comparison_evaluated": true,
+            "pointer_comparison_result": true,
+            "nr_read": true,
+            "return_nr": 20,
+            "zero_reason": null
+          },
+          "old_return_nr": 20,
+          "graph_prefix": "Q136_C4_N1_G"
+        }
+      ],
+      "frozen_return_sequence": [
+        20,
+        7,
+        22,
+        5100,
+        20,
+        0,
+        4100,
+        20,
+        0,
+        20
+      ],
+      "frozen_twenty_fields_total": 200
+    },
+    "R135_02": {
+      "state": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_batch": 135,
+      "old_slot_object": "A.copy_process.slots",
+      "old_graph_node": "A135_iserr",
+      "source_order": [
+        "p->pid != 0 outer gate",
+        "init_task_pid(p,PIDTYPE_PID,pid_struct) -> K.thread_pid",
+        "thread_group_leader(p) independent inner gate",
+        "init_task_pid(p,PIDTYPE_TGID,pid_struct) -> K.signal.pids[TGID]"
+      ],
+      "slot_gates": {
+        "PIDTYPE_PID": {
+          "requires_nonzero_pid": true,
+          "requires_group_leader": false,
+          "destination": "K.thread_pid",
+          "value": "KPID"
+        },
+        "PIDTYPE_TGID": {
+          "requires_nonzero_pid": true,
+          "requires_group_leader": true,
+          "destination": "K.signal.pids[PIDTYPE_TGID]",
+          "value": "KPID"
+        }
+      },
+      "raw_IS_ERR": "IS_ERR(p)",
+      "raw_pointer_cases": {
+        "C1": {
+          "p": "K",
+          "nonzero": true,
+          "leader": true,
+          "IS_ERR": false,
+          "PID_slot_writes": true,
+          "TGID_slot_writes": true
+        },
+        "C2": {
+          "p": "K",
+          "nonzero": true,
+          "leader": true,
+          "IS_ERR": false,
+          "PID_slot_writes": true,
+          "TGID_slot_writes": true
+        },
+        "C3": {
+          "p": "ERR_PTR(-ENOMEM)",
+          "IS_ERR": true,
+          "retval": "-ENOMEM",
+          "PID_slot_reached": false,
+          "TGID_slot_reached": false
+        }
+      },
+      "group_leader_predicate": "p->exit_signal >=0, independently given true in C1/C2; args SIGCHLD alone insufficient"
+    },
+    "R135_03": {
+      "state": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_batch": 135,
+      "old_five_edges": [
+        {
+          "case_id": "C1",
+          "from": "C135_C1_19",
+          "to": "C135_C1_GETPID_CHILD",
+          "kind": "CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY",
+          "old_dot_line": 626,
+          "old_facts_selector": "graph.edges[from=C135_C1_19,to=C135_C1_GETPID_CHILD]",
+          "old_dot_selector": "C135_C1_19 -> C135_C1_GETPID_CHILD [kind=\"CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY\"]",
+          "new_disposition": "NO_PARENT_TO_CHILD_TEMPORAL_EDGE"
+        },
+        {
+          "case_id": "C1",
+          "from": "C135_C1_19",
+          "to": "C135_C1_GETPPID_CHILD",
+          "kind": "CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY",
+          "old_dot_line": 632,
+          "old_facts_selector": "graph.edges[from=C135_C1_19,to=C135_C1_GETPPID_CHILD]",
+          "old_dot_selector": "C135_C1_19 -> C135_C1_GETPPID_CHILD [kind=\"CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY\"]",
+          "new_disposition": "NO_PARENT_TO_CHILD_TEMPORAL_EDGE"
+        },
+        {
+          "case_id": "C2",
+          "from": "C135_C2_19",
+          "to": "C135_C2_GETPID_CHILD",
+          "kind": "CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY",
+          "old_dot_line": 714,
+          "old_facts_selector": "graph.edges[from=C135_C2_19,to=C135_C2_GETPID_CHILD]",
+          "old_dot_selector": "C135_C2_19 -> C135_C2_GETPID_CHILD [kind=\"CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY\"]",
+          "new_disposition": "NO_PARENT_TO_CHILD_TEMPORAL_EDGE"
+        },
+        {
+          "case_id": "C2",
+          "from": "C135_C2_19",
+          "to": "C135_C2_GETPPID_CHILD",
+          "kind": "CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY",
+          "old_dot_line": 720,
+          "old_facts_selector": "graph.edges[from=C135_C2_19,to=C135_C2_GETPPID_CHILD]",
+          "old_dot_selector": "C135_C2_19 -> C135_C2_GETPPID_CHILD [kind=\"CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY\"]",
+          "new_disposition": "NO_PARENT_TO_CHILD_TEMPORAL_EDGE"
+        },
+        {
+          "case_id": "C2",
+          "from": "C135_C2_19",
+          "to": "C135_C2_EXPLICIT_N0_CHILD_TGID",
+          "kind": "CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY",
+          "old_dot_line": 732,
+          "old_facts_selector": "graph.edges[from=C135_C2_19,to=C135_C2_EXPLICIT_N0_CHILD_TGID]",
+          "old_dot_selector": "C135_C2_19 -> C135_C2_EXPLICIT_N0_CHILD_TGID [kind=\"CONDITIONAL_FUTURE_USER_OR_HELPER_QUERY\"]",
+          "new_disposition": "NO_PARENT_TO_CHILD_TEMPORAL_EDGE"
+        }
+      ],
+      "parent_kernel_clone_source_returns": [
+        {
+          "id": "C135_C1_FORK_PARENT",
+          "nr": 5200,
+          "success_conditional_on_libc": false
+        },
+        {
+          "id": "C135_C2_FORK_PARENT",
+          "nr": 30,
+          "success_conditional_on_libc": false
+        }
+      ],
+      "parent_userspace_bridge": "UNKNOWN",
+      "child_first_run": "UNKNOWN",
+      "child_queries": [
+        "C135_C1_GETPID_CHILD",
+        "C135_C1_GETPPID_CHILD",
+        "C135_C2_GETPID_CHILD",
+        "C135_C2_GETPPID_CHILD"
+      ],
+      "child_query_preconditions": [
+        "child saved regs ax=0",
+        "child runnable enqueue",
+        "subsequent picker selected child, not entailed by enqueue",
+        "child first CPU context run and successful user return",
+        "user code reaches query"
+      ],
+      "C2_explicit_N0_helper": {
+        "value": 5200,
+        "type": "independent helper object evaluation, no parent-return time ordering"
+      },
+      "C1_frozen_results": {
+        "child_scalar_pid": 5200,
+        "child_scalar_tgid": 5200,
+        "child_pid_slot_object": "KPID",
+        "child_tgid_slot_object": "KPID",
+        "child_real_parent": "P",
+        "source_child_KPID_numbers0": 5200,
+        "parent_fork_source_return_nr": 5200,
+        "parent_view_namespace": "N0",
+        "K_childregs_ax_parent_source": 57,
+        "K_childregs_ax_after_copy_before_zero": 57,
+        "K_childregs_ax_after_explicit_copy_thread_write": 0,
+        "child_fork_user_return_if_ABI_working": 0,
+        "child_getpid_if_reached": 5200,
+        "child_getppid_if_reached": 5100,
+        "parent_getpid_if_reached": 5100,
+        "refcount_before_get_task_pid": 2,
+        "refcount_after_get_task_pid": 3,
+        "refcount_after_put_pid": 2,
+        "wake_up_new_task_direct_call_reached": true,
+        "actual_wake_or_context_switch": "UNKNOWN_NOT_RUN",
+        "kernel_clone_success_return_reached": true,
+        "requested_init_child_branch_if_child_0": true,
+        "requested_init_parent_branch_if_parent_positive": true,
+        "parent_child_real_execution_order": "UNKNOWN_NOT_RUN",
+        "group_leader_predicate_explicit_given": true,
+        "arg_signal_SIGCHLD_does_not_prove_K_exit_signal": true
+      },
+      "C2_frozen_results": {
+        "child_scalar_pid": 5200,
+        "child_scalar_tgid": 5200,
+        "child_pid_slot_object": "KPID",
+        "child_tgid_slot_object": "KPID",
+        "child_real_parent": "P",
+        "source_child_KPID_numbers0": 5200,
+        "parent_fork_source_return_nr": 30,
+        "parent_view_namespace": "N1",
+        "K_childregs_ax_parent_source": 57,
+        "K_childregs_ax_after_copy_before_zero": 57,
+        "K_childregs_ax_after_explicit_copy_thread_write": 0,
+        "child_fork_user_return_if_ABI_working": 0,
+        "child_getpid_if_reached": 30,
+        "child_getppid_if_reached": 20,
+        "parent_getpid_if_reached": 20,
+        "explicit_N0_child_TGID_helper_result": 5200,
+        "refcount_before_get_task_pid": 2,
+        "refcount_after_get_task_pid": 3,
+        "refcount_after_put_pid": 2,
+        "wake_up_new_task_direct_call_reached": true,
+        "actual_wake_or_context_switch": "UNKNOWN_NOT_RUN",
+        "kernel_clone_success_return_reached": true,
+        "requested_init_child_branch_if_child_0": true,
+        "requested_init_parent_branch_if_parent_positive": true,
+        "parent_child_real_execution_order": "UNKNOWN_NOT_RUN",
+        "group_leader_predicate_explicit_given": true,
+        "arg_signal_SIGCHLD_does_not_prove_K_exit_signal": true
+      },
+      "C1_result_fields": 26,
+      "C2_result_fields": 27,
+      "C3_frozen_trace": [
+        {
+          "seq": 1,
+          "owner": "copy_process",
+          "site": "fork.c:958",
+          "action": "retval=-ENOMEM",
+          "value": "-ENOMEM",
+          "event_id": "C135_C3_01"
+        },
+        {
+          "seq": 2,
+          "owner": "copy_process",
+          "site": "fork.c:959",
+          "action": "p=dup_task_struct(current,node)",
+          "value": "NULL",
+          "event_id": "C135_C3_02"
+        },
+        {
+          "seq": 3,
+          "owner": "copy_process",
+          "site": "fork.c:960–961",
+          "action": "if(!p) goto fork_out",
+          "condition": true,
+          "event_id": "C135_C3_03"
+        },
+        {
+          "seq": 4,
+          "owner": "copy_process",
+          "site": "fork.c:1428–1432",
+          "action": "fork_out: active spin_lock_irq and spin_unlock_irq then return ERR_PTR(retval)",
+          "value": "ERR_PTR(-ENOMEM)",
+          "event_id": "C135_C3_04"
+        },
+        {
+          "seq": 5,
+          "owner": "kernel_clone",
+          "site": "fork.c:1488–1489",
+          "action": "if IS_ERR(p) return PTR_ERR(p)",
+          "condition": true,
+          "value": "-ENOMEM",
+          "event_id": "C135_C3_05"
+        },
+        {
+          "seq": 6,
+          "owner": "sys_fork",
+          "site": "syscall.c:64",
+          "action": "return kernel_clone(&args)",
+          "value": "-ENOMEM",
+          "event_id": "C135_C3_06"
+        }
+      ],
+      "C3_frozen_not_reached": [
+        "p->flags clear/conditional PF_KTHREAD setup",
+        "copy_thread and pt_regs child frame, copied ax and childregs ax=0",
+        "alloc_pid and K PID object",
+        "K.pid/tgid scalar assignment",
+        "K.real_parent and PID/TGID slots",
+        "return K success pointer",
+        "get_task_pid(K) and get_pid ref increment",
+        "pid_vnr and successful nr",
+        "wake_up_new_task(K)",
+        "put_pid of temporary success-path PID reference",
+        "kernel_clone successful return nr"
+      ],
+      "C3_trace_count": 6,
+      "C3_not_reached_count": 11,
+      "actual_parent_child_order": "UNKNOWN_NOT_RUN"
+    }
+  },
+  "A": {
+    "fork_success_path": [
+      "kernel_clone -> copy_process",
+      "copy_process -> sched_fork",
+      "sched_fork -> __sched_fork",
+      "copy_process returns new child",
+      "kernel_clone -> wake_up_new_task(child)",
+      "kernel_clone -> put_pid -> return nr"
+    ],
+    "child_K": {
+      "vruntime_write": 0,
+      "run_list_init_next": "self",
+      "run_list_init_prev": "self",
+      "sched_fork_state": "TASK_NEW",
+      "sched_fork_state_numeric": "0x00000800",
+      "on_cpu_write": 0,
+      "rt_time_slice_written": false,
+      "rt_time_slice_comment_only": true,
+      "on_rq_written": false,
+      "on_rq_comment_only": true
+    },
+    "child_J_same_setup": true,
+    "wake_after_success": {
+      "rq_cpu": 0,
+      "write_state": "TASK_RUNNING",
+      "write_state_numeric": "0x00000000",
+      "list_entry": "&child->rt.run_list",
+      "header": "&rq->myos.running_lhdr",
+      "on_cpu_write_after_sched_fork": "NONE_IN_SELECTED_FUNCTION",
+      "rq_curr_write": "NONE_IN_SELECTED_FUNCTION",
+      "need_resched_write": "NONE_IN_SELECTED_FUNCTION"
+    },
+    "scope": "bounded source, not run"
+  },
+  "B": {
+    "base": {
+      "H": "header anchor",
+      "Q": "initial head",
+      "R": "tail",
+      "K": "child rt.run_list",
+      "J": "other child rt.run_list",
+      "count": 2,
+      "list": [
+        "H",
+        "Q",
+        "R",
+        "H"
+      ],
+      "reverse": [
+        "H",
+        "R",
+        "Q",
+        "H"
+      ],
+      "rq_curr": "P",
+      "need_resched": false
+    },
+    "call_chain": [
+      "wake_up_new_task",
+      "list_header_add_to_head",
+      "list_add_to_next",
+      "__list_add_between",
+      "lhdr.count++"
+    ],
+    "new_node_argument": "&p->rt.run_list (List_s*)",
+    "header_argument": "&rq->myos.running_lhdr (List_hdr_s*)",
+    "header_anchor": "&rq->myos.running_lhdr.anchor",
+    "cpu_selection": "&per_cpu(runqueues,0)",
+    "four_source_stores": [
+      "next->prev=new",
+      "new->next=next",
+      "new->prev=prev",
+      "WRITE_ONCE(prev->next,new)"
+    ],
+    "K_then_J": [
+      {
+        "who": "K",
+        "old_first": "Q",
+        "old_count": 2,
+        "new_count": 3,
+        "new_first": "K",
+        "ordered_writes": [
+          "Q.prev=K",
+          "K.next=Q",
+          "K.prev=H",
+          "H.next=K"
+        ],
+        "list": [
+          "H",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "H"
+        ],
+        "on_cpu": 0,
+        "new_state": "TASK_RUNNING",
+        "rq_curr": "P",
+        "need_resched": false,
+        "executed": "UNKNOWN_NOT_RUN"
+      },
+      {
+        "who": "J",
+        "old_first": "K",
+        "old_count": 3,
+        "new_count": 4,
+        "new_first": "J",
+        "ordered_writes": [
+          "K.prev=J",
+          "J.next=K",
+          "J.prev=H",
+          "H.next=J"
+        ],
+        "list": [
+          "H",
+          "J",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "J",
+          "H"
+        ],
+        "on_cpu": 0,
+        "new_state": "TASK_RUNNING",
+        "rq_curr": "P",
+        "need_resched": false,
+        "executed": "UNKNOWN_NOT_RUN"
+      }
+    ],
+    "J_then_K": [
+      {
+        "who": "J",
+        "old_first": "Q",
+        "old_count": 2,
+        "new_count": 3,
+        "new_first": "J",
+        "ordered_writes": [
+          "Q.prev=J",
+          "J.next=Q",
+          "J.prev=H",
+          "H.next=J"
+        ],
+        "list": [
+          "H",
+          "J",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "J",
+          "H"
+        ],
+        "on_cpu": 0,
+        "new_state": "TASK_RUNNING",
+        "rq_curr": "P",
+        "need_resched": false,
+        "executed": "UNKNOWN_NOT_RUN"
+      },
+      {
+        "who": "K",
+        "old_first": "J",
+        "old_count": 3,
+        "new_count": 4,
+        "new_first": "K",
+        "ordered_writes": [
+          "J.prev=K",
+          "K.next=J",
+          "K.prev=H",
+          "H.next=K"
+        ],
+        "list": [
+          "H",
+          "K",
+          "J",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "J",
+          "K",
+          "H"
+        ],
+        "on_cpu": 0,
+        "new_state": "TASK_RUNNING",
+        "rq_curr": "P",
+        "need_resched": false,
+        "executed": "UNKNOWN_NOT_RUN"
+      }
+    ],
+    "active_migration": false,
+    "active_lock": false,
+    "active_clock_update": false,
+    "active_activate_task": false,
+    "active_preempt_check": false,
+    "not_actual_dispatch": true
+  },
+  "C": {
+    "pre": {
+      "fresh_independent_each_time": true,
+      "after_one_K_wake": {
+        "list": [
+          "H",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "reverse": [
+          "H",
+          "R",
+          "Q",
+          "K",
+          "H"
+        ],
+        "count": 3,
+        "K_state": "TASK_RUNNING",
+        "K_vruntime": 0,
+        "K_on_cpu": 0
+      },
+      "current": "P",
+      "rq_curr": "P",
+      "P_idle": false,
+      "P_state": "TASK_RUNNING",
+      "need_resched": false,
+      "P_vruntime_before": 3,
+      "P_time_slice": 10,
+      "last_jiffies": 100,
+      "Q_vruntime": 20,
+      "R_vruntime": 40,
+      "jiffies_stipulated_read_stable": true
+    },
+    "C1": {
+      "jiffies": 103,
+      "used_jiffies": 3,
+      "need_resched": false,
+      "is_idle": false,
+      "used_ge_time_slice": false,
+      "state_not_running_checked": true,
+      "state_not_running": false,
+      "outer_or": false,
+      "count_guard_checked": false,
+      "remove_head": false,
+      "reinsert_P": false,
+      "vruntime_charge": false,
+      "after": {
+        "list": [
+          "H",
+          "K",
+          "Q",
+          "R",
+          "H"
+        ],
+        "count": 3,
+        "head": "K",
+        "P_vruntime": 3,
+        "last_jiffies": 100,
+        "retval": "P",
+        "rq_curr": "P",
+        "K_selected": false,
+        "CPU_execution": "UNKNOWN"
+      }
+    },
+    "C2": {
+      "jiffies": 110,
+      "used_jiffies": 10,
+      "need_resched": false,
+      "is_idle": false,
+      "used_ge_time_slice": true,
+      "state_not_running_checked": false,
+      "outer_or": true,
+      "count_guard_checked": true,
+      "count_guard": true,
+      "BUG_ON_first_clause_checked": true,
+      "BUG_ON_first_clause_value": false,
+      "BUG_ON_second_clause_checked": false,
+      "remove_head": true,
+      "removed": "K",
+      "count_after_remove": 2,
+      "removed_K_links": "self-linked",
+      "P_running": true,
+      "P_idle": false,
+      "old_vruntime_compared": 3,
+      "next_candidate": "Q",
+      "candidate_vruntime": 20,
+      "while_condition_first": false,
+      "while_body_executed": false,
+      "reinsert_P": "before Q after H",
+      "count_after_reinsert": 3,
+      "charge_after_insert": 10,
+      "P_vruntime_after": 13,
+      "after": {
+        "list": [
+          "H",
+          "P",
+          "Q",
+          "R",
+          "H"
+        ],
+        "count": 3,
+        "head": "P",
+        "last_jiffies": 110,
+        "retval": "K",
+        "rq_curr": "K",
+        "K_state": "TASK_RUNNING",
+        "K_selected": true,
+        "CPU_execution": "UNKNOWN"
+      }
+    },
+    "distinction": [
+      "runnable",
+      "picked",
+      "actually running",
+      "returned to userspace"
+    ],
+    "nonexecution_levels": [
+      "actually running",
+      "returned to userspace"
+    ]
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "Q136_C1_GETPID_entry",
+        "type": "call",
+        "label": "C1_GETPID"
+      },
+      {
+        "id": "Q136_C1_GETPID_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C1_GETPID_branch",
+        "type": "condition",
+        "label": "line474 DEFAULT CURRENT"
+      },
+      {
+        "id": "Q136_C1_GETPID_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C1_GETPID_return",
+        "type": "result",
+        "label": "20"
+      },
+      {
+        "id": "Q136_C1_GETPPID_entry",
+        "type": "call",
+        "label": "C1_GETPPID"
+      },
+      {
+        "id": "Q136_C1_GETPPID_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C1_GETPPID_branch",
+        "type": "condition",
+        "label": "line474 DEFAULT CURRENT"
+      },
+      {
+        "id": "Q136_C1_GETPPID_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C1_GETPPID_return",
+        "type": "result",
+        "label": "7"
+      },
+      {
+        "id": "Q136_C1_PIDVNR_entry",
+        "type": "call",
+        "label": "C1_PIDVNR"
+      },
+      {
+        "id": "Q136_C1_PIDVNR_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C1_PIDVNR_branch",
+        "type": "condition",
+        "label": "line474 DEFAULT CURRENT"
+      },
+      {
+        "id": "Q136_C1_PIDVNR_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C1_PIDVNR_return",
+        "type": "result",
+        "label": "22"
+      },
+      {
+        "id": "Q136_C2_N0_TGID_entry",
+        "type": "call",
+        "label": "C2_N0_TGID"
+      },
+      {
+        "id": "Q136_C2_N0_TGID_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C2_N0_TGID_branch",
+        "type": "condition",
+        "label": "line474 SKIPPED explicit ns"
+      },
+      {
+        "id": "Q136_C2_N0_TGID_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C2_N0_TGID_return",
+        "type": "result",
+        "label": "5100"
+      },
+      {
+        "id": "Q136_C2_N1_TGID_entry",
+        "type": "call",
+        "label": "C2_N1_TGID"
+      },
+      {
+        "id": "Q136_C2_N1_TGID_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C2_N1_TGID_branch",
+        "type": "condition",
+        "label": "line474 SKIPPED explicit ns"
+      },
+      {
+        "id": "Q136_C2_N1_TGID_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C2_N1_TGID_return",
+        "type": "result",
+        "label": "20"
+      },
+      {
+        "id": "Q136_C3_GETPPID_PARENT0_entry",
+        "type": "call",
+        "label": "C3_GETPPID_PARENT0"
+      },
+      {
+        "id": "Q136_C3_GETPPID_PARENT0_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C3_GETPPID_PARENT0_branch",
+        "type": "condition",
+        "label": "line474 DEFAULT CURRENT"
+      },
+      {
+        "id": "Q136_C3_GETPPID_PARENT0_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C3_GETPPID_PARENT0_return",
+        "type": "result",
+        "label": "0"
+      },
+      {
+        "id": "Q136_C3_N0_GP0_entry",
+        "type": "call",
+        "label": "C3_N0_GP0"
+      },
+      {
+        "id": "Q136_C3_N0_GP0_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C3_N0_GP0_branch",
+        "type": "condition",
+        "label": "line474 SKIPPED explicit ns"
+      },
+      {
+        "id": "Q136_C3_N0_GP0_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C3_N0_GP0_return",
+        "type": "result",
+        "label": "4100"
+      },
+      {
+        "id": "Q136_C3_GETPID_entry",
+        "type": "call",
+        "label": "C3_GETPID"
+      },
+      {
+        "id": "Q136_C3_GETPID_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C3_GETPID_branch",
+        "type": "condition",
+        "label": "line474 DEFAULT CURRENT"
+      },
+      {
+        "id": "Q136_C3_GETPID_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C3_GETPID_return",
+        "type": "result",
+        "label": "20"
+      },
+      {
+        "id": "Q136_C4_M1_G_entry",
+        "type": "call",
+        "label": "C4_M1_G"
+      },
+      {
+        "id": "Q136_C4_M1_G_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C4_M1_G_branch",
+        "type": "condition",
+        "label": "line474 SKIPPED explicit ns"
+      },
+      {
+        "id": "Q136_C4_M1_G_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C4_M1_G_return",
+        "type": "result",
+        "label": "0"
+      },
+      {
+        "id": "Q136_C4_N1_G_entry",
+        "type": "call",
+        "label": "C4_N1_G"
+      },
+      {
+        "id": "Q136_C4_N1_G_if473",
+        "type": "condition",
+        "label": "line473 evaluates if(!ns)"
+      },
+      {
+        "id": "Q136_C4_N1_G_branch",
+        "type": "condition",
+        "label": "line474 SKIPPED explicit ns"
+      },
+      {
+        "id": "Q136_C4_N1_G_slot475",
+        "type": "read",
+        "label": "line475 PID target slot"
+      },
+      {
+        "id": "Q136_C4_N1_G_return",
+        "type": "result",
+        "label": "20"
+      },
+      {
+        "id": "D136_pid_guard",
+        "type": "condition",
+        "label": "p->pid!=0"
+      },
+      {
+        "id": "D136_pid_slot",
+        "type": "write",
+        "label": "K.thread_pid=KPID"
+      },
+      {
+        "id": "D136_leader",
+        "type": "condition",
+        "label": "thread_group_leader(p)"
+      },
+      {
+        "id": "D136_tgid_slot",
+        "type": "write",
+        "label": "K.signal.pids[TGID]=KPID"
+      },
+      {
+        "id": "D136_raw_p",
+        "type": "input",
+        "label": "p=copy_process result"
+      },
+      {
+        "id": "D136_iserr",
+        "type": "condition",
+        "label": "IS_ERR(p)"
+      },
+      {
+        "id": "D136_K",
+        "type": "result",
+        "label": "p=K success"
+      },
+      {
+        "id": "D136_error",
+        "type": "result",
+        "label": "p=ERR_PTR(-ENOMEM)"
+      },
+      {
+        "id": "D136_errno",
+        "type": "result",
+        "label": "PTR_ERR(p)"
+      },
+      {
+        "id": "D136_C1_parent_src",
+        "type": "source",
+        "label": "kernel_clone return 5200"
+      },
+      {
+        "id": "D136_C1_parent_user",
+        "type": "unknown",
+        "label": "parent libc/ABI user bridge"
+      },
+      {
+        "id": "D136_C1_parent_getpid",
+        "type": "conditional",
+        "label": "parent future getpid"
+      },
+      {
+        "id": "D136_C1_child_frame",
+        "type": "source",
+        "label": "child saved frame ax zero"
+      },
+      {
+        "id": "D136_C1_wake",
+        "type": "source",
+        "label": "child TASK_RUNNING in queue"
+      },
+      {
+        "id": "D136_C1_child_pick",
+        "type": "conditional",
+        "label": "later picker may select child"
+      },
+      {
+        "id": "D136_C1_child_user",
+        "type": "unknown",
+        "label": "actual first run/user return"
+      },
+      {
+        "id": "D136_C1_child_getpid",
+        "type": "conditional",
+        "label": "child future getpid"
+      },
+      {
+        "id": "D136_C1_child_getppid",
+        "type": "conditional",
+        "label": "child future getppid"
+      },
+      {
+        "id": "D136_C2_parent_src",
+        "type": "source",
+        "label": "kernel_clone return 30"
+      },
+      {
+        "id": "D136_C2_parent_user",
+        "type": "unknown",
+        "label": "parent libc/ABI user bridge"
+      },
+      {
+        "id": "D136_C2_parent_getpid",
+        "type": "conditional",
+        "label": "parent future getpid"
+      },
+      {
+        "id": "D136_C2_child_frame",
+        "type": "source",
+        "label": "child saved frame ax zero"
+      },
+      {
+        "id": "D136_C2_wake",
+        "type": "source",
+        "label": "child TASK_RUNNING in queue"
+      },
+      {
+        "id": "D136_C2_child_pick",
+        "type": "conditional",
+        "label": "later picker may select child"
+      },
+      {
+        "id": "D136_C2_child_user",
+        "type": "unknown",
+        "label": "actual first run/user return"
+      },
+      {
+        "id": "D136_C2_child_getpid",
+        "type": "conditional",
+        "label": "child future getpid"
+      },
+      {
+        "id": "D136_C2_child_getppid",
+        "type": "conditional",
+        "label": "child future getppid"
+      },
+      {
+        "id": "D136_helper_input",
+        "type": "given",
+        "label": "independent C2 explicit K TGID N0"
+      },
+      {
+        "id": "D136_helper_5200",
+        "type": "result",
+        "label": "5200 independent, no parent ordering"
+      },
+      {
+        "id": "A136_clone",
+        "type": "call",
+        "label": "kernel_clone"
+      },
+      {
+        "id": "A136_copy",
+        "type": "call",
+        "label": "copy_process"
+      },
+      {
+        "id": "A136_fork",
+        "type": "call",
+        "label": "sched_fork"
+      },
+      {
+        "id": "A136_vruntime",
+        "type": "write",
+        "label": "K.se.vruntime=0"
+      },
+      {
+        "id": "A136_initlist",
+        "type": "write",
+        "label": "K.rt.run_list self-links"
+      },
+      {
+        "id": "A136_new",
+        "type": "write",
+        "label": "K.__state=TASK_NEW"
+      },
+      {
+        "id": "A136_oncpu",
+        "type": "write",
+        "label": "K.on_cpu=0"
+      },
+      {
+        "id": "A136_wake",
+        "type": "call",
+        "label": "wake_up_new_task"
+      },
+      {
+        "id": "B136_cpu0",
+        "type": "read",
+        "label": "rq per_cpu 0"
+      },
+      {
+        "id": "B136_running",
+        "type": "write",
+        "label": "TASK_RUNNING"
+      },
+      {
+        "id": "B136_head",
+        "type": "argument",
+        "label": "List_hdr_s running_lhdr"
+      },
+      {
+        "id": "B136_node",
+        "type": "argument",
+        "label": "List_s child rt.run_list"
+      },
+      {
+        "id": "B136_store1",
+        "type": "write",
+        "label": "next->prev=new"
+      },
+      {
+        "id": "B136_store2",
+        "type": "write",
+        "label": "new->next=next"
+      },
+      {
+        "id": "B136_store3",
+        "type": "write",
+        "label": "new->prev=prev"
+      },
+      {
+        "id": "B136_store4",
+        "type": "write",
+        "label": "WRITE_ONCE(prev->next,new)"
+      },
+      {
+        "id": "B136_count",
+        "type": "write",
+        "label": "count++"
+      },
+      {
+        "id": "B136_base",
+        "type": "state",
+        "label": "H-Q-R-H count2"
+      },
+      {
+        "id": "B136_K",
+        "type": "state",
+        "label": "H-K-Q-R-H count3"
+      },
+      {
+        "id": "B136_J",
+        "type": "state",
+        "label": "H-J-K-Q-R-H count4"
+      },
+      {
+        "id": "B136_revJ",
+        "type": "state",
+        "label": "H-J-Q-R-H count3"
+      },
+      {
+        "id": "B136_revK",
+        "type": "state",
+        "label": "H-K-J-Q-R-H count4"
+      },
+      {
+        "id": "C136_base",
+        "type": "state",
+        "label": "H-K-Q-R-H count3; current P"
+      },
+      {
+        "id": "C136_103",
+        "type": "condition",
+        "label": "used3<time_slice10 OR false"
+      },
+      {
+        "id": "C136_103_short",
+        "type": "skip",
+        "label": "count not evaluated"
+      },
+      {
+        "id": "C136_103_out",
+        "type": "result",
+        "label": "return P curr P"
+      },
+      {
+        "id": "C136_110",
+        "type": "condition",
+        "label": "used10>=10 OR true"
+      },
+      {
+        "id": "C136_110_count",
+        "type": "condition",
+        "label": "count>0 true"
+      },
+      {
+        "id": "C136_pop",
+        "type": "write",
+        "label": "remove K count3->2"
+      },
+      {
+        "id": "C136_insertP",
+        "type": "write",
+        "label": "P before Q using old vruntime3"
+      },
+      {
+        "id": "C136_charge",
+        "type": "write",
+        "label": "P vruntime 3->13"
+      },
+      {
+        "id": "C136_retK",
+        "type": "result",
+        "label": "last110 curr K retval K"
+      }
+    ],
+    "edges": [
+      {
+        "from": "Q136_C1_GETPID_entry",
+        "to": "Q136_C1_GETPID_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_GETPID_if473",
+        "to": "Q136_C1_GETPID_branch",
+        "kind": "IF_NS_NULL_TO_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_GETPID_branch",
+        "to": "Q136_C1_GETPID_slot475",
+        "kind": "DEFAULT_NS_474_THEN_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_GETPID_slot475",
+        "to": "Q136_C1_GETPID_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_GETPPID_entry",
+        "to": "Q136_C1_GETPPID_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_GETPPID_if473",
+        "to": "Q136_C1_GETPPID_branch",
+        "kind": "IF_NS_NULL_TO_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_GETPPID_branch",
+        "to": "Q136_C1_GETPPID_slot475",
+        "kind": "DEFAULT_NS_474_THEN_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_GETPPID_slot475",
+        "to": "Q136_C1_GETPPID_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_PIDVNR_entry",
+        "to": "Q136_C1_PIDVNR_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_PIDVNR_if473",
+        "to": "Q136_C1_PIDVNR_branch",
+        "kind": "IF_NS_NULL_TO_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_PIDVNR_branch",
+        "to": "Q136_C1_PIDVNR_slot475",
+        "kind": "DEFAULT_NS_474_THEN_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C1_PIDVNR_slot475",
+        "to": "Q136_C1_PIDVNR_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C2_N0_TGID_entry",
+        "to": "Q136_C2_N0_TGID_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C2_N0_TGID_if473",
+        "to": "Q136_C2_N0_TGID_branch",
+        "kind": "IF_NS_NONNULL_SKIP_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C2_N0_TGID_branch",
+        "to": "Q136_C2_N0_TGID_slot475",
+        "kind": "SEQUENCE_TO_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C2_N0_TGID_slot475",
+        "to": "Q136_C2_N0_TGID_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C2_N1_TGID_entry",
+        "to": "Q136_C2_N1_TGID_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C2_N1_TGID_if473",
+        "to": "Q136_C2_N1_TGID_branch",
+        "kind": "IF_NS_NONNULL_SKIP_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C2_N1_TGID_branch",
+        "to": "Q136_C2_N1_TGID_slot475",
+        "kind": "SEQUENCE_TO_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C2_N1_TGID_slot475",
+        "to": "Q136_C2_N1_TGID_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_GETPPID_PARENT0_entry",
+        "to": "Q136_C3_GETPPID_PARENT0_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_GETPPID_PARENT0_if473",
+        "to": "Q136_C3_GETPPID_PARENT0_branch",
+        "kind": "IF_NS_NULL_TO_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_GETPPID_PARENT0_branch",
+        "to": "Q136_C3_GETPPID_PARENT0_slot475",
+        "kind": "DEFAULT_NS_474_THEN_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_GETPPID_PARENT0_slot475",
+        "to": "Q136_C3_GETPPID_PARENT0_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_N0_GP0_entry",
+        "to": "Q136_C3_N0_GP0_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_N0_GP0_if473",
+        "to": "Q136_C3_N0_GP0_branch",
+        "kind": "IF_NS_NONNULL_SKIP_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_N0_GP0_branch",
+        "to": "Q136_C3_N0_GP0_slot475",
+        "kind": "SEQUENCE_TO_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_N0_GP0_slot475",
+        "to": "Q136_C3_N0_GP0_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_GETPID_entry",
+        "to": "Q136_C3_GETPID_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_GETPID_if473",
+        "to": "Q136_C3_GETPID_branch",
+        "kind": "IF_NS_NULL_TO_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_GETPID_branch",
+        "to": "Q136_C3_GETPID_slot475",
+        "kind": "DEFAULT_NS_474_THEN_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C3_GETPID_slot475",
+        "to": "Q136_C3_GETPID_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C4_M1_G_entry",
+        "to": "Q136_C4_M1_G_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C4_M1_G_if473",
+        "to": "Q136_C4_M1_G_branch",
+        "kind": "IF_NS_NONNULL_SKIP_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C4_M1_G_branch",
+        "to": "Q136_C4_M1_G_slot475",
+        "kind": "SEQUENCE_TO_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C4_M1_G_slot475",
+        "to": "Q136_C4_M1_G_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "Q136_C4_N1_G_entry",
+        "to": "Q136_C4_N1_G_if473",
+        "kind": "CALL_WITH_NS_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "Q136_C4_N1_G_if473",
+        "to": "Q136_C4_N1_G_branch",
+        "kind": "IF_NS_NONNULL_SKIP_474",
+        "label": ""
+      },
+      {
+        "from": "Q136_C4_N1_G_branch",
+        "to": "Q136_C4_N1_G_slot475",
+        "kind": "SEQUENCE_TO_475",
+        "label": ""
+      },
+      {
+        "from": "Q136_C4_N1_G_slot475",
+        "to": "Q136_C4_N1_G_return",
+        "kind": "PID_NR_NS_VALUE",
+        "label": ""
+      },
+      {
+        "from": "D136_pid_guard",
+        "to": "D136_pid_slot",
+        "kind": "OUTER_GATE",
+        "label": ""
+      },
+      {
+        "from": "D136_pid_slot",
+        "to": "D136_leader",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D136_leader",
+        "to": "D136_tgid_slot",
+        "kind": "INNER_GROUP_LEADER_TRUE",
+        "label": ""
+      },
+      {
+        "from": "D136_raw_p",
+        "to": "D136_iserr",
+        "kind": "RAW_INPUT",
+        "label": ""
+      },
+      {
+        "from": "D136_iserr",
+        "to": "D136_K",
+        "kind": "IS_ERR_FALSE",
+        "label": ""
+      },
+      {
+        "from": "D136_iserr",
+        "to": "D136_error",
+        "kind": "IS_ERR_TRUE",
+        "label": ""
+      },
+      {
+        "from": "D136_error",
+        "to": "D136_errno",
+        "kind": "PTR_ERR",
+        "label": ""
+      },
+      {
+        "from": "D136_C1_parent_src",
+        "to": "D136_C1_parent_user",
+        "kind": "CONDITIONAL_ABI_BRIDGE",
+        "label": ""
+      },
+      {
+        "from": "D136_C1_parent_user",
+        "to": "D136_C1_parent_getpid",
+        "kind": "CONDITIONAL_PARENT_USER_QUERY",
+        "label": ""
+      },
+      {
+        "from": "D136_C1_child_frame",
+        "to": "D136_C1_child_user",
+        "kind": "FRAME_PRECONDITION_NOT_TIME_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D136_C1_wake",
+        "to": "D136_C1_child_pick",
+        "kind": "CONDITIONAL_FUTURE_PICK",
+        "label": ""
+      },
+      {
+        "from": "D136_C1_child_pick",
+        "to": "D136_C1_child_user",
+        "kind": "CONDITIONAL_CONTEXT_SWITCH_USER",
+        "label": ""
+      },
+      {
+        "from": "D136_C1_child_user",
+        "to": "D136_C1_child_getpid",
+        "kind": "CONDITIONAL_CHILD_USER_QUERY",
+        "label": ""
+      },
+      {
+        "from": "D136_C1_child_user",
+        "to": "D136_C1_child_getppid",
+        "kind": "CONDITIONAL_CHILD_USER_QUERY",
+        "label": ""
+      },
+      {
+        "from": "D136_C2_parent_src",
+        "to": "D136_C2_parent_user",
+        "kind": "CONDITIONAL_ABI_BRIDGE",
+        "label": ""
+      },
+      {
+        "from": "D136_C2_parent_user",
+        "to": "D136_C2_parent_getpid",
+        "kind": "CONDITIONAL_PARENT_USER_QUERY",
+        "label": ""
+      },
+      {
+        "from": "D136_C2_child_frame",
+        "to": "D136_C2_child_user",
+        "kind": "FRAME_PRECONDITION_NOT_TIME_ORDER",
+        "label": ""
+      },
+      {
+        "from": "D136_C2_wake",
+        "to": "D136_C2_child_pick",
+        "kind": "CONDITIONAL_FUTURE_PICK",
+        "label": ""
+      },
+      {
+        "from": "D136_C2_child_pick",
+        "to": "D136_C2_child_user",
+        "kind": "CONDITIONAL_CONTEXT_SWITCH_USER",
+        "label": ""
+      },
+      {
+        "from": "D136_C2_child_user",
+        "to": "D136_C2_child_getpid",
+        "kind": "CONDITIONAL_CHILD_USER_QUERY",
+        "label": ""
+      },
+      {
+        "from": "D136_C2_child_user",
+        "to": "D136_C2_child_getppid",
+        "kind": "CONDITIONAL_CHILD_USER_QUERY",
+        "label": ""
+      },
+      {
+        "from": "D136_helper_input",
+        "to": "D136_helper_5200",
+        "kind": "INDEPENDENT_HELPER_EVAL",
+        "label": ""
+      },
+      {
+        "from": "A136_clone",
+        "to": "A136_copy",
+        "kind": "DIRECT_CALL",
+        "label": ""
+      },
+      {
+        "from": "A136_copy",
+        "to": "A136_fork",
+        "kind": "DIRECT_CALL",
+        "label": ""
+      },
+      {
+        "from": "A136_fork",
+        "to": "A136_vruntime",
+        "kind": "SCHED_FORK_INIT",
+        "label": ""
+      },
+      {
+        "from": "A136_vruntime",
+        "to": "A136_initlist",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A136_initlist",
+        "to": "A136_new",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A136_new",
+        "to": "A136_oncpu",
+        "kind": "SOURCE_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A136_copy",
+        "to": "A136_wake",
+        "kind": "SUCCESSFUL_COPY_RETURN_THEN_WAKE",
+        "label": ""
+      },
+      {
+        "from": "A136_wake",
+        "to": "B136_cpu0",
+        "kind": "PER_CPU_0",
+        "label": ""
+      },
+      {
+        "from": "A136_wake",
+        "to": "B136_running",
+        "kind": "STATE_WRITE",
+        "label": ""
+      },
+      {
+        "from": "A136_initlist",
+        "to": "B136_node",
+        "kind": "PREPARED_NODE_DATA",
+        "label": ""
+      },
+      {
+        "from": "B136_cpu0",
+        "to": "B136_head",
+        "kind": "HEADER_FIELD",
+        "label": ""
+      },
+      {
+        "from": "B136_node",
+        "to": "B136_store1",
+        "kind": "NEW_NODE_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "B136_head",
+        "to": "B136_store1",
+        "kind": "HEADER_ANCHOR_ARGUMENT",
+        "label": ""
+      },
+      {
+        "from": "B136_store1",
+        "to": "B136_store2",
+        "kind": "STORE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "B136_store2",
+        "to": "B136_store3",
+        "kind": "STORE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "B136_store3",
+        "to": "B136_store4",
+        "kind": "STORE_ORDER",
+        "label": ""
+      },
+      {
+        "from": "B136_store4",
+        "to": "B136_count",
+        "kind": "COUNT_INCREMENT_AFTER_STORES",
+        "label": ""
+      },
+      {
+        "from": "B136_base",
+        "to": "B136_K",
+        "kind": "WAKE_K",
+        "label": ""
+      },
+      {
+        "from": "B136_K",
+        "to": "B136_J",
+        "kind": "WAKE_J",
+        "label": ""
+      },
+      {
+        "from": "B136_base",
+        "to": "B136_revJ",
+        "kind": "WAKE_J_FIRST",
+        "label": ""
+      },
+      {
+        "from": "B136_revJ",
+        "to": "B136_revK",
+        "kind": "WAKE_K_SECOND",
+        "label": ""
+      },
+      {
+        "from": "B136_K",
+        "to": "C136_base",
+        "kind": "INDEPENDENT_RESET",
+        "label": ""
+      },
+      {
+        "from": "C136_base",
+        "to": "C136_103",
+        "kind": "PICKER_SAMPLE",
+        "label": ""
+      },
+      {
+        "from": "C136_103",
+        "to": "C136_103_short",
+        "kind": "OR_FALSE_SHORT_CIRCUIT",
+        "label": ""
+      },
+      {
+        "from": "C136_103_short",
+        "to": "C136_103_out",
+        "kind": "SKIPS_QUEUE",
+        "label": ""
+      },
+      {
+        "from": "C136_base",
+        "to": "C136_110",
+        "kind": "PICKER_SAMPLE",
+        "label": ""
+      },
+      {
+        "from": "C136_110",
+        "to": "C136_110_count",
+        "kind": "OR_TRUE_THEN_COUNT",
+        "label": ""
+      },
+      {
+        "from": "C136_110_count",
+        "to": "C136_pop",
+        "kind": "REMOVE_HEAD",
+        "label": ""
+      },
+      {
+        "from": "C136_pop",
+        "to": "C136_insertP",
+        "kind": "REINSERT_CURR",
+        "label": ""
+      },
+      {
+        "from": "C136_insertP",
+        "to": "C136_charge",
+        "kind": "ACCOUNT_AFTER_INSERT",
+        "label": ""
+      },
+      {
+        "from": "C136_charge",
+        "to": "C136_retK",
+        "kind": "CHOOSE_K",
+        "label": ""
+      }
+    ],
+    "node_count": 111,
+    "edge_count": 93,
+    "all_edges_have_existing_endpoints": true
+  },
+  "limitations": {
+    "complete_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile_link": "NOT_RUN",
+    "repository_scripts": "NOT_RUN",
+    "graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_hardware_process_PID_schedule_clock": "NOT_RUN",
+    "actual_first_CPU_execution": "UNKNOWN",
+    "actual_parent_child_order": "UNKNOWN",
+    "libc_ABI_user_bridge": "UNKNOWN",
+    "no_kernel_change": true,
+    "no_patch": true
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

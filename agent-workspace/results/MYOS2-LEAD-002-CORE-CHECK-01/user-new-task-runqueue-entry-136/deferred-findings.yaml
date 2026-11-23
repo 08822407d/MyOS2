@@ -1,0 +1,103 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-NEW-TASK-RUNQUEUE-ENTRY-136",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "produced_by": "GPT-6（模型族自报，后台与effort未认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "actual_backend_model": "UNATTESTED",
+  "date": "2026-11-23",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "exec_parent_short12": "d01efe19ccec",
+  "lead_contract_short12": "9d333c5959a8",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "record_type": "incremental_deferred_findings",
+  "items": [
+    {
+      "qualified_id": "R135-01",
+      "kind": "DOC_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "source": "135 D00.R134_02.queries; old graph",
+      "mainline_acceptance": "PENDING"
+    },
+    {
+      "qualified_id": "R135-02",
+      "kind": "DOC_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "source": "135 A.copy_process.slots; A135_iserr",
+      "mainline_acceptance": "PENDING"
+    },
+    {
+      "qualified_id": "R135-03",
+      "kind": "DOC_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "source": "135 C.C1/C2; five old DOT arrows",
+      "mainline_acceptance": "PENDING"
+    },
+    {
+      "qualified_id": "R136-G01",
+      "kind": "OBSERVATION_GAP",
+      "status": "needs_evidence",
+      "source": "scheduler queue insertion only",
+      "unknown": "actual context switch and first CPU instruction",
+      "resume": "separate Owner runtime authorization"
+    },
+    {
+      "qualified_id": "R136-G02",
+      "kind": "OBSERVATION_GAP",
+      "status": "needs_evidence",
+      "source": "fork parent/child source paths",
+      "unknown": "userspace ABI/libc and real order",
+      "resume": "separate ABI and runtime review"
+    },
+    {
+      "qualified_id": "R136-G03",
+      "kind": "SOURCE_SCOPE",
+      "status": "deferred_owner_not_ready",
+      "source": "selected wake function",
+      "unknown": "real SMP locking/migration/preemption outside bounded fragment",
+      "resume": "separate full concurrency audit"
+    },
+    {
+      "qualified_id": "R136-G04",
+      "kind": "SOURCE_SCOPE",
+      "status": "needs_evidence",
+      "source": "__sched_fork commented initialization",
+      "unknown": "global rt.time_slice/on_rq initialization and all writers",
+      "resume": "wider source survey"
+    },
+    {
+      "qualified_id": "R136-G05",
+      "kind": "OBSERVATION_GAP",
+      "status": "needs_evidence",
+      "source": "given picker values",
+      "unknown": "real time progression and actual future J/K creation sequence",
+      "resume": "real scheduling only under separate authorization"
+    }
+  ],
+  "historical_status": {
+    "batch135": "RETURN",
+    "batch133_combined": "PASS_PENDING_LOCAL",
+    "batch134_combined": "PASS_PENDING_LOCAL"
+  },
+  "owner_decisions_requested_now": [],
+  "limitations": {
+    "complete_local_P9": "NOT_RUN",
+    "preprocess": "NOT_RUN",
+    "compile_link": "NOT_RUN",
+    "repository_scripts": "NOT_RUN",
+    "graphviz": "NOT_RUN",
+    "QEMU": "NOT_RUN",
+    "real_hardware_process_PID_schedule_clock": "NOT_RUN",
+    "actual_first_CPU_execution": "UNKNOWN",
+    "actual_parent_child_order": "UNKNOWN",
+    "libc_ABI_user_bridge": "UNKNOWN",
+    "no_kernel_change": true,
+    "no_patch": true
+  }
+}
