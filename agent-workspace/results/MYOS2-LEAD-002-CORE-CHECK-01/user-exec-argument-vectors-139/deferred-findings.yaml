@@ -1,0 +1,131 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXEC-ARGUMENT-VECTORS-139",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "record_type": "incremental_deferred_findings",
+  "date": "2026-11-23",
+  "phase": 2,
+  "produced_by": "GPT-6（文本模型族，后台未认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "corrections": [
+    {
+      "qualified_id": "R138-01",
+      "from_batch": 138,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "submitted_by": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_original_six_unchanged": true,
+      "close_authority": "C09 Pro independent review"
+    },
+    {
+      "qualified_id": "R138-02",
+      "from_batch": 138,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "submitted_by": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_original_six_unchanged": true,
+      "close_authority": "C09 Pro independent review"
+    },
+    {
+      "qualified_id": "R138-03",
+      "from_batch": 138,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "submitted_by": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_original_six_unchanged": true,
+      "close_authority": "C09 Pro independent review"
+    },
+    {
+      "qualified_id": "R138-04",
+      "from_batch": 138,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "submitted_by": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_original_six_unchanged": true,
+      "close_authority": "C09 Pro independent review"
+    }
+  ],
+  "older_history": {
+    "R136_04": "CLOSED_DOCUMENTATION_ONLY_BY_C09",
+    "R137_01_02": "CLOSED_DOCUMENTATION_ONLY_BY_C09",
+    "combined_136": "PASS_PENDING_LOCAL",
+    "combined_137": "PASS_PENDING_LOCAL",
+    "original_138": "RETURN",
+    "combined_138": "PENDING_MAINLINE_REVIEW_OF_FOUR_CORRECTIONS"
+  },
+  "findings": [
+    {
+      "id": "R139-RUNTIME-01",
+      "kind": "RUNTIME_EVIDENCE_GAP",
+      "status": "DEFERRED",
+      "known": "Given successful source paths and independent A/B/C integer and byte models only",
+      "unknown": "Actual memory page allocation/copy, host/kernel pointer fault behavior, user process creation, real exec and observable argv",
+      "resume": "Owner must separately authorize runtime/instrumentation; none used in this phase"
+    },
+    {
+      "id": "R139-STACK-02",
+      "kind": "DOWNSTREAM_ADDRESS_BOUNDARY",
+      "status": "DEFERRED",
+      "known": "At bprm_execve call bprm.exec=T-10 and p=T-30 or T-20 for given samples",
+      "unknown": "stack_shift in setup_arg_pages, final absolute addresses, user mode pointer vector, fully built ELF initial stack",
+      "resume": "Separate fixed-source downstream artifact and optional permitted tests; do not present pre-shift T as final user address"
+    },
+    {
+      "id": "R139-ARG-03",
+      "kind": "USER_POINTER_AND_LENGTH_BOUNDARY",
+      "status": "DEFERRED",
+      "known": "count reads pointer slots, copy_strings reads slots again and then string bytes; all reads and page calls stipulated successful",
+      "unknown": "Real get_user errors, inaccessible string bytes, MAX_ARG_STRLEN overflow/edge cases, concurrent modification",
+      "resume": "Separate failure and adversarial-input audit with explicit valid memory model"
+    },
+    {
+      "id": "R139-CFG-04",
+      "kind": "CONFIG_AND_PREPROCESSOR_BOUNDARY",
+      "status": "DEFERRED",
+      "known": "Fixed text includes CMake -DCONFIG_BUG and selected source conditions; target x86_64 sizeof(void*) given as 8",
+      "unknown": "Actual preprocessed translation unit, other build option producers or macro presence and compiled binary",
+      "resume": "Do not run preprocess/build without permission"
+    },
+    {
+      "id": "R139-WARN-05",
+      "kind": "SIDE_EFFECT_BOUNDARY",
+      "status": "DEFERRED",
+      "known": "U0/U1 reach pr_warn_once call point",
+      "unknown": "Whether message actually emitted, once bookkeeping and runtime logging",
+      "resume": "Constrain to call reachability; no runtime conclusion"
+    },
+    {
+      "id": "R139-CLEANUP-06",
+      "kind": "CLEANUP_AND_LIFETIME_BOUNDARY",
+      "status": "DEFERRED",
+      "known": "Kernel zero argv path sets -EINVAL before env counting and branches to out_free/out_ret",
+      "unknown": "Resource cleanup side effects under invalid, dangling or failing file/mm/task state",
+      "resume": "Dedicated failure producer/cleanup source audit"
+    },
+    {
+      "id": "R139-FULLWRITERS-07",
+      "kind": "SOURCE_SCOPE",
+      "status": "DEFERRED",
+      "known": "Selected execve/kernel_execve, copy_strings and copy_string_kernel active body analyzed",
+      "unknown": "Whole system exec interfaces, ELF interpreter replacement and caller-side argument manipulation",
+      "resume": "Dedicated whole repo writer/caller review"
+    }
+  ],
+  "full_local_P9": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "compile_link": "NOT_RUN",
+  "repository_program_script": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU_hardware_and_real_file_process_PID_clock_sched": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}
