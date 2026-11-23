@@ -1,0 +1,3206 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-TASK-COMM-FORK-EXEC-138",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "record_type": "phase2_machine_facts_and_graph",
+  "date": "2026-11-23",
+  "produced_by": "GPT-6（模型族，后端不可认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "exec_parent_short12": "4ae5e3ea1af0",
+  "lead_contract_short12": "4777e07269dd",
+  "phase": 2,
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "D00": {
+    "R136-04": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_137_declared": {
+        "id": "D137_R13604_C1_GE_TEST",
+        "kind": "PREDICATE_GE_FALSE",
+        "label": "used_jiffies=3 >= rt.time_slice=10 => false",
+        "typed_false_edge": "FALSE_SKIP_COUNT_AND_PICKER_BODY"
+      },
+      "old_actual_node": {
+        "id": "D137_R13604_C1_GE_TEST",
+        "kind": "condition",
+        "label": "3 >= 10 false (not 3<10)"
+      },
+      "old_actual_typed_edges": [
+        {
+          "from": "D137_R13604_C1_GE_TEST",
+          "to": "D137_R13604_C1_SKIP",
+          "kind": "FALSE_3_GE_10",
+          "label": ""
+        },
+        {
+          "from": "D137_R13604_C1_SKIP",
+          "to": "D137_R13604_C1_OUT",
+          "kind": "SHORT_CIRCUIT_COUNT",
+          "label": ""
+        }
+      ],
+      "declared_kind_unmatched": true,
+      "declared_edge_kind_unmatched": true,
+      "source_chain": [
+        {
+          "id": "GE",
+          "expr": "3 >= 10",
+          "evaluated": true,
+          "value": false
+        },
+        {
+          "id": "STATE",
+          "expr": "P.__state != TASK_RUNNING",
+          "evaluated": true,
+          "value": false
+        },
+        {
+          "id": "OR",
+          "value": false
+        },
+        {
+          "id": "COUNT",
+          "expr": "running_lhdr.count > 0",
+          "evaluated": false,
+          "value": null
+        },
+        {
+          "id": "RETURN",
+          "retval": "P",
+          "rq_curr": "P"
+        }
+      ],
+      "new_graph_ids": [
+        "D138_GE",
+        "D138_STATE",
+        "D138_OR",
+        "D138_SKIP",
+        "D138_P"
+      ],
+      "preserve_old_three_snapshots": {
+        "C1": {
+          "before_wake": {
+            "queue": [
+              "H",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 2,
+            "K_state": "TASK_NEW",
+            "K_link": "self-linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P"
+          },
+          "after_wake": {
+            "queue": [
+              "H",
+              "K",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 3,
+            "K_state": "TASK_RUNNING",
+            "K_link": "linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P"
+          },
+          "after_picker": {
+            "queue": [
+              "H",
+              "K",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 3,
+            "K_state": "TASK_RUNNING",
+            "K_link": "linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P",
+            "returned": "P"
+          },
+          "or_eval": [
+            "need_resched:false",
+            "is_idle:false",
+            "3>=10:false",
+            "not_RUNNING:false"
+          ],
+          "queue_count_expr": "NOT_EVALUATED",
+          "picker_body": "SKIPPED"
+        },
+        "C2": {
+          "before_wake": {
+            "queue": [
+              "H",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 2,
+            "K_state": "TASK_NEW",
+            "K_link": "self-linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P"
+          },
+          "after_wake": {
+            "queue": [
+              "H",
+              "K",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 3,
+            "K_state": "TASK_RUNNING",
+            "K_link": "linked",
+            "P_vruntime": 3,
+            "last": 100,
+            "rq_curr": "P"
+          },
+          "after_picker": {
+            "queue": [
+              "H",
+              "P",
+              "Q",
+              "R",
+              "H"
+            ],
+            "count": 3,
+            "K_state": "TASK_RUNNING",
+            "K_link": "self-linked after pop",
+            "P_vruntime": 13,
+            "last": 110,
+            "rq_curr": "K",
+            "returned": "K"
+          },
+          "or_eval": [
+            "need_resched:false",
+            "is_idle:false",
+            "10>=10:true",
+            "not_RUNNING:NOT_EVALUATED"
+          ],
+          "queue_count_expr": "EVALUATED_TRUE",
+          "K_removed_and_selflinked": true,
+          "old_P_vruntime_comparison": {
+            "lhs": 3,
+            "rhs": 20,
+            "expression": "3>20",
+            "evaluated": true,
+            "result": false
+          },
+          "anchor_second_operand_evaluated": false,
+          "need_resched": false
+        }
+      },
+      "original_results": {
+        "C1": "P",
+        "C2": "K"
+      },
+      "new_anchor": "E138-036"
+    },
+    "R137-01": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "frozen_facts_path": "137 C.clk_vs_jiffies",
+      "frozen_value": "rq clock updated from local_clock before picker; jiffies independent stipulated input",
+      "old_author_comment_id": 7097528986,
+      "correction": "__schedule calls update_rq_clock for all given examples; local_clock sample may produce negative early return, zero additive write or positive value increase",
+      "clock_samples": [
+        {
+          "id": "CLK999",
+          "old_clock": 1000,
+          "sampled_local_clock": 999,
+          "delta": -1,
+          "negative": true,
+          "early_return": true,
+          "clock_write_reached": false,
+          "after": 1000,
+          "value_changed": false
+        },
+        {
+          "id": "CLK1000",
+          "old_clock": 1000,
+          "sampled_local_clock": 1000,
+          "delta": 0,
+          "negative": false,
+          "early_return": false,
+          "clock_write_reached": true,
+          "after": 1000,
+          "value_changed": false
+        },
+        {
+          "id": "CLK1001",
+          "old_clock": 1000,
+          "sampled_local_clock": 1001,
+          "delta": 1,
+          "negative": false,
+          "early_return": false,
+          "clock_write_reached": true,
+          "after": 1001,
+          "value_changed": true
+        }
+      ],
+      "caller_flag_writes": [
+        "rq->clock_update_flags <<= 1 before call",
+        "rq->clock_update_flags = RQCF_UPDATED after function returns"
+      ],
+      "caller_flag_values": "UNKNOWN",
+      "old_C_jiffies": {
+        "jiffies": 106,
+        "last": 100,
+        "used": 6,
+        "K_slice": 4,
+        "J_slice": 9,
+        "K_selected": "Q",
+        "J_selected": "J",
+        "not_affected": true
+      },
+      "anchors": [
+        "E138-032",
+        "E138-033",
+        "E138-034",
+        "E138-035"
+      ]
+    },
+    "R137-02": {
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "old_evidence_count": 73,
+      "old_facts_indexed_count": 52,
+      "missing_ids": [
+        "E137-038",
+        "E137-039",
+        "E137-041",
+        "E137-042",
+        "E137-043",
+        "E137-044",
+        "E137-045",
+        "E137-046",
+        "E137-047",
+        "E137-049",
+        "E137-050",
+        "E137-051",
+        "E137-055",
+        "E137-058",
+        "E137-059",
+        "E137-065",
+        "E137-066",
+        "E137-067",
+        "E137-068",
+        "E137-069",
+        "E137-070"
+      ],
+      "all_73_old_windows": [
+        {
+          "old_id": "E137-001",
+          "path": "mykernel/sched/task/pid.c",
+          "symbol": "__task_pid_nr_ns",
+          "start": 473,
+          "end": 475,
+          "old_title": "default or explicit namespace and target slot",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-002",
+          "path": "mykernel/sched/task/pid.c",
+          "symbol": "pid_nr_ns",
+          "start": 452,
+          "end": 455,
+          "old_title": "indexed PID namespace value",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-003",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "init_task_pid",
+          "start": 848,
+          "end": 851,
+          "old_title": "PIDTYPE writes different slots",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-004",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "copy_process",
+          "start": 1311,
+          "end": 1311,
+          "old_title": "outer nonzero PID gate",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-005",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "copy_process",
+          "start": 1314,
+          "end": 1316,
+          "old_title": "PID gate precedes independent leader gate",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-006",
+          "path": "mykernel/lock_IPC/signal/signal.h",
+          "symbol": "thread_group_leader",
+          "start": 205,
+          "end": 205,
+          "old_title": "leader predicate",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-007",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "kernel_clone",
+          "start": 1488,
+          "end": 1489,
+          "old_title": "raw p checked not K",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-008",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "kernel_clone",
+          "start": 1497,
+          "end": 1498,
+          "old_title": "read visible PID before wake",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-009",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "kernel_clone",
+          "start": 1516,
+          "end": 1516,
+          "old_title": "explicit wake call",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-010",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "kernel_clone",
+          "start": 1527,
+          "end": 1529,
+          "old_title": "return saved source nr",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-011",
+          "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+          "symbol": "copy_thread",
+          "start": 133,
+          "end": 135,
+          "old_title": "child ax assigned 0",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-012",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "copy_process",
+          "start": 1104,
+          "end": 1106,
+          "old_title": "sched_fork called in copy",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-013",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__sched_fork",
+          "start": 582,
+          "end": 582,
+          "old_title": "vruntime zero",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-014",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__sched_fork",
+          "start": 600,
+          "end": 600,
+          "old_title": "active INIT_LIST_S only; old comment is locator",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-015",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "sched_fork",
+          "start": 627,
+          "end": 627,
+          "old_title": "TASK_NEW written",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-016",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "sched_fork",
+          "start": 670,
+          "end": 670,
+          "old_title": "on_cpu zero",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-017",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "INIT_LIST_S",
+          "start": 150,
+          "end": 151,
+          "old_title": "self-link new list node",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-018",
+          "path": "mykernel/sched/task/task_const.h",
+          "symbol": "TASK_NEW",
+          "start": 41,
+          "end": 41,
+          "old_title": "TASK_NEW value",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-019",
+          "path": "mykernel/sched/task/task_const.h",
+          "symbol": "TASK_RUNNING",
+          "start": 26,
+          "end": 26,
+          "old_title": "TASK_RUNNING value",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-020",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "wake_up_new_task",
+          "start": 688,
+          "end": 688,
+          "old_title": "fixed CPU0 rq",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-021",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "wake_up_new_task",
+          "start": 691,
+          "end": 691,
+          "old_title": "new task state running",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-022",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "wake_up_new_task",
+          "start": 721,
+          "end": 721,
+          "old_title": "distinct list header and node",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-023",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "list_header_add_to_head",
+          "start": 647,
+          "end": 648,
+          "old_title": "head insertion and count increment",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-024",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "list_add_to_next",
+          "start": 209,
+          "end": 209,
+          "old_title": "delegate to two-neighbor insertion",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-025",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "__list_add_between",
+          "start": 193,
+          "end": 196,
+          "old_title": "four ordered links",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-026",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 12,
+          "end": 12,
+          "old_title": "elapsed jiffies",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-027",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 14,
+          "end": 18,
+          "old_title": "picker short-circuit gate",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-028",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 24,
+          "end": 24,
+          "old_title": "pop head K",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [
+            "E138-041"
+          ],
+          "disposition": "GENERIC_SOURCE_CASE_BINDING"
+        },
+        {
+          "old_id": "E137-029",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "list_header_remove_head",
+          "start": 653,
+          "end": 657,
+          "old_title": "remove head then count decrement",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-030",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 37,
+          "end": 40,
+          "old_title": "old vruntime position comparison",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-031",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 44,
+          "end": 45,
+          "old_title": "reinsert P and increment count",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [
+            "E138-042"
+          ],
+          "disposition": "GENERIC_SOURCE_CASE_BINDING"
+        },
+        {
+          "old_id": "E137-032",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 49,
+          "end": 50,
+          "old_title": "charge vruntime after reinsert",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-033",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 52,
+          "end": 54,
+          "old_title": "return task and last-jiffies update",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [
+            "E138-044"
+          ],
+          "disposition": "RETVAL_ASSIGN_VS_RETURN"
+        },
+        {
+          "old_id": "E137-034",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 56,
+          "end": 57,
+          "old_title": "record selected current and return",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [
+            "E138-045"
+          ],
+          "disposition": "RETVAL_ASSIGN_VS_RETURN"
+        },
+        {
+          "old_id": "E137-035",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "list_add_to_prev",
+          "start": 221,
+          "end": 222,
+          "old_title": "insert before Q",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [
+            "E138-043"
+          ],
+          "disposition": "GENERIC_SOURCE_CASE_BINDING"
+        },
+        {
+          "old_id": "E137-036",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "list_del_init",
+          "start": 280,
+          "end": 282,
+          "old_title": "removed node reinitialized",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-037",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "dup_task_struct",
+          "start": 288,
+          "end": 288,
+          "old_title": "whole task structure value-copy",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-038",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "dup_task_struct",
+          "start": 280,
+          "end": 282,
+          "old_title": "task allocation before copy",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-039",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "copy_process",
+          "start": 958,
+          "end": 961,
+          "old_title": "copy_process calls dup_task_struct",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-040",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "copy_process",
+          "start": 1026,
+          "end": 1026,
+          "old_title": "child three CPU times reset",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-041",
+          "path": "mykernel/sched/task/task_types.h",
+          "symbol": "task_struct",
+          "start": 18,
+          "end": 19,
+          "old_title": "task state member",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-042",
+          "path": "mykernel/sched/task/task_types.h",
+          "symbol": "task_struct",
+          "start": 38,
+          "end": 38,
+          "old_title": "on_cpu member",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-043",
+          "path": "mykernel/sched/task/task_types.h",
+          "symbol": "task_struct",
+          "start": 60,
+          "end": 61,
+          "old_title": "embedded scheduler entities",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-044",
+          "path": "mykernel/sched/task/task_types.h",
+          "symbol": "task_struct",
+          "start": 267,
+          "end": 268,
+          "old_title": "utime stime members",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-045",
+          "path": "mykernel/sched/task/task_types.h",
+          "symbol": "task_struct",
+          "start": 273,
+          "end": 273,
+          "old_title": "gtime member",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-046",
+          "path": "mykernel/sched/task/task_types.h",
+          "symbol": "task_struct",
+          "start": 283,
+          "end": 284,
+          "old_title": "nvcsw nivcsw fields",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-047",
+          "path": "mykernel/sched/scheduler/scheduler_types.h",
+          "symbol": "sched_entity",
+          "start": 17,
+          "end": 17,
+          "old_title": "vruntime field",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-048",
+          "path": "mykernel/sched/scheduler/scheduler_types.h",
+          "symbol": "sched_rt_entity",
+          "start": 42,
+          "end": 46,
+          "old_title": "rt run_list and time_slice fields",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [
+            "E138-038",
+            "E138-039"
+          ],
+          "disposition": "ACTIVE_MEMBER_ONLY_COMMENT_SEPARATE"
+        },
+        {
+          "old_id": "E137-049",
+          "path": "mykernel/sched/runqueue/runqueue_types.h",
+          "symbol": "myos_rq",
+          "start": 193,
+          "end": 197,
+          "old_title": "running header and last jiffies",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [
+            "E138-040"
+          ],
+          "disposition": "ACTIVE_MEMBER_ONLY_COMMENT_SEPARATE"
+        },
+        {
+          "old_id": "E137-050",
+          "path": "mykernel/sched/runqueue/runqueue_types.h",
+          "symbol": "runqueue",
+          "start": 229,
+          "end": 229,
+          "old_title": "rq nr_switches field",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-051",
+          "path": "mykernel/sched/runqueue/runqueue_types.h",
+          "symbol": "runqueue",
+          "start": 257,
+          "end": 258,
+          "old_title": "rq curr and idle fields",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-052",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "__list_add_valid",
+          "start": 163,
+          "end": 165,
+          "old_title": "six invalid predicates in while",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-053",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "__list_add_valid",
+          "start": 167,
+          "end": 167,
+          "old_title": "validator true return",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-054",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "__list_add_between",
+          "start": 190,
+          "end": 191,
+          "old_title": "outer if not valid early return",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-055",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "update_rq_clock",
+          "start": 24,
+          "end": 27,
+          "old_title": "rq clock uses local_clock delta",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-056",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1032,
+          "end": 1034,
+          "old_title": "prev from rq curr",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-057",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1065,
+          "end": 1069,
+          "old_title": "rq clock and prev nivcsw pointer",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-058",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1072,
+          "end": 1072,
+          "old_title": "SM_NONE comparison for preempt",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-059",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1078,
+          "end": 1078,
+          "old_title": "read prev state",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-060",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1116,
+          "end": 1119,
+          "old_title": "pick_next_task and clear flags",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-061",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1124,
+          "end": 1125,
+          "old_title": "prev != next and nr_switches",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-062",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1130,
+          "end": 1130,
+          "old_title": "RCU pointer write call",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-063",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1153,
+          "end": 1153,
+          "old_title": "increment selected prev count",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-064",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1162,
+          "end": 1162,
+          "old_title": "context_switch call boundary",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-065",
+          "path": "mykernel/sched/scheduler/scheduler.h",
+          "symbol": "__pick_next_task",
+          "start": 258,
+          "end": 258,
+          "old_title": "scheduler class traversal",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-066",
+          "path": "mykernel/sched/scheduler/scheduler.h",
+          "symbol": "__pick_next_task",
+          "start": 264,
+          "end": 266,
+          "old_title": "indirect class picker and return",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-067",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 9,
+          "end": 10,
+          "old_title": "picker uses current rt",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-068",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 20,
+          "end": 21,
+          "old_title": "BUG_ON guard expression",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-069",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 28,
+          "end": 28,
+          "old_title": "running requeue gate",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-070",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 30,
+          "end": 30,
+          "old_title": "idle check",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": false,
+          "missing_from_old_facts": true,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-071",
+          "path": "mykernel/lib/list/rcu_list_macro.h",
+          "symbol": "RCU_INIT_POINTER",
+          "start": 479,
+          "end": 482,
+          "old_title": "RCU_INIT_POINTER WRITE_ONCE macro",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-072",
+          "path": "mykernel/include/linux/kernel/asm-generic/bug.h",
+          "symbol": "BUG_ON",
+          "start": 66,
+          "end": 66,
+          "old_title": "BUG_ON macro guarded by CONFIG_BUG",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        },
+        {
+          "old_id": "E137-073",
+          "path": "mykernel/scripts/options_flags.cmake",
+          "symbol": "CMAKE_C_FLAGS",
+          "start": 64,
+          "end": 66,
+          "old_title": "CMake -DCONFIG_BUG setting",
+          "direct_source_73_rechecked": true,
+          "old_facts_contains": true,
+          "missing_from_old_facts": false,
+          "replacement_anchors": [],
+          "disposition": "HISTORICAL_SOURCE_LOCATOR"
+        }
+      ],
+      "new_47_window_index": [
+        {
+          "id": "E138-001",
+          "claim": "TASK_COMM_LEN=32",
+          "path": "mykernel/sched/task/task_const.h",
+          "symbol": "TASK_COMM_LEN",
+          "start": 11,
+          "end": 11,
+          "line_count": 1
+        },
+        {
+          "id": "E138-002",
+          "claim": "comm inline char array",
+          "path": "mykernel/sched/task/task_types.h",
+          "symbol": "task_struct",
+          "start": 326,
+          "end": 326,
+          "line_count": 1
+        },
+        {
+          "id": "E138-003",
+          "claim": "whole task value copied",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "dup_task_struct",
+          "start": 288,
+          "end": 289,
+          "line_count": 2
+        },
+        {
+          "id": "E138-004",
+          "claim": "calls dup_task_struct(current,node)",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "copy_process",
+          "start": 958,
+          "end": 961,
+          "line_count": 4
+        },
+        {
+          "id": "E138-005",
+          "claim": "args.name name override gate",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "copy_process",
+          "start": 976,
+          "end": 977,
+          "line_count": 2
+        },
+        {
+          "id": "E138-006",
+          "claim": "ordinary fork args exitsignal",
+          "path": "mykernel/sched/syscall.c",
+          "symbol": "MYOS_SYSCALL_DEFINE0(fork)",
+          "start": 60,
+          "end": 64,
+          "line_count": 5
+        },
+        {
+          "id": "E138-007",
+          "claim": "kernel_thread argument aggregate begins",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "kernel_thread",
+          "start": 1538,
+          "end": 1539,
+          "line_count": 2
+        },
+        {
+          "id": "E138-008",
+          "claim": "kernel_thread name pointer passed",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "kernel_thread",
+          "start": 1542,
+          "end": 1545,
+          "line_count": 4
+        },
+        {
+          "id": "E138-009",
+          "claim": "kernel_thread calls kernel_clone",
+          "path": "mykernel/sched/forkexec/fork.c",
+          "symbol": "kernel_thread",
+          "start": 1548,
+          "end": 1550,
+          "line_count": 3
+        },
+        {
+          "id": "E138-010",
+          "claim": "strscpy res and count initialization",
+          "path": "mykernel/lib/string/string.c",
+          "symbol": "strscpy",
+          "start": 172,
+          "end": 176,
+          "line_count": 5
+        },
+        {
+          "id": "E138-011",
+          "claim": "strscpy rejects zero count",
+          "path": "mykernel/lib/string/string.c",
+          "symbol": "strscpy",
+          "start": 178,
+          "end": 179,
+          "line_count": 2
+        },
+        {
+          "id": "E138-012",
+          "claim": "strscpy copies one byte",
+          "path": "mykernel/lib/string/string.c",
+          "symbol": "strscpy",
+          "start": 213,
+          "end": 217,
+          "line_count": 5
+        },
+        {
+          "id": "E138-013",
+          "claim": "strscpy detects NUL or increments",
+          "path": "mykernel/lib/string/string.c",
+          "symbol": "strscpy",
+          "start": 218,
+          "end": 222,
+          "line_count": 5
+        },
+        {
+          "id": "E138-014",
+          "claim": "strscpy overwrites last byte when truncated",
+          "path": "mykernel/lib/string/string.c",
+          "symbol": "strscpy",
+          "start": 224,
+          "end": 228,
+          "line_count": 5
+        },
+        {
+          "id": "E138-015",
+          "claim": "pad wrapper calls inner strscpy",
+          "path": "mykernel/lib/string/string_helpers.c",
+          "symbol": "strscpy_pad",
+          "start": 831,
+          "end": 835,
+          "line_count": 5
+        },
+        {
+          "id": "E138-016",
+          "claim": "pad wrapper early return for negative/full",
+          "path": "mykernel/lib/string/string_helpers.c",
+          "symbol": "strscpy_pad",
+          "start": 835,
+          "end": 837,
+          "line_count": 3
+        },
+        {
+          "id": "E138-017",
+          "claim": "pad wrapper zeros trailing bytes",
+          "path": "mykernel/lib/string/string_helpers.c",
+          "symbol": "strscpy_pad",
+          "start": 839,
+          "end": 841,
+          "line_count": 3
+        },
+        {
+          "id": "E138-018",
+          "claim": "get_task_comm locks tsk and copies into buf",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__get_task_comm",
+          "start": 820,
+          "end": 824,
+          "line_count": 5
+        },
+        {
+          "id": "E138-019",
+          "claim": "getter unlocks tsk and returns buf",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__get_task_comm",
+          "start": 824,
+          "end": 826,
+          "line_count": 3
+        },
+        {
+          "id": "E138-020",
+          "claim": "setter void and task lock",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__set_task_comm",
+          "start": 836,
+          "end": 838,
+          "line_count": 3
+        },
+        {
+          "id": "E138-021",
+          "claim": "setter copies to task inline comm and unlocks",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "__set_task_comm",
+          "start": 840,
+          "end": 841,
+          "line_count": 2
+        },
+        {
+          "id": "E138-022",
+          "claim": "begin_new_exec me=current",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "begin_new_exec",
+          "start": 851,
+          "end": 854,
+          "line_count": 4
+        },
+        {
+          "id": "E138-023",
+          "claim": "setter receives bprm filename",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "begin_new_exec",
+          "start": 979,
+          "end": 979,
+          "line_count": 1
+        },
+        {
+          "id": "E138-024",
+          "claim": "fd AT_FDCWD chooses filename name",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "alloc_bprm",
+          "start": 1117,
+          "end": 1119,
+          "line_count": 3
+        },
+        {
+          "id": "E138-025",
+          "claim": "interp initially aliases filename pointer",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "alloc_bprm",
+          "start": 1140,
+          "end": 1142,
+          "line_count": 3
+        },
+        {
+          "id": "E138-026",
+          "claim": "do_execve calls do_execveat_common AT_FDCWD",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execve",
+          "start": 1438,
+          "end": 1442,
+          "line_count": 5
+        },
+        {
+          "id": "E138-027",
+          "claim": "execve calls do_execve getname",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "MYOS_SYSCALL_DEFINE3(execve,",
+          "start": 1460,
+          "end": 1463,
+          "line_count": 4
+        },
+        {
+          "id": "E138-028",
+          "claim": "error name pointer early PTR_ERR return",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "start": 1297,
+          "end": 1298,
+          "line_count": 2
+        },
+        {
+          "id": "E138-029",
+          "claim": "valid name reaches alloc_bprm",
+          "path": "mykernel/sched/forkexec/exec.c",
+          "symbol": "do_execveat_common",
+          "start": 1314,
+          "end": 1316,
+          "line_count": 3
+        },
+        {
+          "id": "E138-030",
+          "claim": "task_lock holds p.alloc_lock",
+          "path": "mykernel/sched/task/task.h",
+          "symbol": "task_lock",
+          "start": 93,
+          "end": 95,
+          "line_count": 3
+        },
+        {
+          "id": "E138-031",
+          "claim": "task_unlock releases p.alloc_lock",
+          "path": "mykernel/sched/task/task.h",
+          "symbol": "task_unlock",
+          "start": 98,
+          "end": 100,
+          "line_count": 3
+        },
+        {
+          "id": "E138-032",
+          "claim": "rq clock local_clock sample",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "update_rq_clock",
+          "start": 20,
+          "end": 24,
+          "line_count": 5
+        },
+        {
+          "id": "E138-033",
+          "claim": "clock negative delta skips additive write",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "update_rq_clock",
+          "start": 24,
+          "end": 27,
+          "line_count": 4
+        },
+        {
+          "id": "E138-034",
+          "claim": "clock_update_flags written around call",
+          "path": "mykernel/sched/scheduler/scheduler_core.c",
+          "symbol": "__schedule",
+          "start": 1064,
+          "end": 1067,
+          "line_count": 4
+        },
+        {
+          "id": "E138-035",
+          "claim": "used jiffies separate arithmetic",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 12,
+          "end": 12,
+          "line_count": 1
+        },
+        {
+          "id": "E138-036",
+          "claim": "picker full OR including task state test",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 14,
+          "end": 18,
+          "line_count": 5
+        },
+        {
+          "id": "E138-037",
+          "claim": "picker curr and return",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 56,
+          "end": 57,
+          "line_count": 2
+        },
+        {
+          "id": "E138-038",
+          "claim": "run_list active member E137-048 split",
+          "path": "mykernel/sched/scheduler/scheduler_types.h",
+          "symbol": "sched_rt_entity",
+          "start": 43,
+          "end": 43,
+          "line_count": 1
+        },
+        {
+          "id": "E138-039",
+          "claim": "time_slice active member E137-048 split",
+          "path": "mykernel/sched/scheduler/scheduler_types.h",
+          "symbol": "sched_rt_entity",
+          "start": 46,
+          "end": 46,
+          "line_count": 1
+        },
+        {
+          "id": "E138-040",
+          "claim": "running_lhdr and last_jiffies active E137-049 split",
+          "path": "mykernel/sched/runqueue/runqueue_types.h",
+          "symbol": "myos_rq",
+          "start": 195,
+          "end": 196,
+          "line_count": 2
+        },
+        {
+          "id": "E138-041",
+          "claim": "generic head removal can pick K or Q",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 24,
+          "end": 25,
+          "line_count": 2
+        },
+        {
+          "id": "E138-042",
+          "claim": "generic reinsert is case-specific current",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 44,
+          "end": 45,
+          "line_count": 2
+        },
+        {
+          "id": "E138-043",
+          "claim": "generic before-node insertion",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "list_add_to_prev",
+          "start": 221,
+          "end": 222,
+          "line_count": 2
+        },
+        {
+          "id": "E138-044",
+          "claim": "retval assignment and last write not return statement",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 52,
+          "end": 54,
+          "line_count": 3
+        },
+        {
+          "id": "E138-045",
+          "claim": "actual return statement",
+          "path": "mykernel/sched/scheduler/myos_rt.c",
+          "symbol": "pick_next_task_myos",
+          "start": 56,
+          "end": 57,
+          "line_count": 2
+        },
+        {
+          "id": "E138-046",
+          "claim": "head removal calls list_del_init and decreases count",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "list_header_remove_head",
+          "start": 653,
+          "end": 657,
+          "line_count": 5
+        },
+        {
+          "id": "E138-047",
+          "claim": "removed node selflinks",
+          "path": "mykernel/lib/list/double_list.h",
+          "symbol": "list_del_init",
+          "start": 280,
+          "end": 282,
+          "line_count": 3
+        }
+      ],
+      "original_73_physical_windows_exact_this_turn": true,
+      "old_E048_split": {
+        "run_list": "E138-038 line43",
+        "time_slice": "E138-039 line46",
+        "comment": "L138-E048-COMMENT"
+      },
+      "old_E049_split": {
+        "active": "E138-040 line195-196",
+        "comment": "L138-E049-COMMENT"
+      },
+      "sample_binding": [
+        {
+          "case": "136 C2",
+          "old_ids": [
+            "E137-028",
+            "E137-031",
+            "E137-035"
+          ],
+          "pop": "K",
+          "reinsert": "P",
+          "before": "Q"
+        },
+        {
+          "case": "137 C1",
+          "old_ids": [
+            "E137-028",
+            "E137-031",
+            "E137-035"
+          ],
+          "pop": "Q",
+          "reinsert": "K",
+          "before": "R"
+        },
+        {
+          "case": "137 C2",
+          "old_ids": [
+            "E137-028",
+            "E137-031",
+            "E137-035"
+          ],
+          "reached": false
+        }
+      ],
+      "old_E033": "E138-044 retval variable assigned; last_jiffies stored",
+      "old_E034": "E138-045 rq.curr assigned and actual return",
+      "author_comment_timing": "137 #7097528986 wrote pre-submit fixed/active equality; meaningful fixed/active readback is post-fast-forward",
+      "old_137_report_claims_not_automatically_upgrade": true
+    }
+  },
+  "A": {
+    "assumptions": "ASCII NUL terminated; 8 byte dest initially all 0x5A; each case isolated; valid non-overlapping buffers",
+    "samples": [
+      {
+        "id": "A0",
+        "source": "ab",
+        "source_NUL_at": 2,
+        "count": 0,
+        "dest_object_length": 8,
+        "dest_initial_hex": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "source_read_indices": [],
+        "inner_copy_written_indices": [],
+        "last_byte_rewrite": null,
+        "pad_memset_reached": false,
+        "pad_written_indices": [],
+        "inner_return": "-E2BIG",
+        "outer_return": "-E2BIG",
+        "final8_hex": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "final8_bytes": [
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90
+        ]
+      },
+      {
+        "id": "A1",
+        "source": "ab",
+        "source_NUL_at": 2,
+        "count": 1,
+        "dest_object_length": 8,
+        "dest_initial_hex": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "source_read_indices": [
+          0
+        ],
+        "inner_copy_written_indices": [
+          0
+        ],
+        "last_byte_rewrite": {
+          "index": 0,
+          "old": 97,
+          "new": 0
+        },
+        "pad_memset_reached": false,
+        "pad_written_indices": [],
+        "inner_return": "-E2BIG",
+        "outer_return": "-E2BIG",
+        "final8_hex": [
+          "00",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "final8_bytes": [
+          0,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90,
+          90
+        ]
+      },
+      {
+        "id": "A2",
+        "source": "ab",
+        "source_NUL_at": 2,
+        "count": 3,
+        "dest_object_length": 8,
+        "dest_initial_hex": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "source_read_indices": [
+          0,
+          1,
+          2
+        ],
+        "inner_copy_written_indices": [
+          0,
+          1,
+          2
+        ],
+        "last_byte_rewrite": null,
+        "pad_memset_reached": false,
+        "pad_written_indices": [],
+        "inner_return": 2,
+        "outer_return": 2,
+        "final8_hex": [
+          "61",
+          "62",
+          "00",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "final8_bytes": [
+          97,
+          98,
+          0,
+          90,
+          90,
+          90,
+          90,
+          90
+        ]
+      },
+      {
+        "id": "A3",
+        "source": "ab",
+        "source_NUL_at": 2,
+        "count": 5,
+        "dest_object_length": 8,
+        "dest_initial_hex": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "source_read_indices": [
+          0,
+          1,
+          2
+        ],
+        "inner_copy_written_indices": [
+          0,
+          1,
+          2
+        ],
+        "last_byte_rewrite": null,
+        "pad_memset_reached": true,
+        "pad_written_indices": [
+          3,
+          4
+        ],
+        "inner_return": 2,
+        "outer_return": 2,
+        "final8_hex": [
+          "61",
+          "62",
+          "00",
+          "00",
+          "00",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "final8_bytes": [
+          97,
+          98,
+          0,
+          0,
+          0,
+          90,
+          90,
+          90
+        ]
+      },
+      {
+        "id": "A4",
+        "source": "abcdef",
+        "source_NUL_at": 6,
+        "count": 4,
+        "dest_object_length": 8,
+        "dest_initial_hex": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "source_read_indices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "inner_copy_written_indices": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "last_byte_rewrite": {
+          "index": 3,
+          "old": 100,
+          "new": 0
+        },
+        "pad_memset_reached": false,
+        "pad_written_indices": [],
+        "inner_return": "-E2BIG",
+        "outer_return": "-E2BIG",
+        "final8_hex": [
+          "61",
+          "62",
+          "63",
+          "00",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "final8_bytes": [
+          97,
+          98,
+          99,
+          0,
+          90,
+          90,
+          90,
+          90
+        ]
+      }
+    ]
+  },
+  "B": {
+    "P": {
+      "array_identity": "P.comm",
+      "original_bytes": [
+        105,
+        110,
+        105,
+        116,
+        0,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90
+      ],
+      "original_hex": [
+        "69",
+        "6E",
+        "69",
+        "74",
+        "00",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A"
+      ],
+      "unchanged": true
+    },
+    "K": {
+      "array_identity": "K.comm",
+      "copied_full_32_bytes": [
+        105,
+        110,
+        105,
+        116,
+        0,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90
+      ],
+      "after_gate": [
+        105,
+        110,
+        105,
+        116,
+        0,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90
+      ],
+      "args_name": null,
+      "condition_false": true,
+      "retained_5A_range": [
+        5,
+        31
+      ],
+      "direct_strscpy_pad_called": false
+    },
+    "J": {
+      "array_identity": "J.comm",
+      "after_struct_copy": [
+        105,
+        110,
+        105,
+        116,
+        0,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90
+      ],
+      "name": "io",
+      "name_pointer_nonnull": true,
+      "direct_copy_process_pad_called": true,
+      "inner_pad_return": 2,
+      "after_name": [
+        105,
+        111,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "after_name_hex": [
+        "69",
+        "6F",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00"
+      ],
+      "padded_zero_range": [
+        3,
+        31
+      ],
+      "call_setter": false
+    },
+    "getter_K_buf8": {
+      "initial": [
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A"
+      ],
+      "final": [
+        "69",
+        "6E",
+        "69",
+        "74",
+        "00",
+        "00",
+        "00",
+        "00"
+      ],
+      "inner_return": 4,
+      "outer_return": "same buf pointer",
+      "task_comm_not_modified": true,
+      "lock": "K.alloc_lock"
+    },
+    "all_array_storage_separate": true,
+    "no_real_process_run": true
+  },
+  "C": {
+    "independent_samples": true,
+    "shared_premises": {
+      "K_reset": [
+        105,
+        110,
+        105,
+        116,
+        0,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90
+      ],
+      "argv0": "display-name",
+      "selected_bprm_filename": "filename->name at AT_FDCWD; bprm->interp initially same pointer",
+      "me": "current=K",
+      "setter": "__set_task_comm(K,bprm->filename)",
+      "lock": "set/get both task_lock(K) and task_unlock(K) around strscpy_pad, using K.alloc_lock",
+      "full_exec_outcome": "NOT_OBSERVED",
+      "no_basename_in_active_setter": true
+    },
+    "C1": {
+      "id": "C1",
+      "filename": "/opt/demo/worker",
+      "filename_length": 16,
+      "exec_path_to_setter_given_reached": true,
+      "setter_inner_result": 16,
+      "setter_outer_result": 16,
+      "setter_function_returns": "void",
+      "comm32": [
+        "2F",
+        "6F",
+        "70",
+        "74",
+        "2F",
+        "64",
+        "65",
+        "6D",
+        "6F",
+        "2F",
+        "77",
+        "6F",
+        "72",
+        "6B",
+        "65",
+        "72",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00",
+        "00"
+      ],
+      "character_range": [
+        0,
+        15
+      ],
+      "NUL_at": 16,
+      "zero_padding_range": [
+        17,
+        31
+      ],
+      "get8": {
+        "initial": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "final": [
+          "2F",
+          "6F",
+          "70",
+          "74",
+          "2F",
+          "64",
+          "65",
+          "00"
+        ],
+        "inner_result": "-E2BIG",
+        "outer_result": "buf pointer",
+        "source_reads": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "last_byte_rewrite_at": 7
+      }
+    },
+    "C2": {
+      "id": "C2",
+      "filename": "/opt/demo/abcdefghijklmnopqrstuvwxyz012345",
+      "filename_length": 42,
+      "exec_path_to_setter_given_reached": true,
+      "setter_inner_result": "-E2BIG",
+      "setter_outer_result": "-E2BIG",
+      "setter_function_returns": "void",
+      "comm32": [
+        "2F",
+        "6F",
+        "70",
+        "74",
+        "2F",
+        "64",
+        "65",
+        "6D",
+        "6F",
+        "2F",
+        "61",
+        "62",
+        "63",
+        "64",
+        "65",
+        "66",
+        "67",
+        "68",
+        "69",
+        "6A",
+        "6B",
+        "6C",
+        "6D",
+        "6E",
+        "6F",
+        "70",
+        "71",
+        "72",
+        "73",
+        "74",
+        "75",
+        "00"
+      ],
+      "first31": "/opt/demo/abcdefghijklmnopqrstu",
+      "NUL_at": 31,
+      "zero_padding_range": [],
+      "source_reads": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "get32": {
+        "initial": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "final": [
+          "2F",
+          "6F",
+          "70",
+          "74",
+          "2F",
+          "64",
+          "65",
+          "6D",
+          "6F",
+          "2F",
+          "61",
+          "62",
+          "63",
+          "64",
+          "65",
+          "66",
+          "67",
+          "68",
+          "69",
+          "6A",
+          "6B",
+          "6C",
+          "6D",
+          "6E",
+          "6F",
+          "70",
+          "71",
+          "72",
+          "73",
+          "74",
+          "75",
+          "00"
+        ],
+        "inner_result": 31,
+        "outer_result": "buf pointer",
+        "no_memset_because_written_eq_count_minus_one": true
+      }
+    },
+    "C3": {
+      "id": "C3",
+      "entry": "do_execveat_common receives ERR_PTR(-ENOENT)",
+      "returned": "-ENOENT",
+      "alloc_bprm_reached": false,
+      "begin_new_exec_reached": false,
+      "setter_reached": false,
+      "comm32_unchanged": [
+        "69",
+        "6E",
+        "69",
+        "74",
+        "00",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A",
+        "5A"
+      ],
+      "get8": {
+        "initial": [
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A",
+          "5A"
+        ],
+        "final": [
+          "69",
+          "6E",
+          "69",
+          "74",
+          "00",
+          "00",
+          "00",
+          "00"
+        ],
+        "inner_result": 4,
+        "outer_result": "buf pointer",
+        "pad_indices": [
+          5,
+          6,
+          7
+        ]
+      }
+    }
+  },
+  "graph": {
+    "nodes": [
+      {
+        "id": "D138_GE",
+        "kind": "comparison",
+        "label": "used3>=10 false"
+      },
+      {
+        "id": "D138_STATE",
+        "kind": "comparison",
+        "label": "P state!=TASK_RUNNING false and evaluated"
+      },
+      {
+        "id": "D138_OR",
+        "kind": "logical",
+        "label": "OR false"
+      },
+      {
+        "id": "D138_SKIP",
+        "kind": "short_circuit",
+        "label": "count not evaluated"
+      },
+      {
+        "id": "D138_P",
+        "kind": "result",
+        "label": "picker returns P and curr=P"
+      },
+      {
+        "id": "D138_CLK999_CALL",
+        "kind": "call",
+        "label": "update_rq_clock called"
+      },
+      {
+        "id": "D138_CLK999_SAMPLE",
+        "kind": "clock",
+        "label": "local_clock=999 delta=-1"
+      },
+      {
+        "id": "D138_CLK999_GATE",
+        "kind": "condition",
+        "label": "delta<0=true"
+      },
+      {
+        "id": "D138_CLK999_RESULT",
+        "kind": "early_return",
+        "label": "clock=1000, value changed=false"
+      },
+      {
+        "id": "D138_CLK1000_CALL",
+        "kind": "call",
+        "label": "update_rq_clock called"
+      },
+      {
+        "id": "D138_CLK1000_SAMPLE",
+        "kind": "clock",
+        "label": "local_clock=1000 delta=0"
+      },
+      {
+        "id": "D138_CLK1000_GATE",
+        "kind": "condition",
+        "label": "delta<0=false"
+      },
+      {
+        "id": "D138_CLK1000_RESULT",
+        "kind": "write",
+        "label": "clock=1000, value changed=false"
+      },
+      {
+        "id": "D138_CLK1001_CALL",
+        "kind": "call",
+        "label": "update_rq_clock called"
+      },
+      {
+        "id": "D138_CLK1001_SAMPLE",
+        "kind": "clock",
+        "label": "local_clock=1001 delta=1"
+      },
+      {
+        "id": "D138_CLK1001_GATE",
+        "kind": "condition",
+        "label": "delta<0=false"
+      },
+      {
+        "id": "D138_CLK1001_RESULT",
+        "kind": "write",
+        "label": "clock=1001, value changed=true"
+      },
+      {
+        "id": "D138_OLD_INDEX",
+        "kind": "index",
+        "label": "old evidence73 facts52"
+      },
+      {
+        "id": "D138_NEW_INDEX",
+        "kind": "index",
+        "label": "73 full crosswalk including 21 missing"
+      },
+      {
+        "id": "A0_INPUT",
+        "kind": "given",
+        "label": "ab count0 dest5A*8"
+      },
+      {
+        "id": "A0_INNER",
+        "kind": "copy",
+        "label": "reads ; ret-E2BIG"
+      },
+      {
+        "id": "A0_PAD",
+        "kind": "padding",
+        "label": "pad ,rewritenone"
+      },
+      {
+        "id": "A0_RESULT",
+        "kind": "buffer",
+        "label": "5A 5A 5A 5A 5A 5A 5A 5A"
+      },
+      {
+        "id": "A1_INPUT",
+        "kind": "given",
+        "label": "ab count1 dest5A*8"
+      },
+      {
+        "id": "A1_INNER",
+        "kind": "copy",
+        "label": "reads 0; ret-E2BIG"
+      },
+      {
+        "id": "A1_PAD",
+        "kind": "padding",
+        "label": "pad ,rewrite0"
+      },
+      {
+        "id": "A1_RESULT",
+        "kind": "buffer",
+        "label": "00 5A 5A 5A 5A 5A 5A 5A"
+      },
+      {
+        "id": "A2_INPUT",
+        "kind": "given",
+        "label": "ab count3 dest5A*8"
+      },
+      {
+        "id": "A2_INNER",
+        "kind": "copy",
+        "label": "reads 0,1,2; ret2"
+      },
+      {
+        "id": "A2_PAD",
+        "kind": "padding",
+        "label": "pad ,rewritenone"
+      },
+      {
+        "id": "A2_RESULT",
+        "kind": "buffer",
+        "label": "61 62 00 5A 5A 5A 5A 5A"
+      },
+      {
+        "id": "A3_INPUT",
+        "kind": "given",
+        "label": "ab count5 dest5A*8"
+      },
+      {
+        "id": "A3_INNER",
+        "kind": "copy",
+        "label": "reads 0,1,2; ret2"
+      },
+      {
+        "id": "A3_PAD",
+        "kind": "padding",
+        "label": "pad 3,4,rewritenone"
+      },
+      {
+        "id": "A3_RESULT",
+        "kind": "buffer",
+        "label": "61 62 00 00 00 5A 5A 5A"
+      },
+      {
+        "id": "A4_INPUT",
+        "kind": "given",
+        "label": "abcdef count4 dest5A*8"
+      },
+      {
+        "id": "A4_INNER",
+        "kind": "copy",
+        "label": "reads 0,1,2,3; ret-E2BIG"
+      },
+      {
+        "id": "A4_PAD",
+        "kind": "padding",
+        "label": "pad ,rewrite3"
+      },
+      {
+        "id": "A4_RESULT",
+        "kind": "buffer",
+        "label": "61 62 63 00 5A 5A 5A 5A"
+      },
+      {
+        "id": "B138_P",
+        "kind": "array",
+        "label": "P init NUL +27 Z"
+      },
+      {
+        "id": "B138_K",
+        "kind": "struct_copy",
+        "label": "K copied full32, name gate false"
+      },
+      {
+        "id": "B138_J",
+        "kind": "named_copy",
+        "label": "J name io padded zeros3..31"
+      },
+      {
+        "id": "B138_GET",
+        "kind": "reader",
+        "label": "K getter8 returns buf init NUL zeros"
+      },
+      {
+        "id": "C138_C1_PATH",
+        "kind": "given",
+        "label": "/opt/demo/worker"
+      },
+      {
+        "id": "C138_C1_BPRM",
+        "kind": "pointer",
+        "label": "AT_FDCWD filename->name"
+      },
+      {
+        "id": "C138_C1_SET",
+        "kind": "void_setter",
+        "label": "strscpy_pad returns 16"
+      },
+      {
+        "id": "C138_C1_ARRAY",
+        "kind": "array",
+        "label": "2F 6F 70 74 2F 64 65 6D 6F 2F 77 6F 72 6B 65 72 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00"
+      },
+      {
+        "id": "C138_C1_GET",
+        "kind": "reader",
+        "label": "getter returns buf pointer with size8"
+      },
+      {
+        "id": "C138_C2_PATH",
+        "kind": "given",
+        "label": "/opt/demo/abcdefghijklmnopqrstuvwxyz012345"
+      },
+      {
+        "id": "C138_C2_BPRM",
+        "kind": "pointer",
+        "label": "AT_FDCWD filename->name"
+      },
+      {
+        "id": "C138_C2_SET",
+        "kind": "void_setter",
+        "label": "strscpy_pad returns -E2BIG"
+      },
+      {
+        "id": "C138_C2_ARRAY",
+        "kind": "array",
+        "label": "2F 6F 70 74 2F 64 65 6D 6F 2F 61 62 63 64 65 66 67 68 69 6A 6B 6C 6D 6E 6F 70 71 72 73 74 75 00"
+      },
+      {
+        "id": "C138_C2_GET",
+        "kind": "reader",
+        "label": "getter returns buf pointer with size32"
+      },
+      {
+        "id": "C138_C3_ERR",
+        "kind": "condition",
+        "label": "IS_ERR(filename) true"
+      },
+      {
+        "id": "C138_C3_EXIT",
+        "kind": "early_return",
+        "label": "PTR_ERR=>-ENOENT, no setter"
+      },
+      {
+        "id": "C138_C3_GET",
+        "kind": "reader",
+        "label": "K original init unchanged getter8"
+      }
+    ],
+    "edges": [
+      {
+        "from": "D138_GE",
+        "to": "D138_STATE",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_STATE",
+        "to": "D138_OR",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_OR",
+        "to": "D138_SKIP",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_SKIP",
+        "to": "D138_P",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK999_CALL",
+        "to": "D138_CLK999_SAMPLE",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK999_SAMPLE",
+        "to": "D138_CLK999_GATE",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK999_GATE",
+        "to": "D138_CLK999_RESULT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK1000_CALL",
+        "to": "D138_CLK1000_SAMPLE",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK1000_SAMPLE",
+        "to": "D138_CLK1000_GATE",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK1000_GATE",
+        "to": "D138_CLK1000_RESULT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK1001_CALL",
+        "to": "D138_CLK1001_SAMPLE",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK1001_SAMPLE",
+        "to": "D138_CLK1001_GATE",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_CLK1001_GATE",
+        "to": "D138_CLK1001_RESULT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "D138_OLD_INDEX",
+        "to": "D138_NEW_INDEX",
+        "kind": "R13702_INDEX_COMPLETION",
+        "label": ""
+      },
+      {
+        "from": "A0_INPUT",
+        "to": "A0_INNER",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A0_INNER",
+        "to": "A0_PAD",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A0_PAD",
+        "to": "A0_RESULT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A1_INPUT",
+        "to": "A1_INNER",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A1_INNER",
+        "to": "A1_PAD",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A1_PAD",
+        "to": "A1_RESULT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A2_INPUT",
+        "to": "A2_INNER",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A2_INNER",
+        "to": "A2_PAD",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A2_PAD",
+        "to": "A2_RESULT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A3_INPUT",
+        "to": "A3_INNER",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A3_INNER",
+        "to": "A3_PAD",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A3_PAD",
+        "to": "A3_RESULT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A4_INPUT",
+        "to": "A4_INNER",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A4_INNER",
+        "to": "A4_PAD",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "A4_PAD",
+        "to": "A4_RESULT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "B138_P",
+        "to": "B138_K",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "B138_K",
+        "to": "B138_J",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "B138_J",
+        "to": "B138_GET",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C1_PATH",
+        "to": "C138_C1_BPRM",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C1_BPRM",
+        "to": "C138_C1_SET",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C1_SET",
+        "to": "C138_C1_ARRAY",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C1_ARRAY",
+        "to": "C138_C1_GET",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C2_PATH",
+        "to": "C138_C2_BPRM",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C2_BPRM",
+        "to": "C138_C2_SET",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C2_SET",
+        "to": "C138_C2_ARRAY",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C2_ARRAY",
+        "to": "C138_C2_GET",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C3_ERR",
+        "to": "C138_C3_EXIT",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      },
+      {
+        "from": "C138_C3_EXIT",
+        "to": "C138_C3_GET",
+        "kind": "BOUNDED_SOURCE_OR_GIVEN_SEQUENCE",
+        "label": ""
+      }
+    ],
+    "node_count": 56,
+    "edge_count": 42
+  },
+  "limits": {
+    "complete_local_P9": "NOT_RUN",
+    "compile_or_build": "NOT_RUN",
+    "QEMU_or_actual_tasks": "NOT_RUN",
+    "exec_complete": "UNKNOWN",
+    "real_file_or_user_observation": "NOT_RUN"
+  },
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}

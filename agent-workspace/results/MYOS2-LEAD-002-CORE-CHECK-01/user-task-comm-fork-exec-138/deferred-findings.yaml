@@ -1,0 +1,112 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-TASK-COMM-FORK-EXEC-138",
+  "record_type": "incremental_deferred_findings",
+  "date": "2026-11-23",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "produced_by": "GPT-6（可辨模型族；后端未认证）",
+  "model_per_owner": "GPT-6＋Extra（Owner指定）",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "phase": 2,
+  "prior_status": {
+    "batch136": "RETURN",
+    "batch137": "RETURN",
+    "combined135": "PASS_PENDING_LOCAL",
+    "R136_01_02_03": "CLOSED_DOCUMENTATION_ONLY_BY_C09"
+  },
+  "corrections": [
+    {
+      "qualified_id": "R136-04",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "source_batch": 136,
+      "source_ref": "MyOS2 prior frozen author artifact",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_artifact_frozen": true,
+      "closed_by_author": false,
+      "independent_review": "PENDING_C09_PRO"
+    },
+    {
+      "qualified_id": "R137-01",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "source_batch": 137,
+      "source_ref": "MyOS2 prior frozen author artifact",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_artifact_frozen": true,
+      "closed_by_author": false,
+      "independent_review": "PENDING_C09_PRO"
+    },
+    {
+      "qualified_id": "R137-02",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "source_batch": 137,
+      "source_ref": "MyOS2 prior frozen author artifact",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_artifact_frozen": true,
+      "closed_by_author": false,
+      "independent_review": "PENDING_C09_PRO"
+    }
+  ],
+  "findings": [
+    {
+      "qualified_id": "R138-01",
+      "kind": "RUNTIME_GAP",
+      "status": "needs_evidence",
+      "topic": "Actual fork, kernel_thread, execve, get_task_comm sequencing and user space visible names",
+      "known": "Static selected source and stipulated independent memory input only",
+      "unknown": "Real kernel scheduling, syscall execution and user program observations",
+      "resume": "Separate runtime and test authorization; keep stage2 non-run"
+    },
+    {
+      "qualified_id": "R138-02",
+      "kind": "SOURCE_SCOPE",
+      "status": "needs_evidence",
+      "topic": "All callers and writers of task_struct.comm and naming rules",
+      "known": "Selected copy_process name gate, exec begin_new_exec setter, getter, two kernel string functions",
+      "unknown": "All system write sites, concurrent task lifetime and third-party usages",
+      "resume": "Later full symbol and configuration sweep"
+    },
+    {
+      "qualified_id": "R138-03",
+      "kind": "CONFIGURATION_SCOPE",
+      "status": "needs_evidence",
+      "topic": "Kernel string architecture/config branches and actual binary",
+      "known": "Selected time text strscpy byte loop active, alternative word loop commented, include declaration/conditional located",
+      "unknown": "Preprocessed translation unit and linked runtime selection",
+      "resume": "Do not claim build; optional separately authorized codegen/static build analysis"
+    },
+    {
+      "qualified_id": "R138-04",
+      "kind": "EXECVE_BOUNDARY",
+      "status": "needs_evidence",
+      "topic": "Full exec path and bprm filename lifetime, later interpreter modifications",
+      "known": "AT_FDCWD selected branch assigns filename->name and initial interp; given begin_new_exec reaches setter",
+      "unknown": "Actual file open, real loader success, later interp rewrites, userland argv effects beyond setter",
+      "resume": "Different bounded contract with source and runtime permissions"
+    },
+    {
+      "qualified_id": "R138-05",
+      "kind": "LOCKING_SCOPE",
+      "status": "deferred_owner_not_ready",
+      "topic": "Concurrency and task_lock semantics outside selected comm copy interval",
+      "known": "Getter and setter lock/unlock requested tsk.alloc_lock around strscpy_pad",
+      "unknown": "All possible races, lock ordering and task lifetime guarantees",
+      "resume": "Separate concurrency audit; no unsourced safety guarantee"
+    },
+    {
+      "qualified_id": "R138-06",
+      "kind": "ERROR_INTERFACE",
+      "status": "needs_evidence",
+      "topic": "Error propagation through void setter and buf-returning getter",
+      "known": "strscpy_pad inner -E2BIG for truncation; void setter ignores and getter returns buf pointer",
+      "unknown": "Whether any surrounding consumers separately inspect truncation, final observable error/status",
+      "resume": "Follow future caller audit"
+    }
+  ],
+  "open_questions": [],
+  "owner_decisions_requested_now": [],
+  "local_P9": "NOT_RUN",
+  "compile_and_runtime": "NOT_RUN"
+}
