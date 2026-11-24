@@ -12,14 +12,22 @@ model_per_owner: "沿用主线独审及后继设计使用Pro的持续约定"
 base_snapshot: "time（分支名）"
 source_pin_short12: a039d9803ade
 direct_master_short12: e8e60cd19540
-lead_before_publication_short12: f897f5ad5abc
+lead_before_publication_short12: 649668088c07
+original_publication_short12: 649668088c07
+revision: EXECUTOR_REASSIGNMENT_2026_11_24
+recovery_package_id: MYOS2-A-C09a-TO-C10a-141-20261124
+amendment_scope: "仅执行席位、冷启动接收、对应基点与正式回执标记；技术共同模型及A/B/C和验收要求不变"
 execution_pin_short12: cde2d7f994b5
 read_channel: connector
-status: PUBLISHED_PENDING_EXECUTOR_START
-executor_identity: MYOS2-LEAD-002-CHAT-EXEC-21
-executor_display_name: "MYOS2-A-C09a 代码分析执行"
+status: PUBLISHED_PENDING_NEW_EXECUTOR_START
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-22
+previous_executor_identity: MYOS2-LEAD-002-CHAT-EXEC-21
+executor_display_name: "MYOS2-A-C10a 代码分析执行"
 executor_model_per_owner: "次一档Chat GPT-6.2 Sol；推理强度沿用Owner界面可用的Extra/高强度偏好"
-execution_status: NOT_STARTED
+execution_status: PENDING_NEW_EXECUTOR_START
+actual_receiver_state: NOT_OBSERVED
+old_executor_unpublished_work: UNKNOWN
+mainline_design_count: {conversation: C10, distinct_batches: 1, amendment_increments_count: false, threshold_12: NOT_REACHED, threshold_15: NOT_REACHED}
 canonical_execution_branch: claude/dazzling-cori-q0dnyt
 canonical_execution_PR: 17
 allowed_directory: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-exec-auxv-payload-141/
@@ -28,7 +36,8 @@ D00: []
 startup_selfcheck_quote: "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。"
 branch_canary_quotes: ["\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\","\tthis_cpu = smp_processor_id();"]
 inputs_read:
-  - "140固定六件、192合同与本轮140主线独审/历史裁定/检查点；现行项目约束与110/124/193/194"
+  - "140固定六件、192合同与140主线独审/历史裁定/检查点；现行项目约束与110/124/193/194"
+  - "Owner本轮C09a不可用与修改141指令；本次196恢复交接包及接收启动词；原195固定版"
   - "25、26、28、66、69既有裁定中的所选布局、映射、入口及真实运行边界"
   - "binfmt_elf.c::create_elf_tables及load_elf_binary相关片段"
   - "asm/elf.h、linux/kernel/elf.h、uapi/linux/elf.h、auxvec.h、linux/fs/binfmts.h、uapi/linux/binfmts.h"
@@ -41,20 +50,21 @@ open_questions: []
 
 # 195号合同 · 第141批 · 程序入口auxv的有序载荷、复制范围与地址来源
 
-**发给现有「MYOS2-A-C09a 代码分析执行」／CHAT-EXEC-21，普通执行使用次一档GPT-6.2 Sol。** 完成后交回当前主线「MYOS2-A-C10 内核分析主线续建」，用Pro独立验收并同轮安排后继。型号来自Owner的193号报告；实际模型/effort依可核信息记录，未知不猜测，不承诺回复内部切换。
+**本修订发给新对话「MYOS2-A-C10a 代码分析执行」／CHAT-EXEC-22，普通执行使用次一档GPT-6.2 Sol。** 完成后交回当前主线「MYOS2-A-C10 内核分析主线续建」，用Pro独立验收并同轮安排后继。型号来自Owner的193号报告；实际模型/effort依可核信息记录，未知不猜测，不承诺回复内部切换。
 
 140已接收为PASS_PENDING_LOCAL，五项D00均文档关闭。本批不再重做它们，D00清单为空。140在argv/envp终止槽之后定位了auxv起点，尚未展开辅助向量。25已确定12/13个非终止条目、208/224字节、46字容量和入口地址的区别；这些本批只复验。**新增交付是逐项有序tag/value及类型/来源、绑定140三个具体表尾的逐字地址和清零/复制边界、调用者地址的具体数值对照。** 不扩大成全ELF、全配置或运行审计。
 
 [本轮140独审](reviews/CORE-USER-EXEC-ARGV-ENTRY-VIEW-140-review.md) · [历史五项判闭](reviews/CORE-USER-EXEC-ARGV-ENTRY-VIEW-140-D00-138-139-review.md) · [检查点](checkpoints/2026-11-24-argv-entry140-reviewed-auxv141.md) · [25既有补充](https://github.com/08822407d/MyOS2/blob/f897f5ad5abc/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ELF-STACK-TABLES-25-review.md) · [26映射边界](https://github.com/08822407d/MyOS2/blob/f897f5ad5abc/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ELF-SEGMENT-LOAD-26-review.md) · [28解释器边界](https://github.com/08822407d/MyOS2/blob/f897f5ad5abc/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ELF-INTERPRETER-28-review.md) · [66入口约束](https://github.com/08822407d/MyOS2/blob/f897f5ad5abc/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ENTRY-STACK-BINDING-66-review.md) · [69交接边界](https://github.com/08822407d/MyOS2/blob/f897f5ad5abc/agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-INIT-EXEC-HANDOFF-69-review.md)
 
-## G00 · 先确认原轨与固定输入，然后连续完成本批
+## G00 · 新执行对话先接收、刷新规范，再连续完成本批
 
-1. 全文读取本次固定发布中的本合同、140独审、历史判闭与检查点；读取[194号](https://github.com/08822407d/MyOS2/blob/f897f5ad5abc/agent-workspace/lead/MYOS2-LEAD-002/194-owner-continuity-and-copyable-return.md)及[恢复回执#7121642082](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7121642082)，确认主线已由C09接续为C10，原执行席位不变。接收名字变化不是重新创建执行对话或重跑140的理由。
-2. 原九份项目约束及110/124/193/194持续适用；未实读者补全。继承194记录的Meta-Agent适用通用规范及完整同版本来源，不移植其他项目任务和写权。仅刷新存在变化的依据，不把前任“已读”冒充自己的读取。现有会话若出现真实容量/输入问题，先按实际状态保全并报告，不猜剩余token。
-3. 直接读四个refs：lead预期为本195固定发布提交，exec=cde2d7f994b5，time=a039d9803ade，master=e8e60cd19540。PR16 Open/Ready和原题PR17 Open/Draft，head分别为原lead/exec，base为master、未合并。开放PR与PR17顶层评论无since分页至空，按完整标记和ID查唯一；不得用PR接口base_sha替代直接master。
-4. 核140固定提交唯一父0a3075f3f861、恰六新增、零改删；固定/活动六件逐件核全文、LF、UTF-8字节与Git Blob，合计9013行、307683字节。读取[140作者#7120006816](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7120006816)，按ID双读及全分页查唯一。本轮140独审与141发布标记应各唯一且同在一条C10正式评论；按Owner给出的真实固定合同及正式评论定位，不猜ID。140输入用于谱系、A/B/C参数和已裁定边界，不再将已关闭的D00作为待修任务。
-5. 目标141目录和本人的完整正式标记尚不存在；写前核exec的expected_sha。若重复接收或发生暂态失败，按63先核远端已生效步骤，只续缺项。非预期头变更需定位，不能强推复位。所有短码从真实连接器输出复制前十二位。
-6. MANIFEST登记实际输入、startup原句、time两条金丝雀与直接master反验、read_channel、模型可核信息、P6三整数、P9适用范围。无额外Owner选择时，G00完成即继续A/B/C、自检、发布、G04，不为内部阶段另停问。
+1. 本轮Owner明确说明C09a上下文耗尽，并要求把141改为新对话执行。先完整读取同一固定修订提交中的本合同、[196恢复交接包](196-executor-continuation/00-C09a-to-C10a-recovery-package.md)、[196接收启动词](196-executor-continuation/01-MYOS2-A-C10a-receiver-startup-prompt.md)及工作令§12第12条，再读取140独审、历史五项判闭与检查点。旧版固定[195原合同](https://github.com/08822407d/MyOS2/blob/649668088c07/agent-workspace/lead/MYOS2-LEAD-002/195-user-exec-auxv-payload-contract.md)保留；仅本次执行身份、接收门、基点与回执标记按修订版执行。
+2. 新身份为MYOS2-LEAD-002-CHAT-EXEC-22，显示名「MYOS2-A-C10a 代码分析执行」。Owner转发196启动词即授权本席位接收并执行本批；实际接收、规范刷新和G00由新方自己完成。原C09a／EXEC-21的141执行指派被本修订替换，不再继续141写入；不要求不可用的旧方补签，不冒用旧身份或认证其未公开过程。新方接收前没有任何人可据本文件宣称其已经启动；主线仍为C10。
+3. 按196的固定清单全文读取原九份MyOS2约束及110/124/193/194，补齐截断部分，不继承前任“已读”。分别形成真实接收记录和规范刷新记录，写本批MANIFEST对应段，不增加第七件或单独PR接收评论。适用通用规范按194改用Meta-Agent有效采用版本及同版本共用全文；Mnemosyne仅借用接收流程与命名，不重新加载被替代的旧通用集。检查当前有效入口变化，排除其他项目维护任务和写权。无真实阻断时接收报告可在同轮简短给出，继续下列工作，不另等开工口令。
+4. 直接读四个refs：lead预期为本195修订与196同次固定发布提交，exec=cde2d7f994b5，time=a039d9803ade，master=e8e60cd19540。PR16 Open/Ready和原题PR17 Open/Draft，head分别为原lead/exec，base为master、未合并。开放PR与PR17顶层评论无since分页至空，按完整标记和ID查唯一；不得用PR接口base_sha替代直接master。
+5. 核140固定提交唯一父0a3075f3f861、恰六新增、零改删；固定/活动六件逐件核全文、LF、UTF-8字节与Git Blob，合计9013行、307683字节。读取[140作者#7120006816](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7120006816)，按ID双读及全分页查唯一。[C10独审140及原141发布#7124005105](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7124005105)保留为历史原件；本次另有唯一EXECUTOR_REASSIGNED与OWNER_DIRECTED_RECOVERY_PREPARED合并主线评论，按Owner启动词给出的真实ID双读。旧评论中的C09a指派被本次替换，140裁定不变。140输入用于谱系、A/B/C参数和已裁定边界，不再将已关闭的D00作为待修任务。
+6. 本次主线核查时，exec树无141目录，全部272条唯一顶层评论中无任何141正式作者回执；这不能证明旧对话从未私下分析。新方首次写前重核目标目录、旧EXEC-21和新EXEC-22的141正式标记及exec的expected_sha。若发现本席位已发布相符实物，只按63续缺项；若有旧方或未知来源新写入，先定位并保全，不重跑覆盖或强推复位。所有短码从真实连接器输出复制前十二位。
+7. MANIFEST登记实际输入、接收/刷新记录、startup原句、time两条金丝雀与直接master反验、read_channel、模型可核信息、P6三整数、P9适用范围及write_retry_log。C10现有设计计数1，本批换执行者不加数；12/15提醒均未到达。无额外Owner选择时，G00完成即继续A/B/C、自检、发布、G04，不为内部阶段另停问。
 
 ## 共同模型与输入边界
 
@@ -128,9 +138,9 @@ C3a最终phdr_addr=0x200000，而不是必为0；该值不证明有效头表地�
 
 ## 发布、G04、停写和一键回传
 
-原exec以真实expected_sha、force=false、单父快进；只六件新增、零修改/删除。提交后固定与活动逐件核全文、LF、UTF-8字节和Git Blob。发评前全分页查重；原Draft PR17仅一条正式作者顶层评论，完整标记：
+本次Owner明确改派已由196登记为新席位的唯一写入入口。原exec以真实expected_sha、force=false、单父快进；只六件新增、零修改/删除。提交后固定与活动逐件核全文、LF、UTF-8字节和Git Blob。发评前全分页查重；原Draft PR17仅一条正式作者顶层评论，完整标记：
 
-MYOS2-LEAD-002-CHAT-EXEC-21 / CORE-USER-EXEC-AUXV-PAYLOAD-141 / FORMAL_DELIVERY
+MYOS2-LEAD-002-CHAT-EXEC-22 / CORE-USER-EXEC-AUXV-PAYLOAD-141 / FORMAL_DELIVERY
 
 正式评论给真实固定提交、逐件行/字节/Blob短码、无D00待修的继承状态、A/B/C结果及未证边界。发表后按真实ID双次回读，无since分页到空页查唯一，重核四refs、开放PR、原PR16/17、固定及活动六件和净变化。暂态异常依63先查效果再限次间隔恢复；不重复评论、不强推。
 
