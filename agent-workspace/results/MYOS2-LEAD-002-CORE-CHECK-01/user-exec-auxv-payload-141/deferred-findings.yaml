@@ -1,0 +1,41 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "batch": "CORE-USER-EXEC-AUXV-PAYLOAD-141",
+  "executor": "MYOS2-LEAD-002-CHAT-EXEC-22",
+  "date": "2026-11-24",
+  "base_snapshot": "time@a039d9803ade",
+  "phase": 2,
+  "produced_by": "GPT-6.2 system family; backend/tier/effort unknown",
+  "model_per_owner": "GPT-6.2 Sol Extra/high requested; actual unknown",
+  "evidence_class": "pinned source/static model/prior accepted result",
+  "status": "AUTHOR_STATIC_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04",
+  "mainline_acceptance": "PENDING",
+  "full_local_P9": "NOT_RUN",
+  "record_type": "deferred_findings",
+  "D00": [],
+  "new_confirmed_defects": [],
+  "inherited": [
+    "25 uninitialized vma and commented assignment retained; no reachable-path proof",
+    "26 arithmetic positions not actual mappings or accessible user bytes",
+    "28 interpreter error encoding and final address guard distinct",
+    "66/69 register/CRT/runtime unproved",
+    "140 unrelated stream/parser findings unchanged; no old item closed"
+  ],
+  "open_questions": [
+    "actual configured macros",
+    "actual mapped stack and copy outcomes",
+    "actual F/P address validity",
+    "real interpreter relocation, CRT/register transfer",
+    "future authorized runtime evidence"
+  ],
+  "not_run": [
+    "完整本地P9",
+    "预处理",
+    "编译链接",
+    "MyOS2程序／脚本",
+    "Graphviz",
+    "QEMU",
+    "实机",
+    "真实操作"
+  ]
+}
