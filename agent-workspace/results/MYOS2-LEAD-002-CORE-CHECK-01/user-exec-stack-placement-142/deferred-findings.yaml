@@ -1,0 +1,128 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EXEC-STACK-PLACEMENT-142",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-22",
+  "conversation_display_name": "MYOS2-A-C10a 代码分析执行",
+  "produced_by": "GPT-6.2（系统模型族标识；界面实际型号不可独立核实）",
+  "model_per_owner": "次一档GPT-6.2 Sol；Extra/高档偏好",
+  "actual_backend_model": "UNATTESTED",
+  "actual_backend_effort": "UNATTESTED",
+  "date": "2026-11-24",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "AUTHOR_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04",
+  "mainline_acceptance": "PENDING",
+  "full_local_P9": "NOT_RUN",
+  "open_questions": [
+    "实际配置、C指针/对象合法性、vma前置、映射和真实运行仍未证"
+  ],
+  "inputs_read": [
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ref": "a039d9803ade",
+      "blob": "6019436417ad"
+    },
+    {
+      "path": "mykernel/fs/vfs/binfmt_elf.c",
+      "ref": "a039d9803ade",
+      "blob": "579fb4e9fadd"
+    },
+    {
+      "path": "mykernel/arch/x86_64/include/asm/elf.h",
+      "ref": "a039d9803ade",
+      "blob": "421649d6f3bc"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/elf.h",
+      "ref": "a039d9803ade",
+      "blob": "dd427f17f005"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/elf.h",
+      "ref": "a039d9803ade",
+      "blob": "eff5e1ff56b8"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/auxvec.h",
+      "ref": "a039d9803ade",
+      "blob": "166fa1066af1"
+    },
+    {
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "ref": "a039d9803ade",
+      "blob": "002c2aec4aa8"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/binfmts.h",
+      "ref": "a039d9803ade",
+      "blob": "a60f4e7c53b0"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "ref": "a039d9803ade",
+      "blob": "ec983b79166f"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/asm-generic/param.h",
+      "ref": "a039d9803ade",
+      "blob": "16bba89f98f5"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc_types.h",
+      "ref": "a039d9803ade",
+      "blob": "b9d93f504756"
+    },
+    {
+      "path": "mykernel/arch/x86_64/sched/context/process_arch.c",
+      "ref": "a039d9803ade",
+      "blob": "4431545af5fb"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c",
+      "ref": "a039d9803ade",
+      "blob": "0861ebae6fc2"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "a039d9803ade",
+      "blob": "ef531baa8317"
+    }
+  ],
+  "record_type": "incremental_deferred_findings",
+  "D00": [
+    {
+      "qualified_id": "CORE-USER-EXEC-AUXV-PAYLOAD-141::R141-01",
+      "kind": "DOCUMENTATION_CORRECTION",
+      "status": "documentation_disposition_submitted",
+      "authority_to_close": "C10 independent review",
+      "source_ref": "08f6fee103dd 141 MANIFEST/evidence/facts; e591efa48b3d 141 review; current facts.D00.R141-01",
+      "scope": "RECONFIRMATION_DURING_BATCH_142_ONLY",
+      "counts": {
+        "verified_claims": 129,
+        "quotes_reconfirmed": 129,
+        "downgraded_to_inferred": 0
+      },
+      "original_frozen": true
+    }
+  ],
+  "new_confirmed_kernel_defects": [],
+  "new_boundary_notes": [
+    {
+      "qualified_id": "CORE-USER-EXEC-STACK-PLACEMENT-142::C_POINTER_PROJECTION",
+      "kind": "LIMITED_MODEL_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "source_ref": "time@a039d9803ade STACK_ADD/STACK_ROUND/create_elf_tables; 197 given arithmetic; R25-S02",
+      "known": "P, sp_aux, raw_bottom mod8=1; S aligned only in integer model",
+      "unknown": "actual C pointer/object legality, hardware access and mapping",
+      "effect": "not a new confirmed defect; does not block independent integer projection",
+      "resume": "only authorized separate C/actual build/runtime evidence"
+    }
+  ],
+  "inherited_not_reopened": [
+    "ET25-F01, R25-S02；23/24 GUP/page/return/relocation；26/28 mapping/interpreter；66/69 actual SP/CRT; 140 other deferred; 141 config/runtime"
+  ],
+  "owner_decisions_requested_now": []
+}
