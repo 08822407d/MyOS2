@@ -1,0 +1,173 @@
+/*
+task_id: "MYOS2-LEAD-002-CORE-CHECK-01"
+track_id: "MYOS2-LEAD-002"
+followup_id: "CORE-USER-EXEC-ARGUMENT-LIMITS-143"
+executor_identity: "MYOS2-LEAD-002-CHAT-EXEC-22"
+conversation_display_name: "MYOS2-A-C10a 代码分析执行"
+produced_by: "GPT-6.2（系统模型族；界面/实际后台型号未独立核实）"
+model_per_owner: "次一档GPT-6.2 Sol，Extra／高推理强度"
+actual_effort: "UNATTESTED"
+date: "2026-11-24"
+phase: 2
+base_snapshot: "time（分支名）"
+source_pin_short12: "a039d9803ade"
+read_channel: "connector"
+status: "AUTHOR_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04"
+mainline_acceptance: "PENDING"
+full_local_P9: "NOT_RUN"
+inputs_read: [{"path":"mykernel/scripts/options_flags.cmake","ref":"a039d9803ade","blob":"6019436417ad"},{"path":"mykernel/sched/forkexec/exec.c","ref":"a039d9803ade","blob":"0861ebae6fc2"},{"path":"mykernel/lib/string/strnlen_user.c","ref":"a039d9803ade","blob":"dae5c6c14aa4"},{"path":"mykernel/lib/string/string.c","ref":"a039d9803ade","blob":"cbb2752bc8b2"},{"path":"mykernel/include/uapi/linux/binfmts.h","ref":"a039d9803ade","blob":"a60f4e7c53b0"},{"path":"mykernel/include/uapi/linux/resource.h","ref":"a039d9803ade","blob":"6a683439847c"},{"path":"mykernel/include/uapi/linux/limits.h","ref":"a039d9803ade","blob":"bddfd09e4be2"},{"path":"mykernel/include/linux/fs/binfmts.h","ref":"a039d9803ade","blob":"002c2aec4aa8"},{"path":"mykernel/include/linux/kernel/minmax.h","ref":"a039d9803ade","blob":"d22095ba1acc"},{"path":"mykernel/include/linux/kernel/types.h","ref":"a039d9803ade","blob":"ef531baa8317"},{"path":"mykernel/mm/misc/mm_misc_const.h","ref":"a039d9803ade","blob":"ec983b79166f"},{"path":"mykernel/arch/x86_64/mm/page/page_const_arch.h","ref":"a039d9803ade","blob":"b10e280f26f0"},{"path":"mykernel/include/uapi/asm-generic/posix_types.h","ref":"a039d9803ade","blob":"0246766d9a75"},{"path":"mykernel/include/uapi/linux/const.h","ref":"a039d9803ade","blob":"d8bcaf7e3151"}]
+open_questions: ["实际预处理、C对象/指针有效性、GUP返回/页、真实用户访问与运行仍未证"]
+record_type: "phase2_exec_argument_limits_graph"
+*/
+digraph argument_limits_143 {
+  rankdir=LR;
+  source_limit [kind="source", label="bprm_stack_limits: L0, count, int sum, ptr gate", scenario="source"];
+  source_set [kind="source", label="bprm_set_stack_limit: p<limit, argmin", scenario="source"];
+  source_generic [kind="source", label="generic strnlen count-- && *sc, conditional definition", scenario="source"];
+  source_user [kind="source", label="copy_strings: length then debit then p<argmin then page", scenario="source"];
+  source_kernel [kind="source", label="copy_string_kernel: length then debit then p<argmin then page", scenario="source"];
+  source_caller [kind="source", label="caller counts, limits, filename, env, argv, synthesis user only", scenario="source"];
+  source_cleanup [kind="boundary", label="cleanup normal-return condition; no post-free field reads", scenario="source"];
+  page_boundary [kind="boundary", label="GUP return/page validity not established; independent fragments", scenario="source"];
+  A_NEG [kind="scenario", label="A_NEG ret=-E2BIG argmin=A_old", scenario="A_NEG"];
+  A_ZERO [kind="scenario", label="A_ZERO ret=0 argmin=0x200008", scenario="A_ZERO"];
+  A_SMALL [kind="scenario", label="A_SMALL ret=0 argmin=0x200020", scenario="A_SMALL"];
+  A_PTR_BELOW [kind="scenario", label="A_PTR_BELOW ret=0 argmin=0x7ffff8", scenario="A_PTR_BELOW"];
+  A_PTR_EQUAL [kind="scenario", label="A_PTR_EQUAL ret=-E2BIG argmin=A_old", scenario="A_PTR_EQUAL"];
+  A_INT_SUM [kind="scenario", label="A_INT_SUM ret=NOT_DERIVED argmin=NOT_DERIVED", scenario="A_INT_SUM"];
+  A_SET_EQ [kind="scenario", label="A_SET_EQ ret=0 argmin=0x0", scenario="A_SET_EQ"];
+  A_SET_LT [kind="scenario", label="A_SET_LT ret=-E2BIG argmin=A_old", scenario="A_SET_LT"];
+  B_SHORT [kind="scenario", label="B_SHORT r=131070 len=131071 gate=PASS", scenario="B_SHORT"];
+  B_SHORT_U [kind="helper_result", label="copy_strings via strnlen_user len=131071 ret=NOT_DERIVED p=NOT_DERIVED_AFTER_LENGTH_GATE", scenario="B_SHORT"];
+  B_SHORT_K [kind="helper_result", label="copy_string_kernel via strnlen len=131071 ret=NOT_DERIVED p=NOT_DERIVED_AFTER_LENGTH_GATE", scenario="B_SHORT"];
+  B_EXACT [kind="scenario", label="B_EXACT r=131071 len=131072 gate=PASS", scenario="B_EXACT"];
+  B_EXACT_U [kind="helper_result", label="copy_strings via strnlen_user len=131072 ret=NOT_DERIVED p=NOT_DERIVED_AFTER_LENGTH_GATE", scenario="B_EXACT"];
+  B_EXACT_K [kind="helper_result", label="copy_string_kernel via strnlen len=131072 ret=NOT_DERIVED p=NOT_DERIVED_AFTER_LENGTH_GATE", scenario="B_EXACT"];
+  B_NEXT [kind="scenario", label="B_NEXT r=131072 len=131073 gate=REJECT", scenario="B_NEXT"];
+  B_NEXT_U [kind="helper_result", label="copy_strings via strnlen_user len=131073 ret=-E2BIG p=UNCHANGED", scenario="B_NEXT"];
+  B_NEXT_K [kind="helper_result", label="copy_string_kernel via strnlen len=131073 ret=-E2BIG p=UNCHANGED", scenario="B_NEXT"];
+  B_UNTERM [kind="scenario", label="B_UNTERM r=131072 len=131073 gate=REJECT", scenario="B_UNTERM"];
+  B_UNTERM_U [kind="helper_result", label="copy_strings via strnlen_user len=131073 ret=-E2BIG p=UNCHANGED", scenario="B_UNTERM"];
+  B_UNTERM_K [kind="helper_result", label="copy_string_kernel via strnlen len=131073 ret=-E2BIG p=UNCHANGED", scenario="B_UNTERM"];
+  C_EQ [kind="scenario", label="C_EQ NONE_THROUGH_SPACE_GATE", scenario="C_EQ"];
+  C_EQ_H1 [kind="helper_result", label="copy_strings p=0x6ffffff0 page=CONDITIONALLY_REACHED_IF_NEXT_LOOP_STEP_REACHED ret=NOT_DERIVED", scenario="C_EQ"];
+  C_EQ_H2 [kind="helper_result", label="copy_string_kernel p=0x6ffffff0 page=CONDITIONALLY_REACHED_IF_NEXT_LOOP_STEP_REACHED ret=NOT_DERIVED", scenario="C_EQ"];
+  C_OVER [kind="scenario", label="C_OVER p<argmin", scenario="C_OVER"];
+  C_OVER_H1 [kind="helper_result", label="copy_strings p=0x6fffffef page=SKIPPED ret=-E2BIG", scenario="C_OVER"];
+  C_OVER_H2 [kind="helper_result", label="copy_string_kernel p=0x6fffffef page=SKIPPED ret=-E2BIG", scenario="C_OVER"];
+  C30 [kind="scenario", label="C30 NONE_IN_BUDGET_MODEL", scenario="C30"];
+  C30_T01 [kind="observation", label="entry to copy stage p=0x70000000 argmin=0x6fffffe2 exec=NOT_STIPULATED argc=2 conditional=0 actual=NOT_ESTABLISHED", scenario="C30"];
+  C30_T02 [kind="observation", label="filename p=0x6ffffff6 argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=10 actual=NOT_ESTABLISHED", scenario="C30"];
+  C30_T03 [kind="observation", label="envp[1] p=0x6ffffff1 argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=15 actual=NOT_ESTABLISHED", scenario="C30"];
+  C30_T04 [kind="observation", label="envp[0] p=0x6fffffed argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=19 actual=NOT_ESTABLISHED", scenario="C30"];
+  C30_T05 [kind="observation", label="argv[1] p=0x6fffffea argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=22 actual=NOT_ESTABLISHED", scenario="C30"];
+  C30_T06 [kind="observation", label="argv[0] p=0x6fffffe2 argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=30 actual=NOT_ESTABLISHED", scenario="C30"];
+  C30_T07 [kind="observation", label="conditional bprm_execve call boundary p=0x6fffffe2 argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=30 actual=NOT_ESTABLISHED", scenario="C30"];
+  C29 [kind="scenario", label="C29 p<argmin", scenario="C29"];
+  C29_T01 [kind="observation", label="entry to copy stage p=0x70000000 argmin=0x6fffffe3 exec=NOT_STIPULATED argc=2 conditional=0 actual=NOT_ESTABLISHED", scenario="C29"];
+  C29_T02 [kind="observation", label="filename p=0x6ffffff6 argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=10 actual=NOT_ESTABLISHED", scenario="C29"];
+  C29_T03 [kind="observation", label="envp[1] p=0x6ffffff1 argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=15 actual=NOT_ESTABLISHED", scenario="C29"];
+  C29_T04 [kind="observation", label="envp[0] p=0x6fffffed argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=19 actual=NOT_ESTABLISHED", scenario="C29"];
+  C29_T05 [kind="observation", label="argv[1] p=0x6fffffea argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=22 actual=NOT_ESTABLISHED", scenario="C29"];
+  C29_T06 [kind="observation", label="argv[0] p=0x6fffffe2 argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=22 actual=NOT_ESTABLISHED", scenario="C29"];
+  C29_T07 [kind="observation", label="pre-cleanup error snapshot p=0x6fffffe2 argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=22 actual=NOT_ESTABLISHED", scenario="C29"];
+  C20 [kind="scenario", label="C20 NONE_IN_BUDGET_MODEL", scenario="C20"];
+  C20_T01 [kind="observation", label="entry to copy stage p=0x70000000 argmin=0x6fffffec exec=NOT_STIPULATED argc=0 conditional=0 actual=NOT_ESTABLISHED", scenario="C20"];
+  C20_T02 [kind="observation", label="filename p=0x6ffffff6 argmin=0x6fffffec exec=0x6ffffff6 argc=0 conditional=10 actual=NOT_ESTABLISHED", scenario="C20"];
+  C20_T03 [kind="observation", label="envp[1] p=0x6ffffff1 argmin=0x6fffffec exec=0x6ffffff6 argc=0 conditional=15 actual=NOT_ESTABLISHED", scenario="C20"];
+  C20_T04 [kind="observation", label="envp[0] p=0x6fffffed argmin=0x6fffffec exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED", scenario="C20"];
+  C20_T05 [kind="observation", label="argv copy call with count 0 p=0x6fffffed argmin=0x6fffffec exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED", scenario="C20"];
+  C20_T06 [kind="observation", label="synthetic empty argv[0] p=0x6fffffec argmin=0x6fffffec exec=0x6ffffff6 argc=1 conditional=20 actual=NOT_ESTABLISHED", scenario="C20"];
+  C20_T07 [kind="observation", label="conditional bprm_execve call boundary p=0x6fffffec argmin=0x6fffffec exec=0x6ffffff6 argc=1 conditional=20 actual=NOT_ESTABLISHED", scenario="C20"];
+  C19 [kind="scenario", label="C19 p<argmin", scenario="C19"];
+  C19_T01 [kind="observation", label="entry to copy stage p=0x70000000 argmin=0x6fffffed exec=NOT_STIPULATED argc=0 conditional=0 actual=NOT_ESTABLISHED", scenario="C19"];
+  C19_T02 [kind="observation", label="filename p=0x6ffffff6 argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=10 actual=NOT_ESTABLISHED", scenario="C19"];
+  C19_T03 [kind="observation", label="envp[1] p=0x6ffffff1 argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=15 actual=NOT_ESTABLISHED", scenario="C19"];
+  C19_T04 [kind="observation", label="envp[0] p=0x6fffffed argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED", scenario="C19"];
+  C19_T05 [kind="observation", label="argv copy call with count 0 p=0x6fffffed argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED", scenario="C19"];
+  C19_T06 [kind="observation", label="synthetic empty argv[0] p=0x6fffffec argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED", scenario="C19"];
+  C19_T07 [kind="observation", label="pre-cleanup error snapshot p=0x6fffffec argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED", scenario="C19"];
+  K0 [kind="scenario", label="K0 retval==0 -> -EINVAL; retval<0 -> out_free", scenario="K0"];
+  K0_REJECT [kind="observation", label="count=0 -> -EINVAL, argc assignment and later work SKIPPED", scenario="K0"];
+  source_limit -> source_set [kind="conditional_source_call", label="only if pointer gate passed"];
+  source_generic -> source_user [kind="MODEL_LENGTH_SOURCE", label="via strnlen_user; chosen generic only"];
+  source_generic -> source_kernel [kind="MODEL_LENGTH_SOURCE", label="chosen generic only"];
+  source_user -> page_boundary [kind="ANALYSIS_BOUNDARY", label="no defined complete chain"];
+  source_kernel -> page_boundary [kind="ANALYSIS_BOUNDARY", label="no defined complete chain"];
+  source_caller -> source_cleanup [kind="conditional_source_order", label="error goto / after exec call; normal cleanup required"];
+  source_limit -> A_NEG [kind="INDEPENDENT_MODEL", label="not a production reachability claim"];
+  source_limit -> A_ZERO [kind="INDEPENDENT_MODEL", label="not a production reachability claim"];
+  source_limit -> A_SMALL [kind="INDEPENDENT_MODEL", label="not a production reachability claim"];
+  source_limit -> A_PTR_BELOW [kind="INDEPENDENT_MODEL", label="not a production reachability claim"];
+  source_limit -> A_PTR_EQUAL [kind="INDEPENDENT_MODEL", label="not a production reachability claim"];
+  source_limit -> A_INT_SUM [kind="INDEPENDENT_MODEL", label="not a production reachability claim"];
+  source_set -> A_SET_EQ [kind="INDEPENDENT_MODEL", label="not a production reachability claim"];
+  source_set -> A_SET_LT [kind="INDEPENDENT_MODEL", label="not a production reachability claim"];
+  source_generic -> B_SHORT [kind="GIVEN_GENERIC_MODEL", label="bounded prefix"];
+  B_SHORT -> B_SHORT_U [kind="MODEL_CONSUMPTION", label="same input; no runtime"];
+  source_user -> B_SHORT_U [kind="SOURCE_RELATION", label="length gate"];
+  B_SHORT -> B_SHORT_K [kind="MODEL_CONSUMPTION", label="same input; no runtime"];
+  source_kernel -> B_SHORT_K [kind="SOURCE_RELATION", label="length gate"];
+  source_generic -> B_EXACT [kind="GIVEN_GENERIC_MODEL", label="bounded prefix"];
+  B_EXACT -> B_EXACT_U [kind="MODEL_CONSUMPTION", label="same input; no runtime"];
+  source_user -> B_EXACT_U [kind="SOURCE_RELATION", label="length gate"];
+  B_EXACT -> B_EXACT_K [kind="MODEL_CONSUMPTION", label="same input; no runtime"];
+  source_kernel -> B_EXACT_K [kind="SOURCE_RELATION", label="length gate"];
+  source_generic -> B_NEXT [kind="GIVEN_GENERIC_MODEL", label="bounded prefix"];
+  B_NEXT -> B_NEXT_U [kind="MODEL_CONSUMPTION", label="same input; no runtime"];
+  source_user -> B_NEXT_U [kind="SOURCE_RELATION", label="length gate"];
+  B_NEXT -> B_NEXT_K [kind="MODEL_CONSUMPTION", label="same input; no runtime"];
+  source_kernel -> B_NEXT_K [kind="SOURCE_RELATION", label="length gate"];
+  source_generic -> B_UNTERM [kind="GIVEN_GENERIC_MODEL", label="bounded prefix"];
+  B_UNTERM -> B_UNTERM_U [kind="MODEL_CONSUMPTION", label="same input; no runtime"];
+  source_user -> B_UNTERM_U [kind="SOURCE_RELATION", label="length gate"];
+  B_UNTERM -> B_UNTERM_K [kind="MODEL_CONSUMPTION", label="same input; no runtime"];
+  source_kernel -> B_UNTERM_K [kind="SOURCE_RELATION", label="length gate"];
+  source_user -> C_EQ [kind="INDEPENDENT_MODEL", label="separate short budget or count result"];
+  source_kernel -> C_EQ [kind="INDEPENDENT_MODEL", label="same length for both helpers"];
+  C_EQ -> C_EQ_H1 [kind="MODEL_CONSUMPTION", label="given valid length; p debit first"];
+  C_EQ -> C_EQ_H2 [kind="MODEL_CONSUMPTION", label="given valid length; p debit first"];
+  source_user -> C_OVER [kind="INDEPENDENT_MODEL", label="separate short budget or count result"];
+  source_kernel -> C_OVER [kind="INDEPENDENT_MODEL", label="same length for both helpers"];
+  C_OVER -> C_OVER_H1 [kind="MODEL_CONSUMPTION", label="given valid length; p debit first"];
+  C_OVER -> C_OVER_H2 [kind="MODEL_CONSUMPTION", label="given valid length; p debit first"];
+  source_caller -> C30 [kind="INDEPENDENT_MODEL", label="separate short budget or count result"];
+  C30 -> C30_T01 [kind="GIVEN_ENTRY", label="given copy-stage state"];
+  C30_T01 -> C30_T02 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C30_T02 -> C30_T03 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C30_T03 -> C30_T04 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C30_T04 -> C30_T05 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C30_T05 -> C30_T06 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C30_T06 -> C30_T07 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C30_T07 -> source_cleanup [kind="CONDITIONAL_CONSUMER", label="only if cleanup reached and returns normally"];
+  source_caller -> C29 [kind="INDEPENDENT_MODEL", label="separate short budget or count result"];
+  C29 -> C29_T01 [kind="GIVEN_ENTRY", label="given copy-stage state"];
+  C29_T01 -> C29_T02 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C29_T02 -> C29_T03 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C29_T03 -> C29_T04 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C29_T04 -> C29_T05 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C29_T05 -> C29_T06 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C29_T06 -> C29_T07 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C29_T07 -> source_cleanup [kind="CONDITIONAL_CONSUMER", label="only if cleanup reached and returns normally"];
+  source_caller -> C20 [kind="INDEPENDENT_MODEL", label="separate short budget or count result"];
+  C20 -> C20_T01 [kind="GIVEN_ENTRY", label="given copy-stage state"];
+  C20_T01 -> C20_T02 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C20_T02 -> C20_T03 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C20_T03 -> C20_T04 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C20_T04 -> C20_T05 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C20_T05 -> C20_T06 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C20_T06 -> C20_T07 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C20_T07 -> source_cleanup [kind="CONDITIONAL_CONSUMER", label="only if cleanup reached and returns normally"];
+  source_caller -> C19 [kind="INDEPENDENT_MODEL", label="separate short budget or count result"];
+  C19 -> C19_T01 [kind="GIVEN_ENTRY", label="given copy-stage state"];
+  C19_T01 -> C19_T02 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C19_T02 -> C19_T03 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C19_T03 -> C19_T04 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C19_T04 -> C19_T05 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C19_T05 -> C19_T06 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C19_T06 -> C19_T07 [kind="CONDITIONAL_PREFIX_OR_REJECTION", label="independent prior effects/returns; no production chain"];
+  C19_T07 -> source_cleanup [kind="CONDITIONAL_CONSUMER", label="only if cleanup reached and returns normally"];
+  source_caller -> K0 [kind="INDEPENDENT_MODEL", label="separate short budget or count result"];
+  K0 -> K0_REJECT [kind="SOURCE_GATE_PROJECTION", label="zero result"];
+  K0_REJECT -> source_cleanup [kind="CONDITIONAL_CONSUMER", label="normal cleanup required"];
+}

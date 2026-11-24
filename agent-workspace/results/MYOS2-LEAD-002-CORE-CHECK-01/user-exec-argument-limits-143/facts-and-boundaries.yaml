@@ -1,0 +1,4059 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EXEC-ARGUMENT-LIMITS-143",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-22",
+  "conversation_display_name": "MYOS2-A-C10a 代码分析执行",
+  "produced_by": "GPT-6.2（系统模型族；界面/实际后台型号未独立核实）",
+  "model_per_owner": "次一档GPT-6.2 Sol，Extra／高推理强度",
+  "actual_effort": "UNATTESTED",
+  "date": "2026-11-24",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "AUTHOR_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04",
+  "mainline_acceptance": "PENDING",
+  "full_local_P9": "NOT_RUN",
+  "inputs_read": [
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ref": "a039d9803ade",
+      "blob": "6019436417ad"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c",
+      "ref": "a039d9803ade",
+      "blob": "0861ebae6fc2"
+    },
+    {
+      "path": "mykernel/lib/string/strnlen_user.c",
+      "ref": "a039d9803ade",
+      "blob": "dae5c6c14aa4"
+    },
+    {
+      "path": "mykernel/lib/string/string.c",
+      "ref": "a039d9803ade",
+      "blob": "cbb2752bc8b2"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/binfmts.h",
+      "ref": "a039d9803ade",
+      "blob": "a60f4e7c53b0"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/resource.h",
+      "ref": "a039d9803ade",
+      "blob": "6a683439847c"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/limits.h",
+      "ref": "a039d9803ade",
+      "blob": "bddfd09e4be2"
+    },
+    {
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "ref": "a039d9803ade",
+      "blob": "002c2aec4aa8"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "ref": "a039d9803ade",
+      "blob": "d22095ba1acc"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "a039d9803ade",
+      "blob": "ef531baa8317"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "ref": "a039d9803ade",
+      "blob": "ec983b79166f"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ref": "a039d9803ade",
+      "blob": "b10e280f26f0"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/posix_types.h",
+      "ref": "a039d9803ade",
+      "blob": "0246766d9a75"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/const.h",
+      "ref": "a039d9803ade",
+      "blob": "d8bcaf7e3151"
+    }
+  ],
+  "open_questions": [
+    "实际预处理、C对象/指针有效性、GUP返回/页、真实用户访问与运行仍未证"
+  ],
+  "record_type": "phase2_exec_argument_limits_facts",
+  "D00": [],
+  "inherited": {
+    "batch142": "PASS_PENDING_LOCAL",
+    "R141_01": "CLOSED_DOCUMENTATION_ONLY",
+    "combined_141": "PASS_PENDING_LOCAL",
+    "prior140": "PASS_PENDING_LOCAL",
+    "historical_closed": [
+      "R138-03",
+      "R139-01",
+      "R139-02",
+      "R139-03",
+      "R139-04"
+    ]
+  },
+  "model": {
+    "types": {
+      "int_bits": 32,
+      "int_signed": true,
+      "ulong_bytes": 8,
+      "size_t_bytes": 8,
+      "pointer_bytes": 8,
+      "PAGE_SIZE": 4096
+    },
+    "constants": {
+      "_STK_LIM": 8388608,
+      "ARG_MAX": 131072,
+      "MAX_ARG_STRLEN": 131072,
+      "MAX_ARG_STRINGS": 2147483647,
+      "L0": 6291456
+    },
+    "scope": "new stipulated models only; integer representability/no address or budget wrap except A_INT_SUM stops; generic size_t terminal wrap separately defined",
+    "generic_strnlen": "chosen #ifndef __HAVE_ARCH_STRNLEN body; not actual preprocessing",
+    "C_budget": "independent from A and 142 p0",
+    "source_evidence_classes": [
+      "SOURCE_FACT",
+      "GIVEN",
+      "INFERRED_INTEGER_MODEL",
+      "INDEPENDENT_FRAGMENT",
+      "CONDITIONAL_CALLER",
+      "NOT_DERIVED",
+      "NOT_REACHED",
+      "SKIPPED"
+    ],
+    "historical_limits": "139+140 corrections; R23-S01/S02 and R24-S01/S02 GUP/page; R70-S02 and R71-S02 cleanup/return"
+  },
+  "A": [
+    {
+      "id": "A_NEG",
+      "scope": "INDEPENDENT_INTEGER_HELPER_MODEL",
+      "entry_p": "0x800000",
+      "entry_argmin": "A_old",
+      "argc": -1,
+      "envc": 0,
+      "L0": 6291456,
+      "L0_hex": "0x600000",
+      "count_gate": "REJECT",
+      "max_argc": "NOT_REACHED",
+      "int_sum_type": "int (given signed32)",
+      "int_sum": "NOT_REACHED",
+      "mathematical_int_sum": "NOT_REACHED",
+      "ptr_size": "NOT_REACHED",
+      "ptr_size_type": "ulong destination; multiplication after int addition with sizeof(void*) of size_t",
+      "pointer_gate": "NOT_REACHED",
+      "subtract_executed": false,
+      "remaining_limit": "NOT_REACHED",
+      "mathematical_remaining": "NOT_REACHED",
+      "set_limit": "NOT_REACHED",
+      "return": "-E2BIG",
+      "argmin_after": "A_old",
+      "p_after": "0x800000",
+      "evidence": [
+        "E143-001",
+        "E143-002",
+        "E143-022",
+        "E143-023",
+        "E143-024",
+        "E143-025",
+        "E143-026",
+        "E143-027",
+        "E143-019",
+        "E143-015",
+        "E143-016",
+        "E143-017",
+        "E143-013",
+        "E143-012",
+        "E143-008",
+        "E143-009",
+        "E143-010",
+        "E143-011"
+      ],
+      "first_gate": "negative count",
+      "limit_at_last_observed_point": 6291456
+    },
+    {
+      "id": "A_ZERO",
+      "scope": "INDEPENDENT_INTEGER_HELPER_MODEL",
+      "entry_p": "0x800000",
+      "entry_argmin": "A_old",
+      "argc": 0,
+      "envc": 0,
+      "L0": 6291456,
+      "L0_hex": "0x600000",
+      "count_gate": "PASS",
+      "max_argc": 1,
+      "int_sum_type": "int (given signed32)",
+      "int_sum": 1,
+      "mathematical_int_sum": 1,
+      "ptr_size": 8,
+      "ptr_size_type": "ulong destination; multiplication after int addition with sizeof(void*) of size_t",
+      "pointer_gate": "PASS",
+      "subtract_executed": true,
+      "remaining_limit": 6291448,
+      "mathematical_remaining": 6291448,
+      "set_limit": "REACHED",
+      "return": 0,
+      "argmin_after": "0x200008",
+      "p_after": "0x800000",
+      "evidence": [
+        "E143-001",
+        "E143-002",
+        "E143-022",
+        "E143-023",
+        "E143-024",
+        "E143-025",
+        "E143-026",
+        "E143-027",
+        "E143-019",
+        "E143-015",
+        "E143-016",
+        "E143-017",
+        "E143-013",
+        "E143-012",
+        "E143-008",
+        "E143-009",
+        "E143-010",
+        "E143-011"
+      ],
+      "first_gate": "NONE_IN_HELPER",
+      "limit_at_last_observed_point": 6291448
+    },
+    {
+      "id": "A_SMALL",
+      "scope": "INDEPENDENT_INTEGER_HELPER_MODEL",
+      "entry_p": "0x800000",
+      "entry_argmin": "A_old",
+      "argc": 2,
+      "envc": 2,
+      "L0": 6291456,
+      "L0_hex": "0x600000",
+      "count_gate": "PASS",
+      "max_argc": 2,
+      "int_sum_type": "int (given signed32)",
+      "int_sum": 4,
+      "mathematical_int_sum": 4,
+      "ptr_size": 32,
+      "ptr_size_type": "ulong destination; multiplication after int addition with sizeof(void*) of size_t",
+      "pointer_gate": "PASS",
+      "subtract_executed": true,
+      "remaining_limit": 6291424,
+      "mathematical_remaining": 6291424,
+      "set_limit": "REACHED",
+      "return": 0,
+      "argmin_after": "0x200020",
+      "p_after": "0x800000",
+      "evidence": [
+        "E143-001",
+        "E143-002",
+        "E143-022",
+        "E143-023",
+        "E143-024",
+        "E143-025",
+        "E143-026",
+        "E143-027",
+        "E143-019",
+        "E143-015",
+        "E143-016",
+        "E143-017",
+        "E143-013",
+        "E143-012",
+        "E143-008",
+        "E143-009",
+        "E143-010",
+        "E143-011"
+      ],
+      "first_gate": "NONE_IN_HELPER",
+      "limit_at_last_observed_point": 6291424
+    },
+    {
+      "id": "A_PTR_BELOW",
+      "scope": "INDEPENDENT_INTEGER_HELPER_MODEL",
+      "entry_p": "0x800000",
+      "entry_argmin": "A_old",
+      "argc": 1,
+      "envc": 786430,
+      "L0": 6291456,
+      "L0_hex": "0x600000",
+      "count_gate": "PASS",
+      "max_argc": 1,
+      "int_sum_type": "int (given signed32)",
+      "int_sum": 786431,
+      "mathematical_int_sum": 786431,
+      "ptr_size": 6291448,
+      "ptr_size_type": "ulong destination; multiplication after int addition with sizeof(void*) of size_t",
+      "pointer_gate": "PASS",
+      "subtract_executed": true,
+      "remaining_limit": 8,
+      "mathematical_remaining": 8,
+      "set_limit": "REACHED",
+      "return": 0,
+      "argmin_after": "0x7ffff8",
+      "p_after": "0x800000",
+      "evidence": [
+        "E143-001",
+        "E143-002",
+        "E143-022",
+        "E143-023",
+        "E143-024",
+        "E143-025",
+        "E143-026",
+        "E143-027",
+        "E143-019",
+        "E143-015",
+        "E143-016",
+        "E143-017",
+        "E143-013",
+        "E143-012",
+        "E143-008",
+        "E143-009",
+        "E143-010",
+        "E143-011"
+      ],
+      "first_gate": "NONE_IN_HELPER",
+      "limit_at_last_observed_point": 8
+    },
+    {
+      "id": "A_PTR_EQUAL",
+      "scope": "INDEPENDENT_INTEGER_HELPER_MODEL",
+      "entry_p": "0x800000",
+      "entry_argmin": "A_old",
+      "argc": 1,
+      "envc": 786431,
+      "L0": 6291456,
+      "L0_hex": "0x600000",
+      "count_gate": "PASS",
+      "max_argc": 1,
+      "int_sum_type": "int (given signed32)",
+      "int_sum": 786432,
+      "mathematical_int_sum": 786432,
+      "ptr_size": 6291456,
+      "ptr_size_type": "ulong destination; multiplication after int addition with sizeof(void*) of size_t",
+      "pointer_gate": "REJECT",
+      "subtract_executed": false,
+      "remaining_limit": "NOT_REACHED",
+      "mathematical_remaining": 0,
+      "set_limit": "NOT_REACHED",
+      "return": "-E2BIG",
+      "argmin_after": "A_old",
+      "p_after": "0x800000",
+      "evidence": [
+        "E143-001",
+        "E143-002",
+        "E143-022",
+        "E143-023",
+        "E143-024",
+        "E143-025",
+        "E143-026",
+        "E143-027",
+        "E143-019",
+        "E143-015",
+        "E143-016",
+        "E143-017",
+        "E143-013",
+        "E143-012",
+        "E143-008",
+        "E143-009",
+        "E143-010",
+        "E143-011"
+      ],
+      "first_gate": "limit<=ptr_size",
+      "limit_at_last_observed_point": 6291456
+    },
+    {
+      "id": "A_INT_SUM",
+      "scope": "INDEPENDENT_INTEGER_HELPER_MODEL",
+      "entry_p": "0x800000",
+      "entry_argmin": "A_old",
+      "argc": 2147483647,
+      "envc": 1,
+      "L0": 6291456,
+      "L0_hex": "0x600000",
+      "count_gate": "PASS",
+      "max_argc": 2147483647,
+      "int_sum_type": "int (given signed32)",
+      "int_sum": "NOT_DERIVED",
+      "mathematical_int_sum": 2147483648,
+      "ptr_size": "NOT_DERIVED",
+      "ptr_size_type": "ulong destination; multiplication after int addition with sizeof(void*) of size_t",
+      "pointer_gate": "NOT_DERIVED",
+      "subtract_executed": "NOT_DERIVED",
+      "remaining_limit": "NOT_DERIVED",
+      "mathematical_remaining": "NOT_APPLICABLE_TO_C_EVALUATION",
+      "set_limit": "NOT_DERIVED",
+      "return": "NOT_DERIVED",
+      "argmin_after": "NOT_DERIVED",
+      "p_after": "NOT_DERIVED",
+      "evidence": [
+        "E143-001",
+        "E143-002",
+        "E143-022",
+        "E143-023",
+        "E143-024",
+        "E143-025",
+        "E143-026",
+        "E143-027",
+        "E143-019",
+        "E143-015",
+        "E143-016",
+        "E143-017",
+        "E143-013",
+        "E143-012",
+        "E143-008",
+        "E143-009",
+        "E143-010",
+        "E143-011"
+      ],
+      "first_gate": "signed int intermediate not representable; stop before normal derived result",
+      "last_defined_pre_expression_p": "0x800000",
+      "last_defined_pre_expression_argmin": "A_old",
+      "limit_at_last_observed_point": "NOT_DERIVED"
+    },
+    {
+      "id": "A_SET_EQ",
+      "scope": "INDEPENDENT_SET_LIMIT_MODEL",
+      "entry_p": "0x8",
+      "entry_argmin": "A_old",
+      "L0": "NOT_APPLICABLE",
+      "limit": 8,
+      "argc": "NOT_APPLICABLE",
+      "envc": "NOT_APPLICABLE",
+      "count_gate": "NOT_APPLICABLE",
+      "int_sum": "NOT_APPLICABLE",
+      "ptr_size": "NOT_APPLICABLE",
+      "subtract_executed": "NOT_APPLICABLE",
+      "remaining_limit": 8,
+      "set_limit": "DIRECT_ENTRY",
+      "first_gate": "NONE_IN_HELPER",
+      "return": 0,
+      "argmin_after": "0x0",
+      "p_after": "0x8",
+      "actual_address_access": "NOT_ESTABLISHED",
+      "evidence": [
+        "E143-019",
+        "E143-012",
+        "E143-008"
+      ],
+      "limit_at_last_observed_point": 8
+    },
+    {
+      "id": "A_SET_LT",
+      "scope": "INDEPENDENT_SET_LIMIT_MODEL",
+      "entry_p": "0x7",
+      "entry_argmin": "A_old",
+      "L0": "NOT_APPLICABLE",
+      "limit": 8,
+      "argc": "NOT_APPLICABLE",
+      "envc": "NOT_APPLICABLE",
+      "count_gate": "NOT_APPLICABLE",
+      "int_sum": "NOT_APPLICABLE",
+      "ptr_size": "NOT_APPLICABLE",
+      "subtract_executed": "NOT_APPLICABLE",
+      "remaining_limit": 8,
+      "set_limit": "DIRECT_ENTRY",
+      "first_gate": "p<limit",
+      "return": "-E2BIG",
+      "argmin_after": "A_old",
+      "p_after": "0x7",
+      "actual_address_access": "NOT_ESTABLISHED",
+      "evidence": [
+        "E143-019",
+        "E143-012",
+        "E143-008"
+      ],
+      "limit_at_last_observed_point": 8
+    }
+  ],
+  "B": [
+    {
+      "id": "B_SHORT",
+      "scope": "GIVEN_GENERIC_STRNLEN_FRAGMENT",
+      "given_first_nul_index": 131070,
+      "M": 131072,
+      "read_first_index": 0,
+      "read_last_index": 131070,
+      "bytes_read": 131071,
+      "last_test_count_old": 2,
+      "count_after_final_test": 1,
+      "count_wrap": false,
+      "reads_index_M": false,
+      "r": 131070,
+      "measured_len": 131071,
+      "len_type_chain": "size_t r and +1; user return long then int; kernel size_t+1 then int; representable",
+      "len_zero": false,
+      "length_gate": "PASS",
+      "user_helper": {
+        "helper": "copy_strings via strnlen_user",
+        "result_len": 131071,
+        "first_reject": "NOT_REACHED",
+        "ret": "NOT_DERIVED",
+        "bprm_p": "NOT_DERIVED_AFTER_LENGTH_GATE",
+        "page_copy": "NOT_DERIVED"
+      },
+      "kernel_helper": {
+        "helper": "copy_string_kernel via strnlen",
+        "result_len": 131071,
+        "first_reject": "NOT_REACHED",
+        "ret": "NOT_DERIVED",
+        "bprm_p": "NOT_DERIVED_AFTER_LENGTH_GATE",
+        "page_copy": "NOT_DERIVED"
+      },
+      "beyond_M": "NOT_OBSERVED_BY_HELPER",
+      "evidence": [
+        "E143-028",
+        "E143-029",
+        "E143-030",
+        "E143-031",
+        "E143-034",
+        "E143-037",
+        "E143-038",
+        "E143-047",
+        "E143-048",
+        "E143-018",
+        "E143-003",
+        "E143-006",
+        "E143-005",
+        "E143-007",
+        "E143-009",
+        "E143-010",
+        "E143-011",
+        "E143-032",
+        "E143-033"
+      ]
+    },
+    {
+      "id": "B_EXACT",
+      "scope": "GIVEN_GENERIC_STRNLEN_FRAGMENT",
+      "given_first_nul_index": 131071,
+      "M": 131072,
+      "read_first_index": 0,
+      "read_last_index": 131071,
+      "bytes_read": 131072,
+      "last_test_count_old": 1,
+      "count_after_final_test": 0,
+      "count_wrap": false,
+      "reads_index_M": false,
+      "r": 131071,
+      "measured_len": 131072,
+      "len_type_chain": "size_t r and +1; user return long then int; kernel size_t+1 then int; representable",
+      "len_zero": false,
+      "length_gate": "PASS",
+      "user_helper": {
+        "helper": "copy_strings via strnlen_user",
+        "result_len": 131072,
+        "first_reject": "NOT_REACHED",
+        "ret": "NOT_DERIVED",
+        "bprm_p": "NOT_DERIVED_AFTER_LENGTH_GATE",
+        "page_copy": "NOT_DERIVED"
+      },
+      "kernel_helper": {
+        "helper": "copy_string_kernel via strnlen",
+        "result_len": 131072,
+        "first_reject": "NOT_REACHED",
+        "ret": "NOT_DERIVED",
+        "bprm_p": "NOT_DERIVED_AFTER_LENGTH_GATE",
+        "page_copy": "NOT_DERIVED"
+      },
+      "beyond_M": "NOT_OBSERVED_BY_HELPER",
+      "evidence": [
+        "E143-028",
+        "E143-029",
+        "E143-030",
+        "E143-031",
+        "E143-034",
+        "E143-037",
+        "E143-038",
+        "E143-047",
+        "E143-048",
+        "E143-018",
+        "E143-003",
+        "E143-006",
+        "E143-005",
+        "E143-007",
+        "E143-009",
+        "E143-010",
+        "E143-011",
+        "E143-032",
+        "E143-033"
+      ]
+    },
+    {
+      "id": "B_NEXT",
+      "scope": "GIVEN_GENERIC_STRNLEN_FRAGMENT",
+      "given_first_nul_index": 131072,
+      "M": 131072,
+      "read_first_index": 0,
+      "read_last_index": 131071,
+      "bytes_read": 131072,
+      "last_test_count_old": 0,
+      "count_after_final_test": "2^64-1",
+      "count_wrap": "DEFINED_UNSIGNED_WRAP_ON_FAILED_CONDITION",
+      "reads_index_M": false,
+      "r": 131072,
+      "measured_len": 131073,
+      "len_type_chain": "size_t r and +1; user return long then int; kernel size_t+1 then int; representable",
+      "len_zero": false,
+      "length_gate": "REJECT",
+      "user_helper": {
+        "helper": "copy_strings via strnlen_user",
+        "result_len": 131073,
+        "first_reject": "valid_arg_len",
+        "ret": "-E2BIG",
+        "bprm_p": "UNCHANGED",
+        "page_copy": "SKIPPED"
+      },
+      "kernel_helper": {
+        "helper": "copy_string_kernel via strnlen",
+        "result_len": 131073,
+        "first_reject": "valid_arg_len",
+        "ret": "-E2BIG",
+        "bprm_p": "UNCHANGED",
+        "page_copy": "SKIPPED"
+      },
+      "beyond_M": "NOT_OBSERVED_BY_HELPER",
+      "evidence": [
+        "E143-028",
+        "E143-029",
+        "E143-030",
+        "E143-031",
+        "E143-034",
+        "E143-037",
+        "E143-038",
+        "E143-047",
+        "E143-048",
+        "E143-018",
+        "E143-003",
+        "E143-006",
+        "E143-005",
+        "E143-007",
+        "E143-009",
+        "E143-010",
+        "E143-011",
+        "E143-032",
+        "E143-033"
+      ]
+    },
+    {
+      "id": "B_UNTERM",
+      "scope": "GIVEN_GENERIC_STRNLEN_FRAGMENT",
+      "given_first_nul_index": "UNKNOWN_AFTER_PREFIX",
+      "M": 131072,
+      "read_first_index": 0,
+      "read_last_index": 131071,
+      "bytes_read": 131072,
+      "last_test_count_old": 0,
+      "count_after_final_test": "2^64-1",
+      "count_wrap": "DEFINED_UNSIGNED_WRAP_ON_FAILED_CONDITION",
+      "reads_index_M": false,
+      "r": 131072,
+      "measured_len": 131073,
+      "len_type_chain": "size_t r and +1; user return long then int; kernel size_t+1 then int; representable",
+      "len_zero": false,
+      "length_gate": "REJECT",
+      "user_helper": {
+        "helper": "copy_strings via strnlen_user",
+        "result_len": 131073,
+        "first_reject": "valid_arg_len",
+        "ret": "-E2BIG",
+        "bprm_p": "UNCHANGED",
+        "page_copy": "SKIPPED"
+      },
+      "kernel_helper": {
+        "helper": "copy_string_kernel via strnlen",
+        "result_len": 131073,
+        "first_reject": "valid_arg_len",
+        "ret": "-E2BIG",
+        "bprm_p": "UNCHANGED",
+        "page_copy": "SKIPPED"
+      },
+      "beyond_M": "NOT_OBSERVED_BY_HELPER",
+      "evidence": [
+        "E143-028",
+        "E143-029",
+        "E143-030",
+        "E143-031",
+        "E143-034",
+        "E143-037",
+        "E143-038",
+        "E143-047",
+        "E143-048",
+        "E143-018",
+        "E143-003",
+        "E143-006",
+        "E143-005",
+        "E143-007",
+        "E143-009",
+        "E143-010",
+        "E143-011",
+        "E143-032",
+        "E143-033"
+      ]
+    }
+  ],
+  "C": [
+    {
+      "id": "C_EQ",
+      "scope": "INDEPENDENT_CONDITIONAL_COPY_MODEL; budget given separately from A; actual page/bytes and production reachability NOT_ESTABLISHED",
+      "entry_p": "0x70000000",
+      "argmin": "0x6ffffff0",
+      "len": 16,
+      "entry_exec": "NOT_STIPULATED",
+      "predebit_p": "0x6ffffff0",
+      "remaining_budget": 0,
+      "space_gate": "PASS",
+      "first_reject": "NONE_THROUGH_SPACE_GATE",
+      "return": "NOT_DERIVED",
+      "p_rollback": "NO_LOCAL_ROLLBACK_IN_READ_FAILURE_FRAGMENT",
+      "actual_copy_status": "NOT_ESTABLISHED",
+      "helpers": [
+        {
+          "helper": "copy_strings",
+          "p_after": "0x6ffffff0",
+          "get_arg_page": "CONDITIONALLY_REACHED_IF_NEXT_LOOP_STEP_REACHED",
+          "memcpy_to_page": "CONDITIONAL_ON_VALID_PAGE_AND_NORMAL_REACH",
+          "return": "NOT_DERIVED"
+        },
+        {
+          "helper": "copy_string_kernel",
+          "p_after": "0x6ffffff0",
+          "get_arg_page": "CONDITIONALLY_REACHED_IF_NEXT_LOOP_STEP_REACHED",
+          "memcpy_to_page": "CONDITIONAL_ON_VALID_PAGE_AND_NORMAL_REACH",
+          "return": "NOT_DERIVED"
+        }
+      ],
+      "caller": "NOT_APPLICABLE_TO_DIRECT_HELPER",
+      "evidence": [
+        "E143-037",
+        "E143-038",
+        "E143-039",
+        "E143-043",
+        "E143-044",
+        "E143-046",
+        "E143-047",
+        "E143-048",
+        "E143-049",
+        "E143-052",
+        "E143-053",
+        "E143-020"
+      ]
+    },
+    {
+      "id": "C_OVER",
+      "scope": "INDEPENDENT_CONDITIONAL_COPY_MODEL; budget given separately from A; actual page/bytes and production reachability NOT_ESTABLISHED",
+      "entry_p": "0x70000000",
+      "argmin": "0x6ffffff0",
+      "len": 17,
+      "entry_exec": "NOT_STIPULATED",
+      "predebit_p": "0x6fffffef",
+      "remaining_budget": -1,
+      "space_gate": "REJECT",
+      "first_reject": "p<argmin",
+      "return": "-E2BIG",
+      "p_rollback": "NO_LOCAL_ROLLBACK_IN_READ_FAILURE_FRAGMENT",
+      "actual_copy_status": "NOT_ESTABLISHED",
+      "helpers": [
+        {
+          "helper": "copy_strings",
+          "p_after": "0x6fffffef",
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "return": "-E2BIG"
+        },
+        {
+          "helper": "copy_string_kernel",
+          "p_after": "0x6fffffef",
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "return": "-E2BIG"
+        }
+      ],
+      "caller": "NOT_APPLICABLE_TO_DIRECT_HELPER",
+      "evidence": [
+        "E143-037",
+        "E143-038",
+        "E143-039",
+        "E143-043",
+        "E143-044",
+        "E143-046",
+        "E143-047",
+        "E143-048",
+        "E143-049",
+        "E143-052",
+        "E143-053",
+        "E143-020"
+      ]
+    },
+    {
+      "id": "C30",
+      "scope": "INDEPENDENT_CONDITIONAL_COPY_MODEL; budget given separately from A; actual page/bytes and production reachability NOT_ESTABLISHED",
+      "caller_routes": [
+        "do_execveat_common",
+        "kernel_execve"
+      ],
+      "entry_p": "0x70000000",
+      "argmin": "0x6fffffe2",
+      "initial_argc": 2,
+      "envc": 2,
+      "demand_sequence": [
+        10,
+        5,
+        4,
+        3,
+        8
+      ],
+      "stages": [
+        {
+          "id": "C30_T01",
+          "name": "entry to copy stage",
+          "p": "0x70000000",
+          "argmin": "0x6fffffe2",
+          "bprm_exec": "NOT_STIPULATED",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 0,
+          "conditional_written_bytes": 0,
+          "remaining_demand_bytes": 30,
+          "remaining_budget": 30,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "source": "given p and argmin; preceding counts/limits stipulated, not A output",
+          "get_arg_page": "NOT_REACHED",
+          "memcpy_to_page": "NOT_REACHED",
+          "local_result": "NOT_REACHED",
+          "next": "filename copy",
+          "evidence": [
+            "E143-071",
+            "E143-082"
+          ]
+        },
+        {
+          "id": "C30_T02",
+          "name": "filename",
+          "p": "0x6ffffff6",
+          "argmin": "0x6fffffe2",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 10,
+          "conditional_written_bytes": 10,
+          "remaining_demand_bytes": 20,
+          "remaining_budget": 20,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "/bin/tool",
+            "len_with_NUL": 10,
+            "kind": "filename",
+            "index": null,
+            "helper_user": "copy_string_kernel",
+            "helper_kernel": "copy_string_kernel"
+          },
+          "demand_bytes": 10,
+          "predebit_bytes": 10,
+          "p_before": "0x70000000",
+          "target_interval": [
+            "0x6ffffff6",
+            "0x70000000"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-047",
+            "E143-048",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-072",
+            "E143-083"
+          ]
+        },
+        {
+          "id": "C30_T03",
+          "name": "envp[1]",
+          "p": "0x6ffffff1",
+          "argmin": "0x6fffffe2",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 15,
+          "conditional_written_bytes": 15,
+          "remaining_demand_bytes": 15,
+          "remaining_budget": 15,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "F=xy",
+            "len_with_NUL": 5,
+            "kind": "envp",
+            "index": 1,
+            "helper_user": "copy_strings",
+            "helper_kernel": "copy_strings_kernel -> copy_string_kernel"
+          },
+          "demand_bytes": 5,
+          "predebit_bytes": 5,
+          "p_before": "0x6ffffff6",
+          "target_interval": [
+            "0x6ffffff1",
+            "0x6ffffff6"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-073",
+            "E143-084"
+          ]
+        },
+        {
+          "id": "C30_T04",
+          "name": "envp[0]",
+          "p": "0x6fffffed",
+          "argmin": "0x6fffffe2",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 19,
+          "conditional_written_bytes": 19,
+          "remaining_demand_bytes": 11,
+          "remaining_budget": 11,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "E=1",
+            "len_with_NUL": 4,
+            "kind": "envp",
+            "index": 0,
+            "helper_user": "copy_strings",
+            "helper_kernel": "copy_strings_kernel -> copy_string_kernel"
+          },
+          "demand_bytes": 4,
+          "predebit_bytes": 4,
+          "p_before": "0x6ffffff1",
+          "target_interval": [
+            "0x6fffffed",
+            "0x6ffffff1"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-073",
+            "E143-084"
+          ]
+        },
+        {
+          "id": "C30_T05",
+          "name": "argv[1]",
+          "p": "0x6fffffea",
+          "argmin": "0x6fffffe2",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 22,
+          "conditional_written_bytes": 22,
+          "remaining_demand_bytes": 8,
+          "remaining_budget": 8,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "-q",
+            "len_with_NUL": 3,
+            "kind": "argv",
+            "index": 1,
+            "helper_user": "copy_strings",
+            "helper_kernel": "copy_strings_kernel -> copy_string_kernel"
+          },
+          "demand_bytes": 3,
+          "predebit_bytes": 3,
+          "p_before": "0x6fffffed",
+          "target_interval": [
+            "0x6fffffea",
+            "0x6fffffed"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-074",
+            "E143-085"
+          ]
+        },
+        {
+          "id": "C30_T06",
+          "name": "argv[0]",
+          "p": "0x6fffffe2",
+          "argmin": "0x6fffffe2",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 30,
+          "conditional_written_bytes": 30,
+          "remaining_demand_bytes": 0,
+          "remaining_budget": 0,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "display",
+            "len_with_NUL": 8,
+            "kind": "argv",
+            "index": 0,
+            "helper_user": "copy_strings",
+            "helper_kernel": "copy_strings_kernel -> copy_string_kernel"
+          },
+          "demand_bytes": 8,
+          "predebit_bytes": 8,
+          "p_before": "0x6fffffea",
+          "target_interval": [
+            "0x6fffffe2",
+            "0x6fffffea"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-074",
+            "E143-085"
+          ]
+        },
+        {
+          "id": "C30_T07",
+          "name": "conditional bprm_execve call boundary",
+          "p": "0x6fffffe2",
+          "argmin": "0x6fffffe2",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 30,
+          "conditional_written_bytes": 30,
+          "remaining_demand_bytes": 0,
+          "remaining_budget": 0,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "local_result": "BPRM_EXECVE_RESULT_NOT_DERIVED",
+          "next": "bprm_execve conditionally reached; result and later cleanup not derived",
+          "first_reject": "NONE_IN_BUDGET_MODEL",
+          "bprm_execve": "CONDITIONAL_REACHED",
+          "post_free_field_read_allowed": false,
+          "evidence": [
+            "E143-076",
+            "E143-077",
+            "E143-086",
+            "E143-087",
+            "E143-088"
+          ],
+          "snapshot_scope": "before conditional call; no post-call or pre-cleanup state inferred"
+        }
+      ],
+      "limits": "No defined end-to-end path inferred across GUP missing return; each earlier copy effect/return separately stipulated; no post-free field reads",
+      "prior_A1": "cde2d7f994b5 facts.A.cases[0]",
+      "final_observation": {
+        "observation_point": "AT_CONDITIONAL_CALL_BOUNDARY_BEFORE_BPRM_EXECVE; NOT A LATER CLEANUP SNAPSHOT",
+        "p": "0x6fffffe2",
+        "argmin": "0x6fffffe2",
+        "bprm_exec": "0x6ffffff6",
+        "argc": 2,
+        "attempted_demand_bytes": 30,
+        "conditional_written_bytes": 30,
+        "remaining_demand_bytes": 0,
+        "actual_copy_status": "NOT_ESTABLISHED",
+        "first_reject": "NONE_IN_BUDGET_MODEL",
+        "bprm_execve": "CONDITIONAL_REACHED",
+        "return_after_normal_cleanup": "NOT_DERIVED"
+      }
+    },
+    {
+      "id": "C29",
+      "scope": "INDEPENDENT_CONDITIONAL_COPY_MODEL; budget given separately from A; actual page/bytes and production reachability NOT_ESTABLISHED",
+      "caller_routes": [
+        "do_execveat_common",
+        "kernel_execve"
+      ],
+      "entry_p": "0x70000000",
+      "argmin": "0x6fffffe3",
+      "initial_argc": 2,
+      "envc": 2,
+      "demand_sequence": [
+        10,
+        5,
+        4,
+        3,
+        8
+      ],
+      "stages": [
+        {
+          "id": "C29_T01",
+          "name": "entry to copy stage",
+          "p": "0x70000000",
+          "argmin": "0x6fffffe3",
+          "bprm_exec": "NOT_STIPULATED",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 0,
+          "conditional_written_bytes": 0,
+          "remaining_demand_bytes": 30,
+          "remaining_budget": 29,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "source": "given p and argmin; preceding counts/limits stipulated, not A output",
+          "get_arg_page": "NOT_REACHED",
+          "memcpy_to_page": "NOT_REACHED",
+          "local_result": "NOT_REACHED",
+          "next": "filename copy",
+          "evidence": [
+            "E143-071",
+            "E143-082"
+          ]
+        },
+        {
+          "id": "C29_T02",
+          "name": "filename",
+          "p": "0x6ffffff6",
+          "argmin": "0x6fffffe3",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 10,
+          "conditional_written_bytes": 10,
+          "remaining_demand_bytes": 20,
+          "remaining_budget": 19,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "/bin/tool",
+            "len_with_NUL": 10,
+            "kind": "filename",
+            "index": null,
+            "helper_user": "copy_string_kernel",
+            "helper_kernel": "copy_string_kernel"
+          },
+          "demand_bytes": 10,
+          "predebit_bytes": 10,
+          "p_before": "0x70000000",
+          "target_interval": [
+            "0x6ffffff6",
+            "0x70000000"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-047",
+            "E143-048",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-072",
+            "E143-083"
+          ]
+        },
+        {
+          "id": "C29_T03",
+          "name": "envp[1]",
+          "p": "0x6ffffff1",
+          "argmin": "0x6fffffe3",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 15,
+          "conditional_written_bytes": 15,
+          "remaining_demand_bytes": 15,
+          "remaining_budget": 14,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "F=xy",
+            "len_with_NUL": 5,
+            "kind": "envp",
+            "index": 1,
+            "helper_user": "copy_strings",
+            "helper_kernel": "copy_strings_kernel -> copy_string_kernel"
+          },
+          "demand_bytes": 5,
+          "predebit_bytes": 5,
+          "p_before": "0x6ffffff6",
+          "target_interval": [
+            "0x6ffffff1",
+            "0x6ffffff6"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-073",
+            "E143-084"
+          ]
+        },
+        {
+          "id": "C29_T04",
+          "name": "envp[0]",
+          "p": "0x6fffffed",
+          "argmin": "0x6fffffe3",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 19,
+          "conditional_written_bytes": 19,
+          "remaining_demand_bytes": 11,
+          "remaining_budget": 10,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "E=1",
+            "len_with_NUL": 4,
+            "kind": "envp",
+            "index": 0,
+            "helper_user": "copy_strings",
+            "helper_kernel": "copy_strings_kernel -> copy_string_kernel"
+          },
+          "demand_bytes": 4,
+          "predebit_bytes": 4,
+          "p_before": "0x6ffffff1",
+          "target_interval": [
+            "0x6fffffed",
+            "0x6ffffff1"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-073",
+            "E143-084"
+          ]
+        },
+        {
+          "id": "C29_T05",
+          "name": "argv[1]",
+          "p": "0x6fffffea",
+          "argmin": "0x6fffffe3",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 22,
+          "conditional_written_bytes": 22,
+          "remaining_demand_bytes": 8,
+          "remaining_budget": 7,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "-q",
+            "len_with_NUL": 3,
+            "kind": "argv",
+            "index": 1,
+            "helper_user": "copy_strings",
+            "helper_kernel": "copy_strings_kernel -> copy_string_kernel"
+          },
+          "demand_bytes": 3,
+          "predebit_bytes": 3,
+          "p_before": "0x6fffffed",
+          "target_interval": [
+            "0x6fffffea",
+            "0x6fffffed"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-074",
+            "E143-085"
+          ]
+        },
+        {
+          "id": "C29_T06",
+          "name": "argv[0]",
+          "p": "0x6fffffe2",
+          "argmin": "0x6fffffe3",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 30,
+          "conditional_written_bytes": 22,
+          "remaining_demand_bytes": 8,
+          "remaining_budget": -1,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "display",
+            "len_with_NUL": 8,
+            "kind": "argv",
+            "index": 0,
+            "helper_user": "copy_strings",
+            "helper_kernel": "copy_strings_kernel -> copy_string_kernel"
+          },
+          "demand_bytes": 8,
+          "predebit_bytes": 8,
+          "p_before": "0x6fffffea",
+          "target_interval": [
+            "0x6fffffe2",
+            "0x6fffffea"
+          ],
+          "space_gate": "REJECT",
+          "first_reject": "p<argmin",
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "local_result": "-E2BIG",
+          "caller_wrapper_result": "-E2BIG",
+          "next": "goto out_free (bprm_execve SKIPPED)",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-074",
+            "E143-085"
+          ]
+        },
+        {
+          "id": "C29_T07",
+          "name": "pre-cleanup error snapshot",
+          "p": "0x6fffffe2",
+          "argmin": "0x6fffffe3",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 2,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 30,
+          "conditional_written_bytes": 22,
+          "remaining_demand_bytes": 8,
+          "remaining_budget": -1,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "local_result": "-E2BIG",
+          "next": "free_bprm then putname; return -E2BIG only if cleanup returns normally",
+          "first_reject": "last string p<argmin",
+          "bprm_execve": "SKIPPED",
+          "post_free_field_read_allowed": false,
+          "evidence": [
+            "E143-076",
+            "E143-077",
+            "E143-086",
+            "E143-087",
+            "E143-088"
+          ]
+        }
+      ],
+      "limits": "No defined end-to-end path inferred across GUP missing return; each earlier copy effect/return separately stipulated; no post-free field reads",
+      "prior_A1": "cde2d7f994b5 facts.A.cases[0]",
+      "final_observation": {
+        "observation_point": "PRE_CLEANUP_FAILURE_SNAPSHOT",
+        "p": "0x6fffffe2",
+        "argmin": "0x6fffffe3",
+        "bprm_exec": "0x6ffffff6",
+        "argc": 2,
+        "attempted_demand_bytes": 30,
+        "conditional_written_bytes": 22,
+        "remaining_demand_bytes": 8,
+        "actual_copy_status": "NOT_ESTABLISHED",
+        "first_reject": "p<argmin",
+        "bprm_execve": "SKIPPED",
+        "return_after_normal_cleanup": "-E2BIG"
+      }
+    },
+    {
+      "id": "C20",
+      "scope": "INDEPENDENT_CONDITIONAL_COPY_MODEL; budget given separately from A; actual page/bytes and production reachability NOT_ESTABLISHED",
+      "caller_routes": [
+        "do_execveat_common"
+      ],
+      "entry_p": "0x70000000",
+      "argmin": "0x6fffffec",
+      "initial_argc": 0,
+      "envc": 2,
+      "demand_sequence": [
+        10,
+        5,
+        4,
+        1
+      ],
+      "stages": [
+        {
+          "id": "C20_T01",
+          "name": "entry to copy stage",
+          "p": "0x70000000",
+          "argmin": "0x6fffffec",
+          "bprm_exec": "NOT_STIPULATED",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 0,
+          "conditional_written_bytes": 0,
+          "remaining_demand_bytes": 20,
+          "remaining_budget": 20,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "source": "given p and argmin; preceding counts/limits stipulated, not A output",
+          "get_arg_page": "NOT_REACHED",
+          "memcpy_to_page": "NOT_REACHED",
+          "local_result": "NOT_REACHED",
+          "next": "filename copy",
+          "evidence": [
+            "E143-071",
+            "E143-082"
+          ]
+        },
+        {
+          "id": "C20_T02",
+          "name": "filename",
+          "p": "0x6ffffff6",
+          "argmin": "0x6fffffec",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 10,
+          "conditional_written_bytes": 10,
+          "remaining_demand_bytes": 10,
+          "remaining_budget": 10,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "/bin/tool",
+            "len_with_NUL": 10,
+            "kind": "filename",
+            "index": null,
+            "helper_user": "copy_string_kernel",
+            "helper_kernel": "NOT_APPLICABLE"
+          },
+          "demand_bytes": 10,
+          "predebit_bytes": 10,
+          "p_before": "0x70000000",
+          "target_interval": [
+            "0x6ffffff6",
+            "0x70000000"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-047",
+            "E143-048",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-072",
+            "E143-083"
+          ]
+        },
+        {
+          "id": "C20_T03",
+          "name": "envp[1]",
+          "p": "0x6ffffff1",
+          "argmin": "0x6fffffec",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 15,
+          "conditional_written_bytes": 15,
+          "remaining_demand_bytes": 5,
+          "remaining_budget": 5,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "F=xy",
+            "len_with_NUL": 5,
+            "kind": "envp",
+            "index": 1,
+            "helper_user": "copy_strings",
+            "helper_kernel": "NOT_APPLICABLE"
+          },
+          "demand_bytes": 5,
+          "predebit_bytes": 5,
+          "p_before": "0x6ffffff6",
+          "target_interval": [
+            "0x6ffffff1",
+            "0x6ffffff6"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-073",
+            "E143-084"
+          ]
+        },
+        {
+          "id": "C20_T04",
+          "name": "envp[0]",
+          "p": "0x6fffffed",
+          "argmin": "0x6fffffec",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 19,
+          "conditional_written_bytes": 19,
+          "remaining_demand_bytes": 1,
+          "remaining_budget": 1,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "E=1",
+            "len_with_NUL": 4,
+            "kind": "envp",
+            "index": 0,
+            "helper_user": "copy_strings",
+            "helper_kernel": "NOT_APPLICABLE"
+          },
+          "demand_bytes": 4,
+          "predebit_bytes": 4,
+          "p_before": "0x6ffffff1",
+          "target_interval": [
+            "0x6fffffed",
+            "0x6ffffff1"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-073",
+            "E143-084"
+          ]
+        },
+        {
+          "id": "C20_T05",
+          "name": "argv copy call with count 0",
+          "p": "0x6fffffed",
+          "argmin": "0x6fffffec",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 19,
+          "conditional_written_bytes": 19,
+          "remaining_demand_bytes": 1,
+          "remaining_budget": 1,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "source": "copy_strings(0,argv,bprm), loop body skipped; given normal return0",
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "local_result": 0,
+          "next": "zero argc branch",
+          "evidence": [
+            "E143-074",
+            "E143-035",
+            "E143-045",
+            "E143-046",
+            "E143-075"
+          ]
+        },
+        {
+          "id": "C20_T06",
+          "name": "synthetic empty argv[0]",
+          "p": "0x6fffffec",
+          "argmin": "0x6fffffec",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 20,
+          "conditional_written_bytes": 20,
+          "remaining_demand_bytes": 0,
+          "remaining_budget": 0,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "",
+            "len_with_NUL": 1,
+            "kind": "synthetic_empty",
+            "index": 0,
+            "helper_user": "copy_string_kernel",
+            "helper_kernel": "NOT_APPLICABLE"
+          },
+          "demand_bytes": 1,
+          "predebit_bytes": 1,
+          "p_before": "0x6fffffed",
+          "target_interval": [
+            "0x6fffffec",
+            "0x6fffffed"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "argc assignment=1 then conditional exec call",
+          "evidence": [
+            "E143-047",
+            "E143-048",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-075"
+          ]
+        },
+        {
+          "id": "C20_T07",
+          "name": "conditional bprm_execve call boundary",
+          "p": "0x6fffffec",
+          "argmin": "0x6fffffec",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 1,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 20,
+          "conditional_written_bytes": 20,
+          "remaining_demand_bytes": 0,
+          "remaining_budget": 0,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "local_result": "BPRM_EXECVE_RESULT_NOT_DERIVED",
+          "next": "bprm_execve conditionally reached; result and later cleanup not derived",
+          "first_reject": "NONE_IN_BUDGET_MODEL",
+          "bprm_execve": "CONDITIONAL_REACHED",
+          "post_free_field_read_allowed": false,
+          "evidence": [
+            "E143-076",
+            "E143-077",
+            "E143-086",
+            "E143-087",
+            "E143-088"
+          ],
+          "snapshot_scope": "before conditional call; no post-call or pre-cleanup state inferred"
+        }
+      ],
+      "limits": "No defined end-to-end path inferred across GUP missing return; each earlier copy effect/return separately stipulated; no post-free field reads",
+      "prior_A1": "cde2d7f994b5 facts.A.cases[0]",
+      "final_observation": {
+        "observation_point": "AT_CONDITIONAL_CALL_BOUNDARY_BEFORE_BPRM_EXECVE; NOT A LATER CLEANUP SNAPSHOT",
+        "p": "0x6fffffec",
+        "argmin": "0x6fffffec",
+        "bprm_exec": "0x6ffffff6",
+        "argc": 1,
+        "attempted_demand_bytes": 20,
+        "conditional_written_bytes": 20,
+        "remaining_demand_bytes": 0,
+        "actual_copy_status": "NOT_ESTABLISHED",
+        "first_reject": "NONE_IN_BUDGET_MODEL",
+        "bprm_execve": "CONDITIONAL_REACHED",
+        "return_after_normal_cleanup": "NOT_DERIVED"
+      }
+    },
+    {
+      "id": "C19",
+      "scope": "INDEPENDENT_CONDITIONAL_COPY_MODEL; budget given separately from A; actual page/bytes and production reachability NOT_ESTABLISHED",
+      "caller_routes": [
+        "do_execveat_common"
+      ],
+      "entry_p": "0x70000000",
+      "argmin": "0x6fffffed",
+      "initial_argc": 0,
+      "envc": 2,
+      "demand_sequence": [
+        10,
+        5,
+        4,
+        1
+      ],
+      "stages": [
+        {
+          "id": "C19_T01",
+          "name": "entry to copy stage",
+          "p": "0x70000000",
+          "argmin": "0x6fffffed",
+          "bprm_exec": "NOT_STIPULATED",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 0,
+          "conditional_written_bytes": 0,
+          "remaining_demand_bytes": 20,
+          "remaining_budget": 19,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "source": "given p and argmin; preceding counts/limits stipulated, not A output",
+          "get_arg_page": "NOT_REACHED",
+          "memcpy_to_page": "NOT_REACHED",
+          "local_result": "NOT_REACHED",
+          "next": "filename copy",
+          "evidence": [
+            "E143-071",
+            "E143-082"
+          ]
+        },
+        {
+          "id": "C19_T02",
+          "name": "filename",
+          "p": "0x6ffffff6",
+          "argmin": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 10,
+          "conditional_written_bytes": 10,
+          "remaining_demand_bytes": 10,
+          "remaining_budget": 9,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "/bin/tool",
+            "len_with_NUL": 10,
+            "kind": "filename",
+            "index": null,
+            "helper_user": "copy_string_kernel",
+            "helper_kernel": "NOT_APPLICABLE"
+          },
+          "demand_bytes": 10,
+          "predebit_bytes": 10,
+          "p_before": "0x70000000",
+          "target_interval": [
+            "0x6ffffff6",
+            "0x70000000"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-047",
+            "E143-048",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-072",
+            "E143-083"
+          ]
+        },
+        {
+          "id": "C19_T03",
+          "name": "envp[1]",
+          "p": "0x6ffffff1",
+          "argmin": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 15,
+          "conditional_written_bytes": 15,
+          "remaining_demand_bytes": 5,
+          "remaining_budget": 4,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "F=xy",
+            "len_with_NUL": 5,
+            "kind": "envp",
+            "index": 1,
+            "helper_user": "copy_strings",
+            "helper_kernel": "NOT_APPLICABLE"
+          },
+          "demand_bytes": 5,
+          "predebit_bytes": 5,
+          "p_before": "0x6ffffff6",
+          "target_interval": [
+            "0x6ffffff1",
+            "0x6ffffff6"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-073",
+            "E143-084"
+          ]
+        },
+        {
+          "id": "C19_T04",
+          "name": "envp[0]",
+          "p": "0x6fffffed",
+          "argmin": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 19,
+          "conditional_written_bytes": 19,
+          "remaining_demand_bytes": 1,
+          "remaining_budget": 0,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "E=1",
+            "len_with_NUL": 4,
+            "kind": "envp",
+            "index": 0,
+            "helper_user": "copy_strings",
+            "helper_kernel": "NOT_APPLICABLE"
+          },
+          "demand_bytes": 4,
+          "predebit_bytes": 4,
+          "p_before": "0x6ffffff1",
+          "target_interval": [
+            "0x6fffffed",
+            "0x6ffffff1"
+          ],
+          "space_gate": "PASS",
+          "first_reject": "NONE_THROUGH_SPACE_GATE",
+          "get_arg_page": "CONDITIONALLY_REACHED_IN_INDEPENDENT_PAGE_FRAGMENT",
+          "memcpy_to_page": "GIVEN_CONDITIONAL_COPY_EFFECT_ONLY",
+          "local_result": "GIVEN_NORMAL_RETURN_0_FOR_LATER_CONSUMPTION",
+          "caller_wrapper_result": "GIVEN_SUCCESS_OF_THIS_STRING; ARRAY_RETURN_ONLY_AFTER_ALL_ELEMENTS",
+          "next": "continue only with given normal prefix effects/returns",
+          "evidence": [
+            "E143-035",
+            "E143-037",
+            "E143-039",
+            "E143-043",
+            "E143-044",
+            "E143-046",
+            "E143-055",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-073",
+            "E143-084"
+          ]
+        },
+        {
+          "id": "C19_T05",
+          "name": "argv copy call with count 0",
+          "p": "0x6fffffed",
+          "argmin": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 19,
+          "conditional_written_bytes": 19,
+          "remaining_demand_bytes": 1,
+          "remaining_budget": 0,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "source": "copy_strings(0,argv,bprm), loop body skipped; given normal return0",
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "local_result": 0,
+          "next": "zero argc branch",
+          "evidence": [
+            "E143-074",
+            "E143-035",
+            "E143-045",
+            "E143-046",
+            "E143-075"
+          ]
+        },
+        {
+          "id": "C19_T06",
+          "name": "synthetic empty argv[0]",
+          "p": "0x6fffffec",
+          "argmin": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 20,
+          "conditional_written_bytes": 19,
+          "remaining_demand_bytes": 1,
+          "remaining_budget": -1,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "source": {
+            "text": "",
+            "len_with_NUL": 1,
+            "kind": "synthetic_empty",
+            "index": 0,
+            "helper_user": "copy_string_kernel",
+            "helper_kernel": "NOT_APPLICABLE"
+          },
+          "demand_bytes": 1,
+          "predebit_bytes": 1,
+          "p_before": "0x6fffffed",
+          "target_interval": [
+            "0x6fffffec",
+            "0x6fffffed"
+          ],
+          "space_gate": "REJECT",
+          "first_reject": "p<argmin",
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "local_result": "-E2BIG",
+          "caller_wrapper_result": "-E2BIG",
+          "next": "goto out_free (bprm_execve SKIPPED)",
+          "evidence": [
+            "E143-047",
+            "E143-048",
+            "E143-049",
+            "E143-052",
+            "E143-053",
+            "E143-054",
+            "E143-075"
+          ]
+        },
+        {
+          "id": "C19_T07",
+          "name": "pre-cleanup error snapshot",
+          "p": "0x6fffffec",
+          "argmin": "0x6fffffed",
+          "bprm_exec": "0x6ffffff6",
+          "bprm_argc": 0,
+          "bprm_envc": 2,
+          "attempted_demand_bytes": 20,
+          "conditional_written_bytes": 19,
+          "remaining_demand_bytes": 1,
+          "remaining_budget": -1,
+          "actual_copy_status": "NOT_ESTABLISHED",
+          "demand_bytes": 0,
+          "predebit_bytes": 0,
+          "get_arg_page": "SKIPPED",
+          "memcpy_to_page": "SKIPPED",
+          "local_result": "-E2BIG",
+          "next": "free_bprm then putname; return -E2BIG only if cleanup returns normally",
+          "first_reject": "last string p<argmin",
+          "bprm_execve": "SKIPPED",
+          "post_free_field_read_allowed": false,
+          "evidence": [
+            "E143-076",
+            "E143-077",
+            "E143-086",
+            "E143-087",
+            "E143-088"
+          ]
+        }
+      ],
+      "limits": "No defined end-to-end path inferred across GUP missing return; each earlier copy effect/return separately stipulated; no post-free field reads",
+      "prior_A1": "cde2d7f994b5 facts.A.cases[0]",
+      "final_observation": {
+        "observation_point": "PRE_CLEANUP_FAILURE_SNAPSHOT",
+        "p": "0x6fffffec",
+        "argmin": "0x6fffffed",
+        "bprm_exec": "0x6ffffff6",
+        "argc": 0,
+        "attempted_demand_bytes": 20,
+        "conditional_written_bytes": 19,
+        "remaining_demand_bytes": 1,
+        "actual_copy_status": "NOT_ESTABLISHED",
+        "first_reject": "p<argmin",
+        "bprm_execve": "SKIPPED",
+        "return_after_normal_cleanup": "-E2BIG"
+      }
+    },
+    {
+      "id": "K0",
+      "scope": "INDEPENDENT_KERNEL_EXECVE_COUNT_RETURN_MODEL",
+      "count_result": 0,
+      "initial_bprm_argc": "NOT_STIPULATED",
+      "retval_after_zero_gate": "-EINVAL",
+      "bprm_argc_assignment": "SKIPPED",
+      "bprm_argc_before_cleanup": "NOT_STIPULATED",
+      "env_count": "SKIPPED",
+      "envc_assignment": "SKIPPED",
+      "limit_helper": "SKIPPED",
+      "filename_copy": "SKIPPED",
+      "exec_assignment": "SKIPPED",
+      "env_copy": "SKIPPED",
+      "argv_copy": "SKIPPED",
+      "synthetic_empty": "NOT_APPLICABLE",
+      "bprm_execve": "SKIPPED",
+      "first_reject": "retval==0 -> -EINVAL; retval<0 -> out_free",
+      "cleanup": "free_bprm then putname if reached",
+      "return_after_normal_cleanup": "-EINVAL",
+      "post_free_field_read_allowed": false,
+      "p_before_cleanup": "NOT_STIPULATED",
+      "argmin": "NOT_STIPULATED",
+      "bprm_exec_before_cleanup": "NOT_STIPULATED",
+      "actual_copy_status": "NOT_ESTABLISHED",
+      "evidence": [
+        "E143-079",
+        "E143-080",
+        "E143-081",
+        "E143-082",
+        "E143-083",
+        "E143-084",
+        "E143-085",
+        "E143-086",
+        "E143-087",
+        "E143-088"
+      ]
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "source_limit",
+        "kind": "source",
+        "label": "bprm_stack_limits: L0, count, int sum, ptr gate",
+        "scenario": "source"
+      },
+      {
+        "id": "source_set",
+        "kind": "source",
+        "label": "bprm_set_stack_limit: p<limit, argmin",
+        "scenario": "source"
+      },
+      {
+        "id": "source_generic",
+        "kind": "source",
+        "label": "generic strnlen count-- && *sc, conditional definition",
+        "scenario": "source"
+      },
+      {
+        "id": "source_user",
+        "kind": "source",
+        "label": "copy_strings: length then debit then p<argmin then page",
+        "scenario": "source"
+      },
+      {
+        "id": "source_kernel",
+        "kind": "source",
+        "label": "copy_string_kernel: length then debit then p<argmin then page",
+        "scenario": "source"
+      },
+      {
+        "id": "source_caller",
+        "kind": "source",
+        "label": "caller counts, limits, filename, env, argv, synthesis user only",
+        "scenario": "source"
+      },
+      {
+        "id": "source_cleanup",
+        "kind": "boundary",
+        "label": "cleanup normal-return condition; no post-free field reads",
+        "scenario": "source"
+      },
+      {
+        "id": "page_boundary",
+        "kind": "boundary",
+        "label": "GUP return/page validity not established; independent fragments",
+        "scenario": "source"
+      },
+      {
+        "id": "A_NEG",
+        "kind": "scenario",
+        "label": "A_NEG ret=-E2BIG argmin=A_old",
+        "scenario": "A_NEG"
+      },
+      {
+        "id": "A_ZERO",
+        "kind": "scenario",
+        "label": "A_ZERO ret=0 argmin=0x200008",
+        "scenario": "A_ZERO"
+      },
+      {
+        "id": "A_SMALL",
+        "kind": "scenario",
+        "label": "A_SMALL ret=0 argmin=0x200020",
+        "scenario": "A_SMALL"
+      },
+      {
+        "id": "A_PTR_BELOW",
+        "kind": "scenario",
+        "label": "A_PTR_BELOW ret=0 argmin=0x7ffff8",
+        "scenario": "A_PTR_BELOW"
+      },
+      {
+        "id": "A_PTR_EQUAL",
+        "kind": "scenario",
+        "label": "A_PTR_EQUAL ret=-E2BIG argmin=A_old",
+        "scenario": "A_PTR_EQUAL"
+      },
+      {
+        "id": "A_INT_SUM",
+        "kind": "scenario",
+        "label": "A_INT_SUM ret=NOT_DERIVED argmin=NOT_DERIVED",
+        "scenario": "A_INT_SUM"
+      },
+      {
+        "id": "A_SET_EQ",
+        "kind": "scenario",
+        "label": "A_SET_EQ ret=0 argmin=0x0",
+        "scenario": "A_SET_EQ"
+      },
+      {
+        "id": "A_SET_LT",
+        "kind": "scenario",
+        "label": "A_SET_LT ret=-E2BIG argmin=A_old",
+        "scenario": "A_SET_LT"
+      },
+      {
+        "id": "B_SHORT",
+        "kind": "scenario",
+        "label": "B_SHORT r=131070 len=131071 gate=PASS",
+        "scenario": "B_SHORT"
+      },
+      {
+        "id": "B_SHORT_U",
+        "kind": "helper_result",
+        "label": "copy_strings via strnlen_user len=131071 ret=NOT_DERIVED p=NOT_DERIVED_AFTER_LENGTH_GATE",
+        "scenario": "B_SHORT"
+      },
+      {
+        "id": "B_SHORT_K",
+        "kind": "helper_result",
+        "label": "copy_string_kernel via strnlen len=131071 ret=NOT_DERIVED p=NOT_DERIVED_AFTER_LENGTH_GATE",
+        "scenario": "B_SHORT"
+      },
+      {
+        "id": "B_EXACT",
+        "kind": "scenario",
+        "label": "B_EXACT r=131071 len=131072 gate=PASS",
+        "scenario": "B_EXACT"
+      },
+      {
+        "id": "B_EXACT_U",
+        "kind": "helper_result",
+        "label": "copy_strings via strnlen_user len=131072 ret=NOT_DERIVED p=NOT_DERIVED_AFTER_LENGTH_GATE",
+        "scenario": "B_EXACT"
+      },
+      {
+        "id": "B_EXACT_K",
+        "kind": "helper_result",
+        "label": "copy_string_kernel via strnlen len=131072 ret=NOT_DERIVED p=NOT_DERIVED_AFTER_LENGTH_GATE",
+        "scenario": "B_EXACT"
+      },
+      {
+        "id": "B_NEXT",
+        "kind": "scenario",
+        "label": "B_NEXT r=131072 len=131073 gate=REJECT",
+        "scenario": "B_NEXT"
+      },
+      {
+        "id": "B_NEXT_U",
+        "kind": "helper_result",
+        "label": "copy_strings via strnlen_user len=131073 ret=-E2BIG p=UNCHANGED",
+        "scenario": "B_NEXT"
+      },
+      {
+        "id": "B_NEXT_K",
+        "kind": "helper_result",
+        "label": "copy_string_kernel via strnlen len=131073 ret=-E2BIG p=UNCHANGED",
+        "scenario": "B_NEXT"
+      },
+      {
+        "id": "B_UNTERM",
+        "kind": "scenario",
+        "label": "B_UNTERM r=131072 len=131073 gate=REJECT",
+        "scenario": "B_UNTERM"
+      },
+      {
+        "id": "B_UNTERM_U",
+        "kind": "helper_result",
+        "label": "copy_strings via strnlen_user len=131073 ret=-E2BIG p=UNCHANGED",
+        "scenario": "B_UNTERM"
+      },
+      {
+        "id": "B_UNTERM_K",
+        "kind": "helper_result",
+        "label": "copy_string_kernel via strnlen len=131073 ret=-E2BIG p=UNCHANGED",
+        "scenario": "B_UNTERM"
+      },
+      {
+        "id": "C_EQ",
+        "kind": "scenario",
+        "label": "C_EQ NONE_THROUGH_SPACE_GATE",
+        "scenario": "C_EQ"
+      },
+      {
+        "id": "C_EQ_H1",
+        "kind": "helper_result",
+        "label": "copy_strings p=0x6ffffff0 page=CONDITIONALLY_REACHED_IF_NEXT_LOOP_STEP_REACHED ret=NOT_DERIVED",
+        "scenario": "C_EQ"
+      },
+      {
+        "id": "C_EQ_H2",
+        "kind": "helper_result",
+        "label": "copy_string_kernel p=0x6ffffff0 page=CONDITIONALLY_REACHED_IF_NEXT_LOOP_STEP_REACHED ret=NOT_DERIVED",
+        "scenario": "C_EQ"
+      },
+      {
+        "id": "C_OVER",
+        "kind": "scenario",
+        "label": "C_OVER p<argmin",
+        "scenario": "C_OVER"
+      },
+      {
+        "id": "C_OVER_H1",
+        "kind": "helper_result",
+        "label": "copy_strings p=0x6fffffef page=SKIPPED ret=-E2BIG",
+        "scenario": "C_OVER"
+      },
+      {
+        "id": "C_OVER_H2",
+        "kind": "helper_result",
+        "label": "copy_string_kernel p=0x6fffffef page=SKIPPED ret=-E2BIG",
+        "scenario": "C_OVER"
+      },
+      {
+        "id": "C30",
+        "kind": "scenario",
+        "label": "C30 NONE_IN_BUDGET_MODEL",
+        "scenario": "C30"
+      },
+      {
+        "id": "C30_T01",
+        "kind": "observation",
+        "label": "entry to copy stage p=0x70000000 argmin=0x6fffffe2 exec=NOT_STIPULATED argc=2 conditional=0 actual=NOT_ESTABLISHED",
+        "scenario": "C30"
+      },
+      {
+        "id": "C30_T02",
+        "kind": "observation",
+        "label": "filename p=0x6ffffff6 argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=10 actual=NOT_ESTABLISHED",
+        "scenario": "C30"
+      },
+      {
+        "id": "C30_T03",
+        "kind": "observation",
+        "label": "envp[1] p=0x6ffffff1 argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=15 actual=NOT_ESTABLISHED",
+        "scenario": "C30"
+      },
+      {
+        "id": "C30_T04",
+        "kind": "observation",
+        "label": "envp[0] p=0x6fffffed argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=19 actual=NOT_ESTABLISHED",
+        "scenario": "C30"
+      },
+      {
+        "id": "C30_T05",
+        "kind": "observation",
+        "label": "argv[1] p=0x6fffffea argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=22 actual=NOT_ESTABLISHED",
+        "scenario": "C30"
+      },
+      {
+        "id": "C30_T06",
+        "kind": "observation",
+        "label": "argv[0] p=0x6fffffe2 argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=30 actual=NOT_ESTABLISHED",
+        "scenario": "C30"
+      },
+      {
+        "id": "C30_T07",
+        "kind": "observation",
+        "label": "conditional bprm_execve call boundary p=0x6fffffe2 argmin=0x6fffffe2 exec=0x6ffffff6 argc=2 conditional=30 actual=NOT_ESTABLISHED",
+        "scenario": "C30"
+      },
+      {
+        "id": "C29",
+        "kind": "scenario",
+        "label": "C29 p<argmin",
+        "scenario": "C29"
+      },
+      {
+        "id": "C29_T01",
+        "kind": "observation",
+        "label": "entry to copy stage p=0x70000000 argmin=0x6fffffe3 exec=NOT_STIPULATED argc=2 conditional=0 actual=NOT_ESTABLISHED",
+        "scenario": "C29"
+      },
+      {
+        "id": "C29_T02",
+        "kind": "observation",
+        "label": "filename p=0x6ffffff6 argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=10 actual=NOT_ESTABLISHED",
+        "scenario": "C29"
+      },
+      {
+        "id": "C29_T03",
+        "kind": "observation",
+        "label": "envp[1] p=0x6ffffff1 argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=15 actual=NOT_ESTABLISHED",
+        "scenario": "C29"
+      },
+      {
+        "id": "C29_T04",
+        "kind": "observation",
+        "label": "envp[0] p=0x6fffffed argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=19 actual=NOT_ESTABLISHED",
+        "scenario": "C29"
+      },
+      {
+        "id": "C29_T05",
+        "kind": "observation",
+        "label": "argv[1] p=0x6fffffea argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=22 actual=NOT_ESTABLISHED",
+        "scenario": "C29"
+      },
+      {
+        "id": "C29_T06",
+        "kind": "observation",
+        "label": "argv[0] p=0x6fffffe2 argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=22 actual=NOT_ESTABLISHED",
+        "scenario": "C29"
+      },
+      {
+        "id": "C29_T07",
+        "kind": "observation",
+        "label": "pre-cleanup error snapshot p=0x6fffffe2 argmin=0x6fffffe3 exec=0x6ffffff6 argc=2 conditional=22 actual=NOT_ESTABLISHED",
+        "scenario": "C29"
+      },
+      {
+        "id": "C20",
+        "kind": "scenario",
+        "label": "C20 NONE_IN_BUDGET_MODEL",
+        "scenario": "C20"
+      },
+      {
+        "id": "C20_T01",
+        "kind": "observation",
+        "label": "entry to copy stage p=0x70000000 argmin=0x6fffffec exec=NOT_STIPULATED argc=0 conditional=0 actual=NOT_ESTABLISHED",
+        "scenario": "C20"
+      },
+      {
+        "id": "C20_T02",
+        "kind": "observation",
+        "label": "filename p=0x6ffffff6 argmin=0x6fffffec exec=0x6ffffff6 argc=0 conditional=10 actual=NOT_ESTABLISHED",
+        "scenario": "C20"
+      },
+      {
+        "id": "C20_T03",
+        "kind": "observation",
+        "label": "envp[1] p=0x6ffffff1 argmin=0x6fffffec exec=0x6ffffff6 argc=0 conditional=15 actual=NOT_ESTABLISHED",
+        "scenario": "C20"
+      },
+      {
+        "id": "C20_T04",
+        "kind": "observation",
+        "label": "envp[0] p=0x6fffffed argmin=0x6fffffec exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED",
+        "scenario": "C20"
+      },
+      {
+        "id": "C20_T05",
+        "kind": "observation",
+        "label": "argv copy call with count 0 p=0x6fffffed argmin=0x6fffffec exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED",
+        "scenario": "C20"
+      },
+      {
+        "id": "C20_T06",
+        "kind": "observation",
+        "label": "synthetic empty argv[0] p=0x6fffffec argmin=0x6fffffec exec=0x6ffffff6 argc=1 conditional=20 actual=NOT_ESTABLISHED",
+        "scenario": "C20"
+      },
+      {
+        "id": "C20_T07",
+        "kind": "observation",
+        "label": "conditional bprm_execve call boundary p=0x6fffffec argmin=0x6fffffec exec=0x6ffffff6 argc=1 conditional=20 actual=NOT_ESTABLISHED",
+        "scenario": "C20"
+      },
+      {
+        "id": "C19",
+        "kind": "scenario",
+        "label": "C19 p<argmin",
+        "scenario": "C19"
+      },
+      {
+        "id": "C19_T01",
+        "kind": "observation",
+        "label": "entry to copy stage p=0x70000000 argmin=0x6fffffed exec=NOT_STIPULATED argc=0 conditional=0 actual=NOT_ESTABLISHED",
+        "scenario": "C19"
+      },
+      {
+        "id": "C19_T02",
+        "kind": "observation",
+        "label": "filename p=0x6ffffff6 argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=10 actual=NOT_ESTABLISHED",
+        "scenario": "C19"
+      },
+      {
+        "id": "C19_T03",
+        "kind": "observation",
+        "label": "envp[1] p=0x6ffffff1 argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=15 actual=NOT_ESTABLISHED",
+        "scenario": "C19"
+      },
+      {
+        "id": "C19_T04",
+        "kind": "observation",
+        "label": "envp[0] p=0x6fffffed argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED",
+        "scenario": "C19"
+      },
+      {
+        "id": "C19_T05",
+        "kind": "observation",
+        "label": "argv copy call with count 0 p=0x6fffffed argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED",
+        "scenario": "C19"
+      },
+      {
+        "id": "C19_T06",
+        "kind": "observation",
+        "label": "synthetic empty argv[0] p=0x6fffffec argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED",
+        "scenario": "C19"
+      },
+      {
+        "id": "C19_T07",
+        "kind": "observation",
+        "label": "pre-cleanup error snapshot p=0x6fffffec argmin=0x6fffffed exec=0x6ffffff6 argc=0 conditional=19 actual=NOT_ESTABLISHED",
+        "scenario": "C19"
+      },
+      {
+        "id": "K0",
+        "kind": "scenario",
+        "label": "K0 retval==0 -> -EINVAL; retval<0 -> out_free",
+        "scenario": "K0"
+      },
+      {
+        "id": "K0_REJECT",
+        "kind": "observation",
+        "label": "count=0 -> -EINVAL, argc assignment and later work SKIPPED",
+        "scenario": "K0"
+      }
+    ],
+    "edges": [
+      {
+        "from": "source_limit",
+        "to": "source_set",
+        "kind": "conditional_source_call",
+        "label": "only if pointer gate passed"
+      },
+      {
+        "from": "source_generic",
+        "to": "source_user",
+        "kind": "MODEL_LENGTH_SOURCE",
+        "label": "via strnlen_user; chosen generic only"
+      },
+      {
+        "from": "source_generic",
+        "to": "source_kernel",
+        "kind": "MODEL_LENGTH_SOURCE",
+        "label": "chosen generic only"
+      },
+      {
+        "from": "source_user",
+        "to": "page_boundary",
+        "kind": "ANALYSIS_BOUNDARY",
+        "label": "no defined complete chain"
+      },
+      {
+        "from": "source_kernel",
+        "to": "page_boundary",
+        "kind": "ANALYSIS_BOUNDARY",
+        "label": "no defined complete chain"
+      },
+      {
+        "from": "source_caller",
+        "to": "source_cleanup",
+        "kind": "conditional_source_order",
+        "label": "error goto / after exec call; normal cleanup required"
+      },
+      {
+        "from": "source_limit",
+        "to": "A_NEG",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "not a production reachability claim"
+      },
+      {
+        "from": "source_limit",
+        "to": "A_ZERO",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "not a production reachability claim"
+      },
+      {
+        "from": "source_limit",
+        "to": "A_SMALL",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "not a production reachability claim"
+      },
+      {
+        "from": "source_limit",
+        "to": "A_PTR_BELOW",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "not a production reachability claim"
+      },
+      {
+        "from": "source_limit",
+        "to": "A_PTR_EQUAL",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "not a production reachability claim"
+      },
+      {
+        "from": "source_limit",
+        "to": "A_INT_SUM",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "not a production reachability claim"
+      },
+      {
+        "from": "source_set",
+        "to": "A_SET_EQ",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "not a production reachability claim"
+      },
+      {
+        "from": "source_set",
+        "to": "A_SET_LT",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "not a production reachability claim"
+      },
+      {
+        "from": "source_generic",
+        "to": "B_SHORT",
+        "kind": "GIVEN_GENERIC_MODEL",
+        "label": "bounded prefix"
+      },
+      {
+        "from": "B_SHORT",
+        "to": "B_SHORT_U",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "same input; no runtime"
+      },
+      {
+        "from": "source_user",
+        "to": "B_SHORT_U",
+        "kind": "SOURCE_RELATION",
+        "label": "length gate"
+      },
+      {
+        "from": "B_SHORT",
+        "to": "B_SHORT_K",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "same input; no runtime"
+      },
+      {
+        "from": "source_kernel",
+        "to": "B_SHORT_K",
+        "kind": "SOURCE_RELATION",
+        "label": "length gate"
+      },
+      {
+        "from": "source_generic",
+        "to": "B_EXACT",
+        "kind": "GIVEN_GENERIC_MODEL",
+        "label": "bounded prefix"
+      },
+      {
+        "from": "B_EXACT",
+        "to": "B_EXACT_U",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "same input; no runtime"
+      },
+      {
+        "from": "source_user",
+        "to": "B_EXACT_U",
+        "kind": "SOURCE_RELATION",
+        "label": "length gate"
+      },
+      {
+        "from": "B_EXACT",
+        "to": "B_EXACT_K",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "same input; no runtime"
+      },
+      {
+        "from": "source_kernel",
+        "to": "B_EXACT_K",
+        "kind": "SOURCE_RELATION",
+        "label": "length gate"
+      },
+      {
+        "from": "source_generic",
+        "to": "B_NEXT",
+        "kind": "GIVEN_GENERIC_MODEL",
+        "label": "bounded prefix"
+      },
+      {
+        "from": "B_NEXT",
+        "to": "B_NEXT_U",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "same input; no runtime"
+      },
+      {
+        "from": "source_user",
+        "to": "B_NEXT_U",
+        "kind": "SOURCE_RELATION",
+        "label": "length gate"
+      },
+      {
+        "from": "B_NEXT",
+        "to": "B_NEXT_K",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "same input; no runtime"
+      },
+      {
+        "from": "source_kernel",
+        "to": "B_NEXT_K",
+        "kind": "SOURCE_RELATION",
+        "label": "length gate"
+      },
+      {
+        "from": "source_generic",
+        "to": "B_UNTERM",
+        "kind": "GIVEN_GENERIC_MODEL",
+        "label": "bounded prefix"
+      },
+      {
+        "from": "B_UNTERM",
+        "to": "B_UNTERM_U",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "same input; no runtime"
+      },
+      {
+        "from": "source_user",
+        "to": "B_UNTERM_U",
+        "kind": "SOURCE_RELATION",
+        "label": "length gate"
+      },
+      {
+        "from": "B_UNTERM",
+        "to": "B_UNTERM_K",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "same input; no runtime"
+      },
+      {
+        "from": "source_kernel",
+        "to": "B_UNTERM_K",
+        "kind": "SOURCE_RELATION",
+        "label": "length gate"
+      },
+      {
+        "from": "source_user",
+        "to": "C_EQ",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "separate short budget or count result"
+      },
+      {
+        "from": "source_kernel",
+        "to": "C_EQ",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "same length for both helpers"
+      },
+      {
+        "from": "C_EQ",
+        "to": "C_EQ_H1",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "given valid length; p debit first"
+      },
+      {
+        "from": "C_EQ",
+        "to": "C_EQ_H2",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "given valid length; p debit first"
+      },
+      {
+        "from": "source_user",
+        "to": "C_OVER",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "separate short budget or count result"
+      },
+      {
+        "from": "source_kernel",
+        "to": "C_OVER",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "same length for both helpers"
+      },
+      {
+        "from": "C_OVER",
+        "to": "C_OVER_H1",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "given valid length; p debit first"
+      },
+      {
+        "from": "C_OVER",
+        "to": "C_OVER_H2",
+        "kind": "MODEL_CONSUMPTION",
+        "label": "given valid length; p debit first"
+      },
+      {
+        "from": "source_caller",
+        "to": "C30",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "separate short budget or count result"
+      },
+      {
+        "from": "C30",
+        "to": "C30_T01",
+        "kind": "GIVEN_ENTRY",
+        "label": "given copy-stage state"
+      },
+      {
+        "from": "C30_T01",
+        "to": "C30_T02",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C30_T02",
+        "to": "C30_T03",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C30_T03",
+        "to": "C30_T04",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C30_T04",
+        "to": "C30_T05",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C30_T05",
+        "to": "C30_T06",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C30_T06",
+        "to": "C30_T07",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C30_T07",
+        "to": "source_cleanup",
+        "kind": "CONDITIONAL_CONSUMER",
+        "label": "only if cleanup reached and returns normally"
+      },
+      {
+        "from": "source_caller",
+        "to": "C29",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "separate short budget or count result"
+      },
+      {
+        "from": "C29",
+        "to": "C29_T01",
+        "kind": "GIVEN_ENTRY",
+        "label": "given copy-stage state"
+      },
+      {
+        "from": "C29_T01",
+        "to": "C29_T02",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C29_T02",
+        "to": "C29_T03",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C29_T03",
+        "to": "C29_T04",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C29_T04",
+        "to": "C29_T05",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C29_T05",
+        "to": "C29_T06",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C29_T06",
+        "to": "C29_T07",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C29_T07",
+        "to": "source_cleanup",
+        "kind": "CONDITIONAL_CONSUMER",
+        "label": "only if cleanup reached and returns normally"
+      },
+      {
+        "from": "source_caller",
+        "to": "C20",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "separate short budget or count result"
+      },
+      {
+        "from": "C20",
+        "to": "C20_T01",
+        "kind": "GIVEN_ENTRY",
+        "label": "given copy-stage state"
+      },
+      {
+        "from": "C20_T01",
+        "to": "C20_T02",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C20_T02",
+        "to": "C20_T03",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C20_T03",
+        "to": "C20_T04",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C20_T04",
+        "to": "C20_T05",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C20_T05",
+        "to": "C20_T06",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C20_T06",
+        "to": "C20_T07",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C20_T07",
+        "to": "source_cleanup",
+        "kind": "CONDITIONAL_CONSUMER",
+        "label": "only if cleanup reached and returns normally"
+      },
+      {
+        "from": "source_caller",
+        "to": "C19",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "separate short budget or count result"
+      },
+      {
+        "from": "C19",
+        "to": "C19_T01",
+        "kind": "GIVEN_ENTRY",
+        "label": "given copy-stage state"
+      },
+      {
+        "from": "C19_T01",
+        "to": "C19_T02",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C19_T02",
+        "to": "C19_T03",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C19_T03",
+        "to": "C19_T04",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C19_T04",
+        "to": "C19_T05",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C19_T05",
+        "to": "C19_T06",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C19_T06",
+        "to": "C19_T07",
+        "kind": "CONDITIONAL_PREFIX_OR_REJECTION",
+        "label": "independent prior effects/returns; no production chain"
+      },
+      {
+        "from": "C19_T07",
+        "to": "source_cleanup",
+        "kind": "CONDITIONAL_CONSUMER",
+        "label": "only if cleanup reached and returns normally"
+      },
+      {
+        "from": "source_caller",
+        "to": "K0",
+        "kind": "INDEPENDENT_MODEL",
+        "label": "separate short budget or count result"
+      },
+      {
+        "from": "K0",
+        "to": "K0_REJECT",
+        "kind": "SOURCE_GATE_PROJECTION",
+        "label": "zero result"
+      },
+      {
+        "from": "K0_REJECT",
+        "to": "source_cleanup",
+        "kind": "CONDITIONAL_CONSUMER",
+        "label": "normal cleanup required"
+      }
+    ]
+  },
+  "source_index": [
+    {
+      "id": "E143-001",
+      "key": "stk",
+      "path": "mykernel/include/uapi/linux/resource.h",
+      "symbol": "_STK_LIM",
+      "first_line": 65,
+      "last_line": 65,
+      "kind": "macro_definition",
+      "support": "8*1024*1024",
+      "source_blob": "6a683439847c"
+    },
+    {
+      "id": "E143-002",
+      "key": "argmax",
+      "path": "mykernel/include/uapi/linux/limits.h",
+      "symbol": "ARG_MAX",
+      "first_line": 8,
+      "last_line": 8,
+      "kind": "macro_definition",
+      "support": "131072",
+      "source_blob": "bddfd09e4be2"
+    },
+    {
+      "id": "E143-003",
+      "key": "maxstrlen",
+      "path": "mykernel/include/uapi/linux/binfmts.h",
+      "symbol": "MAX_ARG_STRLEN",
+      "first_line": 15,
+      "last_line": 15,
+      "kind": "macro_definition",
+      "support": "PAGE_SIZE*32",
+      "source_blob": "a60f4e7c53b0"
+    },
+    {
+      "id": "E143-004",
+      "key": "maxstrings",
+      "path": "mykernel/include/uapi/linux/binfmts.h",
+      "symbol": "MAX_ARG_STRINGS",
+      "first_line": 16,
+      "last_line": 16,
+      "kind": "macro_definition",
+      "support": "0x7fffffff",
+      "source_blob": "a60f4e7c53b0"
+    },
+    {
+      "id": "E143-005",
+      "key": "pageshift",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_SHIFT",
+      "first_line": 9,
+      "last_line": 9,
+      "kind": "macro_definition",
+      "support": "12",
+      "source_blob": "b10e280f26f0"
+    },
+    {
+      "id": "E143-006",
+      "key": "pagesize",
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "symbol": "PAGE_SIZE",
+      "first_line": 10,
+      "last_line": 10,
+      "kind": "macro_definition",
+      "support": "_AC(1,UL) << PAGE_SHIFT",
+      "source_blob": "b10e280f26f0"
+    },
+    {
+      "id": "E143-007",
+      "key": "ac",
+      "path": "mykernel/include/uapi/linux/const.h",
+      "symbol": "_AC",
+      "first_line": 20,
+      "last_line": 20,
+      "kind": "macro_definition",
+      "support": "C branch token paste X##Y",
+      "source_blob": "d8bcaf7e3151"
+    },
+    {
+      "id": "E143-008",
+      "key": "ulong",
+      "path": "mykernel/include/linux/kernel/types.h",
+      "symbol": "ulong",
+      "first_line": 105,
+      "last_line": 105,
+      "kind": "type_definition",
+      "support": "unsigned long alias",
+      "source_blob": "ef531baa8317"
+    },
+    {
+      "id": "E143-009",
+      "key": "size_t",
+      "path": "mykernel/include/linux/kernel/types.h",
+      "symbol": "size_t",
+      "first_line": 71,
+      "last_line": 71,
+      "kind": "type_definition",
+      "support": "__kernel_size_t alias",
+      "source_blob": "ef531baa8317"
+    },
+    {
+      "id": "E143-010",
+      "key": "kernel_size_t",
+      "path": "mykernel/include/uapi/asm-generic/posix_types.h",
+      "symbol": "__kernel_size_t",
+      "first_line": 73,
+      "last_line": 73,
+      "kind": "type_definition",
+      "support": "generic selected alias __kernel_ulong_t",
+      "source_blob": "0246766d9a75"
+    },
+    {
+      "id": "E143-011",
+      "key": "kernel_ulong",
+      "path": "mykernel/include/uapi/asm-generic/posix_types.h",
+      "symbol": "__kernel_ulong_t",
+      "first_line": 17,
+      "last_line": 17,
+      "kind": "type_definition",
+      "support": "unsigned long",
+      "source_blob": "0246766d9a75"
+    },
+    {
+      "id": "E143-012",
+      "key": "bprm_p_argmin",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 21,
+      "last_line": 22,
+      "kind": "struct_member",
+      "support": "ulong p and argmin",
+      "source_blob": "002c2aec4aa8"
+    },
+    {
+      "id": "E143-013",
+      "key": "bprm_count",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 49,
+      "last_line": 49,
+      "kind": "struct_member",
+      "support": "argc/envc int",
+      "source_blob": "002c2aec4aa8"
+    },
+    {
+      "id": "E143-014",
+      "key": "bprm_exec",
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "symbol": "linux_binprm",
+      "first_line": 57,
+      "last_line": 57,
+      "kind": "struct_member",
+      "support": "ulong loader, exec",
+      "source_blob": "002c2aec4aa8"
+    },
+    {
+      "id": "E143-015",
+      "key": "cmp",
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "symbol": "__cmp",
+      "first_line": 28,
+      "last_line": 28,
+      "kind": "macro_definition",
+      "support": "conditional expression with two operand types",
+      "source_blob": "d22095ba1acc"
+    },
+    {
+      "id": "E143-016",
+      "key": "max",
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "symbol": "max",
+      "first_line": 59,
+      "last_line": 59,
+      "kind": "macro_definition",
+      "support": "active __cmp not commented careful_cmp",
+      "source_blob": "d22095ba1acc"
+    },
+    {
+      "id": "E143-017",
+      "key": "max_t",
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "symbol": "max_t",
+      "first_line": 123,
+      "last_line": 123,
+      "kind": "macro_definition",
+      "support": "active casts before __cmp",
+      "source_blob": "d22095ba1acc"
+    },
+    {
+      "id": "E143-018",
+      "key": "valid_len",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "valid_arg_len",
+      "first_line": 147,
+      "last_line": 147,
+      "kind": "active_function_fragment",
+      "support": "only len <= MAX_ARG_STRLEN",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-019",
+      "key": "set_limit",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_set_stack_limit",
+      "first_line": 246,
+      "last_line": 250,
+      "kind": "active_function_fragment",
+      "support": "strict p<limit reject, else assign argmin and return0",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-020",
+      "key": "hit_limit",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_hit_stack_limit",
+      "first_line": 253,
+      "last_line": 253,
+      "kind": "active_function_fragment",
+      "support": "same expression helper definition, not a call at copy sites",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-021",
+      "key": "limit_decl",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_stack_limits",
+      "first_line": 258,
+      "last_line": 258,
+      "kind": "local_declaration",
+      "support": "limit and ptr_size ulong",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-022",
+      "key": "limit0",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_stack_limits",
+      "first_line": 268,
+      "last_line": 268,
+      "kind": "active_function_fragment",
+      "support": "3/4 _STK_LIM",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-023",
+      "key": "rlim_comment",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_stack_limits",
+      "first_line": 269,
+      "last_line": 269,
+      "kind": "comment_only",
+      "support": "rlim_cur min is comment only",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-024",
+      "key": "argmax_floor",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_stack_limits",
+      "first_line": 274,
+      "last_line": 274,
+      "kind": "active_function_fragment",
+      "support": "max_t floor",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-025",
+      "key": "negative",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_stack_limits",
+      "first_line": 276,
+      "last_line": 277,
+      "kind": "active_function_fragment",
+      "support": "negative count early E2BIG",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-026",
+      "key": "ptr_gate",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_stack_limits",
+      "first_line": 291,
+      "last_line": 294,
+      "kind": "active_function_fragment",
+      "support": "int sum prior to sizeof multiply; <= rejection; decrement only after gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-027",
+      "key": "limit_call",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "bprm_stack_limits",
+      "first_line": 296,
+      "last_line": 296,
+      "kind": "active_function_fragment",
+      "support": "return helper result",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-028",
+      "key": "generic_gate",
+      "path": "mykernel/lib/string/string.c",
+      "symbol": "__HAVE_ARCH_STRNLEN",
+      "first_line": 488,
+      "last_line": 488,
+      "kind": "conditional_definition_gate",
+      "support": "generic strnlen condition, not proof of actual preprocessing",
+      "source_blob": "cbb2752bc8b2"
+    },
+    {
+      "id": "E143-029",
+      "key": "generic_signature",
+      "path": "mykernel/lib/string/string.c",
+      "symbol": "strnlen",
+      "first_line": 494,
+      "last_line": 496,
+      "kind": "definition_head",
+      "support": "size_t signature and local sc declaration",
+      "source_blob": "cbb2752bc8b2"
+    },
+    {
+      "id": "E143-030",
+      "key": "generic_loop",
+      "path": "mykernel/lib/string/string.c",
+      "symbol": "strnlen",
+      "first_line": 497,
+      "last_line": 499,
+      "kind": "active_function_fragment",
+      "support": "count-- short circuit before *sc, return sc-s",
+      "source_blob": "cbb2752bc8b2"
+    },
+    {
+      "id": "E143-031",
+      "key": "user_signature",
+      "path": "mykernel/lib/string/strnlen_user.c",
+      "symbol": "strnlen_user",
+      "first_line": 92,
+      "last_line": 94,
+      "kind": "definition_head",
+      "support": "long signature; initial commented variable",
+      "source_blob": "dae5c6c14aa4"
+    },
+    {
+      "id": "E143-032",
+      "key": "user_read_comment",
+      "path": "mykernel/lib/string/strnlen_user.c",
+      "symbol": "strnlen_user",
+      "first_line": 112,
+      "last_line": 116,
+      "kind": "comment_only",
+      "support": "user access and do_strnlen_user are commented",
+      "source_blob": "dae5c6c14aa4"
+    },
+    {
+      "id": "E143-033",
+      "key": "user_return_comment",
+      "path": "mykernel/lib/string/strnlen_user.c",
+      "symbol": "strnlen_user",
+      "first_line": 118,
+      "last_line": 118,
+      "kind": "comment_only",
+      "support": "commented return 0 not active",
+      "source_blob": "dae5c6c14aa4"
+    },
+    {
+      "id": "E143-034",
+      "key": "user_len",
+      "path": "mykernel/lib/string/strnlen_user.c",
+      "symbol": "strnlen_user",
+      "first_line": 120,
+      "last_line": 120,
+      "kind": "active_function_fragment",
+      "support": "only active return strnlen+1",
+      "source_blob": "dae5c6c14aa4"
+    },
+    {
+      "id": "E143-035",
+      "key": "user_loop",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 311,
+      "last_line": 315,
+      "kind": "active_function_fragment",
+      "support": "reverse postdecrement argc and locals",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-036",
+      "key": "user_ptr",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 316,
+      "last_line": 319,
+      "kind": "active_function_fragment",
+      "support": "EFAULT default and get_user_arg_ptr error gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-037",
+      "key": "user_measure",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 321,
+      "last_line": 323,
+      "kind": "active_function_fragment",
+      "support": "strnlen_user and !len gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-038",
+      "key": "user_valid",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 325,
+      "last_line": 327,
+      "kind": "active_function_fragment",
+      "support": "E2BIG before valid_len rejection",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-039",
+      "key": "user_predebit",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 330,
+      "last_line": 334,
+      "kind": "active_function_fragment",
+      "support": "pos old p; str advance; whole-length debit before p<argmin",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-040",
+      "key": "user_chunk",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 345,
+      "last_line": 349,
+      "kind": "active_function_fragment",
+      "support": "offset and chunk calculation",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-041",
+      "key": "user_chunk2",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 350,
+      "last_line": 351,
+      "kind": "active_function_fragment",
+      "support": "chunk bounded by len",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-042",
+      "key": "user_progress",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 353,
+      "last_line": 356,
+      "kind": "active_function_fragment",
+      "support": "pos/str/len advanced before get page",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-043",
+      "key": "user_page",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 361,
+      "last_line": 365,
+      "kind": "active_function_fragment",
+      "support": "get_arg_page and null failure",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-044",
+      "key": "user_copy",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 367,
+      "last_line": 368,
+      "kind": "active_function_fragment",
+      "support": "copy to page then put",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-045",
+      "key": "user_zero",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 386,
+      "last_line": 387,
+      "kind": "active_function_fragment",
+      "support": "ret=0 after full loop, out label",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-046",
+      "key": "user_ret",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings",
+      "first_line": 393,
+      "last_line": 393,
+      "kind": "active_function_fragment",
+      "support": "actual return ret; no local p rollback at out",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-047",
+      "key": "kernel_measure",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_string_kernel",
+      "first_line": 401,
+      "last_line": 402,
+      "kind": "active_function_fragment",
+      "support": "strnlen+1 and old pos",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-048",
+      "key": "kernel_valid",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_string_kernel",
+      "first_line": 404,
+      "last_line": 407,
+      "kind": "active_function_fragment",
+      "support": "len==0 EFAULT and valid length E2BIG before debit",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-049",
+      "key": "kernel_predebit",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_string_kernel",
+      "first_line": 410,
+      "last_line": 413,
+      "kind": "active_function_fragment",
+      "support": "arg advance and p debit before strict space gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-050",
+      "key": "kernel_chunk",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_string_kernel",
+      "first_line": 415,
+      "last_line": 418,
+      "kind": "active_function_fragment",
+      "support": "chunk computation",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-051",
+      "key": "kernel_progress",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_string_kernel",
+      "first_line": 420,
+      "last_line": 422,
+      "kind": "active_function_fragment",
+      "support": "pos/arg/len advance before page",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-052",
+      "key": "kernel_page",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_string_kernel",
+      "first_line": 424,
+      "last_line": 426,
+      "kind": "active_function_fragment",
+      "support": "page null returns E2BIG",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-053",
+      "key": "kernel_copy",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_string_kernel",
+      "first_line": 428,
+      "last_line": 429,
+      "kind": "active_function_fragment",
+      "support": "copy and put",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-054",
+      "key": "kernel_ret",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_string_kernel",
+      "first_line": 432,
+      "last_line": 432,
+      "kind": "active_function_fragment",
+      "support": "return0 after loop",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-055",
+      "key": "kernel_array",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings_kernel",
+      "first_line": 440,
+      "last_line": 443,
+      "kind": "active_function_fragment",
+      "support": "reverse loop, negative return propagates",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-056",
+      "key": "kernel_array_ret",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "copy_strings_kernel",
+      "first_line": 448,
+      "last_line": 448,
+      "kind": "active_function_fragment",
+      "support": "return0 after loop including argc=0",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-057",
+      "key": "get_page_ret_decl",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "get_arg_page",
+      "first_line": 69,
+      "last_line": 72,
+      "kind": "local_declaration",
+      "support": "page declaration, mm, int ret",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-058",
+      "key": "get_page_gup",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "get_arg_page",
+      "first_line": 79,
+      "last_line": 82,
+      "kind": "active_function_fragment",
+      "support": "GUP return stored in int, unlock and <=0 check",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-059",
+      "key": "get_page_return",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "get_arg_page",
+      "first_line": 87,
+      "last_line": 87,
+      "kind": "active_function_fragment",
+      "support": "return page not proof of page validity",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-060",
+      "key": "count_user",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "count",
+      "first_line": 203,
+      "last_line": 207,
+      "kind": "active_function_fragment",
+      "support": "non-null outer gate and pointer read",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-061",
+      "key": "count_user_error",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "count",
+      "first_line": 208,
+      "last_line": 212,
+      "kind": "active_function_fragment",
+      "support": "NULL terminates, ERR gives EFAULT",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-062",
+      "key": "count_user_limit",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "count",
+      "first_line": 214,
+      "last_line": 216,
+      "kind": "active_function_fragment",
+      "support": "max check and count increment",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-063",
+      "key": "count_user_ret",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "count",
+      "first_line": 223,
+      "last_line": 223,
+      "kind": "active_function_fragment",
+      "support": "return i",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-064",
+      "key": "count_kernel_null",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "count_strings_kernel",
+      "first_line": 230,
+      "last_line": 231,
+      "kind": "active_function_fragment",
+      "support": "null vector returns0",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-065",
+      "key": "count_kernel_loop",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "count_strings_kernel",
+      "first_line": 233,
+      "last_line": 235,
+      "kind": "active_function_fragment",
+      "support": "test slot before max bound",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-066",
+      "key": "count_kernel_ret",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "count_strings_kernel",
+      "first_line": 240,
+      "last_line": 240,
+      "kind": "active_function_fragment",
+      "support": "return i",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-067",
+      "key": "user_alloc",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1316,
+      "last_line": 1320,
+      "kind": "active_function_fragment",
+      "support": "alloc error gate; not production proof",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-068",
+      "key": "user_count_warn",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1322,
+      "last_line": 1325,
+      "kind": "active_function_fragment",
+      "support": "argv count, zero warning",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-069",
+      "key": "user_argc",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1326,
+      "last_line": 1328,
+      "kind": "active_function_fragment",
+      "support": "negative gate precedes argc assignment",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-070",
+      "key": "user_envc",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1330,
+      "last_line": 1333,
+      "kind": "active_function_fragment",
+      "support": "env count and assignment after gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-071",
+      "key": "user_limits",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1335,
+      "last_line": 1337,
+      "kind": "active_function_fragment",
+      "support": "limit call and failure goto",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-072",
+      "key": "user_filename",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1339,
+      "last_line": 1342,
+      "kind": "active_function_fragment",
+      "support": "filename copy normal condition then exec=p",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-073",
+      "key": "user_envcopy",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1344,
+      "last_line": 1346,
+      "kind": "active_function_fragment",
+      "support": "env reverse helper and negative goto",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-074",
+      "key": "user_argcopy",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1348,
+      "last_line": 1350,
+      "kind": "active_function_fragment",
+      "support": "argv helper and failure goto",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-075",
+      "key": "user_synth",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1358,
+      "last_line": 1362,
+      "kind": "active_function_fragment",
+      "support": "zero argc branch, empty literal, negative gate and argc=1",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-076",
+      "key": "user_exec",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1365,
+      "last_line": 1367,
+      "kind": "active_function_fragment",
+      "support": "bprm_execve then cleanup label free_bprm",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-077",
+      "key": "user_cleanup",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "do_execveat_common",
+      "first_line": 1369,
+      "last_line": 1372,
+      "kind": "active_function_fragment",
+      "support": "putname and return retval conditional cleanup",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-078",
+      "key": "kernel_alloc",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1393,
+      "last_line": 1397,
+      "kind": "active_function_fragment",
+      "support": "alloc gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-079",
+      "key": "kernel_zero_reject",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1399,
+      "last_line": 1403,
+      "kind": "active_function_fragment",
+      "support": "zero result -> -EINVAL then goto before argc assignment",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-080",
+      "key": "kernel_argc",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1404,
+      "last_line": 1404,
+      "kind": "active_function_fragment",
+      "support": "assignment only if gate passed",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-081",
+      "key": "kernel_envc",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1406,
+      "last_line": 1409,
+      "kind": "active_function_fragment",
+      "support": "env count and gate assignment",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-082",
+      "key": "kernel_limits",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1411,
+      "last_line": 1413,
+      "kind": "active_function_fragment",
+      "support": "limits call and negative gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-083",
+      "key": "kernel_filename",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1415,
+      "last_line": 1418,
+      "kind": "active_function_fragment",
+      "support": "filename copy before exec assignment",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-084",
+      "key": "kernel_envcopy",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1420,
+      "last_line": 1422,
+      "kind": "active_function_fragment",
+      "support": "env kernel array helper and negative gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-085",
+      "key": "kernel_argcopy",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1424,
+      "last_line": 1426,
+      "kind": "active_function_fragment",
+      "support": "argv kernel array helper and negative gate",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-086",
+      "key": "kernel_exec",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1428,
+      "last_line": 1430,
+      "kind": "active_function_fragment",
+      "support": "exec call then free_bprm label",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-087",
+      "key": "kernel_cleanup",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "kernel_execve",
+      "first_line": 1432,
+      "last_line": 1435,
+      "kind": "active_function_fragment",
+      "support": "putname and return retval conditional cleanup",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-088",
+      "key": "free_bprm_tail",
+      "path": "mykernel/sched/forkexec/exec.c",
+      "symbol": "free_bprm",
+      "first_line": 1091,
+      "last_line": 1095,
+      "kind": "active_function_fragment",
+      "support": "kfree bprm; no later field read justified",
+      "source_blob": "0861ebae6fc2"
+    },
+    {
+      "id": "E143-089",
+      "key": "build_arch",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "ARCH",
+      "first_line": 7,
+      "last_line": 9,
+      "kind": "build_declaration",
+      "support": "default x86_64",
+      "source_blob": "6019436417ad"
+    },
+    {
+      "id": "E143-090",
+      "key": "build_c",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "first_line": 38,
+      "last_line": 42,
+      "kind": "build_declaration",
+      "support": "C flags -m64 etc",
+      "source_blob": "6019436417ad"
+    },
+    {
+      "id": "E143-091",
+      "key": "build_config",
+      "path": "mykernel/scripts/options_flags.cmake",
+      "symbol": "CMAKE_C_FLAGS",
+      "first_line": 58,
+      "last_line": 62,
+      "kind": "build_declaration",
+      "support": "explicit CONFIG_64BIT not all actual preprocessing",
+      "source_blob": "6019436417ad"
+    }
+  ],
+  "not_run": [
+    "完整本地P9",
+    "预处理",
+    "编译链接",
+    "MyOS2程序／脚本",
+    "Graphviz",
+    "QEMU",
+    "实机",
+    "真实操作"
+  ],
+  "owner_decisions_requested_now": []
+}

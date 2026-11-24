@@ -1,0 +1,124 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-EXEC-ARGUMENT-LIMITS-143",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-22",
+  "conversation_display_name": "MYOS2-A-C10a 代码分析执行",
+  "produced_by": "GPT-6.2（系统模型族；界面/实际后台型号未独立核实）",
+  "model_per_owner": "次一档GPT-6.2 Sol，Extra／高推理强度",
+  "actual_effort": "UNATTESTED",
+  "date": "2026-11-24",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "AUTHOR_CONTENT_PREPARED_PENDING_PUBLICATION_AND_G04",
+  "mainline_acceptance": "PENDING",
+  "full_local_P9": "NOT_RUN",
+  "inputs_read": [
+    {
+      "path": "mykernel/scripts/options_flags.cmake",
+      "ref": "a039d9803ade",
+      "blob": "6019436417ad"
+    },
+    {
+      "path": "mykernel/sched/forkexec/exec.c",
+      "ref": "a039d9803ade",
+      "blob": "0861ebae6fc2"
+    },
+    {
+      "path": "mykernel/lib/string/strnlen_user.c",
+      "ref": "a039d9803ade",
+      "blob": "dae5c6c14aa4"
+    },
+    {
+      "path": "mykernel/lib/string/string.c",
+      "ref": "a039d9803ade",
+      "blob": "cbb2752bc8b2"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/binfmts.h",
+      "ref": "a039d9803ade",
+      "blob": "a60f4e7c53b0"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/resource.h",
+      "ref": "a039d9803ade",
+      "blob": "6a683439847c"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/limits.h",
+      "ref": "a039d9803ade",
+      "blob": "bddfd09e4be2"
+    },
+    {
+      "path": "mykernel/include/linux/fs/binfmts.h",
+      "ref": "a039d9803ade",
+      "blob": "002c2aec4aa8"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/minmax.h",
+      "ref": "a039d9803ade",
+      "blob": "d22095ba1acc"
+    },
+    {
+      "path": "mykernel/include/linux/kernel/types.h",
+      "ref": "a039d9803ade",
+      "blob": "ef531baa8317"
+    },
+    {
+      "path": "mykernel/mm/misc/mm_misc_const.h",
+      "ref": "a039d9803ade",
+      "blob": "ec983b79166f"
+    },
+    {
+      "path": "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+      "ref": "a039d9803ade",
+      "blob": "b10e280f26f0"
+    },
+    {
+      "path": "mykernel/include/uapi/asm-generic/posix_types.h",
+      "ref": "a039d9803ade",
+      "blob": "0246766d9a75"
+    },
+    {
+      "path": "mykernel/include/uapi/linux/const.h",
+      "ref": "a039d9803ade",
+      "blob": "d8bcaf7e3151"
+    }
+  ],
+  "open_questions": [
+    "实际预处理、C对象/指针有效性、GUP返回/页、真实用户访问与运行仍未证"
+  ],
+  "record_type": "incremental_deferred_findings",
+  "D00": [],
+  "new_confirmed_kernel_defects": [],
+  "new_findings": [
+    {
+      "qualified_id": "CORE-USER-EXEC-ARGUMENT-LIMITS-143::INT_SUM_BOUNDARY",
+      "kind": "CONDITIONAL_SOURCE_ARITHMETIC_EVIDENCE_GAP",
+      "status": "needs_evidence",
+      "source": "bprm_stack_limits ptr_size expression; int argc/envc; active max; 199 A_INT_SUM",
+      "known": "max(argc,1)+envc is signed int before multiplication; supplied extreme pair not representable",
+      "unknown": "actual production reachability and toolchain behavior; no derived normal errno",
+      "effect": "not an observed runtime bug; no new production defect assertion",
+      "resume": "authorized bounded call/reachability/compiler analysis if needed"
+    },
+    {
+      "qualified_id": "CORE-USER-EXEC-ARGUMENT-LIMITS-143::PREDEBIT_REJECT",
+      "kind": "CONDITIONAL_LOCAL_STATE_OBSERVATION",
+      "status": "recorded_no_runtime_claim",
+      "source": "copy_strings / copy_string_kernel and callers; C_OVER,C29,C19",
+      "known": "length error before p debit, space error after debit; no local rollback in read fragment",
+      "unknown": "real cleanup effects, actual page writes and final external return",
+      "effect": "not claim of leaked bytes or rollback failure",
+      "resume": "only authorized cleanup/runtime evidence"
+    }
+  ],
+  "inherited_not_reopened": [
+    "23/24 GUP return/page/ref gaps",
+    "70/71 cleanup/object/return gates",
+    "141/142 C object/stack/vma/runtime boundaries"
+  ],
+  "owner_decisions_requested_now": []
+}
