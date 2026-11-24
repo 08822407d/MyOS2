@@ -1,0 +1,180 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "batch146_deferred_and_prior_disposition",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-23",
+  "produced_by": "GPT-6.2",
+  "model_per_owner": "GPT-6.2 Sol Extra/high requested; backend/effort UNATTESTED",
+  "date": "2026-11-24",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "AUTHOR_DISPOSITION_SUBMITTED_PENDING_MAINLINE",
+  "open_questions": [
+    "real bitmap payload and linker selection unknown"
+  ],
+  "prior_dispositions": [
+    {
+      "qualified_id": "CORE-USER-MALLOC-SLOT-145::R145-01",
+      "kind": "report_correction",
+      "previous_status": "OPEN_FOR_BATCH_146",
+      "status": "disposition_submitted",
+      "mainline_closure": "PENDING",
+      "source_ref": {
+        "ref": "f9de786c34d4",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-MALLOC-SLOT-145-review.md",
+        "selector": "R145-01"
+      },
+      "replacement": {
+        "path": "facts-and-boundaries.yaml",
+        "selector": "D00.R145-01"
+      },
+      "old_artifacts_frozen": true
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-SLOT-145::R145-02",
+      "kind": "report_correction",
+      "previous_status": "OPEN_FOR_BATCH_146",
+      "status": "disposition_submitted",
+      "mainline_closure": "PENDING",
+      "source_ref": {
+        "ref": "f9de786c34d4",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-MALLOC-SLOT-145-review.md",
+        "selector": "R145-02"
+      },
+      "replacement": {
+        "path": "facts-and-boundaries.yaml",
+        "selector": "D00.R145-02"
+      },
+      "old_artifacts_frozen": true
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-SLOT-145::R145-03",
+      "kind": "report_correction",
+      "previous_status": "OPEN_FOR_BATCH_146",
+      "status": "disposition_submitted",
+      "mainline_closure": "PENDING",
+      "source_ref": {
+        "ref": "f9de786c34d4",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-MALLOC-SLOT-145-review.md",
+        "selector": "R145-03"
+      },
+      "replacement": {
+        "path": "facts-and-boundaries.yaml",
+        "selector": "D00.R145-03"
+      },
+      "old_artifacts_frozen": true
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-SLOT-145::MS145-N01",
+      "kind": "consumption_scope",
+      "status": "CONDITIONAL_OBSERVATION_UNCHANGED",
+      "source_ref": {
+        "ref": "b094af6bb8f3",
+        "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-slot-145/deferred-findings.yaml",
+        "selector": "MS145-N01"
+      },
+      "new_finding": false,
+      "runtime_defect_proven": false
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-SLOT-145::MS145-N02",
+      "kind": "consumption_scope",
+      "status": "LIMITED_INCREMENT_POST_SLOT_ORDER_AND_PREMISES",
+      "source_ref": {
+        "ref": "b094af6bb8f3",
+        "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-slot-145/deferred-findings.yaml",
+        "selector": "MS145-N02"
+      },
+      "replacement_scope": "refill local order/premises increment only; initial recursion and dynamic payload remain inherited unknown",
+      "new_finding": false
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-SLOT-145::MS145-N03",
+      "kind": "consumption_reclassification",
+      "status": "INHERITED_UNCHANGED",
+      "source_ref": {
+        "ref": "b094af6bb8f3",
+        "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-slot-145/deferred-findings.yaml",
+        "selector": "MS145-N03"
+      },
+      "inherited_from": [
+        {
+          "ref": "af3fde16ba9b",
+          "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-brk-allocator-144/brk-allocator.md",
+          "selector": "actual_linked_to_sh"
+        },
+        {
+          "ref": "7f68407aec9f",
+          "path": "agent-workspace/lead/MYOS2-LEAD-002/201-user-malloc-slot-contract.md",
+          "selector": "增量、共同前提与边界"
+        }
+      ],
+      "new_finding": false,
+      "actual_linked_to_sh": "UNKNOWN"
+    }
+  ],
+  "items": [
+    {
+      "qualified_id": "CORE-USER-MALLOC-COLORMAP-146::CM146-O01",
+      "kind": "source_scope_observation",
+      "status": "recorded_no_runtime_claim",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "init_uslab",
+        "selector": "cm_size declaration at physical line196, E146-050"
+      },
+      "finding": "complete init_uslab physical174–221 contains one exact cm_size identifier occurrence (declaration assignment), no later read in that definition",
+      "premises": [
+        "complete fixed function body read"
+      ],
+      "impact": "raw integer should not be interpreted as actual colormap word or byte allocation",
+      "counterevidence_or_limiters": [
+        "other array declarations and separate dynamic allocation expression exist"
+      ],
+      "unknowns": [
+        "developer intent of local cm_size",
+        "compiled treatment"
+      ],
+      "static_analysis_blocker": false,
+      "real_runtime_claim": false,
+      "resume_condition": "only separate authorized source intent or build investigation"
+    },
+    {
+      "qualified_id": "CORE-USER-MALLOC-COLORMAP-146::CM146-O02",
+      "kind": "conditional_payload_initialization_gap",
+      "status": "needs_evidence",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "uslab_alloc",
+        "selector": "E146-055–057 / C_DYNAMIC"
+      },
+      "finding": "callee binds colormap pointer and initializes free/total=N but no direct explicit write of bitmap payload in its full body; caller publish fragment likewise no direct payload clear",
+      "premises": [
+        "two malloc calls and upage_alloc return valid sufficient distinct objects",
+        "normal legal list/page operations"
+      ],
+      "impact": "metadata count N cannot establish all bitmap bits zero",
+      "counterevidence_or_limiters": [
+        "static array declaration and capacity model do not describe dynamic payload",
+        "nested callee effects UNKNOWN",
+        "no real data written or read"
+      ],
+      "unknowns": [
+        "initial payload",
+        "callee effects",
+        "real reachability"
+      ],
+      "static_analysis_blocker": false,
+      "real_runtime_claim": false,
+      "resume_condition": "separately authorized payload provenance/initialization examination"
+    }
+  ],
+  "inherited_bounds": [
+    "actual_linked_to_sh UNKNOWN unchanged from 144/201",
+    "complete initialization/refill recursion UNKNOWN; no new full-chain investigation"
+  ],
+  "owner_decisions_requested_now": []
+}
