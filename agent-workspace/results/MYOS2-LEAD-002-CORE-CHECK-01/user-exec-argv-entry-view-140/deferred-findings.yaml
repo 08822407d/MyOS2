@@ -1,0 +1,127 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "followup_id": "CORE-USER-EXEC-ARGV-ENTRY-VIEW-140",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-21",
+  "record_type": "incremental_deferred_findings",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "phase": 2,
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "corrections": [
+    {
+      "id": "R138-03",
+      "origin_batch": 138,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_frozen": true,
+      "closing_authority": "original C09 Pro independent review"
+    },
+    {
+      "id": "R139-01",
+      "origin_batch": 139,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_frozen": true,
+      "closing_authority": "original C09 Pro independent review"
+    },
+    {
+      "id": "R139-02",
+      "origin_batch": 139,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_frozen": true,
+      "closing_authority": "original C09 Pro independent review"
+    },
+    {
+      "id": "R139-03",
+      "origin_batch": 139,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_frozen": true,
+      "closing_authority": "original C09 Pro independent review"
+    },
+    {
+      "id": "R139-04",
+      "origin_batch": 139,
+      "original_author": "MYOS2-LEAD-002-CHAT-EXEC-21",
+      "status": "CORRECTION_SUBMITTED_PENDING_MAINLINE_REVIEW",
+      "original_frozen": true,
+      "closing_authority": "original C09 Pro independent review"
+    }
+  ],
+  "historical_status": {
+    "R138_01_02_04": "CLOSED_DOCUMENTATION_ONLY_BY_C09",
+    "R138_03": "PARTIAL_OPEN_BEFORE_140",
+    "combined_136": "PASS_PENDING_LOCAL",
+    "combined_137": "PASS_PENDING_LOCAL",
+    "combined_138": "RETURN_BEFORE_140",
+    "original_139": "RETURN"
+  },
+  "deferred": [
+    {
+      "id": "R140-PRODUCTION-01",
+      "kind": "LOADER_PRODUCTION_BOUNDARY",
+      "known": "create_elf_tables vma local declaration and earlier gate; batch25 found lack of active producer at commented find_extend_vma_locked site",
+      "unknown": "complete valid ELF production path, fault behavior, actual page/table writes",
+      "disposition": "RETAIN_25_GAP",
+      "resume": "separate source repair or expressly authorized runtime audit; independent post-gate model is not proof of reachability"
+    },
+    {
+      "id": "R140-ENTRY-02",
+      "kind": "ENTRY_ABI_BOUNDARY",
+      "known": "S is a given model table base, pointer slot width eight, U=T-Δ",
+      "unknown": "actual chosen Δ, absolute S/U, registers at entry, actual stack and initial instruction",
+      "disposition": "DEFERRED",
+      "resume": "carry 66/69 entry/bridge constraints; do not substitute independent C formals for architectural entry"
+    },
+    {
+      "id": "R140-CRT-03",
+      "kind": "LINK_SELECTION_BOUNDARY",
+      "known": "fixed top CMake musl-gcc and myinit/myshell targets; separate mylib/csu mycrt STATIC declaration and C/ASM sources",
+      "unknown": "actual configured toolchain, linking of candidate crt1_c.c, resulting ELF entry and first main",
+      "disposition": "DEFERRED",
+      "resume": "authorized link provenance or build evidence, not executed in phase2"
+    },
+    {
+      "id": "R140-STREAM-04",
+      "kind": "CALL_RESULT_BOUNDARY",
+      "known": "given normal fopen results F0,NULL,F2; candidate assigns stdin/stdout/stderr in source order, main returns7 by premise",
+      "unknown": "real device/file opens, effect of NULL stdout on main, exit and process termination",
+      "disposition": "DEFERRED",
+      "resume": "separate actual file/runtime test permission required"
+    },
+    {
+      "id": "R140-PARSER-05",
+      "kind": "PARSER_SCOPE_BOUNDARY",
+      "known": "shell has distinct per-line __argc/__argv outputs from parse_command and run_cmd conditional dispatch",
+      "unknown": "arbitrary input grammar, overflow/invalid memory/allocation failure, actual command execution",
+      "disposition": "DEFERRED",
+      "resume": "dedicated parser review; no parsing or running in current batch"
+    },
+    {
+      "id": "R140-AUXV-06",
+      "kind": "STACK_SCOPE_BOUNDARY",
+      "known": "current sp after argv/envp terminators identifies start of next auxv copy; AT_EXECFN consumes bprm.exec",
+      "unknown": "complete auxiliary vector and all downstream loader/CRT consumption",
+      "disposition": "DEFERRED",
+      "resume": "separate bounded auxv contract; no implied real user stack"
+    },
+    {
+      "id": "R140-RUNTIME-07",
+      "kind": "RUNTIME_GAP",
+      "known": "given init child reaches execve and seven successful independent copies; 93 bytes in modeled layout",
+      "unknown": "actual fork result, exec completion, selected shell task, scheduling, real userland output",
+      "disposition": "DEFERRED",
+      "resume": "keep old 131/25/69 limitations; owner separate runtime authorization only"
+    }
+  ],
+  "full_local_P9": "NOT_RUN",
+  "preprocessing": "NOT_RUN",
+  "compile_link": "NOT_RUN",
+  "repository_program_script": "NOT_RUN",
+  "Graphviz": "NOT_RUN",
+  "QEMU_hardware_real_file_process_PID_clock_sched": "NOT_RUN",
+  "owner_decisions_requested_now": [],
+  "open_questions": []
+}
