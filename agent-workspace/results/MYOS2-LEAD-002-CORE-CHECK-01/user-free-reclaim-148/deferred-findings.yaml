@@ -1,0 +1,61 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "batch148_deferred_observations",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-23",
+  "produced_by": "GPT-6.2",
+  "model_per_owner": "GPT-6.2 Sol Extra/high requested",
+  "date": "2026-11-25",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "RECORDED_PENDING_MAINLINE",
+  "items": [
+    {
+      "qualified_id": "CORE-USER-FREE-RECLAIM-148::FR148-O01",
+      "kind": "conditional_base_selection",
+      "status": "recorded_no_runtime_claim",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "free",
+        "selector": "E148-033 / A3_BASE_TAIL"
+      },
+      "observation": "count>2 gate selects tail without normal_base_slab_p comparison; given base at tail passes B to uslab_free",
+      "limit": "no actual base release, fault or reachability proof"
+    },
+    {
+      "qualified_id": "CORE-USER-FREE-RECLAIM-148::FR148-O02",
+      "kind": "conditional_counter_identity",
+      "status": "recorded_no_runtime_claim",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "free / uslab_free",
+        "selector": "E148-033 / E148-032 / C4"
+      },
+      "observation": "two decrements and one unlink give count1 vs length2 only with same cache, both reached, no other net effects; caller predecrement also creates local mismatch",
+      "limit": "opaque recursive effects and current owner may differ; no complete path proof"
+    },
+    {
+      "qualified_id": "CORE-USER-FREE-RECLAIM-148::FR148-O03",
+      "kind": "conditional_postcall_object_access_and_total",
+      "status": "needs_evidence",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "free",
+        "selector": "E148-034 / C2,C3"
+      },
+      "observation": "discarded total field expression does not decrement; CF compound assignment needs postcall T.total access, missing in C2, supplied independently in C3",
+      "limit": "not evidence of actual lifetime fault, actual execution, or overall consistency"
+    }
+  ],
+  "inherited_only": [
+    "actual_linked_to_sh UNKNOWN",
+    "dynamic bitmap payload UNKNOWN",
+    "N1547 independent evidence UNKNOWN",
+    "complete recursion and real mapping/runtime unknown"
+  ],
+  "owner_decisions_requested_now": []
+}
