@@ -1,0 +1,56 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "record_type": "batch147_deferred_observations",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-23",
+  "produced_by": "GPT-6.2",
+  "model_per_owner": "GPT-6.2 Sol Extra/high requested",
+  "date": "2026-11-25",
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "read_channel": "connector",
+  "status": "RECORDED_PENDING_MAINLINE",
+  "items": [
+    {
+      "qualified_id": "CORE-USER-FREE-SLOT-147::FS147-O01",
+      "kind": "conditional_ISO_shift_boundary",
+      "status": "needs_evidence",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/util/bitmap.c",
+        "symbol": "bm_get_assigned_bit",
+        "selector": "E147-048 / B_31,B_32,B_63,B_95,B_96,B_127"
+      },
+      "observation": "given int32 ISO model stops at t=31 due to result not representable and at t>=32 due to count width; target bitmap_t conversion is later; clear independently has ULL64",
+      "premises": [
+        "204 GIVEN historical ISO model; specified N1547 independent source unavailable",
+        "two valid words and given widths"
+      ],
+      "limit": "not actual GCC behavior, machine result, runtime defect, or C free reachability proof; actual compiler and flags UNKNOWN",
+      "resume_condition": "authorized actual standard/compiler or high-bit path study"
+    },
+    {
+      "qualified_id": "CORE-USER-FREE-SLOT-147::FS147-O02",
+      "kind": "conditional_list_classification_observation",
+      "status": "recorded_no_runtime_claim",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "free",
+        "selector": "E147-040 / E147-041 / E147-042 / C_LAST"
+      },
+      "observation": "given valid low-bit C_LAST, S.free increments 127->128, CF/CU 255/1->256/0, both updated-free conditions 1 and 0 false, S remains used; object conservation does not establish list classification",
+      "premises": [
+        "given valid C_LAST, original free<N, no arithmetic wrap, normal helpers"
+      ],
+      "limit": "no proof of real runtime reachability, complete allocator safety or recovery recursion; no repair authorization",
+      "resume_condition": "separate authorized free classification or caller consumption study"
+    }
+  ],
+  "inherited_only": [
+    "actual_linked_to_sh UNKNOWN",
+    "dynamic bitmap payload UNKNOWN",
+    "initialization/recursive recovery UNKNOWN"
+  ],
+  "owner_decisions_requested_now": []
+}
