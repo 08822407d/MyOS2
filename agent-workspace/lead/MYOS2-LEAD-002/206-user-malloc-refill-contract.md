@@ -3,14 +3,14 @@ task_id: MYOS2-LEAD-002-CORE-CHECK-01
 track_id: MYOS2-LEAD-002
 conversation_display_name: "MYOS2-A-C10 内核分析主线续建"
 produced_by: "GPT-6 Astra Pro（当前系统标识；后台及effort未独立认证）"
-model_per_owner: "Owner明确要求Pro独立验收及同轮后继"
+model_per_owner: "本轮为事务性恢复，无需Pro；实际未切换模型"
 date: 2026-11-25
 date_timezone: Asia/Shanghai
 phase: 2
 base_snapshot: "time（分支名）"
 source_pin_short12: a039d9803ade
 direct_master_short12: e8e60cd19540
-lead_before_publication_short12: aa4922a76378
+lead_before_publication_short12: 2a3fca43a977
 execution_pin_short12: d2c99a1f285b
 read_channel: connector
 startup_selfcheck_quote: "2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。"
@@ -20,9 +20,9 @@ full_local_P9: NOT_RUN
 owner_decisions_requested_now: []
 record_type: phase2_executor_contract
 followup_id: CORE-USER-MALLOC-REFILL-149
-status: PUBLISHED_PENDING_EXECUTOR_START
-executor_display_name: "MYOS2-A-C10b 代码分析执行"
-executor_identity: MYOS2-LEAD-002-CHAT-EXEC-23
+status: REASSIGNED_PENDING_NEW_RECEIVER_START
+executor_display_name: "MYOS2-A-C10c 代码分析执行"
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-24
 executor_model_per_owner: "GPT-6.2 Sol；Owner界面可用Extra／高推理强度"
 actual_149_receiver_state: NOT_OBSERVED
 canonical_execution_branch: claude/dazzling-cori-q0dnyt
@@ -32,40 +32,41 @@ allowed_files: [MANIFEST.md, malloc-refill.md, facts-and-boundaries.yaml, malloc
 D00: []
 prior148: PASS_PENDING_LOCAL
 N1547_author_independent_evidence: UNKNOWN_INHERITED
-mainline_design_count: {conversation: C10, first_batch: 141, before_release: 8, after_successful_formal_release: 9, latest_batch: 149, threshold_12: NOT_REACHED, threshold_15: NOT_REACHED}
-self_check_scope: "本合同无新正式源码窗；A4/B3/C3为新任务给定，执行者独立回源"
+mainline_design_count: {conversation: C10, first_batch: 141, latest_batch: 149, distinct_batches: 9, amendment_increments_count: false, threshold_12: NOT_REACHED, threshold_15: NOT_REACHED}
+self_check_scope: "本次恢复不新增正式源码窗；原206技术与六件/验收段逐字保持，无新技术独审"
+recovery_package_id: MYOS2-A-C10b-TO-C10c-149-20261125
+old_executor_identity: MYOS2-LEAD-002-CHAT-EXEC-23
+old_executor_availability: OWNER_REPORTED_CONTEXT_EXHAUSTED
+old_executor_unpublished_work: UNKNOWN
+original_contract_pin_short12: 2a3fca43a977
+business_execution_source: "Owner本轮恢复请求、00工作令§12第16条与本修订206"
 inputs_read:
-  - "agent-workspace/lead/MYOS2-LEAD-002/205-user-free-reclaim-contract.md"
-  - "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-FREE-RECLAIM-148-review.md"
-  - "agent-workspace/lead/MYOS2-LEAD-002/200-user-brk-allocator-contract.md"
-  - "agent-workspace/lead/MYOS2-LEAD-002/201-user-malloc-slot-contract.md"
-  - "agent-workspace/lead/MYOS2-LEAD-002/203-user-malloc-colormap-contract.md"
-  - "myinitramfs/mylib/myglibc/malloc/malloc.c"
-  - "myinitramfs/mylib/myglibc/malloc/_malloc.h"
-  - "myinitramfs/mylib/include/utils.h"
-  - "myinitramfs/mylib/util/list.c"
-  - "myinitramfs/mylib/util/bitmap.c"
+  - "Owner本轮消息、原206、207恢复包/启动词、工作令及当前远端；旧技术来源沿原206，不是本轮重审"
+  - "148固定/活动/API Blob六件、148作者与原149发令、本轮四refs/PR/完整评论及开放PR分页"
+  - "Meta-Agent及Mnemosyne当前refs/入口、命名与接收范围；现行项目规范按79同一主线复用"
 open_questions: ["完整补充递归、返回值对应真实对象、布局/编译/链接及运行未证"]
 ---
 
 # 206号合同 · 第149批 · malloc补充预留、递归申请依赖与对象门
 
-**继续现有MYOS2-A-C10b／EXEC-23，使用次一档GPT-6.2 Sol及Owner可用Extra／高推理强度。** CORE-USER-MALLOC-REFILL-149包含A4申请依赖、B3预留计数下的首次嵌套申请、C3独立调用响应，共三个相关专题、十个有界记录及两项结构布局辅助表，一套六件。D00为空；[148独审](reviews/CORE-USER-FREE-RECLAIM-148-review.md)为PASS_PENDING_LOCAL。
+**本合同改由新对话「MYOS2-A-C10c 代码分析执行」／EXEC-24独立接收，使用次一档GPT-6.2 Sol及Owner可用Extra／高推理强度。** Owner报告旧C10b上下文耗尽、第149批未能成功执行；本轮实际远端仍停在148提交d2c99a1f285b，未见149结果目录或正式作者回执。旧方未公开工作UNKNOWN，不追签旧方“已读”或中间成果。
 
-Owner转发真实正式发令即授权连续完成G00、分析、自检、六件提交、唯一作者评论、实际G04及停写。依[198号](198-repository-first-compact-relay.md)，详细内容留GitHub，最终聊天仅一个短复制块、一个正式作者URL。无需重启202交接或另等开工。
+任务仍为CORE-USER-MALLOC-REFILL-149，A4申请依赖、B3预留计数下首次嵌套申请、C3独立调用响应，十记录与两项结构布局辅助表，一套六件。D00为空；[148独审](reviews/CORE-USER-FREE-RECLAIM-148-review.md)保持PASS_PENDING_LOCAL。本次只改派和补齐新对话启动，原固定206技术及六件/验收段逐字保留，不重新设计或计数。
 
-## G00 · 当前断点与规范
+Owner转发本次真实改派入口即授权新方按[207完整启动词](207-executor-continuation/01-MYOS2-A-C10c-receiver-startup-prompt.md)及[恢复包](207-executor-continuation/00-C10b-to-C10c-recovery-package.md)连续完成独立接收、规范刷新、fresh G00、149分析、自检、六件提交、唯一作者评论、实际G04及停写。不要求不可用旧C10b补签或另等开工。完整材料留GitHub，双向聊天依[198号](198-repository-first-compact-relay.md)各一个短复制块和真实入口。
 
-1. 按真实评论ID双读本轮148独审／149发令，取得同提交206、148独审与[检查点](checkpoints/2026-11-25-reclaim148-reviewed-refill149.md)。148作者[7162962611](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7162962611)双读；固定d2c99a1f285b六件及本轮裁定合读。作者中断原因UNKNOWN，不追认私有时序。
-2. 依[202§3](https://github.com/08822407d/MyOS2/blob/7f68407aec9f/agent-workspace/lead/MYOS2-LEAD-002/202-executor-continuation/00-C10a-to-C10b-recovery-package.md)十四份项目规则和79，仅复用本C10b自己完整读过且未变的材料，遗漏或截断先补读；MANIFEST分列实际复用和本轮新读。保留README、公约、协议v2、工作令及18/24/28/63/79/110/124/193/194/198。
-3. 刷新Meta-Agent与Mnemosyne当前refs及入口。主线本轮MA master=b234c6c91a2e、建设分支=5fec75f1c996；相对50806a75e050的一提交仅GDAL启动交接，未改变本项目适用规范。沿119597a75517的48采用决定、47有效v1.4-r10.266及45归档同版共用1.1-r9.260；Mnemosyne=e581eb9df6c4。按202§4只作任务局部接收/命名，不导入跨项目业务或写权。真实模型标识、后台/effort不可核范围和current_task_preserved分别记录。
-4. 直接四refs：lead为本次发布提交，exec预期d2c99a1f285b、time=a039d9803ade、master=e8e60cd19540。PR16 Open/Ready、PR17原题Open/Draft，原head/base及未合并保持；不得以PR.base_sha替代直接master。
-5. PR17顶层评论无since完整分页至空；本轮检查点所列32枚既有标记加本次148独审／149发布两枚，共34枚各唯一；旧EXEC-22的145作者0。开放PR分页至空仅16/17。148固定/活动/API Blob全文、LF及字节相合，单父12b3784893e5，一提交六新增；前序冻结成果及作者评论保持。
-6. 首次写前核149目录与作者标记不存在，获取真实exec expected_sha。自身相符部分发布按63续缺项；未知并行变化保全定位，不覆盖、强推或重复提交/发评。未发生真实阻断就连续推进，普通问题先入deferred，不向Owner逐项问决策。
+## G00 · 新对话独立接收后执行
 
-148六件长hex扫描为零；原作者评论两条URL使用全长提交串的格式偏差，主线已在独审§4记录并提供短12消费入口。旧评论冻结，不重发。**本批所有新文件及正式作者评论的提交/目录/blob链接都使用连接器原样复制的短12码，含链接目标；不是给URL新增P1豁免。**
+1. 从Owner给出的真实改派评论锁定本次固定提交，按真实ID双读；完整读取同提交207恢复包/启动词、修订206、工作令§12第16条与[恢复检查点](checkpoints/2026-11-25-c10b-to-c10c-recovery-refill149.md)。本次仅新增149 EXECUTOR_REASSIGNED及C10b_TO_C10c OWNER_DIRECTED_RECOVERY_PREPARED，不重发原TASK_RELEASE或148独审。
+2. 新C10c独立全文读取207§3列出的十四份项目规则；工作令取本次固定版，其余十三份按207固定清单。本次不能按79复用旧C10b或C10主线的“已读”。按207§4刷新Meta-Agent实际refs/有效采用决定，独立读47有效全文与同版十五条共用全文；Mnemosyne接收格式、README、批准规范及命名另读。遗漏/截断先补齐，不能以摘要替代。
+3. 在149 MANIFEST分别写execution_handoff_receive与guidance_refresh，真实记包ID/固定来源/非执行源性质、新身份、实际接收时间、可核模型/UNATTESTED后台与effort、到达后胜任判断、实读与缺失路径、任务/写区/边界及下一安全步骤；task_local_only=true、current_task_preserved=true。业务授权来自Owner/工作令16/修订206，不来自外项目规范。不得预签已接收或刷新完成，不增第七件或单发PR接收评论。
+4. 当前主线观察MA master=b234c6c91a2e、建设分支=5fec75f1c996；有效v1.4-r10.266及共用1.1-r9.260，最新增量仅GDAL启动交接，无新适用采用。Mnemosyne=e581eb9df6c4。新方须fresh刷新，按207固定入口和真正适用的后续决定辨识；不导入跨仓业务、写权或额外开工确认。
+5. 直接四refs：lead为本次改派提交，不再以原2a3fca43a977当新head；exec基点d2c99a1f285b，time=a039d9803ade，master=e8e60cd19540。PR16 Open/Ready、PR17原题Open/Draft，原head/base及未合并保持，不能用PR.base_sha代直接master。开放PR与PR17顶层评论无since完整分页到空；207/本次检查点列明的34旧标记及本次两改派标记共36枚各唯一。
+6. 148作者[7162962611](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7162962611)、148独审/149首次发布[7164039453](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7164039453)按真实ID双读。148固定/活动/API Blob六件、LF/字节相合，单父12b3784893e5、一提交六新增；原148及历史裁定保持，不重核旧57窗或原模型。作者148中断原因UNKNOWN，不追认其私有时序。
+7. 首次写前核149目录、旧EXEC-23和新EXEC-24的149作者标记均不存在，获取真实exec expected_sha。准备时未见交付只限已查远端，不等于旧方没有私下工作。若出现旧方成果、其他身份或未知并行写，先保全定位，不覆盖、改署名或重复提交/评论；仅本新方自身已核相符的部分发布按63续缺项。旧EXEC-22的145作者仍0。
+8. 接收、规范刷新和fresh G00无真实阻断后，连续完成原技术范围至实际G04/停写；普通问题先入deferred，不向Owner逐项问开工或修复。C10设计数保持9，12/15未到达；本次改派不加数、不重置，不另开150。
 
-C10已正式设计141–148共8批；149成功正式发布后为9。12/15提醒未到；改派、恢复、验收、补正不重复计数。147合读§4及146合读§4、combined145通过和全部既有文档关闭状态继承，N1547独立外证UNKNOWN保持；本批无重新取证该PDF的前置门。
+148原作者评论全长提交链接的格式注记及短12消费入口沿148独审§4；原评论冻结不重发。所有新文件和正式作者评论的提交/目录/blob链接均用连接器原样复制的短12，含链接目标。147合读§4、146合读§4、combined145及更早有效裁定/文档关闭保持，N1547独立外证UNKNOWN不构成149重取前置门。下节至“六件、自检与验收”末尾与原2a3fca43a977的206逐字相同。
 
 ## 增量与共同给定
 
@@ -170,12 +171,12 @@ MANIFEST真实标准根含read_channel/base_snapshot/inputs_read/startup_selfche
 
 ## 提交、回执、实际G04与停写
 
-原exec以真实expected_sha、force=false单父快进，净差异恰六新增无其他改删。提交后核固定/活动/API Blob全文、LF/UTF-8字节、唯一父和净差异；发评前PR17无since分页至空查重。唯一作者标记：
+原exec以真实expected_sha、force=false单父快进，净差异恰六新增无其他改删。提交后核固定/活动/API Blob全文、LF/UTF-8字节、唯一父和净差异；发评前PR17无since分页至空查重。新方唯一作者标记：
 
-MYOS2-LEAD-002-CHAT-EXEC-23 / CORE-USER-MALLOC-REFILL-149 / FORMAL_DELIVERY
+MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-MALLOC-REFILL-149 / FORMAL_DELIVERY
 
-正式GitHub作者评论给固定合同/提交/六件、三专题及GIVEN/对象边界、真实自检、模型可核范围、未证与发表后G04待做状态；所有提交链接用短12。评论发表后按真实ID双读、PR17全分页至空核34历史/主线标记及本批作者唯一、旧EXEC-22的145作者0；开放PR至空仅16/17及原状态/head/base/PR17原题；四refs；六件固定/活动/API Blob及单父净差异；148冻结六件与原作者保持。实际完成才报READY_FOR_MAINLINE_REVIEW、mainline_acceptance=PENDING、G04=PASS及STOP_WRITING；不自行启动150。
+正式GitHub作者评论给固定修订合同/207、实际接收/刷新记录、提交/六件、三专题及GIVEN/对象边界、真实自检、模型可核范围、未证与发表后G04待做状态；所有提交链接用短12。评论发表后按真实ID双读、PR17全分页至空核36历史/主线标记及新EXEC-24本批作者唯一、旧EXEC-23本批作者0和旧EXEC-22的145作者0；开放PR至空仅16/17及原状态/head/base/PR17原题；直接四refs；六件固定/活动/API Blob及单父净差异；148冻结六件及原作者保持。实际完成才报READY_FOR_MAINLINE_REVIEW、mainline_acceptance=PENDING、G04=PASS及STOP_WRITING，不自行启动150。
 
 暂态故障按63先核远端效果后有限间隔重试，通常首次加三次；自身相符部分只续缺项，不用重复提交/评论补救未知结果，不因单次故障判无权限。未知并行变化不覆盖；无故障记not_needed。
 
-最终聊天按198只给一个通常3–6行原生复制块：149真实交付/主线待审/实际G04/停写、一条正式作者URL，请C10 Pro独审并同轮后继。详细统计/规则/技术摘要均留GitHub；受阻才补必要缺口。阶段2；完整本地P9、预处理、编译链接、MyOS2程序/脚本、Graphviz、QEMU、实机及真实操作NOT_RUN。源码、旧成果/评论、主线目录及PR元数据无执行方改权，不新建分支/PR、合并、强推或删分支。结果先行、人工动作集中、授权内连续推进、次一档执行/Pro独审、同轮后继及63/193/194/198在未来交接继续传递。
+最终聊天按198只给一个通常3–6行原生复制块：149真实交付/主线待审/实际G04/停写、一条正式作者URL，请C10 Pro独审并同轮后继。详细统计、规则、接收/刷新和技术摘要均留GitHub；受阻才补最小必要缺口。阶段2；完整本地P9、预处理、编译链接、MyOS2程序/脚本、Graphviz、QEMU、实机及真实操作NOT_RUN。源码、旧成果/评论、主线目录及PR元数据无执行方改权，不新建分支/PR、合并、强推或删分支。结果先行、人工动作集中、授权内连续推进、次一档执行/Pro独审、同轮后继及63/193/194/198在未来交接继续传递。
