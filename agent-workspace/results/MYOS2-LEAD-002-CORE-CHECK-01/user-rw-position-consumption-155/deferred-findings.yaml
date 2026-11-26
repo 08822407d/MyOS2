@@ -1,0 +1,91 @@
+{
+  "batch": 155,
+  "D00": [],
+  "new_combination_observations": [
+    {
+      "id": "RW155-COMB-A",
+      "scenarios": [
+        "A_READ_ZERO",
+        "A_WRITE_ZERO"
+      ],
+      "observation": "同给定写F90/K70且r=0，读helper写L、写helper不写L；外层均赋值F，结果70/10。",
+      "status": "CONDITIONAL_MODEL_ONLY"
+    },
+    {
+      "id": "RW155-COMB-B",
+      "scenarios": [
+        "B_READ_NEG",
+        "B_WRITE_NEG",
+        "B_READ_STREAM"
+      ],
+      "observation": "负返回或stream省略外层位置赋值但保留给定F90；负读L70、负写L10、stream L未初始化未读。",
+      "status": "CONDITIONAL_MODEL_ONLY"
+    },
+    {
+      "id": "RW155-COMB-C",
+      "scenarios": [
+        "C_KERNEL_ITER_ALIAS",
+        "C_KERNEL_LEGACY_ALIAS"
+      ],
+      "observation": "P与F.f_pos同一对象，iter K70无尾部回写、legacy *P=70是同字段覆盖；原count N与iter M有别。",
+      "status": "CONDITIONAL_MODEL_ONLY"
+    }
+  ],
+  "historical_source_fact_appends": [
+    {
+      "batch": 115,
+      "ref": "452444a1c4b4",
+      "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-memdev-scalar-io-115/facts-and-boundaries.yaml",
+      "selector": "A.position_rule.stream; A.iter_detail; 9 models[].premise",
+      "consumed": "原九例排除直接F写与并发；stream原规则承认回调可能独立改F但not modeled；helper门已知，新增给定直接写的组合。",
+      "blob_short12": "2246b85a8792"
+    },
+    {
+      "batch": 115,
+      "ref": "452444a1c4b4",
+      "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-memdev-scalar-io-115/memdev-scalar-io.md",
+      "selector": "45–59",
+      "consumed": "原正文A排除直接改file字段。"
+    },
+    {
+      "batch": 115,
+      "ref": "61acd9920c6f",
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-MEMDEV-SCALAR-IO-115-review.md",
+      "selector": "R115-03",
+      "consumed": "真实调用主体、两helper门及queued哨兵；原事实保留。"
+    },
+    {
+      "batch": 27,
+      "ref": "b57bd74931dc",
+      "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-elf-header-read-27/elf-header-read.md",
+      "selector": "79–100",
+      "consumed": "kernel_read无活动ki_pos回写；legacy传原count；原事实保留。"
+    },
+    {
+      "batch": 27,
+      "ref": "61acd9920c6f",
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ELF-HEADER-READ-27-review.md",
+      "selector": "R27-S01/S03",
+      "consumed": "init与后继K赋值分开；iter消耗、direction及真实调用点收窄。"
+    },
+    {
+      "batch": 62,
+      "ref": "b57bd74931dc",
+      "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-writev-consumption-62/writev-consumption.md",
+      "selector": "81–93",
+      "consumed": "向量回调可直接改F；外层提交可覆盖；非本批标量新根因。"
+    },
+    {
+      "batch": 62,
+      "ref": "61acd9920c6f",
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-WRITEV-CONSUMPTION-62-review.md",
+      "selector": "R62-S01 #9/10",
+      "consumed": "stream局部未初始化；直接回调及外层提交限制。"
+    }
+  ],
+  "independent_review_pending": [
+    "C11 Pro独审尚未发生；真实生产回调、IO、ABI、完整本地P9未证。"
+  ],
+  "no_new_root_cause": true,
+  "prior_disposition": "R152-01已闭；152原RETURN与NOT_RECORDED、旧文件/评论原样保持。"
+}
