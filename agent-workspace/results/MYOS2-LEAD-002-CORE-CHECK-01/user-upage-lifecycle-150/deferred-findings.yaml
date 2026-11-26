@@ -1,0 +1,101 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "batch_id": "CORE-USER-UPAGE-LIFECYCLE-150",
+  "conversation_display_name": "MYOS2-A-C10c 代码分析执行",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-24",
+  "produced_by": "GPT-6.2",
+  "model_per_owner": "GPT-6.2 Sol；Extra／高推理强度（Owner指定）",
+  "actual_model_identifier_basis": "系统标识GPT-6.2；客户端具体选择不可见",
+  "actual_backend_model": "UNATTESTED",
+  "actual_reasoning_effort": "UNATTESTED",
+  "date": "2026-11-26",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "direct_master_short12": "e8e60cd19540",
+  "lead_pin_short12": "dc12f97a7a91",
+  "execution_parent_short12": "9aa7de497eb0",
+  "read_channel": "connector",
+  "status": "AUTHOR_PENDING_MAINLINE_REVIEW",
+  "full_local_P9": "NOT_RUN",
+  "evidence_class": "SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / CONDITIONAL_FRAGMENT / OBSERVATION / UNKNOWN",
+  "open_questions": [
+    "R149-01作者补正待主线判闭；真实NULL brk可达性、ABI/标准/编译器/DEBUG、实际对象/映射/生命周期、链接及完整递归未知；N1547独立外证UNKNOWN继承。"
+  ],
+  "record_type": "batch150_deferred_observations",
+  "D00": {
+    "R149-01": {
+      "status": "documentation_disposition_submitted",
+      "mainline_closure": "PENDING"
+    }
+  },
+  "items": [
+    {
+      "qualified_id": "CORE-USER-UPAGE-LIFECYCLE-150::D150-O01",
+      "kind": "conditional_dynamic_order",
+      "status": "recorded_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "upage_alloc",
+        "selector": "A_META_NULL_NONNULL; E150-063,E150-064,E150-065,E150-066,E150-067,E150-068,E150-069"
+      },
+      "observation": "metadata NULL不阻止125独立brk调用；GIVEN非NULL响应后128已改brk_end，129缺对象。",
+      "premises": "GIVEN normal returns and per-call frame",
+      "impact": "前写与对象门必须分开",
+      "limit": "不证实际NULL生产可达或真实故障；不推修复",
+      "reopen": "授权的调用结果/对象门专项"
+    },
+    {
+      "qualified_id": "CORE-USER-UPAGE-LIFECYCLE-150::D150-O02",
+      "kind": "conditional_cleanup_boundary",
+      "status": "recorded_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "free",
+        "selector": "B_LOOKUP_MISS/B_LOW_BIT_RETURN; E150-084,E150-085,E150-086,E150-087,E150-088,E150-089,E150-090,E150-091,E150-092,E150-093,E150-094,E150-095,E150-096,E150-072,E150-073,E150-074,E150-075,E150-109,E150-110,E150-111"
+      },
+      "observation": "M活对象并不蕴含lookup能找到合法owner；MISS于342停，另一低位独立前提可正常返回并续137/140。",
+      "premises": "两个独立lookup及owner/bitmap GIVEN",
+      "impact": "不能把进入清理写成清理成功",
+      "limit": "不证明生产路径或M实际生命周期/映射",
+      "reopen": "授权的lookup/object lifecycle专项"
+    },
+    {
+      "qualified_id": "CORE-USER-UPAGE-LIFECYCLE-150::D150-O03",
+      "kind": "controlled_reuse_reverse_reference",
+      "status": "recorded_pending_mainline",
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "myinitramfs/mylib/myglibc/malloc/malloc.c",
+        "symbol": "uslab_alloc",
+        "selector": "C_RELEASED/C_REUSED/C_REBOUND; E150-070,E150-071,E150-063,E150-064,E150-065,E150-066,E150-067,E150-068,E150-069,E150-081,E150-082,E150-083,E150-072,E150-073,E150-074,E150-075"
+      },
+      "observation": "控制序列的P归属NULL期间仍可被used搜索找到；重绑后旧活D_old反向P/W保持。",
+      "premises": "独立快照探针、逐malloc frame、D_old存活",
+      "impact": "归属与反向字段不能合并消费",
+      "limit": "非并发可见性、实际悬空/重复分配或故障证明；不调用free探针",
+      "reopen": "授权的归属/对象生命周期专项"
+    },
+    {
+      "qualified_id": "CORE-USER-UPAGE-LIFECYCLE-150::D150-O04",
+      "kind": "adjacent_old_documentation_observation",
+      "status": "needs_mainline_disposition",
+      "source_ref": {
+        "ref": "9aa7de497eb0",
+        "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-malloc-refill-149/evidence.md",
+        "symbol": "E149-090",
+        "selector": "直接D00输入相邻窗；150 E150-112,E150-113,E150-114,E150-115,E150-116,E150-117,E150-118,E150-119,E150-120,E150-121,E150-122,E150-123,E150-124,E150-125,E150-126,E150-127,E150-128,E150-129,E150-130,E150-131,E150-132,E150-133,E150-134,E150-135,E150-136,E150-137"
+      },
+      "observation": "读取指定四ID邻接段时E149-090原mylibc标签混合add_library、set及target_include_directories起始；与R149-01同类范围问题。",
+      "premises": "只定点读该旧窗；不普查旧96窗",
+      "impact": "150当前构建已用独立精确命令窗；旧149相邻标签另请主线判定是否需处置",
+      "limit": "不扩大208指定四ID的D00计数，不改旧件，不自行闭合或扩成新技术缺陷",
+      "reopen": "C10本轮独立文证判定"
+    }
+  ],
+  "inherited": "149 RETURN_DOCUMENTATION保持；148及更早裁定保持；N1547、实际链接/ABI/运行等继承未知不重报"
+}
