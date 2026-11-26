@@ -1,0 +1,200 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "batch_id": "CORE-USER-BRK-RANGE-ACCOUNTING-154",
+  "conversation_display_name": "MYOS2-A-C11a 代码分析执行",
+  "execution_identity": "MYOS2-LEAD-002-CHAT-EXEC-25",
+  "produced_by": "GPT-6.2（系统标识；界面实际名称不可独立读取）",
+  "model_per_owner": "GPT-6.2 Sol＋Extra／高推理（Owner指定）",
+  "actual_client_selection": "UNATTESTED",
+  "actual_backend_model": "UNATTESTED",
+  "actual_reasoning_effort": "UNATTESTED",
+  "date": "2026-11-26",
+  "date_timezone": "Asia/Shanghai",
+  "phase": 2,
+  "base_snapshot": "time（分支名）",
+  "source_pin_short12": "a039d9803ade",
+  "direct_master_short12": "e8e60cd19540",
+  "lead_pin_short12": "d02e263970ef",
+  "execution_parent_short12": "c9f4ba8d3226",
+  "read_channel": "GitHub connector；自制文本/整数/链表有限模型",
+  "status": "AUTHOR_PENDING_MAINLINE_REVIEW",
+  "evidence_class": "SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / OBSERVATION / UNKNOWN",
+  "full_local_P9": "NOT_RUN",
+  "D00": [],
+  "open_questions": [
+    "真实C转换、ABI、预处理、生产可达、物理映射/回收、对象寿命、实际运行、用户返回寄存器与实际后台档位未证"
+  ],
+  "record_type": "batch154_deferred_findings",
+  "inputs_read": [
+    "mykernel/arch/x86_64/myos/syscall.c",
+    "mykernel/mm/vm_map/mmap.c",
+    "mykernel/mm/vm_map/util.c",
+    "mykernel/lib/list/double_list.h",
+    "mykernel/lib/list/double_list_macro.h",
+    "mykernel/lib/list/double_list_types.h",
+    "mykernel/lib/list/double_list_const.h",
+    "mykernel/include/linux/kernel/asm-generic/bug.h",
+    "mykernel/include/linux/debug/bug.h",
+    "mykernel/include/linux/compiler/myos_debug_option.h",
+    "mykernel/mm/vm_map/vm_map.h",
+    "mykernel/mm/vm_map/vm_map_macro.h",
+    "mykernel/mm/misc/mm_misc_types.h",
+    "mykernel/mm/vm_map/vm_map_types.h",
+    "mykernel/arch/x86_64/mm/page/page_const_arch.h",
+    "mykernel/mm/page_alloc/buddy_const.h",
+    "mykernel/include/linux/kernel/align.h",
+    "mykernel/include/uapi/linux/const.h",
+    "mykernel/include/linux/kernel/types.h",
+    "mykernel/include/linux/kernel/err.h",
+    "mykernel/include/uapi/asm-generic/errno-base.h",
+    "mykernel/mm/vm_map/vm_map_const.h",
+    "mykernel/include/uapi/asm-generic/mman-common.h",
+    "mykernel/include/uapi/asm-generic/mman.h",
+    "mykernel/arch/x86_64/include/asm/uapi_mman.h",
+    "mykernel/include/uapi/linux/mman.h",
+    "mykernel/scripts/options_flags.cmake",
+    "mykernel/debug/panic.c"
+  ],
+  "prior_disposition": "R152-01 CLOSED_BY_153_RECEIPT_ADDENDUM; 153 PASS_PENDING_LOCAL; no old D00 work",
+  "historical_scope": {
+    "R14_S01": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-VMA-LIFETIME-14-review.md",
+      "ref": "d02e263970ef",
+      "selector": "§3 R14-S01 / VL14-F05",
+      "author_comment": 6543731811,
+      "limit": "正常非零unmap返后out恢复brk，不保证此前VMA/引用事务回滚"
+    },
+    "R21_S01_S02": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-MMAP-PLACEMENT-21-review.md",
+      "ref": "d02e263970ef",
+      "selector": "§3–4 R21-S01/S02",
+      "author_comment": 6566959979,
+      "limit": "固定地址早退；NULL初始对象表达式与严格前驱，不能证明生产可达"
+    },
+    "R22_S01_S02": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-VMA-MERGE-22-review.md",
+      "ref": "d02e263970ef",
+      "selector": "§2–3 R22-S01/S02",
+      "author_comment": 6567624838,
+      "limit": "两侧匹配/target分类，非空返回观察不证明实际合并；字段与计数阶段分开"
+    },
+    "R26_S01_S02": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ELF-SEGMENT-LOAD-26-review.md",
+      "ref": "d02e263970ef",
+      "selector": "§2–3 R26-S01/S02",
+      "author_comment": 6572916239,
+      "limit": "旧零长/回绕区间消费和simple_vma_link正常仅0，不另造负返回"
+    },
+    "R144_N01": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-BRK-ALLOCATOR-144-review.md",
+      "ref": "d02e263970ef",
+      "selector": "§2A, §5 R144-N01；200合同",
+      "author_comment": 7130505162,
+      "limit": "候选用户包装原始返回，旧低地址/allocator模型及别名文证补注不重做"
+    },
+    "R19": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ANON-ZERO-19-review.md",
+      "ref": "d02e263970ef",
+      "selector": "R19-S01/S02/S03",
+      "limit": "VMA/页表/零页/匿名层次分开"
+    },
+    "R75": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ALLOCATOR-ENTRY-75-review.md",
+      "ref": "d02e263970ef",
+      "selector": "R75-S01/S02/S03",
+      "author_comment": 6813648992,
+      "limit": "内核分配器入口非用户库/真实运行证据"
+    },
+    "R152": {
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-FREE-REINIT-153-review.md",
+      "ref": "d02e263970ef",
+      "selector": "§5 R152-01=CLOSED_BY_153_RECEIPT_ADDENDUM",
+      "limit": "历史缺失NOT_RECORDED不倒签；154 D00=[]"
+    }
+  },
+  "items": [
+    {
+      "qualified_id": "CORE-USER-BRK-RANGE-ACCOUNTING-154::BRA154-O01",
+      "kind": "evidence_append_and_conditional_consumer_observation",
+      "status": "recorded_pending_mainline",
+      "historical_root_refs": [
+        "R21_S01_S02",
+        "R26_S01_S02",
+        "R144_N01"
+      ],
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "mykernel/mm/vm_map/mmap.c",
+        "symbol": "do_brk_flags / __get_unmapped_area",
+        "selector": "A_CROSS_TASK, A_ALIGN_WRAP",
+        "evidence": [
+          "E154-001–018",
+          "E154-044–051",
+          "E154-066–076",
+          "E154-146–182"
+        ]
+      },
+      "observation": "同一brk调用者两种边界请求：固定地址早退与模长度拒绝不同；跨T例只到清理前，回绕例正常回orig。",
+      "limit": "旧21地址门、26区间回绕、144返回消费根因承继；无新已证越界映射/运行缺陷"
+    },
+    {
+      "qualified_id": "CORE-USER-BRK-RANGE-ACCOUNTING-154::BRA154-O02",
+      "kind": "conditional_growth_accounting_relation",
+      "status": "recorded_pending_mainline",
+      "historical_root_refs": [
+        "R22_S01_S02",
+        "R26_S01_S02",
+        "R19"
+      ],
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "mykernel/mm/vm_map/mmap.c",
+        "symbol": "do_brk_flags / simple_vma_link / vma_link_file",
+        "selector": "B_NEW / B_MERGE_LOCKED / B_ALLOC_FAIL, B_ledger_stages",
+        "evidence": [
+          "E154-037–043",
+          "E154-066–111"
+        ]
+      },
+      "observation": "给定后清理观察帧下尾部使用len>>12，与新对象数增减分离；两计数分别写，分配失败后不达尾账。",
+      "limit": "不证明先行清理/merge无作用、实际合并/真实映射或锁物理页；非独立新根因"
+    },
+    {
+      "qualified_id": "CORE-USER-BRK-RANGE-ACCOUNTING-154::BRA154-O03",
+      "kind": "conditional_shrink_accounting_relation",
+      "status": "recorded_pending_mainline",
+      "historical_root_refs": [
+        "R14_S01",
+        "R21_S01_S02",
+        "R22_S01_S02",
+        "R19"
+      ],
+      "source_ref": {
+        "ref": "a039d9803ade",
+        "path": "mykernel/mm/vm_map/mmap.c",
+        "symbol": "simple_do_vma_munmap / __split_vma",
+        "selector": "C_REMOVE_WHOLE / C_FIRST_SPLIT_FAIL independent B_NEW_DONE data clones",
+        "evidence": [
+          "E154-001–018",
+          "E154-052–065",
+          "E154-080–115"
+        ]
+      },
+      "observation": "整段摘链两个VMA计数回4、给定页账仍103/43/7；首split给定dup NULL恢复brk且列表维持5。",
+      "limit": "不宣称实际运行统计错误、泄漏、页表残留、完整VMA事务恢复；旧14/21/22限定保留"
+    }
+  ],
+  "inherited": [
+    {
+      "id": "R152-01",
+      "status": "CLOSED_BY_153_RECEIPT_ADDENDUM",
+      "source_ref": {
+        "ref": "d02e263970ef",
+        "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-FREE-REINIT-153-review.md",
+        "selector": "§5"
+      },
+      "limit": "旧RETURN记录/历史NOT_RECORDED/160旧窗冻结，不倒签"
+    }
+  ]
+}
