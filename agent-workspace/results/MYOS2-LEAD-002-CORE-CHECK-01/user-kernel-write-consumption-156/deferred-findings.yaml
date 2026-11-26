@@ -1,0 +1,123 @@
+{
+  "batch_id": "CORE-USER-KERNEL-WRITE-CONSUMPTION-156",
+  "D00": [
+    "R155-01"
+  ],
+  "R155_01": {
+    "status": "SUBMITTED_FOR_MAINLINE_REVIEW",
+    "closure": "PENDING_MAINLINE_CLOSURE",
+    "old_selector": "guidance_refresh.ma.read[4].range",
+    "old_range": "L1–100 and L1971–2033, current and latest relevant §322",
+    "old_refresh_completed": true,
+    "historical_full_read_before_155": "NOT_ESTABLISHED_FROM_PUBLISHED_RECORD",
+    "repair_record": "MANIFEST.md::R155_01_current_supplement",
+    "fixed_checkpoint": "06b783861368 / 54ac6e5fc66c",
+    "newly_read": "101–1970=1870 physical lines, current combined 1–2032",
+    "preserve": "155 original RETURN_DOCUMENTATION and old records; author does not close"
+  },
+  "new_combination_observations": [
+    {
+      "id": "KW156-COMB-A",
+      "scenarios": [
+        "A_VFS_BOTH",
+        "A_KERNEL_BOTH"
+      ],
+      "observation": "同表双方法VFS先WL，kernel接口直接WI；给定位置消费不同，新增接口比较。",
+      "status": "CONDITIONAL_MODEL_ONLY"
+    },
+    {
+      "id": "KW156-COMB-B",
+      "scenarios": [
+        "B_NO_WRITE",
+        "B_NO_CAN_WRITE",
+        "B_MISSING_ITER"
+      ],
+      "observation": "KVEC在内层模式门前构造；两模式错误未初始化K，缺WI仅分析停在NULL调用前；不证生产错误或崩溃。",
+      "status": "CONDITIONAL_MODEL_ONLY"
+    },
+    {
+      "id": "KW156-COMB-C",
+      "scenarios": [
+        "C_ALIAS_ZERO",
+        "C_ALIAS_QUEUED_VALUE"
+      ],
+      "observation": "显式别名、两非正值跳过内层正值写回，F给定直接写保持；-529仅数值正常GIVEN。",
+      "status": "CONDITIONAL_MODEL_ONLY"
+    }
+  ],
+  "historical_evidence_appends": [
+    {
+      "batch": 115,
+      "ref": "452444a1c4b4",
+      "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-memdev-scalar-io-115/facts-and-boundaries.yaml",
+      "blob": "2246b85a8792",
+      "selector": "A.write_call_chain; A.write_VFS; A.iter_detail; A.models[0..8]",
+      "consumption": "VFS写模式、原count访问、rw_verify_area=0、截断、legacy优先；九例排除直接f_pos写与并发。此批A VFS仅对照。"
+    },
+    {
+      "batch": 115,
+      "ref": "1937b1b16805",
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/164-user-memdev-scalar-io-contract.md",
+      "blob": "2cc6691f9206",
+      "selector": "A（L93起）",
+      "consumption": "旧ksys外层位置消费不同于本批局部接口。"
+    },
+    {
+      "batch": 115,
+      "ref": "1937b1b16805",
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-MEMDEV-SCALAR-IO-115-review.md",
+      "blob": "6094a3f27e7a",
+      "selector": "R115-03",
+      "consumption": "同步助手与外层真实调用主体，旧同步助手哨兵归属；不迁入kernel_write。"
+    },
+    {
+      "batch": 155,
+      "ref": "def3b82d9191",
+      "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-rw-position-consumption-155/facts-and-boundaries.yaml",
+      "blob": "e6812070097f",
+      "selector": "terminal_boundaries / callback_arguments A_WRITE_ZERO, B_WRITE_NEG, C_KERNEL_ITER_ALIAS, C_KERNEL_LEGACY_ALIAS",
+      "consumption": "写零/负走write=NULL的new_sync_write及ksys边界；C为kernel_read；原结果和101窗不重算。"
+    },
+    {
+      "batch": 155,
+      "ref": "1937b1b16805",
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/217-user-rw-position-consumption-contract.md",
+      "selector": "A/B写两例、C两kernel_read例",
+      "consumption": "P别名和历史快照语义沿用，本批不继承控制栈。"
+    },
+    {
+      "batch": 27,
+      "ref": "1937b1b16805",
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-ELF-HEADER-READ-27-review.md",
+      "blob": "b7f766e95dcb",
+      "selector": "R27-S01/R27-S03",
+      "consumption": "kernel_read KVEC初始化、未存方向、调用主体与位置消费分开；kernel_write另证正返回尾部。"
+    },
+    {
+      "batch": 62,
+      "ref": "1937b1b16805",
+      "path": "agent-workspace/lead/MYOS2-LEAD-002/reviews/CORE-USER-WRITEV-CONSUMPTION-62-review.md",
+      "blob": "97fec28a3605",
+      "selector": "R62-S01",
+      "consumption": "opaque回调位置/返回独立给定，外层条件不证明回滚或真实IO。"
+    },
+    {
+      "batch": 5,
+      "ref": "def3b82d9191",
+      "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-vfs-baseline-05/user-vfs-baseline.md",
+      "blob": "d4196ca9e8c4",
+      "selector": "L552 GAP-U06",
+      "consumption": "旧代表VFS范围明确写路径未覆盖，不是内部接口七例全证。"
+    },
+    {
+      "batch": 8,
+      "ref": "def3b82d9191",
+      "path": "agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-syscall-stdio-08/user-syscall-stdio.md",
+      "blob": "e6836e77cdc0",
+      "selector": "L338,370–374,459,492",
+      "consumption": "用户stdio ksys/vfs/fd路径限定；本批不重做fd引用或用户errno。"
+    }
+  ],
+  "not_a_new_root_cause": true,
+  "prior_R152_01": "沿153已闭合，152历史RETURN/NOT_RECORDED不改"
+}
