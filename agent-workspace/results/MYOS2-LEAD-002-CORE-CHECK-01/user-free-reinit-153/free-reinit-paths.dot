@@ -1,0 +1,70 @@
+// task_id: "MYOS2-LEAD-002-CORE-CHECK-01"
+// batch_id: "CORE-USER-FREE-REINIT-153"
+// conversation_display_name: "MYOS2-A-C11a 代码分析执行"
+// execution_identity: "MYOS2-LEAD-002-CHAT-EXEC-25"
+// produced_by: "GPT-6.2（系统标识）"
+// model_per_owner: "GPT-6.2 Sol＋Extra／高推理（Owner指定）"
+// actual_backend_model: UNATTESTED
+// actual_reasoning_effort: UNATTESTED
+// Graphviz NOT_RUN; graph attributes from facts.graph
+digraph free_reinit_153 {
+  "R_S" [kind="snapshot_import_source", label="R_S fixed 152 nonlocal snapshot", source="152@6994f6b1aaec", snapshot_ref="R_S"];
+  "R_F" [kind="snapshot_import_source", label="R_F fixed 152 nonlocal snapshot", source="152@6994f6b1aaec", snapshot_ref="R_F"];
+  "U_S" [kind="snapshot_import_source", label="U_S fixed 152 nonlocal snapshot", source="152@6994f6b1aaec", snapshot_ref="U_S"];
+  "A_OLD_DYNAMIC__ENTRY" [kind="controlled_call_entry", label="A_OLD_DYNAMIC ENTRY", source="330", snapshot_ref="A_OLD_DYNAMIC:0"];
+  "A_OLD_DYNAMIC__SEARCH_RETURN" [kind="source_state_observation", label="A_OLD_DYNAMIC SEARCH_RETURN", source="341 / search 168", snapshot_ref="A_OLD_DYNAMIC:0"];
+  "A_OLD_DYNAMIC__ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE" [kind="analysis_stop", label="A_OLD_DYNAMIC ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE", source="342 before member access", snapshot_ref="A_OLD_DYNAMIC:0"];
+  "A_OLD_STATIC__ENTRY" [kind="controlled_call_entry", label="A_OLD_STATIC ENTRY", source="330", snapshot_ref="A_OLD_STATIC:0"];
+  "A_OLD_STATIC__SEARCH_RETURN" [kind="source_state_observation", label="A_OLD_STATIC SEARCH_RETURN", source="341 / search 168", snapshot_ref="A_OLD_STATIC:0"];
+  "A_OLD_STATIC__ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE" [kind="analysis_stop", label="A_OLD_STATIC ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE", source="342 before member access", snapshot_ref="A_OLD_STATIC:0"];
+  "B_NEW_SPARSE__ENTRY" [kind="controlled_call_entry", label="B_NEW_SPARSE ENTRY", source="330", snapshot_ref="B_NEW_SPARSE:0"];
+  "B_NEW_SPARSE__SEARCH_RETURN" [kind="source_state_observation", label="B_NEW_SPARSE SEARCH_RETURN", source="341 / search 168", snapshot_ref="B_NEW_SPARSE:0"];
+  "B_NEW_SPARSE__OWNER_READ" [kind="source_state_observation", label="B_NEW_SPARSE OWNER_READ", source="342–343", snapshot_ref="B_NEW_SPARSE:0"];
+  "B_NEW_SPARSE__EMPTY_GATE" [kind="source_state_observation", label="B_NEW_SPARSE EMPTY_GATE", source="345", snapshot_ref="B_NEW_SPARSE:0"];
+  "B_NEW_SPARSE__SOURCE_LOOP_EMPTY_SLAB" [kind="source_loop", label="B_NEW_SPARSE SOURCE_LOOP_EMPTY_SLAB", source="348 while(1)", snapshot_ref="B_NEW_SPARSE:0"];
+  "B_NEW_FULL__ENTRY" [kind="controlled_call_entry", label="B_NEW_FULL ENTRY", source="330", snapshot_ref="B_NEW_FULL:0"];
+  "B_NEW_FULL__SEARCH_RETURN" [kind="source_state_observation", label="B_NEW_FULL SEARCH_RETURN", source="341 / search 168", snapshot_ref="B_NEW_FULL:0"];
+  "B_NEW_FULL__OWNER_READ" [kind="source_state_observation", label="B_NEW_FULL OWNER_READ", source="342–343", snapshot_ref="B_NEW_FULL:0"];
+  "B_NEW_FULL__EMPTY_GATE" [kind="source_state_observation", label="B_NEW_FULL EMPTY_GATE", source="345", snapshot_ref="B_NEW_FULL:0"];
+  "B_NEW_FULL__SOURCE_LOOP_EMPTY_SLAB" [kind="source_loop", label="B_NEW_FULL SOURCE_LOOP_EMPTY_SLAB", source="348 while(1)", snapshot_ref="B_NEW_FULL:0"];
+  "C_CLONED_UPDATE_C1__ENTRY" [kind="controlled_call_entry", label="C_CLONED_UPDATE_C1 ENTRY", source="330", snapshot_ref="C_CLONED_UPDATE:0"];
+  "C_CLONED_UPDATE_C1__SEARCH_RETURN" [kind="source_state_observation", label="C_CLONED_UPDATE_C1 SEARCH_RETURN", source="341 / search 168", snapshot_ref="C_CLONED_UPDATE:0"];
+  "C_CLONED_UPDATE_C1__OWNER_READ" [kind="source_state_observation", label="C_CLONED_UPDATE_C1 OWNER_READ", source="342–343", snapshot_ref="C_CLONED_UPDATE:0"];
+  "C_CLONED_UPDATE_C1__EMPTY_GATE" [kind="source_state_observation", label="C_CLONED_UPDATE_C1 EMPTY_GATE", source="345", snapshot_ref="C_CLONED_UPDATE:0"];
+  "C_CLONED_UPDATE_C1__ASSIGNED_RETURN" [kind="source_state_observation", label="C_CLONED_UPDATE_C1 ASSIGNED_RETURN", source="351–352", snapshot_ref="C_CLONED_UPDATE:0"];
+  "C_CLONED_UPDATE_C1__OBJECT_UPDATE_DONE" [kind="source_state_observation", label="C_CLONED_UPDATE_C1 OBJECT_UPDATE_DONE", source="358–361", snapshot_ref="C_CLONED_UPDATE:4"];
+  "C_CLONED_UPDATE_C1__VOID_FALLTHROUGH" [kind="modeled_return", label="C_CLONED_UPDATE_C1 VOID_FALLTHROUGH", source="391", snapshot_ref="C_CLONED_UPDATE:4"];
+  "C_CLONED_UPDATE_C2__ENTRY" [kind="controlled_call_entry", label="C_CLONED_UPDATE_C2 ENTRY", source="330", snapshot_ref="C_CLONED_UPDATE:4"];
+  "C_CLONED_UPDATE_C2__SEARCH_RETURN" [kind="source_state_observation", label="C_CLONED_UPDATE_C2 SEARCH_RETURN", source="341 / search 168", snapshot_ref="C_CLONED_UPDATE:4"];
+  "C_CLONED_UPDATE_C2__OWNER_READ" [kind="source_state_observation", label="C_CLONED_UPDATE_C2 OWNER_READ", source="342–343", snapshot_ref="C_CLONED_UPDATE:4"];
+  "C_CLONED_UPDATE_C2__EMPTY_GATE" [kind="source_state_observation", label="C_CLONED_UPDATE_C2 EMPTY_GATE", source="345", snapshot_ref="C_CLONED_UPDATE:4"];
+  "C_CLONED_UPDATE_C2__SOURCE_LOOP_EMPTY_SLAB" [kind="source_loop", label="C_CLONED_UPDATE_C2 SOURCE_LOOP_EMPTY_SLAB", source="348 while(1)", snapshot_ref="C_CLONED_UPDATE:4"];
+  "A_OLD_DYNAMIC__ENTRY" -> "A_OLD_DYNAMIC__SEARCH_RETURN" [kind="source_order", label="source order"];
+  "A_OLD_DYNAMIC__SEARCH_RETURN" -> "A_OLD_DYNAMIC__ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE" [kind="source_order", label="source order"];
+  "R_S" -> "A_OLD_DYNAMIC__ENTRY" [kind="snapshot_import", label="copy nonlocal fields into independent GIVEN world"];
+  "A_OLD_STATIC__ENTRY" -> "A_OLD_STATIC__SEARCH_RETURN" [kind="source_order", label="source order"];
+  "A_OLD_STATIC__SEARCH_RETURN" -> "A_OLD_STATIC__ANALYSIS_STOP_MISSING_PAGE_OBJECT_PREMISE" [kind="source_order", label="source order"];
+  "R_S" -> "A_OLD_STATIC__ENTRY" [kind="snapshot_import", label="copy nonlocal fields into independent GIVEN world"];
+  "B_NEW_SPARSE__ENTRY" -> "B_NEW_SPARSE__SEARCH_RETURN" [kind="source_order", label="source order"];
+  "B_NEW_SPARSE__SEARCH_RETURN" -> "B_NEW_SPARSE__OWNER_READ" [kind="source_order", label="source order"];
+  "B_NEW_SPARSE__OWNER_READ" -> "B_NEW_SPARSE__EMPTY_GATE" [kind="source_order", label="source order"];
+  "B_NEW_SPARSE__EMPTY_GATE" -> "B_NEW_SPARSE__SOURCE_LOOP_EMPTY_SLAB" [kind="source_order", label="source order"];
+  "R_S" -> "B_NEW_SPARSE__ENTRY" [kind="snapshot_import", label="copy nonlocal fields into independent GIVEN world"];
+  "B_NEW_FULL__ENTRY" -> "B_NEW_FULL__SEARCH_RETURN" [kind="source_order", label="source order"];
+  "B_NEW_FULL__SEARCH_RETURN" -> "B_NEW_FULL__OWNER_READ" [kind="source_order", label="source order"];
+  "B_NEW_FULL__OWNER_READ" -> "B_NEW_FULL__EMPTY_GATE" [kind="source_order", label="source order"];
+  "B_NEW_FULL__EMPTY_GATE" -> "B_NEW_FULL__SOURCE_LOOP_EMPTY_SLAB" [kind="source_order", label="source order"];
+  "R_F" -> "B_NEW_FULL__ENTRY" [kind="snapshot_import", label="copy nonlocal fields into independent GIVEN world"];
+  "C_CLONED_UPDATE_C1__ENTRY" -> "C_CLONED_UPDATE_C1__SEARCH_RETURN" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C1__SEARCH_RETURN" -> "C_CLONED_UPDATE_C1__OWNER_READ" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C1__OWNER_READ" -> "C_CLONED_UPDATE_C1__EMPTY_GATE" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C1__EMPTY_GATE" -> "C_CLONED_UPDATE_C1__ASSIGNED_RETURN" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C1__ASSIGNED_RETURN" -> "C_CLONED_UPDATE_C1__OBJECT_UPDATE_DONE" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C1__OBJECT_UPDATE_DONE" -> "C_CLONED_UPDATE_C1__VOID_FALLTHROUGH" [kind="source_order", label="source order"];
+  "U_S" -> "C_CLONED_UPDATE_C1__ENTRY" [kind="snapshot_import", label="copy nonlocal fields into independent GIVEN world"];
+  "C_CLONED_UPDATE_C2__ENTRY" -> "C_CLONED_UPDATE_C2__SEARCH_RETURN" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C2__SEARCH_RETURN" -> "C_CLONED_UPDATE_C2__OWNER_READ" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C2__OWNER_READ" -> "C_CLONED_UPDATE_C2__EMPTY_GATE" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C2__EMPTY_GATE" -> "C_CLONED_UPDATE_C2__SOURCE_LOOP_EMPTY_SLAB" [kind="source_order", label="source order"];
+  "C_CLONED_UPDATE_C1__VOID_FALLTHROUGH" -> "C_CLONED_UPDATE_C2__ENTRY" [kind="controlled_next_top_level_call", label="no intervening writes"];
+}
