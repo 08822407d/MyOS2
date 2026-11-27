@@ -392,3 +392,20 @@ Owner原话（仅规范消息转义与换行）：
 Owner将本轮正式入口转入新C11b，即授权按[216恢复包](216-executor-continuation/00-C11a-to-C11b-recovery-package.md)、[完整启动词](216-executor-continuation/01-MYOS2-A-C11b-receiver-startup-prompt.md)及[217号155合同](217-user-rw-position-consumption-contract.md)连续完成独立接收、完整规范加载、fresh G00、155六件、自检、唯一作者回执、真实G04后STOP_WRITING，交C11 Pro独审并同轮后继，不另等开工、不进入156。新方实际创建/接收/启动尚NOT_OBSERVED；只作MyOS2任务局部登记，未操作聊天UI或写外仓。
 
 新席使用次一档GPT-6.2 Sol＋Extra／高推理；实际客户端/后台/effort按可核情况记账，未知不冒签。必须自己全文读十五项目规则、Meta-Agent有效采用及同版共用十五条、Mnemosyne任务局部命名/接收依据，分别留接收与当前刷新完成记录；不继承旧C11a或C11的已读。结果先行、问题先入库、已有授权连续推进、63先核效果再限次重试、198仓库正文/双向短入口、210的8/10提醒及未来交接必读持续适用。C11成功首次发布155后计4，恢复改派/154验收不另计，C10历史11保留；阶段2、旧件冻结、写区和运行禁令不变。
+
+
+### 第20条 · 2026-11-27 · C11b上下文耗尽后改派原第158批到新C11c
+
+Owner本轮原话正文逐字（外围GitHub入口标记略）：
+
+> C11b对话上下文耗尽，执行第158批次任务失败
+
+关联与主线执行解释：按第12/14/16条既有同类恢复约定及本轮请求，C11先核实际远端。当前exec仍abbf15de6fbb，PR17完整310条评论，完整执行树2667项；未见158结果目录或任意作者158正式回执。157已交付且原独审PASS_PENDING_LOCAL，R155/R152既有闭合与历史未证保持。故继续原158，不跳159；旧方未公开工作UNKNOWN，不要求不可用C11b补签，不把其早先容量判断当后继可用保证。
+
+本次由主线代备「MYOS2-A-C11c 代码分析执行」／MYOS2-LEAD-002-CHAT-EXEC-27，替换C11b/EXEC-26对158的执行指派。C11主线、执行任务MYOS2-LEAD-002-CORE-CHECK-01、原claude/dazzling-cori-q0dnyt及Draft PR17保持；旧EXEC-26的155–157及更早作者归属、成果和评论不动。依Mnemosyne父名派生规则登记C11c，canonical身份按所查公开记录顺延，不声称穷尽私有聊天或已操作UI。
+
+Owner把本轮正式改派入口转入新C11c后，新方按[221恢复包](221-executor-continuation/00-C11b-to-C11c-recovery-package.md)、[完整启动词](221-executor-continuation/01-MYOS2-A-C11c-receiver-startup-prompt.md)及[修订220](220-user-libc-format-capacity-contract.md)连续完成实际接收、规范独立全文加载、fresh G00、原158四场景十二行六件、自检、唯一作者评论和实际G04，通过后STOP_WRITING，交C11 Pro独审与同轮后继，不另等开工、不进入159。新方实际创建、接收和执行尚NOT_OBSERVED。
+
+新席使用次一档GPT-6.2 Sol＋Extra／高推理；实际客户端/后台/effort只据可核事实，未知不冒签。自己完整读十五项目规则、MA有效采用/全文及同版十五条共用全文，Mne仅任务局部接收/命名；接收和刷新分列，真实读完才签完成，不继承C11b或C11的已读。结果先行、人工动作集中、授权内连续推进、普通问题先入库、63先核效果再限次重试、198仓库正文/双向短入口、210的8/10提醒及未来交接必读全部继承。
+
+220原技术§1–8逐字保持，D00=[]；本次只修订身份和接收/发表治理，新增221恢复两件及[恢复检查点](checkpoints/2026-11-27-c11b-to-c11c-recovery-format158.md)。原158首次TASK_RELEASE与所有旧评论不重发、不改写，只追加EXECUTOR_REASSIGNED和OWNER_DIRECTED_RECOVERY_PREPARED。C11已设计152–158共7批，本次7→7，8/10未达，C10历史11不变；阶段2、旧件冻结、原分支/PR及源码/运行/合并禁令保持。

@@ -3,7 +3,6 @@ task_id: MYOS2-LEAD-002-CORE-CHECK-01
 track_id: MYOS2-LEAD-002
 conversation_display_name: MYOS2-A-C11 内核分析主线续建
 produced_by: GPT-6 Astra Pro（本轮系统身份）
-model_per_owner: Pro独立验收并同轮安排后继
 actual_backend_model: UNATTESTED
 actual_reasoning_effort: UNATTESTED
 date: '2026-11-27'
@@ -12,39 +11,44 @@ phase: 2
 base_snapshot: time（分支名）
 source_pin_short12: a039d9803ade
 direct_master_short12: e8e60cd19540
-read_channel: GitHub connector；自制文本/整数/符号链核验
 startup_selfcheck_quote: 2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。
 branch_canary_quotes:
 - "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\"
 - "\tthis_cpu = smp_processor_id();"
-self_check:
-  verified_claims: 0
-  quotes_reconfirmed: 0
-  downgraded_to_inferred: 0
 full_local_P9: NOT_RUN
 owner_decisions_requested_now: []
 previous_mainline_design_count:
   conversation: C10
   distinct_batches: 11
-evidence_class: SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / OBSERVATION / UNKNOWN
-lead_before_publication_short12: e9f4a788b1aa
+model_per_owner: 本轮事务性恢复无需Pro；新席GPT-6.2 Sol＋Extra／高推理，正式独审交C11 Pro
+read_channel: GitHub connector；自写文本/字节/元数据核验
+lead_before_publication_short12: a74bf1dc357b
 execution_pin_short12: abbf15de6fbb
-self_check_scope: 本文件新增正式源码窄窗0/0/0；157作者205正式窗、41普通位置、主线独审新增3窗及158 READY分别记账。
+self_check:
+  verified_claims: 0
+  quotes_reconfirmed: 0
+  downgraded_to_inferred: 0
+self_check_scope: 本轮恢复不新增正式源码窗，0/0/0；原158设计READY与157作者/主线P6分别保留，不计作新席已完成。
 mainline_design_count:
   conversation: C11
-  before_release: 6
-  after_successful_158_release: 7
+  first_batch: 152
+  latest_batch: 158
+  distinct_batches: 7
+  before_reassignment: 7
+  after_reassignment: 7
+  amendment_increments_count: false
   thresholds:
   - 8
   - 10
   reached: false
+evidence_class: Owner恢复报告 / 远端观察 / 已有设计继承 / UNKNOWN
 status: PREPARED_FOR_PUBLICATION_G04_PENDING
+D00: []
+R155_01: CLOSED_BY_156_CHECKPOINT_READ_SUPPLEMENT (retained)
+receiver_actual_state: NOT_OBSERVED
+old_executor_unpublished_work: UNKNOWN
 record_type: phase2_executor_contract
 followup_id: CORE-USER-LIBC-FORMAT-CAPACITY-158
-executor_display_name: MYOS2-A-C11b 代码分析执行
-executor_identity: MYOS2-LEAD-002-CHAT-EXEC-26
-executor_model_per_owner: GPT-6.2 Sol＋Extra／高推理；接收执行无需Pro
-executor_start_state: NOT_OBSERVED_FOR_158
 canonical_execution_branch: claude/dazzling-cori-q0dnyt
 canonical_execution_PR: 17
 allowed_directory: agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-libc-format-capacity-158/
@@ -55,22 +59,30 @@ allowed_files:
 - libc-format-capacity-paths.dot
 - deferred-findings.yaml
 - evidence.md
-D00: []
-R155_01: CLOSED_BY_156_CHECKPOINT_READ_SUPPLEMENT (retained)
 execution_parent_short12: abbf15de6fbb
 model_scenarios: 4
 independent_input_rows: 12
 open_questions:
 - 实际ABI/构型、sh链接、getcwd生产者、写入效果和后台档位未知；只作限定源级容量消费。
+executor_display_name: MYOS2-A-C11c 代码分析执行
+executor_identity: MYOS2-LEAD-002-CHAT-EXEC-27
+executor_model_per_owner: GPT-6.2 Sol＋Extra／高推理；接收执行无需Pro
+executor_start_state: NOT_OBSERVED_FOR_158
+replaces_executor_for_this_batch: MYOS2-A-C11b / MYOS2-LEAD-002-CHAT-EXEC-26
+technical_body_preserved_from_short12: a74bf1dc357b
+technical_body_unchanged_sections: 1–8
+recovery_package_id: MYOS2-A-C11b-TO-C11c-158-20261127
 ---
 
 # 220号合同 · 第158批 · 用户库格式容量、指针与长度消费
 
-**继续原「MYOS2-A-C11b 代码分析执行」／EXEC-26，GPT-6.2 Sol＋Extra／高推理；接收执行无需Pro。** 本合同授权规范刷新和fresh G00后，连续完成三相关专题、四场景十二独立输入行、恰六新增、自检、唯一作者回执与发表后实际G04；通过即STOP_WRITING，回C11 Pro独审并同轮后继，不另等开工、不进入159。
+**改派新「MYOS2-A-C11c 代码分析执行」／MYOS2-LEAD-002-CHAT-EXEC-27，GPT-6.2 Sol＋Extra／高推理；接收执行无需Pro。** Owner报告C11b上下文耗尽、158失败；当前远端158尚未交付。依[221恢复包](221-executor-continuation/00-C11b-to-C11c-recovery-package.md)与[完整启动词](221-executor-continuation/01-MYOS2-A-C11c-receiver-startup-prompt.md)，新席独立接收、完整规范加载及fresh G00后，连续完成三相关专题、四场景十二独立输入行、恰六新增、自检、唯一作者回执与实际G04，通过即STOP_WRITING，回C11 Pro独审及同轮后继，不另等开工、不进入159。
 
-[157主线独审](reviews/CORE-USER-SIGNAL-CONTROL-CONSUMPTION-157-review.md)为PASS_PENDING_LOCAL，本批D00=[]。R155既有主线闭合、155原RETURN_DOCUMENTATION及历史全文完成未证、R152既有闭合均保持；157宏递归三窗由主线另账补齐，两项非阻断措辞/行号说明按独审合读，不回改旧件。冻结[157作者7206572285](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7206572285)及[abbf15de6fbb六件](https://github.com/08822407d/MyOS2/tree/abbf15de6fbb/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-signal-control-consumption-157)。
+[157主线独审](reviews/CORE-USER-SIGNAL-CONTROL-CONSUMPTION-157-review.md)的PASS_PENDING_LOCAL、D00=[]、R155/R152既有闭合及所有历史未证保持。157作者仍EXEC-26，[7206572285](https://github.com/08822407d/MyOS2/pull/17#issuecomment-7206572285)及[abbf15de6fbb六件](https://github.com/08822407d/MyOS2/tree/abbf15de6fbb/agent-workspace/results/MYOS2-LEAD-002-CORE-CHECK-01/user-signal-control-consumption-157)不改署、不重做。旧C11b的158执行指派由本次替换，其未公开工作UNKNOWN，不要求旧方补签。
 
-固定源码time=a039d9803ade；执行唯一父abbf15de6fbb；最终固定lead以本轮主线真实评论为准。四场景的十二输入行各自重置，行数来自必要差异，不是成果数量配额。
+本次仅修改身份、接收与发表治理；以下§1–8完整保留[原220固定版](https://github.com/08822407d/MyOS2/blob/a74bf1dc357b/agent-workspace/lead/MYOS2-LEAD-002/220-user-libc-format-capacity-contract.md)原字节，共177 LF／24081字节。段内原设计检索的2070项树、e9f4a788b1aa及“本轮”属于158首次设计来源，不代签本次或C11c已经读取；新席须自己回源、建模与逐窗自检。原191/100 READY仅作设计历史，未运行的158P6、执行与G04不得填完成。
+
+固定源码time=a039d9803ade；执行唯一父abbf15de6fbb；最终lead以本轮真实改派评论为准。批号仍158，C11计数保持7。十二行各自重置、实际数组与名义容量分列、首次无法证明合法的操作前停止。
 
 ## 1. 目标、选择与排重
 
@@ -249,50 +261,52 @@ B02_NARROW停止节点没有通往return/NUL/write的正常边。C01的对象外
 
 
 
-## 9. 正式入口、规范复用和写区
+## 9. 正式入口、新席独立接收与写区
 
-以本轮PR17唯一主线评论为真实入口，取实际ID和最终固定lead，完整读本合同、同提交[157独审](reviews/CORE-USER-SIGNAL-CONTROL-CONSUMPTION-157-review.md)及[检查点](checkpoints/2026-11-27-signal157-reviewed-format158.md)。216恢复包和完整启动词继续提供身份/读序依据；同一C11b继续，不继承157调用控制栈，无新席/改名UI操作。
+以本轮PR17唯一改派评论为入口，取实际ID及固定lead，完整读同提交本合同、[221恢复包](221-executor-continuation/00-C11b-to-C11c-recovery-package.md)、[完整启动词](221-executor-continuation/01-MYOS2-A-C11c-receiver-startup-prompt.md)、[当前检查点](checkpoints/2026-11-27-c11b-to-c11c-recovery-format158.md)和不变的[157独审](reviews/CORE-USER-SIGNAL-CONTROL-CONSUMPTION-157-review.md)。原158首次发令7207878199作为历史入口保留，不重发TASK_RELEASE；新方执行以本次改派为准。
 
-保持MYOS2-LEAD-002-CORE-CHECK-01、阶段2、C11b／EXEC-26、claude/dazzling-cori-q0dnyt及原Draft PR17。唯一写区为user-libc-format-capacity-158六件；Owner当前同轮后继授权与00§19及本合同共同成立，不重演建分支/阶段0等待。无源码、旧件、主线、PR元数据或外仓写权。
+新席MYOS2-A-C11c／EXEC-27，任务仍MYOS2-LEAD-002-CORE-CHECK-01、阶段2、原claude/dazzling-cori-q0dnyt及Draft PR17，唯一写区为user-libc-format-capacity-158六件。授权来自Owner恢复请求、00工作令§12第20条及本合同；恢复包是non_execution_source_transfer_artifact，不导入外仓业务或写权。不重演建分支/阶段0等待，不操作主线、PR元数据、旧件或源码。
 
-按79只复用本人同一C11b会话实际完整读且版本未变的十五项目规则、MA有效全文及45共用十五条、Mne任务局部接收/命名。MA检查点本人156补读2032行已由主线闭合，不倒填155。Mne命名§7真实L445–584共140物理行，旧L585是末换行空段；新记录用实际范围，不把该说明当新补正D00或重读全部旧成果的要求。fresh MA master b234c6c91a2e、建设06b783861368，入口881fd8c1076e/检查点54ac6e5fc66c；Mne master e581eb9df6c4。新适用差异真实读并留证；§322待议非新采用，外项目授权不继承。
+按221§3–4独立全文读十五项目规则（00取本次全文含第20条；其余十四件固定a74bf1dc357b且本次未改）、Meta-Agent现行入口及48采用→47有效全文、45同版共用01–14/16十五条全文、现行模型登记与建设检查点的现状/后续适用采用段，以及Mnemosyne任务局部README、接收命令、批准规范及命名§7。新C11c不能按79继承C11b或主线的已读；完整取得与实际阅读全文分开记录，输出截断续读到尾。
 
-保留18结果先行/问题先入库、24职责、28同轮后继、63先查远端效果再限次重试、124次一档执行/Pro验收、198仓库正文/单一短入口、210的8/10提醒。当前胜任/容量、规范刷新及下一安全步真实记账；容量非未来保证，后台未知不冒签，也不因此重复索取开工许可。真正权限/材料/容量阻断才保全并报告最小缺口。
+在MANIFEST分列execution_handoff_receive与guidance_refresh，记录包ID=MYOS2-A-C11b-TO-C11c-158-20261127、非执行源性质、真实固定入口/来源/授权、接收日期时刻或UNKNOWN、新名称/EXEC-27、任务/阶段/原分支/六件写区、实际已读与缺项、当前胜任及容量判断、权限边界、下一安全动作和未知；刷新块记录项目十五份、MA有效全文及同版十五条的实际版本/范围、适用与冲突、task_local_only/current_task_preserved，真实读完才refresh_completed=true。新席接收、刷新、启动待自己完成；不得把前任旧记录复制成自己的完成记录。
+
+本轮MA master b234c6c91a2e、建设06b783861368，入口881fd8c1076e/检查点54ac6e5fc66c；Mne master e581eb9df6c4。新席到达仍fresh核，实际适用差异真实读取；§322待议不是新采用。命名§7实际L445–584共140物理行，全文件584LF；旧585是尾空段，不构成新D00。R155既有闭合只作历史裁定，不继承C11b完整读记录，也不重开155历史。
+
+保留18问题先入库、24职责、28同轮后继、63先核远端效果再限次重试、124次一档执行/Pro验收、198仓库正文/短入口和210的8/10提醒。后台/effort未知保持UNATTESTED，当前容量判断不是未来保证；无真实阻断就连续执行到终点，不重复索取开工许可。
 
 ## 10. fresh G00与冻结基线
 
-1. 直接lead等于本轮评论真实发布提交；exec=abbf15de6fbb、time=a039d9803ade、直接master=e8e60cd19540，不用PR.base_sha代替。原PR16 Open/Ready，PR17原标题Open/Draft，原head/base master且未合并；开放PR无since完整到空。
-2. PR17评论无since全分页到空，满100继续。检查点68历史精确标记加本轮独审157/发令158两枚共70，逐条字面一次且实际ID正确，不靠总数。当前入口、157作者7206572285、前次发令7197587783各直接ID双读并与分页同文。准备309评论，加本轮预计310，以fresh实际为准。
-3. 检查点十四错误作者负标记均0：EXEC-23/149、EXEC-22/145、EXEC-24/152/153/154/155/156/157/158、EXEC-25/155/156/157/158、EXEC-26/154。正确EXEC-26/155/156/157及EXEC-25/152/153/154各1；EXEC-26/158入场0。核任意作者158占用和整个结果目录，未知并行写不覆盖。
-4. 157固定abbf15de6fbb、活动exec和API Git Blob六件全文一致，22588 LF/746032字节；唯一父2d134f987c21，一提交六新增零其它改删，原2265非tree保持。158写前完整exec2667项/2271非tree为冻结基线。只核冻结、主线裁定与补链/说明，不重算157的232事件或205窗。
-5. 两time canary、直接master反验、公约原句实核，保留read_channel与self_check。本次MANIFEST明确D00=[]、R155既有主线闭合入口、历史保持和真实接收/权限/本人规范复用/当前容量/下一安全步；只有实际完成的读取才记完成。G00通过后连续A/B/C。
+1. 直接lead等于本次改派评论真实发布提交；exec=abbf15de6fbb、time=a039d9803ade、直接master=e8e60cd19540，不用PR.base_sha替代。原PR16 Open/Ready，PR17原标题Open/Draft，原head/base master、未合并；开放PR完整到空。
+2. PR17评论无since全分页到空；本次准备310条，改派后预计311条。检查点70既有精确标记加本轮EXECUTOR_REASSIGNED、OWNER_DIRECTED_RECOVERY_PREPARED两枚共72，每枚字面一次且实际ID正确。当前改派入口、原158首次发令7207878199和157作者7206572285各直接ID双读并与分页正文/时间一致；不得只比总数。
+3. 检查点完整十六错误作者负标记均0，包含旧EXEC-26/158、新EXEC-27/157；正确EXEC-26/155/156/157及EXEC-25/152/153/154各1，新EXEC-27/158入场0。任意作者158正式回执、整个结果目录及未知并行变更均检查；发生真实占用先保全定位，不覆盖、不改署。
+4. 157固定abbf15de6fbb、活动exec、API Git Blob六件全文一致，22588 LF／746032字节；唯一父2d134f987c21，一提交六新增零其它改删，原2265非tree保持。158写前完整exec2667项／2271非tree冻结。只核冻结、主线裁定和补链/说明，不重算157的232事件、205窗或重新判闭R155。
+5. 两time canary、直接master反验、公约原句实核，保留read_channel与self_check。MANIFEST明确D00=[]、R155既有主线闭合入口、历史保持、真实接收/权限/独立全文加载/当前容量/下一步；实际完成才登记。G00通过后连续A/B/C。
 
 ## 11. 六件、自检、唯一发表与实际G04
 
-恰六件与技术段清单一致：MANIFEST.md、libc-format-capacity.md、facts-and-boundaries.yaml、libc-format-capacity-paths.dot、deferred-findings.yaml、evidence.md。接收/规范/D00空集放MANIFEST，必要历史索引放deferred；不加第七件或接收评论。保留read_channel、startup_selfcheck_quote、branch_canary_quotes和self_check三整数。允许共享基态/差量，但可重建所有关键容量、对象身份、指针与写入顺序、NUL覆盖、长度及首次停止；帧退出后只保留历史快照。
+恰六件：MANIFEST.md、libc-format-capacity.md、facts-and-boundaries.yaml、libc-format-capacity-paths.dot、deferred-findings.yaml、evidence.md。接收、规范、D00空集在MANIFEST，必要旧项索引在deferred；不加第七件或接收评论。保留read_channel、startup_selfcheck_quote、branch_canary_quotes和self_check三整数。允许共享基态/有序差量，但所有关键对象容量、q/o所属帧、指针运算、实际写序、NUL覆盖、长度、首次停止必须可重建。
 
-P2/P6正式证据每窗1–5连续物理行，按固定实际源的原字节、LF/CRLF/NONE和真实单一定义/命令实例重开核。vsnprintf原CRLF不能被本地读写归一化后冒签原字节。P6 n=m+k，普通位置另账；作者157的205、主线本轮3和旧结果均不并入158新账。连接器可达P9第1–8、11、13实做，9/10无代码变更、12非降级可NA；完整本地P9未做即NOT_RUN。关键体和前置定义不得用降级逃避，不设字数/窗口/新问题配额。
+P2/P6正式证据每窗1–5连续物理行，按固定源的原字节、LF/CRLF/NONE和真实单一定义/命令实例重开核。vsnprintf原CRLF不得归一化后冒签。P6 n=m+k，普通位置另账；157作者205、157主线补窗3、原158设计READY 191/100与任何未公开旧草稿都不计入新席158P6。连接器可达P9第1–8、11、13实做，9/10无代码变更、12非降级可NA；完整本地P9未做即NOT_RUN。不以降级逃避关键体/定义，不设字数/窗数/新问题配额。
 
-写前fresh四refs、原PR状态及作者/目录未占用。只以真实abbf15de6fbb为唯一父，expected_sha匹配、force=false，原exec一次提交六新增零其它改删。先回读六件固定/活动/API Git Blob全文、LF/字节/行尾、唯一父、compare净差异及全部2271旧非tree冻结，再发表唯一作者评论。
+写前fresh四refs、原PR状态、作者/目录占用。仅以真实abbf15de6fbb为唯一父，expected_sha匹配、force=false，原exec一次提交六新增零其它改删。先回读六件固定/活动/API Git Blob全文、LF/字节/行尾、唯一父、compare及全部2271旧非tree冻结，再发表一条唯一作者评论；实际发生局部成功则按63核效果后续缺项，不重复写。
 
 唯一作者标记：
 
-MYOS2-LEAD-002-CHAT-EXEC-26 / CORE-USER-LIBC-FORMAT-CAPACITY-158 / FORMAL_DELIVERY
+MYOS2-LEAD-002-CHAT-EXEC-27 / CORE-USER-LIBC-FORMAT-CAPACITY-158 / FORMAL_DELIVERY
 
-作者评论列真实固定合同/提交/六件、D00=[]及R155既有闭合、四场景十二行/首次停止、Owner指定/可见身份/未知后台档位、实际P6与自检。发表时actual_G04=PENDING_POST_PUBLICATION、mainline_acceptance=PENDING；不得预签发表后终检或主线验收。
+作者回执列真实新席接收/刷新、固定修订220及221、提交/六件、D00=[]和R155保持、四场景十二行/首次停止、Owner指定/可见身份/未知后台档位、实际P6与可达自检。发表时actual_G04=PENDING_POST_PUBLICATION、mainline_acceptance=PENDING，不预签终检或主线验收。
 
-发表后实际直接读取新评论ID两次并与全分页同文；评论到空，70原标记加唯一作者共71，逐条字面一次/实际ID正确，十四负标记0。四refs（exec为真实158提交）、开放PR到空、两原PR状态/原标题/元数据、六件三渠道全文、唯一父/一提交六新增零其它改删与全部旧对象/评论冻结均实核。通过后才报READY_FOR_MAINLINE_REVIEW、实际G04=PASS、STOP_WRITING，不进入159。
+发表后新ID实际直接读两次，与全分页同文；72原标记加新作者共73，每枚字面一次/ID正确，十六负标记0，评论预计312条且仍读到实际空页。四refs（exec为真实158提交）、原两PR/开放页、六件三渠道、唯一父/一提交六新增、全部旧对象及改派后311条旧评论冻结均实核。通过才READY_FOR_MAINLINE_REVIEW、实际G04=PASS、STOP_WRITING，不进入159。
 
-按63先核远端效果，避免重复写，再通常首次加三次10/20/40秒或实质工作间隔限次重试。参数校验未发出、工具调用上限恢复、写重试、读回暂态分别如实记；不放松expected-head/force=false，不覆盖未知并行写，不为补正改旧评论/文件。
+63先核远端效果，通常首次加三次10/20/40秒或实质工作间隔限次重试；参数校验未发出、调用上限恢复、写重试及读回暂态分账，不覆盖未知并行写，不为补正回改旧评论/成果。最终按198只给一个通常3–6行原生短复制块、一个真实作者评论URL，报158实际交付/自检/G04/停写与必要未知，请C11 Pro独审并同轮后继；完整依据和字段留GitHub。
 
-按198最终只给一个通常3–6行原生短复制块和一个真实作者评论URL，报158四场景十二行六件、唯一提交/P6、D00空集、实际G04/停写和必要未知，交C11 Pro独审及同轮后继。正文/依据/细节留GitHub，不要求Owner拼长报告或裁决普通技术问题。
+## 12. 原设计READY、同批改派计数与限制
 
-## 12. 技术READY、计数和限制
+原158首次发布时由设计分工提出，另一技术分工先读27份固定源与GIVEN-only输入并封存模型，再读取合同比较，191项源码/模型检查和100项合同比较分别0失败。该记录固定在原a74bf1dc357b合同与157独审；本轮只验证§1–8逐字冻结，不重跑、不新增技术READY，不把旧结果代签C11c的回源、P6或实际G04。
 
-158由设计分工提出，另一技术分工先读取27份固定源码和GIVEN-only输入、封存源码笔记及十二行有限模型，再首次读取技术合同作比较；没有使用设计预期生成模型。独算191项（27源Blob、62语义锚、102对象/整数/边界断言）与后读合同的100项比较分别0失败，技术READY。四场景十二行的容量/NUL、不同帧q/o、D[4]在q加5前首次停止、D[8]逆写时序及提示符4095/4096/4105请求核同；超对象9仅为请求整数范围，不认证实际读出。真实sh链接、getcwd生产者、ABI与IO保持未知；仅write正常返回时才可继续printf局部return。旧129容量边界项作限定证据追加，不关闭effective ABI或旧真实绑定/输出未知。该就绪账不是158未来作者P6、最终验收或实际G04。
+名义n与真实数组大小分开；B02 D[4]在q加5之前首次停止，后续o更新、逆写、返回及最终NUL均不能继续认证。C01只到write指针/整数长度请求；4105比对象4096多9仅是请求范围，实际读取/输出/泄漏未证；只有write正常返回才继续printf局部return。旧129 qualified容量项仅作限定证据追加，不关闭effective ABI、真实绑定或输出未知。
 
-READY仅认证合同源码/GIVEN/预期/边界自洽，不预签158作者成果、实际G04、真实用户程序链接或IO效果；不得执行仓内printf/vsnprintf来冒充本次有限模型。容量域分别跟踪名义n与实际数组大小，首次超出可证明指针范围即停止；C只到write请求边界，不推真实越界读取/数据泄漏或屏显，write正常返回仅作后续printf局部return的条件。
+C11首次正式设计152–158共7批，本次158换席恢复计7→7，不新发159、不重置；8/10未达，C10历史11保留。未来交接带十五项目规则、有效MA全文及同版共用全文、Mne命名/接收依据、实际断点/身份/计数及口述约定。C11c实际接收尚未观察，登记名称不等于操作聊天UI。
 
-C11成功首次发布158计6→7，8/10未达；157验收/宏补链/行号说明不重复计，C10历史11不变。未来交接带十五规则、有效MA全文及同版共用全文、Mne命名依据、真实断点/身份/计数和口述约定。原C11b继续，无新对话或UI操作。
-
-阶段2，只允许自写有限文本/整数/对象核验；无项目脚本/程序、预处理、编译链接、C/ASM执行、Graphviz、内核/QEMU/实机/真实IO。完整本地P9 NOT_RUN，实际配置/ABI、sh链接归属、输入生产者、系统调用/内核效果和后台模型/Extra未认证。无源码/旧件/主线/PR元数据修改、新分支/PR、合并、强推、删除或跨仓写权。
+阶段2，仅允许自写有限文本/整数/对象核验；无项目脚本/程序、预处理、编译链接、C/ASM执行、Graphviz、内核/QEMU/实机/真实IO。完整本地P9 NOT_RUN，实际配置/ABI、sh链接归属、输入生产者、系统调用/内核效果及后台模型/Extra未认证。无源码/旧件/主线/PR元数据修改、新分支/PR、合并、强推、删除或跨仓写权。
