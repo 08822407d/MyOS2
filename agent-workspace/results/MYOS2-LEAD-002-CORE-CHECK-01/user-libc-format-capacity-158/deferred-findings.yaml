@@ -1,0 +1,82 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-FORMAT-CAPACITY-158",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-27",
+  "produced_by": "GPT-6.2（会话自报，实际Sol后台与Extra/high档UNATTESTED）",
+  "model_per_owner": "GPT-6.2 Sol＋Extra／高推理；接收与执行无需Pro",
+  "date": "2026-11-27",
+  "date_timezone": "Asia/Shanghai",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "actual_G04": "PENDING_POST_PUBLICATION",
+  "D00": [],
+  "full_local_P9": "NOT_RUN",
+  "new_candidates": [],
+  "qualified_evidence_additions": [
+    {
+      "id": "CORE-USER-SHELL-DATETIME-FORMAT-129::DT129-VSNPRINTF-BOUNDARY",
+      "prior_status": "CONDITIONAL_MODEL",
+      "disposition": "EVIDENCE_APPEND_ONLY",
+      "rows": [
+        "A01_N0",
+        "A01_N1",
+        "A01_N4",
+        "A01_N5",
+        "B01_N4",
+        "B01_N7",
+        "B01_N8",
+        "B02_NARROW",
+        "B02_WIDE",
+        "C01_L4085",
+        "C01_L4086",
+        "C01_L4095"
+      ],
+      "addition": "A: read and logical o despite no stores; B01 separate local/outer q; B02 physical object first-stop; C request length exceeds given object only as integer metadata.",
+      "remaining": "effective ABI and actual implementation/link still UNKNOWN; no closure or duplicate new root"
+    }
+  ],
+  "retained": [
+    {
+      "id": "CORE-USER-SHELL-DATETIME-FORMAT-129::DT129-STDIO-LINK",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "CORE-USER-SHELL-DATETIME-FORMAT-129::DT129-PRINTF-WRITE",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "CORE-USER-SHELL-ERROR-DIAGNOSTICS-130::actual_sh_libc_linkage",
+      "status": "UNKNOWN"
+    },
+    {
+      "id": "CORE-USER-SHELL-ERROR-DIAGNOSTICS-130::actual_stdout_and_runtime",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "CORE-USER-SYSCALL-STDIO-08::GAP-U10",
+      "status": "OPEN"
+    },
+    {
+      "id": "158 input producer",
+      "status": "UNKNOWN",
+      "note": "given long strings not actual getcwd production; not new defect ID"
+    }
+  ],
+  "history": {
+    "D00": [],
+    "R155_01": "prior closure by 156 maintained; see 157 review and 221 checkpoint",
+    "R152": "existing closure retained",
+    "R129_01": "CLOSED_DOCUMENTATION_ONLY; combined 129 PASS_PENDING_LOCAL",
+    "old_157": "PASS_PENDING_LOCAL; original frozen"
+  },
+  "limits": [
+    "effective ABI/compiler headers/actual sh linkage",
+    "actual input producer/getcwd reachability",
+    "actual stdout F/write result/real memory reads and visible output",
+    "actual Sol backend and Extra/high effort; UI rename unverified",
+    "full local P9, preprocessing, C/ASM, compile/link, Graphviz, QEMU/hardware/real IO NOT_RUN"
+  ]
+}
