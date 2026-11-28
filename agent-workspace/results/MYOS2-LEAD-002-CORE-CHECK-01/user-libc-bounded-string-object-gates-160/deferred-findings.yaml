@@ -1,0 +1,97 @@
+{
+  "task_id": "MYOS2-LEAD-002-CORE-CHECK-01",
+  "track_id": "MYOS2-LEAD-002",
+  "followup_id": "CORE-USER-LIBC-BOUNDED-STRING-OBJECT-GATES-160",
+  "executor_identity": "MYOS2-LEAD-002-CHAT-EXEC-27",
+  "produced_by": "GPT-6.2（会话自报；实际Sol后台与Extra/high推理档UNATTESTED）",
+  "model_per_owner": "GPT-6.2 Sol＋Extra／高推理；普通执行无需Pro",
+  "date": "2026-11-28",
+  "date_timezone": "Asia/Shanghai",
+  "base_snapshot": "time（分支名）",
+  "read_channel": "connector",
+  "status": "READY_FOR_MAINLINE_REVIEW",
+  "mainline_acceptance": "PENDING",
+  "actual_G04": "PENDING_POST_PUBLICATION",
+  "D00": [
+    "R159-01"
+  ],
+  "full_local_P9": "NOT_RUN",
+  "R159_01": {
+    "status": "CORRECTION_SUBMITTED_PENDING_C12_REVIEW",
+    "original": "RETURN_DOCUMENTATION",
+    "old_P6": [
+      85,
+      85,
+      0
+    ],
+    "combined_view_P6": [
+      60,
+      60,
+      0
+    ],
+    "combined_ordinary": 48,
+    "scope": "classification and read-view selectors only; original and technical rows frozen"
+  },
+  "qualified_evidence_additions": [
+    {
+      "id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124::SC124-READ-BEYOND-BUDGET",
+      "prior_status": "STATIC_ONLY",
+      "disposition": "EVIDENCE_APPEND_ONLY",
+      "case_ids": [
+        "A160_01",
+        "A160_02",
+        "A160_03",
+        "A160_04",
+        "B160_01",
+        "B160_02",
+        "B160_03"
+      ],
+      "addition": "finite endpoint, prefix and whole-word physical-window models; return budget separate from read width",
+      "remaining": "real ABI/compiler and actual arbitrary-object behavior not certified"
+    }
+  ],
+  "new_candidates": [
+    {
+      "id": "BS160-TARGET-GATE",
+      "status": "CONDITIONAL_MODEL",
+      "case_ids": [
+        "C160_01",
+        "C160_02",
+        "C160_03",
+        "C160_04"
+      ],
+      "observation": "given insufficient physical target, padding pointer formation/store can stop before copy; partial zero write distinct from normal return",
+      "scope": "finite supplied object model only; no actual runtime or general C certification"
+    }
+  ],
+  "retained": [
+    {
+      "id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124::SC124-ABI-ASSUMPTIONS",
+      "status": "CONDITIONAL_MODEL/UNKNOWN actual"
+    },
+    {
+      "id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124::SC124-SH-LINK",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124::SC124-STRNLEN-SYMBOL",
+      "status": "NEEDS_EVIDENCE"
+    },
+    {
+      "id": "CORE-USER-LIBC-STRING-LENGTH-COPY-124::SC124-STRNCPY-HELPERS",
+      "status": "CONDITIONAL_MODEL/UNKNOWN actual"
+    }
+  ],
+  "history": {
+    "R152": "existing closure retained",
+    "R155": "existing closure retained",
+    "R158": "CLOSED_BY_MAINLINE_GRAPH_CONSUMPTION_ADDENDUM retained",
+    "R159": "OPEN pending C12 independent review of correction"
+  },
+  "limits": [
+    "actual ABI/alignment/effective type, compiler and linker, STRNLEN/STRNCPY/MEMCPY effective macro choice",
+    "real sh linkage/call site and actual memory/runtime behavior; finite model not proof of real C first undefined operation",
+    "backend Sol/Extra/high UNATTESTED",
+    "full local P9, project programs/scripts, preprocess/C/ASM/build/link/Graphviz/QEMU/hardware/real IO NOT_RUN"
+  ]
+}
