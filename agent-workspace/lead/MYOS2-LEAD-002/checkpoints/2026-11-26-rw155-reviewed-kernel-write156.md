@@ -1,0 +1,202 @@
+---
+task_id: MYOS2-LEAD-002
+track_id: MYOS2-LEAD-002
+conversation_display_name: MYOS2-A-C11 内核分析主线续建
+produced_by: GPT-6 Astra Pro（本轮系统身份）
+model_per_owner: Pro独立验收并同轮安排后继
+actual_backend_model: UNATTESTED
+actual_reasoning_effort: UNATTESTED
+date: 2026-11-26
+date_timezone: Asia/Shanghai
+phase: 2
+base_snapshot: time（分支名）
+source_pin_short12: a039d9803ade
+direct_master_short12: e8e60cd19540
+read_channel: GitHub connector；自制文本/整数/符号链核验
+startup_selfcheck_quote: 2. **唯一可写区**：`agent-workspace/results/<你的任务号>/`。只许**新增**文件；不改内核源码、不改 tasks/ 任务书、不碰其他任务号的目录、不改本公约。
+branch_canary_quotes:
+- "\t-m64 -mcmodel=kernel -fno-pie -fno-pic \\"
+- "\tthis_cpu = smp_processor_id();"
+self_check:
+  verified_claims: 0
+  quotes_reconfirmed: 0
+  downgraded_to_inferred: 0
+full_local_P9: NOT_RUN
+owner_decisions_requested_now: []
+previous_mainline_design_count:
+  conversation: C10
+  distinct_batches: 11
+evidence_class: SOURCE_FACT / GIVEN / ARITHMETIC_MODEL / OBSERVATION / UNKNOWN
+lead_before_publication_short12: 61acd9920c6f
+execution_pin_short12: def3b82d9191
+self_check_scope: 本文件新增正式源码窄窗0/0/0；155作者101正式窗的主线复核另账。
+mainline_design_count:
+  conversation: C11
+  before_release: 4
+  after_successful_156_release: 5
+  thresholds:
+  - 8
+  - 10
+  reached: false
+status: PREPARED_FOR_PUBLICATION_G04_PENDING
+record_type: mainline_checkpoint
+mainline_acceptance_155: RETURN_DOCUMENTATION
+technical_and_evidence_acceptance_155: PASS_PENDING_LOCAL
+open_documentation_item: R155-01
+next_batch: CORE-USER-KERNEL-WRITE-CONSUMPTION-156
+next_executor: MYOS2-LEAD-002-CHAT-EXEC-26
+next_batch_D00:
+- R155-01
+open_questions:
+- 155检查点全文接收未留证；156先实际补读并新记账，待C11判闭；实际运行及后台档位未认证。
+---
+
+# C11检查点 · 155技术通过、R155-01待补，156接续
+
+## 1. 当前席位、结果及唯一后继
+
+主线MYOS2-A-C11／MYOS2-LEAD-002；执行继续MYOS2-A-C11b／EXEC-26，原exec与PR17。155固定def3b82d9191六件技术/101正式窗/图PASS_PENDING_LOCAL，整批RETURN_DOCUMENTATION，唯一R155-01：MA检查点全文读取范围未留完整证据，却签refresh_completed。没有技术D00，不重做155，不倒签其旧range/true或历史。
+
+本次发布三件：[155独审](../reviews/CORE-USER-RW-POSITION-CONSUMPTION-155-review.md)、[218／156合同](../218-user-kernel-write-consumption-contract.md)及本检查点。156先实际补足同一C11b自身读取并新增当前补记，再连续三相关专题、七场景、六件；交C11独审判闭R155并同轮后继。普通执行无需Pro，按Owner指定GPT-6.2 Sol＋Extra／高推理；实际后台与档位未认证。
+
+不新增恢复包或修改00工作令，00§19与216身份/授权持续适用；同会话79可复用本人已完整读且未变材料，R155漏证的首次全文范围不属于可直接复用项。R152-01继承153已闭，152原RETURN/NOT_RECORDED保持。新156实际启动尚NOT_OBSERVED，不冒操作UI。
+
+## 2. 入场实际基线
+
+| 对象 | 本轮实核 |
+|---|---|
+| lead | 61acd9920c6f，唯一父d02e263970ef；完整2064项，1830非tree |
+| exec | def3b82d9191，唯一父b57bd74931dc；完整2653项，2259非tree |
+| 155净差异 | ahead1/behind0/一提交；六新增零其它改删；17341 LF/541883字节 |
+| 旧exec对象 | 父树2646项；原2253非tree SHA/type/mode逐一相同 |
+| source / direct master | time a039d9803ade／e8e60cd19540；不用PR.base_sha替代 |
+| PR16 | Open/Ready，agent/MYOS2-LEAD-002→master，未合并；题为154通过、C11b恢复接155 |
+| PR17 | Open/Draft，原标题、claude/dazzling-cori-q0dnyt→master，未合并 |
+| 开放PR | 无since 2/0，完整到空 |
+| PR17评论 | 无since100/100/100/5/0，305唯一ID，61标记各唯一/实际ID正确 |
+| 双读 | 155作者7195286787、155发令7194265302各两次直接ID与全分页同文 |
+| G00 | 主线只读入场/冻结2375比较、0失败；作者接收文证另裁 |
+| 双canary | 固定time41/79命中，直接master两反验无；公约原句匹配 |
+| 后继占用 | 未见user-kernel-write-consumption-156目录或任何156正式作者 |
+
+155六件固定提交、活动exec和API Git Blob全文相同；每件Git blob独算见独审。历史304评论的完整枚举、API创建/更新时间不晚于前次发令、60旧markerID和已存主线正文一致，未见155期间变化；不冒称完整304旧正文快照逐字比较。本轮305全文已实际取齐并保全，主线发表后对这305逐字冻结核。
+
+## 3. 61枚既有精确标记
+
+| 序号 | 精确标记 | 实际评论ID |
+|---:|---|---:|
+| 1 | MYOS2-LEAD-002-CHAT-EXEC-21 / CORE-USER-EXEC-ARGV-ENTRY-VIEW-140 / FORMAL_DELIVERY | 7120006816 |
+| 2 | MYOS2-LEAD-002 / CORE-USER-EXEC-ARGV-ENTRY-VIEW-140 / INDEPENDENT_REVIEW | 7124005105 |
+| 3 | MYOS2-LEAD-002 / CORE-USER-EXEC-ARGV-ENTRY-VIEW-140 / D00_138_139_CLOSED | 7124005105 |
+| 4 | MYOS2-LEAD-002 / CORE-USER-EXEC-AUXV-PAYLOAD-141 / TASK_RELEASE | 7124005105 |
+| 5 | MYOS2-LEAD-002 / CORE-USER-EXEC-AUXV-PAYLOAD-141 / EXECUTOR_REASSIGNED | 7124317436 |
+| 6 | MYOS2-LEAD-002 / C09a_TO_C10a / OWNER_DIRECTED_RECOVERY_PREPARED | 7124317436 |
+| 7 | MYOS2-LEAD-002-CHAT-EXEC-22 / CORE-USER-EXEC-AUXV-PAYLOAD-141 / FORMAL_DELIVERY | 7124829269 |
+| 8 | MYOS2-LEAD-002 / CORE-USER-EXEC-AUXV-PAYLOAD-141 / INDEPENDENT_REVIEW | 7125650327 |
+| 9 | MYOS2-LEAD-002 / CORE-USER-EXEC-STACK-PLACEMENT-142 / TASK_RELEASE | 7125650327 |
+| 10 | MYOS2-LEAD-002-CHAT-EXEC-22 / CORE-USER-EXEC-STACK-PLACEMENT-142 / FORMAL_DELIVERY | 7126024963 |
+| 11 | MYOS2-LEAD-002 / CORE-USER-EXEC-STACK-PLACEMENT-142 / INDEPENDENT_REVIEW | 7127316380 |
+| 12 | MYOS2-LEAD-002 / CORE-USER-EXEC-STACK-PLACEMENT-142 / D00_141_CLOSED | 7127316380 |
+| 13 | MYOS2-LEAD-002 / CORE-USER-EXEC-ARGUMENT-LIMITS-143 / TASK_RELEASE | 7127316380 |
+| 14 | MYOS2-LEAD-002-CHAT-EXEC-22 / CORE-USER-EXEC-ARGUMENT-LIMITS-143 / FORMAL_DELIVERY | 7129263893 |
+| 15 | MYOS2-LEAD-002 / CORE-USER-EXEC-ARGUMENT-LIMITS-143 / INDEPENDENT_REVIEW | 7130162575 |
+| 16 | MYOS2-LEAD-002 / CORE-USER-BRK-ALLOCATOR-144 / TASK_RELEASE | 7130162575 |
+| 17 | MYOS2-LEAD-002-CHAT-EXEC-22 / CORE-USER-BRK-ALLOCATOR-144 / FORMAL_DELIVERY | 7130505162 |
+| 18 | MYOS2-LEAD-002 / CORE-USER-BRK-ALLOCATOR-144 / INDEPENDENT_REVIEW | 7131554504 |
+| 19 | MYOS2-LEAD-002 / CORE-USER-MALLOC-SLOT-145 / TASK_RELEASE | 7131554504 |
+| 20 | MYOS2-LEAD-002 / CORE-USER-MALLOC-SLOT-145 / EXECUTOR_REASSIGNED | 7133242891 |
+| 21 | MYOS2-LEAD-002 / C10a_TO_C10b / OWNER_DIRECTED_RECOVERY_PREPARED | 7133242891 |
+| 22 | MYOS2-LEAD-002-CHAT-EXEC-23 / CORE-USER-MALLOC-SLOT-145 / FORMAL_DELIVERY | 7134018368 |
+| 23 | MYOS2-LEAD-002 / CORE-USER-MALLOC-SLOT-145 / INDEPENDENT_REVIEW | 7135456076 |
+| 24 | MYOS2-LEAD-002 / CORE-USER-MALLOC-COLORMAP-146 / TASK_RELEASE | 7135456076 |
+| 25 | MYOS2-LEAD-002-CHAT-EXEC-23 / CORE-USER-MALLOC-COLORMAP-146 / FORMAL_DELIVERY | 7137058632 |
+| 26 | MYOS2-LEAD-002 / CORE-USER-MALLOC-COLORMAP-146 / INDEPENDENT_REVIEW | 7148601262 |
+| 27 | MYOS2-LEAD-002 / CORE-USER-MALLOC-COLORMAP-146 / D00_145_CLOSED | 7148601262 |
+| 28 | MYOS2-LEAD-002 / CORE-USER-FREE-SLOT-147 / TASK_RELEASE | 7148601262 |
+| 29 | MYOS2-LEAD-002-CHAT-EXEC-23 / CORE-USER-FREE-SLOT-147 / FORMAL_DELIVERY | 7149259180 |
+| 30 | MYOS2-LEAD-002 / CORE-USER-FREE-SLOT-147 / INDEPENDENT_REVIEW | 7149706868 |
+| 31 | MYOS2-LEAD-002 / CORE-USER-FREE-RECLAIM-148 / TASK_RELEASE | 7149706868 |
+| 32 | MYOS2-LEAD-002-CHAT-EXEC-23 / CORE-USER-FREE-RECLAIM-148 / FORMAL_DELIVERY | 7162962611 |
+| 33 | MYOS2-LEAD-002 / CORE-USER-FREE-RECLAIM-148 / INDEPENDENT_REVIEW | 7164039453 |
+| 34 | MYOS2-LEAD-002 / CORE-USER-MALLOC-REFILL-149 / TASK_RELEASE | 7164039453 |
+| 35 | MYOS2-LEAD-002 / CORE-USER-MALLOC-REFILL-149 / EXECUTOR_REASSIGNED | 7165121897 |
+| 36 | MYOS2-LEAD-002 / C10b_TO_C10c / OWNER_DIRECTED_RECOVERY_PREPARED | 7165121897 |
+| 37 | MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-MALLOC-REFILL-149 / FORMAL_DELIVERY | 7167216690 |
+| 38 | MYOS2-LEAD-002 / CORE-USER-MALLOC-REFILL-149 / INDEPENDENT_REVIEW | 7167992035 |
+| 39 | MYOS2-LEAD-002 / CORE-USER-UPAGE-LIFECYCLE-150 / TASK_RELEASE | 7167992035 |
+| 40 | MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-UPAGE-LIFECYCLE-150 / FORMAL_DELIVERY | 7179601188 |
+| 41 | MYOS2-LEAD-002 / CORE-USER-UPAGE-LIFECYCLE-150 / INDEPENDENT_REVIEW | 7180585940 |
+| 42 | MYOS2-LEAD-002 / CORE-USER-UPAGE-LIFECYCLE-150 / D00_149_CLOSED | 7180585940 |
+| 43 | MYOS2-LEAD-002 / CORE-USER-MALLOC-STATE-CONSUMPTION-151 / TASK_RELEASE | 7180585940 |
+| 44 | MYOS2-LEAD-002 / CORE-USER-UPAGE-LIFECYCLE-150 / C11_INDEPENDENT_RECHECK | 7182378909 |
+| 45 | MYOS2-LEAD-002 / CORE-USER-MALLOC-STATE-CONSUMPTION-151 / C11_RESUME_ENTRY_RELEASED | 7182378909 |
+| 46 | MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-MALLOC-STATE-CONSUMPTION-151 / FORMAL_DELIVERY | 7184689930 |
+| 47 | MYOS2-LEAD-002 / CORE-USER-MALLOC-STATE-CONSUMPTION-151 / INDEPENDENT_REVIEW | 7185473439 |
+| 48 | MYOS2-LEAD-002 / CORE-USER-MALLOC-REINIT-152 / TASK_RELEASE | 7185473439 |
+| 49 | MYOS2-LEAD-002 / C10c_TO_C11a / OWNER_DIRECTED_RECOVERY_PREPARED | 7185473439 |
+| 50 | MYOS2-LEAD-002-CHAT-EXEC-25 / CORE-USER-MALLOC-REINIT-152 / FORMAL_DELIVERY | 7185898830 |
+| 51 | MYOS2-LEAD-002 / CORE-USER-MALLOC-REINIT-152 / INDEPENDENT_REVIEW | 7186791511 |
+| 52 | MYOS2-LEAD-002 / CORE-USER-FREE-REINIT-153 / TASK_RELEASE | 7186791511 |
+| 53 | MYOS2-LEAD-002-CHAT-EXEC-25 / CORE-USER-FREE-REINIT-153 / FORMAL_DELIVERY | 7191089498 |
+| 54 | MYOS2-LEAD-002 / CORE-USER-FREE-REINIT-153 / INDEPENDENT_REVIEW | 7192512724 |
+| 55 | MYOS2-LEAD-002 / CORE-USER-FREE-REINIT-153 / D00_152_CLOSED | 7192512724 |
+| 56 | MYOS2-LEAD-002 / CORE-USER-BRK-RANGE-ACCOUNTING-154 / TASK_RELEASE | 7192512724 |
+| 57 | MYOS2-LEAD-002-CHAT-EXEC-25 / CORE-USER-BRK-RANGE-ACCOUNTING-154 / FORMAL_DELIVERY | 7192993361 |
+| 58 | MYOS2-LEAD-002 / CORE-USER-BRK-RANGE-ACCOUNTING-154 / INDEPENDENT_REVIEW | 7194265302 |
+| 59 | MYOS2-LEAD-002 / CORE-USER-RW-POSITION-CONSUMPTION-155 / TASK_RELEASE | 7194265302 |
+| 60 | MYOS2-LEAD-002 / C11a_TO_C11b / OWNER_DIRECTED_RECOVERY_PREPARED | 7194265302 |
+| 61 | MYOS2-LEAD-002-CHAT-EXEC-26 / CORE-USER-RW-POSITION-CONSUMPTION-155 / FORMAL_DELIVERY | 7195286787 |
+
+本轮同一新正式评论仅新增两枚，真实ID由实际发表结果取得，不预造：
+
+- MYOS2-LEAD-002 / CORE-USER-RW-POSITION-CONSUMPTION-155 / INDEPENDENT_REVIEW
+- MYOS2-LEAD-002 / CORE-USER-KERNEL-WRITE-CONSUMPTION-156 / TASK_RELEASE
+
+发表后主线G04及新156 G00共63枚；156唯一EXEC-26作者后64枚。R155-01本次仅登记OPEN_NEXT_BATCH_D00，无判闭标记、无第二个155作者；将来由C11核实际补正后才裁定闭合。
+
+十枚错误作者标记继续0：
+
+- MYOS2-LEAD-002-CHAT-EXEC-23 / CORE-USER-MALLOC-REFILL-149 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-22 / CORE-USER-MALLOC-SLOT-145 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-MALLOC-REINIT-152 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-FREE-REINIT-153 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-BRK-RANGE-ACCOUNTING-154 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-RW-POSITION-CONSUMPTION-155 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-25 / CORE-USER-RW-POSITION-CONSUMPTION-155 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-26 / CORE-USER-BRK-RANGE-ACCOUNTING-154 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-24 / CORE-USER-KERNEL-WRITE-CONSUMPTION-156 / FORMAL_DELIVERY
+- MYOS2-LEAD-002-CHAT-EXEC-25 / CORE-USER-KERNEL-WRITE-CONSUMPTION-156 / FORMAL_DELIVERY
+
+EXEC-26/155保持1；EXEC-26/156在主线发布时0、仅未来唯一作者后1。任意作者156占用另核，不通过改身份绕过冲突。页满100须继续至空，不用总数代替每枚字面唯一及真实ID。
+
+## 4. 规范状态与R155精确断点
+
+本轮九关键项目规范fresh核：00为本轮前次已发§19全文；18/24/28/63/79/124/198/210各blob与上轮未变。C11主线只复用自己本会话已完整读且未变的十五项目规则、MA有效全文及45共用十五条；不是替新执行者代签已读。C11b在155公开记录除了下列检查点范围外，独立接收/身份/权限/容量及规范字段齐全。
+
+MA master b234c6c91a2e、建设06b783861368；入口881fd8c1076e、检查点54ac6e5fc66c未变。有效仍48采用→47 v1.4-r10.266及45的1.1-r9.260共用01–14/16十五条，§322待议Alaya反馈不是新采用。Mne master e581eb9df6c4；README、接收命令、人工批准规范、命名§7的已核blob未变，只任务局部，不接active-context/todo或外仓写。
+
+R155-01精确选择器：155 MANIFEST.guidance_refresh.ma.read[4].range=L1–100 and L1971–2033；guidance_refresh.refresh_completed=true。216§4的完整读序包含检查点，故FULL_READ_NOT_EVIDENCED。实际固定文件386310字节、2032 LF/2032物理行、末尾LF；两已记范围实际162行，缺101–1970共1870行；2033是末空段。原件不改，不从当前补读倒签历史；本批MANIFEST补新实际完成范围与适用判断，deferred索引为SUBMITTED_FOR_MAINLINE_REVIEW/PENDING_MAINLINE_CLOSURE。
+
+## 5. 独立验收及后继就绪
+
+155技术2557比较/0失败，17新取源/115源锚、162阶段、七完整退出快照、全部写/读/短路/实参。七F终点70/10/90/90/90/90/70，A/B止fdput前；C仅kernel_read局部返回3。选定位置源写22和GIVEN写14分账，不是全部机器效果。
+
+文证2288比较/0机械失败：101窗287物理LF，11普通位置29物理LF，均原字节/来源/相邻断言相合；56 path::symbol。图162/155全属性匹配，七独立链/七无后继终点。接收只R155-01一项，不把原源码PASS清零，也不因机械窗PASS而抹去范围缺口。
+
+156比较VFS legacy与kernel iter，KVEC构造与模式拒绝/NULL调用前停，显式位置别名和0/-529消费；旧单点具名继承，真实kernel_write高频上层调用者未证。156由设计分工提出，另一未参与设计的技术分工先读20份固定源码、62处精确源锚及实际errno包含链，按明确GIVEN独建七场景模型后比较候选；133项检查、0失败，READY，未读或执行设计者model156。已核双方法分派、KVEC先构造后模式拒绝、NULL调用前停止、正返回位置写回及本接口无-529 BUG_ON；这只证明合同就绪，不预签156未来交付、R155补正闭合或真实G04。
+
+## 6. 发布事务与发表后真实终检
+
+仅在原lead，以实际61acd9920c6f为唯一父、expected_sha匹配、force=false，一次提交上述三新增、零旧文件改删；原1830非tree对象冻结，exec及其2653完整树不写。不得新增分支/PR、合并、强推、删除、改源码或跨仓写。
+
+提交后三件固定/活动/API Git Blob全文、LF/字节、唯一父、compare三新增及旧树先核，再发PR17唯一正式评论两新标记；发表时actual_G04=PENDING_POST_PUBLICATION。之后更新原PR16题和两PR顶部导航，整段旧body留为精确后缀，PR17原标题/两PR状态和head/base保持。
+
+发表后真实G04：新ID两次直接及全分页同文；评论无since完整到空，预计306条／100/100/100/6/0，以真实读数为准；63精确标记各1且真实ID正确，十负标记与任何156作者0；305旧正文逐字保持；四refs/开放PR/原PR元数据；三件三渠道全文/单父三新增/1830旧lead对象冻结；完整exec2653及155六件不变。全部通过才向Owner签实际PASS、STOP_WRITING，不在文件/评论预签或倒改发表时点。
+
+63先查远端效果再通常首次加三次10/20/40秒或实质工作间隔重试；未知并行写不覆盖，真实重试如实记。完整本地P9、项目程序/预处理/编译/Graphviz/QEMU/实机/IO均NOT_RUN，真实C/ABI/生产效果和后台/effort未认证。
+
+## 7. 计数、简短回传与后继边界
+
+C11成功首次发布156后4→5，8/10未到；验收/D00登记不计新设计，C10历史11保留。未来交接带完整十五项目规则、有效MA全文/同版共用全文、命名依据、实际断点/身份/计数与口述约定。
+
+Owner仅需把一个3–6行原生短复制块和本轮真实正式评论URL转回原C11b，次一档执行无需Pro；先R155补正再156，实际G04后STOP_WRITING，回C11 Pro独审判闭及同轮后继，不进入157。完整正文/证据/处置留GitHub，结果先行、必要手工动作集中，不要求Owner搬长报告或逐项作技术裁决。
